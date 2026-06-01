@@ -3529,56 +3529,57 @@ ServiceNow is designed as an integration hub as much as an ITSM platform. Integr
     SNOW &lt;--&gt;|"REST / Webhook"| PD
     SNOW &lt;--&gt;|"REST / Webhook"| DT
     SNOW &lt;--&gt;|"REST / Webhook"| SPL</code></pre>
-┌─────────────────────────────── ServiceNow — Architecture Integrations ────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                ServiceNow Integration Landscape                               │   │
-│   │                 Auth: SAML SSO (Okta/ADFS); MFA at IdP; LDAP user provisioning                │   │
-│   │               ITSM integrations: Jira (sync), PagerDuty (alert), Slack (notify)               │   │
-│   │            Monitoring: Zabbix/Prometheus/Datadog → SNOW event via REST or MID probe           │   │
-│   │            REST Table API: create/update incidents from external systems via HTTPS            │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    ServiceNow sits at the integration centre of ops tooling ecosystem                                 │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │       Identity &amp; Auth       │  │       Dev &amp; ITSM Tools      │  │          Monitoring         │   │
-│   │     SAML SSO (Okta/ADFS)    │  │       Jira: issue sync      │  │        Zabbix alerts        │   │
-│   │      LDAP provisioning      │  │     PagerDuty: escalate     │  │      Prometheus events      │   │
-│   │         MFA via IdP         │  │        Slack: notify        │  │        Datadog events       │   │
-│   │      OAuth 2.0 API auth     │  │     Confluence: KB link     │  │          SNMP traps         │   │
-│   │     Basic auth (legacy)     │  │        Bitbucket PRs        │  │        Syslog ingest        │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  IdP (Okta/ADFS) · LDAP/AD · MID Server VM · SMTP relay · network connectivity                        │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  SAML SSO     = ServiceNow supports SAML 2.0; configure under System Properties &gt; SSO                 │
-│  LDAP provisioning = ServiceNow LDAP integration creates/updates users from AD                        │
-│  Table API    = REST endpoint for CRUD on any table; used by external integrations                    │
-│  Jira sync    = Jira issues linked to SNOW changes via webhook or REST                                │
-│  PagerDuty    = incident alert routing; SNOW triggers PagerDuty via REST outbound                     │
-│  Slack        = SNOW sends notifications to Slack channels via Integration Hub                        │
-│  OAuth 2.0    = recommended API auth method; create OAuth app under System OAuth                      │
-│  SNMP trap    = network device alert; received by MID Server or event connector                       │
-│  Syslog       = log stream from servers; parsed by SNOW event connector                               │
-│  MID probe    = MID Server sensor that polls target systems for monitoring data                       │
-│  Event connector = SNOW module that receives external events and creates incidents                    │
-│  Integration Hub = pre-built action library for REST, JDBC, LDAP flow steps                           │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>---
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>## SOAP Web Services
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>Legacy integrations often use SOAP. ServiceNow auto-generates WSDL for every table:
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>```text
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>https://&lt;instance&gt;.service-now.com/&lt;table_name&gt;.do?WSDL
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────────── ServiceNow — Architecture Integrations ────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │                                ServiceNow Integration Landscape                               │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │                 Auth: SAML SSO (Okta/ADFS); MFA at IdP; LDAP user provisioning                │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │               ITSM integrations: Jira (sync), PagerDuty (alert), Slack (notify)               │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │            Monitoring: Zabbix/Prometheus/Datadog → SNOW event via REST or MID probe           │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │            REST Table API: create/update incidents from external systems via HTTPS            │   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│                                                                                                       │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│    ServiceNow sits at the integration centre of ops tooling ecosystem                                 │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                                                                                                       │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│                                                                                                       │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │       Identity &amp; Auth       │  │       Dev &amp; ITSM Tools      │  │          Monitoring         │   │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │     SAML SSO (Okta/ADFS)    │  │       Jira: issue sync      │  │        Zabbix alerts        │   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │      LDAP provisioning      │  │     PagerDuty: escalate     │  │      Prometheus events      │   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │         MFA via IdP         │  │        Slack: notify        │  │        Datadog events       │   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │      OAuth 2.0 API auth     │  │     Confluence: KB link     │  │          SNMP traps         │   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   │     Basic auth (legacy)     │  │        Bitbucket PRs        │  │        Syslog ingest        │   │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│                                                                                                       │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  IdP (Okta/ADFS) · LDAP/AD · MID Server VM · SMTP relay · network connectivity                        │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│                                                                                                       │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│                                                                                                       │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│  SAML SSO     = ServiceNow supports SAML 2.0; configure under System Properties &gt; SSO                 │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  LDAP provisioning = ServiceNow LDAP integration creates/updates users from AD                        │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│  Table API    = REST endpoint for CRUD on any table; used by external integrations                    │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  Jira sync    = Jira issues linked to SNOW changes via webhook or REST                                │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│  PagerDuty    = incident alert routing; SNOW triggers PagerDuty via REST outbound                     │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│  Slack        = SNOW sends notifications to Slack channels via Integration Hub                        │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│  OAuth 2.0    = recommended API auth method; create OAuth app under System OAuth                      │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│  SNMP trap    = network device alert; received by MID Server or event connector                       │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│  Syslog       = log stream from servers; parsed by SNOW event connector                               │
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│  MID probe    = MID Server sensor that polls target systems for monitoring data                       │
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│  Event connector = SNOW module that receives external events and creates incidents                    │
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│  Integration Hub = pre-built action library for REST, JDBC, LDAP flow steps                           │
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│                                                                                                       │
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>---
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## SOAP Web Services
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Legacy integrations often use SOAP. ServiceNow auto-generates WSDL for every table:
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>```text
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>https://&lt;instance&gt;.service-now.com/&lt;table_name&gt;.do?WSDL
 </code></pre></div></p>
 <p>Inbound SOAP is consumed via <strong>Web Service Import Sets</strong> or direct table SOAP endpoints. Outbound SOAP is configured under <strong>System Web Services &gt; Outbound &gt; SOAP Message</strong>.</p>
 <p>SOAP is considered legacy — prefer REST for new integrations.</p>

@@ -4745,148 +4745,149 @@ Procedures reference covering Create a Protection Group (vSphere Replication), C
 <a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│  └───────────────────────────────────────────────────────┘   │
 <a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>└──────────────────────────────────────────────────────────────┘
 </code></pre></div>
-┌─────────────────────────────────── VMware SRM — Common Procedures ────────────────────────────────────┐
-│                                                                                                       │
-│  Routine SRM procedures: add VM to protection group, run DR test, perform planned                     │
-│  failover, reprotect after failover, and update recovery plan steps.                                  │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              DR Test Procedure               │  │               Planned Failover              │   │
-│   │          Test: bubble network only           │  │          Notify stakeholders first          │   │
-│   │           Select plan: Test option           │  │           Replication sync: verify          │   │
-│   │            Monitor: plan progress            │  │            Run: Planned migration           │   │
-│   │           Cleanup: remove test VMs           │  │           Failback: Reprotect+run           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  DR test must always use Test mode; run actual failover only with explicit approval.                  │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │            Protection Group Mgmt             │  │               Plan Maintenance              │   │
-│   │               Add VM to group                │  │             Update startup order            │   │
-│   │          Configure IP customisation          │  │           Add custom recovery step          │   │
-│   │          Verify replication running          │  │           Update network mappings           │   │
-│   │           Remove decommissioned VM           │  │             Document RTO target             │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Test failover uses isolated network on recovery site; cleanup deletes test VMs;                      │
-│  planned failover powers off protected site VMs before starting.                                      │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Test mode     = failover to bubble network; no production impact                                     │
-│  Planned migration= graceful failover; quiesce source then fail over                                  │
-│  Disaster recovery= forced failover; uses last available replica                                      │
-│  Reprotect     = reverses replication; recovery becomes protected                                     │
-│  Failback      = reprotect then planned migration back to original                                    │
-│  Bubble network= isolated VLAN; test VMs not routable to production                                   │
-│  IP customisation= re-IP VMs with recovery-site addresses on failover                                 │
-│  Startup order = priority sequence; lower number powers on first                                      │
-│  Custom step   = script or manual step in recovery plan                                               │
-│  Cleanup       = SRM removes test VMs and associated snapshots                                        │
-│  Protection group= collection of VMs replicated and failed over together                              │
-│  Network mapping= maps source portgroup to recovery portgroup                                         │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">---</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="o">##</span><span class="w"> </span><span class="k">Create</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">Recovery</span><span class="w"> </span><span class="n">Plan</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="o">```</span><span class="nb">text</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="n">Site</span><span class="w"> </span><span class="n">Recovery</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="n">Recovery</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="n">Recovery</span><span class="w"> </span><span class="n">Plans</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="k">New</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span><span class="n">Name</span><span class="p">:</span><span class="w"> </span><span class="k">SQL</span><span class="o">-</span><span class="n">DR</span><span class="o">-</span><span class="n">Plan</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span><span class="n">Protection</span><span class="w"> </span><span class="n">Groups</span><span class="p">:</span><span class="w"> </span><span class="k">add</span><span class="w"> </span><span class="k">SQL</span><span class="o">-</span><span class="n">PG</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span><span class="n">Recovery</span><span class="w"> </span><span class="n">Site</span><span class="p">:</span><span class="w"> </span><span class="n">Recovery</span><span class="o">-</span><span class="n">Site</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">  </span><span class="n">Configure</span><span class="w"> </span><span class="n">steps</span><span class="p">:</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">    </span><span class="n">Priority</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="err">—</span><span class="w"> </span><span class="n">Infrastructure</span><span class="w"> </span><span class="n">VMs</span><span class="w"> </span><span class="p">(</span><span class="n">DNS</span><span class="p">,</span><span class="w"> </span><span class="n">DC</span><span class="p">)</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">    </span><span class="n">Priority</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="err">—</span><span class="w"> </span><span class="k">Database</span><span class="w"> </span><span class="n">servers</span><span class="w"> </span><span class="p">(</span><span class="k">SQL</span><span class="p">)</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">    </span><span class="n">Priority</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="err">—</span><span class="w"> </span><span class="n">Application</span><span class="w"> </span><span class="n">servers</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">    </span><span class="n">Priority</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="err">—</span><span class="w"> </span><span class="n">Web</span><span class="w"> </span><span class="n">servers</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">  </span><span class="n">Network</span><span class="w"> </span><span class="n">Mappings</span><span class="p">:</span><span class="w"> </span><span class="n">verify</span><span class="w"> </span><span class="n">mapped</span><span class="w"> </span><span class="p">(</span><span class="n">inherited</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">site</span><span class="w"> </span><span class="n">pair</span><span class="w"> </span><span class="k">or</span><span class="w"> </span><span class="k">add</span><span class="w"> </span><span class="n">per</span><span class="o">-</span><span class="n">plan</span><span class="p">)</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="w">  </span><span class="n">IP</span><span class="w"> </span><span class="n">Customization</span><span class="p">:</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="k">static</span><span class="o">-</span><span class="n">IP</span><span class="w"> </span><span class="n">VMs</span><span class="p">:</span>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">    </span><span class="n">Site</span><span class="w"> </span><span class="n">Recovery</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="n">Recovery</span><span class="w"> </span><span class="n">Plans</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="p">[</span><span class="n">plan</span><span class="p">]</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="n">IP</span><span class="w"> </span><span class="n">Customization</span>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">    </span><span class="k">Add</span><span class="w"> </span><span class="k">rule</span><span class="p">:</span><span class="w"> </span><span class="k">source</span><span class="w"> </span><span class="n">IP</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="n">recovery</span><span class="w"> </span><span class="n">IP</span><span class="w"> </span><span class="n">mapping</span><span class="w"> </span><span class="p">(</span><span class="n">per</span><span class="o">-</span><span class="n">VM</span><span class="w"> </span><span class="k">or</span><span class="w"> </span><span class="n">per</span><span class="o">-</span><span class="n">subnet</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌─────────────────────────────────── VMware SRM — Common Procedures ────────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  Routine SRM procedures: add VM to protection group, run DR test, perform planned                     │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│  failover, reprotect after failover, and update recovery plan steps.                                  │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│                                                                                                       │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │              DR Test Procedure               │  │               Planned Failover              │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │          Test: bubble network only           │  │          Notify stakeholders first          │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │           Select plan: Test option           │  │           Replication sync: verify          │   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │            Monitor: plan progress            │  │            Run: Planned migration           │   │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │           Cleanup: remove test VMs           │  │           Failback: Reprotect+run           │   │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                                                                       │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│  DR test must always use Test mode; run actual failover only with explicit approval.                  │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                                                                                                       │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│                                                                                                       │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │            Protection Group Mgmt             │  │               Plan Maintenance              │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │               Add VM to group                │  │             Update startup order            │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │          Configure IP customisation          │  │           Add custom recovery step          │   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │          Verify replication running          │  │           Update network mappings           │   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   │           Remove decommissioned VM           │  │             Document RTO target             │   │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│                                                                                                       │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  Test failover uses isolated network on recovery site; cleanup deletes test VMs;                      │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  planned failover powers off protected site VMs before starting.                                      │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│                                                                                                       │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  Test mode     = failover to bubble network; no production impact                                     │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  Planned migration= graceful failover; quiesce source then fail over                                  │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  Disaster recovery= forced failover; uses last available replica                                      │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  Reprotect     = reverses replication; recovery becomes protected                                     │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  Failback      = reprotect then planned migration back to original                                    │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  Bubble network= isolated VLAN; test VMs not routable to production                                   │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  IP customisation= re-IP VMs with recovery-site addresses on failover                                 │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  Startup order = priority sequence; lower number powers on first                                      │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  Custom step   = script or manual step in recovery plan                                               │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  Cleanup       = SRM removes test VMs and associated snapshots                                        │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│  Protection group= collection of VMs replicated and failed over together                              │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  Network mapping= maps source portgroup to recovery portgroup                                         │
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│                                                                                                       │
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">---</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="o">##</span><span class="w"> </span><span class="k">Create</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">Recovery</span><span class="w"> </span><span class="n">Plan</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="o">```</span><span class="nb">text</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="n">Site</span><span class="w"> </span><span class="n">Recovery</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="n">Recovery</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="n">Recovery</span><span class="w"> </span><span class="n">Plans</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="k">New</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span><span class="n">Name</span><span class="p">:</span><span class="w"> </span><span class="k">SQL</span><span class="o">-</span><span class="n">DR</span><span class="o">-</span><span class="n">Plan</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span><span class="n">Protection</span><span class="w"> </span><span class="n">Groups</span><span class="p">:</span><span class="w"> </span><span class="k">add</span><span class="w"> </span><span class="k">SQL</span><span class="o">-</span><span class="n">PG</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span><span class="n">Recovery</span><span class="w"> </span><span class="n">Site</span><span class="p">:</span><span class="w"> </span><span class="n">Recovery</span><span class="o">-</span><span class="n">Site</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">  </span><span class="n">Configure</span><span class="w"> </span><span class="n">steps</span><span class="p">:</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">    </span><span class="n">Priority</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="err">—</span><span class="w"> </span><span class="n">Infrastructure</span><span class="w"> </span><span class="n">VMs</span><span class="w"> </span><span class="p">(</span><span class="n">DNS</span><span class="p">,</span><span class="w"> </span><span class="n">DC</span><span class="p">)</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">    </span><span class="n">Priority</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="err">—</span><span class="w"> </span><span class="k">Database</span><span class="w"> </span><span class="n">servers</span><span class="w"> </span><span class="p">(</span><span class="k">SQL</span><span class="p">)</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">    </span><span class="n">Priority</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="err">—</span><span class="w"> </span><span class="n">Application</span><span class="w"> </span><span class="n">servers</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">    </span><span class="n">Priority</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="err">—</span><span class="w"> </span><span class="n">Web</span><span class="w"> </span><span class="n">servers</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">  </span><span class="n">Network</span><span class="w"> </span><span class="n">Mappings</span><span class="p">:</span><span class="w"> </span><span class="n">verify</span><span class="w"> </span><span class="n">mapped</span><span class="w"> </span><span class="p">(</span><span class="n">inherited</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">site</span><span class="w"> </span><span class="n">pair</span><span class="w"> </span><span class="k">or</span><span class="w"> </span><span class="k">add</span><span class="w"> </span><span class="n">per</span><span class="o">-</span><span class="n">plan</span><span class="p">)</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">  </span><span class="n">IP</span><span class="w"> </span><span class="n">Customization</span><span class="p">:</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="k">static</span><span class="o">-</span><span class="n">IP</span><span class="w"> </span><span class="n">VMs</span><span class="p">:</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">    </span><span class="n">Site</span><span class="w"> </span><span class="n">Recovery</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="n">Recovery</span><span class="w"> </span><span class="n">Plans</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="p">[</span><span class="n">plan</span><span class="p">]</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="n">IP</span><span class="w"> </span><span class="n">Customization</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="w">    </span><span class="k">Add</span><span class="w"> </span><span class="k">rule</span><span class="p">:</span><span class="w"> </span><span class="k">source</span><span class="w"> </span><span class="n">IP</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="n">recovery</span><span class="w"> </span><span class="n">IP</span><span class="w"> </span><span class="n">mapping</span><span class="w"> </span><span class="p">(</span><span class="n">per</span><span class="o">-</span><span class="n">VM</span><span class="w"> </span><span class="k">or</span><span class="w"> </span><span class="n">per</span><span class="o">-</span><span class="n">subnet</span><span class="p">)</span>
 </code></pre></div></p>
 <hr />
 <h2 id="run-a-test-failover-non-disruptive">Run a Test Failover (Non-Disruptive)<a class="headerlink" href="#run-a-test-failover-non-disruptive" title="Permanent link">&para;</a></h2>
 <p>Test failover powers on VMs in an isolated bubble network — production is unaffected.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Site Recovery → Recovery Plans → [plan] → Test
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  Confirm: Test
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  Monitor progress: Site Recovery → Recovery Plans → [plan] → History → [current run]
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>After test completes:
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>  Verify VMs powered on at recovery site (vCenter recovery site → VMs)
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>  Verify IP customization applied correctly
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>  Verify application-level health in isolated network
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>Cleanup (mandatory — must clean up before running another test or real recovery):
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>  Site Recovery → Recovery Plans → [plan] → Cleanup
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>  Cleanup removes powered-on test VMs from recovery site
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Site Recovery → Recovery Plans → [plan] → Test
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  Confirm: Test
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  Monitor progress: Site Recovery → Recovery Plans → [plan] → History → [current run]
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>After test completes:
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  Verify VMs powered on at recovery site (vCenter recovery site → VMs)
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  Verify IP customization applied correctly
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>  Verify application-level health in isolated network
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>Cleanup (mandatory — must clean up before running another test or real recovery):
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>  Site Recovery → Recovery Plans → [plan] → Cleanup
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>  Cleanup removes powered-on test VMs from recovery site
 </code></pre></div>
 <hr />
 <h2 id="run-a-planned-migration">Run a Planned Migration<a class="headerlink" href="#run-a-planned-migration" title="Permanent link">&para;</a></h2>
 <p>Both sites are available. VMs are gracefully shut down at protected site, replicated, and powered on at recovery site.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="l l-Scalar l-Scalar-Plain">Site Recovery → Recovery Plans → [plan] → Run</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Type</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Planned Migration</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Confirm</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">check &quot;I understand this will shut down VMs at the protected site&quot;</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Monitor</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">watch each step complete</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="nt">Post-migration</span><span class="p">:</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Verify VMs running at recovery site</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Update DNS records for moved VMs (if not handled by IP customization)</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Notify application teams</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="l l-Scalar l-Scalar-Plain">Site Recovery → Recovery Plans → [plan] → Run</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Type</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Planned Migration</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Confirm</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">check &quot;I understand this will shut down VMs at the protected site&quot;</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Monitor</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">watch each step complete</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nt">Post-migration</span><span class="p">:</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Verify VMs running at recovery site</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Update DNS records for moved VMs (if not handled by IP customization)</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Notify application teams</span>
 </code></pre></div>
 <hr />
 <h2 id="run-a-disaster-recovery-protected-site-down">Run a Disaster Recovery (Protected Site Down)<a class="headerlink" href="#run-a-disaster-recovery-protected-site-down" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="l l-Scalar l-Scalar-Plain">Site Recovery → Recovery Plans → [plan] → Run</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Type</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Disaster Recovery</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Confirm</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">acknowledge data loss risk (last sync point used)</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Monitor</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">watch recovery progress</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nt">Note</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">VMs at protected site must be considered &quot;lost&quot; — do NOT try to power them on</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="l l-Scalar l-Scalar-Plain">Site Recovery → Recovery Plans → [plan] → Run</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Type</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Disaster Recovery</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Confirm</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">acknowledge data loss risk (last sync point used)</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Monitor</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">watch recovery progress</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="nt">Note</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">VMs at protected site must be considered &quot;lost&quot; — do NOT try to power them on</span>
 </code></pre></div>
 <hr />
 <h2 id="perform-failback-after-recovery">Perform Failback After Recovery<a class="headerlink" href="#perform-failback-after-recovery" title="Permanent link">&para;</a></h2>
 <p>After the protected site is restored and ready:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>1. Re-protect VMs at recovery site (reverse replication direction):
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>   Site Recovery → Protection → Protection Groups → [group] → Reprotect
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>   This configures replication from recovery site back to protected site
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>2. Wait for initial replication to complete (RPO achieved)
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>3. Run Planned Migration back to protected site:
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>   Site Recovery → Recovery Plans → [original plan] → Run → Planned Migration
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>1. Re-protect VMs at recovery site (reverse replication direction):
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>   Site Recovery → Protection → Protection Groups → [group] → Reprotect
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>   This configures replication from recovery site back to protected site
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>2. Wait for initial replication to complete (RPO achieved)
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>3. Run Planned Migration back to protected site:
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>   Site Recovery → Recovery Plans → [original plan] → Run → Planned Migration
 </code></pre></div>
 <hr />
 <h2 id="add-a-vm-to-an-existing-protection-group">Add a VM to an Existing Protection Group<a class="headerlink" href="#add-a-vm-to-an-existing-protection-group" title="Permanent link">&para;</a></h2>
 <p>For ABR protection groups: add the VM to the storage replication group on the array, then rediscover:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Site Recovery → Protection → [PG] → Discover Devices
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Site Recovery → Protection → [PG] → Discover Devices
 </code></pre></div>
 The new VM appears automatically if it is on a replicated datastore.</p>
 <p>For vSphere Replication groups: configure VR on the VM first, then:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Site Recovery → Protection → [PG] → Add VMs
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Site Recovery → Protection → [PG] → Add VMs
 </code></pre></div></p>
 <hr />
 <h2 id="change-rpo-on-a-vsphere-replication-vm">Change RPO on a vSphere Replication VM<a class="headerlink" href="#change-rpo-on-a-vsphere-replication-vm" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>vCenter (Protected Site) → [VM] → right-click → Configure Replication → Edit
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>  RPO: change from current value (minimum 5 minutes, maximum 24 hours)
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  Save → replication schedule updates immediately
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>vCenter (Protected Site) → [VM] → right-click → Configure Replication → Edit
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  RPO: change from current value (minimum 5 minutes, maximum 24 hours)
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  Save → replication schedule updates immediately
 </code></pre></div>
 <hr />
 <h2 id="remove-vm-from-protection-decommission">Remove VM from Protection (Decommission)<a class="headerlink" href="#remove-vm-from-protection-decommission" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>1. Remove VM from Protection Group:
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>   Site Recovery → Protection → [PG] → VMs → [VM] → Remove
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>2. If VR-replicated: stop replication on the VM:
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>   vCenter → [VM] → right-click → Remove Replication
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>3. Clean up placeholder VM at recovery site:
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>   vCenter (Recovery) → delete placeholder VM
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>1. Remove VM from Protection Group:
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>   Site Recovery → Protection → [PG] → VMs → [VM] → Remove
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>2. If VR-replicated: stop replication on the VM:
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>   vCenter → [VM] → right-click → Remove Replication
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>3. Clean up placeholder VM at recovery site:
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>   vCenter (Recovery) → delete placeholder VM
 </code></pre></div>
 
 

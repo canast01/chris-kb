@@ -3683,77 +3683,78 @@ Architecture Standards reference covering Project Naming Conventions, Workflow S
 <h3 id="project-name-format">Project Name Format<a class="headerlink" href="#project-name-format" title="Permanent link">&para;</a></h3>
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>&lt;Team/Domain&gt; — &lt;Product/Initiative&gt;
 </code></pre></div>
-┌─────────────────────────────────────── Jira — Design Standards ───────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                Jira Design and Sizing Standards                               │   │
-│   │               App node: min 8 vCPU / 16 GB RAM; JVM heap 4-8 GB set in setenv.sh              │   │
-│   │                DB: 4 vCPU / 8 GB RAM; SSD storage; tune autovacuum and work_mem               │   │
-│   │              NFS: shared home for index/attachments; 10 GbE, low latency (&lt;1 ms)              │   │
-│   │           Project naming: PROJ-KEY in CAPS (max 10 chars); descriptive display name           │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Standards enforce consistent sizing, naming, and topology across environments                      │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │           Infrastructure Standards           │  │           Configuration Standards           │   │
-│   │              App: 8 vCPU/16 GB               │  │              JVM: -Xms2g -Xmx8g             │   │
-│   │             DB: 4 vCPU/8 GB SSD              │  │               DB pool: max 60               │   │
-│   │           NFS: 10 Gbps low latency           │  │             Tomcat: 150 threads             │   │
-│   │             LB: sticky sessions              │  │           Scheduler: cluster-aware          │   │
-│   │           Replica: streaming repl            │  │           Backup: nightly pg_dump           │   │
-│   │            DR: off-site NFS copy             │  │              Retention: 30-day              │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  vSphere HA cluster · SSD datastores · 10 GbE NFS segment · dedicated DB VLAN                         │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  -Xmx         = JVM max heap; set in JIRA_INSTALL/bin/setenv.sh                                       │
-│  autovacuum   = PostgreSQL background vacuum; critical for Jira schema with high write rate           │
-│  work_mem     = PostgreSQL per-sort memory; increase for complex JQL aggregation queries              │
-│  Project key  = 2-10 uppercase chars; unique ID prefix for all issues (e.g. OPS-1234)                 │
-│  DB pool      = HikariCP in Jira; maxPoolSize in dbconfig.xml; match DB max_connections               │
-│  NFS latency  = shared home I/O latency directly affects Lucene indexing performance                  │
-│  Retention    = 30-day backup minimum; adjust per compliance requirement                              │
-│  Streaming repl = PostgreSQL WAL replica for HA failover and read offloading                          │
-│  Sticky session = LB routes same user to same node; minimizes cache miss overhead                     │
-│  DC-aware sched = only one Jira node runs each scheduled task at a time                               │
-│  JIRA_HOME    = data directory; set in jira-application.properties; NFS mount path                    │
-│  Tomcat threads = max concurrent HTTP handlers; set connector maxThreads in server.xml                │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>| Status | Category | Description |
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>|---|---|---|
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>| `Backlog` | To Do | Not yet scheduled for a sprint |
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>| `To Do` | To Do | In sprint, not started |
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>| `In Progress` | In Progress | Actively being worked on |
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>| `In Review` | In Progress | PR open, awaiting code review |
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| `QA / Testing` | In Progress | In QA or integration testing |
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>| `Blocked` | In Progress | Work halted, awaiting external dependency |
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>| `Done` | Done | Complete and verified |
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>### Operations Workflow
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>```mermaid
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>stateDiagram-v2
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>    [*] --&gt; New
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>    New --&gt; Assigned : Triage
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>    Assigned --&gt; InProgress : Work started
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>    InProgress --&gt; PendingChange : Requires change approval
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>    PendingChange --&gt; InProgress : Change approved
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>    InProgress --&gt; PendingInfo : Awaiting information
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>    PendingInfo --&gt; InProgress : Info received
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>    InProgress --&gt; Resolved : Resolution applied
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>    Resolved --&gt; Closed : Confirmed resolved
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>    Resolved --&gt; InProgress : Reopened
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>    InProgress: In Progress
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>    PendingChange: Pending Change
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>    PendingInfo: Pending Information
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌─────────────────────────────────────── Jira — Design Standards ───────────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │                                Jira Design and Sizing Standards                               │   │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │               App node: min 8 vCPU / 16 GB RAM; JVM heap 4-8 GB set in setenv.sh              │   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │                DB: 4 vCPU / 8 GB RAM; SSD storage; tune autovacuum and work_mem               │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │              NFS: shared home for index/attachments; 10 GbE, low latency (&lt;1 ms)              │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │           Project naming: PROJ-KEY in CAPS (max 10 chars); descriptive display name           │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│                                                                                                       │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│    Standards enforce consistent sizing, naming, and topology across environments                      │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│                                                                                                       │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│                                                                                                       │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│   │           Infrastructure Standards           │  │           Configuration Standards           │   │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   │              App: 8 vCPU/16 GB               │  │              JVM: -Xms2g -Xmx8g             │   │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │             DB: 4 vCPU/8 GB SSD              │  │               DB pool: max 60               │   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │           NFS: 10 Gbps low latency           │  │             Tomcat: 150 threads             │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │             LB: sticky sessions              │  │           Scheduler: cluster-aware          │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │           Replica: streaming repl            │  │           Backup: nightly pg_dump           │   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │            DR: off-site NFS copy             │  │              Retention: 30-day              │   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│                                                                                                       │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  vSphere HA cluster · SSD datastores · 10 GbE NFS segment · dedicated DB VLAN                         │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│                                                                                                       │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  -Xmx         = JVM max heap; set in JIRA_INSTALL/bin/setenv.sh                                       │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│  autovacuum   = PostgreSQL background vacuum; critical for Jira schema with high write rate           │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  work_mem     = PostgreSQL per-sort memory; increase for complex JQL aggregation queries              │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  Project key  = 2-10 uppercase chars; unique ID prefix for all issues (e.g. OPS-1234)                 │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  DB pool      = HikariCP in Jira; maxPoolSize in dbconfig.xml; match DB max_connections               │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  NFS latency  = shared home I/O latency directly affects Lucene indexing performance                  │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  Retention    = 30-day backup minimum; adjust per compliance requirement                              │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  Streaming repl = PostgreSQL WAL replica for HA failover and read offloading                          │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  Sticky session = LB routes same user to same node; minimizes cache miss overhead                     │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  DC-aware sched = only one Jira node runs each scheduled task at a time                               │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  JIRA_HOME    = data directory; set in jira-application.properties; NFS mount path                    │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  Tomcat threads = max concurrent HTTP handlers; set connector maxThreads in server.xml                │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│                                                                                                       │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>| Status | Category | Description |
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>|---|---|---|
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>| `Backlog` | To Do | Not yet scheduled for a sprint |
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>| `To Do` | To Do | In sprint, not started |
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>| `In Progress` | In Progress | Actively being worked on |
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>| `In Review` | In Progress | PR open, awaiting code review |
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>| `QA / Testing` | In Progress | In QA or integration testing |
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>| `Blocked` | In Progress | Work halted, awaiting external dependency |
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>| `Done` | Done | Complete and verified |
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>### Operations Workflow
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>```mermaid
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>stateDiagram-v2
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>    [*] --&gt; New
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>    New --&gt; Assigned : Triage
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>    Assigned --&gt; InProgress : Work started
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>    InProgress --&gt; PendingChange : Requires change approval
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>    PendingChange --&gt; InProgress : Change approved
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>    InProgress --&gt; PendingInfo : Awaiting information
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>    PendingInfo --&gt; InProgress : Info received
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>    InProgress --&gt; Resolved : Resolution applied
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>    Resolved --&gt; Closed : Confirmed resolved
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>    Resolved --&gt; InProgress : Reopened
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>    InProgress: In Progress
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>    PendingChange: Pending Change
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>    PendingInfo: Pending Information
 </code></pre></div></p>
 <h3 id="transition-conditions-and-validators">Transition Conditions and Validators<a class="headerlink" href="#transition-conditions-and-validators" title="Permanent link">&para;</a></h3>
 <table>
@@ -4158,11 +4159,11 @@ Architecture Standards reference covering Project Naming Conventions, Workflow S
 </table>
 <h3 id="escalation-notifications-automation">Escalation Notifications (Automation)<a class="headerlink" href="#escalation-notifications-automation" title="Permanent link">&para;</a></h3>
 <p>Configure via Jira Automation for escalation beyond the notification scheme:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">Trigger</span><span class="p">:</span><span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">Scheduled (every 1 hour)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nt">Condition: issue matches</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">priority = Critical AND status != Done</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">           </span><span class="l l-Scalar l-Scalar-Plain">AND created &lt; -4h</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nt">Action</span><span class="p">:</span><span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">Send email to Engineering Manager</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nt">Action</span><span class="p">:</span><span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">Add comment &quot;@manager — Critical issue overdue&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nt">Trigger</span><span class="p">:</span><span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">Scheduled (every 1 hour)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nt">Condition: issue matches</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">priority = Critical AND status != Done</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">           </span><span class="l l-Scalar l-Scalar-Plain">AND created &lt; -4h</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="nt">Action</span><span class="p">:</span><span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">Send email to Engineering Manager</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nt">Action</span><span class="p">:</span><span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">Add comment &quot;@manager — Critical issue overdue&quot;</span>
 </code></pre></div>
 <hr />
 <h2 id="dashboard-standards">Dashboard Standards<a class="headerlink" href="#dashboard-standards" title="Permanent link">&para;</a></h2>
@@ -4241,12 +4242,12 @@ Architecture Standards reference covering Project Naming Conventions, Workflow S
 </tbody>
 </table>
 <h3 id="dashboard-naming-convention">Dashboard Naming Convention<a class="headerlink" href="#dashboard-naming-convention" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>[SCOPE] - [TEAM/PROJECT] - [PURPOSE]
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Examples:
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  TEAM - Platform Engineering - Sprint Dashboard
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  MGMT - Engineering - Portfolio Overview
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  OPS  - Incident Management - SLA Dashboard
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>[SCOPE] - [TEAM/PROJECT] - [PURPOSE]
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>Examples:
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  TEAM - Platform Engineering - Sprint Dashboard
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>  MGMT - Engineering - Portfolio Overview
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>  OPS  - Incident Management - SLA Dashboard
 </code></pre></div>
 <h3 id="sharing-standards">Sharing Standards<a class="headerlink" href="#sharing-standards" title="Permanent link">&para;</a></h3>
 <table>

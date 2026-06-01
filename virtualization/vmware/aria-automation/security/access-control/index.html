@@ -4652,89 +4652,90 @@ Access Control reference covering RBAC Model, Configuring AD Group Role Assignme
 <p><strong>Add a group to a project:</strong></p>
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Infrastructure → Administration → Projects → select project → Members → Add Members
 </code></pre></div>
-┌────────────────────────────────── Aria Automation — Access Control ───────────────────────────────────┐
-│                                                                                                       │
-│  vRA access is governed by project membership, catalog entitlements, and approval policies.           │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │            Roles and Permissions             │  │             Project Access Model            │   │
-│   │        System Admin: full vRA access         │  │      Project member: request+manage own     │   │
-│   │      Project Admin: manage one project       │  │     Project Admin: manage members+quotas    │   │
-│   │        Member: request catalog items         │  │     Entitlement: catalog item → project     │   │
-│   │        Viewer: read-only deployments         │  │    No cross-project visibility by default   │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Entitlements and policies control which users can request and who must approve.                      │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Catalog Entitlements             │  │              Approval Policies              │   │
-│   │      Entitle item → user/group/project       │  │        Policy: approver group + level       │   │
-│   │     Source: published catalog items only     │  │    Mandatory for prod-tier catalog items    │   │
-│   │     Sharing: item accessible across orgs     │  │     Auto-approve: dev/test environments     │   │
-│   │      Revoke: remove entitlement record       │  │       Audit: approval decisions logged      │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  vRA appliance · vIDM (user/group source) · AD/LDAP · Postgres (policy store)                         │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  System Admin      = Global vRA admin role; full access to all projects and configurations            │
-│  Project Admin     = Role scoped to one project; manages members, quotas, and entitlements            │
-│  Project member    = Can request catalog items and manage own deployments within project              │
-│  Viewer role       = Read-only access to deployment status; cannot request or modify                  │
-│  Entitlement       = Record linking a catalog item (or source) to a project or user/group             │
-│  Catalog source    = Blueprint/Terraform/ABX library shared as catalog item collection                │
-│  Approval policy   = Named rule requiring human authorisation before vRA provisions resources         │
-│  Approval level    = Single or multi-level; e.g. manager then finance for expensive items             │
-│  Auto-approve      = Policy setting for non-prod items; request proceeds without human input          │
-│  vIDM group        = AD group synced to vIDM; mapped to vRA project role                              │
-│  Cross-project     = Sharing catalog items from one project to another via entitlement                │
-│  Audit log         = vRA records who requested, who approved, and timestamps for compliance           │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="o">-</span><span class="w"> </span><span class="k">Source</span><span class="p">:</span><span class="w"> </span><span class="k">select</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">Assembler</span><span class="w"> </span><span class="n">content</span><span class="w"> </span><span class="k">source</span><span class="w"> </span><span class="p">(</span><span class="k">or</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">git</span><span class="o">-</span><span class="n">backed</span><span class="w"> </span><span class="n">content</span><span class="w"> </span><span class="k">source</span><span class="p">)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="o">-</span><span class="w"> </span><span class="n">Target</span><span class="p">:</span><span class="w"> </span><span class="k">select</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">project</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="k">share</span><span class="w"> </span><span class="k">with</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="o">-</span><span class="w"> </span><span class="n">Optionally</span><span class="w"> </span><span class="n">filter</span><span class="w"> </span><span class="n">which</span><span class="w"> </span><span class="n">templates</span><span class="w"> </span><span class="k">are</span><span class="w"> </span><span class="n">shared</span><span class="w"> </span><span class="p">(</span><span class="k">by</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="k">or</span><span class="w"> </span><span class="n">tag</span><span class="p">)</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1">---</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="o">##</span><span class="w"> </span><span class="n">Approval</span><span class="w"> </span><span class="n">Policies</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="n">Approval</span><span class="w"> </span><span class="n">policies</span><span class="w"> </span><span class="k">add</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">human</span><span class="w"> </span><span class="n">approval</span><span class="w"> </span><span class="n">gate</span><span class="w"> </span><span class="k">before</span><span class="w"> </span><span class="n">provisioning</span><span class="p">.</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="o">**</span><span class="k">Create</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="n">assign</span><span class="w"> </span><span class="n">an</span><span class="w"> </span><span class="n">approval</span><span class="w"> </span><span class="n">policy</span><span class="p">:</span><span class="o">**</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="o">```</span><span class="n">bash</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="n">Service</span><span class="w"> </span><span class="n">Broker</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="n">Content</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">Policies</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="n">Policies</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="k">New</span><span class="w"> </span><span class="n">Policy</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="n">Approval</span><span class="w"> </span><span class="n">Policy</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌────────────────────────────────── Aria Automation — Access Control ───────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  vRA access is governed by project membership, catalog entitlements, and approval policies.           │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│                                                                                                       │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │            Roles and Permissions             │  │             Project Access Model            │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │        System Admin: full vRA access         │  │      Project member: request+manage own     │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │      Project Admin: manage one project       │  │     Project Admin: manage members+quotas    │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │        Member: request catalog items         │  │     Entitlement: catalog item → project     │   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │        Viewer: read-only deployments         │  │    No cross-project visibility by default   │   │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│                                                                                                       │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│  Entitlements and policies control which users can request and who must approve.                      │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│                                                                                                       │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                                                                                                       │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │             Catalog Entitlements             │  │              Approval Policies              │   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │      Entitle item → user/group/project       │  │        Policy: approver group + level       │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │     Source: published catalog items only     │  │    Mandatory for prod-tier catalog items    │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │     Sharing: item accessible across orgs     │  │     Auto-approve: dev/test environments     │   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │      Revoke: remove entitlement record       │  │       Audit: approval decisions logged      │   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│                                                                                                       │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  vRA appliance · vIDM (user/group source) · AD/LDAP · Postgres (policy store)                         │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│                                                                                                       │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  System Admin      = Global vRA admin role; full access to all projects and configurations            │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│  Project Admin     = Role scoped to one project; manages members, quotas, and entitlements            │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  Project member    = Can request catalog items and manage own deployments within project              │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  Viewer role       = Read-only access to deployment status; cannot request or modify                  │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  Entitlement       = Record linking a catalog item (or source) to a project or user/group             │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  Catalog source    = Blueprint/Terraform/ABX library shared as catalog item collection                │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  Approval policy   = Named rule requiring human authorisation before vRA provisions resources         │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  Approval level    = Single or multi-level; e.g. manager then finance for expensive items             │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  Auto-approve      = Policy setting for non-prod items; request proceeds without human input          │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  vIDM group        = AD group synced to vIDM; mapped to vRA project role                              │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  Cross-project     = Sharing catalog items from one project to another via entitlement                │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  Audit log         = vRA records who requested, who approved, and timestamps for compliance           │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│                                                                                                       │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="o">-</span><span class="w"> </span><span class="k">Source</span><span class="p">:</span><span class="w"> </span><span class="k">select</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">Assembler</span><span class="w"> </span><span class="n">content</span><span class="w"> </span><span class="k">source</span><span class="w"> </span><span class="p">(</span><span class="k">or</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">git</span><span class="o">-</span><span class="n">backed</span><span class="w"> </span><span class="n">content</span><span class="w"> </span><span class="k">source</span><span class="p">)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="o">-</span><span class="w"> </span><span class="n">Target</span><span class="p">:</span><span class="w"> </span><span class="k">select</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">project</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="k">share</span><span class="w"> </span><span class="k">with</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="o">-</span><span class="w"> </span><span class="n">Optionally</span><span class="w"> </span><span class="n">filter</span><span class="w"> </span><span class="n">which</span><span class="w"> </span><span class="n">templates</span><span class="w"> </span><span class="k">are</span><span class="w"> </span><span class="n">shared</span><span class="w"> </span><span class="p">(</span><span class="k">by</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="k">or</span><span class="w"> </span><span class="n">tag</span><span class="p">)</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1">---</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="o">##</span><span class="w"> </span><span class="n">Approval</span><span class="w"> </span><span class="n">Policies</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="n">Approval</span><span class="w"> </span><span class="n">policies</span><span class="w"> </span><span class="k">add</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">human</span><span class="w"> </span><span class="n">approval</span><span class="w"> </span><span class="n">gate</span><span class="w"> </span><span class="k">before</span><span class="w"> </span><span class="n">provisioning</span><span class="p">.</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="o">**</span><span class="k">Create</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="n">assign</span><span class="w"> </span><span class="n">an</span><span class="w"> </span><span class="n">approval</span><span class="w"> </span><span class="n">policy</span><span class="p">:</span><span class="o">**</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="o">```</span><span class="n">bash</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="n">Service</span><span class="w"> </span><span class="n">Broker</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="n">Content</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">Policies</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="n">Policies</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="k">New</span><span class="w"> </span><span class="n">Policy</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="n">Approval</span><span class="w"> </span><span class="n">Policy</span>
 </code></pre></div></p>
 <p>Configuration:
 - Scope: project-level (all requests in the project) or catalog item-level (specific items)
 - Approver groups: AD groups (any member can approve)
 - Auto-reject if not approved within: 5 business days</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List approval policies via API</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="s2">&quot;https://vra-prod-01.example.local/policy/api/policies?type=com.vmware.policy.approval&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.content[] | {name: .name, scope: .scope, approvers: .definition.approvers}&#39;</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># List pending approvals</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span><span class="s2">&quot;https://vra-prod-01.example.local/approval/api/requests?status=PENDING&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.content[] | {id: .id, requester: .requestedBy, item: .catalogItemName}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># List approval policies via API</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="s2">&quot;https://vra-prod-01.example.local/policy/api/policies?type=com.vmware.policy.approval&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.content[] | {name: .name, scope: .scope, approvers: .definition.approvers}&#39;</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># List pending approvals</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span><span class="s2">&quot;https://vra-prod-01.example.local/approval/api/requests?status=PENDING&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.content[] | {id: .id, requester: .requestedBy, item: .catalogItemName}&#39;</span>
 </code></pre></div>
 <hr />
 <h2 id="reviewing-role-assignments-via-api">Reviewing Role Assignments via API<a class="headerlink" href="#reviewing-role-assignments-via-api" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># List all organisation-level role assignments</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="s2">&quot;https://vra-prod-01.example.local/csp/gateway/am/api/orgs/&lt;org-id&gt;/role-assignments&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.items[] | {principal: .principal, role: .role}&#39;</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># List project membership</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span><span class="s2">&quot;https://vra-prod-01.example.local/project-service/api/projects/&lt;project-id&gt;/members&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.members[] | {email: .email, role: .role}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List all organisation-level role assignments</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="s2">&quot;https://vra-prod-01.example.local/csp/gateway/am/api/orgs/&lt;org-id&gt;/role-assignments&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.items[] | {principal: .principal, role: .role}&#39;</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># List project membership</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span><span class="s2">&quot;https://vra-prod-01.example.local/project-service/api/projects/&lt;project-id&gt;/members&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.members[] | {email: .email, role: .role}&#39;</span>
 </code></pre></div>
 <p>Audit role assignments monthly — remove access for team members who have changed roles or left the organisation.</p>
 <hr />

@@ -3182,60 +3182,61 @@ Backup validation is the systematic process of confirming that backup data is in
     N --&gt; O[Application Verification]
     O --&gt; P[Test Report Generated]
     P --&gt; M</code></pre>
-┌───────────────────────────────── Data Protection — Backup Validation ─────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │     Backup validation: confirm jobs complete, data is intact, restores work before needed     │   │
-│   │              Automated: every job — checksums + VM boot test; evidence in job log             │   │
-│   │      Manual: quarterly — full application restore with user acceptance and signed report      │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Automated Validation             │  │            Manual Restore Testing           │   │
-│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
-│   │        Veeam SureBackup: boot VM test        │  │         Quarterly full restore test         │   │
-│   │         Commvault: snap verify mount         │  │         Application-level acceptance        │   │
-│   │        NBU bpverify: media integrity         │  │         User validates restored data        │   │
-│   │         Checksum validation on file          │  │          Document result + sign-off         │   │
-│   │         Alert on job failure or skip         │  │          Update test calendar entry         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   │       Tier       │      Method      │     Frequency     │ Success criteria │     Evidence     │   │
-│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
-│   │    Auto/basic    │  Job log check   │    Every backup   │   Job success    │  Job log entry   │   │
-│   │    Auto/deep     │  Mount/boot VM   │    Daily/weekly   │  VM boots clean  │  SureBackup log  │   │
-│   │      Manual      │   Full restore   │     Quarterly     │  App functional  │  Signed report   │   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    SureBackup  = Veeam automated recovery verification; boots VM from backup in isolated sandbox      │
-│    bpverify    = NetBackup command; reads backup image and verifies data integrity on media           │
-│    Checksum    = Hash of backup data; mismatch indicates corruption in backup storage                 │
-│    RTO         = Recovery Time Objective; max time to restore; verified in manual restore tests       │
-│    RPO         = Recovery Point Objective; max data loss; validated by backup job frequency           │
-│    Snap verify = Mount snapshot in sandbox and run application check scripts                          │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">Expected</span> <span class="n">output</span> <span class="n">columns</span><span class="p">:</span> <span class="p">`</span><span class="n">Name</span><span class="p">`</span> <span class="p">(</span><span class="n">VM</span> <span class="n">name</span><span class="p">),</span> <span class="p">`</span><span class="n">Status</span><span class="p">`</span> <span class="p">(</span><span class="n">Success</span> <span class="p">/</span> <span class="n">Warning</span> <span class="p">/</span> <span class="n">Failed</span><span class="p">),</span> <span class="n">timing</span><span class="p">.</span> <span class="n">Any</span> <span class="p">`</span><span class="n">Failed</span><span class="p">`</span> <span class="n">row</span> <span class="n">requires</span> <span class="n">immediate</span> <span class="n">investigation</span> <span class="n">and</span> <span class="n">re-run</span> <span class="n">after</span> <span class="n">remediation</span><span class="p">.</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">---</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c">## Commvault — Synthetic Full Verification</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="n">Commvault</span><span class="err">&#39;</span><span class="n">s</span> <span class="n">Data</span> <span class="n">Verification</span> <span class="n">runs</span> <span class="n">data</span> <span class="n">integrity</span> <span class="n">checks</span> <span class="n">on</span> <span class="n">backup</span> <span class="n">images</span> <span class="n">stored</span> <span class="k">in</span> <span class="n">the</span> <span class="n">CommVault</span> <span class="n">MediaAgent</span> <span class="n">without</span> <span class="n">requiring</span> <span class="n">a</span> <span class="n">full</span> <span class="n">restore</span><span class="p">.</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="p">```</span><span class="n">powershell</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c"># Trigger Data Verification from CommVault PowerShell SDK</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nv">$client</span> <span class="p">=</span> <span class="nb">Get-CVClient</span> <span class="n">-Name</span> <span class="s2">&quot;SQL-PROD-01&quot;</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="nv">$subClient</span> <span class="p">=</span> <span class="nb">Get-CVSubClient</span> <span class="n">-ClientName</span> <span class="s2">&quot;SQL-PROD-01&quot;</span> <span class="n">-AppName</span> <span class="s2">&quot;SQL Server&quot;</span> <span class="n">-Name</span> <span class="s2">&quot;default&quot;</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="c"># Queue a Data Verification job</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="nb">Start-CVDataVerification</span> <span class="n">-ClientName</span> <span class="s2">&quot;SQL-PROD-01&quot;</span> <span class="p">`</span>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    <span class="n">-SubClientName</span> <span class="s2">&quot;default&quot;</span> <span class="p">`</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    <span class="n">-AppName</span> <span class="s2">&quot;SQL Server&quot;</span> <span class="p">`</span>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    <span class="n">-VerificationType</span> <span class="s2">&quot;DataOnly&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────── Data Protection — Backup Validation ─────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │     Backup validation: confirm jobs complete, data is intact, restores work before needed     │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │              Automated: every job — checksums + VM boot test; evidence in job log             │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │      Manual: quarterly — full application restore with user acceptance and signed report      │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│                                                                                                       │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│                                                                                                       │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   │             Automated Validation             │  │            Manual Restore Testing           │   │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   │        Veeam SureBackup: boot VM test        │  │         Quarterly full restore test         │   │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   │         Commvault: snap verify mount         │  │         Application-level acceptance        │   │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │        NBU bpverify: media integrity         │  │         User validates restored data        │   │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │         Checksum validation on file          │  │          Document result + sign-off         │   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │         Alert on job failure or skip         │  │          Update test calendar entry         │   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│                                                                                                       │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   │       Tier       │      Method      │     Frequency     │ Success criteria │     Evidence     │   │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│   │    Auto/basic    │  Job log check   │    Every backup   │   Job success    │  Job log entry   │   │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│   │    Auto/deep     │  Mount/boot VM   │    Daily/weekly   │  VM boots clean  │  SureBackup log  │   │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│   │      Manual      │   Full restore   │     Quarterly     │  App functional  │  Signed report   │   │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│                                                                                                       │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│    Key terms:                                                                                         │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│                                                                                                       │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│    SureBackup  = Veeam automated recovery verification; boots VM from backup in isolated sandbox      │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│    bpverify    = NetBackup command; reads backup image and verifies data integrity on media           │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│    Checksum    = Hash of backup data; mismatch indicates corruption in backup storage                 │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│    RTO         = Recovery Time Objective; max time to restore; verified in manual restore tests       │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│    RPO         = Recovery Point Objective; max data loss; validated by backup job frequency           │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│    Snap verify = Mount snapshot in sandbox and run application check scripts                          │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│                                                                                                       │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">Expected</span> <span class="n">output</span> <span class="n">columns</span><span class="p">:</span> <span class="p">`</span><span class="n">Name</span><span class="p">`</span> <span class="p">(</span><span class="n">VM</span> <span class="n">name</span><span class="p">),</span> <span class="p">`</span><span class="n">Status</span><span class="p">`</span> <span class="p">(</span><span class="n">Success</span> <span class="p">/</span> <span class="n">Warning</span> <span class="p">/</span> <span class="n">Failed</span><span class="p">),</span> <span class="n">timing</span><span class="p">.</span> <span class="n">Any</span> <span class="p">`</span><span class="n">Failed</span><span class="p">`</span> <span class="n">row</span> <span class="n">requires</span> <span class="n">immediate</span> <span class="n">investigation</span> <span class="n">and</span> <span class="n">re-run</span> <span class="n">after</span> <span class="n">remediation</span><span class="p">.</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="p">---</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c">## Commvault — Synthetic Full Verification</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="n">Commvault</span><span class="err">&#39;</span><span class="n">s</span> <span class="n">Data</span> <span class="n">Verification</span> <span class="n">runs</span> <span class="n">data</span> <span class="n">integrity</span> <span class="n">checks</span> <span class="n">on</span> <span class="n">backup</span> <span class="n">images</span> <span class="n">stored</span> <span class="k">in</span> <span class="n">the</span> <span class="n">CommVault</span> <span class="n">MediaAgent</span> <span class="n">without</span> <span class="n">requiring</span> <span class="n">a</span> <span class="n">full</span> <span class="n">restore</span><span class="p">.</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="p">```</span><span class="n">powershell</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c"># Trigger Data Verification from CommVault PowerShell SDK</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="nv">$client</span> <span class="p">=</span> <span class="nb">Get-CVClient</span> <span class="n">-Name</span> <span class="s2">&quot;SQL-PROD-01&quot;</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="nv">$subClient</span> <span class="p">=</span> <span class="nb">Get-CVSubClient</span> <span class="n">-ClientName</span> <span class="s2">&quot;SQL-PROD-01&quot;</span> <span class="n">-AppName</span> <span class="s2">&quot;SQL Server&quot;</span> <span class="n">-Name</span> <span class="s2">&quot;default&quot;</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c"># Queue a Data Verification job</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="nb">Start-CVDataVerification</span> <span class="n">-ClientName</span> <span class="s2">&quot;SQL-PROD-01&quot;</span> <span class="p">`</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>    <span class="n">-SubClientName</span> <span class="s2">&quot;default&quot;</span> <span class="p">`</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>    <span class="n">-AppName</span> <span class="s2">&quot;SQL Server&quot;</span> <span class="p">`</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>    <span class="n">-VerificationType</span> <span class="s2">&quot;DataOnly&quot;</span>
 </code></pre></div></p>
 <p>For GUI-driven verification: <strong>CommCell Console → Backup Sets → Right-click subclient → Data Verification → Run Now</strong>.</p>
 <p>Verification checks:
@@ -3245,24 +3246,24 @@ Backup validation is the systematic process of confirming that backup data is in
 <hr />
 <h2 id="netbackup-bpverify-command-reference">NetBackup — <code>bpverify</code> Command Reference<a class="headerlink" href="#netbackup-bpverify-command-reference" title="Permanent link">&para;</a></h2>
 <p><code>bpverify</code> reads backup images from media and verifies data integrity without writing to disk. It is the primary validation tool in NetBackup environments.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Verify the most recent backup for a client</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>bpverify<span class="w"> </span>-client<span class="w"> </span>sql-prod-01.example.local<span class="w"> </span>-back_id<span class="w"> </span><span class="m">0</span><span class="w"> </span>-st<span class="w"> </span>FULL
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Verify a specific backup image by backup ID</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>bpverify<span class="w"> </span>-id<span class="w"> </span><span class="m">1716800000</span><span class="w"> </span>-client<span class="w"> </span>sql-prod-01.example.local
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Verify all backups in a date range</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>bpverify<span class="w"> </span>-client<span class="w"> </span>sql-prod-01.example.local<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span>-s<span class="w"> </span><span class="m">05</span>/01/2026<span class="w"> </span><span class="m">00</span>:00:00<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span>-e<span class="w"> </span><span class="m">05</span>/08/2026<span class="w"> </span><span class="m">23</span>:59:59
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># Verify and output results to a log file</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>bpverify<span class="w"> </span>-client<span class="w"> </span>sql-prod-01.example.local<span class="w"> </span>-back_id<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">  </span>-st<span class="w"> </span>FULL<span class="w"> </span>-l<span class="w"> </span>/var/log/netbackup/verify_<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.log
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># Check verification status / exit code</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Exit code: </span><span class="nv">$?</span><span class="s2">&quot;</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="c1"># 0 = success, 1 = partial failure, 2 = failure</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Verify the most recent backup for a client</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>bpverify<span class="w"> </span>-client<span class="w"> </span>sql-prod-01.example.local<span class="w"> </span>-back_id<span class="w"> </span><span class="m">0</span><span class="w"> </span>-st<span class="w"> </span>FULL
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Verify a specific backup image by backup ID</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>bpverify<span class="w"> </span>-id<span class="w"> </span><span class="m">1716800000</span><span class="w"> </span>-client<span class="w"> </span>sql-prod-01.example.local
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Verify all backups in a date range</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>bpverify<span class="w"> </span>-client<span class="w"> </span>sql-prod-01.example.local<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span>-s<span class="w"> </span><span class="m">05</span>/01/2026<span class="w"> </span><span class="m">00</span>:00:00<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span>-e<span class="w"> </span><span class="m">05</span>/08/2026<span class="w"> </span><span class="m">23</span>:59:59
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Verify and output results to a log file</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>bpverify<span class="w"> </span>-client<span class="w"> </span>sql-prod-01.example.local<span class="w"> </span>-back_id<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">  </span>-st<span class="w"> </span>FULL<span class="w"> </span>-l<span class="w"> </span>/var/log/netbackup/verify_<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.log
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># Check verification status / exit code</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Exit code: </span><span class="nv">$?</span><span class="s2">&quot;</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="c1"># 0 = success, 1 = partial failure, 2 = failure</span>
 </code></pre></div>
 <h3 id="bpverify-exit-code-reference"><code>bpverify</code> Exit Code Reference<a class="headerlink" href="#bpverify-exit-code-reference" title="Permanent link">&para;</a></h3>
 <table>
@@ -3457,67 +3458,67 @@ Backup validation is the systematic process of confirming that backup data is in
 <hr />
 <h2 id="alerting-on-failed-validations">Alerting on Failed Validations<a class="headerlink" href="#alerting-on-failed-validations" title="Permanent link">&para;</a></h2>
 <h3 id="veeam-powershell-alert-script">Veeam — PowerShell Alert Script<a class="headerlink" href="#veeam-powershell-alert-script" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Run after SureBackup jobs complete — alert on any failure</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">$sessions</span> <span class="p">=</span> <span class="nb">Get-VBRSureBackupSession</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="nv">$_</span><span class="p">.</span><span class="n">CreationTime</span> <span class="o">-gt</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddHours</span><span class="p">(-</span><span class="n">25</span><span class="p">)</span> <span class="o">-and</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="nv">$_</span><span class="p">.</span><span class="n">Result</span> <span class="o">-ne</span> <span class="s2">&quot;Success&quot;</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="p">}</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$s</span> <span class="k">in</span> <span class="nv">$sessions</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    <span class="nv">$body</span> <span class="p">=</span> <span class="s2">&quot;SureBackup FAILED: </span><span class="p">$(</span><span class="nv">$s</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2"> | Result: </span><span class="p">$(</span><span class="nv">$s</span><span class="p">.</span><span class="n">Result</span><span class="p">)</span><span class="s2"> | Time: </span><span class="p">$(</span><span class="nv">$s</span><span class="p">.</span><span class="n">CreationTime</span><span class="p">)</span><span class="s2">&quot;</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    <span class="nb">Send-MailMessage</span> <span class="n">-To</span> <span class="s2">&quot;backup-alerts@corp.local&quot;</span> <span class="p">`</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>        <span class="n">-From</span> <span class="s2">&quot;veeam-noreply@corp.local&quot;</span> <span class="p">`</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>        <span class="n">-Subject</span> <span class="s2">&quot;ALERT: Backup Validation Failed — </span><span class="p">$(</span><span class="nv">$s</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2">&quot;</span> <span class="p">`</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>        <span class="n">-Body</span> <span class="nv">$body</span> <span class="p">`</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>        <span class="n">-SmtpServer</span> <span class="s2">&quot;smtp.example.local&quot;</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Run after SureBackup jobs complete — alert on any failure</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">$sessions</span> <span class="p">=</span> <span class="nb">Get-VBRSureBackupSession</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="nv">$_</span><span class="p">.</span><span class="n">CreationTime</span> <span class="o">-gt</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddHours</span><span class="p">(-</span><span class="n">25</span><span class="p">)</span> <span class="o">-and</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="nv">$_</span><span class="p">.</span><span class="n">Result</span> <span class="o">-ne</span> <span class="s2">&quot;Success&quot;</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="p">}</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$s</span> <span class="k">in</span> <span class="nv">$sessions</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    <span class="nv">$body</span> <span class="p">=</span> <span class="s2">&quot;SureBackup FAILED: </span><span class="p">$(</span><span class="nv">$s</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2"> | Result: </span><span class="p">$(</span><span class="nv">$s</span><span class="p">.</span><span class="n">Result</span><span class="p">)</span><span class="s2"> | Time: </span><span class="p">$(</span><span class="nv">$s</span><span class="p">.</span><span class="n">CreationTime</span><span class="p">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    <span class="nb">Send-MailMessage</span> <span class="n">-To</span> <span class="s2">&quot;backup-alerts@corp.local&quot;</span> <span class="p">`</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>        <span class="n">-From</span> <span class="s2">&quot;veeam-noreply@corp.local&quot;</span> <span class="p">`</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>        <span class="n">-Subject</span> <span class="s2">&quot;ALERT: Backup Validation Failed — </span><span class="p">$(</span><span class="nv">$s</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2">&quot;</span> <span class="p">`</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>        <span class="n">-Body</span> <span class="nv">$body</span> <span class="p">`</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>        <span class="n">-SmtpServer</span> <span class="s2">&quot;smtp.example.local&quot;</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="p">}</span>
 </code></pre></div>
 <h3 id="netbackup-unix-alert-integration">NetBackup — UNIX Alert Integration<a class="headerlink" href="#netbackup-unix-alert-integration" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="ch">#!/bin/bash</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># /usr/local/bin/nbverify-alert.sh</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nv">LOGFILE</span><span class="o">=</span><span class="s2">&quot;/var/log/netbackup/verify_</span><span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span><span class="s2">.log&quot;</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>bpverify<span class="w"> </span>-client<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$1</span><span class="s2">&quot;</span><span class="w"> </span>-back_id<span class="w"> </span><span class="m">0</span><span class="w"> </span>-st<span class="w"> </span>FULL<span class="w"> </span>-l<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$LOGFILE</span><span class="s2">&quot;</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nv">EXIT</span><span class="o">=</span><span class="nv">$?</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="nv">$EXIT</span><span class="w"> </span>-ne<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;NetBackup bpverify FAILED for </span><span class="nv">$1</span><span class="s2"> — Exit: </span><span class="nv">$EXIT</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">    </span>mail<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;ALERT: NBU Validation Failure — </span><span class="nv">$1</span><span class="s2">&quot;</span><span class="w"> </span>backup-alerts@corp.local
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="k">fi</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="ch">#!/bin/bash</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># /usr/local/bin/nbverify-alert.sh</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nv">LOGFILE</span><span class="o">=</span><span class="s2">&quot;/var/log/netbackup/verify_</span><span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span><span class="s2">.log&quot;</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>bpverify<span class="w"> </span>-client<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$1</span><span class="s2">&quot;</span><span class="w"> </span>-back_id<span class="w"> </span><span class="m">0</span><span class="w"> </span>-st<span class="w"> </span>FULL<span class="w"> </span>-l<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$LOGFILE</span><span class="s2">&quot;</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nv">EXIT</span><span class="o">=</span><span class="nv">$?</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="nv">$EXIT</span><span class="w"> </span>-ne<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;NetBackup bpverify FAILED for </span><span class="nv">$1</span><span class="s2"> — Exit: </span><span class="nv">$EXIT</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">    </span>mail<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;ALERT: NBU Validation Failure — </span><span class="nv">$1</span><span class="s2">&quot;</span><span class="w"> </span>backup-alerts@corp.local
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="k">fi</span>
 </code></pre></div>
 <hr />
 <h2 id="validation-report-template">Validation Report Template<a class="headerlink" href="#validation-report-template" title="Permanent link">&para;</a></h2>
 <p>Generate and retain a validation report monthly. Minimum fields:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>BACKUP VALIDATION REPORT
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>Period:          YYYY-MM
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>Prepared by:     &lt;name&gt;
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>Reviewed by:     &lt;manager&gt;
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>AUTOMATED VALIDATION SUMMARY
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>  Total backup jobs:               ____
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>  Successful jobs:                 ____
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>  Failed jobs:                     ____
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>  Job success rate:                ____%
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>  SureBackup sessions run:         ____
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>  VMs verified (boot test):        ____
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>  SureBackup failures:             ____
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>MANUAL RESTORE TESTS
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>  File-level restores performed:   ____
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>  VM-level restores performed:     ____
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>  Application restores performed:  ____
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>  All tests passed (Y/N):          ____
-<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>
-<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>RPO COMPLIANCE
-<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>  Workloads with defined RPO:      ____
-<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>  Workloads meeting RPO this month:____
-<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>  RPO compliance rate:             ____%
-<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>
-<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a>FAILURES AND INCIDENTS
-<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a>  [List any validation failures, root cause, and resolution]
-<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a>
-<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a>SIGN-OFF
-<a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a>  Backup Admin:   ______________ Date: __________
-<a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a>  IT Manager:     ______________ Date: __________
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>BACKUP VALIDATION REPORT
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Period:          YYYY-MM
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Prepared by:     &lt;name&gt;
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Reviewed by:     &lt;manager&gt;
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>AUTOMATED VALIDATION SUMMARY
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>  Total backup jobs:               ____
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>  Successful jobs:                 ____
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>  Failed jobs:                     ____
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>  Job success rate:                ____%
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>  SureBackup sessions run:         ____
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>  VMs verified (boot test):        ____
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>  SureBackup failures:             ____
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>MANUAL RESTORE TESTS
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>  File-level restores performed:   ____
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>  VM-level restores performed:     ____
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>  Application restores performed:  ____
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>  All tests passed (Y/N):          ____
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>RPO COMPLIANCE
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>  Workloads with defined RPO:      ____
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>  Workloads meeting RPO this month:____
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>  RPO compliance rate:             ____%
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>FAILURES AND INCIDENTS
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>  [List any validation failures, root cause, and resolution]
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>
+<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a>SIGN-OFF
+<a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a>  Backup Admin:   ______________ Date: __________
+<a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a>  IT Manager:     ______________ Date: __________
 </code></pre></div>
 
 

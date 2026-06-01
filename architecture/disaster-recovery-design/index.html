@@ -3002,42 +3002,43 @@
     F --&gt;|No| J{RTO &lt; 24 hr?}
     J --&gt;|Yes| K["Pilot Light\n(scale up on failover)"]
     J --&gt;|No| L["Backup-Restore\n(periodic backup, manual restore process)"]</code></pre>
-┌─────────────────────────────── Architecture — Disaster Recovery Design ───────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │        DR design: select site topology and replication pattern to meet RPO/RTO targets        │   │
-│   │          Tiers: hot standby (&lt; 1 min RTO), warm (&lt; 4h), cold (&gt; 4h, data only backup)         │   │
-│   │       Replication: synchronous (zero RPO, latency cost) vs async (small RPO, no latency)      │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                   DR Tiers                   │  │             Replication Options             │   │
-│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
-│   │             Hot: always-on sync              │  │           Sync: zero RPO; ≤ 100km           │   │
-│   │            Warm: replicated async            │  │              Async: RPO minutes             │   │
-│   │              Cold: backup only               │  │             SRM / Zerto / vVols             │   │
-│   │             DR site sizing: N+x              │  │          Storage-level replication          │   │
-│   │            Test annually minimum             │  │           App-consistent snapshots          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   │       Tier       │       RPO        │        RTO        │       Cost       │    Technology    │   │
-│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
-│   │   Hot standby    │    Near zero     │      &lt; 15 min     │     Highest      │     Sync rep     │   │
-│   │   Warm standby   │     &lt; 15 min     │     1-4 hours     │      Medium      │    Async rep     │   │
-│   │   Cold standby   │    &lt; 24 hours    │     &gt; 4 hours     │      Lowest      │   Backup/tape    │   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    RPO          = Recovery Point Objective; max acceptable data loss; drives replication freq         │
-│    RTO          = Recovery Time Objective; max acceptable downtime; drives DR tier selection          │
-│    Synchronous  = Write confirmed only after replica ACK; zero data loss; limited by distance         │
-│    Asynchronous = Write confirmed locally; replica slightly behind; RPO = replication interval        │
-│    SRM          = VMware Site Recovery Manager; orchestrates VM failover between vCenter sites        │
-│    BCP          = Business Continuity Plan; broader than DR; includes people, process, comms          │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────────── Architecture — Disaster Recovery Design ───────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │        DR design: select site topology and replication pattern to meet RPO/RTO targets        │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │          Tiers: hot standby (&lt; 1 min RTO), warm (&lt; 4h), cold (&gt; 4h, data only backup)         │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │       Replication: synchronous (zero RPO, latency cost) vs async (small RPO, no latency)      │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│                                                                                                       │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│                                                                                                       │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   │                   DR Tiers                   │  │             Replication Options             │   │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   │             Hot: always-on sync              │  │           Sync: zero RPO; ≤ 100km           │   │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   │            Warm: replicated async            │  │              Async: RPO minutes             │   │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │              Cold: backup only               │  │             SRM / Zerto / vVols             │   │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │             DR site sizing: N+x              │  │          Storage-level replication          │   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │            Test annually minimum             │  │           App-consistent snapshots          │   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│                                                                                                       │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   │       Tier       │       RPO        │        RTO        │       Cost       │    Technology    │   │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│   │   Hot standby    │    Near zero     │      &lt; 15 min     │     Highest      │     Sync rep     │   │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│   │   Warm standby   │     &lt; 15 min     │     1-4 hours     │      Medium      │    Async rep     │   │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│   │   Cold standby   │    &lt; 24 hours    │     &gt; 4 hours     │      Lowest      │   Backup/tape    │   │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│                                                                                                       │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│    Key terms:                                                                                         │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│                                                                                                       │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│    RPO          = Recovery Point Objective; max acceptable data loss; drives replication freq         │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│    RTO          = Recovery Time Objective; max acceptable downtime; drives DR tier selection          │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│    Synchronous  = Write confirmed only after replica ACK; zero data loss; limited by distance         │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│    Asynchronous = Write confirmed locally; replica slightly behind; RPO = replication interval        │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│    SRM          = VMware Site Recovery Manager; orchestrates VM failover between vCenter sites        │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│    BCP          = Business Continuity Plan; broader than DR; includes people, process, comms          │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│                                                                                                       │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 ```</p>
 <p><strong>Design decisions for DR site topology:</strong></p>
 <table>

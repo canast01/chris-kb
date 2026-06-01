@@ -3385,58 +3385,59 @@
 <h2 id="switch-naming">Switch Naming<a class="headerlink" href="#switch-naming" title="Permanent link">&para;</a></h2>
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>&lt;site&gt;-san-sw&lt;nn&gt;
 </code></pre></div>
-┌──────────────────────────────── Brocade Fabric OS — Design Standards ─────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      FOS design standards for production SAN: topology, naming, ISL sizing, HA, security      │   │
-│   │        Topology: dual-fabric A/B design; no single-fabric dependency for storage access       │   │
-│   │         Domain IDs: statically assigned; Fabric A starts at 1, Fabric B starts at 100         │   │
-│   │         ISL sizing: minimum 2 ISLs per switch pair; trunk for bandwidth and redundancy        │   │
-│   │       Zone naming: host_alias_storage_alias format; no generic zone names in production       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Topology standards -&gt; naming conventions -&gt; ISL design -&gt; HA and redundancy rules                  │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │           Topology          │  │         Naming / IDs        │  │           HA / ISL          │   │
-│   │       Dual fabric A/B       │  │      Static domain IDs      │  │          Min 2 ISLs         │   │
-│   │       Core-edge design      │  │       Zone naming std       │  │         ISL trunking        │   │
-│   │       No single fabric      │  │        Alias per HBA        │  │        Director core        │   │
-│   │        Separate VSANs       │  │        Config naming        │  │        Redundant PSU        │   │
-│   │       Buffer planning       │  │       FW rev tracking       │  │        OOB mgmt path        │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    Core switches (directors) connect to all edge switches; no edge-to-edge ISLs                       │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │     Standard     │       Rule       │     Rationale     │       Tool       │      Notes       │   │
-│   │   Dual fabric    │    A+B always    │    HA for hosts   │  Multi-pathing   │  MPIO required   │   │
-│   │    Domain ID     │  Static assign   │   Predictability  │     portcfg      │  A=1-99, B=100+  │   │
-│   │    ISL trunk     │  Min 2 per pair  │     Redundancy    │    SANnav/CLI    │ Same speed ISLs  │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: dual directors at core · edge switches per row · redundant ISL paths                     │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Dual fabric    = Two independent FC fabrics (A and B); each host has one HBA in each               │
-│    Core-edge      = Directors at core; fixed-port switches at edge; no edge-to-edge ISLs              │
-│    Domain ID      = Statically assigned switch identifier; dynamic assignment risks reconfiguring     │
-│    ISL trunk      = Bundled ISLs between same switch pair for bandwidth and redundancy                │
-│    Zone naming    = Standard: srvname_hba0_arrayname_sp0; enables instant identification              │
-│    Alias          = WWN alias per HBA port; one alias per physical port, not per LUN                  │
-│    Buffer credit  = Must be planned for long-distance ISLs; insufficient credits cause congestion     │
-│    MPIO           = Multi-path I/O on host; uses both fabric A and B paths for redundancy             │
-│    OOB mgmt       = Out-of-band Ethernet management must be redundant and always accessible           │
-│    PSU redundancy = Each switch/director must have redundant power supplies from separate PDUs        │
-│    FW tracking    = Firmware version matrix maintained; all switches in fabric same minor version     │
-│    Config naming  = Zone config names include date/ticket reference for auditability                  │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌──────────────────────────────── Brocade Fabric OS — Design Standards ─────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │      FOS design standards for production SAN: topology, naming, ISL sizing, HA, security      │   │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │        Topology: dual-fabric A/B design; no single-fabric dependency for storage access       │   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │         Domain IDs: statically assigned; Fabric A starts at 1, Fabric B starts at 100         │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │         ISL sizing: minimum 2 ISLs per switch pair; trunk for bandwidth and redundancy        │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │       Zone naming: host_alias_storage_alias format; no generic zone names in production       │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│                                                                                                       │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│    Topology standards -&gt; naming conventions -&gt; ISL design -&gt; HA and redundancy rules                  │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│                                                                                                       │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│                                                                                                       │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│   │           Topology          │  │         Naming / IDs        │  │           HA / ISL          │   │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   │       Dual fabric A/B       │  │      Static domain IDs      │  │          Min 2 ISLs         │   │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │       Core-edge design      │  │       Zone naming std       │  │         ISL trunking        │   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │       No single fabric      │  │        Alias per HBA        │  │        Director core        │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │        Separate VSANs       │  │        Config naming        │  │        Redundant PSU        │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │       Buffer planning       │  │       FW rev tracking       │  │        OOB mgmt path        │   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│                                                                                                       │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│    Core switches (directors) connect to all edge switches; no edge-to-edge ISLs                       │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│                                                                                                       │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│                                                                                                       │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│   │     Standard     │       Rule       │     Rationale     │       Tool       │      Notes       │   │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│   │   Dual fabric    │    A+B always    │    HA for hosts   │  Multi-pathing   │  MPIO required   │   │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│   │    Domain ID     │  Static assign   │   Predictability  │     portcfg      │  A=1-99, B=100+  │   │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│   │    ISL trunk     │  Min 2 per pair  │     Redundancy    │    SANnav/CLI    │ Same speed ISLs  │   │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│                                                                                                       │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│    Physical: dual directors at core · edge switches per row · redundant ISL paths                     │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│                                                                                                       │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│    Key terms:                                                                                         │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│                                                                                                       │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│    Dual fabric    = Two independent FC fabrics (A and B); each host has one HBA in each               │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│    Core-edge      = Directors at core; fixed-port switches at edge; no edge-to-edge ISLs              │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│    Domain ID      = Statically assigned switch identifier; dynamic assignment risks reconfiguring     │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│    ISL trunk      = Bundled ISLs between same switch pair for bandwidth and redundancy                │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│    Zone naming    = Standard: srvname_hba0_arrayname_sp0; enables instant identification              │
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│    Alias          = WWN alias per HBA port; one alias per physical port, not per LUN                  │
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>│    Buffer credit  = Must be planned for long-distance ISLs; insufficient credits cause congestion     │
+<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>│    MPIO           = Multi-path I/O on host; uses both fabric A and B paths for redundancy             │
+<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>│    OOB mgmt       = Out-of-band Ethernet management must be redundant and always accessible           │
+<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>│    PSU redundancy = Each switch/director must have redundant power supplies from separate PDUs        │
+<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>│    FW tracking    = Firmware version matrix maintained; all switches in fabric same minor version     │
+<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>│    Config naming  = Zone config names include date/ticket reference for auditability                  │
+<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>│                                                                                                       │
+<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 ```</p>
 <hr />
 <h2 id="security-standards">Security Standards<a class="headerlink" href="#security-standards" title="Permanent link">&para;</a></h2>

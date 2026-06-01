@@ -4559,49 +4559,50 @@ Escalation reference covering Support Portal, When to Escalate, Generating a Sup
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Copy to a local machine for upload</span>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>scp<span class="w"> </span>root@vra-prod-01.example.local:/tmp/vracli-support-bundle*.tar.gz<span class="w"> </span>/tmp/
 </code></pre></div>
-┌──────────────────────────────────── Aria Automation — Escalation ─────────────────────────────────────┐
-│                                                                                                       │
-│  Escalate vRA issues when self-service diagnostics are exhausted and impact is unresolved.            │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Escalation Triggers              │  │          Prepare Before Escalating          │   │
-│   │          vRA service down &gt; 30 min           │  │       Support bundle (LCM logscraper)       │   │
-│   │      Data loss or corruption suspected       │  │         vRA version and patch level         │   │
-│   │         Upgrade failure mid-process          │  │        Timeline of events and changes       │   │
-│   │       Security breach or data exposure       │  │         Deployment events + pod logs        │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Open VMware SR with P1 priority for service-down; provide bundle and timeline.                       │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             VMware Support Path              │  │             Internal Escalation             │   │
-│   │         SR: my.vmware.com or portal          │  │      Platform team: notify stakeholders     │   │
-│   │       P1: live call with GSS engineer        │  │       Change freeze if upgrade-related      │   │
-│   │     TAM: escalate for critical accounts      │  │       DR: consider vRA failover if HA       │   │
-│   │        KB: search kb.vmware.com first        │  │        Post-incident: RCA within 48h        │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  vRA appliance cluster · LCM · Postgres · vIDM · vCenter · support upload endpoint                    │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  SR                = Support Request; formal case opened with VMware GSS                              │
-│  P1 priority       = Critical severity; service down with no workaround; live engineer call           │
-│  GSS               = Global Support Services; VMware technical support team                           │
-│  TAM               = Technical Account Manager; premium support contact for critical accounts         │
-│  LCM logscraper    = Diagnostic archive tool; collect before calling support                          │
-│  Support bundle    = Generated from VAMI or LCM; contains pod logs, DB state, configs                 │
-│  Change freeze     = Halt all non-critical changes during active incident investigation               │
-│  RCA               = Root Cause Analysis; post-incident document describing failure and fix           │
-│  vRA HA            = High Availability mode; second vRA node can serve if primary fails               │
-│  kb.vmware.com     = VMware Knowledge Base; search before opening SR to find known fixes              │
-│  Timeline          = Chronological record of events, changes, and symptoms before the issue           │
-│  Stakeholder notif = Communicate impact and ETA to application owners and business units              │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌──────────────────────────────────── Aria Automation — Escalation ─────────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  Escalate vRA issues when self-service diagnostics are exhausted and impact is unresolved.            │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│                                                                                                       │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │             Escalation Triggers              │  │          Prepare Before Escalating          │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │          vRA service down &gt; 30 min           │  │       Support bundle (LCM logscraper)       │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │      Data loss or corruption suspected       │  │         vRA version and patch level         │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │         Upgrade failure mid-process          │  │        Timeline of events and changes       │   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │       Security breach or data exposure       │  │         Deployment events + pod logs        │   │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│                                                                                                       │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│  Open VMware SR with P1 priority for service-down; provide bundle and timeline.                       │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│                                                                                                       │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                                                                                                       │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │             VMware Support Path              │  │             Internal Escalation             │   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │         SR: my.vmware.com or portal          │  │      Platform team: notify stakeholders     │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │       P1: live call with GSS engineer        │  │       Change freeze if upgrade-related      │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │     TAM: escalate for critical accounts      │  │       DR: consider vRA failover if HA       │   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │        KB: search kb.vmware.com first        │  │        Post-incident: RCA within 48h        │   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│                                                                                                       │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  vRA appliance cluster · LCM · Postgres · vIDM · vCenter · support upload endpoint                    │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│                                                                                                       │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  SR                = Support Request; formal case opened with VMware GSS                              │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│  P1 priority       = Critical severity; service down with no workaround; live engineer call           │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  GSS               = Global Support Services; VMware technical support team                           │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  TAM               = Technical Account Manager; premium support contact for critical accounts         │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  LCM logscraper    = Diagnostic archive tool; collect before calling support                          │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  Support bundle    = Generated from VAMI or LCM; contains pod logs, DB state, configs                 │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  Change freeze     = Halt all non-critical changes during active incident investigation               │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  RCA               = Root Cause Analysis; post-incident document describing failure and fix           │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  vRA HA            = High Availability mode; second vRA node can serve if primary fails               │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  kb.vmware.com     = VMware Knowledge Base; search before opening SR to find known fixes              │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  Timeline          = Chronological record of events, changes, and symptoms before the issue           │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  Stakeholder notif = Communicate impact and ETA to application owners and business units              │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│                                                                                                       │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 ```</p>
 <hr />
 <h2 id="useful-links">Useful Links<a class="headerlink" href="#useful-links" title="Permanent link">&para;</a></h2>

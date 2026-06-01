@@ -4744,61 +4744,62 @@ Health Checks reference covering Daily Health Checks, Weekly Health Checks, Pre-
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># Expected: all nodes state = &quot;ACTIVE&quot;</span>
 </code></pre></div>
-┌────────────────────────────── Aria Operations for Logs — Health Checks ───────────────────────────────┐
-│                                                                                                       │
-│  Daily vRLI health check: disk, ingestion rate, cluster nodes, alerts, and source flow.               │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                Cluster Health                │  │               Ingestion Health              │   │
-│   │     All nodes: green in Cluster section      │  │       Events/sec: steady baseline rate      │   │
-│   │        Disk: hot partition &lt;80% used         │  │      Sources: all expected sending logs     │   │
-│   │          CPU/RAM: under 80% average          │  │      vSphere sources: heartbeat recent      │   │
-│   │          NTP: all nodes time-synced          │  │       Drop rate: near zero if healthy       │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Alert and forwarding health confirm the notification pipeline is operational.                        │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                 Alert Health                 │  │              Integration Health             │   │
-│   │     Alerts: all enabled (none disabled)      │  │          Aria Ops connection: green         │   │
-│   │     Test alert: fire and receive notify      │  │      SIEM forward: test event received      │   │
-│   │      Alert history: no unexpected gaps       │  │        SSO: AD login test user works        │   │
-│   │        Webhook: HTTP 200 from target         │  │      Archive: last export job succeeded     │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  vRLI master/worker VMs · disk storage · NTP · ESXi syslog config · SIEM target                       │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Hot partition      = /storage/var/loginsight/ disk; fills with indexed log data                      │
-│  Events/sec         = Real-time ingestion rate; baseline varies by environment size                   │
-│  Drop rate          = Percentage of received syslog messages discarded; should be ~0%                 │
-│  Heartbeat          = vSphere agent sends periodic log; gap indicates source disconnected             │
-│  Cluster nodes      = Master + workers visible in Administration → Cluster section                    │
-│  Alert test         = Manually trigger alert query to confirm notification delivery                   │
-│  Webhook 200        = Successful HTTP response from notification target on alert fire                 │
-│  Archive job        = Scheduled task exporting logs to NFS/S3; check last success time                │
-│  Aria Ops conn      = vRLI integration with Aria Operations; shows in Aria Ops admin page             │
-│  SSO test           = Browser login test confirming LDAP/AD authentication still working              │
-│  SIEM test event    = Send synthetic log and verify it appears in SIEM after forwarding               │
-│  NTP sync           = All vRLI nodes must be NTP-synced; time skew breaks cluster consensus           │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">Via</span><span class="w"> </span><span class="n">UI</span><span class="p">:</span><span class="w"> </span><span class="o">**</span><span class="n">Administration</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="n">Agents</span><span class="o">**</span><span class="w"> </span><span class="err">—</span><span class="w"> </span><span class="n">agents</span><span class="w"> </span><span class="k">with</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="k">last</span><span class="w"> </span><span class="k">check</span><span class="o">-</span><span class="k">in</span><span class="w"> </span><span class="n">older</span><span class="w"> </span><span class="k">than</span><span class="w"> </span><span class="mi">15</span><span class="w"> </span><span class="n">minutes</span><span class="w"> </span><span class="k">are</span><span class="w"> </span><span class="n">potentially</span><span class="w"> </span><span class="n">offline</span><span class="p">.</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1">---</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="o">###</span><span class="w"> </span><span class="n">Alert</span><span class="w"> </span><span class="n">Definitions</span><span class="w"> </span><span class="n">Health</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="o">```</span><span class="n">bash</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="o">#</span><span class="w"> </span><span class="k">Check</span><span class="w"> </span><span class="n">that</span><span class="w"> </span><span class="k">all</span><span class="w"> </span><span class="n">alert</span><span class="w"> </span><span class="n">definitions</span><span class="w"> </span><span class="k">are</span><span class="w"> </span><span class="n">enabled</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="n">curl</span><span class="w"> </span><span class="o">-</span><span class="n">sk</span><span class="w"> </span><span class="o">-</span><span class="n">u</span><span class="w"> </span><span class="s1">&#39;admin:&lt;password&gt;&#39;</span><span class="w"> </span><span class="err">\</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span><span class="ss">&quot;https://vrli-prod-01.example.local/api/v2/alerts&quot;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="err">\</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span><span class="n">jq</span><span class="w"> </span><span class="s1">&#39;.alerts[] | select(.enabled == false) | {name: .name, enabled: .enabled}&#39;</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="o">#</span><span class="w"> </span><span class="k">Output</span><span class="w"> </span><span class="n">should</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">empty</span><span class="w"> </span><span class="err">—</span><span class="w"> </span><span class="k">no</span><span class="w"> </span><span class="n">alerts</span><span class="w"> </span><span class="n">should</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">disabled</span><span class="w"> </span><span class="n">unintentionally</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌────────────────────────────── Aria Operations for Logs — Health Checks ───────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  Daily vRLI health check: disk, ingestion rate, cluster nodes, alerts, and source flow.               │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│                                                                                                       │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │                Cluster Health                │  │               Ingestion Health              │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │     All nodes: green in Cluster section      │  │       Events/sec: steady baseline rate      │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │        Disk: hot partition &lt;80% used         │  │      Sources: all expected sending logs     │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │          CPU/RAM: under 80% average          │  │      vSphere sources: heartbeat recent      │   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │          NTP: all nodes time-synced          │  │       Drop rate: near zero if healthy       │   │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│                                                                                                       │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│  Alert and forwarding health confirm the notification pipeline is operational.                        │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│                                                                                                       │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                                                                                                       │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │                 Alert Health                 │  │              Integration Health             │   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │     Alerts: all enabled (none disabled)      │  │          Aria Ops connection: green         │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │     Test alert: fire and receive notify      │  │      SIEM forward: test event received      │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │      Alert history: no unexpected gaps       │  │        SSO: AD login test user works        │   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │        Webhook: HTTP 200 from target         │  │      Archive: last export job succeeded     │   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│                                                                                                       │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  vRLI master/worker VMs · disk storage · NTP · ESXi syslog config · SIEM target                       │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│                                                                                                       │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Hot partition      = /storage/var/loginsight/ disk; fills with indexed log data                      │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│  Events/sec         = Real-time ingestion rate; baseline varies by environment size                   │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  Drop rate          = Percentage of received syslog messages discarded; should be ~0%                 │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  Heartbeat          = vSphere agent sends periodic log; gap indicates source disconnected             │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  Cluster nodes      = Master + workers visible in Administration → Cluster section                    │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  Alert test         = Manually trigger alert query to confirm notification delivery                   │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  Webhook 200        = Successful HTTP response from notification target on alert fire                 │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  Archive job        = Scheduled task exporting logs to NFS/S3; check last success time                │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  Aria Ops conn      = vRLI integration with Aria Operations; shows in Aria Ops admin page             │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  SSO test           = Browser login test confirming LDAP/AD authentication still working              │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  SIEM test event    = Send synthetic log and verify it appears in SIEM after forwarding               │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  NTP sync           = All vRLI nodes must be NTP-synced; time skew breaks cluster consensus           │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│                                                                                                       │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">Via</span><span class="w"> </span><span class="n">UI</span><span class="p">:</span><span class="w"> </span><span class="o">**</span><span class="n">Administration</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="n">Agents</span><span class="o">**</span><span class="w"> </span><span class="err">—</span><span class="w"> </span><span class="n">agents</span><span class="w"> </span><span class="k">with</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="k">last</span><span class="w"> </span><span class="k">check</span><span class="o">-</span><span class="k">in</span><span class="w"> </span><span class="n">older</span><span class="w"> </span><span class="k">than</span><span class="w"> </span><span class="mi">15</span><span class="w"> </span><span class="n">minutes</span><span class="w"> </span><span class="k">are</span><span class="w"> </span><span class="n">potentially</span><span class="w"> </span><span class="n">offline</span><span class="p">.</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1">---</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="o">###</span><span class="w"> </span><span class="n">Alert</span><span class="w"> </span><span class="n">Definitions</span><span class="w"> </span><span class="n">Health</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="o">```</span><span class="n">bash</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="o">#</span><span class="w"> </span><span class="k">Check</span><span class="w"> </span><span class="n">that</span><span class="w"> </span><span class="k">all</span><span class="w"> </span><span class="n">alert</span><span class="w"> </span><span class="n">definitions</span><span class="w"> </span><span class="k">are</span><span class="w"> </span><span class="n">enabled</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="n">curl</span><span class="w"> </span><span class="o">-</span><span class="n">sk</span><span class="w"> </span><span class="o">-</span><span class="n">u</span><span class="w"> </span><span class="s1">&#39;admin:&lt;password&gt;&#39;</span><span class="w"> </span><span class="err">\</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span><span class="ss">&quot;https://vrli-prod-01.example.local/api/v2/alerts&quot;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="err">\</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span><span class="n">jq</span><span class="w"> </span><span class="s1">&#39;.alerts[] | select(.enabled == false) | {name: .name, enabled: .enabled}&#39;</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="o">#</span><span class="w"> </span><span class="k">Output</span><span class="w"> </span><span class="n">should</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">empty</span><span class="w"> </span><span class="err">—</span><span class="w"> </span><span class="k">no</span><span class="w"> </span><span class="n">alerts</span><span class="w"> </span><span class="n">should</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">disabled</span><span class="w"> </span><span class="n">unintentionally</span>
 </code></pre></div></p>
 <p>Via UI: <strong>Alerts → Alert Definitions</strong> — review the Enabled column and confirm no alerts have been accidentally disabled.</p>
 <hr />
@@ -4809,20 +4810,20 @@ Health Checks reference covering Daily Health Checks, Weekly Health Checks, Pre-
 <li><strong>Source coverage</strong>: Group by <code>hostname</code> → confirm all vCenter, NSX, and ESXi hostnames appear with recent events</li>
 <li><strong>Log gaps</strong>: Filter <code>Last 7 days</code> — any hostname with zero events in the past 24 hours is a potential problem</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Via API — get unique hosts seen in the last hour</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://vrli-prod-01.example.local/api/v2/events/ingest&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="s1">    &quot;query&quot;: &quot;&quot;,</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="s1">    &quot;start-time&quot;: &quot;&#39;</span><span class="k">$(</span>date<span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;1 hour ago&quot;</span><span class="w"> </span>+%s000<span class="k">)</span><span class="s1">&#39;&quot;,</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="s1">    &quot;end-time&quot;: &quot;&#39;</span><span class="k">$(</span>date<span class="w"> </span>+%s000<span class="k">)</span><span class="s1">&#39;&quot;,</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="s1">    &quot;content-pack-fields&quot;: [&quot;hostname&quot;],</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="s1">    &quot;limit&quot;: 0</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.fieldValues[] | .value&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Via API — get unique hosts seen in the last hour</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="s2">&quot;https://vrli-prod-01.example.local/api/v2/events/ingest&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="s1">    &quot;query&quot;: &quot;&quot;,</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="s1">    &quot;start-time&quot;: &quot;&#39;</span><span class="k">$(</span>date<span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;1 hour ago&quot;</span><span class="w"> </span>+%s000<span class="k">)</span><span class="s1">&#39;&quot;,</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="s1">    &quot;end-time&quot;: &quot;&#39;</span><span class="k">$(</span>date<span class="w"> </span>+%s000<span class="k">)</span><span class="s1">&#39;&quot;,</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="s1">    &quot;content-pack-fields&quot;: [&quot;hostname&quot;],</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="s1">    &quot;limit&quot;: 0</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.fieldValues[] | .value&#39;</span>
 </code></pre></div>
 <h3 id="notification-channel-test">Notification Channel Test<a class="headerlink" href="#notification-channel-test" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Administration → Notification Channels → select channel → Test
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Administration → Notification Channels → select channel → Test
 </code></pre></div>
 <p>Confirm email, webhook (Slack/Teams), or SNMP notifications are delivered successfully. Investigate delivery failures before they are needed during a real incident.</p>
 <hr />
@@ -4875,14 +4876,14 @@ Health Checks reference covering Daily Health Checks, Weekly Health Checks, Pre-
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Watch main runtime log for errors</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/loginsight/runtime.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|warn\|exception&quot;</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Check ingestion errors (dropped events, parsing failures)</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|drop\|fail&quot;</span><span class="w"> </span>/var/log/loginsight/ingestion.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Check Cassandra storage health</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/loginsight/cassandra/system.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|warn&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Watch main runtime log for errors</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/loginsight/runtime.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|warn\|exception&quot;</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Check ingestion errors (dropped events, parsing failures)</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|drop\|fail&quot;</span><span class="w"> </span>/var/log/loginsight/ingestion.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Check Cassandra storage health</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/loginsight/cassandra/system.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|warn&quot;</span>
 </code></pre></div>
 
 

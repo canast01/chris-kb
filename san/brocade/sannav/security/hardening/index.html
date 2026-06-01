@@ -3610,105 +3610,106 @@
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># Change default OS root password (if accessible)</span>
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>sudo<span class="w"> </span>passwd<span class="w"> </span>root
 </code></pre></div>
-┌───────────────────────────────── Brocade SANnav — Security Hardening ─────────────────────────────────┐
-│                                                                                                       │
-│  SANnav hardening: disable defaults, TACACS+ enforce, TLS, RBAC, patch management.                    │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Platform Hardening              │  │               Access Hardening              │   │
-│   │        Replace default admin password        │  │         TACACS+: no local admin use         │   │
-│   │           Disable HTTP; HTTPS only           │  │           RBAC: read-only for ops           │   │
-│   │          Disable unused OS services          │  │         API: IP whitelist source IPs        │   │
-│   │          OS firewall: port 443 only          │  │           Session timeout: 30 min           │   │
-│   │         TLS 1.2+ only; disable older         │  │               MFA via SAML SSO              │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Change defaults on day 1; restrict API access; enforce TACACS+ before production use.                │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │            Monitoring &amp; Alerting             │  │          Patch &amp; Update Management          │   │
-│   │        Audit log: all actions logged         │  │           Quarterly SANnav upgrade          │   │
-│   │         Failed logins: alert to SIEM         │  │           Check BCM PSIRTs monthly          │   │
-│   │         Config changes: diff + alert         │  │          OS patches: monthly cycle          │   │
-│   │         API token expiry: 8h default         │  │          Backup before any upgrade          │   │
-│   │        Cert expiry monitor: 60d warn         │  │            Test in staging first            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  SANnav Linux VM · vSphere host · management-only VLAN · TACACS+ server                               │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  TLS 1.2+        = minimum required; disable TLS 1.0/1.1 and SSL 3.0                                  │
-│  RBAC            = Role-Based Access Control; operator = read-only; admin = full                      │
-│  IP whitelist    = restrict SANnav REST API to known source IP ranges                                 │
-│  SAML SSO        = SANnav integrates with IdP; MFA enforced at IdP level                              │
-│  Session timeout = idle GUI/API session terminated after 30 minutes                                   │
-│  API token expiry= JWT expires after configurable period; 8 hours default                             │
-│  PSIRT           = Product Security Incident Response; Broadcom security advisories                   │
-│  Audit log       = all GUI clicks and API calls logged with user and timestamp                        │
-│  Config diff     = SANnav detects out-of-band zone changes and alerts                                 │
-│  Cert expiry     = TLS certificate monitored; 60-day warning before expiry                            │
-│  OS patches      = SANnav VM runs Linux; apply OS patches on monthly cycle                            │
-│  Staging test    = validate SANnav upgrade in non-prod before production rollout                      │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>---
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1">## 4. SSH Hardening</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="sb">```</span>bash
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>sudo<span class="w"> </span>vi<span class="w"> </span>/etc/ssh/sshd_config
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Recommended settings:</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>Protocol<span class="w"> </span><span class="m">2</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>PermitRootLogin<span class="w"> </span>no
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>PasswordAuthentication<span class="w"> </span>yes<span class="w">     </span><span class="c1"># or &#39;no&#39; if using SSH key auth</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>PubkeyAuthentication<span class="w"> </span>yes
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>PermitEmptyPasswords<span class="w"> </span>no
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>MaxAuthTries<span class="w"> </span><span class="m">3</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>LoginGraceTime<span class="w"> </span><span class="m">30</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>ClientAliveInterval<span class="w"> </span><span class="m">300</span><span class="w">        </span><span class="c1"># disconnect idle sessions after 5 minutes</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>ClientAliveCountMax<span class="w"> </span><span class="m">2</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>X11Forwarding<span class="w"> </span>no
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>AllowTcpForwarding<span class="w"> </span>no
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>AllowUsers<span class="w"> </span>admin<span class="w"> </span>sannav<span class="w">        </span><span class="c1"># restrict SSH to specific local accounts</span>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>sshd
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="c1"># Verify</span>
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>sudo<span class="w"> </span>sshd<span class="w"> </span>-T<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;permitrootlogin|passwordauthentication|protocol|maxauthtries&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌───────────────────────────────── Brocade SANnav — Security Hardening ─────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  SANnav hardening: disable defaults, TACACS+ enforce, TLS, RBAC, patch management.                    │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│                                                                                                       │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │              Platform Hardening              │  │               Access Hardening              │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │        Replace default admin password        │  │         TACACS+: no local admin use         │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │           Disable HTTP; HTTPS only           │  │           RBAC: read-only for ops           │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │          Disable unused OS services          │  │         API: IP whitelist source IPs        │   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │          OS firewall: port 443 only          │  │           Session timeout: 30 min           │   │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │         TLS 1.2+ only; disable older         │  │               MFA via SAML SSO              │   │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                                                                       │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│  Change defaults on day 1; restrict API access; enforce TACACS+ before production use.                │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                                                                                                       │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│                                                                                                       │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │            Monitoring &amp; Alerting             │  │          Patch &amp; Update Management          │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │        Audit log: all actions logged         │  │           Quarterly SANnav upgrade          │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │         Failed logins: alert to SIEM         │  │           Check BCM PSIRTs monthly          │   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │         Config changes: diff + alert         │  │          OS patches: monthly cycle          │   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   │         API token expiry: 8h default         │  │          Backup before any upgrade          │   │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│   │        Cert expiry monitor: 60d warn         │  │            Test in staging first            │   │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│                                                                                                       │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  SANnav Linux VM · vSphere host · management-only VLAN · TACACS+ server                               │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│                                                                                                       │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  TLS 1.2+        = minimum required; disable TLS 1.0/1.1 and SSL 3.0                                  │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  RBAC            = Role-Based Access Control; operator = read-only; admin = full                      │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  IP whitelist    = restrict SANnav REST API to known source IP ranges                                 │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  SAML SSO        = SANnav integrates with IdP; MFA enforced at IdP level                              │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  Session timeout = idle GUI/API session terminated after 30 minutes                                   │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  API token expiry= JWT expires after configurable period; 8 hours default                             │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  PSIRT           = Product Security Incident Response; Broadcom security advisories                   │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  Audit log       = all GUI clicks and API calls logged with user and timestamp                        │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  Config diff     = SANnav detects out-of-band zone changes and alerts                                 │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  Cert expiry     = TLS certificate monitored; 60-day warning before expiry                            │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│  OS patches      = SANnav VM runs Linux; apply OS patches on monthly cycle                            │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  Staging test    = validate SANnav upgrade in non-prod before production rollout                      │
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│                                                                                                       │
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>---
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1">## 4. SSH Hardening</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="sb">```</span>bash
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>sudo<span class="w"> </span>vi<span class="w"> </span>/etc/ssh/sshd_config
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Recommended settings:</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>Protocol<span class="w"> </span><span class="m">2</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>PermitRootLogin<span class="w"> </span>no
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>PasswordAuthentication<span class="w"> </span>yes<span class="w">     </span><span class="c1"># or &#39;no&#39; if using SSH key auth</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>PubkeyAuthentication<span class="w"> </span>yes
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>PermitEmptyPasswords<span class="w"> </span>no
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>MaxAuthTries<span class="w"> </span><span class="m">3</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>LoginGraceTime<span class="w"> </span><span class="m">30</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>ClientAliveInterval<span class="w"> </span><span class="m">300</span><span class="w">        </span><span class="c1"># disconnect idle sessions after 5 minutes</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>ClientAliveCountMax<span class="w"> </span><span class="m">2</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>X11Forwarding<span class="w"> </span>no
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>AllowTcpForwarding<span class="w"> </span>no
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>AllowUsers<span class="w"> </span>admin<span class="w"> </span>sannav<span class="w">        </span><span class="c1"># restrict SSH to specific local accounts</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>sshd
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="c1"># Verify</span>
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>sudo<span class="w"> </span>sshd<span class="w"> </span>-T<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;permitrootlogin|passwordauthentication|protocol|maxauthtries&quot;</span>
 </code></pre></div></p>
 <hr />
 <h2 id="5-os-patching">5. OS Patching<a class="headerlink" href="#5-os-patching" title="Permanent link">&para;</a></h2>
 <p>The SANnav appliance OS (CentOS/RHEL based) requires security patching independently of SANnav application upgrades:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check for available security updates</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>sudo<span class="w"> </span>yum<span class="w"> </span>updateinfo<span class="w"> </span>list<span class="w"> </span>security
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Apply security patches only (does not touch SANnav application packages)</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>sudo<span class="w"> </span>yum<span class="w"> </span>update<span class="w"> </span>--security<span class="w"> </span>-y
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Verify SANnav services still running after OS update</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>sannav<span class="w"> </span>status
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check for available security updates</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>sudo<span class="w"> </span>yum<span class="w"> </span>updateinfo<span class="w"> </span>list<span class="w"> </span>security
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Apply security patches only (does not touch SANnav application packages)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>sudo<span class="w"> </span>yum<span class="w"> </span>update<span class="w"> </span>--security<span class="w"> </span>-y
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Verify SANnav services still running after OS update</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>sannav<span class="w"> </span>status
 </code></pre></div>
 <p>Patch the OS quarterly at minimum. Critical OS CVEs (CVSS 9.0+) should be patched within 30 days of publication.</p>
 <hr />
 <h2 id="6-ntp-synchronization">6. NTP Synchronization<a class="headerlink" href="#6-ntp-synchronization" title="Permanent link">&para;</a></h2>
 <p>Correct time is essential for log correlation, event timestamps, and certificate validity:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check NTP synchronization</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>timedatectl<span class="w"> </span>status
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Expected: &quot;synchronized: yes&quot;, NTP service active</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># If not synchronized, configure NTP</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>sudo<span class="w"> </span>vi<span class="w"> </span>/etc/chrony.conf
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Add: server 10.10.0.10 prefer</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1">#       server 10.10.0.11</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>chronyd
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>chronyc<span class="w"> </span>tracking
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># Expected: Reference ID should match your NTP server, offset &lt; 1ms</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check NTP synchronization</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>timedatectl<span class="w"> </span>status
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Expected: &quot;synchronized: yes&quot;, NTP service active</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># If not synchronized, configure NTP</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>sudo<span class="w"> </span>vi<span class="w"> </span>/etc/chrony.conf
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Add: server 10.10.0.10 prefer</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1">#       server 10.10.0.11</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>chronyd
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>chronyc<span class="w"> </span>tracking
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># Expected: Reference ID should match your NTP server, offset &lt; 1ms</span>
 </code></pre></div>
 <hr />
 <h2 id="7-sannav-application-hardening">7. SANnav Application Hardening<a class="headerlink" href="#7-sannav-application-hardening" title="Permanent link">&para;</a></h2>
@@ -3736,21 +3737,21 @@
 <li>Navigate to <strong>Administration &gt; Security Settings &gt; Login Banner</strong>.</li>
 <li>Enter the banner text:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>WARNING: This system is for authorized use only.
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>All connections are monitored and recorded.
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>Unauthorized access or use is prohibited and may be subject to legal action.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>WARNING: This system is for authorized use only.
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>All connections are monitored and recorded.
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Unauthorized access or use is prohibited and may be subject to legal action.
 </code></pre></div>
 <ol>
 <li>Click <strong>Save</strong>. The banner appears on the SANnav login page.</li>
 </ol>
 <p>For SSH access, configure the OS banner:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>sudo<span class="w"> </span>vi<span class="w"> </span>/etc/issue.net
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># Add:</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># WARNING: Authorized access only. All activities are monitored and logged.</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>sudo<span class="w"> </span>vi<span class="w"> </span>/etc/ssh/sshd_config
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Banner /etc/issue.net</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>sshd
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>sudo<span class="w"> </span>vi<span class="w"> </span>/etc/issue.net
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># Add:</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># WARNING: Authorized access only. All activities are monitored and logged.</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>sudo<span class="w"> </span>vi<span class="w"> </span>/etc/ssh/sshd_config
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Banner /etc/issue.net</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>sshd
 </code></pre></div>
 <hr />
 <h2 id="hardening-checklist">Hardening Checklist<a class="headerlink" href="#hardening-checklist" title="Permanent link">&para;</a></h2>

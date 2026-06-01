@@ -4601,65 +4601,66 @@ Authentication reference covering Authentication Architecture, Active Directory 
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Browser → Aria Automation UI → VIDM (SAML redirect) → AD/LDAP → VIDM session → Aria Automation JWT
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>API clients → Aria Automation /csp/gateway/am/api/login → VIDM credentials → Bearer token
 </code></pre></div>
-┌────────────────────────────────── Aria Automation — Authentication ───────────────────────────────────┐
-│                                                                                                       │
-│  vRA authentication flows through vIDM (Workspace ONE) via SAML; local accounts are minimal.          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │            Authentication Methods            │  │               vIDM / SSO Flow               │   │
-│   │          Primary: SAML via vIDM/WS1          │  │        Browser → vRA → redirect vIDM        │   │
-│   │       API: Bearer JWT from CSP gateway       │  │        vIDM → LDAP/SAML IdP validate        │   │
-│   │        Local admin: break-glass only         │  │         vIDM returns SAML assertion         │   │
-│   │        MFA: enforced via vIDM policy         │  │     vRA validates assertion, issues JWT     │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  API authentication uses a short-lived JWT; service accounts use refresh tokens.                      │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                API Auth Flow                 │  │                MFA and Policy               │   │
-│   │        POST /csp/gateway/am/api/login        │  │       MFA: TOTP, push, or hardware key      │   │
-│   │        Payload: {username, password}         │  │      Policy: step-up for admin actions      │   │
-│   │      Returns: access_token (JWT/1h TTL)      │  │         Session timeout: 8h default         │   │
-│   │     Refresh: use refresh_token to renew      │  │        Failed logins: lockout after 5       │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  vIDM/WS1 appliance · vRA appliance · AD/LDAP directory · NTP (for SAML timestamps)                   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  vIDM              = VMware Identity Manager; SAML IdP for all Aria suite products                    │
-│  SAML assertion    = XML token vIDM returns after authenticating user; vRA validates signature        │
-│  JWT               = JSON Web Token; short-lived bearer token for vRA REST API calls                  │
-│  CSP gateway       = Cloud Services Platform auth gateway endpoint in vRA                             │
-│  Refresh token     = Long-lived token for service accounts; exchange for new access token             │
-│  MFA               = Multi-Factor Authentication; enforced via vIDM access policy                     │
-│  TOTP              = Time-based One-Time Password; one MFA method supported by vIDM                   │
-│  Break-glass admin = Local vRA admin account used only when vIDM is unavailable                       │
-│  Access policy     = vIDM policy defining auth method, MFA, and device requirements                   │
-│  Session timeout   = Duration before vRA redirects user back to vIDM for re-authentication            │
-│  Lockout           = Account locked after N failed logins; admin must unlock via vIDM                 │
-│  Token TTL         = Access token expires in 1 hour; refresh token lasts days/weeks                   │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>**Acquire<span class="w"> </span>a<span class="w"> </span>token<span class="w"> </span><span class="o">(</span>AD<span class="w"> </span>user<span class="o">)</span>:**
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="sb">```</span>bash
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span><span class="s2">&quot;https://vra-prod-01.example.local/csp/gateway/am/api/login&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;svc.vra@corp.local&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;,&quot;domain&quot;:&quot;corp.local&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.token&#39;</span><span class="k">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌────────────────────────────────── Aria Automation — Authentication ───────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  vRA authentication flows through vIDM (Workspace ONE) via SAML; local accounts are minimal.          │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│                                                                                                       │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │            Authentication Methods            │  │               vIDM / SSO Flow               │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │          Primary: SAML via vIDM/WS1          │  │        Browser → vRA → redirect vIDM        │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │       API: Bearer JWT from CSP gateway       │  │        vIDM → LDAP/SAML IdP validate        │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │        Local admin: break-glass only         │  │         vIDM returns SAML assertion         │   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │        MFA: enforced via vIDM policy         │  │     vRA validates assertion, issues JWT     │   │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│                                                                                                       │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│  API authentication uses a short-lived JWT; service accounts use refresh tokens.                      │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│                                                                                                       │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                                                                                                       │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │                API Auth Flow                 │  │                MFA and Policy               │   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │        POST /csp/gateway/am/api/login        │  │       MFA: TOTP, push, or hardware key      │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │        Payload: {username, password}         │  │      Policy: step-up for admin actions      │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │      Returns: access_token (JWT/1h TTL)      │  │         Session timeout: 8h default         │   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │     Refresh: use refresh_token to renew      │  │        Failed logins: lockout after 5       │   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│                                                                                                       │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  vIDM/WS1 appliance · vRA appliance · AD/LDAP directory · NTP (for SAML timestamps)                   │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│                                                                                                       │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  vIDM              = VMware Identity Manager; SAML IdP for all Aria suite products                    │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│  SAML assertion    = XML token vIDM returns after authenticating user; vRA validates signature        │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  JWT               = JSON Web Token; short-lived bearer token for vRA REST API calls                  │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  CSP gateway       = Cloud Services Platform auth gateway endpoint in vRA                             │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  Refresh token     = Long-lived token for service accounts; exchange for new access token             │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  MFA               = Multi-Factor Authentication; enforced via vIDM access policy                     │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  TOTP              = Time-based One-Time Password; one MFA method supported by vIDM                   │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  Break-glass admin = Local vRA admin account used only when vIDM is unavailable                       │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  Access policy     = vIDM policy defining auth method, MFA, and device requirements                   │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  Session timeout   = Duration before vRA redirects user back to vIDM for re-authentication            │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  Lockout           = Account locked after N failed logins; admin must unlock via vIDM                 │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  Token TTL         = Access token expires in 1 hour; refresh token lasts days/weeks                   │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│                                                                                                       │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>**Acquire<span class="w"> </span>a<span class="w"> </span>token<span class="w"> </span><span class="o">(</span>AD<span class="w"> </span>user<span class="o">)</span>:**
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="sb">```</span>bash
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="s2">&quot;https://vra-prod-01.example.local/csp/gateway/am/api/login&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;svc.vra@corp.local&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;,&quot;domain&quot;:&quot;corp.local&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.token&#39;</span><span class="k">)</span>
 </code></pre></div></p>
 <p><strong>Token validity:</strong> 8 hours by default. For long-running scripts, implement token refresh logic:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Refresh token before expiry (every 7 hours)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="s2">&quot;https://vra-prod-01.example.local/csp/gateway/am/api/login&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;svc-vra-api&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;,&quot;domain&quot;:&quot;System Domain&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.token&#39;</span><span class="k">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Refresh token before expiry (every 7 hours)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="s2">&quot;https://vra-prod-01.example.local/csp/gateway/am/api/login&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;svc-vra-api&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;,&quot;domain&quot;:&quot;System Domain&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.token&#39;</span><span class="k">)</span>
 </code></pre></div>
 <hr />
 <h2 id="api-service-account">API Service Account<a class="headerlink" href="#api-service-account" title="Permanent link">&para;</a></h2>
@@ -4712,15 +4713,15 @@ Authentication reference covering Authentication Architecture, Active Directory 
 <hr />
 <h2 id="certificate-trust-for-api-clients">Certificate Trust for API Clients<a class="headerlink" href="#certificate-trust-for-api-clients" title="Permanent link">&para;</a></h2>
 <p>Aria Automation uses TLS for all API endpoints. Clients must trust the CA that signed the Aria Automation certificate:</p>
-<h2 id="add-aria-automation-ca-to-the-os-trust-store-on-a-linux-client-cp-internal-capem-usrlocalshareca-certificatesinternal-cacrt-update-ca-certificates-debianubuntu-python-clients-import-requests-requestsgethttpsvra-prod-01examplelocaliaasapizones-headersauthorization-fbearer-token-verifyetcsslcertsca-certificatescrt"><div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Add Aria Automation CA to the OS trust store on a Linux client</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>cp<span class="w"> </span>internal-ca.pem<span class="w"> </span>/usr/local/share/ca-certificates/internal-ca.crt
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>update-ca-certificates<span class="w">   </span><span class="c1"># Debian/Ubuntu</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Python clients</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>import<span class="w"> </span>requests
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>requests.get<span class="o">(</span><span class="s2">&quot;https://vra-prod-01.example.local/iaas/api/zones&quot;</span>,
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">             </span><span class="nv">headers</span><span class="o">={</span><span class="s2">&quot;Authorization&quot;</span>:<span class="w"> </span>f<span class="s2">&quot;Bearer {token}&quot;</span><span class="o">}</span>,
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">             </span><span class="nv">verify</span><span class="o">=</span><span class="s2">&quot;/etc/ssl/certs/ca-certificates.crt&quot;</span><span class="o">)</span>
+<h2 id="add-aria-automation-ca-to-the-os-trust-store-on-a-linux-client-cp-internal-capem-usrlocalshareca-certificatesinternal-cacrt-update-ca-certificates-debianubuntu-python-clients-import-requests-requestsgethttpsvra-prod-01examplelocaliaasapizones-headersauthorization-fbearer-token-verifyetcsslcertsca-certificatescrt"><div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Add Aria Automation CA to the OS trust store on a Linux client</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>cp<span class="w"> </span>internal-ca.pem<span class="w"> </span>/usr/local/share/ca-certificates/internal-ca.crt
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>update-ca-certificates<span class="w">   </span><span class="c1"># Debian/Ubuntu</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Python clients</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>import<span class="w"> </span>requests
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>requests.get<span class="o">(</span><span class="s2">&quot;https://vra-prod-01.example.local/iaas/api/zones&quot;</span>,
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">             </span><span class="nv">headers</span><span class="o">={</span><span class="s2">&quot;Authorization&quot;</span>:<span class="w"> </span>f<span class="s2">&quot;Bearer {token}&quot;</span><span class="o">}</span>,
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">             </span><span class="nv">verify</span><span class="o">=</span><span class="s2">&quot;/etc/ssl/certs/ca-certificates.crt&quot;</span><span class="o">)</span>
 </code></pre></div><a class="headerlink" href="#add-aria-automation-ca-to-the-os-trust-store-on-a-linux-client-cp-internal-capem-usrlocalshareca-certificatesinternal-cacrt-update-ca-certificates-debianubuntu-python-clients-import-requests-requestsgethttpsvra-prod-01examplelocaliaasapizones-headersauthorization-fbearer-token-verifyetcsslcertsca-certificatescrt" title="Permanent link">&para;</a></h2>
 <h2 id="related-reference">Related Reference<a class="headerlink" href="#related-reference" title="Permanent link">&para;</a></h2>
 <ul>

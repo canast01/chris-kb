@@ -3473,64 +3473,65 @@
 <h2 id="switch-naming">Switch Naming<a class="headerlink" href="#switch-naming" title="Permanent link">&para;</a></h2>
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>&lt;site&gt;-mds-sw&lt;nn&gt;
 </code></pre></div>
-┌────────────────────────────────── Cisco MDS 9000 — Design Standards ──────────────────────────────────┐
-│                                                                                                       │
-│  MDS design principles: dual-fabric A/B, VSAN per workload, PortChannel ISLs, ISSU.                   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                Fabric Design                 │  │                 VSAN Design                 │   │
-│   │          Dual fabric A and B always          │  │          One VSAN per workload type         │   │
-│   │       No single switch failure impact        │  │         VSAN 1 never used: reserved         │   │
-│   │         ISL PortChannel: min 2 ports         │  │         Prod/dev/test separate VSAN         │   │
-│   │          Over-subscription: 7:1 max          │  │         VSAN QoS: priority per VSAN         │   │
-│   │          Directors: 9706/9710/9718           │  │             FCoE: separate VSAN             │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Dual fabric is non-negotiable; VSAN per workload prevents blast-radius cross-talk.                   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                 Zone Design                  │  │            Operational Standards            │   │
-│   │         WWN zoning: not port zoning          │  │          ISSU upgrade: all upgrades         │   │
-│   │          Single initiator per zone           │  │          TACACS+ via ISE: mandatory         │   │
-│   │          Alias: device name not WWN          │  │           NX-OS: &lt; 2 versions lag           │   │
-│   │         Default deny: no open zones          │  │          SNMPv3 only: disable v1/v2         │   │
-│   │            Zone set: one per VSAN            │  │         Backup: config + zone daily         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  MDS director pair (A+B) · dual supervisor per director · SFP transceivers · FC cables                │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Dual fabric     = two independent FC fabrics; every host and array dual-homed                        │
-│  VSAN            = Virtual SAN; one VSAN per workload (prod/dev/test separate)                        │
-│  VSAN 1          = default VSAN; avoid using it; reserved for management                              │
-│  PortChannel ISL = bundled ISLs; PortChannel1 is recommended minimum 2 links                          │
-│  7:1             = recommended over-subscription ratio for FC storage traffic                         │
-│  WWN zoning      = zone by HBA World Wide Name; survives port changes                                 │
-│  Single initiator= one HBA per zone; prevents initiator-to-initiator traffic                          │
-│  Device alias    = human-readable name for WWN; managed via CFS distribution                          │
-│  Default deny    = no zone = no communication; strict zone policy                                     │
-│  ISSU            = In-Service Software Upgrade; required for all NX-OS upgrades                       │
-│  TACACS+ via ISE = Cisco ISE provides TACACS+ for all MDS admin auth                                  │
-│  Zone set        = one active zone set per VSAN at a time; backup sets inactive                       │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## ISL Standards
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>| Parameter | Standard |
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>|---|---|
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>| Port-channel ISLs | Minimum 2 physical links per channel group |
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>| ISL speed | 32G Fibre Channel minimum for new deployments |
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| Load balancing | Source-ID/Destination-ID exchange-based (`port-channel load-balance src-dst-oxid`) |
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>| Trunk mode | Enabled on ISL ports: `switchport trunk mode on` |
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Verify port-channel ISL:
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>```bash
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>show port-channel summary
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>show interface san-port-channel 1
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌────────────────────────────────── Cisco MDS 9000 — Design Standards ──────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  MDS design principles: dual-fabric A/B, VSAN per workload, PortChannel ISLs, ISSU.                   │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│                                                                                                       │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │                Fabric Design                 │  │                 VSAN Design                 │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │          Dual fabric A and B always          │  │          One VSAN per workload type         │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │       No single switch failure impact        │  │         VSAN 1 never used: reserved         │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │         ISL PortChannel: min 2 ports         │  │         Prod/dev/test separate VSAN         │   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │          Over-subscription: 7:1 max          │  │         VSAN QoS: priority per VSAN         │   │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │          Directors: 9706/9710/9718           │  │             FCoE: separate VSAN             │   │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                                                                       │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│  Dual fabric is non-negotiable; VSAN per workload prevents blast-radius cross-talk.                   │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                                                                                                       │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│                                                                                                       │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │                 Zone Design                  │  │            Operational Standards            │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │         WWN zoning: not port zoning          │  │          ISSU upgrade: all upgrades         │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │          Single initiator per zone           │  │          TACACS+ via ISE: mandatory         │   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │          Alias: device name not WWN          │  │           NX-OS: &lt; 2 versions lag           │   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   │         Default deny: no open zones          │  │          SNMPv3 only: disable v1/v2         │   │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│   │            Zone set: one per VSAN            │  │         Backup: config + zone daily         │   │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│                                                                                                       │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  MDS director pair (A+B) · dual supervisor per director · SFP transceivers · FC cables                │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│                                                                                                       │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  Dual fabric     = two independent FC fabrics; every host and array dual-homed                        │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  VSAN            = Virtual SAN; one VSAN per workload (prod/dev/test separate)                        │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  VSAN 1          = default VSAN; avoid using it; reserved for management                              │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  PortChannel ISL = bundled ISLs; PortChannel1 is recommended minimum 2 links                          │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  7:1             = recommended over-subscription ratio for FC storage traffic                         │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  WWN zoning      = zone by HBA World Wide Name; survives port changes                                 │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  Single initiator= one HBA per zone; prevents initiator-to-initiator traffic                          │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  Device alias    = human-readable name for WWN; managed via CFS distribution                          │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  Default deny    = no zone = no communication; strict zone policy                                     │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  ISSU            = In-Service Software Upgrade; required for all NX-OS upgrades                       │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│  TACACS+ via ISE = Cisco ISE provides TACACS+ for all MDS admin auth                                  │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  Zone set        = one active zone set per VSAN at a time; backup sets inactive                       │
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│                                                                                                       │
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>## ISL Standards
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>| Parameter | Standard |
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>|---|---|
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>| Port-channel ISLs | Minimum 2 physical links per channel group |
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>| ISL speed | 32G Fibre Channel minimum for new deployments |
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>| Load balancing | Source-ID/Destination-ID exchange-based (`port-channel load-balance src-dst-oxid`) |
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>| Trunk mode | Enabled on ISL ports: `switchport trunk mode on` |
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>Verify port-channel ISL:
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>```bash
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>show port-channel summary
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>show interface san-port-channel 1
 </code></pre></div></p>
 <h2 id="aaa-authentication-standards">AAA / Authentication Standards<a class="headerlink" href="#aaa-authentication-standards" title="Permanent link">&para;</a></h2>
 <table>

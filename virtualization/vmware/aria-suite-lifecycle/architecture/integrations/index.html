@@ -4528,77 +4528,78 @@ Integrations reference covering vCenter Server, NSX-T Integration (Optional), SM
 <a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│     └──────────┘ └──────────┘   └─────────────┘                 │
 <a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>└─────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-┌───────────────────────────────────── Aria Suite LCM Integrations ─────────────────────────────────────┐
-│                                                                                                       │
-│  vIDM, vCenter, all Aria products, NFS/S3 content store integrations for LCM.                         │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Core Platform Integrations          │  │                Content Store                │   │
-│   │         vCenter: deploy product VMs          │  │            NFS: local PAK storage           │   │
-│   │          vIDM: SSO for all products          │  │            S3: cloud depot option           │   │
-│   │          DNS: FQDN resolution check          │  │           VMware online depot sync          │   │
-│   │          NTP: time sync validation           │  │         SFTP: custom content source         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  vCenter and vIDM are mandatory; content store provides PAK files for all products.                   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Aria Product Integrations           │  │            Certificate Authority            │   │
-│   │           vROps: deploy + upgrade            │  │            Import CA cert to LCM            │   │
-│   │            vRLI: deploy + upgrade            │  │            LCM pushes to products           │   │
-│   │            vRA: deploy + upgrade             │  │          Cert rotation orchestrated         │   │
-│   │            vRNI: deploy + upgrade            │  │            Expired cert alerting            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  LCM VM on vSphere; vCenter cluster; NFS/S3 for content; CA for cert signing                          │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  vCenter Integration = LCM uses vCenter API to deploy product VMs and check resources                 │
-│  vIDM Integration    = LCM registers all products with vIDM for unified SSO                           │
-│  NFS Content Store   = Local file share holding PAK/OVA files for offline install                     │
-│  S3 Depot            = Cloud object store as alternative content source for LCM                       │
-│  SFTP Content Source = Custom SFTP server as content source for PAK delivery                          │
-│  Online Depot        = VMware Customer Connect; LCM syncs PAK catalog from here                       │
-│  CA Import           = Trusted CA cert uploaded to LCM for cert validation                            │
-│  Cert Push           = LCM distributes assigned cert to all product nodes                             │
-│  Cert Expiry Alert   = LCM tracks cert validity dates and warns on approach                           │
-│  DNS Integration     = LCM validates FQDN resolution before deploying each product                    │
-│  NTP Integration     = LCM checks time sync on LCM and target product VMs                             │
-│  Product Version     = LCM tracks deployed version; drives upgrade PAK selection                      │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## NSX-T Integration (Optional)
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>If LCM-deployed products require new overlay segments:
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>1. LCM → Settings → NSX-T → Add NSX-T Manager
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>2. Provide NSX-T Manager FQDN and credentials
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>3. LCM can auto-provision overlay segments for Aria product deployment
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>## SMTP Configuration
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Configure email notifications for upgrade alerts and certificate expiry warnings:
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>1. LCM → Settings → My VMware → SMTP Settings
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>2. Enter relay host, port (25/587), and credentials if required
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>3. Set a sender address and notification recipient list
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>Test SMTP: LCM → Settings → SMTP → Send Test Email.
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>## NFS Binary Repository
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>LCM stores downloaded product bundles on an NFS share:
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>```bash
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a># Verify NFS mount from LCM appliance
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>df -h /data
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>mount | grep /data
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a># Should show: &lt;nfs-server&gt;:/lcm-repo on /data type nfs
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a># Check available space (requires &gt; 50 GB free per product version)
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>du -sh /data/*
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌───────────────────────────────────── Aria Suite LCM Integrations ─────────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  vIDM, vCenter, all Aria products, NFS/S3 content store integrations for LCM.                         │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│                                                                                                       │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │          Core Platform Integrations          │  │                Content Store                │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │         vCenter: deploy product VMs          │  │            NFS: local PAK storage           │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │          vIDM: SSO for all products          │  │            S3: cloud depot option           │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │          DNS: FQDN resolution check          │  │           VMware online depot sync          │   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │          NTP: time sync validation           │  │         SFTP: custom content source         │   │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│                                                                                                       │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│  vCenter and vIDM are mandatory; content store provides PAK files for all products.                   │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│                                                                                                       │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                                                                                                       │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │          Aria Product Integrations           │  │            Certificate Authority            │   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │           vROps: deploy + upgrade            │  │            Import CA cert to LCM            │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │            vRLI: deploy + upgrade            │  │            LCM pushes to products           │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │            vRA: deploy + upgrade             │  │          Cert rotation orchestrated         │   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │            vRNI: deploy + upgrade            │  │            Expired cert alerting            │   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│                                                                                                       │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  LCM VM on vSphere; vCenter cluster; NFS/S3 for content; CA for cert signing                          │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│                                                                                                       │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  vCenter Integration = LCM uses vCenter API to deploy product VMs and check resources                 │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│  vIDM Integration    = LCM registers all products with vIDM for unified SSO                           │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  NFS Content Store   = Local file share holding PAK/OVA files for offline install                     │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  S3 Depot            = Cloud object store as alternative content source for LCM                       │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  SFTP Content Source = Custom SFTP server as content source for PAK delivery                          │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  Online Depot        = VMware Customer Connect; LCM syncs PAK catalog from here                       │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  CA Import           = Trusted CA cert uploaded to LCM for cert validation                            │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  Cert Push           = LCM distributes assigned cert to all product nodes                             │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  Cert Expiry Alert   = LCM tracks cert validity dates and warns on approach                           │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  DNS Integration     = LCM validates FQDN resolution before deploying each product                    │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  NTP Integration     = LCM checks time sync on LCM and target product VMs                             │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  Product Version     = LCM tracks deployed version; drives upgrade PAK selection                      │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│                                                                                                       │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>## NSX-T Integration (Optional)
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>If LCM-deployed products require new overlay segments:
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>1. LCM → Settings → NSX-T → Add NSX-T Manager
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>2. Provide NSX-T Manager FQDN and credentials
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>3. LCM can auto-provision overlay segments for Aria product deployment
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>## SMTP Configuration
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>Configure email notifications for upgrade alerts and certificate expiry warnings:
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>1. LCM → Settings → My VMware → SMTP Settings
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>2. Enter relay host, port (25/587), and credentials if required
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>3. Set a sender address and notification recipient list
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>Test SMTP: LCM → Settings → SMTP → Send Test Email.
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>## NFS Binary Repository
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>LCM stores downloaded product bundles on an NFS share:
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>```bash
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a># Verify NFS mount from LCM appliance
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>df -h /data
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>mount | grep /data
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a># Should show: &lt;nfs-server&gt;:/lcm-repo on /data type nfs
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a># Check available space (requires &gt; 50 GB free per product version)
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>du -sh /data/*
 </code></pre></div></p>
 <p>If NFS becomes unavailable: LCM upgrades will fail. Ensure NFS server HA (or VMware datastore-backed NFS).</p>
 <h2 id="proxy-offline-depot">Proxy / Offline Depot<a class="headerlink" href="#proxy-offline-depot" title="Permanent link">&para;</a></h2>

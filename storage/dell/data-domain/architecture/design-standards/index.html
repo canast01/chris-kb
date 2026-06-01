@@ -4288,51 +4288,52 @@ Standards reference covering Sizing Considerations, MTree Naming Convention, DD 
     veeamProd --&gt;|"DD Boost SU"| suVeeam["Storage Unit: su-veeam-prod\nUser: ddboost-veeam"]
     nbOracle --&gt;|"DD Boost SU"| suNB["Storage Unit: su-netbackup-ora\nUser: ddboost-netbackup"]
     cvSQL --&gt;|"DD Boost SU"| suCV["Storage Unit: su-commvault-sql\nUser: ddboost-commvault"]</code></pre>
-┌────────────────────────────────── Dell Data Domain Design Standards ──────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │            Size DD at 2× expected logical retention to account for dedup variation            │   │
-│   │            Separate MTrees per backup application or environment for quota control            │   │
-│   │           Replication: active site primary → passive site DR; test restore quarterly          │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Sizing Standards               │  │               Layout Standards              │   │
-│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
-│   │         2× logical retention in raw          │  │              MTree per app/env              │   │
-│   │         Plan for 10–30x dedup ratio          │  │            MTree quotas enforced            │   │
-│   │           Leave 20% free headroom            │  │            NFS exports per MTree            │   │
-│   │         DD Boost preferred protocol          │  │            DD Boost users per app           │   │
-│   │           NVRAM: do not exceed 80%           │  │            Replication per MTree            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   │     Standard     │      Value       │       Reason      │      Owner       │      Review      │   │
-│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
-│   │   Raw headroom   │      &gt; 20%       │   Dedup overhead  │   Backup team    │     Monthly      │   │
-│   │   MTree quotas   │ Per environment  │  Prevent runaway  │   Backup team    │    Quarterly     │   │
-│   │   Rep schedule   │  4-hour RPO max  │     DR target     │   Backup team    │      Annual      │   │
-│   │   Restore test   │    Quarterly     │     Verify DR     │   Backup team    │     Per test     │   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Dedup ratio      = Logical data stored ÷ physical space used; 10–30x typical for backup            │
-│    20% headroom     = DDOS performance degrades when filesystem &gt; 80% full; always leave buffer       │
-│    MTree quota      = Soft/hard limits on MTree logical capacity; prevents one app starving others    │
-│    DD Boost protocol= Preferred over NFS for backup; offloads dedup; uses less network bandwidth      │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">Each</span><span class="w"> </span><span class="k">storage</span><span class="w"> </span><span class="n">unit</span><span class="w"> </span><span class="n">maps</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">exactly</span><span class="w"> </span><span class="n">one</span><span class="w"> </span><span class="n">MTree</span><span class="p">.</span><span class="w"> </span><span class="k">Create</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">MTree</span><span class="w"> </span><span class="k">first</span><span class="p">,</span><span class="w"> </span><span class="k">then</span><span class="w"> </span><span class="k">create</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">storage</span><span class="w"> </span><span class="n">unit</span><span class="w"> </span><span class="n">pointing</span><span class="w"> </span><span class="k">at</span><span class="w"> </span><span class="n">it</span><span class="p">.</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="o">##</span><span class="w"> </span><span class="n">Replication</span><span class="w"> </span><span class="n">Context</span><span class="w"> </span><span class="n">Naming</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">Pattern</span><span class="p">:</span><span class="w"> </span><span class="o">`&lt;</span><span class="n">src</span><span class="o">-</span><span class="n">dd</span><span class="o">-</span><span class="n">hostname</span><span class="o">&gt;-</span><span class="k">to</span><span class="o">-&lt;</span><span class="n">dst</span><span class="o">-</span><span class="n">dd</span><span class="o">-</span><span class="n">hostname</span><span class="o">&gt;-&lt;</span><span class="n">mtree</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;`</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="n">Example</span><span class="p">:</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="o">```</span><span class="nb">text</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="n">dd9900</span><span class="o">-</span><span class="n">prod</span><span class="o">-</span><span class="k">to</span><span class="o">-</span><span class="n">dd6400</span><span class="o">-</span><span class="n">dr</span><span class="o">-</span><span class="n">mtree</span><span class="o">-</span><span class="n">veeam</span><span class="o">-</span><span class="n">prod</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌────────────────────────────────── Dell Data Domain Design Standards ──────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │            Size DD at 2× expected logical retention to account for dedup variation            │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │            Separate MTrees per backup application or environment for quota control            │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │           Replication: active site primary → passive site DR; test restore quarterly          │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│                                                                                                       │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│                                                                                                       │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   │               Sizing Standards               │  │               Layout Standards              │   │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   │         2× logical retention in raw          │  │              MTree per app/env              │   │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   │         Plan for 10–30x dedup ratio          │  │            MTree quotas enforced            │   │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │           Leave 20% free headroom            │  │            NFS exports per MTree            │   │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │         DD Boost preferred protocol          │  │            DD Boost users per app           │   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │           NVRAM: do not exceed 80%           │  │            Replication per MTree            │   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│                                                                                                       │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   │     Standard     │      Value       │       Reason      │      Owner       │      Review      │   │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│   │   Raw headroom   │      &gt; 20%       │   Dedup overhead  │   Backup team    │     Monthly      │   │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│   │   MTree quotas   │ Per environment  │  Prevent runaway  │   Backup team    │    Quarterly     │   │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│   │   Rep schedule   │  4-hour RPO max  │     DR target     │   Backup team    │      Annual      │   │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│   │   Restore test   │    Quarterly     │     Verify DR     │   Backup team    │     Per test     │   │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│                                                                                                       │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│    Key terms:                                                                                         │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│                                                                                                       │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│    Dedup ratio      = Logical data stored ÷ physical space used; 10–30x typical for backup            │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│    20% headroom     = DDOS performance degrades when filesystem &gt; 80% full; always leave buffer       │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│    MTree quota      = Soft/hard limits on MTree logical capacity; prevents one app starving others    │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│    DD Boost protocol= Preferred over NFS for backup; offloads dedup; uses less network bandwidth      │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│                                                                                                       │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">Each</span><span class="w"> </span><span class="k">storage</span><span class="w"> </span><span class="n">unit</span><span class="w"> </span><span class="n">maps</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">exactly</span><span class="w"> </span><span class="n">one</span><span class="w"> </span><span class="n">MTree</span><span class="p">.</span><span class="w"> </span><span class="k">Create</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">MTree</span><span class="w"> </span><span class="k">first</span><span class="p">,</span><span class="w"> </span><span class="k">then</span><span class="w"> </span><span class="k">create</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">storage</span><span class="w"> </span><span class="n">unit</span><span class="w"> </span><span class="n">pointing</span><span class="w"> </span><span class="k">at</span><span class="w"> </span><span class="n">it</span><span class="p">.</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="o">##</span><span class="w"> </span><span class="n">Replication</span><span class="w"> </span><span class="n">Context</span><span class="w"> </span><span class="n">Naming</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="n">Pattern</span><span class="p">:</span><span class="w"> </span><span class="o">`&lt;</span><span class="n">src</span><span class="o">-</span><span class="n">dd</span><span class="o">-</span><span class="n">hostname</span><span class="o">&gt;-</span><span class="k">to</span><span class="o">-&lt;</span><span class="n">dst</span><span class="o">-</span><span class="n">dd</span><span class="o">-</span><span class="n">hostname</span><span class="o">&gt;-&lt;</span><span class="n">mtree</span><span class="o">-</span><span class="n">name</span><span class="o">&gt;`</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="n">Example</span><span class="p">:</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="o">```</span><span class="nb">text</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="n">dd9900</span><span class="o">-</span><span class="n">prod</span><span class="o">-</span><span class="k">to</span><span class="o">-</span><span class="n">dd6400</span><span class="o">-</span><span class="n">dr</span><span class="o">-</span><span class="n">mtree</span><span class="o">-</span><span class="n">veeam</span><span class="o">-</span><span class="n">prod</span>
 </code></pre></div></p>
 <p>This makes it immediately clear which source and destination are involved and which MTree is being replicated in each context.</p>
 <h2 id="mtree-quota-standards">MTree Quota Standards<a class="headerlink" href="#mtree-quota-standards" title="Permanent link">&para;</a></h2>
@@ -4383,19 +4384,19 @@ Standards reference covering Sizing Considerations, MTree Naming Convention, DD 
 </tbody>
 </table>
 <p>Retention lock minimum and maximum periods must be set at MTree creation:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Enable governance retention lock on an MTree</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>mtree<span class="w"> </span>retention-lock<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>mode<span class="w"> </span>governance<span class="w"> </span>mtree<span class="w"> </span>/data/col1/mtree-veeam-prod
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Set retention period limits</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>mtree<span class="w"> </span>retention-lock<span class="w"> </span><span class="nb">set</span><span class="w"> </span>min-retention-period<span class="w"> </span>30days<span class="w"> </span>mtree<span class="w"> </span>/data/col1/mtree-veeam-prod
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>mtree<span class="w"> </span>retention-lock<span class="w"> </span><span class="nb">set</span><span class="w"> </span>max-retention-period<span class="w"> </span>7years<span class="w"> </span>mtree<span class="w"> </span>/data/col1/mtree-veeam-prod
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Enable governance retention lock on an MTree</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>mtree<span class="w"> </span>retention-lock<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>mode<span class="w"> </span>governance<span class="w"> </span>mtree<span class="w"> </span>/data/col1/mtree-veeam-prod
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Set retention period limits</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>mtree<span class="w"> </span>retention-lock<span class="w"> </span><span class="nb">set</span><span class="w"> </span>min-retention-period<span class="w"> </span>30days<span class="w"> </span>mtree<span class="w"> </span>/data/col1/mtree-veeam-prod
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>mtree<span class="w"> </span>retention-lock<span class="w"> </span><span class="nb">set</span><span class="w"> </span>max-retention-period<span class="w"> </span>7years<span class="w"> </span>mtree<span class="w"> </span>/data/col1/mtree-veeam-prod
 </code></pre></div>
 <h2 id="dd-boost-user-naming">DD Boost User Naming<a class="headerlink" href="#dd-boost-user-naming" title="Permanent link">&para;</a></h2>
 <p>Pattern: <code>ddboost-&lt;backup-tool&gt;</code></p>
 <p>Examples:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ddboost-veeam
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ddboost-netbackup
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>ddboost-commvault
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ddboost-veeam
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ddboost-netbackup
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>ddboost-commvault
 </code></pre></div>
 <p>Create a separate DD Boost user per backup application. Do not share a single DD Boost user across multiple backup tools — this prevents credential rotation from impacting unrelated backup systems.</p>
 <h2 id="build-baseline-checklist">Build Baseline Checklist<a class="headerlink" href="#build-baseline-checklist" title="Permanent link">&para;</a></h2>

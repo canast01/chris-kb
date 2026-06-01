@@ -4443,41 +4443,42 @@ CloudIQ Lifecycle reference covering Platform Update Model, Secure Connect Gatew
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>3. Note the current SCG version
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>4. Compare against the latest available version in the Dell Support Portal
 </code></pre></div>
-┌─────────────────────────────────── CloudIQ — Lifecycle Management ────────────────────────────────────┐
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                  Onboarding                  │  │             Ongoing Maintenance             │   │
-│   │             Create Dell account              │  │            Monitor telemetry age            │   │
-│   │               Register arrays                │  │             Re-register if stale            │   │
-│   │               Configure alerts               │  │            Update array firmware            │   │
-│   │              Add users + roles               │  │            Rotate service account           │   │
-│   │            Test webhook delivery             │  │             Annual access review            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  CloudIQ is SaaS — no on-prem component to patch · array firmware controls telemetry client           │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Telemetry age = Time since last successful push from array; stale &gt; 15 min triggers alert            │
-│  Re-registration = Removing and re-adding array to CloudIQ; resets telemetry stream                   │
-│  Service account rotation = Changing Dell account password used for CloudIQ API access                │
-│  Access review = Auditing CloudIQ user list; removing departed staff and role changes                 │
-│  Array firmware = On-array software; update process depends on array model (PSTCLI, ESRS)             │
-│  ESRS = EMC Secure Remote Services; gateway used by some older Dell arrays for telemetry              │
-│  CloudIQ SaaS = Hosted by Dell; no customer upgrade responsibility for the platform itself            │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">## API Token Lifecycle</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">CloudIQ</span> <span class="n">REST</span> <span class="n">API</span> <span class="n">tokens</span> <span class="n">use</span> <span class="n">OAuth2</span> <span class="n">client</span> <span class="n">credentials</span><span class="o">.</span> <span class="n">Tokens</span> <span class="n">should</span> <span class="n">be</span> <span class="n">rotated</span> <span class="n">annually</span><span class="o">.</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="err">```</span><span class="n">text</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="n">Rotation</span> <span class="n">procedure</span><span class="p">:</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="mf">1.</span> <span class="n">CloudIQ</span> <span class="n">portal</span> <span class="o">&gt;</span> <span class="n">Settings</span> <span class="o">&gt;</span> <span class="n">API</span> <span class="n">Clients</span> <span class="o">&gt;</span> <span class="p">[</span><span class="n">Client</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">Rotate</span> <span class="n">Secret</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="mf">2.</span> <span class="n">Update</span> <span class="n">the</span> <span class="n">new</span> <span class="n">client_secret</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">team</span> <span class="n">secrets</span> <span class="n">manager</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="mf">3.</span> <span class="n">Redeploy</span> <span class="ow">or</span> <span class="n">restart</span> <span class="nb">any</span> <span class="n">automation</span> <span class="n">scripts</span> <span class="n">that</span> <span class="n">use</span> <span class="n">the</span> <span class="n">old</span> <span class="n">secret</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="mf">4.</span> <span class="n">Verify</span> <span class="n">API</span> <span class="n">scripts</span> <span class="k">return</span> <span class="n">HTTP</span> <span class="mi">200</span> <span class="n">after</span> <span class="n">rotation</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌─────────────────────────────────── CloudIQ — Lifecycle Management ────────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │                  Onboarding                  │  │             Ongoing Maintenance             │   │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │             Create Dell account              │  │            Monitor telemetry age            │   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │               Register arrays                │  │             Re-register if stale            │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │               Configure alerts               │  │            Update array firmware            │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │              Add users + roles               │  │            Rotate service account           │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │            Test webhook delivery             │  │             Annual access review            │   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│                                                                                                       │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│  Physical Infrastructure:                                                                             │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│  CloudIQ is SaaS — no on-prem component to patch · array firmware controls telemetry client           │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│                                                                                                       │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                                                                                                       │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│  Telemetry age = Time since last successful push from array; stale &gt; 15 min triggers alert            │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│  Re-registration = Removing and re-adding array to CloudIQ; resets telemetry stream                   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│  Service account rotation = Changing Dell account password used for CloudIQ API access                │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│  Access review = Auditing CloudIQ user list; removing departed staff and role changes                 │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│  Array firmware = On-array software; update process depends on array model (PSTCLI, ESRS)             │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│  ESRS = EMC Secure Remote Services; gateway used by some older Dell arrays for telemetry              │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│  CloudIQ SaaS = Hosted by Dell; no customer upgrade responsibility for the platform itself            │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│                                                                                                       │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">## API Token Lifecycle</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">CloudIQ</span> <span class="n">REST</span> <span class="n">API</span> <span class="n">tokens</span> <span class="n">use</span> <span class="n">OAuth2</span> <span class="n">client</span> <span class="n">credentials</span><span class="o">.</span> <span class="n">Tokens</span> <span class="n">should</span> <span class="n">be</span> <span class="n">rotated</span> <span class="n">annually</span><span class="o">.</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="err">```</span><span class="n">text</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="n">Rotation</span> <span class="n">procedure</span><span class="p">:</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="mf">1.</span> <span class="n">CloudIQ</span> <span class="n">portal</span> <span class="o">&gt;</span> <span class="n">Settings</span> <span class="o">&gt;</span> <span class="n">API</span> <span class="n">Clients</span> <span class="o">&gt;</span> <span class="p">[</span><span class="n">Client</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">Rotate</span> <span class="n">Secret</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="mf">2.</span> <span class="n">Update</span> <span class="n">the</span> <span class="n">new</span> <span class="n">client_secret</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">team</span> <span class="n">secrets</span> <span class="n">manager</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="mf">3.</span> <span class="n">Redeploy</span> <span class="ow">or</span> <span class="n">restart</span> <span class="nb">any</span> <span class="n">automation</span> <span class="n">scripts</span> <span class="n">that</span> <span class="n">use</span> <span class="n">the</span> <span class="n">old</span> <span class="n">secret</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="mf">4.</span> <span class="n">Verify</span> <span class="n">API</span> <span class="n">scripts</span> <span class="k">return</span> <span class="n">HTTP</span> <span class="mi">200</span> <span class="n">after</span> <span class="n">rotation</span>
 </code></pre></div></p>
 <h2 id="release-notes-review">Release Notes Review<a class="headerlink" href="#release-notes-review" title="Permanent link">&para;</a></h2>
 <p>Review CloudIQ release notes when notified by Dell (typically monthly). Check for:

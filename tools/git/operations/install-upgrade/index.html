@@ -3745,64 +3745,65 @@ This page covers Git client installation and upgrades across operating systems, 
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># Upgrade only</span>
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>--only-upgrade<span class="w"> </span>git
 </code></pre></div>
-┌────────────────────────────────────── Git — Install and Upgrade ──────────────────────────────────────┐
-│                                                                                                       │
-│  Git client and server installation, upgrade paths, and self-hosted platform setup.                   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Git Client Install              │  │            GitHub / GitLab Server           │   │
-│   │          Linux: apt/yum install git          │  │       GitHub Enterprise: VM appliance       │   │
-│   │           macOS: brew install git            │  │       GitLab: omnibus package + config      │   │
-│   │        Windows: git-scm.com installer        │  │      Gitea: single binary; lightweight      │   │
-│   │            Verify: git --version             │  │            Backup before upgrade            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Client upgrade is non-breaking; server upgrade requires maintenance window                         │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Git Configuration               │  │              Post-Install Steps             │   │
-│   │        git config --global user.name         │  │         Generate SSH key: ssh-keygen        │   │
-│   │        git config --global user.email        │  │         Add pub key to GitHub/GitLab        │   │
-│   │       git config --global core.editor        │  │          Test: git clone <ssh-url>          │   │
-│   │       git config --global pull.rebase        │  │           Set default branch: main          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Developer workstations · self-hosted Git server VM · package repositories                            │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  git-scm.com    = official Git download site for Windows installer                                    │
-│  omnibus        = GitLab all-in-one package including Nginx, Postgres, Redis                          │
-│  Gitea          = lightweight self-hosted Git service; single Go binary                               │
-│  GHE            = GitHub Enterprise Server; VM-based on-prem deployment                               │
-│  ssh-keygen     = generates RSA/Ed25519 key pair for SSH authentication                               │
-│  pull.rebase    = config to rebase instead of merge on git pull                                       │
-│  core.editor    = sets preferred text editor for commit messages                                      │
-│  Maintenance window= server upgrade downtime; plan for hook + webhook reconnect                       │
-│  Default branch = initialises as main; change default in server settings                              │
-│  Ed25519        = modern elliptic-curve SSH key type; preferred over RSA                              │
-│  git config     = reads/writes ~/.gitconfig (global) or .git/config (repo)                            │
-│  Appliance      = GitHub Enterprise is a VM image (OVA/AMI); managed internally                       │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="o">###</span><span class="w"> </span><span class="n">Windows</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="o">|</span><span class="w"> </span><span class="k">Method</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">Command</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">Notes</span><span class="w"> </span><span class="o">|</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="o">|</span><span class="c1">--------|---------|-------|</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="o">|</span><span class="w"> </span><span class="o">**</span><span class="n">Git</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">Windows</span><span class="o">**</span><span class="w"> </span><span class="p">(</span><span class="n">recommended</span><span class="p">)</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">Download</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">git</span><span class="o">-</span><span class="n">scm</span><span class="p">.</span><span class="n">com</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">Includes</span><span class="w"> </span><span class="n">bash</span><span class="p">,</span><span class="w"> </span><span class="n">credential</span><span class="w"> </span><span class="n">manager</span><span class="w"> </span><span class="o">|</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="o">|</span><span class="w"> </span><span class="o">**</span><span class="n">winget</span><span class="o">**</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="o">`</span><span class="n">winget</span><span class="w"> </span><span class="n">install</span><span class="w"> </span><span class="c1">--id Git.Git -e` | Silent install |</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="o">|</span><span class="w"> </span><span class="o">**</span><span class="n">Chocolatey</span><span class="o">**</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="o">`</span><span class="n">choco</span><span class="w"> </span><span class="n">install</span><span class="w"> </span><span class="n">git</span><span class="o">`</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="o">`</span><span class="n">choco</span><span class="w"> </span><span class="n">upgrade</span><span class="w"> </span><span class="n">git</span><span class="o">`</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">CI</span><span class="o">-</span><span class="n">friendly</span><span class="w"> </span><span class="o">|</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="o">|</span><span class="w"> </span><span class="o">**</span><span class="n">Scoop</span><span class="o">**</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="o">`</span><span class="n">scoop</span><span class="w"> </span><span class="n">install</span><span class="w"> </span><span class="n">git</span><span class="o">`</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="o">`</span><span class="n">scoop</span><span class="w"> </span><span class="k">update</span><span class="w"> </span><span class="n">git</span><span class="o">`</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="k">User</span><span class="o">-</span><span class="k">level</span><span class="p">,</span><span class="w"> </span><span class="k">no</span><span class="w"> </span><span class="k">admin</span><span class="w"> </span><span class="o">|</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="o">```</span><span class="n">powershell</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="o">#</span><span class="w"> </span><span class="n">Upgrade</span><span class="w"> </span><span class="n">via</span><span class="w"> </span><span class="n">winget</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="n">winget</span><span class="w"> </span><span class="n">upgrade</span><span class="w"> </span><span class="c1">--id Git.Git -e --include-unknown</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="o">#</span><span class="w"> </span><span class="k">Check</span><span class="w"> </span><span class="k">version</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="n">git</span><span class="w"> </span><span class="c1">--version</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌────────────────────────────────────── Git — Install and Upgrade ──────────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  Git client and server installation, upgrade paths, and self-hosted platform setup.                   │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│                                                                                                       │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │              Git Client Install              │  │            GitHub / GitLab Server           │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │          Linux: apt/yum install git          │  │       GitHub Enterprise: VM appliance       │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │           macOS: brew install git            │  │       GitLab: omnibus package + config      │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │        Windows: git-scm.com installer        │  │      Gitea: single binary; lightweight      │   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │            Verify: git --version             │  │            Backup before upgrade            │   │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│                                                                                                       │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│    Client upgrade is non-breaking; server upgrade requires maintenance window                         │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│                                                                                                       │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                                                                                                       │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │              Git Configuration               │  │              Post-Install Steps             │   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │        git config --global user.name         │  │         Generate SSH key: ssh-keygen        │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │        git config --global user.email        │  │         Add pub key to GitHub/GitLab        │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │       git config --global core.editor        │  │          Test: git clone &lt;ssh-url&gt;          │   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │       git config --global pull.rebase        │  │           Set default branch: main          │   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│                                                                                                       │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  Developer workstations · self-hosted Git server VM · package repositories                            │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│                                                                                                       │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  git-scm.com    = official Git download site for Windows installer                                    │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│  omnibus        = GitLab all-in-one package including Nginx, Postgres, Redis                          │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  Gitea          = lightweight self-hosted Git service; single Go binary                               │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  GHE            = GitHub Enterprise Server; VM-based on-prem deployment                               │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  ssh-keygen     = generates RSA/Ed25519 key pair for SSH authentication                               │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  pull.rebase    = config to rebase instead of merge on git pull                                       │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  core.editor    = sets preferred text editor for commit messages                                      │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  Maintenance window= server upgrade downtime; plan for hook + webhook reconnect                       │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  Default branch = initialises as main; change default in server settings                              │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  Ed25519        = modern elliptic-curve SSH key type; preferred over RSA                              │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  git config     = reads/writes ~/.gitconfig (global) or .git/config (repo)                            │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  Appliance      = GitHub Enterprise is a VM image (OVA/AMI); managed internally                       │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│                                                                                                       │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="o">###</span><span class="w"> </span><span class="n">Windows</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="o">|</span><span class="w"> </span><span class="k">Method</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">Command</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">Notes</span><span class="w"> </span><span class="o">|</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="o">|</span><span class="c1">--------|---------|-------|</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="o">|</span><span class="w"> </span><span class="o">**</span><span class="n">Git</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">Windows</span><span class="o">**</span><span class="w"> </span><span class="p">(</span><span class="n">recommended</span><span class="p">)</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">Download</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">git</span><span class="o">-</span><span class="n">scm</span><span class="p">.</span><span class="n">com</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">Includes</span><span class="w"> </span><span class="n">bash</span><span class="p">,</span><span class="w"> </span><span class="n">credential</span><span class="w"> </span><span class="n">manager</span><span class="w"> </span><span class="o">|</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="o">|</span><span class="w"> </span><span class="o">**</span><span class="n">winget</span><span class="o">**</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="o">`</span><span class="n">winget</span><span class="w"> </span><span class="n">install</span><span class="w"> </span><span class="c1">--id Git.Git -e` | Silent install |</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="o">|</span><span class="w"> </span><span class="o">**</span><span class="n">Chocolatey</span><span class="o">**</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="o">`</span><span class="n">choco</span><span class="w"> </span><span class="n">install</span><span class="w"> </span><span class="n">git</span><span class="o">`</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="o">`</span><span class="n">choco</span><span class="w"> </span><span class="n">upgrade</span><span class="w"> </span><span class="n">git</span><span class="o">`</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">CI</span><span class="o">-</span><span class="n">friendly</span><span class="w"> </span><span class="o">|</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="o">|</span><span class="w"> </span><span class="o">**</span><span class="n">Scoop</span><span class="o">**</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="o">`</span><span class="n">scoop</span><span class="w"> </span><span class="n">install</span><span class="w"> </span><span class="n">git</span><span class="o">`</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="o">`</span><span class="n">scoop</span><span class="w"> </span><span class="k">update</span><span class="w"> </span><span class="n">git</span><span class="o">`</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="k">User</span><span class="o">-</span><span class="k">level</span><span class="p">,</span><span class="w"> </span><span class="k">no</span><span class="w"> </span><span class="k">admin</span><span class="w"> </span><span class="o">|</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="o">```</span><span class="n">powershell</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="o">#</span><span class="w"> </span><span class="n">Upgrade</span><span class="w"> </span><span class="n">via</span><span class="w"> </span><span class="n">winget</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="n">winget</span><span class="w"> </span><span class="n">upgrade</span><span class="w"> </span><span class="c1">--id Git.Git -e --include-unknown</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="o">#</span><span class="w"> </span><span class="k">Check</span><span class="w"> </span><span class="k">version</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="n">git</span><span class="w"> </span><span class="c1">--version</span>
 </code></pre></div></p>
 <hr />
 <h2 id="pre-upgrade-checklist-any-platform">Pre-Upgrade Checklist (Any Platform)<a class="headerlink" href="#pre-upgrade-checklist-any-platform" title="Permanent link">&para;</a></h2>
@@ -3822,190 +3823,190 @@ This page covers Git client installation and upgrades across operating systems, 
 <hr />
 <h2 id="gitlab-upgrade-omnibus-package">GitLab Upgrade — Omnibus Package<a class="headerlink" href="#gitlab-upgrade-omnibus-package" title="Permanent link">&para;</a></h2>
 <h3 id="minor-patch-upgrade-eg-1701-1703">Minor / Patch Upgrade (e.g., 17.0.1 → 17.0.3)<a class="headerlink" href="#minor-patch-upgrade-eg-1701-1703" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># 1. Back up</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>sudo<span class="w"> </span>gitlab-backup<span class="w"> </span>create<span class="w"> </span><span class="nv">CRON</span><span class="o">=</span><span class="m">1</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>sudo<span class="w"> </span>cp<span class="w"> </span>/etc/gitlab/gitlab-secrets.json<span class="w"> </span>/secure/
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>sudo<span class="w"> </span>cp<span class="w"> </span>/etc/gitlab/gitlab.rb<span class="w"> </span>/secure/
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># 2. Update package (Ubuntu/Debian)</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>curl<span class="w"> </span>-s<span class="w"> </span>https://packages.gitlab.com/install/repositories/gitlab/gitlab-ee/script.deb.sh<span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>bash
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>sudo<span class="w"> </span>apt-get<span class="w"> </span>update
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>gitlab-ee<span class="o">=</span><span class="m">17</span>.0.3-ee.0
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># 3. Reconfigure and restart</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>sudo<span class="w"> </span>gitlab-ctl<span class="w"> </span>reconfigure
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>sudo<span class="w"> </span>gitlab-ctl<span class="w"> </span>restart
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># 4. Run post-upgrade checks</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>sudo<span class="w"> </span>gitlab-rake<span class="w"> </span>gitlab:check<span class="w"> </span><span class="nv">SANITIZE</span><span class="o">=</span><span class="nb">true</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>sudo<span class="w"> </span>gitlab-rake<span class="w"> </span>db:migrate:status<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-5
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>curl<span class="w"> </span>-sf<span class="w"> </span>https://gitlab.example.com/-/readiness?all<span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># 1. Back up</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>sudo<span class="w"> </span>gitlab-backup<span class="w"> </span>create<span class="w"> </span><span class="nv">CRON</span><span class="o">=</span><span class="m">1</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>sudo<span class="w"> </span>cp<span class="w"> </span>/etc/gitlab/gitlab-secrets.json<span class="w"> </span>/secure/
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>sudo<span class="w"> </span>cp<span class="w"> </span>/etc/gitlab/gitlab.rb<span class="w"> </span>/secure/
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># 2. Update package (Ubuntu/Debian)</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>curl<span class="w"> </span>-s<span class="w"> </span>https://packages.gitlab.com/install/repositories/gitlab/gitlab-ee/script.deb.sh<span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>bash
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>sudo<span class="w"> </span>apt-get<span class="w"> </span>update
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>gitlab-ee<span class="o">=</span><span class="m">17</span>.0.3-ee.0
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># 3. Reconfigure and restart</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>sudo<span class="w"> </span>gitlab-ctl<span class="w"> </span>reconfigure
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>sudo<span class="w"> </span>gitlab-ctl<span class="w"> </span>restart
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="c1"># 4. Run post-upgrade checks</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>sudo<span class="w"> </span>gitlab-rake<span class="w"> </span>gitlab:check<span class="w"> </span><span class="nv">SANITIZE</span><span class="o">=</span><span class="nb">true</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>sudo<span class="w"> </span>gitlab-rake<span class="w"> </span>db:migrate:status<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-5
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>curl<span class="w"> </span>-sf<span class="w"> </span>https://gitlab.example.com/-/readiness?all<span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
 </code></pre></div>
 <h3 id="major-version-upgrade-sequential-path-required">Major Version Upgrade (Sequential Path Required)<a class="headerlink" href="#major-version-upgrade-sequential-path-required" title="Permanent link">&para;</a></h3>
 <p>GitLab requires upgrading through specific stop versions. Check the <a href="https://docs.gitlab.com/ee/update/index.html#upgrade-paths">GitLab upgrade paths</a> documentation.</p>
 <p>Example: 15.4 → 17.1 requires:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>15.4 → 15.11.x → 16.0.x → 16.3.x → 16.11.x → 17.1.x
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>15.4 → 15.11.x → 16.0.x → 16.3.x → 16.11.x → 17.1.x
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Stop at each required version, run migrations, verify, then continue</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Upgrade to 15.11 (last minor before 16)</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>gitlab-ee<span class="o">=</span><span class="m">15</span>.11.13-ee.0
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>sudo<span class="w"> </span>gitlab-ctl<span class="w"> </span>reconfigure
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>sudo<span class="w"> </span>gitlab-rake<span class="w"> </span>db:migrate:status
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>sudo<span class="w"> </span>gitlab-rake<span class="w"> </span>gitlab:check<span class="w"> </span><span class="nv">SANITIZE</span><span class="o">=</span><span class="nb">true</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Wait for background migrations to complete before upgrading to 16.0</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>sudo<span class="w"> </span>gitlab-rails<span class="w"> </span>runner<span class="w"> </span><span class="s2">&quot;Gitlab::Database::BackgroundMigration::BatchedMigration.where(status: [:active, :queued]).count&quot;</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Must return 0 before proceeding</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Upgrade to 16.0</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>gitlab-ee<span class="o">=</span><span class="m">16</span>.0.9-ee.0
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="c1"># ... repeat for each stop version</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Stop at each required version, run migrations, verify, then continue</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Upgrade to 15.11 (last minor before 16)</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>gitlab-ee<span class="o">=</span><span class="m">15</span>.11.13-ee.0
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>sudo<span class="w"> </span>gitlab-ctl<span class="w"> </span>reconfigure
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>sudo<span class="w"> </span>gitlab-rake<span class="w"> </span>db:migrate:status
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>sudo<span class="w"> </span>gitlab-rake<span class="w"> </span>gitlab:check<span class="w"> </span><span class="nv">SANITIZE</span><span class="o">=</span><span class="nb">true</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># Wait for background migrations to complete before upgrading to 16.0</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>sudo<span class="w"> </span>gitlab-rails<span class="w"> </span>runner<span class="w"> </span><span class="s2">&quot;Gitlab::Database::BackgroundMigration::BatchedMigration.where(status: [:active, :queued]).count&quot;</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># Must return 0 before proceeding</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># Upgrade to 16.0</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>gitlab-ee<span class="o">=</span><span class="m">16</span>.0.9-ee.0
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="c1"># ... repeat for each stop version</span>
 </code></pre></div>
 <h3 id="check-running-migrations">Check Running Migrations<a class="headerlink" href="#check-running-migrations" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check for in-progress background migrations (must be 0 before major upgrade)</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>sudo<span class="w"> </span>gitlab-rails<span class="w"> </span>runner<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="s2">  count = Gitlab::Database::BackgroundMigration::BatchedMigration</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="s2">            .where(status: [:active, :queued]).count</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="s2">  puts \&quot;Pending background migrations: #{count}\&quot;</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="s2">&quot;</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Force-run pending migrations (if needed)</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>sudo<span class="w"> </span>gitlab-rake<span class="w"> </span>db:migrate
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check for in-progress background migrations (must be 0 before major upgrade)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>sudo<span class="w"> </span>gitlab-rails<span class="w"> </span>runner<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="s2">  count = Gitlab::Database::BackgroundMigration::BatchedMigration</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="s2">            .where(status: [:active, :queued]).count</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="s2">  puts \&quot;Pending background migrations: #{count}\&quot;</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="s2">&quot;</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Force-run pending migrations (if needed)</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>sudo<span class="w"> </span>gitlab-rake<span class="w"> </span>db:migrate
 </code></pre></div>
 <hr />
 <h2 id="gitlab-upgrade-docker-kubernetes">GitLab Upgrade — Docker / Kubernetes<a class="headerlink" href="#gitlab-upgrade-docker-kubernetes" title="Permanent link">&para;</a></h2>
 <h3 id="docker-compose">Docker Compose<a class="headerlink" href="#docker-compose" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># docker-compose.yml (excerpt)</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nt">services</span><span class="p">:</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="nt">gitlab</span><span class="p">:</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gitlab/gitlab-ee:17.0.3-ee.0</span><span class="w">   </span><span class="c1"># pin the version</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># docker-compose.yml (excerpt)</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nt">services</span><span class="p">:</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="nt">gitlab</span><span class="p">:</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gitlab/gitlab-ee:17.0.3-ee.0</span><span class="w">   </span><span class="c1"># pin the version</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">...</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Pull new image</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>docker<span class="w"> </span>compose<span class="w"> </span>pull<span class="w"> </span>gitlab
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Stop, upgrade, start</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>docker<span class="w"> </span>compose<span class="w"> </span>down<span class="w"> </span>gitlab
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>gitlab
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># Check logs</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>docker<span class="w"> </span>compose<span class="w"> </span>logs<span class="w"> </span>-f<span class="w"> </span>gitlab
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="c1"># Verify</span>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>gitlab<span class="w"> </span>gitlab-rake<span class="w"> </span>gitlab:check<span class="w"> </span><span class="nv">SANITIZE</span><span class="o">=</span><span class="nb">true</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Pull new image</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>docker<span class="w"> </span>compose<span class="w"> </span>pull<span class="w"> </span>gitlab
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Stop, upgrade, start</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>docker<span class="w"> </span>compose<span class="w"> </span>down<span class="w"> </span>gitlab
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>gitlab
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># Check logs</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>docker<span class="w"> </span>compose<span class="w"> </span>logs<span class="w"> </span>-f<span class="w"> </span>gitlab
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c1"># Verify</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>gitlab<span class="w"> </span>gitlab-rake<span class="w"> </span>gitlab:check<span class="w"> </span><span class="nv">SANITIZE</span><span class="o">=</span><span class="nb">true</span>
 </code></pre></div>
 <h3 id="helm-gitlab-on-kubernetes">Helm (GitLab on Kubernetes)<a class="headerlink" href="#helm-gitlab-on-kubernetes" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Add / update GitLab Helm repo</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>helm<span class="w"> </span>repo<span class="w"> </span>add<span class="w"> </span>gitlab<span class="w"> </span>https://charts.gitlab.io
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>helm<span class="w"> </span>repo<span class="w"> </span>update
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Check current deployed chart version</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>helm<span class="w"> </span>list<span class="w"> </span>-n<span class="w"> </span>gitlab
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># Upgrade (always review values diff first)</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>helm<span class="w"> </span>diff<span class="w"> </span>upgrade<span class="w"> </span>gitlab<span class="w"> </span>gitlab/gitlab<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">  </span>--namespace<span class="w"> </span>gitlab<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">  </span>--version<span class="w"> </span><span class="m">8</span>.0.3<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">  </span>-f<span class="w"> </span>values.yaml
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>helm<span class="w"> </span>upgrade<span class="w"> </span>gitlab<span class="w"> </span>gitlab/gitlab<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="w">  </span>--namespace<span class="w"> </span>gitlab<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="w">  </span>--version<span class="w"> </span><span class="m">8</span>.0.3<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="w">  </span>-f<span class="w"> </span>values.yaml<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="w">  </span>--timeout<span class="w"> </span>600s<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="w">  </span>--wait
-<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>
-<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a><span class="c1"># Monitor rollout</span>
-<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a>kubectl<span class="w"> </span>rollout<span class="w"> </span>status<span class="w"> </span>deployment/gitlab-webservice<span class="w"> </span>-n<span class="w"> </span>gitlab
-<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a>kubectl<span class="w"> </span>rollout<span class="w"> </span>status<span class="w"> </span>deployment/gitlab-sidekiq-all-in-1-v2<span class="w"> </span>-n<span class="w"> </span>gitlab
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Add / update GitLab Helm repo</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>helm<span class="w"> </span>repo<span class="w"> </span>add<span class="w"> </span>gitlab<span class="w"> </span>https://charts.gitlab.io
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>helm<span class="w"> </span>repo<span class="w"> </span>update
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># Check current deployed chart version</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>helm<span class="w"> </span>list<span class="w"> </span>-n<span class="w"> </span>gitlab
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="c1"># Upgrade (always review values diff first)</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>helm<span class="w"> </span>diff<span class="w"> </span>upgrade<span class="w"> </span>gitlab<span class="w"> </span>gitlab/gitlab<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="w">  </span>--namespace<span class="w"> </span>gitlab<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="w">  </span>--version<span class="w"> </span><span class="m">8</span>.0.3<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="w">  </span>-f<span class="w"> </span>values.yaml
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>helm<span class="w"> </span>upgrade<span class="w"> </span>gitlab<span class="w"> </span>gitlab/gitlab<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="w">  </span>--namespace<span class="w"> </span>gitlab<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a><span class="w">  </span>--version<span class="w"> </span><span class="m">8</span>.0.3<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a><span class="w">  </span>-f<span class="w"> </span>values.yaml<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a><span class="w">  </span>--timeout<span class="w"> </span>600s<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a><span class="w">  </span>--wait
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a><span class="c1"># Monitor rollout</span>
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>kubectl<span class="w"> </span>rollout<span class="w"> </span>status<span class="w"> </span>deployment/gitlab-webservice<span class="w"> </span>-n<span class="w"> </span>gitlab
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>kubectl<span class="w"> </span>rollout<span class="w"> </span>status<span class="w"> </span>deployment/gitlab-sidekiq-all-in-1-v2<span class="w"> </span>-n<span class="w"> </span>gitlab
 </code></pre></div>
 <hr />
 <h2 id="github-enterprise-server-upgrade">GitHub Enterprise Server Upgrade<a class="headerlink" href="#github-enterprise-server-upgrade" title="Permanent link">&para;</a></h2>
 <p>GHES upgrades are applied as <code>.pkg</code> upgrade packages via the Management Console or the admin SSH interface.</p>
 <h3 id="pre-upgrade-steps-ghes">Pre-Upgrade Steps (GHES)<a class="headerlink" href="#pre-upgrade-steps-ghes" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># 1. Enable maintenance mode</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$GHES_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span><span class="s2">&quot;https://github.example.com/api/v3/maintenance&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;maintenance&quot;: {&quot;enabled&quot;: true, &quot;message&quot;: &quot;Upgrading to 3.13&quot;}}&#39;</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># 2. Verify maintenance mode is active</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;https://github.example.com/api/v3/maintenance&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$GHES_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="c1"># 3. Take snapshot backup</span>
-<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>/opt/github-backup-utils/bin/ghe-backup
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># 1. Enable maintenance mode</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$GHES_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span><span class="s2">&quot;https://github.example.com/api/v3/maintenance&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;maintenance&quot;: {&quot;enabled&quot;: true, &quot;message&quot;: &quot;Upgrading to 3.13&quot;}}&#39;</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># 2. Verify maintenance mode is active</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;https://github.example.com/api/v3/maintenance&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$GHES_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="c1"># 3. Take snapshot backup</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>/opt/github-backup-utils/bin/ghe-backup
 </code></pre></div>
 <h3 id="apply-upgrade-package">Apply Upgrade Package<a class="headerlink" href="#apply-upgrade-package" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Upload upgrade package to appliance</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>scp<span class="w"> </span>-P<span class="w"> </span><span class="m">122</span><span class="w"> </span>ghes-3.13.0.pkg<span class="w"> </span>admin@github.example.com:
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Apply via SSH</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>ssh<span class="w"> </span>-p<span class="w"> </span><span class="m">122</span><span class="w"> </span>admin@github.example.com
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>ghe-upgrade<span class="w"> </span>/home/admin/ghes-3.13.0.pkg
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="c1"># Monitor progress (takes 15–45 minutes)</span>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="c1"># The appliance reboots automatically during upgrade</span>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="c1"># After reboot — disable maintenance mode</span>
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$GHES_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="w">  </span><span class="s2">&quot;https://github.example.com/api/v3/maintenance&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;maintenance&quot;: {&quot;enabled&quot;: false}}&#39;</span>
-<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>
-<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="c1"># Verify version</span>
-<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;https://github.example.com/api/v3/meta&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$GHES_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.installed_version
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Upload upgrade package to appliance</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>scp<span class="w"> </span>-P<span class="w"> </span><span class="m">122</span><span class="w"> </span>ghes-3.13.0.pkg<span class="w"> </span>admin@github.example.com:
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Apply via SSH</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>ssh<span class="w"> </span>-p<span class="w"> </span><span class="m">122</span><span class="w"> </span>admin@github.example.com
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>ghe-upgrade<span class="w"> </span>/home/admin/ghes-3.13.0.pkg
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="c1"># Monitor progress (takes 15–45 minutes)</span>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="c1"># The appliance reboots automatically during upgrade</span>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="c1"># After reboot — disable maintenance mode</span>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$GHES_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="w">  </span><span class="s2">&quot;https://github.example.com/api/v3/maintenance&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;maintenance&quot;: {&quot;enabled&quot;: false}}&#39;</span>
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a><span class="c1"># Verify version</span>
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;https://github.example.com/api/v3/meta&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$GHES_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.installed_version
 </code></pre></div>
 <h3 id="ghes-ha-upgrade-sequence">GHES HA Upgrade Sequence<a class="headerlink" href="#ghes-ha-upgrade-sequence" title="Permanent link">&para;</a></h3>
 <p>For High-Availability pairs, upgrade the replica first, then promote/fail over:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># 1. Upgrade replica</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>ssh<span class="w"> </span>-p<span class="w"> </span><span class="m">122</span><span class="w"> </span>admin@github-replica.example.com<span class="w"> </span><span class="s2">&quot;ghe-upgrade /home/admin/ghes-3.13.0.pkg&quot;</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># 2. Failover to replica (replica becomes primary)</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>ssh<span class="w"> </span>-p<span class="w"> </span><span class="m">122</span><span class="w"> </span>admin@github-replica.example.com<span class="w"> </span><span class="s2">&quot;ghe-repl-promote&quot;</span>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1"># 3. Upgrade old primary (now replica)</span>
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>ssh<span class="w"> </span>-p<span class="w"> </span><span class="m">122</span><span class="w"> </span>admin@github-primary.example.com<span class="w"> </span><span class="s2">&quot;ghe-upgrade /home/admin/ghes-3.13.0.pkg&quot;</span>
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>
-<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="c1"># 4. Re-establish replication</span>
-<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>ssh<span class="w"> </span>-p<span class="w"> </span><span class="m">122</span><span class="w"> </span>admin@github-primary.example.com<span class="w"> </span><span class="s2">&quot;ghe-repl-setup github-replica.example.com&quot;</span>
-<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>ssh<span class="w"> </span>-p<span class="w"> </span><span class="m">122</span><span class="w"> </span>admin@github-primary.example.com<span class="w"> </span><span class="s2">&quot;ghe-repl-start&quot;</span>
-<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>
-<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="c1"># 5. Verify replication</span>
-<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>ssh<span class="w"> </span>-p<span class="w"> </span><span class="m">122</span><span class="w"> </span>admin@github-primary.example.com<span class="w"> </span><span class="s2">&quot;ghe-repl-status&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># 1. Upgrade replica</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>ssh<span class="w"> </span>-p<span class="w"> </span><span class="m">122</span><span class="w"> </span>admin@github-replica.example.com<span class="w"> </span><span class="s2">&quot;ghe-upgrade /home/admin/ghes-3.13.0.pkg&quot;</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># 2. Failover to replica (replica becomes primary)</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>ssh<span class="w"> </span>-p<span class="w"> </span><span class="m">122</span><span class="w"> </span>admin@github-replica.example.com<span class="w"> </span><span class="s2">&quot;ghe-repl-promote&quot;</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># 3. Upgrade old primary (now replica)</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>ssh<span class="w"> </span>-p<span class="w"> </span><span class="m">122</span><span class="w"> </span>admin@github-primary.example.com<span class="w"> </span><span class="s2">&quot;ghe-upgrade /home/admin/ghes-3.13.0.pkg&quot;</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="c1"># 4. Re-establish replication</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>ssh<span class="w"> </span>-p<span class="w"> </span><span class="m">122</span><span class="w"> </span>admin@github-primary.example.com<span class="w"> </span><span class="s2">&quot;ghe-repl-setup github-replica.example.com&quot;</span>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>ssh<span class="w"> </span>-p<span class="w"> </span><span class="m">122</span><span class="w"> </span>admin@github-primary.example.com<span class="w"> </span><span class="s2">&quot;ghe-repl-start&quot;</span>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="c1"># 5. Verify replication</span>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>ssh<span class="w"> </span>-p<span class="w"> </span><span class="m">122</span><span class="w"> </span>admin@github-primary.example.com<span class="w"> </span><span class="s2">&quot;ghe-repl-status&quot;</span>
 </code></pre></div>
 <hr />
 <h2 id="rollback-steps">Rollback Steps<a class="headerlink" href="#rollback-steps" title="Permanent link">&para;</a></h2>
 <h3 id="gitlab-rollback-omnibus">GitLab Rollback (Omnibus)<a class="headerlink" href="#gitlab-rollback-omnibus" title="Permanent link">&para;</a></h3>
 <p>GitLab does not support automatic downgrade. Rollback requires restoring from backup.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># 1. Stop GitLab</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>sudo<span class="w"> </span>gitlab-ctl<span class="w"> </span>stop
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># 2. Install previous package version</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>gitlab-ee<span class="o">=</span>&lt;previous-version&gt;
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># 3. Restore database from backup</span>
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>sudo<span class="w"> </span>gitlab-backup<span class="w"> </span>restore<span class="w"> </span><span class="nv">BACKUP</span><span class="o">=</span>&lt;timestamp_label&gt;
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>
-<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="c1"># 4. Restore configuration</span>
-<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>sudo<span class="w"> </span>cp<span class="w"> </span>/secure/gitlab-secrets.json<span class="w"> </span>/etc/gitlab/
-<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>sudo<span class="w"> </span>cp<span class="w"> </span>/secure/gitlab.rb<span class="w"> </span>/etc/gitlab/
-<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>
-<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="c1"># 5. Reconfigure and restart</span>
-<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>sudo<span class="w"> </span>gitlab-ctl<span class="w"> </span>reconfigure
-<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>sudo<span class="w"> </span>gitlab-ctl<span class="w"> </span>restart
-<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>
-<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a><span class="c1"># 6. Verify</span>
-<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a>sudo<span class="w"> </span>gitlab-rake<span class="w"> </span>gitlab:check<span class="w"> </span><span class="nv">SANITIZE</span><span class="o">=</span><span class="nb">true</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># 1. Stop GitLab</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>sudo<span class="w"> </span>gitlab-ctl<span class="w"> </span>stop
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># 2. Install previous package version</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>gitlab-ee<span class="o">=</span>&lt;previous-version&gt;
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c1"># 3. Restore database from backup</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>sudo<span class="w"> </span>gitlab-backup<span class="w"> </span>restore<span class="w"> </span><span class="nv">BACKUP</span><span class="o">=</span>&lt;timestamp_label&gt;
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="c1"># 4. Restore configuration</span>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>sudo<span class="w"> </span>cp<span class="w"> </span>/secure/gitlab-secrets.json<span class="w"> </span>/etc/gitlab/
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>sudo<span class="w"> </span>cp<span class="w"> </span>/secure/gitlab.rb<span class="w"> </span>/etc/gitlab/
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a><span class="c1"># 5. Reconfigure and restart</span>
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a>sudo<span class="w"> </span>gitlab-ctl<span class="w"> </span>reconfigure
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>sudo<span class="w"> </span>gitlab-ctl<span class="w"> </span>restart
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a><span class="c1"># 6. Verify</span>
+<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>sudo<span class="w"> </span>gitlab-rake<span class="w"> </span>gitlab:check<span class="w"> </span><span class="nv">SANITIZE</span><span class="o">=</span><span class="nb">true</span>
 </code></pre></div>
 <h3 id="ghes-rollback">GHES Rollback<a class="headerlink" href="#ghes-rollback" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># GHES supports rollback to previous upgrade package if within the same minor version</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>ssh<span class="w"> </span>-p<span class="w"> </span><span class="m">122</span><span class="w"> </span>admin@github.example.com<span class="w"> </span><span class="s2">&quot;ghe-upgrade --allow-downgrade /home/admin/ghes-3.12.5.pkg&quot;</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># For major version rollback — restore from backup-utils snapshot</span>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>/opt/github-backup-utils/bin/ghe-restore<span class="w"> </span>-s<span class="w"> </span>/backup/ghes/&lt;snapshot-dir&gt;<span class="w"> </span>github-restored.example.com
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># GHES supports rollback to previous upgrade package if within the same minor version</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>ssh<span class="w"> </span>-p<span class="w"> </span><span class="m">122</span><span class="w"> </span>admin@github.example.com<span class="w"> </span><span class="s2">&quot;ghe-upgrade --allow-downgrade /home/admin/ghes-3.12.5.pkg&quot;</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># For major version rollback — restore from backup-utils snapshot</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>/opt/github-backup-utils/bin/ghe-restore<span class="w"> </span>-s<span class="w"> </span>/backup/ghes/&lt;snapshot-dir&gt;<span class="w"> </span>github-restored.example.com
 </code></pre></div>
 <h3 id="rollback-decision-matrix">Rollback Decision Matrix<a class="headerlink" href="#rollback-decision-matrix" title="Permanent link">&para;</a></h3>
 <pre class="mermaid"><code>flowchart TD

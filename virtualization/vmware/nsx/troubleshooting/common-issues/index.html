@@ -4797,80 +4797,81 @@ Common Issues reference covering Incident Triage, VM Cannot Communicate with Gat
 <a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># NSX Manager UI: Plan &amp; Troubleshoot → Traceflow</span>
 <a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="c1"># Source: VM vNIC, Destination: gateway IP, Protocol: ICMP</span>
 </code></pre></div>
-┌───────────────────────────────────────── NSX — Common Issues ─────────────────────────────────────────┐
-│                                                                                                       │
-│  BGP session down, DFW unexpected drops, transport node failures, and fixes.                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             BGP / Routing Issues             │  │               DFW Drop Issues               │   │
-│   │           Session Idle or Connect            │  │         Traffic unexpectedly dropped        │   │
-│   │            Check Edge uplink VLAN            │  │             Check DFW rule order            │   │
-│   │           Verify BGP timers match            │  │             Enable DFW flow logs            │   │
-│   │            Check ASN/neighbor IP             │  │              Use Traceflow tool             │   │
-│   │           get bgp neighbor summary           │  │            Check group membership           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  BGP/routing diagnosis first; DFW Traceflow for east-west drop issues.                                │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │            Transport Node Issues             │  │            Manager Cluster Issues           │   │
-│   │             Node shows degraded              │  │             Node shows DEGRADED             │   │
-│   │           Check NSX agent on ESXi            │  │           Check disk space on mgr           │   │
-│   │            Resync transport node             │  │            Restart proton service           │   │
-│   │            Check TEP connectivity            │  │              Verify NTP in sync             │   │
-│   │           N-VDS mtu / uplink check           │  │            Check /var/log/proton            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  NSX Manager VMs, Edge VMs, ESXi transport nodes, ToR switches, vCenter                               │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  BGP session = routing peer; Idle/Connect = not established                                           │
-│  Traceflow   = NSX tool; sends test packet to debug path/drops                                        │
-│  DFW flow log= per-rule hit log; enabled in rule settings                                             │
-│  Transport node = ESXi/Edge with N-VDS; resync forces config refresh                                  │
-│  TEP         = Tunnel Endpoint; GENEVE source; ping to verify                                         │
-│  N-VDS       = NSX distributed switch; check uplink binding                                           │
-│  proton      = NSX Manager core service; restart to recover stuck state                               │
-│  DEGRADED    = NSX cluster status; one or more nodes unhealthy                                        │
-│  Group memb  = DFW group members; wrong group = wrong firewall policy                                 │
-│  ASN         = Autonomous System Number; must match on BGP peers                                      │
-│  Edge uplink = VLAN uplink on Edge to physical switch; check tagging                                  │
-│  Resync      = NSX Manager pushes config to transport node again                                      │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">---</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="o">##</span><span class="w"> </span><span class="n">Geneve</span><span class="w"> </span><span class="n">Tunnel</span><span class="w"> </span><span class="n">Down</span><span class="w"> </span><span class="k">Between</span><span class="w"> </span><span class="n">Two</span><span class="w"> </span><span class="n">Hosts</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="o">###</span><span class="w"> </span><span class="n">Symptom</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="n">VMs</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">same</span><span class="w"> </span><span class="n">segment</span><span class="w"> </span><span class="n">hosted</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="n">different</span><span class="w"> </span><span class="n">ESXi</span><span class="w"> </span><span class="n">hosts</span><span class="w"> </span><span class="n">cannot</span><span class="w"> </span><span class="n">communicate</span><span class="p">.</span><span class="w"> </span><span class="n">The</span><span class="w"> </span><span class="n">segment</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">UP</span><span class="p">,</span><span class="w"> </span><span class="n">but</span><span class="w"> </span><span class="n">traffic</span><span class="w"> </span><span class="k">between</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">two</span><span class="w"> </span><span class="n">hosts</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="k">not</span><span class="w"> </span><span class="n">flowing</span><span class="p">.</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="o">###</span><span class="w"> </span><span class="n">Diagnosis</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="o">```</span><span class="n">bash</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="o">#</span><span class="w"> </span><span class="k">From</span><span class="w"> </span><span class="n">NSX</span><span class="w"> </span><span class="n">Manager</span><span class="w"> </span><span class="n">CLI</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="n">nsxcli</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="k">get</span><span class="w"> </span><span class="n">tunnel</span><span class="w"> </span><span class="n">status</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="o">#</span><span class="w"> </span><span class="n">Look</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">DOWN</span><span class="w"> </span><span class="n">tunnels</span><span class="w"> </span><span class="k">between</span><span class="w"> </span><span class="k">specific</span><span class="w"> </span><span class="n">TEP</span><span class="w"> </span><span class="n">pairs</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="k">get</span><span class="w"> </span><span class="n">tunnel</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">&lt;</span><span class="n">remote</span><span class="o">-</span><span class="n">tep</span><span class="o">-</span><span class="n">ip</span><span class="o">&gt;</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="o">#</span><span class="w"> </span><span class="n">Identify</span><span class="w"> </span><span class="n">which</span><span class="w"> </span><span class="n">hosts</span><span class="w"> </span><span class="n">have</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">affected</span><span class="w"> </span><span class="n">TEPs</span>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="k">get</span><span class="w"> </span><span class="n">tunnel</span><span class="w"> </span><span class="n">endpoints</span>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="o">#</span><span class="w"> </span><span class="k">From</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">ESXi</span><span class="w"> </span><span class="k">host</span><span class="w"> </span><span class="err">—</span><span class="w"> </span><span class="n">verify</span><span class="w"> </span><span class="n">TEP</span><span class="w"> </span><span class="n">IP</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">assigned</span>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="n">esxcli</span><span class="w"> </span><span class="n">network</span><span class="w"> </span><span class="n">ip</span><span class="w"> </span><span class="n">interface</span><span class="w"> </span><span class="n">ipv4</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">grep</span><span class="w"> </span><span class="n">vmk</span>
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="o">#</span><span class="w"> </span><span class="n">Test</span><span class="w"> </span><span class="n">TEP</span><span class="w"> </span><span class="n">reachability</span>
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="n">vmkping</span><span class="w"> </span><span class="o">-</span><span class="n">I</span><span class="w"> </span><span class="n">vmk</span><span class="o">&lt;</span><span class="n">n</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&lt;</span><span class="n">remote</span><span class="o">-</span><span class="n">tep</span><span class="o">-</span><span class="n">ip</span><span class="o">&gt;</span>
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="o">#</span><span class="w"> </span><span class="n">Test</span><span class="w"> </span><span class="k">with</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">right</span><span class="w"> </span><span class="n">MTU</span>
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="n">vmkping</span><span class="w"> </span><span class="o">-</span><span class="n">I</span><span class="w"> </span><span class="n">vmk</span><span class="o">&lt;</span><span class="n">n</span><span class="o">&gt;</span><span class="w"> </span><span class="o">-</span><span class="n">d</span><span class="w"> </span><span class="o">-</span><span class="n">s</span><span class="w"> </span><span class="mi">1572</span><span class="w"> </span><span class="o">&lt;</span><span class="n">remote</span><span class="o">-</span><span class="n">tep</span><span class="o">-</span><span class="n">ip</span><span class="o">&gt;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌───────────────────────────────────────── NSX — Common Issues ─────────────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  BGP session down, DFW unexpected drops, transport node failures, and fixes.                          │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│                                                                                                       │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │             BGP / Routing Issues             │  │               DFW Drop Issues               │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │           Session Idle or Connect            │  │         Traffic unexpectedly dropped        │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │            Check Edge uplink VLAN            │  │             Check DFW rule order            │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │           Verify BGP timers match            │  │             Enable DFW flow logs            │   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │            Check ASN/neighbor IP             │  │              Use Traceflow tool             │   │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │           get bgp neighbor summary           │  │            Check group membership           │   │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                                                                       │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│  BGP/routing diagnosis first; DFW Traceflow for east-west drop issues.                                │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                                                                                                       │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│                                                                                                       │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │            Transport Node Issues             │  │            Manager Cluster Issues           │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │             Node shows degraded              │  │             Node shows DEGRADED             │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │           Check NSX agent on ESXi            │  │           Check disk space on mgr           │   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │            Resync transport node             │  │            Restart proton service           │   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   │            Check TEP connectivity            │  │              Verify NTP in sync             │   │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│   │           N-VDS mtu / uplink check           │  │            Check /var/log/proton            │   │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│                                                                                                       │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  NSX Manager VMs, Edge VMs, ESXi transport nodes, ToR switches, vCenter                               │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│                                                                                                       │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  BGP session = routing peer; Idle/Connect = not established                                           │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  Traceflow   = NSX tool; sends test packet to debug path/drops                                        │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  DFW flow log= per-rule hit log; enabled in rule settings                                             │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  Transport node = ESXi/Edge with N-VDS; resync forces config refresh                                  │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  TEP         = Tunnel Endpoint; GENEVE source; ping to verify                                         │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  N-VDS       = NSX distributed switch; check uplink binding                                           │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  proton      = NSX Manager core service; restart to recover stuck state                               │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  DEGRADED    = NSX cluster status; one or more nodes unhealthy                                        │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  Group memb  = DFW group members; wrong group = wrong firewall policy                                 │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  ASN         = Autonomous System Number; must match on BGP peers                                      │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│  Edge uplink = VLAN uplink on Edge to physical switch; check tagging                                  │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  Resync      = NSX Manager pushes config to transport node again                                      │
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│                                                                                                       │
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">---</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="o">##</span><span class="w"> </span><span class="n">Geneve</span><span class="w"> </span><span class="n">Tunnel</span><span class="w"> </span><span class="n">Down</span><span class="w"> </span><span class="k">Between</span><span class="w"> </span><span class="n">Two</span><span class="w"> </span><span class="n">Hosts</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="o">###</span><span class="w"> </span><span class="n">Symptom</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="n">VMs</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">same</span><span class="w"> </span><span class="n">segment</span><span class="w"> </span><span class="n">hosted</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="n">different</span><span class="w"> </span><span class="n">ESXi</span><span class="w"> </span><span class="n">hosts</span><span class="w"> </span><span class="n">cannot</span><span class="w"> </span><span class="n">communicate</span><span class="p">.</span><span class="w"> </span><span class="n">The</span><span class="w"> </span><span class="n">segment</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">UP</span><span class="p">,</span><span class="w"> </span><span class="n">but</span><span class="w"> </span><span class="n">traffic</span><span class="w"> </span><span class="k">between</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">two</span><span class="w"> </span><span class="n">hosts</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="k">not</span><span class="w"> </span><span class="n">flowing</span><span class="p">.</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="o">###</span><span class="w"> </span><span class="n">Diagnosis</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="o">```</span><span class="n">bash</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="o">#</span><span class="w"> </span><span class="k">From</span><span class="w"> </span><span class="n">NSX</span><span class="w"> </span><span class="n">Manager</span><span class="w"> </span><span class="n">CLI</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="n">nsxcli</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="k">get</span><span class="w"> </span><span class="n">tunnel</span><span class="w"> </span><span class="n">status</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="o">#</span><span class="w"> </span><span class="n">Look</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">DOWN</span><span class="w"> </span><span class="n">tunnels</span><span class="w"> </span><span class="k">between</span><span class="w"> </span><span class="k">specific</span><span class="w"> </span><span class="n">TEP</span><span class="w"> </span><span class="n">pairs</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="k">get</span><span class="w"> </span><span class="n">tunnel</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">&lt;</span><span class="n">remote</span><span class="o">-</span><span class="n">tep</span><span class="o">-</span><span class="n">ip</span><span class="o">&gt;</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="o">#</span><span class="w"> </span><span class="n">Identify</span><span class="w"> </span><span class="n">which</span><span class="w"> </span><span class="n">hosts</span><span class="w"> </span><span class="n">have</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">affected</span><span class="w"> </span><span class="n">TEPs</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="k">get</span><span class="w"> </span><span class="n">tunnel</span><span class="w"> </span><span class="n">endpoints</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="o">#</span><span class="w"> </span><span class="k">From</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">ESXi</span><span class="w"> </span><span class="k">host</span><span class="w"> </span><span class="err">—</span><span class="w"> </span><span class="n">verify</span><span class="w"> </span><span class="n">TEP</span><span class="w"> </span><span class="n">IP</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">assigned</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="n">esxcli</span><span class="w"> </span><span class="n">network</span><span class="w"> </span><span class="n">ip</span><span class="w"> </span><span class="n">interface</span><span class="w"> </span><span class="n">ipv4</span><span class="w"> </span><span class="k">get</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">grep</span><span class="w"> </span><span class="n">vmk</span>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="o">#</span><span class="w"> </span><span class="n">Test</span><span class="w"> </span><span class="n">TEP</span><span class="w"> </span><span class="n">reachability</span>
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="n">vmkping</span><span class="w"> </span><span class="o">-</span><span class="n">I</span><span class="w"> </span><span class="n">vmk</span><span class="o">&lt;</span><span class="n">n</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&lt;</span><span class="n">remote</span><span class="o">-</span><span class="n">tep</span><span class="o">-</span><span class="n">ip</span><span class="o">&gt;</span>
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="o">#</span><span class="w"> </span><span class="n">Test</span><span class="w"> </span><span class="k">with</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="k">right</span><span class="w"> </span><span class="n">MTU</span>
+<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a><span class="n">vmkping</span><span class="w"> </span><span class="o">-</span><span class="n">I</span><span class="w"> </span><span class="n">vmk</span><span class="o">&lt;</span><span class="n">n</span><span class="o">&gt;</span><span class="w"> </span><span class="o">-</span><span class="n">d</span><span class="w"> </span><span class="o">-</span><span class="n">s</span><span class="w"> </span><span class="mi">1572</span><span class="w"> </span><span class="o">&lt;</span><span class="n">remote</span><span class="o">-</span><span class="n">tep</span><span class="o">-</span><span class="n">ip</span><span class="o">&gt;</span>
 </code></pre></div></p>
 <h3 id="common-causes">Common Causes<a class="headerlink" href="#common-causes" title="Permanent link">&para;</a></h3>
 <table>
@@ -4914,24 +4915,24 @@ Common Issues reference covering Incident Triage, VM Cannot Communicate with Gat
 <h3 id="symptom_1">Symptom<a class="headerlink" href="#symptom_1" title="Permanent link">&para;</a></h3>
 <p>A DFW policy change was made in NSX Manager, but the rules are not taking effect on a specific VM.</p>
 <h3 id="diagnosis_1">Diagnosis<a class="headerlink" href="#diagnosis_1" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Step 1 — Confirm the policy is published (not in draft)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/policy/api/v1/infra/domains/default/security-policies/&lt;policy-id&gt;&quot;</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check: &quot;publish_state&quot;: &quot;realized&quot;</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Step 2 — Check realisation status on the transport node</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/policy/api/v1/infra/realized-state/realized-entities?intent_path=&lt;policy-path&gt;&quot;</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Step 3 — Check rules on the ESXi host</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># SSH to ESXi host running the VM</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>summarize-dvfilter<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;vm-name&gt;
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>vsipioctl<span class="w"> </span>getrules<span class="w"> </span>-f<span class="w"> </span>&lt;filter-name&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;rule-id&gt;
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># Step 4 — Check group membership</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># Is the VM actually in the security group referenced by the rule?</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/policy/api/v1/infra/domains/default/groups/&lt;group-id&gt;/members/virtual-machines&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Step 1 — Confirm the policy is published (not in draft)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/policy/api/v1/infra/domains/default/security-policies/&lt;policy-id&gt;&quot;</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Check: &quot;publish_state&quot;: &quot;realized&quot;</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Step 2 — Check realisation status on the transport node</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/policy/api/v1/infra/realized-state/realized-entities?intent_path=&lt;policy-path&gt;&quot;</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Step 3 — Check rules on the ESXi host</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># SSH to ESXi host running the VM</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>summarize-dvfilter<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;vm-name&gt;
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>vsipioctl<span class="w"> </span>getrules<span class="w"> </span>-f<span class="w"> </span>&lt;filter-name&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;rule-id&gt;
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="c1"># Step 4 — Check group membership</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="c1"># Is the VM actually in the security group referenced by the rule?</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/policy/api/v1/infra/domains/default/groups/&lt;group-id&gt;/members/virtual-machines&quot;</span>
 </code></pre></div>
 <h3 id="common-causes_1">Common Causes<a class="headerlink" href="#common-causes_1" title="Permanent link">&para;</a></h3>
 <table>
@@ -4969,16 +4970,16 @@ Common Issues reference covering Incident Triage, VM Cannot Communicate with Gat
 <h3 id="symptom_2">Symptom<a class="headerlink" href="#symptom_2" title="Permanent link">&para;</a></h3>
 <p><code>get cluster status</code> shows <code>UNSTABLE</code>, or two of the three Manager nodes are unreachable.</p>
 <h3 id="diagnosis_2">Diagnosis<a class="headerlink" href="#diagnosis_2" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># From any reachable Manager node</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>nsxcli
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>get<span class="w"> </span>cluster<span class="w"> </span>status
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>get<span class="w"> </span>managers
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>get<span class="w"> </span>corfu-cluster<span class="w"> </span>status
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Check services on this node</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>get<span class="w"> </span>services
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>get<span class="w"> </span>service<span class="w"> </span>http
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>get<span class="w"> </span>service<span class="w"> </span>manager
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># From any reachable Manager node</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>nsxcli
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>get<span class="w"> </span>cluster<span class="w"> </span>status
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>get<span class="w"> </span>managers
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>get<span class="w"> </span>corfu-cluster<span class="w"> </span>status
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Check services on this node</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>get<span class="w"> </span>services
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>get<span class="w"> </span>service<span class="w"> </span>http
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>get<span class="w"> </span>service<span class="w"> </span>manager
 </code></pre></div>
 <h3 id="recovery-steps">Recovery Steps<a class="headerlink" href="#recovery-steps" title="Permanent link">&para;</a></h3>
 <ol>
@@ -4993,16 +4994,16 @@ Common Issues reference covering Incident Triage, VM Cannot Communicate with Gat
 </li>
 <li>
 <p><strong>Corfu DB issues</strong>: If <code>get corfu-cluster status</code> shows errors:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>get<span class="w"> </span>corfu-cluster<span class="w"> </span>status
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># If shows UNSTABLE — collect logs and open a P1 support case immediately</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Do NOT attempt manual Corfu repair without Broadcom guidance</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>get<span class="w"> </span>corfu-cluster<span class="w"> </span>status
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># If shows UNSTABLE — collect logs and open a P1 support case immediately</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Do NOT attempt manual Corfu repair without Broadcom guidance</span>
 </code></pre></div></p>
 </li>
 <li>
 <p><strong>Disk space</strong>: Full disk is a common cause of Manager instability:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>df<span class="w"> </span>-h<span class="w"> </span>/
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># /var/log/vmware/ can grow large</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>du<span class="w"> </span>-sh<span class="w"> </span>/var/log/vmware/nsx-manager/
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>df<span class="w"> </span>-h<span class="w"> </span>/
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># /var/log/vmware/ can grow large</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>du<span class="w"> </span>-sh<span class="w"> </span>/var/log/vmware/nsx-manager/
 </code></pre></div>
    If disk is full, truncate old logs (not current log files) and restart services.</p>
 </li>
@@ -5012,20 +5013,20 @@ Common Issues reference covering Incident Triage, VM Cannot Communicate with Gat
 <h3 id="symptom_3">Symptom<a class="headerlink" href="#symptom_3" title="Permanent link">&para;</a></h3>
 <p>A vSphere cluster host fails to reach <code>Success</code> state after applying a Transport Node Profile. Host shows <code>Failed</code> or stuck in <code>In Progress</code>.</p>
 <h3 id="diagnosis_3">Diagnosis<a class="headerlink" href="#diagnosis_3" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check transport node state details</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/transport-nodes/&lt;tn-id&gt;/state&quot;</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Check the specific error message</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># It will indicate which step failed: VIB install, TEP IP allocation, etc.</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># On the ESXi host (SSH)</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>nsx
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># If VIBs are missing or showing wrong version, re-run preparation</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># Check IP pool has available IPs</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/pools/ip-pools/&lt;pool-id&gt;/ip-allocations&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Check transport node state details</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/transport-nodes/&lt;tn-id&gt;/state&quot;</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Check the specific error message</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1"># It will indicate which step failed: VIB install, TEP IP allocation, etc.</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># On the ESXi host (SSH)</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>nsx
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># If VIBs are missing or showing wrong version, re-run preparation</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="c1"># Check IP pool has available IPs</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/pools/ip-pools/&lt;pool-id&gt;/ip-allocations&quot;</span>
 </code></pre></div>
 <h3 id="common-causes_2">Common Causes<a class="headerlink" href="#common-causes_2" title="Permanent link">&para;</a></h3>
 <table>
@@ -5063,14 +5064,14 @@ Common Issues reference covering Incident Triage, VM Cannot Communicate with Gat
 <h3 id="symptom_4">Symptom<a class="headerlink" href="#symptom_4" title="Permanent link">&para;</a></h3>
 <p>Edge node CPU is consistently above 80%. Load balancer or NAT throughput is degraded.</p>
 <h3 id="diagnosis_4">Diagnosis<a class="headerlink" href="#diagnosis_4" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># SSH to Edge node</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>get<span class="w"> </span>node<span class="w"> </span>cpu-usage
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>get<span class="w"> </span>service<span class="w"> </span>dataplane<span class="w"> </span>stats
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Check active connections</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>get<span class="w"> </span>load-balancer<span class="w"> </span>status
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>get<span class="w"> </span>load-balancer<span class="w"> </span>virtual-servers
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>get<span class="w"> </span>nat<span class="w"> </span>translations<span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># SSH to Edge node</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>get<span class="w"> </span>node<span class="w"> </span>cpu-usage
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>get<span class="w"> </span>service<span class="w"> </span>dataplane<span class="w"> </span>stats
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Check active connections</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>get<span class="w"> </span>load-balancer<span class="w"> </span>status
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>get<span class="w"> </span>load-balancer<span class="w"> </span>virtual-servers
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>get<span class="w"> </span>nat<span class="w"> </span>translations<span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l
 </code></pre></div>
 <h3 id="common-causes-and-fixes">Common Causes and Fixes<a class="headerlink" href="#common-causes-and-fixes" title="Permanent link">&para;</a></h3>
 <table>

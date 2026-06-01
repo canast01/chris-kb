@@ -4774,70 +4774,71 @@ Aria Automation backup uses a built-in tool that exports the platform configurat
 <p>Open <code>https://&lt;vra-fqdn&gt;:5480</code> in a browser.</p>
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Lifecycle Management → Backup → Add Backup Location
 </code></pre></div>
-┌──────────────────────────────── Aria Automation — Backup and Restore ─────────────────────────────────┐
-│                                                                                                       │
-│  Backup covers vRA Postgres DB, Orchestrator, file-based config, and vIDM state.                      │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               What to Back Up                │  │                Backup Methods               │   │
-│   │       Postgres DB (vRA service state)        │  │         VAMI snapshot + export tool         │   │
-│   │       Aria Orchestrator DB + workflows       │  │        pg_dump for Postgres directly        │   │
-│   │       vIDM: tenant config + user data        │  │         VM snapshot before upgrades         │   │
-│   │          TLS certs and private keys          │  │        Offsite: NFS/S3 backup target        │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Restore process replays DB + config in order: vIDM → vRA → Orchestrator → verify.                    │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Restore Sequence               │  │              Restore Validation             │   │
-│   │         1. Restore vIDM from backup          │  │       Login via SSO after vIDM restore      │   │
-│   │          2. Restore vRA Postgres DB          │  │    Catalog items visible and requestable    │   │
-│   │           3. Restart vRA services            │  │       Orchestrator workflows listed OK      │   │
-│   │        4. Validate cloud account sync        │  │    Cloud accounts: data collection green    │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  vRA Linux appliances · Postgres cluster · vIDM VM · NFS/S3 backup storage · vCenter                  │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  VAMI              = Virtual Appliance Management Interface; web UI for vRA appliance config          │
-│  Postgres DB       = PostgreSQL database holding vRA service state, deployments, and catalog          │
-│  pg_dump           = PostgreSQL native backup utility; exports DB to SQL or custom format file        │
-│  vIDM backup       = Separate process; export vIDM config + tenant DB before vRA backup               │
-│  Orchestrator DB   = Separate Postgres schema holding workflow definitions and run history            │
-│  VM snapshot       = vCenter snapshot of appliance; used as pre-upgrade rollback point                │
-│  Restore order     = vIDM first (SSO dependency), then vRA, then verify Orchestrator connection       │
-│  RPO               = Recovery Point Objective; how much data loss is acceptable (target: ≤24h)        │
-│  RTO               = Recovery Time Objective; how fast must vRA be restored (target: ≤4h)             │
-│  Cert backup       = Private key + cert chain stored in password-protected archive off-appliance      │
-│  Data collection   = vRA process syncing resource inventory from cloud accounts post-restore          │
-│  NFS backup target = Network storage mount where backup archives are written and retained             │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">Recommended</span><span class="p">:</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="o">-</span><span class="w"> </span><span class="n">Frequency</span><span class="p">:</span><span class="w"> </span><span class="n">Daily</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="o">-</span><span class="w"> </span><span class="k">Time</span><span class="p">:</span><span class="w"> </span><span class="mi">02</span><span class="p">:</span><span class="mi">00</span><span class="w"> </span><span class="p">(</span><span class="k">off</span><span class="o">-</span><span class="n">peak</span><span class="p">)</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="o">-</span><span class="w"> </span><span class="n">Retention</span><span class="p">:</span><span class="w"> </span><span class="mi">14</span><span class="w"> </span><span class="n">copies</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="o">-</span><span class="w"> </span><span class="n">Enable</span><span class="w"> </span><span class="n">email</span><span class="w"> </span><span class="n">notification</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="n">failure</span><span class="p">:</span><span class="w"> </span><span class="n">requires</span><span class="w"> </span><span class="n">SMTP</span><span class="w"> </span><span class="n">configured</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">VAMI</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1">---</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="o">##</span><span class="w"> </span><span class="n">Restore</span><span class="w"> </span><span class="k">Procedure</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="n">Restore</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">backup</span><span class="w"> </span><span class="n">replaces</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">entire</span><span class="w"> </span><span class="n">Aria</span><span class="w"> </span><span class="n">Automation</span><span class="w"> </span><span class="n">platform</span><span class="w"> </span><span class="k">state</span><span class="p">.</span><span class="w"> </span><span class="k">All</span><span class="w"> </span><span class="n">configuration</span><span class="w"> </span><span class="n">changes</span><span class="w"> </span><span class="n">made</span><span class="w"> </span><span class="k">after</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">backup</span><span class="w"> </span><span class="n">point</span><span class="w"> </span><span class="k">are</span><span class="w"> </span><span class="n">lost</span><span class="p">.</span><span class="w"> </span><span class="n">Running</span><span class="w"> </span><span class="n">cloud</span><span class="w"> </span><span class="n">resources</span><span class="w"> </span><span class="k">are</span><span class="w"> </span><span class="k">not</span><span class="w"> </span><span class="n">affected</span><span class="p">.</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="o">**</span><span class="n">Prerequisites</span><span class="p">:</span><span class="o">**</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="o">-</span><span class="w"> </span><span class="n">Aria</span><span class="w"> </span><span class="n">Automation</span><span class="w"> </span><span class="k">cluster</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">deployed</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="n">accessible</span><span class="w"> </span><span class="p">(</span><span class="n">the</span><span class="w"> </span><span class="k">cluster</span><span class="w"> </span><span class="n">must</span><span class="w"> </span><span class="n">exist</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">restore</span><span class="w"> </span><span class="k">into</span><span class="p">)</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="o">-</span><span class="w"> </span><span class="n">Backup</span><span class="w"> </span><span class="n">file</span><span class="w"> </span><span class="n">accessible</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">NFS</span><span class="o">/</span><span class="n">SFTP</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="o">-</span><span class="w"> </span><span class="n">Backup</span><span class="w"> </span><span class="n">passphrase</span><span class="w"> </span><span class="n">available</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="o">**</span><span class="n">Via</span><span class="w"> </span><span class="n">VAMI</span><span class="p">:</span><span class="o">**</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="o">```</span><span class="nb">text</span>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="n">VAMI</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="n">Lifecycle</span><span class="w"> </span><span class="n">Management</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="n">Backup</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="n">Restore</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="k">select</span><span class="w"> </span><span class="n">backup</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="n">enter</span><span class="w"> </span><span class="n">passphrase</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="n">Restore</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌──────────────────────────────── Aria Automation — Backup and Restore ─────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  Backup covers vRA Postgres DB, Orchestrator, file-based config, and vIDM state.                      │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│                                                                                                       │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │               What to Back Up                │  │                Backup Methods               │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │       Postgres DB (vRA service state)        │  │         VAMI snapshot + export tool         │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │       Aria Orchestrator DB + workflows       │  │        pg_dump for Postgres directly        │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │       vIDM: tenant config + user data        │  │         VM snapshot before upgrades         │   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │          TLS certs and private keys          │  │        Offsite: NFS/S3 backup target        │   │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│                                                                                                       │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│  Restore process replays DB + config in order: vIDM → vRA → Orchestrator → verify.                    │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│                                                                                                       │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                                                                                                       │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │               Restore Sequence               │  │              Restore Validation             │   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │         1. Restore vIDM from backup          │  │       Login via SSO after vIDM restore      │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │          2. Restore vRA Postgres DB          │  │    Catalog items visible and requestable    │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │           3. Restart vRA services            │  │       Orchestrator workflows listed OK      │   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │        4. Validate cloud account sync        │  │    Cloud accounts: data collection green    │   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│                                                                                                       │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  vRA Linux appliances · Postgres cluster · vIDM VM · NFS/S3 backup storage · vCenter                  │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│                                                                                                       │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  VAMI              = Virtual Appliance Management Interface; web UI for vRA appliance config          │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│  Postgres DB       = PostgreSQL database holding vRA service state, deployments, and catalog          │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  pg_dump           = PostgreSQL native backup utility; exports DB to SQL or custom format file        │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  vIDM backup       = Separate process; export vIDM config + tenant DB before vRA backup               │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  Orchestrator DB   = Separate Postgres schema holding workflow definitions and run history            │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  VM snapshot       = vCenter snapshot of appliance; used as pre-upgrade rollback point                │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  Restore order     = vIDM first (SSO dependency), then vRA, then verify Orchestrator connection       │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  RPO               = Recovery Point Objective; how much data loss is acceptable (target: ≤24h)        │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  RTO               = Recovery Time Objective; how fast must vRA be restored (target: ≤4h)             │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  Cert backup       = Private key + cert chain stored in password-protected archive off-appliance      │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  Data collection   = vRA process syncing resource inventory from cloud accounts post-restore          │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  NFS backup target = Network storage mount where backup archives are written and retained             │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│                                                                                                       │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">Recommended</span><span class="p">:</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="o">-</span><span class="w"> </span><span class="n">Frequency</span><span class="p">:</span><span class="w"> </span><span class="n">Daily</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="o">-</span><span class="w"> </span><span class="k">Time</span><span class="p">:</span><span class="w"> </span><span class="mi">02</span><span class="p">:</span><span class="mi">00</span><span class="w"> </span><span class="p">(</span><span class="k">off</span><span class="o">-</span><span class="n">peak</span><span class="p">)</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="o">-</span><span class="w"> </span><span class="n">Retention</span><span class="p">:</span><span class="w"> </span><span class="mi">14</span><span class="w"> </span><span class="n">copies</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="o">-</span><span class="w"> </span><span class="n">Enable</span><span class="w"> </span><span class="n">email</span><span class="w"> </span><span class="n">notification</span><span class="w"> </span><span class="k">on</span><span class="w"> </span><span class="n">failure</span><span class="p">:</span><span class="w"> </span><span class="n">requires</span><span class="w"> </span><span class="n">SMTP</span><span class="w"> </span><span class="n">configured</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">VAMI</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1">---</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="o">##</span><span class="w"> </span><span class="n">Restore</span><span class="w"> </span><span class="k">Procedure</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="n">Restore</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">backup</span><span class="w"> </span><span class="n">replaces</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">entire</span><span class="w"> </span><span class="n">Aria</span><span class="w"> </span><span class="n">Automation</span><span class="w"> </span><span class="n">platform</span><span class="w"> </span><span class="k">state</span><span class="p">.</span><span class="w"> </span><span class="k">All</span><span class="w"> </span><span class="n">configuration</span><span class="w"> </span><span class="n">changes</span><span class="w"> </span><span class="n">made</span><span class="w"> </span><span class="k">after</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">backup</span><span class="w"> </span><span class="n">point</span><span class="w"> </span><span class="k">are</span><span class="w"> </span><span class="n">lost</span><span class="p">.</span><span class="w"> </span><span class="n">Running</span><span class="w"> </span><span class="n">cloud</span><span class="w"> </span><span class="n">resources</span><span class="w"> </span><span class="k">are</span><span class="w"> </span><span class="k">not</span><span class="w"> </span><span class="n">affected</span><span class="p">.</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="o">**</span><span class="n">Prerequisites</span><span class="p">:</span><span class="o">**</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="o">-</span><span class="w"> </span><span class="n">Aria</span><span class="w"> </span><span class="n">Automation</span><span class="w"> </span><span class="k">cluster</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">deployed</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="n">accessible</span><span class="w"> </span><span class="p">(</span><span class="n">the</span><span class="w"> </span><span class="k">cluster</span><span class="w"> </span><span class="n">must</span><span class="w"> </span><span class="n">exist</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">restore</span><span class="w"> </span><span class="k">into</span><span class="p">)</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="o">-</span><span class="w"> </span><span class="n">Backup</span><span class="w"> </span><span class="n">file</span><span class="w"> </span><span class="n">accessible</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">NFS</span><span class="o">/</span><span class="n">SFTP</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="o">-</span><span class="w"> </span><span class="n">Backup</span><span class="w"> </span><span class="n">passphrase</span><span class="w"> </span><span class="n">available</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="o">**</span><span class="n">Via</span><span class="w"> </span><span class="n">VAMI</span><span class="p">:</span><span class="o">**</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="o">```</span><span class="nb">text</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="n">VAMI</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="n">Lifecycle</span><span class="w"> </span><span class="n">Management</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="n">Backup</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="n">Restore</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="k">select</span><span class="w"> </span><span class="n">backup</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="n">enter</span><span class="w"> </span><span class="n">passphrase</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="n">Restore</span>
 </code></pre></div></p>
 <p>The restore process:
 1. Stops all Aria Automation services
@@ -4846,10 +4847,10 @@ Aria Automation backup uses a built-in tool that exports the platform configurat
 4. Restarts all services</p>
 <p>Expect 20–40 minutes for a restore depending on database size.</p>
 <p><strong>Via CLI:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ssh<span class="w"> </span>root@vra-prod-01.example.local
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>vracli<span class="w"> </span>restore<span class="w"> </span>list<span class="w">                         </span><span class="c1"># list available backups</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>vracli<span class="w"> </span>restore<span class="w"> </span>start<span class="w"> </span>--backup-id<span class="w"> </span>&lt;id&gt;<span class="w">       </span><span class="c1"># start restore from a specific backup</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>vracli<span class="w"> </span>restore<span class="w"> </span>status<span class="w">                       </span><span class="c1"># monitor progress</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ssh<span class="w"> </span>root@vra-prod-01.example.local
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>vracli<span class="w"> </span>restore<span class="w"> </span>list<span class="w">                         </span><span class="c1"># list available backups</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>vracli<span class="w"> </span>restore<span class="w"> </span>start<span class="w"> </span>--backup-id<span class="w"> </span>&lt;id&gt;<span class="w">       </span><span class="c1"># start restore from a specific backup</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>vracli<span class="w"> </span>restore<span class="w"> </span>status<span class="w">                       </span><span class="c1"># monitor progress</span>
 </code></pre></div>
 <hr />
 <h2 id="post-restore-validation">Post-Restore Validation<a class="headerlink" href="#post-restore-validation" title="Permanent link">&para;</a></h2>
@@ -4869,14 +4870,14 @@ Aria Automation backup uses a built-in tool that exports the platform configurat
 <hr />
 <h2 id="vm-level-backup-for-disaster-recovery">VM-Level Backup for Disaster Recovery<a class="headerlink" href="#vm-level-backup-for-disaster-recovery" title="Permanent link">&para;</a></h2>
 <p>For full platform DR (including recovery to a different vCenter or site), use VADP-compatible backup of all Aria Automation appliance VMs:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># PowerCLI — snapshot all vRA VMs before a change or backup window</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">$vms</span> <span class="p">=</span> <span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span> <span class="o">-like</span> <span class="s2">&quot;vra-*&quot;</span> <span class="p">}</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$vm</span> <span class="k">in</span> <span class="nv">$vms</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="nb">New-Snapshot</span> <span class="n">-VM</span> <span class="nv">$vm</span> <span class="p">`</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>      <span class="n">-Name</span> <span class="s2">&quot;pre-change-</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="n">yyyyMMdd</span><span class="p">)</span><span class="s2">&quot;</span> <span class="p">`</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>      <span class="n">-Quiesce</span> <span class="n">-Memory</span><span class="p">:</span><span class="nv">$false</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;</span><span class="p">$(</span><span class="nv">$vm</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2">: snapshot complete&quot;</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># PowerCLI — snapshot all vRA VMs before a change or backup window</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">$vms</span> <span class="p">=</span> <span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span> <span class="o">-like</span> <span class="s2">&quot;vra-*&quot;</span> <span class="p">}</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="k">foreach</span> <span class="p">(</span><span class="nv">$vm</span> <span class="k">in</span> <span class="nv">$vms</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="nb">New-Snapshot</span> <span class="n">-VM</span> <span class="nv">$vm</span> <span class="p">`</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>      <span class="n">-Name</span> <span class="s2">&quot;pre-change-</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="n">yyyyMMdd</span><span class="p">)</span><span class="s2">&quot;</span> <span class="p">`</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>      <span class="n">-Quiesce</span> <span class="n">-Memory</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;</span><span class="p">$(</span><span class="nv">$vm</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2">: snapshot complete&quot;</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="p">}</span>
 </code></pre></div>
 <p>For clustered deployments, back up all 3 nodes together — inconsistent snapshots across nodes can cause database split-brain on restore.</p>
 

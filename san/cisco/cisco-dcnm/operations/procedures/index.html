@@ -3816,51 +3816,52 @@
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="s1">    ]</span>
 <a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div>
-┌───────────────────────────────── Cisco DCNM — Operations Procedures ──────────────────────────────────┐
-│                                                                                                       │
-│  DCNM day-2 procedures: zone changes, switch adds, firmware upgrades, health monitoring.              │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │            Zone Change Procedure             │  │             Switch Add / Remove             │   │
-│   │         1. Create device alias (WWN)         │  │           1. Add switch IP in DCNM          │   │
-│   │         2. Create zone with aliases          │  │          2. Set SNMPv3 credentials          │   │
-│   │           3. Add zone to zone set            │  │           3. Discover: verify VSAN          │   │
-│   │         4. Review zone diff in DCNM          │  │         4. Set SNMP threshold rules         │   │
-│   │         5. Activate zone set in VSAN         │  │           5. Verify NX-OS version           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Zone set activation requires change ticket; always review diff before activation.                    │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Firmware Management              │  │          Health Monitoring Routine          │   │
-│   │         1. Upload NX-OS to DCNM repo         │  │           Daily: SNMP alert review          │   │
-│   │          2. Validate compatibility           │  │          Weekly: port error report          │   │
-│   │           3. ISSU upgrade via DCNM           │  │           Monthly: ISL utilisation          │   │
-│   │          4. Verify via show version          │  │          Quarterly: zone set audit          │   │
-│   │         5. Post-upgrade traffic test         │  │             Annual: DCNM upgrade            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  DCNM VM · management network · Cisco MDS switch chassis · SFP transceivers                           │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Device alias    = named mapping for WWN in VSAN; used as zone member instead of raw WWN              │
-│  Zone set        = collection of zones applied to a VSAN; only one active at a time                   │
-│  Zone diff       = DCNM shows before/after comparison before activating zone set                      │
-│  zoneset activate= NX-OS command; activates zone set in VSAN; DCNM triggers remotely                  │
-│  ISSU            = In-Service Software Upgrade; NX-OS upgrade without traffic disruption              │
-│  SNMPv3          = SNMP v3 credentials required for DCNM switch discovery and polling                 │
-│  VSAN            = Virtual SAN; logical FC fabric partition; zones are per-VSAN                       │
-│  Port error report= weekly DCNM report on CRC/discard/loss-of-sync per port                           │
-│  Zone set audit  = quarterly review of all zones for stale aliases and orphaned WWNs                  │
-│  Change ticket   = ITSM approval required before zone activation or firmware upgrade                  │
-│  ISL utilisation = monthly DCNM ISL throughput trend; &gt; 70% = add more ISLs                           │
-│  NX-OS repo      = DCNM internal firmware storage; images staged before upgrade                       │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌───────────────────────────────── Cisco DCNM — Operations Procedures ──────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  DCNM day-2 procedures: zone changes, switch adds, firmware upgrades, health monitoring.              │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│                                                                                                       │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │            Zone Change Procedure             │  │             Switch Add / Remove             │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │         1. Create device alias (WWN)         │  │           1. Add switch IP in DCNM          │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │         2. Create zone with aliases          │  │          2. Set SNMPv3 credentials          │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │           3. Add zone to zone set            │  │           3. Discover: verify VSAN          │   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │         4. Review zone diff in DCNM          │  │         4. Set SNMP threshold rules         │   │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │         5. Activate zone set in VSAN         │  │           5. Verify NX-OS version           │   │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                                                                       │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│  Zone set activation requires change ticket; always review diff before activation.                    │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                                                                                                       │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│                                                                                                       │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │             Firmware Management              │  │          Health Monitoring Routine          │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │         1. Upload NX-OS to DCNM repo         │  │           Daily: SNMP alert review          │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │          2. Validate compatibility           │  │          Weekly: port error report          │   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │           3. ISSU upgrade via DCNM           │  │           Monthly: ISL utilisation          │   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   │          4. Verify via show version          │  │          Quarterly: zone set audit          │   │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│   │         5. Post-upgrade traffic test         │  │             Annual: DCNM upgrade            │   │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│                                                                                                       │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  DCNM VM · management network · Cisco MDS switch chassis · SFP transceivers                           │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│                                                                                                       │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  Device alias    = named mapping for WWN in VSAN; used as zone member instead of raw WWN              │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  Zone set        = collection of zones applied to a VSAN; only one active at a time                   │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  Zone diff       = DCNM shows before/after comparison before activating zone set                      │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  zoneset activate= NX-OS command; activates zone set in VSAN; DCNM triggers remotely                  │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  ISSU            = In-Service Software Upgrade; NX-OS upgrade without traffic disruption              │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  SNMPv3          = SNMP v3 credentials required for DCNM switch discovery and polling                 │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  VSAN            = Virtual SAN; logical FC fabric partition; zones are per-VSAN                       │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  Port error report= weekly DCNM report on CRC/discard/loss-of-sync per port                           │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  Zone set audit  = quarterly review of all zones for stale aliases and orphaned WWNs                  │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  Change ticket   = ITSM approval required before zone activation or firmware upgrade                  │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│  ISL utilisation = monthly DCNM ISL throughput trend; &gt; 70% = add more ISLs                           │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  NX-OS repo      = DCNM internal firmware storage; images staged before upgrade                       │
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│                                                                                                       │
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 ```</p>
 
 

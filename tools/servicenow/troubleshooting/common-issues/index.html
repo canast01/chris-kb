@@ -3815,57 +3815,58 @@ Quick-reference troubleshooting guide for frequently encountered ServiceNow oper
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="nx">gs</span><span class="p">.</span><span class="nx">print</span><span class="p">(</span><span class="nx">gr</span><span class="p">.</span><span class="nx">getValue</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s1">&#39; | &#39;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">gr</span><span class="p">.</span><span class="nx">getValue</span><span class="p">(</span><span class="s1">&#39;duration&#39;</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s1">&#39; | &#39;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nx">gr</span><span class="p">.</span><span class="nx">getValue</span><span class="p">(</span><span class="s1">&#39;thread&#39;</span><span class="p">));</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="p">}</span>
 </code></pre></div>
-┌────────────────────────────────────── ServiceNow Common Issues ───────────────────────────────────────┐
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐                                                    │
-│   │                Login / Access                │                                                    │
-│   │       SSO redirect loop → clear cookie       │                                                    │
-│   │        Account locked → admin unlock         │                                                    │
-│   │       No role → check group membership       │                                                    │
-│   │        MFA failure → reset TOTP seed         │                                                    │
-│   └──────────────────────────────────────────────┘                                                    │
-│                                                     ┌─────────────────────────────────────────────┐   │
-│                                                     │                 Performance                 │   │
-│                                                     │         Slow list → add table index         │   │
-│                                                     │         Form loads slow → GlideAjax         │   │
-│                                                     │       High memory → review sched jobs       │   │
-│                                                     │        Timeout → semaphore leak check       │   │
-│                                                     └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐                                                    │
-│   │                 Integration                  │                                                    │
-│   │        REST fails → check ECC errors         │                                                    │
-│   │        MID offline → restart service         │                                                    │
-│   │         LDAP sync fail → bind creds          │                                                    │
-│   │         Email not sent → SMTP config         │                                                    │
-│   └──────────────────────────────────────────────┘                                                    │
-│                                                     ┌─────────────────────────────────────────────┐   │
-│                                                     │               Workflow / ITSM               │   │
-│                                                     │       Stuck approval → manual reassign      │   │
-│                                                     │       SLA not running → check timezone      │   │
-│                                                     │          Notif not sent → event log         │   │
-│                                                     │       Cat item error → variable check       │   │
-│                                                     └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  ServiceNow SaaS · MID server · SMTP relay · LDAP/AD servers · IdP                                    │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  SSO redirect loop= SAML response rejected; clear browser cookies and retry                           │
-│  GlideAjax  = client-server script framework; slow calls block form rendering                         │
-│  Semaphore  = thread lock; leaked semaphore holds thread pool causing timeouts                        │
-│  ECC queue  = integration message queue; error state shows failed REST/SOAP calls                     │
-│  MID server = on-prem agent; must be running and connected to instance                                │
-│  Bind creds = LDAP service account credentials; rotation requires UI update                           │
-│  Event log  = sys_event table; notification triggers logged here for debug                            │
-│  Cat item   = service catalog item; variable errors prevent form submission                           │
-│  SLA timezone= SLA schedule uses instance timezone; mismatch causes wrong calc                        │
-│  TOTP seed  = secret key for authenticator app; reset via admin user record                           │
-│  Table index= DB index on column; missing index on filter field causes slow lists                     │
-│  Sched jobs = background scheduled tasks; excessive jobs starve user threads                          │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌────────────────────────────────────── ServiceNow Common Issues ───────────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ┌──────────────────────────────────────────────┐                                                    │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │                Login / Access                │                                                    │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │       SSO redirect loop → clear cookie       │                                                    │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │        Account locked → admin unlock         │                                                    │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │       No role → check group membership       │                                                    │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │        MFA failure → reset TOTP seed         │                                                    │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   └──────────────────────────────────────────────┘                                                    │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│                                                     ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│                                                     │                 Performance                 │   │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│                                                     │         Slow list → add table index         │   │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                     │         Form loads slow → GlideAjax         │   │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│                                                     │       High memory → review sched jobs       │   │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                                                     │        Timeout → semaphore leak check       │   │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                                                     └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│                                                                                                       │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   ┌──────────────────────────────────────────────┐                                                    │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │                 Integration                  │                                                    │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │        REST fails → check ECC errors         │                                                    │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │        MID offline → restart service         │                                                    │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │         LDAP sync fail → bind creds          │                                                    │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   │         Email not sent → SMTP config         │                                                    │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│   └──────────────────────────────────────────────┘                                                    │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│                                                     ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│                                                     │               Workflow / ITSM               │   │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│                                                     │       Stuck approval → manual reassign      │   │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│                                                     │       SLA not running → check timezone      │   │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                     │          Notif not sent → event log         │   │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│                                                     │       Cat item error → variable check       │   │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│                                                     └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│                                                                                                       │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  ServiceNow SaaS · MID server · SMTP relay · LDAP/AD servers · IdP                                    │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│                                                                                                       │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│                                                                                                       │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  SSO redirect loop= SAML response rejected; clear browser cookies and retry                           │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  GlideAjax  = client-server script framework; slow calls block form rendering                         │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  Semaphore  = thread lock; leaked semaphore holds thread pool causing timeouts                        │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  ECC queue  = integration message queue; error state shows failed REST/SOAP calls                     │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│  MID server = on-prem agent; must be running and connected to instance                                │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  Bind creds = LDAP service account credentials; rotation requires UI update                           │
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│  Event log  = sys_event table; notification triggers logged here for debug                            │
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>│  Cat item   = service catalog item; variable errors prevent form submission                           │
+<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>│  SLA timezone= SLA schedule uses instance timezone; mismatch causes wrong calc                        │
+<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>│  TOTP seed  = secret key for authenticator app; reset via admin user record                           │
+<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>│  Table index= DB index on column; missing index on filter field causes slow lists                     │
+<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>│  Sched jobs = background scheduled tasks; excessive jobs starve user threads                          │
+<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>│                                                                                                       │
+<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 ```powershell</p>
 <h3 id="resolution_1">Resolution<a class="headerlink" href="#resolution_1" title="Permanent link">&para;</a></h3>
 <ol>

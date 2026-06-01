@@ -4360,35 +4360,36 @@ This page covers common InsightIQ operational problems: connectivity failures be
 <a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="c1"># Restart the collector if it has stopped</span>
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>iiq-collector
 </code></pre></div>
-┌───────────────────────────────────── InsightIQ — Troubleshooting ─────────────────────────────────────┐
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Collection Stops               │  │              Performance Issues             │   │
-│   │               Check iiq_status               │  │               Check VM CPU/mem              │   │
-│   │             Check PAPI TCP 8080              │  │               Check disk usage              │   │
-│   │               Verify PAPI user               │  │               Check PostgreSQL              │   │
-│   │              Restart collection              │  │            Reduce collection int            │   │
-│   │              Check cluster PAPI              │  │              Open Dell support              │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Logs: /var/log/isilon/insightiq/ · iiq_status on VM · PAPI test from VM                              │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  iiq_status = Show InsightIQ collection daemon status (running/stopped)                               │
-│  PAPI TCP 8080 = Test connectivity: curl -k https://<cluster>:8080/platform/1/auth                    │
-│  PAPI user test = Verify credential: curl -u <user>:<pass> https://<cluster>:8080/platform/1          │
-│  Restart collection = iiq_stop then iiq_start to recover stalled collection process                   │
-│  Disk full = df -h /data; if &gt; 95%, purge old data or expand VMDK                                     │
-│  PostgreSQL check = Check DB service: systemctl status postgresql                                     │
-│  VM CPU/mem = If InsightIQ VM is starved, add vCPU or RAM via vSphere                                 │
-│  Reduce interval = Increase collection interval from 30s to 5m to reduce DB write load                │
-│  PAPI on cluster = Verify cluster PAPI is enabled and accessible (isi_backend_cache_rpc_test)         │
-│  Log review = /var/log/isilon/insightiq/collection.log for error details                              │
-│  Dell support = support.dell.com; attach collection log and iiq_status output                         │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌───────────────────────────────────── InsightIQ — Troubleshooting ─────────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │               Collection Stops               │  │              Performance Issues             │   │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │               Check iiq_status               │  │               Check VM CPU/mem              │   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │             Check PAPI TCP 8080              │  │               Check disk usage              │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │               Verify PAPI user               │  │               Check PostgreSQL              │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │              Restart collection              │  │            Reduce collection int            │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │              Check cluster PAPI              │  │              Open Dell support              │   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│                                                                                                       │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│  Physical Infrastructure:                                                                             │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│  Logs: /var/log/isilon/insightiq/ · iiq_status on VM · PAPI test from VM                              │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│                                                                                                       │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                                                                                                       │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│  iiq_status = Show InsightIQ collection daemon status (running/stopped)                               │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│  PAPI TCP 8080 = Test connectivity: curl -k https://&lt;cluster&gt;:8080/platform/1/auth                    │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│  PAPI user test = Verify credential: curl -u &lt;user&gt;:&lt;pass&gt; https://&lt;cluster&gt;:8080/platform/1          │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│  Restart collection = iiq_stop then iiq_start to recover stalled collection process                   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│  Disk full = df -h /data; if &gt; 95%, purge old data or expand VMDK                                     │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│  PostgreSQL check = Check DB service: systemctl status postgresql                                     │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│  VM CPU/mem = If InsightIQ VM is starved, add vCPU or RAM via vSphere                                 │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│  Reduce interval = Increase collection interval from 30s to 5m to reduce DB write load                │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│  PAPI on cluster = Verify cluster PAPI is enabled and accessible (isi_backend_cache_rpc_test)         │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  Log review = /var/log/isilon/insightiq/collection.log for error details                              │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  Dell support = support.dell.com; attach collection log and iiq_status output                         │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│                                                                                                       │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 ```</p>
 <p>Recommended InsightIQ appliance resources:</p>
 <table>

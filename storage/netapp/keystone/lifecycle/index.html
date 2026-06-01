@@ -4008,74 +4008,75 @@ NetApp Keystone Lifecycle reference covering Subscription Terms and Renewal, Tru
 </ul>
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Monthly Invoice = (Committed capacity × committed rate) + (Burst TiB × burst rate)
 </code></pre></div>
-┌───────────────────────────────────── NetApp Keystone — Lifecycle ─────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │         Keystone lifecycle: contract -&gt; install -&gt; operate -&gt; capacity change -&gt; renew        │   │
-│   │          Contract: 1-5 year term; committed TB per service level; burst allowance set         │   │
-│   │         Install: NetApp ships AFF/FAS; rack + cable + ONTAP config by NetApp engineer         │   │
-│   │         Capacity change: add TB via KSM; contract amendment; hardware added if needed         │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Contract sign -&gt; install -&gt; operate -&gt; capacity change -&gt; renew or exit                            │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │          Pre-Deploy         │  │           In-Life           │  │         End of Term         │   │
-│   │        Contract sign        │  │          Operations         │  │        Renewal option       │   │
-│   │          HW sizing          │  │       Capacity review       │  │         Upgrade term        │   │
-│   │         Site survey         │  │       Burst monitoring      │  │       Exit: data move       │   │
-│   │         Rack install        │  │         Capacity add        │  │          HW return          │   │
-│   │         ONTAP config        │  │        ONTAP upgrade        │  │        Contract close       │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    Quarterly review with KSM: usage vs committed; plan capacity change before burst                   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Phase       │      Action      │       Owner       │       SLA        │      Notes       │   │
-│   │      Deploy      │   Rack/install   │       NetApp      │    30-60 days    │  Site ready req  │   │
-│   │     Cap add      │  Contract amend  │        KSM        │     30 days      │   HW lead time   │   │
-│   │    ONTAP upg     │  Patch/upgrade   │    NetApp/cust    │    Scheduled     │  Non-disruptive  │   │
-│   │       Exit       │  Data migration  │      Customer     │     EOL date     │   HW returned    │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: NetApp ships AFF/FAS + disk shelves; customer provides rack/power/cooling                │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    KSM                = Keystone Success Manager; lifecycle advisor; quarterly reviews                │
-│    Contract term      = 1, 3, or 5 years; defines committed TB and burst allowance                    │
-│    Capacity amendment = Formal change to contract committed TB; requires KSM sign-off                 │
-│    Site survey        = Pre-install assessment: rack space, power, cooling, network                   │
-│    Non-disruptive upg = ONTAP upgrade without host I/O interruption via rolling                       │
-│    Exit plan          = 90-day notice; customer migrates data; NetApp reclaims HW                     │
-│    Burst monitoring   = Active IQ alerts at 80%, 90% of burst ceiling                                 │
-│    ONTAP upgrade      = Cluster rolling upgrade; one node at a time; HA takes over                    │
-│    HW return          = Hardware is NetApp property; decommission on contract end                     │
-│    SFO                = Storage Failover; HA takeover during ONTAP upgrade cycles                     │
-│    Quarterly review   = KSM meets customer; reviews usage, forecasts, adjusts plan                    │
-│    HW lead time       = 30-60 days for new AFF/FAS nodes post-amendment                               │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="o">###</span><span class="w"> </span><span class="n">Collector</span><span class="w"> </span><span class="n">VM</span><span class="w"> </span><span class="n">OS</span><span class="w"> </span><span class="n">Maintenance</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">The</span><span class="w"> </span><span class="n">Collector</span><span class="w"> </span><span class="n">VM</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">customer</span><span class="o">-</span><span class="n">managed</span><span class="w"> </span><span class="n">infrastructure</span><span class="p">.</span><span class="w"> </span><span class="n">Apply</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">same</span><span class="w"> </span><span class="n">OS</span><span class="w"> </span><span class="n">hardening</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="n">patching</span><span class="w"> </span><span class="n">standards</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">other</span><span class="w"> </span><span class="n">management</span><span class="w"> </span><span class="n">VMs</span><span class="p">.</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="o">```</span><span class="n">bash</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="o">#</span><span class="w"> </span><span class="n">Apply</span><span class="w"> </span><span class="n">OS</span><span class="w"> </span><span class="k">security</span><span class="w"> </span><span class="n">patches</span><span class="w"> </span><span class="p">(</span><span class="n">RHEL</span><span class="o">/</span><span class="n">CentOS</span><span class="p">)</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="n">sudo</span><span class="w"> </span><span class="n">yum</span><span class="w"> </span><span class="k">update</span><span class="w"> </span><span class="o">-</span><span class="n">y</span><span class="w"> </span><span class="c1">--security</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="o">#</span><span class="w"> </span><span class="n">Apply</span><span class="w"> </span><span class="n">OS</span><span class="w"> </span><span class="k">security</span><span class="w"> </span><span class="n">patches</span><span class="w"> </span><span class="p">(</span><span class="n">Ubuntu</span><span class="o">/</span><span class="n">Debian</span><span class="p">)</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="n">sudo</span><span class="w"> </span><span class="n">apt</span><span class="o">-</span><span class="k">get</span><span class="w"> </span><span class="k">update</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">sudo</span><span class="w"> </span><span class="n">apt</span><span class="o">-</span><span class="k">get</span><span class="w"> </span><span class="n">upgrade</span><span class="w"> </span><span class="o">-</span><span class="n">y</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="o">#</span><span class="w"> </span><span class="k">After</span><span class="w"> </span><span class="n">OS</span><span class="w"> </span><span class="n">patching</span><span class="p">,</span><span class="w"> </span><span class="n">confirm</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">Collector</span><span class="w"> </span><span class="n">service</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">still</span><span class="w"> </span><span class="n">running</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="n">sudo</span><span class="w"> </span><span class="n">systemctl</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="n">keystone</span><span class="o">-</span><span class="n">collector</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="o">#</span><span class="w"> </span><span class="n">Verify</span><span class="w"> </span><span class="n">network</span><span class="w"> </span><span class="n">connectivity</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">NetApp</span><span class="w"> </span><span class="n">endpoint</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">intact</span><span class="w"> </span><span class="n">post</span><span class="o">-</span><span class="n">patch</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="n">curl</span><span class="w"> </span><span class="o">-</span><span class="n">sk</span><span class="w"> </span><span class="o">-</span><span class="n">o</span><span class="w"> </span><span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="k">null</span><span class="w"> </span><span class="o">-</span><span class="n">w</span><span class="w"> </span><span class="ss">&quot;%{http_code}&quot;</span><span class="w"> </span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">keystone</span><span class="p">.</span><span class="n">netapp</span><span class="p">.</span><span class="n">com</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌───────────────────────────────────── NetApp Keystone — Lifecycle ─────────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │         Keystone lifecycle: contract -&gt; install -&gt; operate -&gt; capacity change -&gt; renew        │   │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │          Contract: 1-5 year term; committed TB per service level; burst allowance set         │   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │         Install: NetApp ships AFF/FAS; rack + cable + ONTAP config by NetApp engineer         │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │         Capacity change: add TB via KSM; contract amendment; hardware added if needed         │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│                                                                                                       │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│    Contract sign -&gt; install -&gt; operate -&gt; capacity change -&gt; renew or exit                            │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│                                                                                                       │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                                                                       │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│   │          Pre-Deploy         │  │           In-Life           │  │         End of Term         │   │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│   │        Contract sign        │  │          Operations         │  │        Renewal option       │   │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   │          HW sizing          │  │       Capacity review       │  │         Upgrade term        │   │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │         Site survey         │  │       Burst monitoring      │  │       Exit: data move       │   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │         Rack install        │  │         Capacity add        │  │          HW return          │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │         ONTAP config        │  │        ONTAP upgrade        │  │        Contract close       │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│                                                                                                       │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│    Quarterly review with KSM: usage vs committed; plan capacity change before burst                   │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│                                                                                                       │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│                                                                                                       │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│   │      Phase       │      Action      │       Owner       │       SLA        │      Notes       │   │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│   │      Deploy      │   Rack/install   │       NetApp      │    30-60 days    │  Site ready req  │   │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│   │     Cap add      │  Contract amend  │        KSM        │     30 days      │   HW lead time   │   │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│   │    ONTAP upg     │  Patch/upgrade   │    NetApp/cust    │    Scheduled     │  Non-disruptive  │   │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│   │       Exit       │  Data migration  │      Customer     │     EOL date     │   HW returned    │   │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│                                                                                                       │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│    Physical: NetApp ships AFF/FAS + disk shelves; customer provides rack/power/cooling                │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│                                                                                                       │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│    Key terms:                                                                                         │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│                                                                                                       │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│    KSM                = Keystone Success Manager; lifecycle advisor; quarterly reviews                │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│    Contract term      = 1, 3, or 5 years; defines committed TB and burst allowance                    │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│    Capacity amendment = Formal change to contract committed TB; requires KSM sign-off                 │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│    Site survey        = Pre-install assessment: rack space, power, cooling, network                   │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│    Non-disruptive upg = ONTAP upgrade without host I/O interruption via rolling                       │
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│    Exit plan          = 90-day notice; customer migrates data; NetApp reclaims HW                     │
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>│    Burst monitoring   = Active IQ alerts at 80%, 90% of burst ceiling                                 │
+<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>│    ONTAP upgrade      = Cluster rolling upgrade; one node at a time; HA takes over                    │
+<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>│    HW return          = Hardware is NetApp property; decommission on contract end                     │
+<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>│    SFO                = Storage Failover; HA takeover during ONTAP upgrade cycles                     │
+<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>│    Quarterly review   = KSM meets customer; reviews usage, forecasts, adjusts plan                    │
+<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>│    HW lead time       = 30-60 days for new AFF/FAS nodes post-amendment                               │
+<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>│                                                                                                       │
+<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="o">###</span><span class="w"> </span><span class="n">Collector</span><span class="w"> </span><span class="n">VM</span><span class="w"> </span><span class="n">OS</span><span class="w"> </span><span class="n">Maintenance</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">The</span><span class="w"> </span><span class="n">Collector</span><span class="w"> </span><span class="n">VM</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">customer</span><span class="o">-</span><span class="n">managed</span><span class="w"> </span><span class="n">infrastructure</span><span class="p">.</span><span class="w"> </span><span class="n">Apply</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">same</span><span class="w"> </span><span class="n">OS</span><span class="w"> </span><span class="n">hardening</span><span class="w"> </span><span class="k">and</span><span class="w"> </span><span class="n">patching</span><span class="w"> </span><span class="n">standards</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">other</span><span class="w"> </span><span class="n">management</span><span class="w"> </span><span class="n">VMs</span><span class="p">.</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="o">```</span><span class="n">bash</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="o">#</span><span class="w"> </span><span class="n">Apply</span><span class="w"> </span><span class="n">OS</span><span class="w"> </span><span class="k">security</span><span class="w"> </span><span class="n">patches</span><span class="w"> </span><span class="p">(</span><span class="n">RHEL</span><span class="o">/</span><span class="n">CentOS</span><span class="p">)</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="n">sudo</span><span class="w"> </span><span class="n">yum</span><span class="w"> </span><span class="k">update</span><span class="w"> </span><span class="o">-</span><span class="n">y</span><span class="w"> </span><span class="c1">--security</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="o">#</span><span class="w"> </span><span class="n">Apply</span><span class="w"> </span><span class="n">OS</span><span class="w"> </span><span class="k">security</span><span class="w"> </span><span class="n">patches</span><span class="w"> </span><span class="p">(</span><span class="n">Ubuntu</span><span class="o">/</span><span class="n">Debian</span><span class="p">)</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="n">sudo</span><span class="w"> </span><span class="n">apt</span><span class="o">-</span><span class="k">get</span><span class="w"> </span><span class="k">update</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">sudo</span><span class="w"> </span><span class="n">apt</span><span class="o">-</span><span class="k">get</span><span class="w"> </span><span class="n">upgrade</span><span class="w"> </span><span class="o">-</span><span class="n">y</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="o">#</span><span class="w"> </span><span class="k">After</span><span class="w"> </span><span class="n">OS</span><span class="w"> </span><span class="n">patching</span><span class="p">,</span><span class="w"> </span><span class="n">confirm</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">Collector</span><span class="w"> </span><span class="n">service</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">still</span><span class="w"> </span><span class="n">running</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="n">sudo</span><span class="w"> </span><span class="n">systemctl</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="n">keystone</span><span class="o">-</span><span class="n">collector</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="o">#</span><span class="w"> </span><span class="n">Verify</span><span class="w"> </span><span class="n">network</span><span class="w"> </span><span class="n">connectivity</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">NetApp</span><span class="w"> </span><span class="n">endpoint</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">intact</span><span class="w"> </span><span class="n">post</span><span class="o">-</span><span class="n">patch</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="n">curl</span><span class="w"> </span><span class="o">-</span><span class="n">sk</span><span class="w"> </span><span class="o">-</span><span class="n">o</span><span class="w"> </span><span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="k">null</span><span class="w"> </span><span class="o">-</span><span class="n">w</span><span class="w"> </span><span class="ss">&quot;%{http_code}&quot;</span><span class="w"> </span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">keystone</span><span class="p">.</span><span class="n">netapp</span><span class="p">.</span><span class="n">com</span>
 </code></pre></div></p>
 <hr />
 <h2 id="subscription-exit-and-migration">Subscription Exit and Migration<a class="headerlink" href="#subscription-exit-and-migration" title="Permanent link">&para;</a></h2>
@@ -4123,31 +4124,31 @@ NetApp Keystone Lifecycle reference covering Subscription Terms and Renewal, Tru
 </tbody>
 </table>
 <h3 id="data-migration-approaches">Data Migration Approaches<a class="headerlink" href="#data-migration-approaches" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Option 1: SnapMirror to new ONTAP cluster (preferred for ONTAP-to-ONTAP migration)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Establish cluster peer between Keystone ONTAP and target ONTAP</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>cluster<span class="w"> </span>peer<span class="w"> </span>create<span class="w"> </span>-generate-passphrase<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span>-peer-addrs<span class="w"> </span>&lt;target-intercluster-lif&gt;
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Create XDP relationship to mirror data to the target</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>snapmirror<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">    </span>-source-path<span class="w"> </span>svm_prod:vol_data<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">    </span>-destination-path<span class="w"> </span>svm_target:vol_data<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">    </span>-type<span class="w"> </span>XDP<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">    </span>-policy<span class="w"> </span>MirrorAllSnapshots
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>snapmirror<span class="w"> </span>initialize<span class="w"> </span>-destination-path<span class="w"> </span>svm_target:vol_data
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># Once initial sync completes, schedule cutover</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># Quiesce source, final update, break mirror, mount at target</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>snapmirror<span class="w"> </span>quiesce<span class="w"> </span>-destination-path<span class="w"> </span>svm_target:vol_data
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>snapmirror<span class="w"> </span>update<span class="w"> </span>-destination-path<span class="w"> </span>svm_target:vol_data
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>snapmirror<span class="w"> </span><span class="k">break</span><span class="w"> </span>-destination-path<span class="w"> </span>svm_target:vol_data
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="c1"># Option 2: rsync for NAS data migration to non-ONTAP target</span>
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="c1"># Run from a Linux host with access to both NFS mounts</span>
-<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>rsync<span class="w"> </span>-avz<span class="w"> </span>--progress<span class="w"> </span>--checksum<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="w">    </span>/mnt/keystone-source/<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="w">    </span>/mnt/target-destination/
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Option 1: SnapMirror to new ONTAP cluster (preferred for ONTAP-to-ONTAP migration)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Establish cluster peer between Keystone ONTAP and target ONTAP</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>cluster<span class="w"> </span>peer<span class="w"> </span>create<span class="w"> </span>-generate-passphrase<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span>-peer-addrs<span class="w"> </span>&lt;target-intercluster-lif&gt;
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Create XDP relationship to mirror data to the target</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>snapmirror<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">    </span>-source-path<span class="w"> </span>svm_prod:vol_data<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">    </span>-destination-path<span class="w"> </span>svm_target:vol_data<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">    </span>-type<span class="w"> </span>XDP<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">    </span>-policy<span class="w"> </span>MirrorAllSnapshots
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>snapmirror<span class="w"> </span>initialize<span class="w"> </span>-destination-path<span class="w"> </span>svm_target:vol_data
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="c1"># Once initial sync completes, schedule cutover</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="c1"># Quiesce source, final update, break mirror, mount at target</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>snapmirror<span class="w"> </span>quiesce<span class="w"> </span>-destination-path<span class="w"> </span>svm_target:vol_data
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>snapmirror<span class="w"> </span>update<span class="w"> </span>-destination-path<span class="w"> </span>svm_target:vol_data
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>snapmirror<span class="w"> </span><span class="k">break</span><span class="w"> </span>-destination-path<span class="w"> </span>svm_target:vol_data
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="c1"># Option 2: rsync for NAS data migration to non-ONTAP target</span>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="c1"># Run from a Linux host with access to both NFS mounts</span>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>rsync<span class="w"> </span>-avz<span class="w"> </span>--progress<span class="w"> </span>--checksum<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="w">    </span>/mnt/keystone-source/<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a><span class="w">    </span>/mnt/target-destination/
 </code></pre></div>
 <h3 id="pre-decommission-validation">Pre-Decommission Validation<a class="headerlink" href="#pre-decommission-validation" title="Permanent link">&para;</a></h3>
 <p>Before confirming hardware removal with NetApp:</p>

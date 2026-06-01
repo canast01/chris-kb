@@ -3661,198 +3661,199 @@
 <a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>show<span class="w"> </span>ssh<span class="w"> </span>server
 <a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>show<span class="w"> </span>users
 </code></pre></div>
-┌─────────────────────────────────── Cisco MDS — Security Encryption ───────────────────────────────────┐
-│                                                                                                       │
-│  Management-plane TLS and FC-SP fabric encryption protecting MDS switch communications.               │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │            Management Encryption             │  │         Fabric Encryption (FC-SP-2)         │   │
-│   │         SSH: AES-128/256-CTR ciphers         │  │         FC-SP-2: AES-256-GCM frames         │   │
-│   │            HTTPS: TLS 1.2 minimum            │  │        IKE: key exchange between ISLs       │   │
-│   │         SNMP: v3 authPriv (AES-128)          │  │          Per-ISL encryption enable          │   │
-│   │         Syslog: TLS transport option         │  │         Rekey interval configurable         │   │
-│   │        Disable weak ciphers: RC4/DES         │  │         GCM: integrity + encryption         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Management TLS protects CLI/API; FC-SP-2 protects ISL data in transit                                │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                Key Management                │  │              Compliance Posture             │   │
-│   │        Local key store on supervisor         │  │          FIPS 140-2 mode available          │   │
-│   │       KMS: external key server option        │  │          Common Criteria validation         │   │
-│   │        Key rotation: scheduled rekey         │  │        Audit: cipher negotiation log        │   │
-│   │       PKI trustpoint for cert storage        │  │         No plaintext mgmt protocols         │   │
-│   │        Entropy: hardware RNG on ASIC         │  │         Annual cipher review policy         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  MDS supervisor ASIC (hardware RNG) · ISL fiber links · management Ethernet · KMS server              │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  FC-SP-2        = Fibre Channel Security Protocol v2; adds ISL frame encryption                       │
-│  GCM            = Galois/Counter Mode; AES cipher mode providing auth + encryption                    │
-│  IKE            = Internet Key Exchange; negotiates session keys for FC-SP-2                          │
-│  ISL            = Inter-Switch Link; E_Port connection between two MDS switches                       │
-│  FIPS 140-2     = US federal standard for cryptographic module security                               │
-│  KMS            = Key Management Server; centralizes key lifecycle for encryption                     │
-│  authPriv       = SNMPv3 security level: authentication + privacy (encryption)                        │
-│  Trustpoint     = Named PKI anchor; stores CA cert and associated key material                        │
-│  Rekey interval = How often session encryption keys are rotated to limit exposure                     │
-│  Hardware RNG   = Crypto-grade random number generator built into ASIC                                │
-│  Common Criteria= International security evaluation standard (ISO/IEC 15408)                          │
-│  TLS            = Transport Layer Security; encrypts management-plane sessions                        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">### HTTPS Certificate Management</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">NX</span><span class="o">-</span><span class="n">OS</span> <span class="n">uses</span> <span class="n">a</span> <span class="bp">self</span><span class="o">-</span><span class="n">signed</span> <span class="n">certificate</span> <span class="n">by</span> <span class="n">default</span><span class="o">.</span> <span class="n">For</span> <span class="n">enterprise</span> <span class="n">environments</span><span class="p">,</span> <span class="n">replace</span> <span class="k">with</span> <span class="n">a</span> <span class="n">CA</span><span class="o">-</span><span class="n">signed</span> <span class="n">certificate</span><span class="o">.</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="err">```</span><span class="n">bash</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Generate a new self-signed certificate</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="n">crypto</span> <span class="n">ca</span> <span class="n">trustpoint</span> <span class="n">LOCAL</span><span class="o">-</span><span class="n">CA</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  <span class="n">enrollment</span> <span class="bp">self</span><span class="o">-</span><span class="n">signed</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>  <span class="n">subject</span><span class="o">-</span><span class="n">name</span> <span class="n">CN</span><span class="o">=</span><span class="n">mds</span><span class="o">-</span><span class="n">sw01</span><span class="o">.</span><span class="n">corp</span><span class="o">.</span><span class="n">example</span><span class="o">.</span><span class="n">com</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Generate the keypair and certificate</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="n">crypto</span> <span class="n">key</span> <span class="n">generate</span> <span class="n">rsa</span> <span class="n">label</span> <span class="n">mds</span><span class="o">-</span><span class="n">ssl</span><span class="o">-</span><span class="n">key</span> <span class="n">modulus</span> <span class="mi">2048</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="n">crypto</span> <span class="n">ca</span> <span class="n">enroll</span> <span class="n">LOCAL</span><span class="o">-</span><span class="n">CA</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># Display the current certificate</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="n">show</span> <span class="n">crypto</span> <span class="n">ca</span> <span class="n">certificates</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="c1"># Import a CA-signed certificate (PEM format via TFTP/SCP)</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="n">copy</span> <span class="n">tftp</span><span class="p">:</span><span class="o">//&lt;</span><span class="n">server</span><span class="o">&gt;/</span><span class="n">mds</span><span class="o">-</span><span class="n">sw01</span><span class="o">.</span><span class="n">pem</span> <span class="n">bootflash</span><span class="p">:</span><span class="n">mds</span><span class="o">-</span><span class="n">sw01</span><span class="o">.</span><span class="n">pem</span>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="n">crypto</span> <span class="n">ca</span> <span class="kn">import</span><span class="w"> </span><span class="nn">LOCAL</span><span class="o">-</span><span class="n">CA</span> <span class="n">certificate</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌─────────────────────────────────── Cisco MDS — Security Encryption ───────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  Management-plane TLS and FC-SP fabric encryption protecting MDS switch communications.               │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│                                                                                                       │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │            Management Encryption             │  │         Fabric Encryption (FC-SP-2)         │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │         SSH: AES-128/256-CTR ciphers         │  │         FC-SP-2: AES-256-GCM frames         │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │            HTTPS: TLS 1.2 minimum            │  │        IKE: key exchange between ISLs       │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │         SNMP: v3 authPriv (AES-128)          │  │          Per-ISL encryption enable          │   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │         Syslog: TLS transport option         │  │         Rekey interval configurable         │   │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │        Disable weak ciphers: RC4/DES         │  │         GCM: integrity + encryption         │   │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                                                                       │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│  Management TLS protects CLI/API; FC-SP-2 protects ISL data in transit                                │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                                                                                                       │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│                                                                                                       │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │                Key Management                │  │              Compliance Posture             │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │        Local key store on supervisor         │  │          FIPS 140-2 mode available          │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │       KMS: external key server option        │  │          Common Criteria validation         │   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │        Key rotation: scheduled rekey         │  │        Audit: cipher negotiation log        │   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   │       PKI trustpoint for cert storage        │  │         No plaintext mgmt protocols         │   │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│   │        Entropy: hardware RNG on ASIC         │  │         Annual cipher review policy         │   │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│                                                                                                       │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  MDS supervisor ASIC (hardware RNG) · ISL fiber links · management Ethernet · KMS server              │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│                                                                                                       │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  FC-SP-2        = Fibre Channel Security Protocol v2; adds ISL frame encryption                       │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  GCM            = Galois/Counter Mode; AES cipher mode providing auth + encryption                    │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  IKE            = Internet Key Exchange; negotiates session keys for FC-SP-2                          │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  ISL            = Inter-Switch Link; E_Port connection between two MDS switches                       │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  FIPS 140-2     = US federal standard for cryptographic module security                               │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  KMS            = Key Management Server; centralizes key lifecycle for encryption                     │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  authPriv       = SNMPv3 security level: authentication + privacy (encryption)                        │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  Trustpoint     = Named PKI anchor; stores CA cert and associated key material                        │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  Rekey interval = How often session encryption keys are rotated to limit exposure                     │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  Hardware RNG   = Crypto-grade random number generator built into ASIC                                │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│  Common Criteria= International security evaluation standard (ISO/IEC 15408)                          │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  TLS            = Transport Layer Security; encrypts management-plane sessions                        │
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│                                                                                                       │
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">### HTTPS Certificate Management</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">NX</span><span class="o">-</span><span class="n">OS</span> <span class="n">uses</span> <span class="n">a</span> <span class="bp">self</span><span class="o">-</span><span class="n">signed</span> <span class="n">certificate</span> <span class="n">by</span> <span class="n">default</span><span class="o">.</span> <span class="n">For</span> <span class="n">enterprise</span> <span class="n">environments</span><span class="p">,</span> <span class="n">replace</span> <span class="k">with</span> <span class="n">a</span> <span class="n">CA</span><span class="o">-</span><span class="n">signed</span> <span class="n">certificate</span><span class="o">.</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="err">```</span><span class="n">bash</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Generate a new self-signed certificate</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="n">crypto</span> <span class="n">ca</span> <span class="n">trustpoint</span> <span class="n">LOCAL</span><span class="o">-</span><span class="n">CA</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>  <span class="n">enrollment</span> <span class="bp">self</span><span class="o">-</span><span class="n">signed</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>  <span class="n">subject</span><span class="o">-</span><span class="n">name</span> <span class="n">CN</span><span class="o">=</span><span class="n">mds</span><span class="o">-</span><span class="n">sw01</span><span class="o">.</span><span class="n">corp</span><span class="o">.</span><span class="n">example</span><span class="o">.</span><span class="n">com</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Generate the keypair and certificate</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="n">crypto</span> <span class="n">key</span> <span class="n">generate</span> <span class="n">rsa</span> <span class="n">label</span> <span class="n">mds</span><span class="o">-</span><span class="n">ssl</span><span class="o">-</span><span class="n">key</span> <span class="n">modulus</span> <span class="mi">2048</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="n">crypto</span> <span class="n">ca</span> <span class="n">enroll</span> <span class="n">LOCAL</span><span class="o">-</span><span class="n">CA</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># Display the current certificate</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="n">show</span> <span class="n">crypto</span> <span class="n">ca</span> <span class="n">certificates</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="c1"># Import a CA-signed certificate (PEM format via TFTP/SCP)</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="n">copy</span> <span class="n">tftp</span><span class="p">:</span><span class="o">//&lt;</span><span class="n">server</span><span class="o">&gt;/</span><span class="n">mds</span><span class="o">-</span><span class="n">sw01</span><span class="o">.</span><span class="n">pem</span> <span class="n">bootflash</span><span class="p">:</span><span class="n">mds</span><span class="o">-</span><span class="n">sw01</span><span class="o">.</span><span class="n">pem</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="n">crypto</span> <span class="n">ca</span> <span class="kn">import</span><span class="w"> </span><span class="nn">LOCAL</span><span class="o">-</span><span class="n">CA</span> <span class="n">certificate</span>
 </code></pre></div></p>
 <hr />
 <h2 id="snmpv3-encrypted-snmp">SNMPv3 (Encrypted SNMP)<a class="headerlink" href="#snmpv3-encrypted-snmp" title="Permanent link">&para;</a></h2>
 <p>SNMPv1 and v2c transmit community strings and OID data in cleartext. SNMPv3 with <code>authPriv</code> security level provides both authentication (SHA) and privacy encryption (AES).</p>
 <h3 id="disable-snmpv1v2c">Disable SNMPv1/v2c<a class="headerlink" href="#disable-snmpv1v2c" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Remove default community strings</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>no<span class="w"> </span>snmp-server<span class="w"> </span>community<span class="w"> </span>public
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>no<span class="w"> </span>snmp-server<span class="w"> </span>community<span class="w"> </span>private
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># If v2c is required for a legacy NMS: restrict to a named ACL</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># ip access-list SNMP-LEGACY-NMS</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1">#   permit udp 10.10.2.5/32 any eq 161</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># snmp-server community &lt;string&gt; group network-operator use-acl SNMP-LEGACY-NMS</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Remove default community strings</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>no<span class="w"> </span>snmp-server<span class="w"> </span>community<span class="w"> </span>public
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>no<span class="w"> </span>snmp-server<span class="w"> </span>community<span class="w"> </span>private
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># If v2c is required for a legacy NMS: restrict to a named ACL</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># ip access-list SNMP-LEGACY-NMS</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1">#   permit udp 10.10.2.5/32 any eq 161</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># snmp-server community &lt;string&gt; group network-operator use-acl SNMP-LEGACY-NMS</span>
 </code></pre></div>
 <h3 id="configure-snmpv3-users">Configure SNMPv3 Users<a class="headerlink" href="#configure-snmpv3-users" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Create an SNMPv3 user with authPriv (SHA auth, AES-128 privacy)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>snmp-server<span class="w"> </span>user<span class="w"> </span>nms_monitor<span class="w"> </span>network-operator<span class="w"> </span>v3<span class="w"> </span>auth<span class="w"> </span>sha<span class="w"> </span>&lt;auth-password&gt;<span class="w"> </span>priv<span class="w"> </span>aes-128<span class="w"> </span>&lt;priv-password&gt;
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Create a trap receiver using SNMPv3</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>snmp-server<span class="w"> </span>host<span class="w"> </span><span class="m">10</span>.10.2.50<span class="w"> </span>traps<span class="w"> </span>version<span class="w"> </span><span class="m">3</span><span class="w"> </span>priv<span class="w"> </span>nms_monitor
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Verify SNMPv3 user configuration</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>show<span class="w"> </span>snmp<span class="w"> </span>user
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Verify trap host configuration</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>show<span class="w"> </span>snmp<span class="w"> </span>host
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># Test SNMP from the monitoring server (Linux)</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="c1"># snmpwalk -v3 -u nms_monitor -l authPriv -a SHA -A &lt;auth-pass&gt; -x AES -X &lt;priv-pass&gt; &lt;switch-ip&gt; sysDescr</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Create an SNMPv3 user with authPriv (SHA auth, AES-128 privacy)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>snmp-server<span class="w"> </span>user<span class="w"> </span>nms_monitor<span class="w"> </span>network-operator<span class="w"> </span>v3<span class="w"> </span>auth<span class="w"> </span>sha<span class="w"> </span>&lt;auth-password&gt;<span class="w"> </span>priv<span class="w"> </span>aes-128<span class="w"> </span>&lt;priv-password&gt;
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Create a trap receiver using SNMPv3</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>snmp-server<span class="w"> </span>host<span class="w"> </span><span class="m">10</span>.10.2.50<span class="w"> </span>traps<span class="w"> </span>version<span class="w"> </span><span class="m">3</span><span class="w"> </span>priv<span class="w"> </span>nms_monitor
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Verify SNMPv3 user configuration</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>show<span class="w"> </span>snmp<span class="w"> </span>user
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Verify trap host configuration</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>show<span class="w"> </span>snmp<span class="w"> </span>host
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Test SNMP from the monitoring server (Linux)</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c1"># snmpwalk -v3 -u nms_monitor -l authPriv -a SHA -A &lt;auth-pass&gt; -x AES -X &lt;priv-pass&gt; &lt;switch-ip&gt; sysDescr</span>
 </code></pre></div>
 <h3 id="snmp-trap-configuration">SNMP Trap Configuration<a class="headerlink" href="#snmp-trap-configuration" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Enable specific trap categories</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>snmp-server<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>traps<span class="w"> </span>link
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>snmp-server<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>traps<span class="w"> </span>entity
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>snmp-server<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>traps<span class="w"> </span>vsan
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>snmp-server<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>traps<span class="w"> </span>zone
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Verify trap configuration</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>show<span class="w"> </span>snmp<span class="w"> </span><span class="nb">trap</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Check that traps are being sent (look for SNMP events in log)</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>show<span class="w"> </span>logging<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>snmp
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Enable specific trap categories</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>snmp-server<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>traps<span class="w"> </span>link
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>snmp-server<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>traps<span class="w"> </span>entity
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>snmp-server<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>traps<span class="w"> </span>vsan
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>snmp-server<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>traps<span class="w"> </span>zone
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Verify trap configuration</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>show<span class="w"> </span>snmp<span class="w"> </span><span class="nb">trap</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Check that traps are being sent (look for SNMP events in log)</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>show<span class="w"> </span>logging<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>snmp
 </code></pre></div>
 <hr />
 <h2 id="tacacs-key-encryption">TACACS+ Key Encryption<a class="headerlink" href="#tacacs-key-encryption" title="Permanent link">&para;</a></h2>
 <p>TACACS+ shared keys must be stored encrypted in the NX-OS configuration. NX-OS uses type-7 (Vigenere-based) obfuscation for <code>key 7</code> stored values.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Enter key as plaintext (NX-OS encrypts automatically in running-config)</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>tacacs-server<span class="w"> </span>host<span class="w"> </span><span class="m">10</span>.10.1.10<span class="w"> </span>key<span class="w"> </span><span class="m">0</span><span class="w"> </span>&lt;plaintext-key&gt;
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># The stored config shows an encrypted form</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>show<span class="w"> </span>running-config<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>tacacs
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># tacacs-server host 10.10.1.10 key 7 &lt;encrypted-string&gt;</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Rotating TACACS+ key</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>no<span class="w"> </span>tacacs-server<span class="w"> </span>host<span class="w"> </span><span class="m">10</span>.10.1.10<span class="w"> </span>key
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>tacacs-server<span class="w"> </span>host<span class="w"> </span><span class="m">10</span>.10.1.10<span class="w"> </span>key<span class="w"> </span><span class="m">0</span><span class="w"> </span>&lt;new-plaintext-key&gt;
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>copy<span class="w"> </span>running-config<span class="w"> </span>startup-config
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Enter key as plaintext (NX-OS encrypts automatically in running-config)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>tacacs-server<span class="w"> </span>host<span class="w"> </span><span class="m">10</span>.10.1.10<span class="w"> </span>key<span class="w"> </span><span class="m">0</span><span class="w"> </span>&lt;plaintext-key&gt;
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># The stored config shows an encrypted form</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>show<span class="w"> </span>running-config<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>tacacs
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># tacacs-server host 10.10.1.10 key 7 &lt;encrypted-string&gt;</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Rotating TACACS+ key</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>no<span class="w"> </span>tacacs-server<span class="w"> </span>host<span class="w"> </span><span class="m">10</span>.10.1.10<span class="w"> </span>key
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>tacacs-server<span class="w"> </span>host<span class="w"> </span><span class="m">10</span>.10.1.10<span class="w"> </span>key<span class="w"> </span><span class="m">0</span><span class="w"> </span>&lt;new-plaintext-key&gt;
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>copy<span class="w"> </span>running-config<span class="w"> </span>startup-config
 </code></pre></div>
 <p>Note: NX-OS type-7 keys are obfuscated, not cryptographically secure. The security relies on the confidentiality of the configuration file itself. Store configuration backups in an access-controlled, encrypted repository.</p>
 <hr />
 <h2 id="fc-sp-dhchap-fabric-authentication-encryption">FC-SP / DHCHAP (Fabric Authentication Encryption)<a class="headerlink" href="#fc-sp-dhchap-fabric-authentication-encryption" title="Permanent link">&para;</a></h2>
 <p>FC-SP uses DHCHAP (Diffie-Hellman Challenge Handshake Authentication Protocol) to authenticate FC devices before permitting fabric login. The DHCHAP exchange is cryptographically signed — it does not encrypt FC frames but prevents unauthenticated devices from logging in.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Enable FC-SP</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>feature<span class="w"> </span>fcsp
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Configure per-interface (F_Port connections to hosts/storage)</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>interface<span class="w"> </span>fc1/1
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span>fcsp<span class="w"> </span>dhchap<span class="w"> </span>mode<span class="w"> </span>on<span class="w">      </span><span class="c1"># Require authentication — reject unauthenticated devices</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span><span class="c1"># or</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span>fcsp<span class="w"> </span>dhchap<span class="w"> </span>mode<span class="w"> </span>auto<span class="w">    </span><span class="c1"># Negotiate — accept unauthenticated if peer doesn&#39;t support</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Set a DHCHAP password for a specific device (by PWWN)</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>fcsp<span class="w"> </span>dhchap<span class="w"> </span>devicename-password<span class="w"> </span>pwwn<span class="w"> </span><span class="m">21</span>:00:00:24:ff:a1:b2:c3<span class="w"> </span>password<span class="w"> </span><span class="m">0</span><span class="w"> </span>&lt;secret&gt;
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># Verify</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>show<span class="w"> </span>fcsp<span class="w"> </span>interface<span class="w"> </span>fc1/1
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>show<span class="w"> </span>fcsp<span class="w"> </span>dhchap<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Enable FC-SP</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>feature<span class="w"> </span>fcsp
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Configure per-interface (F_Port connections to hosts/storage)</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>interface<span class="w"> </span>fc1/1
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">  </span>fcsp<span class="w"> </span>dhchap<span class="w"> </span>mode<span class="w"> </span>on<span class="w">      </span><span class="c1"># Require authentication — reject unauthenticated devices</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">  </span><span class="c1"># or</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">  </span>fcsp<span class="w"> </span>dhchap<span class="w"> </span>mode<span class="w"> </span>auto<span class="w">    </span><span class="c1"># Negotiate — accept unauthenticated if peer doesn&#39;t support</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># Set a DHCHAP password for a specific device (by PWWN)</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>fcsp<span class="w"> </span>dhchap<span class="w"> </span>devicename-password<span class="w"> </span>pwwn<span class="w"> </span><span class="m">21</span>:00:00:24:ff:a1:b2:c3<span class="w"> </span>password<span class="w"> </span><span class="m">0</span><span class="w"> </span>&lt;secret&gt;
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="c1"># Verify</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>show<span class="w"> </span>fcsp<span class="w"> </span>interface<span class="w"> </span>fc1/1
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>show<span class="w"> </span>fcsp<span class="w"> </span>dhchap<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
 </code></pre></div>
 <hr />
 <h2 id="fcip-with-ipsec-fc-over-ip-encryption">FCIP with IPSec (FC over IP Encryption)<a class="headerlink" href="#fcip-with-ipsec-fc-over-ip-encryption" title="Permanent link">&para;</a></h2>
 <p>FCIP (Fibre Channel over IP) tunnels FC frames over IP networks for long-distance replication and campus extension. Without IPSec, FCIP traffic is transmitted in cleartext. Add IPSec to encrypt the IP tunnel.</p>
 <h3 id="fcip-with-ipsec-overview">FCIP with IPSec — Overview<a class="headerlink" href="#fcip-with-ipsec-overview" title="Permanent link">&para;</a></h3>
 <p>FCIP is typically deployed on MDS 9700-series switches with the Storage Services Module (SSM) or IPS modules. The configuration defines a tunnel interface that maps an FC VSAN to an IP tunnel endpoint.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Enable FCIP feature</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>feature<span class="w"> </span>fcip
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Create FCIP interface</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>interface<span class="w"> </span>fcip<span class="w"> </span><span class="m">1</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">  </span>peer-info<span class="w"> </span>ipaddr<span class="w"> </span><span class="m">10</span>.20.0.2<span class="w">    </span><span class="c1"># remote MDS management IP for FCIP</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">  </span>use-profile<span class="w"> </span><span class="m">1</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">  </span>vsan<span class="w"> </span><span class="m">20</span><span class="w">                        </span><span class="c1"># associate with replication VSAN</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># Define FCIP profile (TCP parameters)</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>fcip<span class="w"> </span>profile<span class="w"> </span><span class="m">1</span>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="w">  </span>ip<span class="w"> </span>address<span class="w"> </span><span class="m">10</span>.20.0.1
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="c1"># Enable IPSec on the FCIP interface</span>
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="c1"># (Requires IKE and IPSec policy configuration — see below)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Enable FCIP feature</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>feature<span class="w"> </span>fcip
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Create FCIP interface</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>interface<span class="w"> </span>fcip<span class="w"> </span><span class="m">1</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">  </span>peer-info<span class="w"> </span>ipaddr<span class="w"> </span><span class="m">10</span>.20.0.2<span class="w">    </span><span class="c1"># remote MDS management IP for FCIP</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">  </span>use-profile<span class="w"> </span><span class="m">1</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">  </span>vsan<span class="w"> </span><span class="m">20</span><span class="w">                        </span><span class="c1"># associate with replication VSAN</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Define FCIP profile (TCP parameters)</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>fcip<span class="w"> </span>profile<span class="w"> </span><span class="m">1</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">  </span>ip<span class="w"> </span>address<span class="w"> </span><span class="m">10</span>.20.0.1
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="c1"># Enable IPSec on the FCIP interface</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="c1"># (Requires IKE and IPSec policy configuration — see below)</span>
 </code></pre></div>
 <h3 id="ipsec-policy-for-fcip">IPSec Policy for FCIP<a class="headerlink" href="#ipsec-policy-for-fcip" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Define IKE proposal</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>crypto<span class="w"> </span>ike<span class="w"> </span>proposal<span class="w"> </span>FCIP-IKE-PROP
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>encryption<span class="w"> </span>aes-256-cbc
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span><span class="nb">hash</span><span class="w"> </span>sha256
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span>lifetime<span class="w"> </span><span class="m">86400</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Define IKE policy</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>crypto<span class="w"> </span>ike<span class="w"> </span>policy<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">  </span>proposal<span class="w"> </span>FCIP-IKE-PROP
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">  </span>peer<span class="w"> </span><span class="m">10</span>.20.0.2
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">  </span>pre-shared-key<span class="w"> </span><span class="m">0</span><span class="w"> </span>&lt;pre-shared-key&gt;
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="c1"># Define IPSec transform set</span>
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>crypto<span class="w"> </span>ipsec<span class="w"> </span>transform-set<span class="w"> </span>FCIP-XFORM<span class="w"> </span>esp-aes-256<span class="w"> </span>esp-sha256-hmac
-<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>
-<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="c1"># Define IPSec profile</span>
-<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>crypto<span class="w"> </span>ipsec<span class="w"> </span>profile<span class="w"> </span>FCIP-PROFILE
-<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="w">  </span><span class="nb">set</span><span class="w"> </span>transform-set<span class="w"> </span>FCIP-XFORM
-<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>
-<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="c1"># Apply to FCIP interface</span>
-<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>interface<span class="w"> </span>fcip<span class="w"> </span><span class="m">1</span>
-<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a><span class="w">  </span>ipsec<span class="w"> </span>crypto-map<span class="w"> </span>FCIP-PROFILE
-<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a>
-<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a><span class="c1"># Verify IPSec SA establishment</span>
-<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a>show<span class="w"> </span>crypto<span class="w"> </span>ike<span class="w"> </span>sa
-<a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a>show<span class="w"> </span>crypto<span class="w"> </span>ipsec<span class="w"> </span>sa
-<a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a>show<span class="w"> </span>interface<span class="w"> </span>fcip<span class="w"> </span><span class="m">1</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Define IKE proposal</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>crypto<span class="w"> </span>ike<span class="w"> </span>proposal<span class="w"> </span>FCIP-IKE-PROP
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span>encryption<span class="w"> </span>aes-256-cbc
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span><span class="nb">hash</span><span class="w"> </span>sha256
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">  </span>lifetime<span class="w"> </span><span class="m">86400</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Define IKE policy</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>crypto<span class="w"> </span>ike<span class="w"> </span>policy<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="w">  </span>proposal<span class="w"> </span>FCIP-IKE-PROP
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="w">  </span>peer<span class="w"> </span><span class="m">10</span>.20.0.2
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="w">  </span>pre-shared-key<span class="w"> </span><span class="m">0</span><span class="w"> </span>&lt;pre-shared-key&gt;
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="c1"># Define IPSec transform set</span>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>crypto<span class="w"> </span>ipsec<span class="w"> </span>transform-set<span class="w"> </span>FCIP-XFORM<span class="w"> </span>esp-aes-256<span class="w"> </span>esp-sha256-hmac
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a><span class="c1"># Define IPSec profile</span>
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>crypto<span class="w"> </span>ipsec<span class="w"> </span>profile<span class="w"> </span>FCIP-PROFILE
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a><span class="w">  </span><span class="nb">set</span><span class="w"> </span>transform-set<span class="w"> </span>FCIP-XFORM
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a><span class="c1"># Apply to FCIP interface</span>
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>interface<span class="w"> </span>fcip<span class="w"> </span><span class="m">1</span>
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a><span class="w">  </span>ipsec<span class="w"> </span>crypto-map<span class="w"> </span>FCIP-PROFILE
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a><span class="c1"># Verify IPSec SA establishment</span>
+<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>show<span class="w"> </span>crypto<span class="w"> </span>ike<span class="w"> </span>sa
+<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a>show<span class="w"> </span>crypto<span class="w"> </span>ipsec<span class="w"> </span>sa
+<a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a>show<span class="w"> </span>interface<span class="w"> </span>fcip<span class="w"> </span><span class="m">1</span>
 </code></pre></div>
 <hr />
 <h2 id="encryption-standards-summary">Encryption Standards Summary<a class="headerlink" href="#encryption-standards-summary" title="Permanent link">&para;</a></h2>

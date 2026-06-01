@@ -4131,105 +4131,106 @@
 <a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>                       <span class="nb">Sort-Object</span> <span class="n">LastWriteTime</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">1</span><span class="p">).</span><span class="n">Name</span>
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="p">}</span> <span class="p">|</span> <span class="nb">Format-List</span>
 </code></pre></div>
-┌──────────────────────────────────────── RASR — Health Checks ─────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                 RASR — Health Check Procedures                                │   │
-│   │                 Run these checks daily/weekly to confirm protection is working                │   │
-│   │                                         cybersense scan                                       │   │
-│   │                  Review job completion rate — target 100%; investigate failures               │   │
-│   │                         Check replication/backup lag against RPO target                       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   │      Check       │  What to verify  │      Expected     │    Frequency     │  Action if bad   │   │
-│   │    Job status    │All jobs complete │    100% success   │      Daily       │ Triage failures  │   │
-│   │    Lag / RPO     │ Replication lag  │    &lt; RPO target   │      Daily       │  Tune bandwidth  │   │
-│   │     Capacity     │ Repo space used  │     &lt; 80% full    │      Weekly      │ Expand or expire │   │
-│   │   Restore test   │  Random restore  │    Data intact    │     Monthly      │ Fix backup chain │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Isolated network segment (airgap switch) · Vault PowerStore/DD appliance · Clean-room ESXi hosts     │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  RASR          = Ransomware Air-gap Secure Recovery; full workflow from detection to clean rest       │
-│  Vault         = isolated, air-gapped storage appliance receiving periodic replication copies         │
-│  Vault Lock    = WORM lock applied after sync; prevents modification or deletion of vault copies      │
-│  CyberSense    = ML analytics engine scanning vault data for corruption, encryption signatures        │
-│  PPDM          = PowerProtect Data Manager; orchestrates protection policies, jobs, and recovery      │
-│  Air Gap       = physical or logical network isolation preventing attacker lateral movement to        │
-│  Delta Set     = incremental changed blocks replicated from production to vault each cycle            │
-│  Clean Room    = isolated recovery environment: separate vCenter, network, and workstations           │
-│  Recovery Point= specific vault snapshot timestamp from which clean recovery is performed             │
-│  Integrity Lock= two-person authorization required to open vault; prevents insider unlock attac       │
-│  Journal       = write-order-consistent journal on vault enabling point-in-time recovery              │
-│  Scan Report   = CyberSense output: clean/suspect classification per file and block                   │
-│  Retention     = vault copy lifespan; typically 30–90 days of daily snapshots kept                    │
-│  RTO           = Recovery Time Objective; time from failover decision to restored service             │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="o">###</span><span class="w"> </span><span class="mi">4</span><span class="p">.</span><span class="w"> </span><span class="n">VSS</span><span class="w"> </span><span class="n">Writer</span><span class="w"> </span><span class="n">Health</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="o">```</span><span class="n">powershell</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="o">#</span><span class="w"> </span><span class="k">Check</span><span class="w"> </span><span class="n">VSS</span><span class="w"> </span><span class="n">writers</span><span class="w"> </span><span class="k">are</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="k">stable</span><span class="w"> </span><span class="k">state</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="err">$</span><span class="n">writers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">vssadmin</span><span class="w"> </span><span class="n">list</span><span class="w"> </span><span class="n">writers</span><span class="w"> </span><span class="mi">2</span><span class="o">&gt;&amp;</span><span class="mi">1</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="err">$</span><span class="n">failed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">writers</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="k">Select</span><span class="o">-</span><span class="n">String</span><span class="w"> </span><span class="ss">&quot;State: \[8\] Failed&quot;</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="err">$</span><span class="n">failed</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">    </span><span class="k">Write</span><span class="o">-</span><span class="n">Warning</span><span class="w"> </span><span class="ss">&quot;FAIL: VSS writers in failed state:&quot;</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span><span class="err">$</span><span class="n">failed</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="err">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="err">{</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span><span class="k">Write</span><span class="o">-</span><span class="k">Host</span><span class="w"> </span><span class="ss">&quot;PASS: All VSS writers stable&quot;</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="err">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌──────────────────────────────────────── RASR — Health Checks ─────────────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │                                 RASR — Health Check Procedures                                │   │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │                 Run these checks daily/weekly to confirm protection is working                │   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │                                         cybersense scan                                       │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │                  Review job completion rate — target 100%; investigate failures               │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │                         Check replication/backup lag against RPO target                       │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│                                                                                                       │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │      Check       │  What to verify  │      Expected     │    Frequency     │  Action if bad   │   │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   │    Job status    │All jobs complete │    100% success   │      Daily       │ Triage failures  │   │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│   │    Lag / RPO     │ Replication lag  │    &lt; RPO target   │      Daily       │  Tune bandwidth  │   │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│   │     Capacity     │ Repo space used  │     &lt; 80% full    │      Weekly      │ Expand or expire │   │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│   │   Restore test   │  Random restore  │    Data intact    │     Monthly      │ Fix backup chain │   │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│                                                                                                       │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│  Physical Infrastructure:                                                                             │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│  Isolated network segment (airgap switch) · Vault PowerStore/DD appliance · Clean-room ESXi hosts     │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│                                                                                                       │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│  RASR          = Ransomware Air-gap Secure Recovery; full workflow from detection to clean rest       │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│  Vault         = isolated, air-gapped storage appliance receiving periodic replication copies         │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│  Vault Lock    = WORM lock applied after sync; prevents modification or deletion of vault copies      │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│  CyberSense    = ML analytics engine scanning vault data for corruption, encryption signatures        │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  PPDM          = PowerProtect Data Manager; orchestrates protection policies, jobs, and recovery      │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  Air Gap       = physical or logical network isolation preventing attacker lateral movement to        │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  Delta Set     = incremental changed blocks replicated from production to vault each cycle            │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│  Clean Room    = isolated recovery environment: separate vCenter, network, and workstations           │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Recovery Point= specific vault snapshot timestamp from which clean recovery is performed             │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│  Integrity Lock= two-person authorization required to open vault; prevents insider unlock attac       │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  Journal       = write-order-consistent journal on vault enabling point-in-time recovery              │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  Scan Report   = CyberSense output: clean/suspect classification per file and block                   │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  Retention     = vault copy lifespan; typically 30–90 days of daily snapshots kept                    │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  RTO           = Recovery Time Objective; time from failover decision to restored service             │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│                                                                                                       │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="o">###</span><span class="w"> </span><span class="mi">4</span><span class="p">.</span><span class="w"> </span><span class="n">VSS</span><span class="w"> </span><span class="n">Writer</span><span class="w"> </span><span class="n">Health</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="o">```</span><span class="n">powershell</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="o">#</span><span class="w"> </span><span class="k">Check</span><span class="w"> </span><span class="n">VSS</span><span class="w"> </span><span class="n">writers</span><span class="w"> </span><span class="k">are</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="k">stable</span><span class="w"> </span><span class="k">state</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="err">$</span><span class="n">writers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">vssadmin</span><span class="w"> </span><span class="n">list</span><span class="w"> </span><span class="n">writers</span><span class="w"> </span><span class="mi">2</span><span class="o">&gt;&amp;</span><span class="mi">1</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="err">$</span><span class="n">failed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="err">$</span><span class="n">writers</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="k">Select</span><span class="o">-</span><span class="n">String</span><span class="w"> </span><span class="ss">&quot;State: \[8\] Failed&quot;</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="err">$</span><span class="n">failed</span><span class="p">)</span><span class="w"> </span><span class="err">{</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">    </span><span class="k">Write</span><span class="o">-</span><span class="n">Warning</span><span class="w"> </span><span class="ss">&quot;FAIL: VSS writers in failed state:&quot;</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">    </span><span class="err">$</span><span class="n">failed</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="err">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="err">{</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">    </span><span class="k">Write</span><span class="o">-</span><span class="k">Host</span><span class="w"> </span><span class="ss">&quot;PASS: All VSS writers stable&quot;</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="err">}</span>
 </code></pre></div></p>
 <h3 id="5-idrac-media-mapping-test">5. iDRAC Media Mapping Test<a class="headerlink" href="#5-idrac-media-mapping-test" title="Permanent link">&para;</a></h3>
 <p>Test via iDRAC web UI (cannot be scripted without Redfish):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>iDRAC → Configuration → Virtual Media → Verify ISO is mapped
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>iDRAC → Overview → Boot → Boot Next = Virtual Optical Drive
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>(Optional: perform test boot in next maintenance window)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>iDRAC → Configuration → Virtual Media → Verify ISO is mapped
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>iDRAC → Overview → Boot → Boot Next = Virtual Optical Drive
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>(Optional: perform test boot in next maintenance window)
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Via Redfish API</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>root:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>https://&lt;idrac-ip&gt;/redfish/v1/Managers/iDRAC.Embedded.1/VirtualMedia<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Via Redfish API</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>root:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>https://&lt;idrac-ip&gt;/redfish/v1/Managers/iDRAC.Embedded.1/VirtualMedia<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div>
 <h2 id="fleet-wide-health-check">Fleet-Wide Health Check<a class="headerlink" href="#fleet-wide-health-check" title="Permanent link">&para;</a></h2>
 <p>Run monthly across all RASR-protected servers:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nv">$servers</span> <span class="p">=</span> <span class="p">@(</span><span class="s2">&quot;app01&quot;</span><span class="p">,</span> <span class="s2">&quot;app02&quot;</span><span class="p">,</span> <span class="s2">&quot;db01&quot;</span><span class="p">,</span> <span class="s2">&quot;web01&quot;</span><span class="p">)</span>   <span class="c"># update per environment</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nv">$report</span> <span class="p">=</span> <span class="k">foreach</span> <span class="p">(</span><span class="nv">$server</span> <span class="k">in</span> <span class="nv">$servers</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="k">try</span> <span class="p">{</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>        <span class="nv">$result</span> <span class="p">=</span> <span class="nb">Invoke-Command</span> <span class="n">-ComputerName</span> <span class="nv">$server</span> <span class="n">-ScriptBlock</span> <span class="p">{</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>            <span class="nv">$k</span> <span class="p">=</span> <span class="s2">&quot;HKLM:\SOFTWARE\Dell\RASR&quot;</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>            <span class="nv">$lastBkp</span> <span class="p">=</span> <span class="no">[datetime]</span><span class="p">(</span><span class="nb">Get-ItemProperty</span> <span class="nv">$k</span> <span class="n">-ErrorAction</span> <span class="n">Stop</span><span class="p">).</span><span class="n">LastBackupTime</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>            <span class="p">@{</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>                <span class="n">Agent</span>   <span class="p">=</span> <span class="p">(</span><span class="nb">Get-Service</span> <span class="n">RASRAgent</span><span class="p">).</span><span class="n">Status</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>                <span class="n">AgeH</span>    <span class="p">=</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(((</span><span class="nb">Get-Date</span><span class="p">)</span> <span class="p">-</span> <span class="nv">$lastBkp</span><span class="p">).</span><span class="n">TotalHours</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>                <span class="n">Result</span>  <span class="p">=</span> <span class="p">(</span><span class="nb">Get-ItemProperty</span> <span class="nv">$k</span><span class="p">).</span><span class="n">LastBackupResult</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>            <span class="p">}</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>        <span class="p">}</span> <span class="n">-ErrorAction</span> <span class="n">Stop</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>        <span class="no">[PSCustomObject]</span><span class="p">@{</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>            <span class="n">Server</span>  <span class="p">=</span> <span class="nv">$server</span>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>            <span class="n">Agent</span>   <span class="p">=</span> <span class="nv">$result</span><span class="p">.</span><span class="n">Agent</span>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>            <span class="n">AgeH</span>    <span class="p">=</span> <span class="nv">$result</span><span class="p">.</span><span class="n">AgeH</span>
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>            <span class="n">Result</span>  <span class="p">=</span> <span class="nv">$result</span><span class="p">.</span><span class="n">Result</span>
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>            <span class="n">Status</span>  <span class="p">=</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$result</span><span class="p">.</span><span class="n">Agent</span> <span class="o">-eq</span> <span class="s2">&quot;Running&quot;</span> <span class="o">-and</span> <span class="nv">$result</span><span class="p">.</span><span class="n">Result</span> <span class="o">-eq</span> <span class="s2">&quot;Success&quot;</span> <span class="o">-and</span> <span class="nv">$result</span><span class="p">.</span><span class="n">AgeH</span> <span class="o">-lt</span> <span class="n">26</span><span class="p">)</span> <span class="p">{</span><span class="s2">&quot;OK&quot;</span><span class="p">}</span> <span class="k">else</span> <span class="p">{</span><span class="s2">&quot;REVIEW&quot;</span><span class="p">}</span>
-<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>        <span class="p">}</span>
-<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>    <span class="p">}</span> <span class="k">catch</span> <span class="p">{</span>
-<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>        <span class="no">[PSCustomObject]</span><span class="p">@{</span> <span class="n">Server</span> <span class="p">=</span> <span class="nv">$server</span><span class="p">;</span> <span class="n">Agent</span> <span class="p">=</span> <span class="s2">&quot;UNREACHABLE&quot;</span><span class="p">;</span> <span class="n">AgeH</span> <span class="p">=</span> <span class="n">0</span><span class="p">;</span> <span class="n">Result</span> <span class="p">=</span> <span class="s2">&quot;N/A&quot;</span><span class="p">;</span> <span class="n">Status</span> <span class="p">=</span> <span class="s2">&quot;REVIEW&quot;</span> <span class="p">}</span>
-<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>    <span class="p">}</span>
-<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a><span class="p">}</span>
-<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>
-<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a><span class="nv">$report</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">Status</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Format-Table</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nv">$servers</span> <span class="p">=</span> <span class="p">@(</span><span class="s2">&quot;app01&quot;</span><span class="p">,</span> <span class="s2">&quot;app02&quot;</span><span class="p">,</span> <span class="s2">&quot;db01&quot;</span><span class="p">,</span> <span class="s2">&quot;web01&quot;</span><span class="p">)</span>   <span class="c"># update per environment</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nv">$report</span> <span class="p">=</span> <span class="k">foreach</span> <span class="p">(</span><span class="nv">$server</span> <span class="k">in</span> <span class="nv">$servers</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="k">try</span> <span class="p">{</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>        <span class="nv">$result</span> <span class="p">=</span> <span class="nb">Invoke-Command</span> <span class="n">-ComputerName</span> <span class="nv">$server</span> <span class="n">-ScriptBlock</span> <span class="p">{</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>            <span class="nv">$k</span> <span class="p">=</span> <span class="s2">&quot;HKLM:\SOFTWARE\Dell\RASR&quot;</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>            <span class="nv">$lastBkp</span> <span class="p">=</span> <span class="no">[datetime]</span><span class="p">(</span><span class="nb">Get-ItemProperty</span> <span class="nv">$k</span> <span class="n">-ErrorAction</span> <span class="n">Stop</span><span class="p">).</span><span class="n">LastBackupTime</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>            <span class="p">@{</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>                <span class="n">Agent</span>   <span class="p">=</span> <span class="p">(</span><span class="nb">Get-Service</span> <span class="n">RASRAgent</span><span class="p">).</span><span class="n">Status</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>                <span class="n">AgeH</span>    <span class="p">=</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(((</span><span class="nb">Get-Date</span><span class="p">)</span> <span class="p">-</span> <span class="nv">$lastBkp</span><span class="p">).</span><span class="n">TotalHours</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>                <span class="n">Result</span>  <span class="p">=</span> <span class="p">(</span><span class="nb">Get-ItemProperty</span> <span class="nv">$k</span><span class="p">).</span><span class="n">LastBackupResult</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>            <span class="p">}</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>        <span class="p">}</span> <span class="n">-ErrorAction</span> <span class="n">Stop</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>        <span class="no">[PSCustomObject]</span><span class="p">@{</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>            <span class="n">Server</span>  <span class="p">=</span> <span class="nv">$server</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>            <span class="n">Agent</span>   <span class="p">=</span> <span class="nv">$result</span><span class="p">.</span><span class="n">Agent</span>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>            <span class="n">AgeH</span>    <span class="p">=</span> <span class="nv">$result</span><span class="p">.</span><span class="n">AgeH</span>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>            <span class="n">Result</span>  <span class="p">=</span> <span class="nv">$result</span><span class="p">.</span><span class="n">Result</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>            <span class="n">Status</span>  <span class="p">=</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$result</span><span class="p">.</span><span class="n">Agent</span> <span class="o">-eq</span> <span class="s2">&quot;Running&quot;</span> <span class="o">-and</span> <span class="nv">$result</span><span class="p">.</span><span class="n">Result</span> <span class="o">-eq</span> <span class="s2">&quot;Success&quot;</span> <span class="o">-and</span> <span class="nv">$result</span><span class="p">.</span><span class="n">AgeH</span> <span class="o">-lt</span> <span class="n">26</span><span class="p">)</span> <span class="p">{</span><span class="s2">&quot;OK&quot;</span><span class="p">}</span> <span class="k">else</span> <span class="p">{</span><span class="s2">&quot;REVIEW&quot;</span><span class="p">}</span>
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>        <span class="p">}</span>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>    <span class="p">}</span> <span class="k">catch</span> <span class="p">{</span>
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>        <span class="no">[PSCustomObject]</span><span class="p">@{</span> <span class="n">Server</span> <span class="p">=</span> <span class="nv">$server</span><span class="p">;</span> <span class="n">Agent</span> <span class="p">=</span> <span class="s2">&quot;UNREACHABLE&quot;</span><span class="p">;</span> <span class="n">AgeH</span> <span class="p">=</span> <span class="n">0</span><span class="p">;</span> <span class="n">Result</span> <span class="p">=</span> <span class="s2">&quot;N/A&quot;</span><span class="p">;</span> <span class="n">Status</span> <span class="p">=</span> <span class="s2">&quot;REVIEW&quot;</span> <span class="p">}</span>
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>    <span class="p">}</span>
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a><span class="p">}</span>
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a><span class="nv">$report</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">Status</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Format-Table</span>
 </code></pre></div>
 <h2 id="health-check-sign-off">Health Check Sign-Off<a class="headerlink" href="#health-check-sign-off" title="Permanent link">&para;</a></h2>
 <p>Document results monthly in the DR register:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Date: ___________  Performed by: ___________
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Servers checked: ___ / ___
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Servers passing all checks: ___ / ___
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Issues found: ___________
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>Actions taken: ___________
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Next check due: ___________
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Date: ___________  Performed by: ___________
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>Servers checked: ___ / ___
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>Servers passing all checks: ___ / ___
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>Issues found: ___________
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>Actions taken: ___________
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>Next check due: ___________
 </code></pre></div>
 
 

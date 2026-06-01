@@ -3416,111 +3416,112 @@
     HBA-&gt;&gt;Storage: PRLI (Process Login)\nnegotiate FCP parameters
     Storage--&gt;&gt;HBA: ACC — FCP ready
     Note over HBA,Storage: LUN discovery and I/O can begin</code></pre>
-┌────────────────────────────────── Brocade Fabric OS — Integrations ───────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │     FOS integrates with management tools, monitoring platforms, and automation frameworks     │   │
-│   │       SANnav: primary GUI management via SSH + REST API; fabric discovery and monitoring      │   │
-│   │       SNMP v3: NMS integration for trap forwarding; Brocade MIBs cover port/fabric OIDs       │   │
-│   │             LDAP/AD: centralised authentication; role mapping via group membership            │   │
-│   │          REST API: JSON-based programmatic management for Ansible and CI/CD pipelines         │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Management tools -&gt; monitoring/alerting -&gt; identity -&gt; automation integrations                     │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │          Management         │  │          Monitoring         │  │          Automation         │   │
-│   │          SANnav GUI         │  │        SNMP v3 traps        │  │           REST API          │   │
-│   │           SSH CLI           │  │        Syslog (SIEM)        │  │       Ansible modules       │   │
-│   │         LDAP/AD auth        │  │         MAPS alerts         │  │        Python scripts       │   │
-│   │        vCenter plugin       │  │         Email alerts        │  │        CI/CD pipeline       │   │
-│   │           NTP sync          │  │          Dashboard          │  │          Terraform          │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    All integrations use out-of-band Ethernet management; FC data plane unaffected                     │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Integration    │     Protocol     │        Auth       │     Use case     │      Notes       │   │
-│   │      SANnav      │     SSH+REST     │    Password/key   │    Full mgmt     │   Primary tool   │   │
-│   │     SNMP v3      │     UDP 162      │      AuthPriv     │    NMS traps     │   Brocade MIBs   │   │
-│   │     REST API     │    HTTPS 443     │   Session token   │    Automation    │     FOS 8.2+     │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: mgmt Ethernet port on each switch · OOB management network · NTP server                  │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    SANnav         = Brocade SAN management GUI; primary operational tool for FOS switches             │
-│    REST API       = HTTPS-based FOS management API; returns JSON; requires FOS 8.2+                   │
-│    SNMP v3        = SNMPv3 with authentication (SHA) and encryption (AES) for secure traps            │
-│    Brocade MIBs   = SNMP MIB files defining Brocade-specific OIDs for port/fabric telemetry           │
-│    LDAP/AD        = Switch authenticates admin users against Active Directory                         │
-│    MAPS           = Monitoring and Alerting Policy Suite; configures thresholds and actions           │
-│    Syslog         = Switch event log forwarded to SIEM (Splunk, QRadar) for correlation               │
-│    Ansible module = brocade_fibrechannel Ansible collection for zone/port automation                  │
-│    vCenter plugin = Shows FC path visibility from VM HBA through fabric to storage                    │
-│    Session token  = REST API Bearer token returned on login; used in subsequent API calls             │
-│    NTP sync       = Switch clock synchronised to NTP for accurate log timestamps                      │
-│    OOB mgmt       = Out-of-band management via dedicated Ethernet port; separate from FC              │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1">---</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="o">##</span><span class="w"> </span><span class="n">Dell</span><span class="w"> </span><span class="n">PowerMax</span><span class="w"> </span><span class="n">Integration</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">PowerMax</span><span class="w"> </span><span class="n">FA</span><span class="w"> </span><span class="p">(</span><span class="n">Front</span><span class="o">-</span><span class="k">End</span><span class="w"> </span><span class="n">Adapter</span><span class="p">)</span><span class="w"> </span><span class="n">ports</span><span class="w"> </span><span class="k">are</span><span class="w"> </span><span class="n">registered</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">aliases</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="k">each</span><span class="w"> </span><span class="n">Brocade</span><span class="w"> </span><span class="n">fabric</span><span class="p">.</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="o">```</span><span class="n">bash</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="o">#</span><span class="w"> </span><span class="k">Create</span><span class="w"> </span><span class="n">aliases</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">PowerMax</span><span class="w"> </span><span class="n">FA</span><span class="w"> </span><span class="n">ports</span><span class="w"> </span><span class="p">(</span><span class="k">get</span><span class="w"> </span><span class="n">WWPNs</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">Unisphere</span><span class="p">)</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="n">alicreate</span><span class="w"> </span><span class="ss">&quot;powermax01_fa0e&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;5x:xx:xx:xx:xx:xx:xx:xx&quot;</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="n">alicreate</span><span class="w"> </span><span class="ss">&quot;powermax01_fa0f&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;5x:xx:xx:xx:xx:xx:xx:xx&quot;</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="o">#</span><span class="w"> </span><span class="k">For</span><span class="w"> </span><span class="n">SRDF</span><span class="w"> </span><span class="n">replication</span><span class="p">:</span><span class="w"> </span><span class="n">Director</span><span class="w"> </span><span class="n">ports</span><span class="w"> </span><span class="k">are</span><span class="w"> </span><span class="n">zoned</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">replication</span><span class="w"> </span><span class="k">zone</span><span class="o">/</span><span class="n">fabric</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="o">#</span><span class="w"> </span><span class="n">Ensure</span><span class="w"> </span><span class="n">SRDF</span><span class="w"> </span><span class="n">director</span><span class="w"> </span><span class="n">ports</span><span class="w"> </span><span class="n">use</span><span class="w"> </span><span class="n">VSAN</span><span class="o">/</span><span class="k">zone</span><span class="w"> </span><span class="n">separation</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">production</span><span class="w"> </span><span class="k">host</span><span class="w"> </span><span class="n">zones</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌────────────────────────────────── Brocade Fabric OS — Integrations ───────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │     FOS integrates with management tools, monitoring platforms, and automation frameworks     │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │       SANnav: primary GUI management via SSH + REST API; fabric discovery and monitoring      │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │       SNMP v3: NMS integration for trap forwarding; Brocade MIBs cover port/fabric OIDs       │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │             LDAP/AD: centralised authentication; role mapping via group membership            │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │          REST API: JSON-based programmatic management for Ansible and CI/CD pipelines         │   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│                                                                                                       │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│    Management tools -&gt; monitoring/alerting -&gt; identity -&gt; automation integrations                     │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                                                                                                       │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│                                                                                                       │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │          Management         │  │          Monitoring         │  │          Automation         │   │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │          SANnav GUI         │  │        SNMP v3 traps        │  │           REST API          │   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │           SSH CLI           │  │        Syslog (SIEM)        │  │       Ansible modules       │   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │         LDAP/AD auth        │  │         MAPS alerts         │  │        Python scripts       │   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │        vCenter plugin       │  │         Email alerts        │  │        CI/CD pipeline       │   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   │           NTP sync          │  │          Dashboard          │  │          Terraform          │   │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│                                                                                                       │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│    All integrations use out-of-band Ethernet management; FC data plane unaffected                     │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│                                                                                                       │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│                                                                                                       │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│   │   Integration    │     Protocol     │        Auth       │     Use case     │      Notes       │   │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│   │      SANnav      │     SSH+REST     │    Password/key   │    Full mgmt     │   Primary tool   │   │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│   │     SNMP v3      │     UDP 162      │      AuthPriv     │    NMS traps     │   Brocade MIBs   │   │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│   │     REST API     │    HTTPS 443     │   Session token   │    Automation    │     FOS 8.2+     │   │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│                                                                                                       │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│    Physical: mgmt Ethernet port on each switch · OOB management network · NTP server                  │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│                                                                                                       │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│    Key terms:                                                                                         │
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│                                                                                                       │
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│    SANnav         = Brocade SAN management GUI; primary operational tool for FOS switches             │
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│    REST API       = HTTPS-based FOS management API; returns JSON; requires FOS 8.2+                   │
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│    SNMP v3        = SNMPv3 with authentication (SHA) and encryption (AES) for secure traps            │
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│    Brocade MIBs   = SNMP MIB files defining Brocade-specific OIDs for port/fabric telemetry           │
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>│    LDAP/AD        = Switch authenticates admin users against Active Directory                         │
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>│    MAPS           = Monitoring and Alerting Policy Suite; configures thresholds and actions           │
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>│    Syslog         = Switch event log forwarded to SIEM (Splunk, QRadar) for correlation               │
+<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>│    Ansible module = brocade_fibrechannel Ansible collection for zone/port automation                  │
+<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>│    vCenter plugin = Shows FC path visibility from VM HBA through fabric to storage                    │
+<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>│    Session token  = REST API Bearer token returned on login; used in subsequent API calls             │
+<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>│    NTP sync       = Switch clock synchronised to NTP for accurate log timestamps                      │
+<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>│    OOB mgmt       = Out-of-band management via dedicated Ethernet port; separate from FC              │
+<a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>│                                                                                                       │
+<a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">---</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="o">##</span><span class="w"> </span><span class="n">Dell</span><span class="w"> </span><span class="n">PowerMax</span><span class="w"> </span><span class="n">Integration</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="n">PowerMax</span><span class="w"> </span><span class="n">FA</span><span class="w"> </span><span class="p">(</span><span class="n">Front</span><span class="o">-</span><span class="k">End</span><span class="w"> </span><span class="n">Adapter</span><span class="p">)</span><span class="w"> </span><span class="n">ports</span><span class="w"> </span><span class="k">are</span><span class="w"> </span><span class="n">registered</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">aliases</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="k">each</span><span class="w"> </span><span class="n">Brocade</span><span class="w"> </span><span class="n">fabric</span><span class="p">.</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="o">```</span><span class="n">bash</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="o">#</span><span class="w"> </span><span class="k">Create</span><span class="w"> </span><span class="n">aliases</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">PowerMax</span><span class="w"> </span><span class="n">FA</span><span class="w"> </span><span class="n">ports</span><span class="w"> </span><span class="p">(</span><span class="k">get</span><span class="w"> </span><span class="n">WWPNs</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">Unisphere</span><span class="p">)</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="n">alicreate</span><span class="w"> </span><span class="ss">&quot;powermax01_fa0e&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;5x:xx:xx:xx:xx:xx:xx:xx&quot;</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="n">alicreate</span><span class="w"> </span><span class="ss">&quot;powermax01_fa0f&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">&quot;5x:xx:xx:xx:xx:xx:xx:xx&quot;</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="o">#</span><span class="w"> </span><span class="k">For</span><span class="w"> </span><span class="n">SRDF</span><span class="w"> </span><span class="n">replication</span><span class="p">:</span><span class="w"> </span><span class="n">Director</span><span class="w"> </span><span class="n">ports</span><span class="w"> </span><span class="k">are</span><span class="w"> </span><span class="n">zoned</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">replication</span><span class="w"> </span><span class="k">zone</span><span class="o">/</span><span class="n">fabric</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="o">#</span><span class="w"> </span><span class="n">Ensure</span><span class="w"> </span><span class="n">SRDF</span><span class="w"> </span><span class="n">director</span><span class="w"> </span><span class="n">ports</span><span class="w"> </span><span class="n">use</span><span class="w"> </span><span class="n">VSAN</span><span class="o">/</span><span class="k">zone</span><span class="w"> </span><span class="n">separation</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">production</span><span class="w"> </span><span class="k">host</span><span class="w"> </span><span class="n">zones</span>
 </code></pre></div></p>
 <hr />
 <h2 id="netapp-ontap-integration">NetApp ONTAP Integration<a class="headerlink" href="#netapp-ontap-integration" title="Permanent link">&para;</a></h2>
 <p>ONTAP SAN LIFs (Logical Interfaces) have associated WWPNs that log into the Brocade fabric.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Get ONTAP target WWPN from ONTAP CLI</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># network interface show -fields wwpn</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Create alias for ONTAP SAN LIF</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>alicreate<span class="w"> </span><span class="s2">&quot;netapp01_lif0a&quot;</span>,<span class="w"> </span><span class="s2">&quot;2x:xx:xx:xx:xx:xx:xx:xx&quot;</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Zone host HBA to ONTAP LIF</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>zonecreate<span class="w"> </span><span class="s2">&quot;esxi-host01_hba0-netapp01_lif0a&quot;</span>,<span class="w"> </span><span class="s2">&quot;esxi-host01_hba0;netapp01_lif0a&quot;</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>cfgadd<span class="w"> </span><span class="s2">&quot;prod-cfg&quot;</span>,<span class="w"> </span><span class="s2">&quot;esxi-host01_hba0-netapp01_lif0a&quot;</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>cfgenable<span class="w"> </span><span class="s2">&quot;prod-cfg&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Get ONTAP target WWPN from ONTAP CLI</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># network interface show -fields wwpn</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Create alias for ONTAP SAN LIF</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>alicreate<span class="w"> </span><span class="s2">&quot;netapp01_lif0a&quot;</span>,<span class="w"> </span><span class="s2">&quot;2x:xx:xx:xx:xx:xx:xx:xx&quot;</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Zone host HBA to ONTAP LIF</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>zonecreate<span class="w"> </span><span class="s2">&quot;esxi-host01_hba0-netapp01_lif0a&quot;</span>,<span class="w"> </span><span class="s2">&quot;esxi-host01_hba0;netapp01_lif0a&quot;</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>cfgadd<span class="w"> </span><span class="s2">&quot;prod-cfg&quot;</span>,<span class="w"> </span><span class="s2">&quot;esxi-host01_hba0-netapp01_lif0a&quot;</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>cfgenable<span class="w"> </span><span class="s2">&quot;prod-cfg&quot;</span>
 </code></pre></div>
 <hr />
 <h2 id="pure-storage-flasharray-integration">Pure Storage FlashArray Integration<a class="headerlink" href="#pure-storage-flasharray-integration" title="Permanent link">&para;</a></h2>
 <p>Pure target port WWPNs are registered as aliases and zoned per host initiator.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Get Pure target port WWPNs from Pure UI: Settings → SAN</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>alicreate<span class="w"> </span><span class="s2">&quot;pure-fa01_ct0.eth4&quot;</span>,<span class="w"> </span><span class="s2">&quot;52:4a:xx:xx:xx:xx:xx:xx&quot;</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>alicreate<span class="w"> </span><span class="s2">&quot;pure-fa01_ct1.eth4&quot;</span>,<span class="w"> </span><span class="s2">&quot;52:4a:xx:xx:xx:xx:xx:xx&quot;</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Zone: each host HBA to one Pure target port per controller</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>zonecreate<span class="w"> </span><span class="s2">&quot;esxi-host01_hba0-pure-fa01_ct0&quot;</span>,<span class="w"> </span><span class="s2">&quot;esxi-host01_hba0;pure-fa01_ct0.eth4&quot;</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>zonecreate<span class="w"> </span><span class="s2">&quot;esxi-host01_hba1-pure-fa01_ct1&quot;</span>,<span class="w"> </span><span class="s2">&quot;esxi-host01_hba1;pure-fa01_ct1.eth4&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Get Pure target port WWPNs from Pure UI: Settings → SAN</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>alicreate<span class="w"> </span><span class="s2">&quot;pure-fa01_ct0.eth4&quot;</span>,<span class="w"> </span><span class="s2">&quot;52:4a:xx:xx:xx:xx:xx:xx&quot;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>alicreate<span class="w"> </span><span class="s2">&quot;pure-fa01_ct1.eth4&quot;</span>,<span class="w"> </span><span class="s2">&quot;52:4a:xx:xx:xx:xx:xx:xx&quot;</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Zone: each host HBA to one Pure target port per controller</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>zonecreate<span class="w"> </span><span class="s2">&quot;esxi-host01_hba0-pure-fa01_ct0&quot;</span>,<span class="w"> </span><span class="s2">&quot;esxi-host01_hba0;pure-fa01_ct0.eth4&quot;</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>zonecreate<span class="w"> </span><span class="s2">&quot;esxi-host01_hba1-pure-fa01_ct1&quot;</span>,<span class="w"> </span><span class="s2">&quot;esxi-host01_hba1;pure-fa01_ct1.eth4&quot;</span>
 </code></pre></div>
 <hr />
 <h2 id="snmp-and-syslog">SNMP and Syslog<a class="headerlink" href="#snmp-and-syslog" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Configure SNMP v3</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>snmpconfig<span class="w"> </span>--set<span class="w"> </span>mibCapability
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Use interactive prompts to set v3 user, auth (SHA), and priv (AES) settings</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Configure syslog forwarding</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>syslogadmin<span class="w"> </span>--add<span class="w"> </span>-ip<span class="w"> </span>&lt;siem-ip&gt;
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Verify</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>syslogadmin<span class="w"> </span>--show
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Configure SNMP v3</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>snmpconfig<span class="w"> </span>--set<span class="w"> </span>mibCapability
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Use interactive prompts to set v3 user, auth (SHA), and priv (AES) settings</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Configure syslog forwarding</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>syslogadmin<span class="w"> </span>--add<span class="w"> </span>-ip<span class="w"> </span>&lt;siem-ip&gt;
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Verify</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>syslogadmin<span class="w"> </span>--show
 </code></pre></div>
 <p><strong>Test SNMP from monitoring server:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>snmpwalk<span class="w"> </span>-v3<span class="w"> </span>-u<span class="w"> </span>&lt;username&gt;<span class="w"> </span>-l<span class="w"> </span>authPriv<span class="w"> </span>-a<span class="w"> </span>SHA<span class="w"> </span>-A<span class="w"> </span>&lt;auth-pass&gt;<span class="w"> </span>-x<span class="w"> </span>AES<span class="w"> </span>-X<span class="w"> </span>&lt;priv-pass&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span>&lt;switch-ip&gt;<span class="w"> </span>sysDescr
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>snmpwalk<span class="w"> </span>-v3<span class="w"> </span>-u<span class="w"> </span>&lt;username&gt;<span class="w"> </span>-l<span class="w"> </span>authPriv<span class="w"> </span>-a<span class="w"> </span>SHA<span class="w"> </span>-A<span class="w"> </span>&lt;auth-pass&gt;<span class="w"> </span>-x<span class="w"> </span>AES<span class="w"> </span>-X<span class="w"> </span>&lt;priv-pass&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span>&lt;switch-ip&gt;<span class="w"> </span>sysDescr
 </code></pre></div>
 
 

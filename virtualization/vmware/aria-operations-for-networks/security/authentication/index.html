@@ -4650,70 +4650,71 @@ Authentication reference covering Authentication Methods, Local Authentication, 
 <p>Change password:
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Settings → My Account → Change Password
 </code></pre></div>
-┌───────────────────────────────────────── vRNI Authentication ─────────────────────────────────────────┐
-│                                                                                                       │
-│  Local, LDAP, vIDM SSO, and API token authentication methods for vRNI.                                │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Local Authentication             │  │           LDAP / AD Authentication          │   │
-│   │             admin@local account              │  │          Settings &gt; Authentication          │   │
-│   │          Set during OVA deployment           │  │            LDAP server + bind DN            │   │
-│   │           Use only as break-glass            │  │           Base DN for user search           │   │
-│   │          Rotate password regularly           │  │         Group mapping: Admin/Member         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Local is break-glass only; LDAP or vIDM SSO for normal operations; API token for scripts.            │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                   vIDM SSO                   │  │                API Token Auth               │   │
-│   │            Register vRNI in vIDM             │  │           POST /api/ni/auth/token           │   │
-│   │           vIDM groups map to roles           │  │          Body: username + password          │   │
-│   │           SAML2 redirect on login            │  │            Response: Bearer token           │   │
-│   │            MFA enforced via vIDM             │  │         Token TTL: 24 hours default         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  vRNI platform VM; AD/LDAP server; vIDM appliance for SSO; PKI for LDAPS certs                        │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  admin@local         = Default local administrator; used as break-glass account                       │
-│  LDAP Bind DN        = Service account DN vRNI uses to authenticate to directory                      │
-│  Base DN             = Root of directory tree vRNI searches for user accounts                         │
-│  Group Mapping       = Links AD group to vRNI Admin or Member role                                    │
-│  vIDM                = VMware Identity Manager; provides SAML2 SSO for vRNI                           │
-│  SAML2               = Security Assertion Markup Language; SSO federation protocol                    │
-│  MFA                 = Multi-Factor Auth enforced at vIDM layer for all vRNI logins                   │
-│  API Token           = Bearer token obtained via REST POST; used for script auth                      │
-│  Token TTL           = Time-to-live for API token; default 24h; re-auth required                      │
-│  Break-glass         = Emergency local account used when directory is unreachable                     │
-│  LDAPS               = LDAP over TLS on port 636; required for secure directory auth                  │
-│  SSO Redirect        = Browser redirected to vIDM login page on vRNI access                           │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">Attribute</span> <span class="n">mapping</span> <span class="ow">in</span> <span class="n">vIDM</span><span class="p">:</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="o">-</span> <span class="n">NameID</span> <span class="err">→</span> <span class="n">user</span> <span class="n">email</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="o">-</span> <span class="n">Groups</span> <span class="n">attribute</span> <span class="err">→</span> <span class="n">AD</span> <span class="n">groups</span> <span class="n">synced</span> <span class="n">to</span> <span class="n">vIDM</span> <span class="p">(</span><span class="nb">map</span> <span class="n">to</span> <span class="n">vRNI</span> <span class="n">roles</span><span class="p">)</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="o">---</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1">## API Token Authentication</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="n">Create</span> <span class="n">long</span><span class="o">-</span><span class="n">lived</span> <span class="n">tokens</span> <span class="ow">in</span> <span class="n">UI</span> <span class="p">(</span><span class="n">Settings</span> <span class="err">→</span> <span class="n">API</span> <span class="n">Tokens</span> <span class="err">→</span> <span class="n">Generate</span> <span class="n">Token</span><span class="p">)</span><span class="o">.</span> <span class="n">Store</span> <span class="ow">in</span> <span class="n">secrets</span> <span class="n">manager</span> <span class="err">—</span> <span class="n">never</span> <span class="n">hard</span><span class="o">-</span><span class="n">code</span><span class="o">.</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="err">```</span><span class="n">bash</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># Session token (short-lived — for interactive scripting)</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="n">TOKEN</span><span class="o">=</span><span class="err">$</span><span class="p">(</span><span class="n">curl</span> <span class="o">-</span><span class="n">sk</span> <span class="o">-</span><span class="n">X</span> <span class="n">POST</span> \
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>  <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">vrni</span><span class="o">.</span><span class="n">example</span><span class="o">.</span><span class="n">local</span><span class="o">/</span><span class="n">api</span><span class="o">/</span><span class="n">ni</span><span class="o">/</span><span class="n">auth</span><span class="o">/</span><span class="n">token</span> \
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>  <span class="o">-</span><span class="n">H</span> <span class="s2">&quot;Content-Type: application/json&quot;</span> \
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>  <span class="o">-</span><span class="n">d</span> <span class="s1">&#39;{&quot;username&quot;:&quot;admin@local&quot;,&quot;password&quot;:&quot;&lt;pass&gt;&quot;,&quot;domain&quot;:{&quot;domain_type&quot;:&quot;LOCAL&quot;}}&#39;</span> \
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>  <span class="o">|</span> <span class="n">python3</span> <span class="o">-</span><span class="n">c</span> <span class="s2">&quot;import json,sys; print(json.load(sys.stdin)[&#39;token&#39;])&quot;</span><span class="p">)</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="c1"># Use token</span>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="n">curl</span> <span class="o">-</span><span class="n">sk</span> <span class="o">-</span><span class="n">H</span> <span class="s2">&quot;Authorization: NetworkInsight $TOKEN&quot;</span> \
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>  <span class="s2">&quot;https://vrni.example.local/api/ni/data-sources/vcenters&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌───────────────────────────────────────── vRNI Authentication ─────────────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  Local, LDAP, vIDM SSO, and API token authentication methods for vRNI.                                │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│                                                                                                       │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │             Local Authentication             │  │           LDAP / AD Authentication          │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │             admin@local account              │  │          Settings &gt; Authentication          │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │          Set during OVA deployment           │  │            LDAP server + bind DN            │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │           Use only as break-glass            │  │           Base DN for user search           │   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │          Rotate password regularly           │  │         Group mapping: Admin/Member         │   │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│                                                                                                       │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│  Local is break-glass only; LDAP or vIDM SSO for normal operations; API token for scripts.            │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│                                                                                                       │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                                                                                                       │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │                   vIDM SSO                   │  │                API Token Auth               │   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │            Register vRNI in vIDM             │  │           POST /api/ni/auth/token           │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │           vIDM groups map to roles           │  │          Body: username + password          │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │           SAML2 redirect on login            │  │            Response: Bearer token           │   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │            MFA enforced via vIDM             │  │         Token TTL: 24 hours default         │   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│                                                                                                       │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  vRNI platform VM; AD/LDAP server; vIDM appliance for SSO; PKI for LDAPS certs                        │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│                                                                                                       │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  admin@local         = Default local administrator; used as break-glass account                       │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│  LDAP Bind DN        = Service account DN vRNI uses to authenticate to directory                      │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  Base DN             = Root of directory tree vRNI searches for user accounts                         │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  Group Mapping       = Links AD group to vRNI Admin or Member role                                    │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  vIDM                = VMware Identity Manager; provides SAML2 SSO for vRNI                           │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  SAML2               = Security Assertion Markup Language; SSO federation protocol                    │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  MFA                 = Multi-Factor Auth enforced at vIDM layer for all vRNI logins                   │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  API Token           = Bearer token obtained via REST POST; used for script auth                      │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  Token TTL           = Time-to-live for API token; default 24h; re-auth required                      │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  Break-glass         = Emergency local account used when directory is unreachable                     │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  LDAPS               = LDAP over TLS on port 636; required for secure directory auth                  │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  SSO Redirect        = Browser redirected to vIDM login page on vRNI access                           │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│                                                                                                       │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">Attribute</span> <span class="n">mapping</span> <span class="ow">in</span> <span class="n">vIDM</span><span class="p">:</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="o">-</span> <span class="n">NameID</span> <span class="err">→</span> <span class="n">user</span> <span class="n">email</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="o">-</span> <span class="n">Groups</span> <span class="n">attribute</span> <span class="err">→</span> <span class="n">AD</span> <span class="n">groups</span> <span class="n">synced</span> <span class="n">to</span> <span class="n">vIDM</span> <span class="p">(</span><span class="nb">map</span> <span class="n">to</span> <span class="n">vRNI</span> <span class="n">roles</span><span class="p">)</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="o">---</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1">## API Token Authentication</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="n">Create</span> <span class="n">long</span><span class="o">-</span><span class="n">lived</span> <span class="n">tokens</span> <span class="ow">in</span> <span class="n">UI</span> <span class="p">(</span><span class="n">Settings</span> <span class="err">→</span> <span class="n">API</span> <span class="n">Tokens</span> <span class="err">→</span> <span class="n">Generate</span> <span class="n">Token</span><span class="p">)</span><span class="o">.</span> <span class="n">Store</span> <span class="ow">in</span> <span class="n">secrets</span> <span class="n">manager</span> <span class="err">—</span> <span class="n">never</span> <span class="n">hard</span><span class="o">-</span><span class="n">code</span><span class="o">.</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="err">```</span><span class="n">bash</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Session token (short-lived — for interactive scripting)</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="n">TOKEN</span><span class="o">=</span><span class="err">$</span><span class="p">(</span><span class="n">curl</span> <span class="o">-</span><span class="n">sk</span> <span class="o">-</span><span class="n">X</span> <span class="n">POST</span> \
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>  <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">vrni</span><span class="o">.</span><span class="n">example</span><span class="o">.</span><span class="n">local</span><span class="o">/</span><span class="n">api</span><span class="o">/</span><span class="n">ni</span><span class="o">/</span><span class="n">auth</span><span class="o">/</span><span class="n">token</span> \
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>  <span class="o">-</span><span class="n">H</span> <span class="s2">&quot;Content-Type: application/json&quot;</span> \
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>  <span class="o">-</span><span class="n">d</span> <span class="s1">&#39;{&quot;username&quot;:&quot;admin@local&quot;,&quot;password&quot;:&quot;&lt;pass&gt;&quot;,&quot;domain&quot;:{&quot;domain_type&quot;:&quot;LOCAL&quot;}}&#39;</span> \
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>  <span class="o">|</span> <span class="n">python3</span> <span class="o">-</span><span class="n">c</span> <span class="s2">&quot;import json,sys; print(json.load(sys.stdin)[&#39;token&#39;])&quot;</span><span class="p">)</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="c1"># Use token</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="n">curl</span> <span class="o">-</span><span class="n">sk</span> <span class="o">-</span><span class="n">H</span> <span class="s2">&quot;Authorization: NetworkInsight $TOKEN&quot;</span> \
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>  <span class="s2">&quot;https://vrni.example.local/api/ni/data-sources/vcenters&quot;</span>
 </code></pre></div></p>
 <hr />
 <h2 id="session-management">Session Management<a class="headerlink" href="#session-management" title="Permanent link">&para;</a></h2>
@@ -4747,15 +4748,15 @@ Authentication reference covering Authentication Methods, Local Authentication, 
 <hr />
 <h2 id="ldap-certificate-trust-ldaps">LDAP Certificate Trust (LDAPS)<a class="headerlink" href="#ldap-certificate-trust-ldaps" title="Permanent link">&para;</a></h2>
 <p>If using LDAPS (port 636), the LDAP CA certificate must be trusted by the Platform VM:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># SSH to Platform VM</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ssh<span class="w"> </span>ubuntu@vrni.example.local
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Install CA certificate</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>sudo<span class="w"> </span>cp<span class="w"> </span>/tmp/corp-root-ca.crt<span class="w"> </span>/usr/local/share/ca-certificates/corp-root-ca.crt
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>sudo<span class="w"> </span>update-ca-certificates
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Restart vRNI after cert trust update</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>hms
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># SSH to Platform VM</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ssh<span class="w"> </span>ubuntu@vrni.example.local
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Install CA certificate</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>sudo<span class="w"> </span>cp<span class="w"> </span>/tmp/corp-root-ca.crt<span class="w"> </span>/usr/local/share/ca-certificates/corp-root-ca.crt
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>sudo<span class="w"> </span>update-ca-certificates
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Restart vRNI after cert trust update</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>hms
 </code></pre></div>
 <hr />
 <h2 id="token-rotation-policy">Token Rotation Policy<a class="headerlink" href="#token-rotation-policy" title="Permanent link">&para;</a></h2>

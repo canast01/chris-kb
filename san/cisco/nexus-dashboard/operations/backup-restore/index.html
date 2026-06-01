@@ -3843,51 +3843,52 @@
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># List available backups</span>
 <a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>acs<span class="w"> </span>backup<span class="w"> </span>list
 </code></pre></div>
-┌───────────────────────── Cisco Nexus Dashboard — Operations Backup &amp; Restore ─────────────────────────┐
-│                                                                                                       │
-│  Cluster configuration backup to remote storage; restore via UI or CLI for DR recovery.               │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Backup Configuration             │  │                 Backup Scope                │   │
-│   │          Remote: SCP or NFS target           │  │        Cluster config: all node data        │   │
-│   │         Schedule: daily/weekly cron          │  │            App data: NDFC/NDI/NDO           │   │
-│   │         Encryption: AES-256 at rest          │  │         Secrets: encrypted in backup        │   │
-│   │          Retention: keep N backups           │  │        Sites: site credentials incl.        │   │
-│   │          Alert: backup success/fail          │  │          Certificates: not included         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Schedule backup before any upgrade; verify remote target is writable                                 │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Restore Process                │  │              Disaster Recovery              │   │
-│   │         Bootstrap new cluster first          │  │          DR: rebuild cluster nodes          │   │
-│   │          Upload backup file via UI           │  │          Same software version req.         │   │
-│   │          Validate: checksum verify           │  │           IP/hostnames must match           │   │
-│   │         Restore: node-by-node apply          │  │        Certs re-issued after restore        │   │
-│   │          Post-restore: verify sites          │  │            RTO: ~2-4 hrs typical            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  ND cluster nodes · remote SCP/NFS server · management network · spare hardware for DR                │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  SCP            = Secure Copy Protocol; encrypted file transfer to remote backup target               │
-│  NFS            = Network File System; shared storage mount for backup destination                    │
-│  AES-256        = Advanced Encryption Standard 256-bit; encrypts backup archive                       │
-│  Bootstrap      = Initial cluster bring-up before restoring configuration                             │
-│  Checksum       = SHA hash validating backup file integrity before restore                            │
-│  RTO            = Recovery Time Objective; target time to restore service                             │
-│  DR             = Disaster Recovery; rebuilding ND cluster at alternate site                          │
-│  Secrets        = Passwords and API keys stored encrypted within backup bundle                        │
-│  Retention      = Policy defining how many backup files are kept before purging                       │
-│  Site credentials= Per-site username/password ND uses to reach APIC/switches                          │
-│  Certs re-issued= SSL certificates are regenerated fresh on restore; not restored                     │
-│  Version match  = Restore requires identical ND software version as backup source                     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌───────────────────────── Cisco Nexus Dashboard — Operations Backup &amp; Restore ─────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  Cluster configuration backup to remote storage; restore via UI or CLI for DR recovery.               │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│                                                                                                       │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │             Backup Configuration             │  │                 Backup Scope                │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │          Remote: SCP or NFS target           │  │        Cluster config: all node data        │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │         Schedule: daily/weekly cron          │  │            App data: NDFC/NDI/NDO           │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │         Encryption: AES-256 at rest          │  │         Secrets: encrypted in backup        │   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │          Retention: keep N backups           │  │        Sites: site credentials incl.        │   │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │          Alert: backup success/fail          │  │          Certificates: not included         │   │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                                                                       │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│  Schedule backup before any upgrade; verify remote target is writable                                 │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                                                                                                       │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│                                                                                                       │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │               Restore Process                │  │              Disaster Recovery              │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │         Bootstrap new cluster first          │  │          DR: rebuild cluster nodes          │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │          Upload backup file via UI           │  │          Same software version req.         │   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │          Validate: checksum verify           │  │           IP/hostnames must match           │   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   │         Restore: node-by-node apply          │  │        Certs re-issued after restore        │   │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│   │          Post-restore: verify sites          │  │            RTO: ~2-4 hrs typical            │   │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│                                                                                                       │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  ND cluster nodes · remote SCP/NFS server · management network · spare hardware for DR                │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│                                                                                                       │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  SCP            = Secure Copy Protocol; encrypted file transfer to remote backup target               │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  NFS            = Network File System; shared storage mount for backup destination                    │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  AES-256        = Advanced Encryption Standard 256-bit; encrypts backup archive                       │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  Bootstrap      = Initial cluster bring-up before restoring configuration                             │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  Checksum       = SHA hash validating backup file integrity before restore                            │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  RTO            = Recovery Time Objective; target time to restore service                             │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  DR             = Disaster Recovery; rebuilding ND cluster at alternate site                          │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  Secrets        = Passwords and API keys stored encrypted within backup bundle                        │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  Retention      = Policy defining how many backup files are kept before purging                       │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  Site credentials= Per-site username/password ND uses to reach APIC/switches                          │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│  Certs re-issued= SSL certificates are regenerated fresh on restore; not restored                     │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  Version match  = Restore requires identical ND software version as backup source                     │
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│                                                                                                       │
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 ```</p>
 <hr />
 <h2 id="backup-retention-policy">Backup Retention Policy<a class="headerlink" href="#backup-retention-policy" title="Permanent link">&para;</a></h2>
