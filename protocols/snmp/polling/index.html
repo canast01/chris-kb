@@ -3390,6 +3390,28 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#poll-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Poll Operations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-cli-polling-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common CLI Polling Commands
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#common-oids-for-polling" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3597,8 +3619,11 @@
 
 
 <h1 id="snmp-polling">SNMP Polling<a class="headerlink" href="#snmp-polling" title="Permanent link">&para;</a></h1>
-<p>SNMP polling is the process of an NMS periodically querying devices to collect metrics.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>        SNMP POLLING CYCLE
+<div class="kb-summary">
+SNMP polling is the process of an NMS periodically querying devices to collect metrics.
+</div>
+
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>        SNMP POLLING CYCLE
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌─────────────────────────────────────────────────────────────┐
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  NMS (every 60s)              Device agent                  │
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  ┌─────────────────┐          ┌──────────────────────────┐  │
@@ -3617,35 +3642,56 @@
 <a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│                        GETBULK = multiple OIDs (efficient)  │
 <a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│                        SET     = write value (RW only)      │
 <a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>└─────────────────────────────────────────────────────────────┘
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>``` Unlike traps, polling is initiated by the manager on a schedule.
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>## Poll Operations
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>| Operation | Version | Description |
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>|---|---|---|
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>| `GET` | v1, v2c, v3 | Retrieve a single OID value |
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>| `GETNEXT` | v1, v2c, v3 | Retrieve next OID in MIB tree |
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>| `GETBULK` | v2c, v3 | Retrieve multiple OIDs in one request (efficient for tables) |
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>| `SET` | v1, v2c, v3 | Write a value to a device (requires RW community) |
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>## Common CLI Polling Commands
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>```bash
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a># Single OID — system description
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>snmpget -v2c -c &lt;community&gt; &lt;device-ip&gt; sysDescr.0
-<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>
-<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a># Walk a MIB subtree
-<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>snmpwalk -v2c -c &lt;community&gt; &lt;device-ip&gt; system
-<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>snmpwalk -v2c -c &lt;community&gt; &lt;device-ip&gt; interfaces
-<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>snmpwalk -v2c -c &lt;community&gt; &lt;device-ip&gt; ifTable
-<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>
-<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a># Bulk walk (faster for large MIBs)
-<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>snmpbulkwalk -v2c -c &lt;community&gt; -Cn0 -Cr25 &lt;device-ip&gt; ifTable
-<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>
-<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a># Translate OID to human-readable name
-<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>snmptranslate -On .1.3.6.1.2.1.1.1.0        # numeric → name
-<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>snmptranslate .1.3.6.1.2.1.1.1.0            # OID info
-<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>snmptranslate -Td sysDescr                  # detailed MIB info
+</code></pre></div>
+Unlike traps, polling is initiated by the manager on a schedule.</p>
+<h2 id="poll-operations">Poll Operations<a class="headerlink" href="#poll-operations" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Operation</th>
+<th>Version</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GET</code></td>
+<td>v1, v2c, v3</td>
+<td>Retrieve a single OID value</td>
+</tr>
+<tr>
+<td><code>GETNEXT</code></td>
+<td>v1, v2c, v3</td>
+<td>Retrieve next OID in MIB tree</td>
+</tr>
+<tr>
+<td><code>GETBULK</code></td>
+<td>v2c, v3</td>
+<td>Retrieve multiple OIDs in one request (efficient for tables)</td>
+</tr>
+<tr>
+<td><code>SET</code></td>
+<td>v1, v2c, v3</td>
+<td>Write a value to a device (requires RW community)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="common-cli-polling-commands">Common CLI Polling Commands<a class="headerlink" href="#common-cli-polling-commands" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Single OID — system description</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>snmpget<span class="w"> </span>-v2c<span class="w"> </span>-c<span class="w"> </span>&lt;community&gt;<span class="w"> </span>&lt;device-ip&gt;<span class="w"> </span>sysDescr.0
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Walk a MIB subtree</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>snmpwalk<span class="w"> </span>-v2c<span class="w"> </span>-c<span class="w"> </span>&lt;community&gt;<span class="w"> </span>&lt;device-ip&gt;<span class="w"> </span>system
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>snmpwalk<span class="w"> </span>-v2c<span class="w"> </span>-c<span class="w"> </span>&lt;community&gt;<span class="w"> </span>&lt;device-ip&gt;<span class="w"> </span>interfaces
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>snmpwalk<span class="w"> </span>-v2c<span class="w"> </span>-c<span class="w"> </span>&lt;community&gt;<span class="w"> </span>&lt;device-ip&gt;<span class="w"> </span>ifTable
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Bulk walk (faster for large MIBs)</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>snmpbulkwalk<span class="w"> </span>-v2c<span class="w"> </span>-c<span class="w"> </span>&lt;community&gt;<span class="w"> </span>-Cn0<span class="w"> </span>-Cr25<span class="w"> </span>&lt;device-ip&gt;<span class="w"> </span>ifTable
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># Translate OID to human-readable name</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>snmptranslate<span class="w"> </span>-On<span class="w"> </span>.1.3.6.1.2.1.1.1.0<span class="w">        </span><span class="c1"># numeric → name</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>snmptranslate<span class="w"> </span>.1.3.6.1.2.1.1.1.0<span class="w">            </span><span class="c1"># OID info</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>snmptranslate<span class="w"> </span>-Td<span class="w"> </span>sysDescr<span class="w">                  </span><span class="c1"># detailed MIB info</span>
 </code></pre></div>
 <h2 id="common-oids-for-polling">Common OIDs for Polling<a class="headerlink" href="#common-oids-for-polling" title="Permanent link">&para;</a></h2>
 <table>
@@ -3747,37 +3793,37 @@
 </tbody>
 </table>
 <h2 id="zabbix-snmp-polling-config">Zabbix SNMP Polling Config<a class="headerlink" href="#zabbix-snmp-polling-config" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Zabbix item config (SNMP interface)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nt">Type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SNMP agent</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nt">Key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ifOperStatus[{#SNMPINDEX}]</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nt">SNMP OID</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.1.3.6.1.2.1.2.2.1.8.{#SNMPINDEX}</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nt">Update interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60s</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Zabbix item config (SNMP interface)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nt">Type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SNMP agent</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nt">Key</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ifOperStatus[{#SNMPINDEX}]</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nt">SNMP OID</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.1.3.6.1.2.1.2.2.1.8.{#SNMPINDEX}</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nt">Update interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">60s</span>
 </code></pre></div>
 <h2 id="prometheus-snmp-exporter">Prometheus + SNMP Exporter<a class="headerlink" href="#prometheus-snmp-exporter" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># snmp_exporter/snmp.yml — generator config snippet</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nt">modules</span><span class="p">:</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="nt">cisco_ios</span><span class="p">:</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span><span class="nt">walk</span><span class="p">:</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.3.6.1.2.1.2.2</span><span class="w">          </span><span class="c1"># interfaces</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.3.6.1.2.1.31.1.1</span><span class="w">       </span><span class="c1"># ifXTable</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span><span class="nt">metrics</span><span class="p">:</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ifOperStatus</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">        </span><span class="nt">oid</span><span class="p">:</span><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">1.3.6.1.2.1.2.2.1.8</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gauge</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># prometheus.yml scrape config</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="nt">scrape_configs</span><span class="p">:</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">job_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">snmp</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">    </span><span class="nt">static_configs</span><span class="p">:</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">targets</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">&lt;device-ip&gt;</span><span class="p p-Indicator">]</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">    </span><span class="nt">metrics_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/snmp</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">    </span><span class="nt">params</span><span class="p">:</span>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">      </span><span class="nt">module</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">cisco_ios</span><span class="p p-Indicator">]</span>
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">    </span><span class="nt">relabel_configs</span><span class="p">:</span>
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">source_labels</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">__address__</span><span class="p p-Indicator">]</span>
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="w">        </span><span class="nt">target_label</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">__param_target</span>
-<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">target_label</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">__address__</span>
-<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="w">        </span><span class="nt">replacement</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;snmp-exporter-host&gt;:9116</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># snmp_exporter/snmp.yml — generator config snippet</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nt">modules</span><span class="p">:</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="nt">cisco_ios</span><span class="p">:</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span><span class="nt">walk</span><span class="p">:</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.3.6.1.2.1.2.2</span><span class="w">          </span><span class="c1"># interfaces</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.3.6.1.2.1.31.1.1</span><span class="w">       </span><span class="c1"># ifXTable</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">    </span><span class="nt">metrics</span><span class="p">:</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ifOperStatus</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">        </span><span class="nt">oid</span><span class="p">:</span><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">1.3.6.1.2.1.2.2.1.8</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gauge</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># prometheus.yml scrape config</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="nt">scrape_configs</span><span class="p">:</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">job_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">snmp</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">    </span><span class="nt">static_configs</span><span class="p">:</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">targets</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">&lt;device-ip&gt;</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="w">    </span><span class="nt">metrics_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/snmp</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="w">    </span><span class="nt">params</span><span class="p">:</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="w">      </span><span class="nt">module</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">cisco_ios</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="w">    </span><span class="nt">relabel_configs</span><span class="p">:</span>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">source_labels</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">__address__</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="w">        </span><span class="nt">target_label</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">__param_target</span>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">target_label</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">__address__</span>
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="w">        </span><span class="nt">replacement</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;snmp-exporter-host&gt;:9116</span>
 </code></pre></div>
 <h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
 <table>

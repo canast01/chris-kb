@@ -4685,6 +4685,10 @@
 
 
 <h1 id="vsphere-replication-how-it-works">vSphere Replication — How It Works<a class="headerlink" href="#vsphere-replication-how-it-works" title="Permanent link">&para;</a></h1>
+<div class="kb-summary">
+How It Works reference covering Replication Engine — ESXi Kernel Module, Data Flow, RPO Mechanics, VRA Role — vSphere Replication Appliance, VRS — vSphere Replication Server (Scale-Out) and 2 more sections.
+</div>
+
 <h2 id="replication-engine-esxi-kernel-module">Replication Engine — ESXi Kernel Module<a class="headerlink" href="#replication-engine-esxi-kernel-module" title="Permanent link">&para;</a></h2>
 <p>vSphere Replication operates at the hypervisor level using a kernel module (<code>hbr</code> — Host-Based Replication) loaded on each ESXi host. This module intercepts write I/Os to VM virtual disks and tracks which disk blocks have changed since the last replication cycle — functionally equivalent to Changed Block Tracking (CBT) but implemented as a separate subsystem within the VMkernel.</p>
 <p>The tracking is per-VMDK. When a VM disk write occurs, the kernel module marks the corresponding block in a bitmap. At the end of each replication cycle, changed blocks are read from the source datastore and transmitted to the target VRA. This approach is storage-agnostic — it does not rely on array-level snapshotting or replication, and works with any datastore type: VMFS, NFS, vSAN.</p>

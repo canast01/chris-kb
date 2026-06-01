@@ -3390,6 +3390,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#recommended-network-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommended Network Layout
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#linux-dm-multipath" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3614,8 +3625,11 @@
 
 
 <h1 id="iscsi-multipathing">iSCSI Multipathing<a class="headerlink" href="#iscsi-multipathing" title="Permanent link">&para;</a></h1>
-<p>iSCSI multipathing uses multiple network paths between initiator and target for redundancy and load distribution.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>        iSCSI MULTIPATH TOPOLOGY
+<div class="kb-summary">
+iSCSI multipathing uses multiple network paths between initiator and target for redundancy and load distribution.
+</div>
+
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>        iSCSI MULTIPATH TOPOLOGY
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌─────────────────────────────────────────────────────────────────┐
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   HOST                                                          │
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   ┌──────────┐   path 1    ┌──────────┐        ┌─────────────┐ │
@@ -3631,83 +3645,81 @@
 <a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   MPIO (dm-multipath / Windows MPIO / ESXi NMP)                │
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   distributes I/O across path 1 and path 2                     │
 <a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>└─────────────────────────────────────────────────────────────────┘
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>``` On Linux, DM-Multipath handles this; on Windows, MPIO; on ESXi, NMP with PSP.
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>## Recommended Network Layout
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>```text
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>Server NIC0 → Storage VLAN A (10.10.1.x) → Array Port A
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>Server NIC1 → Storage VLAN B (10.10.2.x) → Array Port B
+</code></pre></div>
+On Linux, DM-Multipath handles this; on Windows, MPIO; on ESXi, NMP with PSP.</p>
+<h2 id="recommended-network-layout">Recommended Network Layout<a class="headerlink" href="#recommended-network-layout" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Server NIC0 → Storage VLAN A (10.10.1.x) → Array Port A
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Server NIC1 → Storage VLAN B (10.10.2.x) → Array Port B
 </code></pre></div>
 <p>Use separate NICs and separate switches (or VLANs at minimum) for each path. Never share iSCSI with management traffic.</p>
 <h2 id="linux-dm-multipath">Linux — DM-Multipath<a class="headerlink" href="#linux-dm-multipath" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Install</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>dnf<span class="w"> </span>install<span class="w"> </span>device-mapper-multipath
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Enable and start</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>multipathd
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># View all multipath devices and path state</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>multipath<span class="w"> </span>-ll
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Sample output interpretation:</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># mpatha (360000000000000) dm-0 PURE,FlashArray</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># size=100G features=&#39;0&#39; hwhandler=&#39;1 alua&#39; wp=rw</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># |-+- policy=&#39;service-time 0&#39; prio=50 status=active</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1"># | |- 33:0:0:1  sdb 8:16 active ready running</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># | |- 34:0:0:1  sdd 8:48 active ready running</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># +-+- policy=&#39;service-time 0&#39; prio=10 status=enabled</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="c1">#   |- 33:0:1:1  sdc 8:32 active ready running</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="c1">#   |- 34:0:1:1  sde 8:64 active ready running</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="c1"># Reload path config after changes</span>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>multipath<span class="w"> </span>-r
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="c1"># Show multipath topology</span>
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>multipath<span class="w"> </span>-t
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Install</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>dnf<span class="w"> </span>install<span class="w"> </span>device-mapper-multipath
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Enable and start</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>multipathd
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># View all multipath devices and path state</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>multipath<span class="w"> </span>-ll
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Sample output interpretation:</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># mpatha (360000000000000) dm-0 PURE,FlashArray</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># size=100G features=&#39;0&#39; hwhandler=&#39;1 alua&#39; wp=rw</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># |-+- policy=&#39;service-time 0&#39; prio=50 status=active</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># | |- 33:0:0:1  sdb 8:16 active ready running</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># | |- 34:0:0:1  sdd 8:48 active ready running</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># +-+- policy=&#39;service-time 0&#39; prio=10 status=enabled</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="c1">#   |- 33:0:1:1  sdc 8:32 active ready running</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="c1">#   |- 34:0:1:1  sde 8:64 active ready running</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="c1"># Reload path config after changes</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>multipath<span class="w"> </span>-r
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="c1"># Show multipath topology</span>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>multipath<span class="w"> </span>-t
 </code></pre></div>
 <h3 id="etcmultipathconf-key-settings">/etc/multipath.conf — Key Settings<a class="headerlink" href="#etcmultipathconf-key-settings" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>defaults {
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    find_multipaths  yes
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    user_friendly_names yes
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>}
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>blacklist {
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    devnode &quot;^(ram|raw|loop|fd|md|dm-|sr|scd|st)[0-9]*&quot;
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    devnode &quot;^hd[a-z]&quot;
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    devnode &quot;^sda$&quot;   # local OS disk — always blacklist
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>}
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>defaults {
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    find_multipaths  yes
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    user_friendly_names yes
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>}
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>blacklist {
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    devnode &quot;^(ram|raw|loop|fd|md|dm-|sr|scd|st)[0-9]*&quot;
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    devnode &quot;^hd[a-z]&quot;
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    devnode &quot;^sda$&quot;   # local OS disk — always blacklist
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>}
 </code></pre></div>
 <p>Most major arrays (Pure, NetApp, Dell) have well-known hardware handlers — use vendor-recommended multipath.conf from their support portal.</p>
 <h2 id="windows-mpio">Windows — MPIO<a class="headerlink" href="#windows-mpio" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Install MPIO feature</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Install-WindowsFeature</span> <span class="n">-Name</span> <span class="n">Multipath-IO</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c"># Add iSCSI device support to MPIO</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nb">New-MSDSMSupportedHW</span> <span class="n">-VendorId</span> <span class="n">PURE</span> <span class="n">-ProductId</span> <span class="n">FlashArray</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c"># View MPIO paths</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="nb">Get-MpioDisk</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="nb">Get-MpioAvailableDriveLetters</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c"># Set load balance policy</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="nb">Set-MSDSMGlobalDefaultLoadBalancePolicy</span> <span class="n">-Policy</span> <span class="n">RR</span>   <span class="c"># Round Robin</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Install MPIO feature</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Install-WindowsFeature</span> <span class="n">-Name</span> <span class="n">Multipath-IO</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c"># Add iSCSI device support to MPIO</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nb">New-MSDSMSupportedHW</span> <span class="n">-VendorId</span> <span class="n">PURE</span> <span class="n">-ProductId</span> <span class="n">FlashArray</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c"># View MPIO paths</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="nb">Get-MpioDisk</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="nb">Get-MpioAvailableDriveLetters</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c"># Set load balance policy</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="nb">Set-MSDSMGlobalDefaultLoadBalancePolicy</span> <span class="n">-Policy</span> <span class="n">RR</span>   <span class="c"># Round Robin</span>
 </code></pre></div>
 <h2 id="vmware-esxi-nmp">VMware ESXi — NMP<a class="headerlink" href="#vmware-esxi-nmp" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Show PSP (path selection policy) per datastore</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>device<span class="w"> </span>list
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Change PSP for a device</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>device<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span>-d<span class="w"> </span>naa.&lt;id&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span>--psp<span class="w"> </span>VMW_PSP_RR
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># View active paths</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>path<span class="w"> </span>list<span class="w"> </span>-d<span class="w"> </span>naa.&lt;id&gt;
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># Set Round Robin I/O operations limit (default 1000)</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>psp<span class="w"> </span>roundrobin<span class="w"> </span>deviceconfig<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">  </span>-d<span class="w"> </span>naa.&lt;id&gt;<span class="w"> </span>--type<span class="w"> </span>iops<span class="w"> </span>--iops<span class="w"> </span><span class="m">1</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Show PSP (path selection policy) per datastore</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>device<span class="w"> </span>list
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Change PSP for a device</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>device<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span>-d<span class="w"> </span>naa.&lt;id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span>--psp<span class="w"> </span>VMW_PSP_RR
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># View active paths</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>path<span class="w"> </span>list<span class="w"> </span>-d<span class="w"> </span>naa.&lt;id&gt;
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1"># Set Round Robin I/O operations limit (default 1000)</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>nmp<span class="w"> </span>psp<span class="w"> </span>roundrobin<span class="w"> </span>deviceconfig<span class="w"> </span><span class="nb">set</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">  </span>-d<span class="w"> </span>naa.&lt;id&gt;<span class="w"> </span>--type<span class="w"> </span>iops<span class="w"> </span>--iops<span class="w"> </span><span class="m">1</span>
 </code></pre></div>
 <h2 id="load-balance-policies">Load Balance Policies<a class="headerlink" href="#load-balance-policies" title="Permanent link">&para;</a></h2>
 <table>

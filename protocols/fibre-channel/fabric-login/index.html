@@ -3390,6 +3390,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#login-sequence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Login Sequence
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#login-stages" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3614,8 +3625,11 @@
 
 
 <h1 id="fabric-login">Fabric Login<a class="headerlink" href="#fabric-login" title="Permanent link">&para;</a></h1>
-<p>Fabric login is the process by which FC ports register with the fabric and establish communication paths.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>        FC LOGIN SEQUENCE
+<div class="kb-summary">
+Fabric login is the process by which FC ports register with the fabric and establish communication paths.
+</div>
+
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>        FC LOGIN SEQUENCE
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌──────────┐        ┌───────────┐        ┌───────────┐
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│ Host HBA │        │ FC Switch │        │  Storage  │
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│          │        │(Name Svr) │        │  Target   │
@@ -3639,28 +3653,25 @@
 <a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>     │                     │  ACC (target ready) │
 <a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>     │ ◄─────────────────────────────────────── │
 <a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>     │                     │  I/O can begin     │
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>``` Login failures prevent hosts from seeing storage.
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>## Login Sequence
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>```mermaid
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>sequenceDiagram
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>    participant HBA as Host HBA
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>    participant SW as FC Switch
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>    participant NS as Name Server
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>    participant TGT as Storage Target
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>
-<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>    HBA-&gt;&gt;SW: FLOGI — Fabric Login
-<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>    SW--&gt;&gt;HBA: ACC (fabric parameters: FCID assigned)
-<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>    HBA-&gt;&gt;NS: PLOGI — Port Login to Name Server (0xFFFFFC)
-<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>    NS--&gt;&gt;HBA: ACC
-<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>    HBA-&gt;&gt;NS: RFT_ID — Register FC-4 Types
-<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>    HBA-&gt;&gt;NS: RPN_ID — Register Port Name
-<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>    HBA-&gt;&gt;TGT: PLOGI — Port Login to target WWPN
-<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>    TGT--&gt;&gt;HBA: ACC
-<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>    HBA-&gt;&gt;TGT: PRLI — Process Login (SCSI)
-<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>    TGT--&gt;&gt;HBA: ACC (target ready)
 </code></pre></div>
+Login failures prevent hosts from seeing storage.</p>
+<h2 id="login-sequence">Login Sequence<a class="headerlink" href="#login-sequence" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>sequenceDiagram
+    participant HBA as Host HBA
+    participant SW as FC Switch
+    participant NS as Name Server
+    participant TGT as Storage Target
+
+    HBA-&gt;&gt;SW: FLOGI — Fabric Login
+    SW--&gt;&gt;HBA: ACC (fabric parameters: FCID assigned)
+    HBA-&gt;&gt;NS: PLOGI — Port Login to Name Server (0xFFFFFC)
+    NS--&gt;&gt;HBA: ACC
+    HBA-&gt;&gt;NS: RFT_ID — Register FC-4 Types
+    HBA-&gt;&gt;NS: RPN_ID — Register Port Name
+    HBA-&gt;&gt;TGT: PLOGI — Port Login to target WWPN
+    TGT--&gt;&gt;HBA: ACC
+    HBA-&gt;&gt;TGT: PRLI — Process Login (SCSI)
+    TGT--&gt;&gt;HBA: ACC (target ready)</code></pre>
 <h2 id="login-stages">Login Stages<a class="headerlink" href="#login-stages" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

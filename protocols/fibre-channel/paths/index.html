@@ -3390,6 +3390,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#path-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Path Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#path-states" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3636,8 +3647,11 @@
 
 
 <h1 id="fc-paths">FC Paths<a class="headerlink" href="#fc-paths" title="Permanent link">&para;</a></h1>
-<p>A path is a complete end-to-end connection from an HBA port through the fabric to a storage target port.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>        DUAL-FABRIC MULTIPATH TOPOLOGY (4 paths to 1 LUN)
+<div class="kb-summary">
+A path is a complete end-to-end connection from an HBA port through the fabric to a storage target port.
+</div>
+
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>        DUAL-FABRIC MULTIPATH TOPOLOGY (4 paths to 1 LUN)
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>                ┌─────────────┐
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>                │    HOST     │
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>                │ ┌─────────┐ │
@@ -3661,13 +3675,11 @@
 <a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>                │ └─────────┘ │               path 4
 <a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>                └─────────────┘
 <a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>        MPIO distributes I/O across active paths (round-robin or policy)
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>``` Multipath I/O (MPIO) uses multiple paths simultaneously for redundancy and load distribution.
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>## Path Architecture
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>```text
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>Host HBA0 (WWPN-A) → Fabric A → Array Port CT-A0 → LUN
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>Host HBA1 (WWPN-B) → Fabric B → Array Port CT-B0 → LUN
+</code></pre></div>
+Multipath I/O (MPIO) uses multiple paths simultaneously for redundancy and load distribution.</p>
+<h2 id="path-architecture">Path Architecture<a class="headerlink" href="#path-architecture" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Host HBA0 (WWPN-A) → Fabric A → Array Port CT-A0 → LUN
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>Host HBA1 (WWPN-B) → Fabric B → Array Port CT-B0 → LUN
 </code></pre></div>
 <p>Minimum for production: 2 paths per LUN across independent fabrics.</p>
 <h2 id="path-states">Path States<a class="headerlink" href="#path-states" title="Permanent link">&para;</a></h2>
@@ -3703,41 +3715,41 @@
 </table>
 <h2 id="checking-paths">Checking Paths<a class="headerlink" href="#checking-paths" title="Permanent link">&para;</a></h2>
 <h3 id="linux-dm-multipath">Linux — DM-Multipath<a class="headerlink" href="#linux-dm-multipath" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Show all paths and their state</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>multipath<span class="w"> </span>-ll
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Show path count per device</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>multipath<span class="w"> </span>-ll<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;^[a-z]|policy|status&quot;</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Path details</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>dmsetup<span class="w"> </span>ls<span class="w"> </span>--tree
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Reload multipath config</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>multipath<span class="w"> </span>-r
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Blacklist check</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>cat<span class="w"> </span>/etc/multipath.conf<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A5<span class="w"> </span>blacklist
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Show all paths and their state</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>multipath<span class="w"> </span>-ll
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Show path count per device</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>multipath<span class="w"> </span>-ll<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;^[a-z]|policy|status&quot;</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Path details</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>dmsetup<span class="w"> </span>ls<span class="w"> </span>--tree
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Reload multipath config</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>multipath<span class="w"> </span>-r
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Blacklist check</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>cat<span class="w"> </span>/etc/multipath.conf<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A5<span class="w"> </span>blacklist
 </code></pre></div>
 <h3 id="esxi">ESXi<a class="headerlink" href="#esxi" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List all paths for all datastores</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>path<span class="w"> </span>list
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Paths for a specific device</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>path<span class="w"> </span>list<span class="w"> </span>-d<span class="w"> </span>naa.&lt;id&gt;
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Active path count</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>path<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;Active (I/O)&quot;</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Path claim rules</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>claimrule<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># List all paths for all datastores</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>path<span class="w"> </span>list
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Paths for a specific device</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>path<span class="w"> </span>list<span class="w"> </span>-d<span class="w"> </span>naa.&lt;id&gt;
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Active path count</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>path<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;Active (I/O)&quot;</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Path claim rules</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>claimrule<span class="w"> </span>list
 </code></pre></div>
 <h3 id="windows-mpio">Windows — MPIO<a class="headerlink" href="#windows-mpio" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Show MPIO paths</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-MSDSMSupportedHW</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nb">Get-MPIOAvailableHW</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c"># MPIO disk paths</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="nb">Get-Disk</span> <span class="p">|</span> <span class="nb">Get-MpioDisk</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-ExpandProperty</span> <span class="n">MpioDeviceAttributes</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Show MPIO paths</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-MSDSMSupportedHW</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nb">Get-MPIOAvailableHW</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c"># MPIO disk paths</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nb">Get-Disk</span> <span class="p">|</span> <span class="nb">Get-MpioDisk</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-ExpandProperty</span> <span class="n">MpioDeviceAttributes</span>
 </code></pre></div>
 <h2 id="path-policies">Path Policies<a class="headerlink" href="#path-policies" title="Permanent link">&para;</a></h2>
 <table>
@@ -3804,16 +3816,16 @@
 </tbody>
 </table>
 <h2 id="re-scanning-for-new-paths">Re-scanning for New Paths<a class="headerlink" href="#re-scanning-for-new-paths" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Linux — rescan HBAs</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;- - -&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/sys/class/scsi_host/host0/scan
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;- - -&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/sys/class/scsi_host/host1/scan
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>multipath<span class="w"> </span>-r
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># ESXi — rescan all HBAs</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>adapter<span class="w"> </span>rescan<span class="w"> </span>--all
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Windows</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>Update-StorageProviderCache<span class="w"> </span>-DiscoveryLevel<span class="w"> </span>Full
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Linux — rescan HBAs</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;- - -&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/sys/class/scsi_host/host0/scan
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;- - -&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/sys/class/scsi_host/host1/scan
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>multipath<span class="w"> </span>-r
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># ESXi — rescan all HBAs</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>adapter<span class="w"> </span>rescan<span class="w"> </span>--all
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># Windows</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>Update-StorageProviderCache<span class="w"> </span>-DiscoveryLevel<span class="w"> </span>Full
 </code></pre></div>
 
 

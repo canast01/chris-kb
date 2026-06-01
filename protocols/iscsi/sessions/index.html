@@ -3390,6 +3390,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#session-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Session Lifecycle
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#viewing-sessions-linux" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3608,8 +3619,11 @@
 
 
 <h1 id="iscsi-sessions">iSCSI Sessions<a class="headerlink" href="#iscsi-sessions" title="Permanent link">&para;</a></h1>
-<p>An iSCSI session is a logical connection between an initiator and a target, established after discovery.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>        SESSION SETUP SEQUENCE
+<div class="kb-summary">
+An iSCSI session is a logical connection between an initiator and a target, established after discovery.
+</div>
+
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>        SESSION SETUP SEQUENCE
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>┌──────────────┐                         ┌──────────────────┐
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Initiator   │                         │     Target       │
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>└──────┬───────┘                         └─────────┬────────┘
@@ -3627,20 +3641,17 @@
 <a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>       │ ◄═══════════════════════════════════════════│
 <a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>       │  5. I/O (SCSI commands over TCP)           │
 <a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>       │ ◄══════════════════════════════════════════►│
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>``` Each session can carry multiple connections (TCP streams) for performance.
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>## Session Lifecycle
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>```mermaid
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>flowchart LR
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>    A[Discovery] --&gt; B[Login]
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>    B --&gt; C[Session Active]
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>    C --&gt; D{I/O or Idle}
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>    D --&gt;|I/O| C
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>    D --&gt;|Logout| E[Session Closed]
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>    C --&gt;|Error / timeout| F[Session Recovery]
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>    F --&gt; C
 </code></pre></div>
+Each session can carry multiple connections (TCP streams) for performance.</p>
+<h2 id="session-lifecycle">Session Lifecycle<a class="headerlink" href="#session-lifecycle" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart LR
+    A[Discovery] --&gt; B[Login]
+    B --&gt; C[Session Active]
+    C --&gt; D{I/O or Idle}
+    D --&gt;|I/O| C
+    D --&gt;|Logout| E[Session Closed]
+    C --&gt;|Error / timeout| F[Session Recovery]
+    F --&gt; C</code></pre>
 <h2 id="viewing-sessions-linux">Viewing Sessions — Linux<a class="headerlink" href="#viewing-sessions-linux" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List all active sessions (brief)</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>iscsiadm<span class="w"> </span>-m<span class="w"> </span>session
