@@ -67,7 +67,7 @@ curl -sf http://localhost:<port>/health
 │    Time overrun= Execution exceeds approved window; decision: extend (if safe) or rollback            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 ## Phase 4 — Monitoring Soak
 

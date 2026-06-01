@@ -84,7 +84,7 @@ Password Policy Controls (enforced via Host Profile)
 │  STIG        = Security Technical Implementation Guide; DOD hardening                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```bash
 
 ### List and Remove Unused Local Accounts
 

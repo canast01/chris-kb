@@ -93,7 +93,7 @@ tail -f /opt/sannav/logs/event-engine.log | grep "trap\|SNMP"
 │  Config diff     = SANnav compares its zone db to switch; shows out-of-band changes                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 If disk is > 85% full: purge old performance data. Navigate to **Administration > System > Data Retention** and reduce the retention period for historical data.
 

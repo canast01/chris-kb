@@ -77,7 +77,7 @@ flowchart TD
 │  Configuration = shares, exports, quotas, NFS aliases; Eyeglass syncs these between clusters          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```text
 
 | SyncIQ Status | Meaning | Action |
 |---|---|---|

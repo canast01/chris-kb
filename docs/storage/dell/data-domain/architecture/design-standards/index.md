@@ -66,7 +66,7 @@ graph TD
 │    DD Boost protocol= Preferred over NFS for backup; offloads dedup; uses less network bandwidth      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 Each storage unit maps to exactly one MTree. Create the MTree first, then create the storage unit pointing at it.
 

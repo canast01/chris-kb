@@ -71,7 +71,7 @@ Diagnostics reference covering Collect SRM Support Bundle, vSphere Replication L
 │  ProgramData   = Windows hidden folder; SRM writes logs here                                          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 ---
 

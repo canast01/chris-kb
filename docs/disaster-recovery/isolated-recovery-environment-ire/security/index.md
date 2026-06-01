@@ -65,7 +65,7 @@ Compare-Object $prodAdmins $ireAdmins -IncludeEqual | Where-Object {$_.SideIndic
 │  BIA           = Business Impact Analysis; drives RPO/RTO targets per system                          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 ## Audit Logging
 

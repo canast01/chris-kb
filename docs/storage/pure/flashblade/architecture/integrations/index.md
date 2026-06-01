@@ -23,7 +23,7 @@ FlashBlade Integration Map
                                     │
                                     └──► Remote FlashBlade
                                          (ActiveDR async repl)
-```
+```sql
 
 > Part of the [FlashBlade Architecture](../index.md) reference.
 

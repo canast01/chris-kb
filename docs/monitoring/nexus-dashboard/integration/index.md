@@ -48,7 +48,7 @@ Admin > Sites > Add Site
 │  SMTP = Email notification for NDI events; configured in ND admin settings                            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 ## ServiceNow ITSM Integration
 

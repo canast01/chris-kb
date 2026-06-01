@@ -40,7 +40,7 @@ terraform version
 │   │     required_version= constraint in versions.tf; prevents running wrong Terraform version     │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 ## Upgrade Terraform In-Place
 

@@ -80,7 +80,7 @@
 │    Snapshot stun= Momentary IO pause during snapshot create/delete; worse with large VMs              │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```powershell
 
 ## Step 2 — Create Snapshot
 

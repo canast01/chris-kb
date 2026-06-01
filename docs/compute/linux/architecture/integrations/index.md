@@ -66,7 +66,7 @@ sequenceDiagram
 │  Elasticsearch= Distributed search and analytics engine for log aggregation at scale                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 **Troubleshoot AD authentication:**
 

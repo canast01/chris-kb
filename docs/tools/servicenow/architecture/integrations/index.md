@@ -82,7 +82,7 @@ graph LR
 │  Integration Hub = pre-built action library for REST, JDBC, LDAP flow steps                           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```text
 
 ---
 

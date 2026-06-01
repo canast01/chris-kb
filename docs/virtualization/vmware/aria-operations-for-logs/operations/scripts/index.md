@@ -73,7 +73,7 @@ curl -sk -u "$USER:$PASS" "https://$VRLI/api/v2/alerts?severity=critical&status=
 │  Bearer header     = Authorization: Bearer <sessionId> on subsequent API calls                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```bash
 
 ---
 

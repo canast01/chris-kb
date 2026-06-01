@@ -87,7 +87,7 @@ VCSA Procedure Flow — Maintenance Window
 │  Diskgroup     = vSAN storage unit; one cache tier + capacity tier per host                           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```powershell
 
 Service restart order for manual recovery:
 1. `vmware-vpostgres` — database must be running before vpxd

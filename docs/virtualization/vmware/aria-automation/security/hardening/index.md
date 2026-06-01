@@ -55,7 +55,7 @@ VAMI (https://vra-prod-01.example.local:5480) → Services → Change Admin Pass
 │  SIEM integration  = Security Information and Event Management; aggregates vRA and vIDM logs          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```bash
 
 **Via vracli (standalone deployments):**
 

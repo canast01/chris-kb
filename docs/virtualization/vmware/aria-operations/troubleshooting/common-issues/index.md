@@ -67,7 +67,7 @@ service vmware-vcops-watchdog restart
 │  Time Range           = Dashboard widget setting; widen if no data appears                            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 If the node is running but not joining the cluster:
 1. Check NTP — time drift > 1 second between nodes prevents cluster consensus

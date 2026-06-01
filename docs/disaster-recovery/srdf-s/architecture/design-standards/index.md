@@ -82,7 +82,7 @@ graph LR
 │  RF Port       = Remote Fabric port on PowerMax; used exclusively for SRDF replication traffic        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 Where 1.25 = 25% headroom for burst absorption.
 

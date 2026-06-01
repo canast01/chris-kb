@@ -73,7 +73,7 @@ flowchart TD
 │  LAPS          = auto-rotated local admin password; check rotation age                                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```powershell
 
 ### Disk Space
 

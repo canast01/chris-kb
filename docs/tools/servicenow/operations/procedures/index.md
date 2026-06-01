@@ -63,7 +63,7 @@ Closed:      Caller confirmed resolution or auto-closed after N days
 │  Role inherit = group role automatically applies to all group members                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```text
 
 | Priority | Response SLA | Resolution SLA |
 |----------|-------------|---------------|

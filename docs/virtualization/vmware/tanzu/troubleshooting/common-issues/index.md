@@ -75,13 +75,13 @@ Common Issues reference covering Supervisor Stuck in Configuring State, TKG Clus
    Fix: add A record for Supervisor API VIP in DNS
 
 2. **NTP skew**: Control plane VMs time differs from vCenter by >5 seconds
-   ```
+```text
    vCenter → Workload Management → Supervisor → Control Plane VMs
    SSH to a control plane VM → check timedatectl
    ```
 
 3. **NSX-T or AVI misconfiguration**: Load balancer not assigning VIP to Supervisor
-   ```
+```text
    NSX-T → Load Balancing → Virtual Servers → check if VIP created for Supervisor
    ```
 

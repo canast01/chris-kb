@@ -52,7 +52,7 @@ graph LR
 │   │       CloudTrail on S3= logs every GetObject/PutObject on state bucket; full audit trail      │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```bash
 
 ## Dependency and Provider Security
 

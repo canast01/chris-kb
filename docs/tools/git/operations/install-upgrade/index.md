@@ -69,7 +69,7 @@ sudo apt-get install --only-upgrade git
 │  Appliance      = GitHub Enterprise is a VM image (OVA/AMI); managed internally                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 ### Windows
 

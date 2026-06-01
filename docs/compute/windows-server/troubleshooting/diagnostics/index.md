@@ -80,7 +80,7 @@ flowchart LR
 │  PortQry        = Microsoft port connectivity scanner; tests TCP/UDP port accessibility               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```powershell
 
 ## Exporting Logs
 

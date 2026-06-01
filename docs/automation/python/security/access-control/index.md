@@ -44,7 +44,7 @@ graph TD
 │   │    chmod 750    = owner execute, group execute, no world access; protect sensitive scripts    │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```powershell
 
 ```bash
 # Verify effective permissions for an IAM role

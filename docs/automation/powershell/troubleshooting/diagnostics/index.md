@@ -52,7 +52,7 @@ flowchart TD
 │   │   ScriptStackTrace     = call stack at the point of error; shows which function called what   │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```powershell
 
 > Warning: `-Trace 2` is very verbose. Redirect output to a file for scripts with large loops: `Set-PSDebug -Trace 2; .\MyScript.ps1 *>&1 | Out-File trace.txt`
 

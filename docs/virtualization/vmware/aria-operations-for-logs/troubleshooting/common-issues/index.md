@@ -71,7 +71,7 @@ grep -i "drop\|overflow\|parse error\|reject" /var/log/loginsight/ingestion.log 
 │  Worker overloaded = Worker CPU/RAM at limit; scale out by adding another worker VM                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```powershell
 
 For Windows agents:
 

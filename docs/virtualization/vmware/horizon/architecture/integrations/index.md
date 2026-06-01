@@ -71,7 +71,7 @@ nslookup _ldap._tcp.dc._msdcs.<your-domain>
 │  CIFS              = file share protocol; desktop profiles stored here                                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 Key GPO paths (in GPMC):
 - `Computer Configuration > Administrative Templates > VMware Blast` — display protocol settings

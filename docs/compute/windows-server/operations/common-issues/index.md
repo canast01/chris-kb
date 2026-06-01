@@ -84,7 +84,7 @@ flowchart TD
 │  dism           = Deployment Image Servicing and Management; repairs OS component store               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```powershell
 
 ## High Memory
 

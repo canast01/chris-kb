@@ -66,7 +66,7 @@ Scripts reference covering Get All Protected VMs and RPO Compliance, Get Last Te
 │  Plan run date = stored in SRM DB; queryable via REST API                                             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```powershell
 
 ---
 

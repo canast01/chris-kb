@@ -117,7 +117,7 @@ echo "Done. Repositories in: $DEST_DIR"
 │  Batch delete     = gh api /repos/{owner}/{repo}/branches/{branch} -X DELETE                          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```text
 
 ---
 

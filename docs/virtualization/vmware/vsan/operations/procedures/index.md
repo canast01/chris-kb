@@ -86,7 +86,7 @@ KEY PROCEDURE FLOWS
 │  30% free       = minimum headroom for resync operations                                              │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 **From vCenter UI:**
 vSphere Client → Cluster → Configure → vSAN → Disk Management → Claim Disks

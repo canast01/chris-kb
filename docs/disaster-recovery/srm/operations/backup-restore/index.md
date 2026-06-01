@@ -87,7 +87,7 @@ ls -lh /var/lib/applmgmt/backup/
 │  Site Pair     = trust relationship between protected and recovery SRM servers                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```powershell
 
 ---
 

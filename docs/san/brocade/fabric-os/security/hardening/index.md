@@ -74,7 +74,7 @@ flowchart TD
 │  IP whitelist    = management source IP restriction; configured via acp filter command                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 ### Remove Default SNMP Community Strings
 

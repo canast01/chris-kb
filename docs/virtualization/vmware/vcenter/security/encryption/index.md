@@ -83,7 +83,7 @@ vSphere Encryption Key Flow
 │  vSAN enc     = cluster-wide encryption; hosts encrypt writes to disk                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 ## vSphere Trust Authority (vTA)
 

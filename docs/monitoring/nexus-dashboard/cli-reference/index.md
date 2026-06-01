@@ -55,7 +55,7 @@ kubectl logs -n nd-base <pod_name>
 │  APIC Read-Only = Minimum privilege for NDI APIC credentials: Observer role                           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```bash
 
 ---
 

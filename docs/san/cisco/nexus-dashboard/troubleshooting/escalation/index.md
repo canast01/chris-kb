@@ -134,7 +134,7 @@ kubectl get events --all-namespaces --sort-by='.lastTimestamp' > /tmp/k8s-events
 │  Tech-support   = Collected before any recovery action; preserves failure state                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 ### For Cluster Formation or etcd Issues
 

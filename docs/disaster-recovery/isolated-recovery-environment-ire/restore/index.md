@@ -53,7 +53,7 @@ flowchart TD
 │  BIA           = Business Impact Analysis; drives RPO/RTO targets per system                          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 ### Database Restore
 

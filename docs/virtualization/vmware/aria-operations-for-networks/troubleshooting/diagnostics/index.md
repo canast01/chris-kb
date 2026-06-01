@@ -59,7 +59,7 @@ Settings → Support → Download Support Bundle
 │  Collector Log Level = Adjust in collector config for verbose debugging output                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```python
 
 ---
 

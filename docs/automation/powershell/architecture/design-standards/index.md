@@ -37,7 +37,7 @@ Get-Verb | Sort-Object Group, Verb | Format-Table -AutoSize
 │   │   Pester                = PS testing framework; Describe/Context/It blocks; mock with Mock{}  │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```powershell
 
 Key attributes reference:
 

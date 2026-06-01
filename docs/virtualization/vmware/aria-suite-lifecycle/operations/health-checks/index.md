@@ -69,7 +69,7 @@ Health Checks reference covering Cluster Node Health via API, Locker Health Chec
 │  Logscraper          = Run after health check failure to collect diagnostic logs                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```bash
 
 ---
 

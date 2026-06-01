@@ -69,7 +69,7 @@ openssl s_client -connect nsx-manager.example.local:443 -tls1_2 2>/dev/null | \
 │  Policy-based= IPSec with selectors; legacy; no dynamic routing                                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```python
 
 When FIPS mode is enabled, NSX Manager, Edge nodes, and ESXi host agents must all run FIPS-compliant builds.
 

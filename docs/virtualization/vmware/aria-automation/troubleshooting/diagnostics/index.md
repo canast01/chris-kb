@@ -89,7 +89,7 @@ resources:
 │  VMware SR         = Support Request; opened with support bundle attached for complex issues          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```text
 
 ---
 

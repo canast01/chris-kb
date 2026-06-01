@@ -71,7 +71,7 @@ grep "<switch-ip>" /var/log/dcnm/discovery.log | tail -30
 │  journalctl      = Linux systemd log; shows DCNM service crashes and errors                           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```bash
 
 **Resolution for DCNM permission error:**
 - Verify the `dcnm_mgmt` account has `network-admin` role on the switch: `show user-account | grep dcnm_mgmt`

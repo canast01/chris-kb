@@ -78,7 +78,7 @@ CLI TOOL CHAIN
 │  Test-VsanCluster= PowerCLI; triggers health check run                                                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 ### Skyline Health (vSphere Client Context)
 

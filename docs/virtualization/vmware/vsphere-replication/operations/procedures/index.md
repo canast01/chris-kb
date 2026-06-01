@@ -76,7 +76,7 @@ For vSphere Replication-based SRM protection:
 1. Configure VR replication on the VM (see above)
 2. Wait for initial sync to complete (status: OK)
 3. Then:
-   ```
+```sql
    SRM → Protection → Protection Groups → [VR-based group] → Add VMs
    Select: the newly replicated VM
    ```
@@ -179,7 +179,7 @@ Before decommissioning a site or replacing a VRA appliance:
 1. Migrate all VM replications to a different VRA/VRS (Edit → change VRS assignment)
 2. Verify zero replications remain on the VRA
 3. Unregister from vCenter:
-   ```
+```text
    VRA VAMI → Configuration → vCenter Server → Unregister
    ```
 4. Power off and delete the VRA VM from vCenter

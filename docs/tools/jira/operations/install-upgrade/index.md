@@ -109,7 +109,7 @@ cat /tmp/jira-plugins-before.txt
 │  PostgreSQL 14 = minimum recommended for Jira 9.x; check matrix for exact version                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```bash
 
 ### Install Jira
 

@@ -47,7 +47,7 @@ graph LR
 │   │   encrypt_string = encrypts a single string value; embed inline in plain YAML variable files  │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```bash
 
 ### Recommended Layout
 

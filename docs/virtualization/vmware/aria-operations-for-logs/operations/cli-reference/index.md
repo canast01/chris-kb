@@ -71,7 +71,7 @@ li-admin storage
 │  API bearer token  = Auth via POST /api/v1/sessions; returns sessionId for API calls                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```bash
 
 ---
 

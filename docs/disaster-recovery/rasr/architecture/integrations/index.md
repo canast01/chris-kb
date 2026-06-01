@@ -67,7 +67,7 @@ Get-Service -Name "DellRASR" | Select-Object Status, StartType
 │  RTO           = Recovery Time Objective; time from failover decision to restored service             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```powershell
 
 **Option 3 — Reset computer account from DC (run on a domain controller):**
 

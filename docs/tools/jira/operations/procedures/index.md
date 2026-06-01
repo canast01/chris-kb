@@ -65,7 +65,7 @@ Example:
 │  Backup verify  = check pg_dump file exists and is non-zero size after cron run                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```bash
 
 Estimation tips:
 - Use planning poker for team alignment

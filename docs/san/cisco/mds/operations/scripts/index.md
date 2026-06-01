@@ -171,7 +171,7 @@ MDS_HOST=192.168.1.20 MDS_USER=admin ./mds_fabric_health.sh
 │  Port error daily= parse show interface fc counters; alert on CRC increase                            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 **What you should see**
 

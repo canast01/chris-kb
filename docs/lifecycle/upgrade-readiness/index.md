@@ -50,7 +50,7 @@ flowchart LR
 │    Known issues   = Vendor-published list of bugs in release; check for impact on your environment    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```text
 
 | Health Check | Pass Criteria |
 |---|---|

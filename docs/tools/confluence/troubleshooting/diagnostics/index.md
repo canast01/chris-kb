@@ -81,7 +81,7 @@ flowchart TD
 │  df -h          = disk usage; alert if CONFLUENCE_HOME volume >80% full                               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```bash
 
 ### Useful Log Grep Patterns
 

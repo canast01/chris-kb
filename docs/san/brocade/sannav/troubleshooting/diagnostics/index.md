@@ -93,7 +93,7 @@ sannav restart
 │  Audit log CSV   = exported SANnav user action log; shared during security review                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 ### Check InfluxDB Health (SAN Analytics)
 

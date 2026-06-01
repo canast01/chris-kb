@@ -99,7 +99,7 @@ vsipioctl getstats -f <filter-name>
 │  Resync      = NSX Manager pushes config to transport node again                                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 ---
 

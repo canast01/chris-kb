@@ -75,7 +75,7 @@
 │    Quiesce   = Cluster: move resources to peer node; HA group: disable before reboot                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```powershell
 
 **Windows:**
 ```powershell

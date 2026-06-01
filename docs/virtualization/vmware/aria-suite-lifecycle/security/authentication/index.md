@@ -70,7 +70,7 @@ Authentication reference covering Workspace ONE Access Integration, Active Direc
 │  90-day Rotation     = Local admin password changed every 90 days                                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 Provide:
 - VIDM FQDN (must be resolvable from LCM)

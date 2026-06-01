@@ -62,7 +62,7 @@ python3 -c "import yaml,sys; yaml.safe_load(open('blueprint.yaml'))" \
 │  Cloud acct log    = vRA data collection history; shows timestamps and errors per account             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 If the VM was created in vCenter but the deployment is stuck:
 - Do not delete the VM from vCenter directly — this orphans the deployment record

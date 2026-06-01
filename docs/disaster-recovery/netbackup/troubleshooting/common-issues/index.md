@@ -82,7 +82,7 @@ tail -200 /usr/openv/netbackup/logs/bpbrm/log.<yyyymmdd>
 │  NDMP          = Network Data Management Protocol; direct NAS-to-storage backup path                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```text
 
 ---
 

@@ -105,7 +105,7 @@ graph TD
 │   │    internal PyPI= host with Nexus, Artifactory, or devpi; configure with pip.conf index-url   │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```python
 
 ```python
 from apscheduler.schedulers.blocking import BlockingScheduler

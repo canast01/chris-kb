@@ -82,7 +82,7 @@ curl -sk -u 'admin:password' \
 │  CR          = Change Request; ITSM record authorising change                                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 **Step 4 — Functional test**
 

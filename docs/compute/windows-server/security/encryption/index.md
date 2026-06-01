@@ -85,7 +85,7 @@ flowchart TD
 │  HSM            = Hardware Security Module; tamper-proof key storage for CA root keys                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```powershell
 
 ### Enable BitLocker on Data Drives
 

@@ -71,7 +71,7 @@ graph TD
 │    Micro-seg    = Per-VM firewall rules (NSX DFW); east-west traffic control inside DC                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 **Zone definitions:**
 

@@ -73,7 +73,7 @@ Get-ChildItem $share | Sort-Object LastWriteTime -Descending | Select-Object -Fi
 │  RTO           = Recovery Time Objective; time from failover decision to restored service             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```powershell
 
 ---
 

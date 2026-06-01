@@ -56,7 +56,7 @@ flowchart TD
 │    Partial fail  = Some components succeeded, others failed; assess risk vs completing rollback       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 ```powershell
 # Windows — uninstall cumulative update

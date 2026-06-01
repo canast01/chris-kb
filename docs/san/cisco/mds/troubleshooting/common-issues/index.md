@@ -80,7 +80,7 @@ show fcdomain domain-list vsan 10
 │  CRC error      = Frame checksum failure; indicates physical layer problem                            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```bash
 
 ```bash
 # Check reason

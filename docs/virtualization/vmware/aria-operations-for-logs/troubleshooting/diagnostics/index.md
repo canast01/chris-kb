@@ -69,7 +69,7 @@ grep -i "error\|warn"           /var/log/loginsight/cassandra/system.log | tail 
 │  VMware SR         = Support Request; provide bundle + timeline + version details                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```bash
 
 Via UI: **Administration → Cluster → Support Bundle → Generate and Download**.
 

@@ -61,7 +61,7 @@ Get-Service -Name "Veeam Agent for Microsoft Windows"
 │  Test restore = periodic recovery drill; validates backup integrity                                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```powershell
 
 ## Windows Server Backup (WSB)
 

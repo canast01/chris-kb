@@ -90,7 +90,7 @@ flowchart TD
 │    failback         = CLI command to reverse replication after failover; requires resync first        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```python
 
 ### Image Access (CG Operations)
 

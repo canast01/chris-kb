@@ -55,7 +55,7 @@ InsightIQ web UI > Administration > Authentication > LDAP
 │  Annual review = Yearly audit of InsightIQ users and PAPI credentials                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 Rotate the service account password on the 12-month schedule. Update the credential in InsightIQ immediately after rotation.
 

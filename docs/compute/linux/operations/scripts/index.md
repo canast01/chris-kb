@@ -64,7 +64,7 @@ flowchart LR
 │  shebang     = First line of script (#!/bin/bash); tells kernel which interpreter to use              │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 ## patch-status-report.sh
 

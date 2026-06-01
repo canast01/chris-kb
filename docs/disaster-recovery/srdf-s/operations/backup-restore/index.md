@@ -77,7 +77,7 @@ symrdf list -rdfg <rdf_group_number> -detail
 │  RF Port       = Remote Fabric port on PowerMax; used exclusively for SRDF replication traffic        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 **Caution:** In a synchronous pair, forced failover during an outage is effectively zero-data-loss if the link was synchronized before the failure. If the link had suspended writes (e.g., network drop was not immediate), up to the in-flight writes may be lost.
 

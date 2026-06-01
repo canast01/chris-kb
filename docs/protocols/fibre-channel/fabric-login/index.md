@@ -31,7 +31,7 @@ Fabric login is the process by which FC ports register with the fabric and estab
      │                     │  ACC (target ready) │
      │ ◄─────────────────────────────────────── │
      │                     │  I/O can begin     │
-```
+```sql
 Login failures prevent hosts from seeing storage.
 
 ## Login Sequence

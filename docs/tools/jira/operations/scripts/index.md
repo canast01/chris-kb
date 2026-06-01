@@ -43,7 +43,7 @@ export PGPASSWORD="${JIRA_DB_PASSWORD}"
 │  Attachment tar = tar -czf; compress JIRA_HOME/data/attachments/                                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 ### Inactive User Report (SQL)
 

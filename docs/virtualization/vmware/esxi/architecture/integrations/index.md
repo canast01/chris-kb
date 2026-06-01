@@ -75,7 +75,7 @@ ESXi Integration Map
 │  svMotion = Storage vMotion; migrates VMDK between datastores live                                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```bash
 
 Ensure the NFS vmkernel adapter is on the correct VLAN and the NFS server export allows the ESXi management/NFS IP.
 

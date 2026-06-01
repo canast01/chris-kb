@@ -113,7 +113,7 @@ passwd admin
 │  Standby upgrade = deploy new SANnav version as standby; validate before DNS swing                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 Post-upgrade, delete the VM snapshot taken before the upgrade. Snapshots held for more than 48 hours degrade VM performance.
 

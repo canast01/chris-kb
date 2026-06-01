@@ -77,7 +77,7 @@ graph TB
 │  Dual control    = key operations require two independent admin approvals                             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 ### Test SNMP v3 from Monitoring Server
 

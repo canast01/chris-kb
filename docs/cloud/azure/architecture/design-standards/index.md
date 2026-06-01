@@ -86,7 +86,7 @@ az policy state list --resource-group <rg> \
 │  Platform sub    = Dedicated subscriptions for management, connectivity, and identity                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 ## Resource Lock Standards
 

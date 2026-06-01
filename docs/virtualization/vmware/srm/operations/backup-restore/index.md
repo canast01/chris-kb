@@ -72,7 +72,7 @@ Backup and Restore reference covering Backup Schedule Recommendation, SRM Config
 │  VADP backup   = standard VM backup; required for SRM Server VM                                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```python
 
 The exported XML contains:
 - Site pairing information.

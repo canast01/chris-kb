@@ -61,7 +61,7 @@ sudo systemctl status vrni-platform
 │  SSH                 = Secure Shell; admin access to appliance CLI on port 22                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```yaml
 
 Output format:
 ```yaml

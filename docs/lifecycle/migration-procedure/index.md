@@ -70,7 +70,7 @@ Data volume:      <GB / TB>
 │    Quiesce source = Stop writes to source for delta sync; creates RPO = zero at cutover               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```powershell
 
 ## Phase 3 — Data Synchronisation
 

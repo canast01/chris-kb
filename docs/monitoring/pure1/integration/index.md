@@ -51,7 +51,7 @@ purearray set --proxy https://<proxy-host>:<port>
 │  Email = Pure1 SMTP notification for proactive alerts; configure in org settings                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 Separate rules for WARNING (email) and CRITICAL (PagerDuty + ServiceNow) are the recommended pattern.
 

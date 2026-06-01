@@ -94,7 +94,7 @@ BASE="https://cloudiq.apis.dell.com/rest/v1"
 │    /v1/health   = CloudIQ REST endpoint: returns health scores for all systems                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```bash
 
 ---
 

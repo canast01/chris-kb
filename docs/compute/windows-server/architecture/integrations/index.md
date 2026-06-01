@@ -67,7 +67,7 @@ flowchart TD
 │  iSCSI initiator= Windows built-in iSCSI client for SAN block access                                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```powershell
 
 Maintenance windows control reboot scheduling:
 - Development: patching on Tuesdays, auto-reboot allowed

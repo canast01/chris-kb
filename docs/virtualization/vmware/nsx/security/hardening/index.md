@@ -111,7 +111,7 @@ for r in d.get('results', []):
 │  NTP         = time sync; required for cert validity and log correlation                              │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```bash
 
 ---
 

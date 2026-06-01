@@ -98,7 +98,7 @@ flowchart TD
 │    NUMA miss  = vCPU accesses RAM from remote NUMA node; size VMs within physical NUMA boundary       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```powershell
 
 ### Memory Reclamation States
 

@@ -59,7 +59,7 @@ Pure1 > Administration > Single Sign-On > Configure
 │  API key rotation = RSA key pair rotated annually per security policy                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```python
 
 ## Authentication Flow (RSA Key)
 

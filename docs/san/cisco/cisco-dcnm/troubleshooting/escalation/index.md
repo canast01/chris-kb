@@ -138,7 +138,7 @@ top -b -n 1 > /tmp/top-snapshot-$(date +%Y%m%d).txt
 │  No config changes= freeze all DCNM and MDS changes during active incident                            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 ### For Performance / DB Issues
 

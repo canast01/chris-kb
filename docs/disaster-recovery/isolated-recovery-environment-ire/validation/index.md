@@ -44,7 +44,7 @@ flowchart LR
 │  BIA           = Business Impact Analysis; drives RPO/RTO targets per system                          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 ## RTO / RPO Measurement
 

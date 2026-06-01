@@ -49,7 +49,7 @@ flowchart TD
 │   │      Cause B: PSModulePath does not include install directory → fix: add path to env var      │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```powershell
 
 ## Debugging Scripts
 

@@ -94,7 +94,7 @@ Recommended SAML configuration:
 │  Assertion    = SAML XML document signed by IdP containing user identity and attributes               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```bash
 
 ## Local Accounts
 

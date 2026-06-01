@@ -79,7 +79,7 @@ ESXi Host Design Checklist — Standard Layout
 │  Slot    = HA resource unit = worst-case VM CPU+mem in cluster                                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```bash
 
 ---
 

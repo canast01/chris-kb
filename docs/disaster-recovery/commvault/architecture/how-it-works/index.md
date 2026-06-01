@@ -96,7 +96,7 @@ graph TB
 │  Job Queue      = CommServe priority queue; throttles concurrent jobs per resource                    │
 │  Catalog        = CommCell browse index enabling file-level restore from any backup                   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```python
 
 MediaAgent best practices:
 - Deploy one MediaAgent per site for local backups

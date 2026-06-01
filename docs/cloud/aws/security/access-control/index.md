@@ -86,7 +86,7 @@ Access Control reference covering IAM Fundamentals, Least-Privilege Policy Desig
 │  Wildcard action = iam:* or s3:* in a policy grants all actions — avoid in production                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 ---
 

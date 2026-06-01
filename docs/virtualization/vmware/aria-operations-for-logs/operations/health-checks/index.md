@@ -60,7 +60,7 @@ curl -sk -u 'admin:<password>' \
 │  NTP sync           = All vRLI nodes must be NTP-synced; time skew breaks cluster consensus           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 Via UI: **Administration → Agents** — agents with a last check-in older than 15 minutes are potentially offline.
 

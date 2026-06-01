@@ -71,7 +71,7 @@ CLI Reference reference covering Session Management, vdmexport / vdmimport, UAG 
 │  Remove-HVMachine= PowerCLI; remove a desktop VM from pool                                            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 ### Desktop and Pool Operations
 

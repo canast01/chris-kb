@@ -69,7 +69,7 @@ Encryption reference covering Encryption at Recovery Site, Certificate Managemen
 │  Re-pair       = after cert replacement; required for site pair trust                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 After replacing the SRM Server cert, update the thumbprint at the remote site:
 ```text

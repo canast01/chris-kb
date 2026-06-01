@@ -194,7 +194,7 @@ RP_HOST=192.168.1.100 RP_USER=admin RP_PASS=MyPassword python3 rp-cg-health.py
 │    Error handling   = Catch HTTP 4xx/5xx; retry with backoff; log to syslog on persistent failure     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```python
 
 **What you should see**
 

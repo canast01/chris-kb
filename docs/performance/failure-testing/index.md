@@ -73,7 +73,7 @@ tc qdisc del dev eth0 root
 │    Rollback       = Restore normal state after test; documented before injection starts               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 ## Application Resilience Tests
 

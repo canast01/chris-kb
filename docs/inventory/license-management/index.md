@@ -63,7 +63,7 @@ ps aux --sort=-%cpu | awk '{print $11}' | sort -u | head -30
 │    SCCM         = Microsoft System Center; discovers installed software for licence counting          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```powershell
 
 ## License Utilisation — Common Products
 

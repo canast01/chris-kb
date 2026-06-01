@@ -78,7 +78,7 @@ fwupdmgr refresh && fwupdmgr update  # update via LVFS
 │    ITAD     = IT Asset Disposition; certified disposal with chain-of-custody and destruction cert     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```powershell
 
 ## Decommission Procedure
 

@@ -55,7 +55,7 @@ chronyc tracking | grep -E "offset|frequency|drift"
 │    w32tm        = Windows NTP tool; /query /status shows source, stratum, offset                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```bash
 
 ## ntpd (Legacy)
 

@@ -83,7 +83,7 @@ LCM → Lifecycle Operations → Environments → select or create environment �
 │  SAN cert          = Subject Alternative Name; must include vRA FQDN for browser trust                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```text
 
 ---
 

@@ -81,7 +81,7 @@ flowchart TD
 │    Snap verify = Mount snapshot in sandbox and run application check scripts                          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```powershell
 
 Expected output columns: `Name` (VM name), `Status` (Success / Warning / Failed), timing. Any `Failed` row requires immediate investigation and re-run after remediation.
 

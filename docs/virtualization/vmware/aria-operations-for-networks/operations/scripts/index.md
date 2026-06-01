@@ -75,7 +75,7 @@ HEADERS = {"Authorization": f"NetworkInsight {TOKEN}", "Content-Type": "applicat
 │  CI/CD Integration   = Scripts run in pipelines for automated config drift detection                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```python
 
 ---
 

@@ -64,7 +64,7 @@ flowchart LR
 │  CloudFormation = AWS native IaC; stack-based resource provisioning and updates                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```powershell
 
 **AD Connector** (proxy authentication to on-premises AD without replication):
 ```bash

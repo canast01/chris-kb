@@ -109,7 +109,7 @@ while (gr.next()) {
 │  Sched jobs = background scheduled tasks; excessive jobs starve user threads                          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```powershell
 
 ### Resolution
 

@@ -62,7 +62,7 @@ flowchart LR
 │  Generalise   = sysprep step to remove SIDs; must do before capturing image                           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```powershell
 
 ---
 

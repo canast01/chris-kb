@@ -94,7 +94,7 @@ trap cleanup EXIT
 │  CSV input       = bulk zone creation from spreadsheet; scripted via REST API batch                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```python
 
 ---
 

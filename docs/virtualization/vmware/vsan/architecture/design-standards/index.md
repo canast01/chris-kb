@@ -72,7 +72,7 @@ vmkping -I vmk2 -d -s 8972 <remote-vsan-vmk-ip>
 │  LLDP         = Link Layer Discovery Protocol; used for vSAN net health                               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```powershell
 
 **Stretched cluster requirements:**
 

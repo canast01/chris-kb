@@ -70,7 +70,7 @@ Diagnostics reference covering Collect Horizon Support Bundle, Windows Event Log
 │  Pool error    = UI shows red error; hover for provisioning reason                                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```powershell
 
 ---
 

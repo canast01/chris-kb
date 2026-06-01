@@ -76,7 +76,7 @@ flowchart TD
 │  fsck        = Filesystem check and repair; must be run on unmounted filesystem                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```bash
 
 ## High Disk I/O or Latency
 

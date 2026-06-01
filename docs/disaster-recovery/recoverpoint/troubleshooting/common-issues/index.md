@@ -56,7 +56,7 @@ boxmgmt system status
 │  Distributed CG= consistency group spanning volumes on multiple storage arrays                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```bash
 
 **RP4VM software splitter (ESXi):**
 - Check ESXi host kernel module: `esxcli software vib list | grep rp`

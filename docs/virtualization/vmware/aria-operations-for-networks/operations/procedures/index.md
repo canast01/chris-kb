@@ -84,7 +84,7 @@ curl -sk -X POST "${PLATFORM}/api/ni/datasources/vcenter" \
 │  Test Connection     = vRNI built-in check that validates API reachability + auth                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 Verify in AON within 5–10 minutes:
 
@@ -197,7 +197,7 @@ curl -sk -X POST "${PLATFORM}/api/ni/applications/${APP_ID}/security-groups/expo
 ### Saved Search
 
 1. Enter a search query in the search bar:
-   ```
+```sql
    flows where destination port = 22 and flow type = North-South
    ```
 2. Click **Save** → enter a name: `External-SSH-Flows`

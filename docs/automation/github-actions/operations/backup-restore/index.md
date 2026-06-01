@@ -75,7 +75,7 @@ echo "0 2 * * * /usr/local/bin/github-repo-mirror.sh" | crontab -
 │   │        OIDC trust      = re-configure cloud OIDC trust relationship if repo moves orgs        │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 ### Recreate Secrets After Repository Loss
 

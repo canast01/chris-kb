@@ -87,7 +87,7 @@ flowchart TD
 │  NDMP          = Network Data Management Protocol; direct NAS-to-storage backup path                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 Alert on: `backup failed`, `policy modified`, `client deleted`, `catalog backup failed`.
 

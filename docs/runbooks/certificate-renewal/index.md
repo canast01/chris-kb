@@ -57,7 +57,7 @@
 │    Venafi       = Enterprise cert lifecycle management; tracks expiry and automates renewal           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```bash
 
 **Capture:** CN, SANs, issuing CA, expiry date, key algorithm.
 

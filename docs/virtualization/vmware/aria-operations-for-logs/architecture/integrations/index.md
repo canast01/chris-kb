@@ -61,7 +61,7 @@ Administration → Integrations → Aria Operations → Add vRealize Operations 
 │  Custom field      = User-defined regex extractor creating a queryable field from log text            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```bash
 
 **Configure ESXi syslog via esxcli (single host):**
 ```bash

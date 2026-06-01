@@ -77,7 +77,7 @@ RDS CLI: Instances · Snapshots · Events
 │  Maintenance window= Weekly scheduled time for RDS to apply updates                                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 ## Parameter Groups
 

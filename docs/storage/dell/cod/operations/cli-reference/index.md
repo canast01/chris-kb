@@ -98,7 +98,7 @@ symcfg -sid <sid> list -disk -thin
 │    Solutions Enabler= Dell software toolkit for PowerMax management automation                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```bash
 
 ---
 

@@ -87,7 +87,7 @@ VSAN UPGRADE SEQUENCE (host-by-host rolling)
 │  Disk group    = logical container of cache + capacity disks per host                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 All health checks must pass before beginning an upgrade. Resolve any degraded objects or active resyncs before proceeding.
 

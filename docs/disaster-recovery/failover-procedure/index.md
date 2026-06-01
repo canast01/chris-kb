@@ -49,7 +49,7 @@ symrdf -g <rdfgroup> query
 │  BIA           = Business Impact Analysis; drives RPO/RTO targets per system                          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```powershell
 
 ### VM Failover — VMware SRM
 

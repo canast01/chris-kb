@@ -135,7 +135,7 @@ flowchart TD
 │    Restore report    = Formal record of test result; filed for audit evidence                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```yaml
 
 DataLabs is ideal for:
 - Testing patches before production deployment against a live copy of the environment

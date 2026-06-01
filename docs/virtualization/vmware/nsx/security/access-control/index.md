@@ -101,7 +101,7 @@ for r in d.get('results', []):
 │  Service acct = named automation account; not shared personal login                                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 ---
 

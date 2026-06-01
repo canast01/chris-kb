@@ -65,7 +65,7 @@ flowchart LR
 │  Azure Sentinel  = Cloud-native SIEM/SOAR; ingests logs and generates security alerts                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```powershell
 
 ## Azure AD Connect (Hybrid Identity)
 

@@ -49,7 +49,7 @@ graph LR
 │   │        state migration   = moving state between backends; terraform init -migrate-state       │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 Use `-target` sparingly — it creates drift between the plan and real state if overused.
 

@@ -134,7 +134,7 @@ flowchart TD
 │  Unisphere     = Dell PowerMax management GUI; REST API; array health and provisioning                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```text
 
 | RPO Factor | How to Check | Acceptable Threshold |
 |---|---|---|

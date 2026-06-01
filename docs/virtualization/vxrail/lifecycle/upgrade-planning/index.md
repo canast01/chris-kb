@@ -42,7 +42,7 @@ VxRail Upgrade Sequence
           │  validate health · firmware        │
           │  update change ticket · versions   │
           └────────────────────────────────────┘
-```
+```bash
 
 ---
 ## Phase 1: Planning

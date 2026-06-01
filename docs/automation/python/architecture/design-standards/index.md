@@ -82,7 +82,7 @@ def process_widgets(
 │   │   pip compile  = pip-tools; pip-compile requirements.in → requirements.txt with pinned deps   │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```python
 
 ### Structured JSON Logging (`structlog`)
 

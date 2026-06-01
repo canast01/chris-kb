@@ -77,7 +77,7 @@ show version
 │  show analytics   = MDS 9700 ITL flow analytics: IOPS, throughput, latency                            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 Compare the list against the expected device register (CMDB or SAN design spreadsheet). A host HBA or storage target missing from this output is a fault condition.
 

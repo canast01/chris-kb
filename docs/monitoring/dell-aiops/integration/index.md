@@ -45,7 +45,7 @@ SCG admin UI > Systems > [System] > Connection Status
 │  REST client = Custom script polling AIOps API and pushing to proprietary system                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 ## SIEM Integration
 

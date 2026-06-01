@@ -69,7 +69,7 @@ Access Control reference covering Least-Privilege Role Assignments, SRA Credenti
 │  No cross-site  = SRM roles are per-site; no admin across both sites                                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 Rotate SRA credentials:
 ```text

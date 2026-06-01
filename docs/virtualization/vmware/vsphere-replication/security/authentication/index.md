@@ -102,7 +102,7 @@ Token TTL: default 300 seconds — request a new token for longer-running script
 
 When vCenter's SSL certificate is replaced:
 - VRA must re-register with vCenter to accept the new certificate:
-  ```
+```text
   VRA VAMI → Configuration → vCenter Server → Reconnect or Re-register
   ```
 - Site pairing thumbprints should be verified:

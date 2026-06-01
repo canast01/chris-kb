@@ -57,7 +57,7 @@ Infrastructure → Connections → Cloud Accounts
 │  Catalog visible   = Consumer role user sees expected items in self-service portal                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```text
 
 ---
 

@@ -49,7 +49,7 @@ ansible --version
 │   │requirements.yml= collections/roles dependency file; ansible-galaxy install -r requirements.yml│   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 ## Install Collections and Roles
 

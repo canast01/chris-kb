@@ -74,7 +74,7 @@ Morning Check Sequence
 │    Stuck task  = vCenter task in running state > 30 min; cancel via task manager panel                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```powershell
 
 ## 3. Cluster HA / DRS
 

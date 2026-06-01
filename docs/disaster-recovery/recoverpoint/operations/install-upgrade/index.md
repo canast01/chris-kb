@@ -103,7 +103,7 @@ flowchart TD
 │    Journal datastore= Dedicated datastore for journal VMDKs; separate from production datastores      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```text
 
 ---
 

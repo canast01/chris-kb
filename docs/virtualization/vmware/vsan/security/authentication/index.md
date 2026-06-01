@@ -68,7 +68,7 @@ vSphere SSO (Platform Services Controller embedded in VCSA)
 │  AD groups     = Active Directory groups mapped to vCenter RBAC roles                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 **Post-join verification:**
 

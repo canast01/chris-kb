@@ -62,7 +62,7 @@ Global Permissions
 │  Audit log         = Admin > Audit Log; records permission and scheme changes                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 ---
 

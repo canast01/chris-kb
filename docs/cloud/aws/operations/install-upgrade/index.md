@@ -71,7 +71,7 @@ aws ssm describe-instance-patches --instance-id <i-xxxx> \
 │  Immutable upgrade= Never patch in place; always replace with pre-patched AMI                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 ## Lambda Runtime Deprecation
 

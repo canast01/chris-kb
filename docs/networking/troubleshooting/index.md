@@ -59,7 +59,7 @@ dig <hostname> @<dns_server_ip>    # query a specific server directly
 │    Asymmetric   = Forward and return path differ; FW stateful check fails; causes drops               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```bash
 
 #### 3. Test DNS Server Reachability
 

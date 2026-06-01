@@ -77,7 +77,7 @@ Initial sync is a full copy of all VM disks — large VMs (1+ TB) naturally take
    If bytes transferred is not increasing for >1 hour → stalled
 
 2. **Use a seed** (pre-copy VM disks to target site via another method, then configure VR pointing to the seed):
-   ```
+```text
    Configure Replication → Step 4: Seeds → Use existing data
    ```
 

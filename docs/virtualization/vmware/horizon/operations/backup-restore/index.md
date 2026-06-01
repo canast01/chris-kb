@@ -66,7 +66,7 @@ Backup and Restore reference covering Verify the Backup, App Volumes Manager Dat
 │  Re-register   = reconnect Connection Server to Horizon pod after restore                             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```powershell
 
 **What is included in the LDIF export:**
 - Desktop pool definitions

@@ -55,7 +55,7 @@ Administration → Authentication → Local Users → admin → Edit → Change 
 │  MFA enforcement   = Handled by vIDM access policy if vRLI uses SSO                                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 ---
 

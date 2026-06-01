@@ -50,7 +50,7 @@ graph TD
 │   │AMSI bypass    = attackers attempt to disable; monitor for AMSI-related events in security logs│   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```powershell
 
 ## Audit and Event Log
 

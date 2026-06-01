@@ -62,7 +62,7 @@ def get_token(host, username, password):
 │  Retry logic = Exponential backoff pattern for handling 429/503 from Aria Ops API                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```python
 
 ## Script Inventory
 

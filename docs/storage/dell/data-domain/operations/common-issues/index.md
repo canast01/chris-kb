@@ -58,7 +58,7 @@ flowchart TD
 │    Context broken   = Replication context in error state; replication resync to re-establish          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 ### Recovery Steps
 

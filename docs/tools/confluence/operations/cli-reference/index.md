@@ -50,7 +50,7 @@ export CF_AUTH="Authorization: Bearer ${CF_TOKEN}"
 │  Heap dump = -XX:+HeapDumpOnOutOfMemoryError in JVM_SUPPORT_RECOMMENDED_ARGS                          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```bash
 
 ### Users and Groups
 

@@ -91,7 +91,7 @@ curl -k -u 'svc-aon:PASSWORD' \
 │  eAPI                = Arista EOS API used by vRNI for topology and flow collection                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```powershell
 
 ## Physical Switch Integration — NetFlow/IPFIX
 

@@ -116,7 +116,7 @@ sudo systemctl status vrni-platform nginx cassandra
 │  Port Requirements   = UDP 2055, TCP 443, TCP 5480; documented in VMware port guide                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```powershell
 
 ### Prepare for Upgrade
 

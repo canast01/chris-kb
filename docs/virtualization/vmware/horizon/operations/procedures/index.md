@@ -72,7 +72,7 @@ Procedures reference covering Entitle an AD Group to a Pool, Push a Golden Image
 │  Provisioning  = Horizon auto-creates VMs to fill pool spare count                                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 Users in the group can now connect to the pool from Horizon Client or HTML access.
 

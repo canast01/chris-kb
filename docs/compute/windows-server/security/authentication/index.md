@@ -71,7 +71,7 @@ sequenceDiagram
 │  Conditional Access= Azure AD policy evaluating signals before granting resource access               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 ```cmd
 REM Command-line alternative

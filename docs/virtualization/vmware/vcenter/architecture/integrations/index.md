@@ -83,7 +83,7 @@ vCenter Integration Map
 │  HCI     = Hyper-Converged Infrastructure; vSAN = primary HCI integration                             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 - **IWA**: Uses the machine account of the VCSA; requires VCSA joined to AD domain
 - **LDAP**: Explicit bind account; use LDAPS (port 636) for encrypted queries

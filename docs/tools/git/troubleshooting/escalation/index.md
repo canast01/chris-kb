@@ -66,7 +66,7 @@ flowchart TD
 │  SIEM alert      = audit log webhook to SIEM; enables real-time access alerts                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```bash
 
 ---
 

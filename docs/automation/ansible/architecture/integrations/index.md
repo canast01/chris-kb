@@ -35,7 +35,7 @@ pip install PyVmomi vsphere-automation-sdk-python
 │   │   Netbox            = open-source DCIM/IPAM; Ansible inventory plugin pulls live device list  │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```bash
 
 ## HashiCorp Vault
 

@@ -64,7 +64,7 @@ Symptom: Cluster shows Disconnected or Missing in InsightIQ
 │  Management report = Monthly PDF summary of performance trends for leadership review                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 ## Appliance Health Checks
 

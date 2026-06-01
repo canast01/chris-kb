@@ -106,7 +106,7 @@ flowchart LR
 │  Heartbeat     = Inter-controller health signal; loss triggers failover to surviving controller       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 ## Protection Groups
 

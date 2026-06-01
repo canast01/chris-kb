@@ -76,7 +76,7 @@ graph TD
 │  Stash        = stores dirty working tree temporarily; git stash pop restores                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```text
 
 ---
 

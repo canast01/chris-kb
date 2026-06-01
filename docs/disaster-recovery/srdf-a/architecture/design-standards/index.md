@@ -63,7 +63,7 @@ symrdf -g <rdfg> query -v | grep "Minimum Cycle Time"
 │  Unisphere     = Dell PowerMax management GUI; REST API; array health and provisioning                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 Where 1.20 = 20% headroom for burst absorption. Measure peak change rate with:
 

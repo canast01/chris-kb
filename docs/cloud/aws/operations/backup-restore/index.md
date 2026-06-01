@@ -73,7 +73,7 @@ AWS Backup & Restore Flow
 │  Incremental snapshot= After first full, EBS snapshots store only changed blocks                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```powershell
 
 ---
 

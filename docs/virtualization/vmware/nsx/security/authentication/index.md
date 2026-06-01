@@ -92,7 +92,7 @@ curl -sk -u 'admin:password' \
 │  Session timeout = idle session expiry; configurable in NSX                                           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 Use LDAPS (port 636) in production. If using LDAP (port 389) with STARTTLS, set `"use_starttls": true` and provide the CA certificate.
 

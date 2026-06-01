@@ -61,7 +61,7 @@ flowchart TD
 │  leapp preupgrade= Pre-flight check for RHEL upgrades; reports inhibitors before proceeding           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```bash
 
 ## In-Place Upgrade (RHEL 8 → 9)
 

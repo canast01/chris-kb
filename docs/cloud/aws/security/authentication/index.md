@@ -77,7 +77,7 @@ aws sso login --profile prod
 │  Short-lived token= Temporary STS credential; expires after max 12h; no rotation needed               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```powershell
 
 ---
 

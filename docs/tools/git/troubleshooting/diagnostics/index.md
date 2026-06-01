@@ -82,7 +82,7 @@ GIT_TRACE_PERFORMANCE=1 git log --oneline -100 2>&1 | grep "performance"
 │  shortlog -sn    = summary of commits per author sorted by count                                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 ### Stripping Sensitive Data from Trace Logs
 

@@ -170,7 +170,7 @@ flowchart TD
 │    Post-failover    = Confirm all VMs running; validate application; set new bookmark                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```bash
 
 ### Post-Failover Validation
 

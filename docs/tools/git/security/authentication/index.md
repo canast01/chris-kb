@@ -81,7 +81,7 @@ ssh-keygen -lf ~/.ssh/id_ed25519_git.pub
 │  Keychain     = macOS keychain / Windows Credential Manager stores SSH passphrase                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 `IdentitiesOnly yes` prevents SSH from trying all keys in the agent — critical when managing multiple identities.
 

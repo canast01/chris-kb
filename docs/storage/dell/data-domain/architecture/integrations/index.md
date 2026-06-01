@@ -58,7 +58,7 @@ graph TD
 │    Cloud Tier= DDOS tier moving aged data to object storage; read-back transparent                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 ## CommVault (SISL + DD Boost)
 

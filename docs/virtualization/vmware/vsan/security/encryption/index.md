@@ -67,7 +67,7 @@ vCenter (Key Management Service client)
 │  Trust KMS cert= vCenter must trust KMS server TLS cert for KMIP                                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```powershell
 
 **From vCenter UI:**
 vSphere Client → vCenter → Configure → Key Providers → Add Standard Key Provider

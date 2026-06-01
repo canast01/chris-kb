@@ -71,7 +71,7 @@ awk -F',' 'NR>1 {
 │    SLA breach   = Vendor misses response time; escalate to account manager immediately                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 ## Renewal Process
 

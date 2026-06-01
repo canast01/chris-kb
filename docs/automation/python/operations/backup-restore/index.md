@@ -60,7 +60,7 @@ git push origin v1.4.2
 │   │     Python version = document in .python-version (pyenv) or pyproject.toml requires-python    │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 ### Offline package cache (air-gapped environments)
 

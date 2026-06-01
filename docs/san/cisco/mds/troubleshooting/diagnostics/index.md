@@ -78,7 +78,7 @@ show interface fc1/1 counters errors
 │  FC loopback    = Hardware self-test looping frames back at the port for validation                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 CPU sustained above 80% or memory usage above 90% warrants investigation. High CPU from the `fc_platform` or zone processes may indicate FLOGI storms or a large zone database activation in progress.
 

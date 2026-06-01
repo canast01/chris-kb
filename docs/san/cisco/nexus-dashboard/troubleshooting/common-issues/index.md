@@ -71,7 +71,7 @@ kubectl get nodes
 │  TAC            = Cisco TAC; escalate cluster quorum loss or etcd corruption                          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 **Resolution:**
 

@@ -80,7 +80,7 @@ Lambda CLI: Deploy → Invoke → Monitor
 │  ECR             = Elastic Container Registry; source for Lambda container image                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 ## Event Source Mappings (SQS / Kinesis triggers)
 

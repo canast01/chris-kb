@@ -87,7 +87,7 @@ graph TD
 │  Account lockout= Security policy disabling login after N consecutive failed attempts                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 ### VSAN-Scoped Roles
 

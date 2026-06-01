@@ -88,7 +88,7 @@ flowchart TD
 │    MPIO = Multipath I/O; balanced across paths; single active path = higher DAVG                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```bash
 
 ### esxtop Storage Threshold Summary
 

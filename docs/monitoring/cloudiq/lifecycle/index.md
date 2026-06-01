@@ -51,7 +51,7 @@ The SCG has its own version lifecycle and must be kept current for compatibility
 │  CloudIQ SaaS = Hosted by Dell; no customer upgrade responsibility for the platform itself            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```python
 
 ## API Token Lifecycle
 

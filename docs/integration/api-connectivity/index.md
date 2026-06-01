@@ -58,7 +58,7 @@ curl -s -X POST \
 │    openssl s_client= Test TLS handshake; shows cert chain, expiry, cipher negotiated                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```powershell
 
 ## Authentication Checks
 

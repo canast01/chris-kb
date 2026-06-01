@@ -70,7 +70,7 @@ Procedures reference covering Rotate a Password in Locker, Add a vCenter Server 
 │  Credential Test     = LCM verifies stored account password still authenticates                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 Via UI: **LCM → Locker → Certificates → Import Certificate** — paste PEM content for each field.
 

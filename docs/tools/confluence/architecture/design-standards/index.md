@@ -69,7 +69,7 @@ curl -u user:token \
 │  WAL          = Write-Ahead Log; PostgreSQL durability mechanism, source for replication              │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 Note: updating a template does not retroactively change pages already created from it.
 

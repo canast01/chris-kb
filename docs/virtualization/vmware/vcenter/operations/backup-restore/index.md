@@ -91,7 +91,7 @@ VCSA Backup & Restore Architecture
 │  Tarball      = compressed archive format used by VCSA file-based backup                              │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 ### Prerequisites
 

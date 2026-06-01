@@ -96,7 +96,7 @@ sequenceDiagram
 │  VMFS            = VMware File System; FC LUN presented to ESXi as datastore                          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 ---
 

@@ -125,7 +125,7 @@ acs health
 │  Rollback       = Only via backup restore; no in-place cluster downgrade supported                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 After a 48-hour validation window with no issues: delete the VM snapshots taken before the upgrade.
 

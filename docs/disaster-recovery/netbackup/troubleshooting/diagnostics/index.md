@@ -79,7 +79,7 @@ vxlogview -o 117 -d 24h -t "DEBUG|WARNING|ERROR" | less
 │  NDMP          = Network Data Management Protocol; direct NAS-to-storage backup path                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```text
 
 ---
 

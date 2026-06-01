@@ -79,7 +79,7 @@ git count-objects -vH
 │  Webhook           = must be updated to point to restored remote URL                                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 ---
 

@@ -27,7 +27,7 @@ SMB Sessions reference covering Overview, Listing and Managing Sessions, SMB Sig
       │ ◄════════════════════════════════════════════►│
       │                                               │
       │  SMB3: signing + optional encryption active   │
-```
+```powershell
 
 ## Overview
 

@@ -73,7 +73,7 @@ flowchart LR
 │  /proc/PID   = Virtual filesystem exposing process state: maps, fd, stat, cmdline                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```bash
 
 ## Audit Log (auditd)
 

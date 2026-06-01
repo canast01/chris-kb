@@ -82,7 +82,7 @@ Monthly Invoice = (Committed capacity × committed rate) + (Burst TiB × burst r
 │    HW lead time       = 30-60 days for new AFF/FAS nodes post-amendment                               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 ### Collector VM OS Maintenance
 

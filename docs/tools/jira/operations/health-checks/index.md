@@ -79,7 +79,7 @@ flowchart TD
 │  JMX            = expose JVM metrics; scrape with Prometheus JMX exporter                             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```yaml
 
 Expected: All nodes show `healthy` / `UP`.
 

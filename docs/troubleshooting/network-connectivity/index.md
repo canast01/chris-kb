@@ -85,7 +85,7 @@ flowchart TD
 │    traceroute    = Shows each hop to destination; identifies where path breaks                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```text
 
 ---
 

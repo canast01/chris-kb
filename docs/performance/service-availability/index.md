@@ -49,7 +49,7 @@ Availability % = (Total time - Downtime) / Total time × 100
 │    Nines         = Number of 9s in availability %; four nines (99.99%) = 52 min/yr max                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```powershell
 
 ## AWS Route 53 Health Checks
 

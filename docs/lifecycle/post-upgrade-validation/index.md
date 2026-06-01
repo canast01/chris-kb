@@ -51,7 +51,7 @@ flowchart TD
 │    Error rate     = Application error rate; an increase post-upgrade indicates regression             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```bash
 
 ### VMware ESXi
 

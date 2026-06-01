@@ -30,7 +30,7 @@ VxRail Node Anatomy + Cluster Connectivity
    │  Top-of-Rack / Aggregation Switch            │
    │  MTU 9000 on vSAN and vMotion VLANs          │
    └─────────────────────────────────────────────┘
-```
+```python
 
 ![VxRail Architecture](../../../assets/vxrail-architecture-overview.svg)
 

@@ -73,7 +73,7 @@ Administration → Access Control → Object Permissions → Add Permission
 │  Local Account        = vROps-internal account; use for break-glass only                              │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```text
 
 | AD Group | Aria Operations Role | Object Scope |
 |---|---|---|

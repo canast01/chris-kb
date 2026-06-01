@@ -53,7 +53,7 @@ flowchart TD
 │  RPO = Recovery Point Objective; maximum acceptable data loss in time                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 Naming convention: `backup-<YYYY-MM-DD-HH-MM-SS>.zip`
 

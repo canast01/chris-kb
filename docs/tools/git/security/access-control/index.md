@@ -61,7 +61,7 @@ Organisation / Instance level
 │  MFA enforce  = org setting requiring all members to have MFA enabled                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 ---
 

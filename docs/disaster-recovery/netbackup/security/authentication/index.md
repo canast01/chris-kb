@@ -58,7 +58,7 @@ nbcertcmd -listCerts | grep -E "Host|Expiry"
 │  NDMP          = Network Data Management Protocol; direct NAS-to-storage backup path                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 ### Token Expiry and Best Practices
 

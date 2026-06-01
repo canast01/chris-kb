@@ -102,7 +102,7 @@ curl -sk -u 'admin:<password>' \
 │  OSI               = Operationally Significant Instance; licensed unit in vRLI                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```bash
 
 ---
 

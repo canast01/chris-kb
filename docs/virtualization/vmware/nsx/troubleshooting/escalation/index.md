@@ -123,7 +123,7 @@ curl -sk -u 'admin:password' \
 │  Config export = API GET of all NSX config; provides GSS full picture                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 Key files within the ESXi support bundle for NSX:
 - `/var/log/vmkernel.log` — NSX VIB and Geneve events

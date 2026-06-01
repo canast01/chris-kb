@@ -63,7 +63,7 @@ flowchart LR
 │  repadmin     = AD replication tool; output parsed by PS for reporting                                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```powershell
 
 ## Service Monitor
 

@@ -37,7 +37,7 @@
 │   │ OIDC              = workflow requests short-lived AWS/Azure token; no stored cloud credentials│   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 !!! warning "Do not use `permissions: write-all`"
     `write-all` grants excessive access. Set permissions explicitly per job, and only grant what each job needs.

@@ -87,7 +87,7 @@ sannav license
 │  curl            = command-line HTTP client; used to test SANnav REST API endpoints                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```bash
 
 ### Network Configuration
 

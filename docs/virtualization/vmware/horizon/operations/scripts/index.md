@@ -71,7 +71,7 @@ Scripts reference covering Get Session Count by Pool, Force Logoff Disconnected 
 │  Licence /usage    = REST endpoint for licence consumption reporting                                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```powershell
 
 ---
 

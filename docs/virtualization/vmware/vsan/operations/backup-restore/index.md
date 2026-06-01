@@ -84,7 +84,7 @@ BACKUP FLOW — vSAN VM TO TARGET
 │  Diskgroup  = cache + capacity units; re-created after disk replacement                               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```powershell
 
 **Reset CBT if incremental backups are failing:**
 

@@ -68,7 +68,7 @@ flowchart TD
 │  Forward Incremental= default mode; one full + daily incrementals; synthetic full created perio       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 This performs a Storage vMotion in the background. The VM remains live throughout.
 

@@ -61,7 +61,7 @@ switchshow                        # Brocade
 │  BIA           = Business Impact Analysis; drives RPO/RTO targets per system                          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```bash
 
 **Wait for replication to catch up:**
 ```bash

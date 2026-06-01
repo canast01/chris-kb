@@ -71,7 +71,7 @@ CLI Reference reference covering SRM REST API — Recovery Plans, PowerCLI for S
 │  Replication lag= time delta between protected and recovery replica                                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```powershell
 
 ---
 

@@ -71,7 +71,7 @@ CLI Reference reference covering Services, Certificates, Proxy & Network, NTP & 
 │  Depot Config Page   = VAMI page to add/edit online or local content depot                            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 ---
 

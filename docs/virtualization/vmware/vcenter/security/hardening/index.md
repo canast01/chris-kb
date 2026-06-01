@@ -89,7 +89,7 @@ vCenter Hardening Layers
 │  Admin count  = fewer admin accounts = smaller blast radius on compromise                             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```powershell
 
 ---
 

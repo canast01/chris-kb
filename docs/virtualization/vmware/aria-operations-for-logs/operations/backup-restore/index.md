@@ -79,7 +79,7 @@ df -h /var/log/loginsight
 │  LCM logscraper    = Diagnostic tool; not a backup tool; used for support bundles only                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```text
 
 ---
 

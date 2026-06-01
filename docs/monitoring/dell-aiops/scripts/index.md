@@ -59,7 +59,7 @@ def api_get(path: str, token: str, params: dict = None) -> dict:
 │  Requests library = pip install requests; standard Python HTTP client                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```python
 
 ## Weekly Health Score Report
 

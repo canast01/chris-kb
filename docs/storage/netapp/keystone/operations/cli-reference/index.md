@@ -82,7 +82,7 @@ keystone-collector upgrade --apply
 │    set -priv advanced       = Enable advanced CLI; required for diag-level cmds                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```python
 
 ## Keystone Portal API
 

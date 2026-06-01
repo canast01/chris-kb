@@ -62,7 +62,7 @@ Admin > Solutions > VMware vCenter > Configure
 │  Alert notification = Outbound message triggered when alert changes state (firing or resolved)        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 Separate plugins are recommended per team channel for targeted routing.
 

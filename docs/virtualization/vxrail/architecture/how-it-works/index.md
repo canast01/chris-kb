@@ -35,7 +35,7 @@ VxRail LCM Flow — How It Works
     │  iDRAC (per node)  ──►  hardware health           │
     │  Dell SRS/SupportAssist ──►  auto SR creation     │
     └──────────────────────────────────────────────────┘
-```
+```python
 
 ## Overview
 

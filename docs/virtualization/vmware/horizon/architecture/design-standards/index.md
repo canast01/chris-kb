@@ -69,7 +69,7 @@ Design Standards reference covering Desktop VM Sizing, Storage Sizing, VLAN and 
 │  Pod           = group of Connection Servers in same broadcast domain                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 ### App Volumes Storage
 

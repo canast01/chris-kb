@@ -73,7 +73,7 @@ Pre-Change Baseline Sequence
 │    Change rec.    = ITSM change record; must be approved before any maintenance begins                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```powershell
 
 ## 3. Active Alarms
 

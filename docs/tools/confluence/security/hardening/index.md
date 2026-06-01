@@ -61,7 +61,7 @@ Administrator account policy:
 │  MFA              = enforced at IdP; admins must pass MFA before receiving SAML assertion             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 ## Security Configuration Hardening
 

@@ -61,7 +61,7 @@ aws configure list
 │  aws support     = Open AWS support case via CLI with describe-trusted-advisor-checks                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```powershell
 
 ---
 

@@ -53,7 +53,7 @@ Get-Service -Name MSSQLSERVER
 │    Wait event      = Reason a session is not running; categorised by type (I/O, lock, CPU, etc.)      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 ## SQL Server Health Checks
 

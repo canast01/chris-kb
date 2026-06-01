@@ -92,7 +92,7 @@ Get-EventLog -LogName Application -Source "RASR*" -Newest 50 | Export-Csv "$arch
 │  RTO           = Recovery Time Objective; time from failover decision to restored service             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```powershell
 
 ### Error Codes to Include
 

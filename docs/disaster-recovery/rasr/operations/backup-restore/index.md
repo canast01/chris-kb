@@ -76,7 +76,7 @@ rasrutil.exe /backup /dest \\nas01\rasr-images\SERVER01 /compress /log C:\Logs\r
 │  RTO           = Recovery Time Objective; time from failover decision to restored service             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 ### Phase 3 — Map Network Share
 

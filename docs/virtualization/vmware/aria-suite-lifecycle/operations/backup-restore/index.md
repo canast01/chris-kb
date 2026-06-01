@@ -70,7 +70,7 @@ Backup & Restore reference covering Option 2 — VADP-Compatible Backup (Preferr
 │  Backup Schedule     = Automate daily LCM backup via VAMI scheduler                                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 ## Option 2 — VADP-Compatible Backup (Preferred for Production)
 

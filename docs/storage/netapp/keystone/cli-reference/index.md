@@ -85,7 +85,7 @@ echo "Token acquired"
 │    storage disk show  = Physical disk info; checks spares, broken, and RAID groups                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```bash
 
 ### Service Level Listing
 

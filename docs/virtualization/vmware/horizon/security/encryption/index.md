@@ -13,7 +13,7 @@ Encryption reference covering Connection Server Certificate, UAG Certificate, Cl
 │  Client      │  443 (HTTPS)│  (DMZ)    │  443/proxy  │  Server           │
 │  (external)  │             └───────────┘             └──────────────────┘
 └──────────────┘                                                 │
-```
+```text
                                                         TLS / Blast AES-256
 ```
 ┌──────────────┐  Blast AES  ┌───────────┐                      ▼

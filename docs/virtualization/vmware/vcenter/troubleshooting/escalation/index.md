@@ -90,7 +90,7 @@ Escalation Path — Broadcom / VMware Support
 │  Broadcom portal= support.broadcom.com replaced my.vmware.com for SRs                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 **From VCSA shell (`vm-support` bundle):**
 ```bash

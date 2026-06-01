@@ -107,7 +107,7 @@ flowchart TD
 │    MPIO         = Multi-Path I/O; multiple paths to array; transparent failover on path loss          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 Where:
 - **RAID Efficiency**: RAID-1 = 50%; RAID-5 (4+1) = 80%; RAID-6 (4+2) = 67%; RAID-10 = 50%

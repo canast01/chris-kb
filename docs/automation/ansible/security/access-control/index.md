@@ -41,7 +41,7 @@ graph TD
 │   │ Approval workflow= AWX Workflow Job Template can require human approval step before execution │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```bash
 
 ### Sudoers — Scope Privilege Escalation
 

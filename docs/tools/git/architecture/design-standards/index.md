@@ -71,7 +71,7 @@ refactor(cache): replace in-memory store with Redis
 │  Changelog    = auto-generated from conventional commits by tools like release-it                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 ## Cherry-Picking
 

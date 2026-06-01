@@ -90,7 +90,7 @@ flowchart TD
 │  Forward Incremental= default mode; one full + daily incrementals; synthetic full created perio       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```powershell
 
 ---
 

@@ -70,7 +70,7 @@ Hardening reference covering Windows Hardening of Connection Server, UAG Hardeni
 │  Isolated VLAN = desktop VMs cannot reach management or other VLANs                                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 ---
 

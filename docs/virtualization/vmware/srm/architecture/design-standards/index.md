@@ -72,7 +72,7 @@ Design Standards reference covering Test Network Design, IP Customization Strate
 │  WAN BW        = replication bandwidth; plan for peak replication rate                                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```text
 No IP customization needed. Requires routing coordination.
 
 **Option C: Different subnets with IP re-addressing** — Recovery site uses entirely different IP ranges:

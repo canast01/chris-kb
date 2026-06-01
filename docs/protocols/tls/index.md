@@ -29,7 +29,7 @@ TLS (Transport Layer Security) provides encryption, integrity, and authenticatio
        │                                             │
        │  All application data encrypted             │
        │ ◄════════════════════════════════════════════│
-```
+```xml
 
 
 <div class="kb-grid kb-grid-1">

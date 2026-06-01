@@ -70,7 +70,7 @@ passwd ndadmin
 │  Syslog TLS     = Encrypted syslog stream forwarding audit events to SIEM                             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```text
 
 ---
 

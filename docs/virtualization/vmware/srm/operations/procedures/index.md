@@ -73,7 +73,7 @@ Procedures reference covering Create a Protection Group (vSphere Replication), C
 │  Network mapping= maps source portgroup to recovery portgroup                                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 ---
 

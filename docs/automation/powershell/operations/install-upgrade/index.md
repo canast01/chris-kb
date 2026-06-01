@@ -36,7 +36,7 @@ pwsh --version
 │   │     NuGet provider= required for PSGallery; Install-PackageProvider -Name NuGet if missing    │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```powershell
 
 ## Update All Installed Modules
 

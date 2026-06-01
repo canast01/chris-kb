@@ -54,7 +54,7 @@ FROM pg_replication_slots;
 │    Synchronous rep   = Primary waits for replica ACK before committing; zero data loss; slower        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```bash
 
 ```bash
 # Quick one-liner — show lag and thread status

@@ -61,7 +61,7 @@ flowchart LR
 │  Logon audit   = logs interactive, network, and Kerberos logons                                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```powershell
 
 WinRM listener configuration:
 

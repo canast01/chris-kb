@@ -74,7 +74,7 @@ Settings → My Account → Change Password
 │  SSO Redirect        = Browser redirected to vIDM login page on vRNI access                           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```python
 
 Attribute mapping in vIDM:
 - NameID → user email

@@ -80,7 +80,7 @@ kubectl get pods --all-namespaces --field-selector spec.nodeName=<node-hostname>
 │  TAC            = Cisco Technical Assistance Center; escalate unrecoverable faults                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```bash
 
 Maintain copies of the ND certificate key and signed certificate on a secure file share or vault. They are needed after every major ND upgrade if the cert is not preserved.
 

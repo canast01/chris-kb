@@ -76,7 +76,7 @@ Post-Change Validation Flow
 │    Monitoring alert = Any new alert fired after change = likely caused by the change; triage          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```bash
 
 ## NSX (if change was NSX-related)
 

@@ -53,7 +53,7 @@ Key compatibility rules:
 │  Decommission = iiq_backup → save archive → power off VM → remove from vCenter                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 Backup files should be replicated to an external backup target (NAS, S3-compatible, or enterprise backup solution).
 

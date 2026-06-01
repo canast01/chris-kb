@@ -76,7 +76,7 @@ uemcli /stor/drive show -detail | grep -i encrypt
 │  RTO           = Recovery Time Objective; time from failover decision to restored service             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 ```bash
 # Backup the LUKS header (required to recover if header is damaged)

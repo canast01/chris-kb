@@ -60,7 +60,7 @@ Start-Service RASRAgent
 │  RTO           = Recovery Time Objective; time from failover decision to restored service             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 ### WinPE cannot see local disks
 

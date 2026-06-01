@@ -76,7 +76,7 @@ flowchart TD
 │  ss          = Socket statistics; replaces netstat; shows ports, states, processes                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```bash
 
 ## High Disk I/O or Latency
 

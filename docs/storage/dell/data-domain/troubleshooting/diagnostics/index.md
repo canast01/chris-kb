@@ -59,7 +59,7 @@ flowchart TD
 │    alerts show    = Check for active hardware or software alerts; review before escalating            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```text
 
 ---
 

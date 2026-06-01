@@ -67,7 +67,7 @@ Administration → SSL → Import Certificate → paste root CA PEM
 │  API session       = POST /api/v1/sessions {username, password}; returns sessionId                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```python
 
 - VMware Identity Manager FQDN: `vidm.example.local`
 - Enable redirect to VIDM login page

@@ -76,7 +76,7 @@ curl -sk -X DELETE -H "Authorization: Bearer $TOKEN" \
 │  Service account   = vRA uses a service account to authenticate to AD, vCenter, and NSX               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 ---
 

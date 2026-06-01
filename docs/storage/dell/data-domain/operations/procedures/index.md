@@ -85,7 +85,7 @@ flowchart TD
 │    filesys clean     = Manually triggers cleaning cycle; normally automated off-peak                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```bash
 
 ### Replication State
 

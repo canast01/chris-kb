@@ -59,7 +59,7 @@ curl -s -u admin:pass http://grafana:3000/api/datasources | jq '.[] | {name:.nam
 │    API key scope = Limit API key to minimum permissions; rotate annually or on staff change           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```python
 
 ## Active Directory / LDAP Integration
 

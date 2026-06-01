@@ -76,7 +76,7 @@ flowchart LR
 │  repadmin     = AD replication diagnostics; /replsummary shows health                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```powershell
 
 ## Disk and Storage
 

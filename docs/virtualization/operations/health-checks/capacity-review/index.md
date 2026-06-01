@@ -63,7 +63,7 @@ Capacity Check Flow
 │    vSAN slack = vSAN requires ~25% free space for rebuild operations; do not fill beyond 70%          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```bash
 
 Alert thresholds:
 - > 75% used: review and plan expansion

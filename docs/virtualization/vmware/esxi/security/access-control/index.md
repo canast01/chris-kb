@@ -88,7 +88,7 @@ ESXi Access Control Model
 │  Audit log   = record of permission changes; stored in vCenter events                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```powershell
 
 ## Exception Users
 

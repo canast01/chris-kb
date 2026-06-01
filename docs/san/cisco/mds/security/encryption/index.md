@@ -90,7 +90,7 @@ show users
 │  TLS            = Transport Layer Security; encrypts management-plane sessions                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```python
 
 ### HTTPS Certificate Management
 

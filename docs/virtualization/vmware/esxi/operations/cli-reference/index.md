@@ -78,7 +78,7 @@ ESXi CLI Tool Map
 │  vCenter API = REST + SOAP endpoint; govc/PowerCLI both use it                                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```bash
 
 ```bash
 # Maintenance mode

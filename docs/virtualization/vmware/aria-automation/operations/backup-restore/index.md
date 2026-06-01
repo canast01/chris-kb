@@ -79,7 +79,7 @@ Lifecycle Management → Backup → Add Backup Location
 │  NFS backup target = Network storage mount where backup archives are written and retained             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 Recommended:
 - Frequency: Daily

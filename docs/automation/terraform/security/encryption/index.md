@@ -48,7 +48,7 @@ graph TD
 │   │  sensitive = true= prevents value from appearing in output; value still exists in state file  │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```hcl
 
 ```hcl
 # Read a parameter from AWS SSM Parameter Store

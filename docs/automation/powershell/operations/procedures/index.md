@@ -112,7 +112,7 @@ flowchart TD
 │   │     Transcript     = Start-Transcript; logs all input/output to file; use for audit trail     │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```powershell
 
 ### Scheduled Tasks for Automated Reports
 

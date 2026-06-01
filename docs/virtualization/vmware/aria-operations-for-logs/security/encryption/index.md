@@ -57,7 +57,7 @@ Administration → SSL → Replace Certificate
 │  Cert expiry alert = vRLI shows warning banner when cert expires within 30 days                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```ini
 
 ---
 

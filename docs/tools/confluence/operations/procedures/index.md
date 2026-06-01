@@ -80,7 +80,7 @@ curl -u user:token -X PUT \
 │  VACUUM ANALYZE = PostgreSQL command; reclaims storage and updates query planner statistics           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```bash
 
 Add a version comment when saving: **Edit → Save → enter comment** — this helps trace why content changed.
 

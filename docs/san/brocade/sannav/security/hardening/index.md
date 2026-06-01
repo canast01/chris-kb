@@ -72,7 +72,7 @@ sudo passwd root
 │  Staging test    = validate SANnav upgrade in non-prod before production rollout                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```bash
 
 ---
 

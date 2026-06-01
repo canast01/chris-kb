@@ -80,7 +80,7 @@ Get-ADGroupMember -Identity "GG-ServerAdmins" | Select-Object Name, SamAccountNa
 │  Protected Users= AD security group; blocks NTLM, unconstrained delegation, DES                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```powershell
 
 ## Just Enough Administration (JEA)
 

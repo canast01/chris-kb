@@ -67,7 +67,7 @@ flowchart TD
 │  war room    = Bridge call with all stakeholders during major incident                                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```text
 
 ### Checking Subscription Status
 

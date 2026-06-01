@@ -45,7 +45,7 @@ flowchart TD
 │   │  After import: terraform plan should show no changes if config matches the existing resource  │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```hcl
 
 ## Workspace Issues
 

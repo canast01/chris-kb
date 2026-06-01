@@ -50,7 +50,7 @@ graph LR
 │   │   -W error       = treat warnings as errors; catches deprecation warnings before they break   │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```python
 
 ## Import and Module Diagnostics
 

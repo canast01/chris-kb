@@ -68,7 +68,7 @@ curl -sk -X GET \
 │  Data node = Worker node; adding nodes scales collection capacity linearly                            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```text
 
 ## Performance Degradation
 

@@ -78,7 +78,7 @@ Infrastructure → Administration → Projects → select project → Members �
 │  Audit log         = vRA records who requested, who approved, and timestamps for compliance           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 - Source: select the Assembler content source (or a git-backed content source)
 - Target: select the project(s) to share with

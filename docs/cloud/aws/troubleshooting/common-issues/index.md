@@ -215,7 +215,7 @@ aws cloudformation continue-update-rollback \
 │  Credential expired= SSO tokens expire; run aws sso login to refresh                                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```powershell
 
 ---
 

@@ -120,7 +120,7 @@ show zoneset active   # zoning intact
 │  show system health= post-upgrade health check; all modules should be online                          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 5. Configure VSANs on the ISL trunk port to allow only the required VSANs.
 6. Update CMDB and SAN design register with the new switch domain ID and port allocation.

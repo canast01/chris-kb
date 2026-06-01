@@ -51,7 +51,7 @@ free -h           # check swap usage — DB paging = critical
 │    Seq scan      = Full table scan; normal for small tables; bad for large + OLTP queries             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 ## SQL Server — Slow Query Analysis
 

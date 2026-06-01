@@ -74,7 +74,7 @@ symrdf -sid 000123456789 query -g <rdf_group>
 │  Unisphere     = Dell PowerMax management GUI; REST API; array health and provisioning                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```text
 
 ---
 

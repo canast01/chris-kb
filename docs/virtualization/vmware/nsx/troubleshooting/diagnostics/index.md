@@ -92,7 +92,7 @@ grep -i "role\|login\|delete\|create" /var/log/vmware/nsx-manager/audit.log | ta
 │  Bidirectional= Traceflow sends packets in both directions simultaneously                             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```bash
 
 ---
 

@@ -70,7 +70,7 @@ Authentication reference covering Site Pairing Authentication (Certificate-Based
 │  Cert rotation = requires re-pair; plan maintenance window                                            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 The certificate thumbprint is permanently stored — if either site's certificate is replaced, the pairing must be re-established or the new thumbprint accepted.
 

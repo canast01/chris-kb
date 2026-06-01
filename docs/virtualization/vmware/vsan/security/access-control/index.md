@@ -77,7 +77,7 @@ vSAN RBAC MODEL
 │  Qtrly review  = check admin accounts; remove stale assignments                                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```powershell
 
 ### vSAN Read-Only Role (Monitoring)
 

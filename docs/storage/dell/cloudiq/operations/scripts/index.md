@@ -182,7 +182,7 @@ python cloudiq_alert_poller.py
 │    /v1/metrics        = Telemetry endpoint: query capacity, performance, alerts by system             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```powershell
 
 **What you should see**
 

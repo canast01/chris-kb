@@ -78,7 +78,7 @@ flowchart TD
 │  procexp        = SysInternals Process Explorer; shows handles, threads, DLLs per process             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```powershell
 
 ## High Memory
 

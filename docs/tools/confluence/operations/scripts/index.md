@@ -50,7 +50,7 @@ export BACKUP_DIR="/backup/confluence"
 │  Poll loop      = reindex.sh polls /rest/api/index/reindexAll until status=DONE                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```text
 
 ---
 

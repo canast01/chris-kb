@@ -64,7 +64,7 @@ aws sts get-caller-identity
 │  Route 53 health = External probe; fails DNS failover if endpoint unreachable                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 ---
 

@@ -70,7 +70,7 @@ Hardening reference covering SSH Hardening on the LCM Appliance, TLS Configurati
 │  Log Retention        = 90 days minimum; match compliance policy                                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```python
 
 ---
 

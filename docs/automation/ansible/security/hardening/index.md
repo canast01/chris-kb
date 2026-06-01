@@ -61,7 +61,7 @@ systemctl reload sshd
 │   │    CIS baseline      = Centre for Internet Security hardening guide for the control node OS   │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 ## AWX / AAP Hardening
 

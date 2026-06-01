@@ -72,7 +72,7 @@ flowchart TD
 │  Site Pair     = trust relationship between protected and recovery SRM servers                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```powershell
 
 1. SRM → Configure → Array Managers → check status
 2. Verify SRA service is running:

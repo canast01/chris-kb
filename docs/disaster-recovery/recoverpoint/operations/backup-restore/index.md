@@ -89,7 +89,7 @@ get_bookmarks --cg "CG_PROD_SQL"
 │    Recovery point   = Specific second-level timestamp in journal window chosen for recovery           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+```sql
 
 ### Creating a Test Copy via RPMA
 
