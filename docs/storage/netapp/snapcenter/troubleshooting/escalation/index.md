@@ -62,7 +62,7 @@
 
 ## Support Portal
 
-[https://mysupport.netapp.com](https://mysupport.netapp.com)
+[https://support.netapp.com](https://support.netapp.com)
 
 Open SnapCenter cases under: Storage Software → SnapCenter. Cases are handled by NetApp support engineers specialising in SnapCenter and its application plugins.
 
@@ -102,7 +102,7 @@ For P1 SnapCenter cases, call the NetApp support line after opening the web case
 
 ## Escalation Path
 
-1. **Initial case**: Assigned to a SnapCenter Technical Support Engineer (TSE) via [mysupport.netapp.com](https://mysupport.netapp.com)
+1. **Initial case**: Assigned to a SnapCenter Technical Support Engineer (TSE) via [mysupport.netapp.com](https://support.netapp.com)
 2. **Application specialist escalation**: TSE escalates to an Oracle/SQL/VMware application plugin specialist if the issue is in the plugin layer
 3. **Development escalation**: For confirmed bugs, the TSE opens a bug report (BUG ID) and escalates to SnapCenter engineering; you receive a tracking ID
 4. **Duty Manager escalation**: If response SLA is breached or the issue is unresolved after reasonable time, request escalation to the Support Duty Manager — state your case number and SLA breach

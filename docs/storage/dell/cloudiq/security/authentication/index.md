@@ -64,7 +64,7 @@ Authentication reference covering API Authentication, Related Reference.
 
 ---
 
-CloudIQ uses Dell account-based authentication for portal access. Accounts are managed at [https://myaccount.dell.com](https://myaccount.dell.com).
+CloudIQ uses Dell account-based authentication for portal access. Accounts are managed at [https://www.dell.com/account](https://www.dell.com/account).
 
 - **SSO/Federation**: CloudIQ supports identity federation via Azure AD and Okta. Configure federation under **Settings > Identity Provider** in the CloudIQ admin console. With federation enabled, users authenticate via your corporate IdP and CloudIQ accepts the SAML assertion.
 - **MFA**: Enforce multi-factor authentication on all Dell accounts that have access to CloudIQ. For federated accounts, MFA enforcement is managed by your IdP. For non-federated Dell accounts, enable MFA in **My Dell Account** settings.

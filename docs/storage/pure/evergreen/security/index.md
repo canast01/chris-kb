@@ -104,4 +104,4 @@ Under the Evergreen subscription model, Pure manages several security functions 
 - **Controller refresh** — the Ever Modern refresh replaces controller hardware before it reaches end of vendor support, eliminating the security risk of running unsupported hardware
 - **Phonehome monitoring** — Pure1 continuously monitors array health and can detect anomalous behaviour (unexpected snapshot deletion, alert spikes) that may indicate a security incident
 
-Review the Pure Security Advisories page (https://support.purestorage.com/Security_Advisories) regularly and apply Purity upgrades promptly when a security advisory is issued.
+Review the Pure Security Advisories page (https://support.purestorage.com/) regularly and apply Purity upgrades promptly when a security advisory is issued.

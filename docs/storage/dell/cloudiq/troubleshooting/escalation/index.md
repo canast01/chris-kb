@@ -59,5 +59,5 @@ For SaaS platform-level issues (CloudIQ dashboard unavailable, systemic reportin
 
 1. Open a P1 support case and specify that the issue is a **CloudIQ SaaS platform issue** affecting all managed systems.
 2. Contact your **Dell account team** and request escalation to the **CloudIQ product team**. The CloudIQ engineering team can investigate SaaS-side infrastructure issues that front-line support cannot resolve.
-3. Check [https://status.dell.com](https://status.dell.com) or the Dell support portal for any announced CloudIQ service incidents before escalating — platform maintenance or incidents may already be tracked.
+3. Check [https://www.dell.com/support/incidents-outages](https://www.dell.com/support/incidents-outages) or the Dell support portal for any announced CloudIQ service incidents before escalating — platform maintenance or incidents may already be tracked.
 4. For prolonged SaaS outages affecting contractual monitoring obligations, request engagement through **Dell Global Priority Services** via your account team.

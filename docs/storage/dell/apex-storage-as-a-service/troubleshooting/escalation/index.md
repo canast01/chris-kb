@@ -73,4 +73,4 @@ Open a support case via the APEX Console (APEX Console → Support → New Case)
 1. For SLA-impacting issues (system offline, performance below committed SLA), open a **P1 support case** via APEX Console immediately
 2. Contact your **Dell account team** to escalate if the issue is not resolved within the contracted response time
 3. For billing or contractual disputes, engage your Dell account team directly — these are typically not resolved through standard support cases
-4. Check [https://status.dell.com](https://status.dell.com) for any announced APEX service incidents before escalating
+4. Check [https://www.dell.com/support/incidents-outages](https://www.dell.com/support/incidents-outages) for any announced APEX service incidents before escalating

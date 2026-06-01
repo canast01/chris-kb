@@ -162,7 +162,7 @@ Via UI validation:
 
 VMware/Broadcom product lifecycle pages are the authoritative source for version EOS dates:
 - [https://lifecycle.vmware.com](https://lifecycle.vmware.com)
-- [https://support.broadcom.com/lifecycle-management](https://support.broadcom.com/lifecycle-management)
+- [https://support.broadcom.com/group/ecx/productlifecycle](https://support.broadcom.com/group/ecx/productlifecycle)
 
 Key lifecycle phases:
 
@@ -181,7 +181,7 @@ Alert at 90 days before the End of General Support date for the installed versio
 On-premises deployments receive updates via LCM. SaaS deployments receive updates automatically from VMware.
 
 For on-premises:
-- Review Broadcom Security Advisories monthly: [https://support.broadcom.com/security-advisory](https://support.broadcom.com/security-advisory)
+- Review Broadcom Security Advisories monthly: [https://support.broadcom.com/web/ecx/security-advisory](https://support.broadcom.com/web/ecx/security-advisory)
 - Apply critical security patches within the change freeze exception window (do not wait for the next planned upgrade cycle for critical-severity patches)
 - Apply non-critical patches during scheduled quarterly maintenance windows
 - Test all patches in a non-production environment before applying to production

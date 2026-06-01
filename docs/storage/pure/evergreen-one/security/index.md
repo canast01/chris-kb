@@ -116,4 +116,4 @@ Evergreen//One shifts several security functions from the customer to Pure:
 - **Drive retirement and erasure** — Pure performs cryptographic erasure on all drives removed from the service, and provides erasure certificates on request — this satisfies data destruction requirements for regulated environments
 - **Proactive monitoring** — Pure1 AIOps continuously monitors array health; anomalous snapshot deletion spikes or alert patterns can be flagged proactively, providing an early indicator of ransomware or insider threat activity
 
-Review the Pure Security Advisories page (https://support.purestorage.com/Security_Advisories) for awareness of disclosed vulnerabilities. Pure will contact customers directly for any advisory requiring action on the managed service, but tracking advisories independently is recommended for compliance documentation.
+Review the Pure Security Advisories page (https://support.purestorage.com/) for awareness of disclosed vulnerabilities. Pure will contact customers directly for any advisory requiring action on the managed service, but tracking advisories independently is recommended for compliance documentation.

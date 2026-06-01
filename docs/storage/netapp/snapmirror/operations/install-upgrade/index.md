@@ -71,7 +71,7 @@ SnapMirror requires the destination cluster to run an ONTAP version equal to or 
 | ONTAP 9.10 | ONTAP 9.10 | Check IMT for feature compatibility |
 | ONTAP 9.8 | ONTAP 9.8 | XDP policy features vary by minor version |
 
-Always consult the [NetApp Interoperability Matrix Tool (IMT)](https://mysupport.netapp.com/matrix) before upgrading either cluster in a SnapMirror relationship.
+Always consult the [NetApp Interoperability Matrix Tool (IMT)](https://imt.netapp.com/matrix/imt.html) before upgrading either cluster in a SnapMirror relationship.
 
 ## Policy and Relationship Management
 
@@ -85,7 +85,7 @@ Always consult the [NetApp Interoperability Matrix Tool (IMT)](https://mysupport
 
 ONTAP Mediator provides the out-of-band witness for SMBC automatic failover decisions. Mediator version must be compatible with the ONTAP version on both clusters.
 
-- Mediator VM requires updates when ONTAP is upgraded — check the [SMBC Mediator compatibility matrix](https://mysupport.netapp.com/matrix) before any ONTAP upgrade
+- Mediator VM requires updates when ONTAP is upgraded — check the [SMBC Mediator compatibility matrix](https://imt.netapp.com/matrix/imt.html) before any ONTAP upgrade
 - Mediator must remain reachable from both clusters at all times; loss of mediator connectivity does not stop I/O but disables automatic failover
 - Mediator runs as a Linux VM; patch the OS independently of ONTAP upgrade cycles
 

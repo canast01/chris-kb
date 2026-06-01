@@ -44,7 +44,7 @@ This page covers when and how to escalate Cisco DCNM issues to Cisco TAC, what i
 
 Open a support case at the Cisco Support Portal:
 
-- URL: `https://mycase.cloudapps.cisco.com` or `https://tools.cisco.com/ServiceRequestTool/`
+- URL: `https://mycase.cisco.com` or `https://tools.cisco.com/ServiceRequestTool/`
 - Product: **Cisco Data Center Network Manager (DCNM)**
 - Navigate to: **Open New Case > Software**
 
@@ -225,5 +225,5 @@ Attachments:
 Keep a local record of any active CSCxxxxxx bug IDs affecting your environment. When opening a new case for a known issue, reference the existing bug ID to accelerate TAC routing.
 
 Useful search:
-- Cisco Bug Search Tool: `https://bst.cloudapps.cisco.com/bugsearch/`
+- Cisco Bug Search Tool: `https://bst.cisco.com/bugsearch/`
 - Search by product: DCNM; filter by version and status (Open / Fixed in version)

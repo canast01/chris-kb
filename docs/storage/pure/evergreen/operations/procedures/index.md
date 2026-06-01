@@ -92,7 +92,7 @@ export FA_API_TOKEN=<token>
 python fa_upgrade_readiness.py
 ```
 
-Confirm the target version with Pure Support. Pure will specify the upgrade path — never skip more than two minor versions without Pure's guidance. Verify the target version is compatible with the current controller generation using the [Pure compatibility matrix](https://support.purestorage.com/compatibility_matrix).
+Confirm the target version with Pure Support. Pure will specify the upgrade path — never skip more than two minor versions without Pure's guidance. Verify the target version is compatible with the current controller generation using the [Pure compatibility matrix](https://support.purestorage.com/).
 
 ### Step 2 — Pre-Upgrade Actions
 

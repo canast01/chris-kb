@@ -75,7 +75,7 @@ Contents of `show tech-support`:
 ## Support Contract Verification
 
 Check SmartNet coverage:
-- [cisco.com/go/contractcenter](https://www.cisco.com/c/en/us/support/web/tools/contractor/main.html)
+- [cisco.com/go/contractcenter](https://www.cisco.com/c/en/us/support/index.html)
 - `show inventory` provides serial numbers for all modules
 
 ## Severity Levels

@@ -64,6 +64,6 @@ Aria Operations does not have a native backup tool. Use the following:
 
 ## EOL Tracking
 
-- Broadcom Product Lifecycle Matrix: [lifecycle.broadcom.com](https://lifecycle.broadcom.com)
+- Broadcom Product Lifecycle Matrix: [support.broadcom.com/group/ecx/productlifecycle](https://support.broadcom.com/group/ecx/productlifecycle)
 - Aria Suite Lifecycle Manager — check installed product versions against the matrix quarterly
 - Aim to be no more than one major version behind the current release

@@ -71,7 +71,7 @@
 | SnapCenter 6.0 | Oct 2023 | ONTAP 9.10–9.14 | Oct 2025 |
 | SnapCenter 6.1 | Jun 2024 | ONTAP 9.11–9.15 | Jun 2026 |
 
-Always verify the exact compatibility matrix in the [NetApp Interoperability Matrix Tool (IMT)](https://imt.netapp.com/matrix/) before upgrading. SnapCenter also has separate compatibility tables for each application plugin (Oracle, SQL Server, Exchange, SAP HANA, VMware).
+Always verify the exact compatibility matrix in the [NetApp Interoperability Matrix Tool (IMT)](https://imt.netapp.com/matrix/imt.html) before upgrading. SnapCenter also has separate compatibility tables for each application plugin (Oracle, SQL Server, Exchange, SAP HANA, VMware).
 
 ## ONTAP Compatibility
 
@@ -85,7 +85,7 @@ SnapCenter supports in-place upgrades. Upgrade path:
 
 1. Back up the MySQL repository: `C:\Program Files\NetApp\SnapCenter\MySQL Data\`
 2. Record all resource groups, policies, schedules, and RBAC configurations (export from GUI or API)
-3. Download the new SnapCenter Server installer from [mysupport.netapp.com](https://mysupport.netapp.com)
+3. Download the new SnapCenter Server installer from [mysupport.netapp.com](https://support.netapp.com)
 4. Run the installer on the SnapCenter Server — it performs an in-place upgrade
 5. After server upgrade, update all plugin packages via Settings → Hosts → select all → Update Plug-in
 6. Update SnapCenter Plug-in for VMware OVA if deployed (download new OVA, deploy, deregister old OVA, register new OVA with vCenter)

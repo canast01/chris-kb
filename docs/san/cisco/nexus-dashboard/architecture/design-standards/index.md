@@ -133,7 +133,7 @@ Avoid generic names like `Site1` or `Fabric-A`. Use names that immediately ident
 ## Application Version Compatibility Standards
 
 Always verify the Cisco ND-App compatibility matrix before upgrades:
-- URL: `https://www.cisco.com/c/en/us/support/cloud-systems-management/nexus-dashboard/tsd-products-support-series-home.html`
+- URL: `https://www.cisco.com/c/en/us/support/cloud-systems-management/nexus-dashboard/series.html`
 
 Apply this rule: **upgrade ND platform before upgrading hosted apps**. Never run an app version that requires a higher ND platform version than is installed.
 

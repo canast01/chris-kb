@@ -36,7 +36,7 @@ This page covers when and how to escalate Nexus Dashboard issues to Cisco TAC, w
 
 Open a support case at the Cisco Support Portal:
 
-- Primary URL: `https://mycase.cloudapps.cisco.com`
+- Primary URL: `https://mycase.cisco.com`
 - Product: **Cisco Nexus Dashboard** (platform) and/or **Nexus Dashboard Fabric Controller** (NDFC) or **Nexus Dashboard Insights** (NDI)
 - Navigate to: **Open New Case > Software**
 
@@ -214,8 +214,8 @@ Attachments:
 
 ## Cisco Nexus Dashboard Bug Resources
 
-- Cisco Bug Search Tool: `https://bst.cloudapps.cisco.com/bugsearch/`
+- Cisco Bug Search Tool: `https://bst.cisco.com/bugsearch/`
   - Search by product: Nexus Dashboard, NDFC, or NDI
   - Filter by version and status (Open / Fixed)
 - Cisco ND Release Notes: always review before upgrading for known issues and workarounds
-- Cisco ND Compatibility Matrix: `https://www.cisco.com/c/en/us/support/cloud-systems-management/nexus-dashboard/tsd-products-support-series-home.html`
+- Cisco ND Compatibility Matrix: `https://www.cisco.com/c/en/us/support/cloud-systems-management/nexus-dashboard/series.html`

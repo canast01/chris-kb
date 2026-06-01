@@ -62,7 +62,7 @@
 
 ## Support Portal
 
-NetApp support portal: [https://mysupport.netapp.com](https://mysupport.netapp.com)
+NetApp support portal: [https://support.netapp.com](https://support.netapp.com)
 
 SnapMirror issues are handled under the standard ONTAP support contract — there is no separate SnapMirror support entitlement. Ensure both source and destination clusters are covered under active support contracts before opening a case, as NetApp may require access to both clusters to diagnose replication issues.
 

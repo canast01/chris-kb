@@ -526,4 +526,4 @@ If no spare disks are available, RAID reconstruction cannot proceed. Escalate im
 4. Note the exact ONTAP version: `system image show`
 5. Record the hardware platform and serial numbers: `system node show -fields model,serial-number`
 6. Describe the timeline of the issue — when it started, what changed (upgrade, config change, load change)
-7. Have the NetApp support site login ready: [https://mysupport.netapp.com](https://mysupport.netapp.com)
+7. Have the NetApp support site login ready: [https://support.netapp.com](https://support.netapp.com)

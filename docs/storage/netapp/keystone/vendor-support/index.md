@@ -71,7 +71,7 @@ Contact the KSM directly for issues that require commercial or service-level att
 
 ## Support Portal
 
-- **Technical support portal:** [https://mysupport.netapp.com](https://mysupport.netapp.com) — for infrastructure issues, Collector problems, and ONTAP/StorageGRID issues on Keystone-managed hardware
+- **Technical support portal:** [https://support.netapp.com](https://support.netapp.com) — for infrastructure issues, Collector problems, and ONTAP/StorageGRID issues on Keystone-managed hardware
 - **Keystone-specific issues:** raise via the KSM or open a Keystone ticket in the BlueXP portal
 - Ensure your NetApp SSO account is linked to your company's support entitlement before opening cases
 

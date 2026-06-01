@@ -108,9 +108,9 @@ Follow the VCF LCM upgrade wizard — it enforces the correct order and blocks i
 |---|---|
 | vCenter + ESXi version pairing | [VMware Product Interoperability Matrix](https://interopmatrix.vmware.com) |
 | NSX + vCenter compatibility | [NSX-T Release Notes](https://docs.vmware.com/en/VMware-NSX) |
-| ESXi + hardware (HBA, NIC) | [VMware Compatibility Guide](https://www.vmware.com/resources/compatibility) |
+| ESXi + hardware (HBA, NIC) | [Broadcom Compatibility Guide](https://compatibilityguide.broadcom.com/) |
 | Aria product compatibility | [Aria Interoperability Matrix](https://interopmatrix.vmware.com) |
-| VxRail version support | [VxRail Compatibility Matrix](https://dl.dell.com/content/manual36428085-vxrail-compatibility-guide.pdf) |
+| VxRail version support | [VxRail Support Docs](https://www.dell.com/support/home/en-us/product-support/product/vxrail-d-series/docs) |
 
 ## Key Version Constraints
 

@@ -114,7 +114,7 @@ Aria Operations — Upgrade Paths
 | vROps 8.10.x | 2022-10 | Per Broadcom lifecycle policy |
 | Aria Operations 8.14+ | 2023+ | Check Broadcom lifecycle page |
 
-Reference: [Broadcom Lifecycle Policy](https://support.broadcom.com/lifecycle-management)
+Reference: [Broadcom Lifecycle Policy](https://support.broadcom.com/group/ecx/productlifecycle)
 
 ---
 

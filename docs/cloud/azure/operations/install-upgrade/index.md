@@ -122,7 +122,7 @@ az aks nodepool upgrade --cluster-name <cluster-name> -g <rg> \
 
 Monitor Azure service retirements:
 - Azure Portal → Home → Recommendations → Retirements
-- Subscribe to Azure Updates: [azure.microsoft.com/updates](https://azure.microsoft.com/updates)
+- Subscribe to Azure Updates: [azure.microsoft.com/en-us/updates](https://azure.microsoft.com/en-us/updates/)
 - Azure Advisor: Operational Excellence recommendations
 
 ```bash

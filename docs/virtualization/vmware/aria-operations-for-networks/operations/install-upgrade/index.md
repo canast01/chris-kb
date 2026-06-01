@@ -36,7 +36,7 @@ Always verify on the [VMware Interoperability Matrix](https://interopmatrix.vmwa
 | Platform VM | `VMware-Aria-Operations-for-Networks-6.14.0-Platform.ova` |
 | Collector VM | `VMware-Aria-Operations-for-Networks-6.14.0-Collector.ova` |
 
-OVAs are downloaded from [Broadcom Customer Connect](https://customerconnect.broadcom.com/) under My Downloads → Aria Operations for Networks.
+OVAs are downloaded from [Broadcom Support Portal](https://support.broadcom.com/) under My Downloads → Aria Operations for Networks.
 
 ## Platform VM Deployment
 

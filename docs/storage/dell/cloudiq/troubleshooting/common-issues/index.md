@@ -22,7 +22,7 @@
 | Alert not routing to webhook | Webhook URL unreachable from Dell cloud; SSL certificate error on endpoint | Test the webhook URL from an external host; verify the endpoint returns 200 to a POST request |
 | System shows correct health score but no performance data | Array-side performance statistics collection disabled | Enable performance stats collection on the array; for PowerMax, verify SRDF performance is enabled |
 | SCG shows systems as unregistered after SCG rebuild | SCG was rebuilt or re-deployed; re-registration required | Re-register each system to the new SCG from the array management interface |
-| CloudIQ dashboard shows `Service Unavailable` | Dell CloudIQ SaaS platform outage | Check [https://status.dell.com](https://status.dell.com); open a P1 case if extended outage |
+| CloudIQ dashboard shows `Service Unavailable` | Dell CloudIQ SaaS platform outage | Check [https://www.dell.com/support/incidents-outages](https://www.dell.com/support/incidents-outages); open a P1 case if extended outage |
 | SSO login not working | SAML assertion not matching; IdP configuration drift | Review IdP metadata in CloudIQ Settings → Identity Provider; compare with IdP configuration |
 | Alert not acknowledging via API | Incorrect alert ID; alert already resolved | Confirm the alert ID and current state via `GET /rest/v1/alerts/<id>` before patching |
 

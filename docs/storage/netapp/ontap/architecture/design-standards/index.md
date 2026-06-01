@@ -79,7 +79,7 @@ Standards reference covering Naming Conventions, Build Baseline, Sizing Guidelin
 
 ## Build Baseline
 
-- ONTAP version: track the current recommended release on the [NetApp support site](https://mysupport.netapp.com); prefer the latest 9.x GA build shown in BlueXP upgrade advisor
+- ONTAP version: track the current recommended release on the [NetApp support site](https://support.netapp.com); prefer the latest 9.x GA build shown in BlueXP upgrade advisor
 - All clusters must have AutoSupport configured and confirmed sending (HTTPS preferred over SMTP)
 - Cluster-management LIF must have a resolvable DNS entry
 - NTP configured on all nodes with at least two external NTP sources

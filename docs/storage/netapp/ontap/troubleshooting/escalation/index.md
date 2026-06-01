@@ -60,7 +60,7 @@ Escalation reference covering Support Portal, AutoSupport, Information to Collec
 
 ## Support Portal
 
-[https://mysupport.netapp.com](https://mysupport.netapp.com)
+[https://support.netapp.com](https://support.netapp.com)
 
 - Case management, knowledge base, downloads, and compatibility tools
 - Login with NetApp SSO credentials tied to your support contract serial numbers
@@ -128,7 +128,7 @@ SLA clock starts from case creation and first engineer acknowledgment. For P1, c
 
 ## Escalation Path
 
-1. **Initial case**: Open via [mysupport.netapp.com](https://mysupport.netapp.com) or phone; assigned to a Technical Support Engineer (TSE)
+1. **Initial case**: Open via [mysupport.netapp.com](https://support.netapp.com) or phone; assigned to a Technical Support Engineer (TSE)
 2. **Escalation to specialist**: TSE escalates to a product specialist or escalation engineer if the issue requires deeper expertise — typically within the same business day for P1/P2
 3. **Duty Manager escalation**: If response is inadequate, request escalation to the Support Duty Manager via the support portal or phone; state the case number and the escalation reason
 4. **Account team escalation**: Engage your NetApp Account Manager and Systems Engineer for persistent P1 issues, commercial disputes, or SLA breach claims

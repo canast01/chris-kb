@@ -82,7 +82,7 @@ Raise support cases at: [https://support.superna.net](https://support.superna.ne
 
 Licensing issues (appliance reporting "Unlicensed") are handled via the Superna licensing portal:
 
-1. Go to [https://licensing.superna.net](https://licensing.superna.net)
+1. Go to [https://superna.net/support/](https://superna.net/support/)
 2. Locate license by serial number
 3. Confirm that the license UUID matches the UUID shown in Admin UI → License
 4. If UUID mismatch (after OVA redeployment), request license re-issue via the portal

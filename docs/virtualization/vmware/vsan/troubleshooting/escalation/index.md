@@ -127,7 +127,7 @@ URL: [https://support.broadcom.com](https://support.broadcom.com)
 For P1 cases, do not rely on portal submission alone. Call the VMware support line:
 - North America: +1 (877) 486-9273
 - EMEA: +44 (0)3453 700 100
-- Full list: [https://www.broadcom.com/support/vmware/contact-support](https://www.broadcom.com/support/vmware/contact-support)
+- Full list: [https://support.broadcom.com/](https://support.broadcom.com/)
 
 State "Priority 1 — production down" clearly at the start of the call. Request direct assignment to a vSAN support engineer.
 
