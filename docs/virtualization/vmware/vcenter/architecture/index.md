@@ -61,3 +61,8 @@ vCenter Server is the management plane for VMware vSphere, deployed as the VCSA 
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+
+
+## vCenter Deployment Models
+
+![vCenter Deployment Models](../../../../assets/vcenter-architecture-overview.svg)

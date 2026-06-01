@@ -63,3 +63,8 @@ Enterprise infrastructure architecture design guides covering high availability 
 ## Enterprise Architecture Overview
 
 
+
+
+## Architecture Design Principles
+
+![Architecture Design Principles](../assets/architecture-overview.svg)

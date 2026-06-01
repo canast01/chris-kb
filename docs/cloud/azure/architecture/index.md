@@ -66,3 +66,8 @@ Azure cloud platform architecture — management hierarchy, hub-and-spoke networ
 <a class="kb-card" href="integrations/"><strong>Integrations</strong><span>ExpressRoute, on-premises connectivity, and third-party integrations.</span></a>
 <a class="kb-card" href="design-standards/"><strong>Design Standards</strong><span>Naming conventions, tagging policy, subscription design, and security baselines.</span></a>
 </div>
+
+
+## Azure Platform Architecture
+
+![Azure Platform Architecture](../../../assets/azure-architecture-overview.svg)

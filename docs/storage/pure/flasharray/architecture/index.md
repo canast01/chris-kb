@@ -71,3 +71,8 @@ ActiveCluster (sync replication, RPO=0):
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+
+
+## FlashArray Architecture Models
+
+![FlashArray Architecture Models](../../../../assets/flasharray-architecture-overview.svg)

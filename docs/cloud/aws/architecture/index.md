@@ -61,3 +61,8 @@ Multi-account AWS platform managed through AWS Organizations with SCPs, IAM Iden
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+
+
+## AWS Platform Architecture
+
+![AWS Platform Architecture](../../../assets/aws-architecture-overview.svg)
