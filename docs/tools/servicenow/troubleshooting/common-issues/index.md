@@ -107,6 +107,28 @@ while (gr.next()) {
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 
+---
+
+## 2. MID Server Disconnected
+
+### Symptoms
+
+- MID Server status shows **Down** or **Unvalidated** in **MID Server > MID Servers**
+- Discovery jobs failing with "No MID Server available" error
+- ECC Queue input records accumulating with no processing
+
+### Common Root Causes
+
+| Cause | Indicator |
+|---|---|
+| MID Server service stopped | Service not running on the host |
+| Credential change not propagated | 401 Unauthorized in MID Server log |
+| JVM out of memory | OOM error in `agent0.log.0` |
+| Network change blocking HTTPS | Connection timeout to instance URL |
+| MID Server version mismatch after upgrade | Validation failure in MID Server record |
+
+### Diagnostic Steps
+
 ```powershell
 # Windows — check service
 Get-Service -Name "ServiceNow MID Server_*"

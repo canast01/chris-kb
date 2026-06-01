@@ -95,6 +95,115 @@ function New-RASRImage {
 #               -ShareUser "CORP\svc-rasr" `
 #               -SharePassword "S3cr3t!"
 ```
+
+---
+
+## Test-RASRImageAge
+
+Checks whether the most recent RASR image on a share was created within the maximum allowed age. Exits with a non-zero code and writes an Event Log entry if the image is stale.
+
+```powershell
+<#
+.SYNOPSIS
+    Verifies that the most recent RASR image does not exceed the maximum age threshold.
+.PARAMETER SharePath
+    UNC path to the RASR image directory.
+.PARAMETER MaxAgeDays
+    Maximum allowed age in days for the most recent image.
+#>
+function Test-RASRImageAge {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [string]$SharePath,
+
+        [int]$MaxAgeDays = 7
+    )
+
+    $images = Get-ChildItem -Path $SharePath -Filter "*.rasr" -ErrorAction Stop |
+              Sort-Object LastWriteTime -Descending
+
+    if ($images.Count -eq 0) {
+        Write-Warning "No RASR images found in $SharePath"
+        return 1
+    }
+
+    $latest    = $images[0]
+    $ageDays   = ((Get-Date) - $latest.LastWriteTime).TotalDays
+    $threshold = $MaxAgeDays
+
+    if ($ageDays -gt $threshold) {
+        $msg = "RASR image age check FAILED: latest image '$($latest.Name)' is $([math]::Round($ageDays,1)) days old (threshold: $threshold days)"
+        Write-Warning $msg
+
+        $eventSource = "RASR-Backup"
+        if (-not [System.Diagnostics.EventLog]::SourceExists($eventSource)) {
+            [System.Diagnostics.EventLog]::CreateEventSource($eventSource, "Application")
+        }
+        Write-EventLog -LogName Application -Source $eventSource `
+                       -EntryType Warning -EventId 9002 -Message $msg
+        return 1
+    }
+
+    Write-Host "RASR image age OK: '$($latest.Name)' is $([math]::Round($ageDays,1)) days old."
+    return 0
+}
+
+# Example:
+# Test-RASRImageAge -SharePath "\\nas01\rasr-images\SERVER01" -MaxAgeDays 7
+```
+
+---
+
+## Remove-OldRASRImages
+
+Deletes RASR images on a share that exceed the configured retention count, keeping the most recent N images.
+
+```powershell
+<#
+.SYNOPSIS
+    Removes RASR images from a share that exceed the retention count.
+.PARAMETER SharePath
+    UNC path to the RASR image directory.
+.PARAMETER RetentionCount
+    Number of most-recent images to keep. Images beyond this count are deleted.
+.PARAMETER WhatIf
+    Show which files would be deleted without actually deleting them.
+#>
+function Remove-OldRASRImages {
+    [CmdletBinding(SupportsShouldProcess)]
+    param(
+        [Parameter(Mandatory)]
+        [string]$SharePath,
+
+        [int]$RetentionCount = 4
+    )
+
+    $images = Get-ChildItem -Path $SharePath -Filter "*.rasr" -ErrorAction Stop |
+              Sort-Object LastWriteTime -Descending
+
+    if ($images.Count -le $RetentionCount) {
+        Write-Host "Nothing to remove: $($images.Count) image(s) present, retention is $RetentionCount."
+        return
+    }
+
+    $toDelete = $images | Select-Object -Skip $RetentionCount
+
+    foreach ($img in $toDelete) {
+        if ($PSCmdlet.ShouldProcess($img.FullName, "Delete old RASR image")) {
+            Remove-Item -Path $img.FullName -Force
+            Write-Host "Deleted: $($img.Name) (age: $([math]::Round(((Get-Date) - $img.LastWriteTime).TotalDays,1)) days)"
+        }
+    }
+
+    Write-Host "Retention cleanup complete. Kept $RetentionCount most-recent image(s)."
+}
+
+# Example:
+# Remove-OldRASRImages -SharePath "\\nas01\rasr-images\SERVER01" -RetentionCount 4
+# Remove-OldRASRImages -SharePath "\\nas01\rasr-images\SERVER01" -WhatIf
+```
+
 ┌─────────────────────────────────────────── RASR — Scripts ────────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
