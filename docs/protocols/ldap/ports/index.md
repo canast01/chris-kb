@@ -1,5 +1,10 @@
 # LDAP Ports
 
+
+<div class="kb-summary">
+LDAP Ports reference covering Overview, Port 389 and 636, Global Catalog Ports (3268 and 3269), Firewall Rules, StartTLS vs LDAPS and 1 more sections.
+</div>
+
 ```text
         LDAP PORT MAP
 ┌──────────────────────────────────────────────────────────────┐

@@ -1,6 +1,9 @@
 # FC Paths
 
+
+<div class="kb-summary">
 A path is a complete end-to-end connection from an HBA port through the fabric to a storage target port.
+</div>
 
 ```text
         DUAL-FABRIC MULTIPATH TOPOLOGY (4 paths to 1 LUN)
@@ -27,7 +30,8 @@ A path is a complete end-to-end connection from an HBA port through the fabric t
                 │ └─────────┘ │               path 4
                 └─────────────┘
         MPIO distributes I/O across active paths (round-robin or policy)
-``` Multipath I/O (MPIO) uses multiple paths simultaneously for redundancy and load distribution.
+```
+Multipath I/O (MPIO) uses multiple paths simultaneously for redundancy and load distribution.
 
 ## Path Architecture
 

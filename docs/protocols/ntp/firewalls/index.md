@@ -1,5 +1,10 @@
 # NTP Firewall Rules
 
+
+<div class="kb-summary">
+NTP Firewall Rules reference covering Required Firewall Rules, Linux — firewalld, Linux — iptables, Windows Firewall, Cisco ASA / Firepower and 2 more sections.
+</div>
+
 ```text
         NTP FIREWALL REQUIREMENTS
 ┌──────────────────────────────────────────────────────────────┐

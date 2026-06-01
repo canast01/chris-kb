@@ -1,5 +1,10 @@
 # DHCP Leases
 
+
+<div class="kb-summary">
+DHCP Leases reference covering Overview, Viewing Leases, Finding IP from MAC, Lease States Reference, Clearing Stale Leases and 2 more sections.
+</div>
+
 ```text
         LEASE LIFECYCLE AND RENEWAL TIMERS
 ┌──────────────────────────────────────────────────────────────┐

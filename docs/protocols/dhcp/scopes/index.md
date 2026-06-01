@@ -1,5 +1,10 @@
 # DHCP Scopes
 
+
+<div class="kb-summary">
+DHCP Scopes reference covering Overview, Creating a Scope, Exclusions, Scope Planning Reference, Superscopes and 2 more sections.
+</div>
+
 ```text
         SCOPE STRUCTURE
 ┌──────────────────────────────────────────────────────────────┐

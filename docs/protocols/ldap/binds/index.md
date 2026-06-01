@@ -1,5 +1,10 @@
 # LDAP Binds
 
+
+<div class="kb-summary">
+LDAP Binds reference covering Overview, Simple Bind, SASL / Kerberos Bind, Service Account Bind Configuration, Anonymous Bind Risks and 1 more sections.
+</div>
+
 ```text
         LDAP BIND TYPES
 ┌──────────────────────────────────────────────────────────────┐

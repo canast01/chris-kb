@@ -4,7 +4,10 @@ title: SNMPv3
 
 # SNMPv3
 
+
+<div class="kb-summary">
 SNMPv3 adds authentication and encryption to SNMP, replacing the plaintext community strings of v1/v2c.
+</div>
 
 ```text
         SNMPv3 authPriv SECURITY MODEL (USM)
@@ -27,7 +30,8 @@ SNMPv3 adds authentication and encryption to SNMP, replacing the plaintext commu
 │  authNoPriv   ─ SHA auth, no encryption (metrics only)      │
 │  authPriv     ─ SHA auth + AES encryption  ◄── use this     │
 └──────────────────────────────────────────────────────────────┘
-``` It is the required version for any environment with compliance requirements.
+```
+It is the required version for any environment with compliance requirements.
 
 ## Security Models
 

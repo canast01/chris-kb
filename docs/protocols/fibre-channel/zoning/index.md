@@ -1,6 +1,9 @@
 # FC Zoning
 
+
+<div class="kb-summary">
 Zoning restricts which initiators (HBAs) can communicate with which targets (storage ports) in a Fibre Channel fabric.
+</div>
 
 ```text
         ZONING: INITIATOR + TARGET → ZONE → ZONE SET → FABRIC
@@ -23,7 +26,8 @@ Zoning restricts which initiators (HBAs) can communicate with which targets (sto
 │                      │  (switches) │  blocks unlisted WWPNs     │
 │                      └─────────────┘                           │
 └─────────────────────────────────────────────────────────────────┘
-``` Every production fabric must have active zoning; unzoned fabrics allow all nodes to see each other.
+```
+Every production fabric must have active zoning; unzoned fabrics allow all nodes to see each other.
 
 ## Zone Types
 

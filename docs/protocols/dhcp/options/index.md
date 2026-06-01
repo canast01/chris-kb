@@ -1,5 +1,10 @@
 # DHCP Options
 
+
+<div class="kb-summary">
+DHCP Options reference covering Overview, Common Option Codes, Setting Scope-Level Options, Setting Server-Level Options, Vendor-Specific Options (043) and 2 more sections.
+</div>
+
 ```text
         DHCP OPTION HIERARCHY (most specific wins)
 ┌──────────────────────────────────────────────────────────────┐

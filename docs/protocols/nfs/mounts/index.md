@@ -1,5 +1,10 @@
 # NFS Mounts
 
+
+<div class="kb-summary">
+NFS Mounts reference covering Overview, Manual Mounts, /etc/fstab Options, Mount Option Reference, Automount with autofs and 1 more sections.
+</div>
+
 ```text
         CLIENT-SIDE MOUNT PROCESS
 ┌──────────────────────────────────────────────────────────────┐

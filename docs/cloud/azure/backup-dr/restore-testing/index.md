@@ -1,6 +1,9 @@
 # Restore Testing
 
+
+<div class="kb-summary">
 Restore testing validates that backup data is usable and that recovery procedures work as documented.
+</div>
 
 ---
 

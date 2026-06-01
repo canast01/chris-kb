@@ -1,6 +1,9 @@
 # TLS Validation
 
+
+<div class="kb-summary">
 Use these commands to verify TLS configuration on servers, check certificate validity, diagnose handshake failures, and confirm correct chain presentation.
+</div>
 
 ```text
         OPENSSL VALIDATION CHECKLIST

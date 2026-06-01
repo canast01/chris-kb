@@ -1,6 +1,9 @@
 # Failover
 
+
+<div class="kb-summary">
 Azure Site Recovery supports three types of failover: test failover (non-disruptive validation), planned failover (zero data loss), and unplanned failover (best-effort, used during real incidents). All failovers move protected workloads to the recovery region.
+</div>
 
 ---
 

@@ -1,6 +1,9 @@
 # TLS Certificate Chains
 
+
+<div class="kb-summary">
 A certificate chain (or chain of trust) links a server certificate back to a trusted root CA through one or more intermediate CAs.
+</div>
 
 ```text
         CHAIN OF TRUST
@@ -29,7 +32,8 @@ A certificate chain (or chain of trust) links a server certificate back to a tru
 │  Chain breaks if: intermediate missing, wrong order,        │
 │  or root not in client trust store                          │
 └──────────────────────────────────────────────────────────────┘
-``` If the chain is broken or incomplete, clients will reject the certificate.
+```
+If the chain is broken or incomplete, clients will reject the certificate.
 
 ## Chain Structure
 

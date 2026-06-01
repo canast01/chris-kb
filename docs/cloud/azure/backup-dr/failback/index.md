@@ -1,6 +1,11 @@
 # Failback
 
-Failback is the process of returning protected workloads from the DR (recovery) region back to the primary region after a failover event. In Azure Site Recovery, failback consists of re-protecting the DR VM, running a planned failover toward the primary, then committing and re-enabling replication.
+
+<div class="kb-summary">
+Failback is the process of returning protected workloads from the DR (recovery) region back to the primary region after a failover event.
+</div>
+
+ In Azure Site Recovery, failback consists of re-protecting the DR VM, running a planned failover toward the primary, then committing and re-enabling replication.
 
 ---
 

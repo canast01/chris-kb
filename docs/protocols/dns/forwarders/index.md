@@ -1,5 +1,10 @@
 # DNS Forwarders
 
+
+<div class="kb-summary">
+DNS Forwarders reference covering Overview, Configuring Global Forwarders, Conditional Forwarders, Root Hints vs Forwarders, Split-Brain DNS and 2 more sections.
+</div>
+
 ```text
         FORWARDER RESOLUTION FLOW
 ┌──────────────────────────────────────────────────────────────┐

@@ -1,6 +1,9 @@
 # SNMP Communities
 
+
+<div class="kb-summary">
 An SNMP community string is a plaintext password used in SNMPv1 and SNMPv2c to authenticate read or write access to a device's management information base (MIB).
+</div>
 
 ```text
         COMMUNITY STRING FLOW (SNMPv1/v2c)
@@ -21,7 +24,8 @@ An SNMP community string is a plaintext password used in SNMPv1 and SNMPv2c to a
 │  RW community: all ops + SET (device config change) — risk! │
 │  All traffic is PLAINTEXT — use SNMPv3 for production       │
 └─────────────────────────────────────────────────────────────┘
-``` Community strings provide no encryption.
+```
+Community strings provide no encryption.
 
 !!! warning "SNMPv2c security"
     Community strings are transmitted in plaintext and are visible in packet captures. Treat them as secrets and use SNMPv3 for any environment with compliance requirements or sensitive data. SNMPv2c is acceptable only on isolated management VLANs with strict ACLs.

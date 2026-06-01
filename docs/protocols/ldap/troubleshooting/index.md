@@ -1,5 +1,10 @@
 # LDAP Troubleshooting
 
+
+<div class="kb-summary">
+LDAP Troubleshooting reference covering Overview, Bind Failure Diagnostics, Certificate Errors, Using ldp.exe (Windows GUI Tool), LDAP Referrals and 1 more sections.
+</div>
+
 ```text
         TRIAGE: LDAP BIND FAILS
 ┌──────────────────────────────────────────────────────────────┐

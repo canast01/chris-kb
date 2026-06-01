@@ -1,6 +1,9 @@
 # iSCSI Targets
 
+
+<div class="kb-summary">
 An iSCSI target is the storage-side endpoint — a port on an array, NAS gateway, or software target — that presents LUNs to initiators.
+</div>
 
 ```text
         iSCSI TARGET STRUCTURE

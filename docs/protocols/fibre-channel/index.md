@@ -1,6 +1,9 @@
 # Fibre Channel
 
+
+<div class="kb-summary">
 High-speed serial protocol for Storage Area Network (SAN) connectivity between hosts and storage arrays.
+</div>
 
 ```text
         FC END-TO-END PATH

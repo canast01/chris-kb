@@ -1,5 +1,10 @@
 # FC Troubleshooting
 
+
+<div class="kb-summary">
+FC Troubleshooting reference covering Diagnostic Flow, Quick Diagnostics, Common Issues Reference, Error Counter Interpretation (Brocade), Log Locations.
+</div>
+
 ```text
         TRIAGE: HOST CANNOT SEE LUN
 ┌─────────────────────────────────────────────────────────────┐

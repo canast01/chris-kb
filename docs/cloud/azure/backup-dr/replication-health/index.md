@@ -1,6 +1,9 @@
 # Replication Health
 
+
+<div class="kb-summary">
 Monitoring ASR replication health is critical for validating that DR protection is active and within acceptable RPO thresholds. Health states reflect the ongoing synchronisation between source and target regions.
+</div>
 
 ---
 

@@ -1,5 +1,10 @@
 # DNS Records
 
+
+<div class="kb-summary">
+DNS Records reference covering Overview, Common Record Types, Managing Records with PowerShell, Scavenging and Aging, Dynamic DNS and 1 more sections.
+</div>
+
 ```text
         COMMON RECORD TYPES
 ┌──────────────────────────────────────────────────────────────┐

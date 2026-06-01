@@ -1,6 +1,9 @@
 # iSCSI Initiators
 
+
+<div class="kb-summary">
 An iSCSI initiator is the client-side component — typically software on a server OS or a hardware iSCSI HBA — that sends SCSI commands over an IP network to iSCSI targets.
+</div>
 
 ```text
         INITIATOR TYPES

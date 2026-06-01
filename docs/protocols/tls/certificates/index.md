@@ -1,6 +1,9 @@
 # TLS Certificates
 
+
+<div class="kb-summary">
 A TLS certificate is a signed X.509 document that binds a public key to an identity (hostname, IP, or service).
+</div>
 
 ```text
         CERTIFICATE FIELD STRUCTURE (X.509)
@@ -22,7 +25,8 @@ A TLS certificate is a signed X.509 document that binds a public key to an ident
 │  Client checks: SAN matches hostname + not expired +         │
 │                 chain traces to trusted root CA              │
 └──────────────────────────────────────────────────────────────┘
-``` The certificate allows clients to verify they are talking to the correct server and to establish encrypted sessions.
+```
+The certificate allows clients to verify they are talking to the correct server and to establish encrypted sessions.
 
 ## Certificate Components
 

@@ -1,6 +1,9 @@
 # Backup Jobs
 
+
+<div class="kb-summary">
 Azure Backup jobs represent discrete backup, restore, and configuration operations.
+</div>
 
 ```text
   Trigger
@@ -27,7 +30,8 @@ Azure Backup jobs represent discrete backup, restore, and configuration operatio
      │
      ▼
   az backup job list --status Failed
-``` Monitoring job status is essential for confirming scheduled backups ran successfully and for diagnosing failures.
+```
+Monitoring job status is essential for confirming scheduled backups ran successfully and for diagnosing failures.
 
 ---
 

@@ -1,6 +1,9 @@
 # SNMP Traps
 
+
+<div class="kb-summary">
 SNMP traps are unsolicited notifications sent from a device to a trap receiver (NMS) when an event occurs
+</div>
 
 ```text
         TRAP FLOW (device-initiated, async)
@@ -22,7 +25,8 @@ SNMP traps are unsolicited notifications sent from a device to a trap receiver (
 │                                                             │
 │  INFORM = trap with ACK; device retries until NMS replies   │
 └─────────────────────────────────────────────────────────────┘
-``` — a link going down, a threshold being crossed, or a hardware fault. Unlike polling, traps push alerts in real time.
+```
+— a link going down, a threshold being crossed, or a hardware fault. Unlike polling, traps push alerts in real time.
 
 ## Trap vs Inform
 

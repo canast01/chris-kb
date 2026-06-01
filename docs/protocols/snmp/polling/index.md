@@ -1,6 +1,9 @@
 # SNMP Polling
 
+
+<div class="kb-summary">
 SNMP polling is the process of an NMS periodically querying devices to collect metrics.
+</div>
 
 ```text
         SNMP POLLING CYCLE
@@ -22,7 +25,8 @@ SNMP polling is the process of an NMS periodically querying devices to collect m
 │                        GETBULK = multiple OIDs (efficient)  │
 │                        SET     = write value (RW only)      │
 └─────────────────────────────────────────────────────────────┘
-``` Unlike traps, polling is initiated by the manager on a schedule.
+```
+Unlike traps, polling is initiated by the manager on a schedule.
 
 ## Poll Operations
 

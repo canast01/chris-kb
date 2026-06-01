@@ -1,5 +1,10 @@
 # NTFS Permissions
 
+
+<div class="kb-summary">
+NTFS Permissions reference covering Overview, NTFS Permission Types, icacls Reference, Inheritance, Effective Permissions and 1 more sections.
+</div>
+
 ```text
         NTFS ACL STRUCTURE
 ┌──────────────────────────────────────────────────────────────┐

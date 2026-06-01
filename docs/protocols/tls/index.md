@@ -4,7 +4,10 @@ title: TLS
 
 # TLS and HTTPS
 
+
+<div class="kb-summary">
 TLS (Transport Layer Security) provides encryption, integrity, and authentication for network communications.
+</div>
 
 ```text
         TLS HANDSHAKE (TLS 1.3 simplified)

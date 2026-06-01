@@ -1,5 +1,10 @@
 # DNS Lookups
 
+
+<div class="kb-summary">
+DNS Lookups reference covering Overview, nslookup, dig, Resolve-DnsName (PowerShell), TTL Debugging and 1 more sections.
+</div>
+
 ```text
         FORWARD vs REVERSE LOOKUPS
 ┌──────────────────────────────────────────────────────────────┐

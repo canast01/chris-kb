@@ -1,5 +1,10 @@
 # DHCP Reservations
 
+
+<div class="kb-summary">
+DHCP Reservations reference covering Overview, Creating a Reservation, Bulk Reservations from CSV, Reservation Conflicts, Reservation Management Reference and 2 more sections.
+</div>
+
 ```text
         RESERVATION: MAC → FIXED IP
 ┌──────────────────────────────────────────────────────────────┐

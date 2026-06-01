@@ -1,6 +1,9 @@
 # TLS Certificate Expiration
 
+
+<div class="kb-summary">
 Expired certificates cause immediate outages — services reject connections without warning.
+</div>
 
 ```text
         EXPIRY ALERT THRESHOLDS AND ACTIONS
@@ -24,7 +27,8 @@ Expired certificates cause immediate outages — services reject connections wit
 │  │ → fires CertExpiryWarning alert                      │   │
 │  └──────────────────────────────────────────────────────┘   │
 └──────────────────────────────────────────────────────────────┘
-``` Expiration monitoring and automated renewal must be in place for every certificate in production.
+```
+Expiration monitoring and automated renewal must be in place for every certificate in production.
 
 ## Checking Expiry
 

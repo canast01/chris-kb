@@ -4,6 +4,11 @@ title: TLS (LDAP)
 
 # TLS (LDAP)
 
+
+<div class="kb-summary">
+TLS (LDAP) reference covering Overview, Certificate Requirements for LDAPS, Configuring LDAPS on Active Directory, Channel Binding and LDAP Signing, LdapClientIntegrity (Client Side) and 1 more sections.
+</div>
+
 ```text
         STARTTLS vs LDAPS
 ┌──────────────────────────────────────────────────────────────┐

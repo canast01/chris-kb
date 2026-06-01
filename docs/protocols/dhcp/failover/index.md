@@ -1,5 +1,10 @@
 # DHCP Failover
 
+
+<div class="kb-summary">
+DHCP Failover reference covering Overview, Configuring Failover, Checking Failover State, Failover States Reference, Split Scope (Pre-2012 Fallback) and 2 more sections.
+</div>
+
 ```text
         DHCP FAILOVER MODES
 ┌──────────────────────────────────────────────────────────────┐

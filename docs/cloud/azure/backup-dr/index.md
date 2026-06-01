@@ -4,7 +4,11 @@ title: Azure Backup and DR
 
 # Azure Backup and DR
 
+
+<div class="kb-summary">
 Backup and recovery notes for Azure Backup, Site Recovery, vaults, jobs, and restore validation.
+</div>
+
 ```text
 ┌──────────────────────────────────── Azure Backup and DR Overview ─────────────────────────────────────┐
 │                                                                                                       │

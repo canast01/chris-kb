@@ -1,6 +1,9 @@
 # Fabric Login
 
+
+<div class="kb-summary">
 Fabric login is the process by which FC ports register with the fabric and establish communication paths.
+</div>
 
 ```text
         FC LOGIN SEQUENCE
@@ -27,7 +30,8 @@ Fabric login is the process by which FC ports register with the fabric and estab
      │                     │  ACC (target ready) │
      │ ◄─────────────────────────────────────── │
      │                     │  I/O can begin     │
-``` Login failures prevent hosts from seeing storage.
+```
+Login failures prevent hosts from seeing storage.
 
 ## Login Sequence
 
