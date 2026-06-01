@@ -4,6 +4,48 @@
 <div class="kb-summary">
 Site Map reference covering Infrastructure, Resilience & Recovery, Automation & Tooling, Security & Compliance, Operations & Monitoring.
 </div>
+```
+┌──────────────────────────────────────── KB Site Map ──────────────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │              Knowledge base navigation map — 27 sections across 5 domains                     │   │
+│   │        2,100+ pages · Infrastructure · Resilience · Automation · Security · Operations        │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │       Infrastructure        │  │    Resilience & Recovery     │  │    Automation & Tooling     │   │
+│   │       ─────────────         │  │    ─────────────────────     │  │    ─────────────────────    │   │
+│   │  Virtualization (VMware)    │  │  Disaster Recovery           │  │  Automation (PS/Py/TF)      │   │
+│   │  Storage (Dell/Pure/NetApp) │  │  Data Protection             │  │  AI (OpenAI/Bedrock/Ollama) │   │
+│   │  SAN (Cisco/Brocade)        │  │  Performance / SLOs          │  │  Tools (SNOW/Jira/Git)      │   │
+│   │  Cloud (AWS / Azure)        │  │  Architecture (HA / DR)      │  │  Integration / Database     │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   Domain               │  Key Sections                                                        │   │
+│   │   Security & Compliance│  AD · CyberArk · PKI · MFA · Vulnerability · Incident Handling      │   │
+│   │   Operations & Monitor │  Monitoring tools · Runbooks · Troubleshooting · Change Mgmt        │   │
+│   │   Lifecycle / Inventory│  Onboarding · Upgrade · Migration · Asset Tracking · Decommission   │   │
+│   │   Standards / Certs    │  Compliance Standards · VMware/AWS/Azure/SAN/Storage certs          │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: Cloudflare CDN · GitHub Pages · MkDocs Material · GitHub Actions CI/CD pipeline         │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Section         = Top-level nav entry; each maps to a docs/<section>/index.md landing page        │
+│    Landing page    = index.md with kb-summary and card grid linking to sub-pages                     │
+│    Subsection      = Second-level nav entry under a section (e.g. Storage → Pure → FlashArray)       │
+│    CLI reference   = Page documenting commands, flags, and usage examples for a specific tool        │
+│    Runbook         = Step-by-step operational procedure for a common task or incident response       │
+│    Architecture    = Design and topology pages (HA, DR design, network design, storage design)       │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 ## Infrastructure
 
