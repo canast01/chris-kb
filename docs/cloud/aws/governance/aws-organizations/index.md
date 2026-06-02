@@ -110,3 +110,8 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 | Document ownership. | Document ownership. |
 | Use least privilege access. | Use least privilege access. |
 | Validate changes after implementation. | Validate changes after implementation. |
+
+---
+
+## AWS Organizations Multi-Account Hierarchy
+

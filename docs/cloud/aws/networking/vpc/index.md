@@ -98,3 +98,107 @@ aws ec2 describe-vpn-connections --query 'VpnConnections[*].[VpnConnectionId,Sta
 | Two subnets can't talk to each other | Missing route or NACL blocking | Route table + NACL rules |
 | On-prem can't reach VPC | VPN tunnel down or BGP issue | VPN connection status + BGP session |
 | EC2 can't reach on-prem | Missing route to on-prem CIDR via VGW | Route table — is on-prem CIDR routed to VGW? |
+
+---
+
+## VPC Subnet Architecture
+
+
+
+---
+
+## AWS Network Connectivity Options
+
+```
+┌────────────────────────────────── AWS Network Connectivity Options ───────────────────────────────────┐
+│                                                                                                       │
+│    Multiple options connect on-prem to AWS or VPCs to each other; choose by need.                     │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │      Internet Gateway / NAT Gateway          │  │      Site-to-Site VPN                       │   │
+│   │  IGW: public subnet internet access          │  │  IPSec tunnel over the public internet      │   │
+│   │  NAT GW: private outbound only (no in)       │  │  Virtual Private Gateway on VPC side        │   │
+│   │  Managed by AWS; HA within AZ                │  │  Customer Gateway on on-prem side           │   │
+│   │  NAT GW: charged per GB + hourly             │  │  Bandwidth: up to ~1.25 Gbps per VPN        │   │
+│   │  Scales automatically; no maintenance        │  │  Low cost; quick to set up; encrypted       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    VPN is encrypted but uses shared internet; Direct Connect is dedicated private link.               │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │      AWS Direct Connect (DX)                 │  │     PrivateLink / Transit Gateway           │   │
+│   │  Dedicated physical link to AWS              │  │  PrivateLink: expose service to VPC         │   │
+│   │  1 Gbps or 10 Gbps ports available           │  │  No internet; no peering; private IP        │   │
+│   │  Lower latency + consistent bandwidth        │  │  Endpoint in consumer VPC; NLB backed       │   │
+│   │  DX Gateway: one DX to many Regions          │  │  Transit Gateway: hub-spoke for VPCs        │   │
+│   │  Not encrypted by default; use IPSec         │  │  TGW: transitive routing; centrally         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical Infrastructure (the hardware everything above runs on):                                   │
+│    AWS backbone fibre · DX colocation partner facilities · physical DX ports                          │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Site-to-Site VPN = IPSec encrypted tunnel from on-prem to VPC via internet                         │
+│    Direct Connect   = Dedicated private physical connection; bypasses internet                        │
+│    VGW              = Virtual Private Gateway; VPN/DX attachment point on VPC                         │
+│    CGW              = Customer Gateway; on-prem router configuration in AWS                           │
+│    DX Gateway       = Connect one Direct Connect to VPCs in multiple Regions                          │
+│    Transit Gateway  = Regional hub; connects many VPCs and on-prem via single hub                     │
+│    PrivateLink      = Expose a service privately; no internet traversal; NLB-backed                   │
+│    VPC Peering      = Direct 1:1 routing between two VPCs; not transitive                             │
+│    Transitive routing= Traffic A→B→C; TGW supports it; VPC Peering does not                           │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+
+---
+
+## Route 53 Routing Policies
+
+```
+┌─────────────────────────────── Route 53 Routing Policies — Comparison ────────────────────────────────┐
+│                                                                                                       │
+│    Route 53 supports 7 routing policies; choose based on traffic distribution goal.                   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │        Policy                                │  │      Use Case / Behaviour                   │   │
+│   │  Simple                                      │  │  Single record; basic DNS; no health        │   │
+│   │  Weighted                                    │  │  Split traffic by % (A/B testing)           │   │
+│   │  Latency                                     │  │  Route to lowest-latency AWS Region         │   │
+│   │  Failover                                    │  │  Primary + secondary with health chk        │   │
+│   │  Geolocation                                 │  │  Route by user country or continent         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │        Policy (continued)                    │  │      Use Case / Behaviour                   │   │
+│   │  Geoproximity                                │  │  Route by geographic proximity; bias        │   │
+│   │  Multivalue Answer                           │  │  Return up to 8 healthy records             │   │
+│   │  Health checks                               │  │  Monitor endpoints; failover if down        │   │
+│   │  Alias records                               │  │  Point to AWS resources (ALB, CF, S3)       │   │
+│   │  Private hosted zone                         │  │  DNS inside VPC; internal resolution        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical Infrastructure (the hardware everything above runs on):                                   │
+│    Route 53 anycast infrastructure · 100+ edge PoPs globally · DNSSEC support                         │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Simple routing     = Single resource; multiple values returned randomly (no health)                │
+│    Weighted routing   = Assign weights (0-255) to split traffic; A/B testing                          │
+│    Latency routing    = Measure latency to AWS Regions; send user to lowest latency                   │
+│    Failover routing   = Active/passive; primary serves traffic; secondary if unhealthy                │
+│    Geolocation        = Route based on user geographic location (country, continent)                  │
+│    Geoproximity       = Route by proximity to resource; bias shifts boundary                          │
+│    Multivalue         = Up to 8 healthy records returned; basic load distribution                     │
+│    Health check       = HTTP/HTTPS/TCP probe; marks record unhealthy if failing                       │
+│    Alias record       = Native Route 53 record type pointing to AWS service endpoints                 │
+│    Private hosted zone= DNS zone only resolvable inside VPC or associated VPCs                        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```

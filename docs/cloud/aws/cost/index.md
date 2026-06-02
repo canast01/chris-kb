@@ -96,3 +96,57 @@ AWS cost management combines visibility tools (Cost Explorer, Anomaly Detection)
 </a>
 
 </div>
+
+---
+
+## EC2 Pricing Models
+
+
+
+---
+
+## AWS Support Tiers
+
+```
+┌─────────────────────────── AWS Support Plans — Features and Response Times ───────────────────────────┐
+│                                                                                                       │
+│    Five support tiers; higher tiers add TAMs, faster response, and architectural guidance.            │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │     Basic / Developer Plans                  │  │      Business / Enterprise On-Ramp          │   │
+│   │  Basic: free; documentation only             │  │  Business: $100/mo or 10% of charges        │   │
+│   │  Basic: AWS Health Dashboard + forums        │  │  Business: all contacts; 24/7 phone         │   │
+│   │  Developer: $29/mo or 3% of charges          │  │  Business: <1h critical response            │   │
+│   │  Developer: 1 contact; biz-hours email       │  │  Enterprise On-Ramp: $5500/mo min           │   │
+│   │  Developer: general guidance + sandbox       │  │  Ent On-Ramp: TAM pool; <30 min crit        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Business adds 24/7 support + full Trusted Advisor; Enterprise adds dedicated TAM.                  │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │     Enterprise Plan                          │  │      Trusted Advisor Checks by Tier         │   │
+│   │  Enterprise: $15000/mo or % of charges       │  │  Basic: 6 core security checks only         │   │
+│   │  Enterprise: dedicated Technical Acct        │  │  Developer: same 6 checks as Basic          │   │
+│   │  Enterprise: <15 min business-critical       │  │  Business: ALL ~500+ Trusted Advisor        │   │
+│   │  Enterprise: Well-Architected Reviews        │  │  Enterprise: ALL checks + API access        │   │
+│   │  Enterprise: Concierge; billing review       │  │  Proactive recommendations: Ent only        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical Infrastructure (the hardware everything above runs on):                                   │
+│    AWS Support infrastructure · TAM communication channels · Trusted Advisor service                  │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    TAM            = Technical Account Manager; dedicated expert in Enterprise plan                    │
+│    Trusted Advisor= Automated checks across cost, performance, security, fault tolerance              │
+│    Basic          = Free; 7 Trusted Advisor checks; Health Dashboard; community forums                │
+│    Developer      = $29/mo or 3% of monthly charges; 1 primary contact; 12-24h response               │
+│    Business       = $100+/mo; unlimited contacts; 24/7 phone+chat; <1h prod-down response             │
+│    Enterprise On-Ramp= $5500/mo; TAM pool; 30-min critical response; WAR reviews                      │
+│    Enterprise     = $15000/mo; dedicated TAM; 15-min critical; Concierge team access                  │
+│    Infrastructure Event Mgmt = Enterprise only; AWS support during launches/migrations                │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```

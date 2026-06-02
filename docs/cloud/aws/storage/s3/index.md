@@ -106,3 +106,57 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 | Document ownership. | Document ownership. |
 | Use least privilege access. | Use least privilege access. |
 | Validate changes after implementation. | Validate changes after implementation. |
+
+---
+
+## S3 Storage Classes
+
+
+
+---
+
+## AWS Storage Services Comparison
+
+```
+┌────────────────── AWS Storage Services — S3 vs EBS vs EFS vs FSx vs Instance Store ───────────────────┐
+│                                                                                                       │
+│    Five main storage types; choose by access pattern, sharing, and persistence needs.                 │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │      S3 (Object Storage)                     │  │      EBS (Block Storage)                    │   │
+│   │  Objects in buckets; unlimited scale         │  │  Persistent block volumes for EC2           │   │
+│   │  Globally unique bucket name                 │  │  Bound to a single AZ                       │   │
+│   │  HTTP API (PUT/GET); not mountable           │  │  Mountable like a local disk (ext4)         │   │
+│   │  11 nines durability; 3+ AZ by default       │  │  SSD (gp3/io2) or HDD (st1/sc1)             │   │
+│   │  Use: backups, static web, data lake         │  │  Use: OS disk, DB, boot volume              │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    EBS is block (like a hard drive); EFS is shared NFS; S3 is object (HTTP API).                      │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │     EFS (Elastic File System)                │  │      Instance Store / FSx                   │   │
+│   │  NFSv4 shared file system                    │  │  Instance Store: ephemeral local NVMe       │   │
+│   │  Multi-AZ; automatically scales              │  │  Lost on stop/terminate/host failure        │   │
+│   │  Mount simultaneously to many EC2            │  │  Highest I/O throughput; no extra $         │   │
+│   │  Linux only; no Windows                      │  │  FSx for Windows: SMB, AD-integrated        │   │
+│   │  Standard + Infrequent Access tiers          │  │  FSx for Lustre: HPC parallel FS            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical Infrastructure (the hardware everything above runs on):                                   │
+│    S3 infrastructure (3+ AZ) · EBS volumes in AZ · NFS cluster (EFS) · local NVMe                     │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    S3         = Object storage; buckets + keys; unlimited scale; HTTP GET/PUT API                     │
+│    EBS        = Elastic Block Store; like a virtual hard drive; attached to one EC2                   │
+│    EFS        = Elastic File System; NFS v4; shared across many Linux EC2 instances                   │
+│    Instance Store = Local NVMe on the physical host; ephemeral; fastest raw IOPS                      │
+│    FSx for Windows= Fully managed Windows file server; SMB protocol; AD integration                   │
+│    FSx for Lustre = High-performance parallel file system; integrates with S3                         │
+│    Storage Gateway= Hybrid storage; connects on-prem to S3/EBS/Tape via iSCSI/NFS                     │
+│    Snow Family    = Physical devices (Snowcone/Snowball/Snowmobile) for data transfer                 │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```

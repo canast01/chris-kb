@@ -93,3 +93,209 @@ graph TB
 | Cross-region S3 replication | S3 CRR | Near-zero RPO |
 | RDS automated backups | RDS to secondary region | < 1 hour RPO |
 | Route 53 health-check failover | Route 53 + secondary ALB | < 5 minutes RTO |
+
+---
+
+## AWS Global Infrastructure
+
+
+
+---
+
+## AWS Shared Responsibility Model
+
+```
+┌──────────────────── AWS Shared Responsibility Model — Security OF vs IN the Cloud ────────────────────┐
+│                                                                                                       │
+│    AWS secures the infrastructure; customers secure what they run on it.                              │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │        AWS Responsibility (OF the cloud)     │  │     Customer Responsibility (IN the cloud)  │   │
+│   │  Physical hardware + data centres            │  │  Data: classification and encryption        │   │
+│   │  Network and hypervisor layer                │  │  Identity and access management             │   │
+│   │  Compute / storage / database infra          │  │  OS patches (for EC2/IaaS only)             │   │
+│   │  Regions, AZs, and edge locations            │  │  Application code and configuration         │   │
+│   │  Managed service security (RDS/S3)           │  │  Network config: SGs, NACLs, routes         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    For managed services (RDS, Lambda), AWS takes more responsibility; EC2 is IaaS.                    │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │      IaaS (EC2): Customer manages most       │  │      PaaS/SaaS: AWS manages most            │   │
+│   │  Guest OS: customer patches/updates          │  │  RDS: OS/engine patched by AWS              │   │
+│   │  Security groups: customer configures        │  │  S3: infra/durability managed by AWS        │   │
+│   │  Application: customer deploys/secures       │  │  Lambda: runtime managed by AWS             │   │
+│   │  IAM roles: customer defines access          │  │  DynamoDB: fully managed by AWS             │   │
+│   │  Encryption: customer enables/manages        │  │  Customer manages data and IAM only         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical Infrastructure (the hardware everything above runs on):                                   │
+│    AWS-owned hardware, data centres, network; customers have no physical access                       │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Shared model    = AWS owns security of the cloud; customer owns security in the cloud              │
+│    IaaS            = Infrastructure as a Service; e.g., EC2 — customer manages OS up                  │
+│    PaaS            = Platform as a Service; e.g., Elastic Beanstalk, RDS                              │
+│    SaaS            = Software as a Service; e.g., Chime, WorkMail                                     │
+│    Security of     = Hardware, software, networking, facilities managed by AWS                        │
+│    Security in     = Data, platform, applications, identity managed by customer                       │
+│    Managed service = AWS handles patching, HA, backups; customer handles data/access                  │
+│    Encryption keys = Customer may manage via KMS CMK; AWS manages default keys                        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+
+---
+
+## AWS Well-Architected Framework — 6 Pillars
+
+```
+┌───────────────────────────── AWS Well-Architected Framework — 6 Pillars ──────────────────────────────┐
+│                                                                                                       │
+│    Framework guides cloud architecture decisions; assessed via Well-Architected Tool.                 │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │      Operational Excellence                  │  │      Security                               │   │
+│   │  Run + monitor workloads effectively         │  │  Protect data, systems, and assets          │   │
+│   │  Improve operations through small            │  │  Apply security at all layers               │   │
+│   │  frequent reversible changes                 │  │  Enable traceability via logging            │   │
+│   │  Annotate docs; anticipate failure           │  │  Automate security best practices           │   │
+│   │  Perform operations as code (IaC)            │  │  Protect data in transit and at rest        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │      Reliability                             │  │      Performance Efficiency                 │   │
+│   │  Recover from failures automatically         │  │  Use compute resources efficiently          │   │
+│   │  Scale horizontally for availability         │  │  Select right resource types/sizes          │   │
+│   │  Manage change via automation                │  │  Monitor performance; adapt/evolve          │   │
+│   │  Test recovery procedures regularly          │  │  Use advanced tech democratized             │   │
+│   │  Design for multi-AZ and multi-region        │  │  Go global quickly with AWS Regions         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │      Cost Optimization                       │  │      Sustainability (6th pillar, 2021)      │   │
+│   │  Avoid unnecessary costs                     │  │  Minimise environmental impact              │   │
+│   │  Measure efficiency; use managed svcs        │  │  Understand your impact footprint           │   │
+│   │  Analyse and attribute expenditure           │  │  Maximise resource utilisation              │   │
+│   │  Use Reserved/Savings Plans wisely           │  │  Use managed services (lower footpt)        │   │
+│   │  Right-size and eliminate idle rsrcs         │  │  Choose Regions with clean energy           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical Infrastructure (the hardware everything above runs on):                                   │
+│    All 6 pillars apply to services running on AWS hardware in Regions and AZs                         │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Well-Architected Tool  = Free AWS service to review workloads against 6 pillars                    │
+│    Well-Architected Review = Formal assessment producing improvement action plan                      │
+│    Pillar                 = One of 6 design domains; each has design principles + questions           │
+│    High Risk Issue (HRI)  = WAF finding requiring immediate attention                                 │
+│    Medium Risk Issue (MRI)= WAF finding to address in upcoming sprint                                 │
+│    IaC                    = Infrastructure as Code; operations as code principle                      │
+│    Sustainability pillar  = Added 2021; focuses on energy use and carbon footprint                    │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+
+---
+
+## AWS Cloud Adoption Framework — 6 Perspectives
+
+```
+┌───────────────────────── AWS Cloud Adoption Framework (CAF) — 6 Perspectives ─────────────────────────┐
+│                                                                                                       │
+│    CAF organises guidance into Business and Technology perspectives for cloud adoption.               │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │      Business Perspectives (outcomes)        │  │      Technology Perspectives (delivery)     │   │
+│   │  Business: value / strategy / KPIs           │  │  Platform: architecture / IaC / CI/CD       │   │
+│   │  People: change mgmt / org readiness         │  │  Security: IAM / detection / response       │   │
+│   │  Governance: risk / compliance / fin         │  │  Operations: monitoring / ITSM / DR         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Business side drives why; Technology side drives how. Both needed for success.                     │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │      CAF Capabilities by Perspective         │  │      Transformation Domains                 │   │
+│   │  Business: portfolio mgmt, data monet        │  │  Technology: modernise IT platforms         │   │
+│   │  People: HR trans, leadership align          │  │  Process: digitise, automate, optimise      │   │
+│   │  Governance: prog mgmt, benefit real         │  │  Organisation: lead cloud teams             │   │
+│   │  Platform: platform eng, data estate         │  │  Product: innovate, experiment fast         │   │
+│   │  Security: threat intel, vuln mgmt           │  │  Outcomes: reduce cost + risk, speed        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical Infrastructure (the hardware everything above runs on):                                   │
+│    CAF is a methodology; underlying infra = AWS Regions, AZs, and managed services                    │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    CAF          = Cloud Adoption Framework; AWS guidance for org cloud transformation                 │
+│    Perspective  = One of 6 CAF domains grouping related capabilities                                  │
+│    Capability   = Specific business or technology ability needed for cloud adoption                   │
+│    Business side= Business + People + Governance; aligned to business outcomes                        │
+│    Tech side    = Platform + Security + Operations; aligned to technical delivery                     │
+│    Transformation domain = Area of organisational change: technology, process, org, product           │
+│    MRA          = Migration Readiness Assessment; CAF-based readiness scoring                         │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+
+---
+
+## AWS Migration Strategies — 7 Rs
+
+```
+┌───────────────────────────────── AWS Migration Strategies — The 7 Rs ─────────────────────────────────┐
+│                                                                                                       │
+│    7 Rs describe how an application moves to or is handled in the cloud migration.                    │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │         Retire / Retain (no move)            │  │         Rehost / Relocate (lift-shift)      │   │
+│   │  Retire: decommission the app                │  │  Rehost: move to EC2 with no changes        │   │
+│   │  No migration needed; end of life            │  │  Fastest path; no refactoring needed        │   │
+│   │  Retain: keep on-premises for now            │  │  Relocate: move VMware VMs to VMC           │   │
+│   │  Revisit later; compliance/technical         │  │  Hyper-V/VMware to cloud via migrate        │   │
+│   │  Review at next migration cycle              │  │  Good for large legacy app portfolios       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Retire/Retain need no cloud resources; Rehost/Relocate need minimal changes.                       │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │      Replatform / Repurchase                 │  │      Refactor / Re-architect                │   │
+│   │  Replatform: lift-tinker-shift               │  │  Refactor: re-write as cloud-native         │   │
+│   │  e.g., RDS instead of self-managed DB        │  │  e.g., move to Lambda/containers/EKS        │   │
+│   │  Minor optimisations; same app code          │  │  Highest effort; highest cloud value        │   │
+│   │  Repurchase: drop and shop to SaaS           │  │  Best for apps needing scale/agility        │   │
+│   │  e.g., CRM on-prem to Salesforce             │  │  Microservices, serverless, event-drv       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical Infrastructure (the hardware everything above runs on):                                   │
+│    AWS Regions and AZs host migrated workloads; on-prem DC remains for Retain/Retire                  │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Retire      = Decommission; no longer needed; remove from scope                                    │
+│    Retain      = Keep on-premises; revisit later; compliance or technical blocker                     │
+│    Rehost      = Lift and shift to EC2; no application changes; fastest                               │
+│    Relocate    = Move to cloud without buying new hardware (e.g., VMware Cloud on AWS)                │
+│    Replatform  = Lift tinker and shift; minor optimisations without code changes                      │
+│    Repurchase  = Replace with SaaS product; drop and shop; e.g., on-prem CRM to SaaS                  │
+│    Refactor    = Re-architect as cloud-native; highest effort; microservices/serverless               │
+│    MGN         = AWS Application Migration Service; automates rehost migrations                       │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```

@@ -110,3 +110,57 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 | Document ownership. | Document ownership. |
 | Use least privilege access. | Use least privilege access. |
 | Validate changes after implementation. | Validate changes after implementation. |
+
+---
+
+## IAM Identity Model
+
+
+
+---
+
+## IAM Policy Evaluation Order
+
+```
+┌──────────────────────────────── IAM Policy Evaluation — Decision Flow ────────────────────────────────┐
+│                                                                                                       │
+│    Every AWS API call follows this exact evaluation order; explicit deny always wins.                 │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │      Evaluation Steps (in order)             │  │      Details                                │   │
+│   │  1. Explicit Deny in any policy              │  │  Any deny = DENY; no override               │   │
+│   │  2. AWS Organizations SCP                    │  │  Must allow the action at OU level          │   │
+│   │  3. Resource-based policy                    │  │  S3 bucket/KMS key/SQS policy check         │   │
+│   │  4. IAM Permission Boundary                  │  │  Sets maximum allowed permissions           │   │
+│   │  5. Session Policy (AssumeRole)              │  │  Further limits role session                │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    After step 5: if no explicit allow found in identity policy, default = DENY.                       │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │      Common Deny Scenarios                   │  │      Common Allow Scenarios                 │   │
+│   │  SCP blocks action in OU                     │  │  SCP allows + identity policy allows        │   │
+│   │  Explicit Deny in identity policy            │  │  Resource policy grants cross-account       │   │
+│   │  Permission boundary excludes action         │  │  Role trust policy allows AssumeRole        │   │
+│   │  No identity policy allows action            │  │  Session + identity policy both allow       │   │
+│   │  KMS key policy denies user access           │  │  Least privilege: narrowest allow set       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical Infrastructure (the hardware everything above runs on):                                   │
+│    IAM policy engine (global service) · STS · CloudTrail logging all API decisions                    │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Explicit Deny   = Deny statement in any policy; overrides all allows; step 1                       │
+│    SCP             = Service Control Policy; restricts max perms at OU/account level                  │
+│    Resource policy = Policy attached to a resource (S3, KMS); can allow cross-account                 │
+│    Permission boundary = IAM policy capping the maximum perms a principal can have                    │
+│    Session policy  = Passed during AssumeRole; further restricts session permissions                  │
+│    Identity policy = Policy attached to user/group/role via managed or inline                         │
+│    Default deny    = Implicit deny when no explicit allow is found; not logged                        │
+│    Cross-account   = Resource policy can grant access from another AWS account                        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
