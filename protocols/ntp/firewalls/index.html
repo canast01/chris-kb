@@ -3627,25 +3627,25 @@ NTP Firewall Rules reference covering Required Firewall Rules, Linux — firewal
 </code></pre></div>
 <p><code>text
 ┌──────────────────────────────────────────────────────────────┐
-│  NTP CLIENT (server/device)                                  │
-│  ┌──────────────┐   UDP 123 outbound    ┌──────────────────┐ │
-│  │  Client host │ ─────────────────────►│  NTP Server      │ │
-│  │  (chrony/    │                       │  (stratum 2)     │ │
-│  │   w32tm)     │◄──────────────────────│                  │ │
-│  └──────────────┘   UDP 123 response    └──────────────────┘ │
-│                     (src port 123)                           │
-│  Stateful firewall: return traffic handled automatically     │
-│  Stateless ACL: must permit both directions explicitly       │
-│                                                              │
-│  NTP SERVER (serving clients):                               │
-│  ┌──────────────┐   UDP 123 inbound     ┌──────────────────┐ │
-│  │  NTP Server  │◄──────────────────────│  Clients         │ │
-│  │  (chrony     │ ─────────────────────►│                  │ │
-│  │  allow 10/8) │   UDP 123 response    └──────────────────┘ │
-│  └──────────────┘                                           │
-│                                                              │
-│  Rule summary:  permit udp any → ntpserver port 123         │
-│                 permit udp ntpserver port 123 → any          │
+│  NTP CLIENT (server/device)                                                                           │
+│  ┌──────────────┐   UDP 123 outbound    ┌──────────────────┐                                          │
+│  │  Client host │ ─────────────────────►│  NTP Server      │                                          │
+│  │  (chrony/    │                       │  (stratum 2)     │                                          │
+│  │   w32tm)     │◄──────────────────────│                  │                                          │
+│  └──────────────┘   UDP 123 response    └──────────────────┘                                          │
+│                     (src port 123)                                                                    │
+│  Stateful firewall: return traffic handled automatically                                              │
+│  Stateless ACL: must permit both directions explicitly                                                │
+│                                                                                                       │
+│  NTP SERVER (serving clients):                                                                        │
+│  ┌──────────────┐   UDP 123 inbound     ┌──────────────────┐                                          │
+│  │  NTP Server  │◄──────────────────────│  Clients         │                                          │
+│  │  (chrony     │ ─────────────────────►│                  │                                          │
+│  │  allow 10/8) │   UDP 123 response    └──────────────────┘                                          │
+│  └──────────────┘                                                                                     │
+│                                                                                                       │
+│  Rule summary:  permit udp any → ntpserver port 123                                                   │
+│                 permit udp ntpserver port 123 → any                                                   │
 └──────────────────────────────────────────────────────────────┘</code></p>
 <p>NTP uses <strong>UDP port 123</strong> for all client-server and peer communication. If this port is blocked between a host and its NTP server, the clock will not synchronise.</p>
 <h2 id="required-firewall-rules">Required Firewall Rules<a class="headerlink" href="#required-firewall-rules" title="Permanent link">&para;</a></h2>

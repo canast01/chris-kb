@@ -3627,23 +3627,23 @@ DNS Forwarders reference covering Overview, Configuring Global Forwarders, Condi
 </code></pre></div>
 <p><code>text
 ┌──────────────────────────────────────────────────────────────┐
-│  Internal DNS (DC)            External / Upstream            │
-│  ┌──────────────────┐         ┌──────────────────────────┐   │
-│  │ corp.local zone  │         │  Forwarder: 8.8.8.8      │   │
-│  │ (authoritative)  │         │  (for unknown names)     │   │
-│  └────────┬─────────┘         └──────────────────────────┘   │
-│           │                                                  │
-│  Query: web01.example.local  ──► answered from local zone       │
-│  Query: google.com        ──► forwarded to 8.8.8.8 ─► answer │
-│                                                              │
-│  CONDITIONAL FORWARDER:                                      │
-│  ┌────────────────────────────────────────────────────────┐  │
-│  │ partner.example.com ──► forward to 172.16.1.10         │  │
-│  │ (specific domain sent to designated server)            │  │
-│  └────────────────────────────────────────────────────────┘  │
-│                                                              │
-│  Forwarder unreachable? ──► fallback to root hints           │
-│  (if UseRootHint = $true — recommended for resilience)       │
+│  Internal DNS (DC)            External / Upstream                                                     │
+│  ┌──────────────────┐         ┌──────────────────────────┐                                            │
+│  │ corp.local zone  │         │  Forwarder: 8.8.8.8      │                                            │
+│  │ (authoritative)  │         │  (for unknown names)     │                                            │
+│  └────────┬─────────┘         └──────────────────────────┘                                            │
+│           │                                                                                           │
+│  Query: web01.example.local  ──► answered from local zone                                             │
+│  Query: google.com        ──► forwarded to 8.8.8.8 ─► answer                                          │
+│                                                                                                       │
+│  CONDITIONAL FORWARDER:                                                                               │
+│  ┌────────────────────────────────────────────────────────┐                                           │
+│  │ partner.example.com ──► forward to 172.16.1.10         │                                           │
+│  │ (specific domain sent to designated server)            │                                           │
+│  └────────────────────────────────────────────────────────┘                                           │
+│                                                                                                       │
+│  Forwarder unreachable? ──► fallback to root hints                                                    │
+│  (if UseRootHint = $true — recommended for resilience)                                                │
 └──────────────────────────────────────────────────────────────┘</code></p>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>DNS forwarders direct queries for names a server cannot resolve locally to another DNS server. Conditional forwarders send queries for a specific domain to a designated server — essential for split-brain DNS and cross-forest resolution. Root hints are the fallback when no forwarder is configured.</p>
