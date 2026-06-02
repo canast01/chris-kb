@@ -103,6 +103,51 @@ aws ec2 describe-vpn-connections --query 'VpnConnections[*].[VpnConnectionId,Sta
 
 ## VPC Subnet Architecture
 
+```
+┌────────────────────── VPC Subnet Architecture — Public, Private, and Data Tiers ──────────────────────┐
+│                                                                                                       │
+│    Multi-tier VPC: public (internet-facing), private (app), data (DB) subnets per AZ.                 │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │        Public Subnet (internet-facing)       │  │        Private Subnet (app/compute tier)    │   │
+│   │  ALB: routes inbound internet traffic        │  │  EC2, ECS, EKS workloads live here          │   │
+│   │  NAT Gateway: private outbound traffic       │  │  No direct inbound internet path            │   │
+│   │  Bastion host (if needed)                    │  │  Route table: 0.0.0.0/0 via NAT GW          │   │
+│   │  Route table: 0.0.0.0/0 via IGW              │  │  Security groups: allow from ALB SG         │   │
+│   │  IGW: internet gateway attached to VPC       │  │  Connects to data tier via SG rules         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    IGW enables internet; NAT GW enables private outbound without public IPs.                          │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │      Security Groups (instance-level)        │  │      NACLs (subnet-level)                   │   │
+│   │  Stateful: return traffic auto-allowed       │  │  Stateless: must allow both directions      │   │
+│   │  Attached to ENI (per-instance)              │  │  Applied to subnet boundary                 │   │
+│   │  Allow rules only; no explicit deny          │  │  Allow and deny rules both available        │   │
+│   │  Rules evaluated together (OR logic)         │  │  Rules evaluated in number order            │   │
+│   │  Default SG: allows all from same SG         │  │  Default NACL: allows all traffic           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical Infrastructure (the hardware everything above runs on):                                   │
+│    AWS regional network fabric · AZ data centres · physical NICs backing ENIs                         │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    IGW         = Internet Gateway; allows public subnets to reach the internet                        │
+│    NAT Gateway = Managed NAT; private subnet instances can reach internet outbound only               │
+│    Security Group = Stateful firewall at the instance (ENI) level; allow rules only                   │
+│    NACL        = Network ACL; stateless firewall at subnet boundary; allow + deny                     │
+│    Stateful    = Return traffic automatically allowed; no explicit rule needed                        │
+│    Stateless   = Every direction needs an explicit rule; no tracking                                  │
+│    Route table = Per-subnet list of destinations and their targets (IGW, NAT, etc.)                   │
+│    ENI         = Elastic Network Interface; virtual NIC; SG is attached to ENI                        │
+│    Bastion host= EC2 in public subnet used as SSH jump host to private EC2 instances                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 
 
 ---

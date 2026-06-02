@@ -91,3 +91,50 @@ AWS security layers authentication (IAM Identity Center SSO, MFA), encryption (K
 
 ## AWS Security Services Map
 
+```
+┌───────────────────── AWS Security Services — Prevention, Detection, and Response ─────────────────────┐
+│                                                                                                       │
+│    Security services span prevention, detection, and response; many can be centralised.               │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │     Prevention Services                      │  │      Detection Services                     │   │
+│   │  Shield Standard: free L3/L4 DDoS            │  │  GuardDuty: ML threat detection             │   │
+│   │  Shield Advanced: L7 + cost protection       │  │  GuardDuty: CloudTrail+FlowLogs+DNS         │   │
+│   │  WAF: Layer 7 rules (ALB/CF/API GW)          │  │  Inspector: EC2 CVE + container scan        │   │
+│   │  KMS: CMK key management + encryption        │  │  Macie: S3 PII/sensitive data finding       │   │
+│   │  SCP: restrict max perms at OU level         │  │  Config: resource drift + rules eval        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Prevent access and encrypt first; detect threats; respond and investigate.                         │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │     Monitoring and Audit                     │  │      Aggregation and Response               │   │
+│   │  CloudTrail: all API calls logged            │  │  Security Hub: aggregates all findings      │   │
+│   │  CloudTrail Org: captures all accounts       │  │  Security Hub: CIS/PCI compliance score     │   │
+│   │  Config: inventory + config history          │  │  Detective: graph-based investigation       │   │
+│   │  Trusted Advisor: security checks            │  │  Incident Manager: runbooks + alerts        │   │
+│   │  Access Analyzer: finds external access      │  │  Systems Manager: patch + run command       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical Infrastructure (the hardware everything above runs on):                                   │
+│    KMS HSMs · GuardDuty ML infra · CloudFront edge for WAF · CloudTrail S3 storage                    │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Shield Standard = Free DDoS protection at L3/L4 for all AWS customers                              │
+│    Shield Advanced = $3000/mo; L7 DDoS; cost protection; dedicated response team                      │
+│    WAF             = Web Application Firewall; rules on ALB/CloudFront/API Gateway                    │
+│    GuardDuty       = ML-based threat detection; analyses CloudTrail/VPC logs/DNS                      │
+│    Inspector       = Automated CVE scanner for EC2 instances and container images                     │
+│    Macie           = Machine learning to discover PII and sensitive data in S3                        │
+│    Config          = Resource configuration recorder; evaluates compliance rules                      │
+│    Security Hub    = Aggregates GuardDuty/Inspector/Macie/Config findings; scores                     │
+│    Detective       = Investigates security incidents using graph analysis of logs                     │
+│    KMS CMK         = Customer Managed Key; full control; CloudTrail logs all usage                    │
+│    Access Analyzer = Identifies resources accessible from outside the account                         │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+

@@ -115,3 +115,48 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## AWS Organizations Multi-Account Hierarchy
 
+```
+┌──────────────── AWS Organizations — Multi-Account Hierarchy and Consolidated Billing ─────────────────┐
+│                                                                                                       │
+│    Organizations enables account governance, SCP guardrails, and consolidated billing.                │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │     Organization Hierarchy                   │  │      Service Control Policies (SCPs)        │   │
+│   │  Root: single top; SCPs here = all           │  │  Attached to Root, OU, or account           │   │
+│   │  OUs: nested up to 5 levels deep             │  │  Limits maximum allowed permissions         │   │
+│   │  Accounts: leaf nodes; leaf or in OUs        │  │  Does NOT grant permissions itself          │   │
+│   │  Management account: billing root only       │  │  FullAWSAccess SCP: default allow all       │   │
+│   │  Management: exempt from SCPs                │  │  Inheritance: child inherits parent         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    SCPs are guardrails, not grants; IAM policies still needed to allow actions.                       │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │     Consolidated Billing                     │  │      Org-Wide Service Enablement            │   │
+│   │  Single invoice for all member accts         │  │  CloudTrail: org trail, all accounts        │   │
+│   │  Combined usage for volume discounts         │  │  Config: aggregated compliance view         │   │
+│   │  RI and Savings Plans shared across          │  │  GuardDuty: one click all accounts          │   │
+│   │  Payer account = management account          │  │  Security Hub: delegated admin acct         │   │
+│   │  Cost allocation tags: per account           │  │  Backup: org backup plans to members        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical Infrastructure (the hardware everything above runs on):                                   │
+│    AWS Organizations global service · SCP engine · consolidated billing infrastructure                │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Root           = Top of OU tree; SCPs applied here affect every account in org                     │
+│    OU             = Organizational Unit; groups accounts with similar SCP requirements                │
+│    SCP            = Service Control Policy; restricts actions regardless of IAM grants                │
+│    Management account = Account that created org; cannot have SCPs applied to it                      │
+│    Consolidated billing= All accounts billed to management account; combined discounts                │
+│    Delegated admin= Member account granted org-level admin for a specific service                     │
+│    AWS Control Tower= Landing zone service using Organizations; guardrails + Account Factory          │
+│    Payer account  = Synonym for management account in billing context                                 │
+│    Tag policy     = Enforces tag key and value standardisation across accounts                        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+

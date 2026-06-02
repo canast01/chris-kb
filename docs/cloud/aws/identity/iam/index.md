@@ -115,6 +115,52 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## IAM Identity Model
 
+```
+┌────────────── IAM Identity Model — Users, Groups, Roles, Policies, and Identity Center ───────────────┐
+│                                                                                                       │
+│    IAM controls all API access; prefer roles over users; use Identity Center for humans.              │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │      IAM Principals                          │  │      Policy Types                           │   │
+│   │  User: human or programmatic access          │  │  Identity policy: on user/role/group        │   │
+│   │  Group: users collection (no nesting)        │  │  Resource policy: on S3/KMS/SQS             │   │
+│   │  Role: temporary creds via STS               │  │  SCP: OU-level max permission cap           │   │
+│   │  Service role: assumed by AWS service        │  │  Permission boundary: per-principal         │   │
+│   │  Root user: full access; protect+avoid       │  │  Session policy: AssumeRole context         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Effective permissions = intersection of all applicable policy types; deny wins.                    │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │      IAM Identity Center (SSO)               │  │      MFA and Credential Types               │   │
+│   │  Central SSO for human access                │  │  Virtual MFA: Google Authenticator          │   │
+│   │  SAML 2.0 federation to external IdP         │  │  Hardware MFA: YubiKey, hardware key        │   │
+│   │  Permission sets map to IAM roles            │  │  TOTP code required at login                │   │
+│   │  No long-lived keys for humans               │  │  Root MFA: mandatory best practice          │   │
+│   │  AWS SSO replaces creating IAM users         │  │  Access keys: programmatic; rotate          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical Infrastructure (the hardware everything above runs on):                                   │
+│    IAM is a global service (no Region) · STS issues temporary tokens · free service                   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    IAM User        = Long-lived identity; access key + secret or console password                     │
+│    IAM Role        = Assumable identity; temp creds via STS; no long-lived keys                       │
+│    IAM Group       = Collection of users sharing policies; groups cannot be nested                    │
+│    Trust policy    = Defines who can assume the role (Principal in trust document)                    │
+│    Managed policy  = Standalone JSON document; reusable across principals                             │
+│    Inline policy   = Embedded in user/role/group; deleted with the principal                          │
+│    Identity Center = AWS SSO; preferred for human access; replaces IAM users                          │
+│    Permission set  = Bundle of IAM policies assigned to user/group in an account                      │
+│    SAML 2.0        = Federation standard; links IdP (Okta/AD) to AWS                                  │
+│    STS             = Security Token Service; issues temporary credentials for roles                   │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 
 
 ---

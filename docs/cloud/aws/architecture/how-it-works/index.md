@@ -98,6 +98,54 @@ graph TB
 
 ## AWS Global Infrastructure
 
+```
+┌──────────────────── AWS Global Infrastructure — Regions, AZs, and Edge Locations ─────────────────────┐
+│                                                                                                       │
+│    33+ Regions, 105+ AZs, 400+ CloudFront edge locations; foundation of all AWS services.             │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             AWS Regions (33+)                │  │          Availability Zones (105+)          │   │
+│   │  Isolated geographic area (sovereign)        │  │  One or more independent data centres       │   │
+│   │  Contains 2 to 6 Availability Zones          │  │  Separate power, cooling, networking        │   │
+│   │  Data stays in Region by default             │  │  Low-latency fibre links between AZs        │   │
+│   │  Choose by: latency, compliance, $           │  │  Fault-isolated; independent failure        │   │
+│   │  Opt-in Regions disabled by default          │  │  AZ ID is consistent cross-account          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Regions are data-sovereignty boundaries; AZs provide HA within a Region.                           │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Edge Locations (400+)             │  │          Special Infrastructure             │   │
+│   │  CloudFront PoP: cache + WAF/Shield          │  │  Local Zone: sub-ms latency in city         │   │
+│   │  Route 53: anycast DNS resolution            │  │  Wavelength: 5G mobile edge compute         │   │
+│   │  Lambda@Edge: code at CloudFront PoP         │  │  Outposts: AWS rack in customer DC          │   │
+│   │  Global Accelerator: Anycast IPs             │  │  GovCloud US: FedRAMP/ITAR compliant        │   │
+│   │  Shield Standard: free L3/L4 DDoS            │  │  China: separate partition, ICP req         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical Infrastructure (the hardware everything above runs on):                                   │
+│    AWS data centres worldwide · submarine cables · backbone fibre · internet exchange points          │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Region         = Isolated geo area; 2+ AZs; data stays in Region; 33+ globally                     │
+│    AZ             = Availability Zone; 1+ DCs with independent power/cooling/network                  │
+│    Edge Location  = CloudFront PoP; caches content; applies WAF and Shield at edge                    │
+│    Local Zone     = AWS infrastructure extension to major cities for low-latency apps                 │
+│    Wavelength     = AWS compute embedded in telecom 5G network for ultra-low latency                  │
+│    Outposts       = AWS rack on-premises; extends AWS APIs to customer data centre                    │
+│    GovCloud       = US-only Regions meeting FedRAMP High, ITAR, DoD requirements                      │
+│    Global Accelerator = Anycast IPs routing users to nearest healthy AWS endpoint                     │
+│    PoP            = Point of Presence; CloudFront edge node for caching/DDoS defence                  │
+│    AZ ID          = Consistent cross-account AZ identifier (e.g., use1-az1)                           │
+│    Opt-in Region  = Region disabled by default; must be enabled per account                           │
+│    Partition      = Isolated AWS infrastructure group: standard, GovCloud, China                      │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 
 
 ---

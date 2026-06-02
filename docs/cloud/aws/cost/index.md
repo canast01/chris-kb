@@ -101,6 +101,50 @@ AWS cost management combines visibility tools (Cost Explorer, Anomaly Detection)
 
 ## EC2 Pricing Models
 
+```
+┌───────────────────────────── EC2 Pricing Models — Commitment vs Discount ─────────────────────────────┐
+│                                                                                                       │
+│    Longer commitment = larger discount; Spot gives biggest saving with interruption risk.             │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │      Model                                   │  │      Key Facts                              │   │
+│   │  On-Demand                                   │  │  No commitment; full price; per second      │   │
+│   │  Standard Reserved (1 year)                  │  │  Up to 72% off; same config only            │   │
+│   │  Standard Reserved (3 year)                  │  │  Maximum RI discount; locked config         │   │
+│   │  Convertible Reserved (1/3 yr)               │  │  Up to 66% off; can exchange family         │   │
+│   │  Compute Savings Plan                        │  │  Up to 66% off; EC2+Fargate+Lambda          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Reserved and Savings Plans are billed whether you use the capacity or not.                         │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │      Model (continued)                       │  │      Key Facts                              │   │
+│   │  EC2 Instance Savings Plan                   │  │  Up to 72% off; same family + Region        │   │
+│   │  Spot Instances                              │  │  Up to 90% off; 2-min interruption          │   │
+│   │  Dedicated Host                              │  │  Physical server; BYOL; compliance          │   │
+│   │  Dedicated Instance                          │  │  On dedicated HW; per-instance charge       │   │
+│   │  Free Tier (12 months new accounts)          │  │  750 hrs/mo t2/t3.micro; then billed        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical Infrastructure (the hardware everything above runs on):                                   │
+│    EC2 billing infrastructure · AWS Cost Explorer API · CUR exported to S3                            │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    On-Demand     = No commitment; highest per-unit cost; most flexible                                │
+│    Reserved RI   = 1 or 3-year commitment to capacity; up to 72% discount                             │
+│    Savings Plan  = $/hr flexible commitment; applies across instance families                         │
+│    Spot          = Unused EC2 capacity auction; up to 90% off; interruptible                          │
+│    Dedicated Host= Physical server commitment; BYOL compliant; socket/core visibility                 │
+│    Free Tier     = 750 hrs/mo t2.micro or t3.micro for 12 months on new accounts                      │
+│    RI Marketplace= Sell unused Standard RIs to other AWS customers                                    │
+│    Utilisation   = Percentage of purchased Reserved/Savings Plan capacity actually used               │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 
 
 ---

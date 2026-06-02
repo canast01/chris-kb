@@ -68,20 +68,23 @@ def fix_identical(lines, tops, bots):
 
 
 def fix_large_small(lines, tops, bots):
-    """Keep the full-width diagram, remove the smaller one + its fences."""
-    # Find which top is full-width
-    full_idx = None
-    for i, t in enumerate(tops):
-        if len(lines[t]) >= FULL_WIDTH_MIN:
-            full_idx = i
-            break
+    """Keep the full-width diagram, remove the smaller one + its fences.
 
-    if full_idx is None:
-        # Can't determine — leave alone
+    When ALL diagrams are full-width (≥ FULL_WIDTH_MIN) they are independent
+    learning sections — leave the file untouched.
+    """
+    full_idxs  = [i for i, t in enumerate(tops) if len(lines[t].rstrip()) >= FULL_WIDTH_MIN]
+    small_idxs = [i for i, t in enumerate(tops) if len(lines[t].rstrip()) <  FULL_WIDTH_MIN]
+
+    # All full-width → independent sections; do nothing
+    if not small_idxs:
         return lines
 
-    # The one to REMOVE is the other one
-    remove_idx = 1 - full_idx  # only handles exactly 2 diagrams
+    if not full_idxs or len(small_idxs) != 1:
+        # Can't determine safely — leave alone
+        return lines
+
+    remove_idx = small_idxs[0]
     t_rm = tops[remove_idx]
     b_rm = bots[remove_idx] if remove_idx < len(bots) else t_rm
 

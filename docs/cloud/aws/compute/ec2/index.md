@@ -111,6 +111,51 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## EC2 Purchase Options
 
+```
+┌────────────────────── EC2 Purchase Options — Discount and Commitment Comparison ──────────────────────┐
+│                                                                                                       │
+│    Six purchase options balance cost, flexibility, and availability guarantees.                       │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │     On-Demand and Reserved                   │  │      Savings Plans                          │   │
+│   │  On-Demand: no commitment, per-second        │  │  Compute SP: EC2+Fargate+Lambda             │   │
+│   │  Full price; start/stop anytime              │  │  Any instance type/family/Region            │   │
+│   │  Standard Reserved: 1 or 3 yr commit         │  │  Up to 66% discount; most flexible          │   │
+│   │  Same type only; up to 72% discount          │  │  EC2 Instance SP: same family/Region        │   │
+│   │  Convertible Reserved: exchange allowed      │  │  Up to 72% discount; less flexible          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Savings Plans and Reserved Instances both require upfront commitment for discount.                 │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │     Spot Instances                           │  │      Dedicated Options                      │   │
+│   │  Uses spare AWS capacity                     │  │  Dedicated Host: physical server            │   │
+│   │  Up to 90% discount off On-Demand            │  │  BYOL licensing; full host control          │   │
+│   │  2-minute interruption notice from AWS       │  │  Dedicated Instance: on dedicated HW        │   │
+│   │  Not for critical/persistent workloads       │  │  Capacity Reservation: guarantee AZ         │   │
+│   │  Spot Fleets: mix types for target cap       │  │  No discount; ensures capacity avail        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical Infrastructure (the hardware everything above runs on):                                   │
+│    EC2 runs on Nitro hypervisor · Nitro cards offload I/O · physical hosts in AZs                     │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    On-Demand         = Full price; no commitment; billed per second after first minute                │
+│    Standard RI       = 1/3yr commit to specific type; up to 72% off; not exchangeable                 │
+│    Convertible RI    = 1/3yr commit; can exchange instance family/OS/tenancy; 66% off                 │
+│    Compute Savings Plan = $/hr commitment; applies to EC2/Fargate/Lambda; 66% off                     │
+│    EC2 Instance SP   = $/hr for a specific family and Region; up to 72% off                           │
+│    Spot              = Spare capacity; up to 90% off; can be reclaimed with 2-min notice              │
+│    Spot interruption = AWS reclaims Spot with 2-minute warning; use checkpointing                     │
+│    Dedicated Host    = Physical server; BYOL; see sockets/cores; compliance isolation                 │
+│    Capacity Reservation= Reserve EC2 capacity in a specific AZ; no commitment discount                │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 
 
 ---

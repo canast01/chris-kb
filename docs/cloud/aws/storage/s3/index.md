@@ -111,6 +111,50 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## S3 Storage Classes
 
+```
+┌─────────────────────── S3 Storage Classes — Availability, Retrieval, and Cost ────────────────────────┐
+│                                                                                                       │
+│    Seven storage classes balance retrieval latency, availability, and storage cost.                   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │     Frequent Access Classes                  │  │      Infrequent Access Classes              │   │
+│   │  Standard: 99.99% avail; 3+ AZ               │  │  Standard-IA: 99.9%; 3+ AZ; fee/get         │   │
+│   │  Standard: no retrieval fee; default         │  │  Standard-IA: 30-day minimum storage        │   │
+│   │  Intelligent-Tiering: auto-moves tiers       │  │  One Zone-IA: 99.5%; 1 AZ; cheaper          │   │
+│   │  IT: monitoring fee; no retrieval fee        │  │  One Zone-IA: re-creatable data only        │   │
+│   │  IT: moves after 30 days of no access        │  │  Both: per-GB retrieval fee applies         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Standard for frequent access; IA tiers for data accessed less than once a month.                   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │     Glacier Archive Classes                  │  │      Retrieval Comparison                   │   │
+│   │  Glacier Instant: ms retrieval; 90-day       │  │  Standard: ms; no retrieval fee             │   │
+│   │  Glacier Flexible: mins-hrs; 90-day          │  │  Standard-IA: ms; retrieval fee/GB          │   │
+│   │  Glacier Deep Archive: 12-hr; 180-day        │  │  Glacier Instant: ms; per GB fee            │   │
+│   │  Deep Archive: cheapest storage class        │  │  Glacier Flexible: bulk=5-12h, free         │   │
+│   │  All Glacier: 11-nines durability; 3AZ       │  │  Deep Archive: standard=12h retrieval       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical Infrastructure (the hardware everything above runs on):                                   │
+│    S3 stores objects across 3+ AZs in a Region; 11 nines (99.999999999%) durability                   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    S3 Standard     = Default; frequent access; 3+ AZ; 99.99% availability                             │
+│    Intelligent-Tiering = Auto-moves objects between tiers; monitoring fee per 1000                    │
+│    Standard-IA     = Infrequent Access; 3+ AZ; lower storage cost; retrieval fee                      │
+│    One Zone-IA     = Single AZ; 20% cheaper than Standard-IA; risk of AZ loss                         │
+│    Glacier Instant = Archive; millisecond retrieval; 90-day minimum; per-GB fee                       │
+│    Glacier Flexible= Archive; expedited(1-5min)/standard(3-5h)/bulk(5-12h) retrieval                  │
+│    Deep Archive    = Cheapest; 12-hour standard retrieval; 180-day minimum                            │
+│    Minimum duration= Classes have minimum storage billing periods; charged even if deleted            │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 
 
 ---
