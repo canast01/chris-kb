@@ -4278,6 +4278,68 @@ Horizon knowledge base — architecture, operations, CLI references, security, a
 <a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a>│                                                                                                       │
 <a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌───────────────────────────── VMware Horizon VDI — Installation Sequence ──────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  Step 1 · Pre-Requisites                                                                              │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│  Active Directory: OUs for VDI computers  ·  Service accounts for Horizon + AD                        │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│  vCenter with shared storage and adequate compute for VM pools                                        │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│  SQL Server (or PostgreSQL) for Horizon Events DB and App Volumes DB                                  │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│  Load balancer VIP for Connection Server pool  ·  Certs from CA ready                                 │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│  DNS: A-records for UAG FQDNs, Connection Server pool VIP, Horizon FQDN                               │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│                                                                                                       │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│                                        │  install Connection Server (primary)                         │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│                                        ▼                                                              │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│  Step 2 · Connection Server — Primary                                                                 │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│  Install Horizon Connection Server on Windows Server 2019/2022                                        │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│  Select role: Standard Server (first/primary)  ·  Enter FQDN + admin creds                            │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│  Set data recovery password (LDAP backup passphrase)                                                  │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│  Apply Horizon licence key  ·  Connect vCenter and vCenter-linked View Composer                       │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│  Confirm vCenter trust  ·  Connection Server admin console accessible                                 │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│                                                                                                       │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│                                        │  install replica Connection Servers                          │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│                                        ▼                                                              │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│  Step 3 · Connection Server — Replicas                                                                │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│  Install 2+ Replica Connection Server instances for HA                                                │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  During install: select Replica role  ·  Enter primary CS FQDN                                        │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  Replica joins AD LDS (internal LDAP) cluster  ·  Config replicated automatically                     │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  Add all CS instances to load balancer pool  ·  Health checks configured                              │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│  Verify LDAP replication: any change on primary appears on replica within 1 min                       │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│                                                                                                       │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│                                        │  deploy Unified Access Gateway                               │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│                                        ▼                                                              │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  Step 4 · Unified Access Gateway (UAG)                                                                │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  Deploy UAG OVA  ·  Configure admin, internet-facing, and backend NICs                                │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  Set edge service: Horizon (Blast, PCoIP, HTML Access tunnels)                                        │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  Upload Horizon CA certificate to UAG  ·  Configure thumbprint or cert trust                          │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  SAML auth: integrate with Workspace ONE Access for SSO if required                                   │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  Verify external URL resolves to UAG VIP  ·  Test connection from external client                     │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│                                                                                                       │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│                                        │  create desktop pools and farms                              │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│                                        ▼                                                              │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  Step 5 · Desktop Pools &amp; RDSH Farms                                                                  │
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>│  Golden image: create master VM  ·  Install Horizon Agent  ·  Snapshot (parent)                       │
+<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>│  Instant clone pool: define pool  ·  Parent VM + snapshot  ·  Provisioning count                      │
+<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>│  RDSH farm: create farm on RDSH server VMs  ·  Install Horizon Agent (RDSH role)                      │
+<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>│  Application pool: publish apps from RDSH farm to Horizon catalogue                                   │
+<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>│  Entitlements: assign pools/apps to AD users or groups  ·  Verify user access                         │
+<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>│                                                                                                       │
+<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>│                                        │  configure App Volumes and DEM                               │
+<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>│                                        ▼                                                              │
+<a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a>│  Step 6 · App Volumes &amp; Dynamic Environment Manager                                                   │
+<a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+<a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a>│  App Volumes Manager: deploy appliance  ·  Register with vCenter + Horizon                            │
+<a id="__codelineno-1-56" name="__codelineno-1-56" href="#__codelineno-1-56"></a>│  AppStacks: capture application packages (MSI/legacy)  ·  Assign to AD groups                         │
+<a id="__codelineno-1-57" name="__codelineno-1-57" href="#__codelineno-1-57"></a>│  Writable Volumes: per-user volumes for profile and user-installed apps                               │
+<a id="__codelineno-1-58" name="__codelineno-1-58" href="#__codelineno-1-58"></a>│  DEM: deploy DEM agent in golden image  ·  Configure file share for user settings                     │
+<a id="__codelineno-1-59" name="__codelineno-1-59" href="#__codelineno-1-59"></a>│  DEM policies: map printers, drives, environment variables  ·  Loopback GPO                           │
+<a id="__codelineno-1-60" name="__codelineno-1-60" href="#__codelineno-1-60"></a>│                                                                                                       │
+<a id="__codelineno-1-61" name="__codelineno-1-61" href="#__codelineno-1-61"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="architecture/">
