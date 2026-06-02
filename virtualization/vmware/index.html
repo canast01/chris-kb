@@ -4008,53 +4008,76 @@ VMware platform knowledge base covering the full VMware stack — vCenter, ESXi,
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  Step 1 · Physical Infrastructure                                                                     │
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│  Rack and cable servers  ·  Configure ToR switches — VLANs: Mgmt | vMotion | vSAN | TEP | VM         │
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│  IPMI / iDRAC accessible on all hosts  ·  DNS A-records for hosts + VIPs  ·  NTP source confirmed     │
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│                                                                                                       │
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│                                      │  install ESXi ISO on each host                                 │
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│                                      ▼                                                                │
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│  Step 2 · ESXi  (repeat for every host in the cluster)                                                │
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│  Install ESXi on bare metal  ·  vmk0 management IP  ·  Hostname · DNS · NTP · SSH (temporary)        │
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│  Confirm all hosts reachable on management VLAN before deploying vCenter                              │
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│                                                                                                       │
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                                      │  deploy VCSA OVA to first ESXi host                            │
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                                      ▼                                                                │
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│  Step 3 · vCenter Server (VCSA)                                                                       │
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│  Deploy VCSA OVA  ·  Create Datacenter + Cluster  ·  Add all ESXi hosts to inventory                 │
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│  Create vDS + migrate vmk adapters  ·  Enable HA · DRS · vLCM  ·  Configure SSO / LDAP · Roles       │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│  Rack and cable servers  ·  Confirm power + cooling capacity                                          │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│  Configure ToR switches — VLANs: Management | vMotion | vSAN | NSX TEP | VM Uplink                   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│  MTU 9000 on vSAN + TEP switch ports  ·  Port channels / LAGs configured on uplinks                  │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│  IPMI / iDRAC: out-of-band management on every host  ·  Host firmware at minimum required version    │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│  DNS: A-records for all hosts + VIPs (vCenter FQDN, NSX Manager VIP, LCM, Edge nodes)                │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│  NTP: two sources reachable from all hosts  ·  Time sync verified before any software deploy         │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│                                                                                                       │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│                                      │  install ESXi ISO on each host                                 │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                      ▼                                                                │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│  Step 2 · ESXi  (repeat for every host)                                                               │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│  Boot from ISO  ·  Set root password  ·  vmk0: management IP, subnet mask, default gateway           │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│  Set hostname + DNS suffix  ·  Configure NTP  ·  Enable SSH temporarily for initial setup            │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│  Verify HTTPS/443 reachable from jump host before continuing to the next host                        │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│  All hosts must be up and reachable on management VLAN before deploying vCenter                      │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│  Disable SSH on each host after initial config; re-enable only when needed for maintenance           │
 <a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│                                                                                                       │
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│      │  enable vSAN on cluster                                       │  deploy NSX Manager OVA (×3)   │
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│      ▼                                                               ▼                                │
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│  ┌──────────────────────────────────────────────┐  ┌──────────────────────────────────────────────┐   │
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│  │  Step 4 · vSAN                               │  │  Step 5 · NSX                                │   │
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  │  Enable vSAN on cluster via vCenter          │  │  Deploy NSX Manager (3-node HA cluster)      │   │
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  │  Claim cache + capacity disks per host       │  │  Register vCenter as compute manager         │   │
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  │  Tag vmk2 for vSAN traffic                   │  │  Configure host transport nodes (TEP vmk)    │   │
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│  │  Skyline Health: all tests green             │  │  Deploy Edge nodes  ·  T0/T1 gateways        │   │
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  │  Create storage policies (SPBM)              │  │  Create overlay segments  ·  Configure DFW   │   │
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│  └──────────────────────────────────────────────┘  └──────────────────────────────────────────────┘   │
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│      │                                                               │                                │
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│      └──────────────────────────────┬────────────────────────────────┘                               │
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│                                     │  (optional) deploy monitoring layer                             │
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│                                     ▼                                                                 │
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  Step 6 · Aria Suite  (optional — deploy after vCenter is stable)                                     │
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  Deploy Aria Suite Lifecycle Manager (LCM) first — LCM orchestrates all Aria product installs         │
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  Via LCM: Aria Operations (vROps)  ·  Aria Operations for Logs  ·  Aria Automation                    │
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  Register vCenter adapter  ·  Import vSAN + NSX mgmt packs  ·  Configure alert policies               │
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│                                                                                                       │
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│                                     │  (optional) add-on products — any order after Step 3            │
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│                                     ▼                                                                 │
-<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│  Step 7 · Add-on Products                                                                             │
-<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>│  SRM + vSphere Replication (DR)  │  Horizon (VDI desktops)  │  HCX (migration)  │  Tanzu (K8s)       │
-<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>│                                                                                                       │
-<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>│  VCF path:    SDDC Manager automates steps 2–5 via a single guided bringup workflow                   │
-<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>│  VxRail path: Dell HCI appliance — VxRail Manager handles ESXi + vCenter + vSAN automatically        │
-<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>│                                                                                                       │
-<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│                                      │  deploy VCSA OVA to first ESXi host                            │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│                                      ▼                                                                │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│  Step 3 · vCenter Server (VCSA)                                                                       │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  Deploy VCSA OVA — Stage 1: appliance config  ·  Stage 2: SSO domain + vCenter services              │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  SSO domain: vsphere.local  ·  Assign management IP, hostname, DNS, NTP for the VCSA                 │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  Create Datacenter + Cluster  ·  Add all ESXi hosts to cluster inventory                             │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│  Create vDS  ·  Migrate vmk0 (mgmt) to vDS  ·  Add vmk1 (vMotion) + vmk2 (vSAN) per host            │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Enable HA with admission control  ·  DRS: fully automated  ·  Create vLCM baseline image            │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│  Connect Active Directory as identity source  ·  Create admin roles  ·  Assign AD groups             │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  Enable VCSA file-based backup to SFTP — schedule daily  ·  Confirm backup restores successfully     │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│                                                                                                       │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│      │  enable vSAN on cluster                                       │  deploy NSX Manager OVA (×3)   │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│      ▼                                                               ▼                                │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  ┌──────────────────────────────────────────────┐  ┌──────────────────────────────────────────────┐   │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  │  Step 4 · vSAN                               │  │  Step 5 · NSX                                │   │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  │  Cluster → Configure → vSAN → Turn on        │  │  Deploy NSX Manager OVA ×3 (cluster VIP)    │   │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  │  Claim disks: assign cache + capacity role   │  │  Register vCenter as compute manager         │   │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  │  Disk groups: 1 cache SSD + 1–7 cap disks    │  │  Create Transport Zones: Overlay + VLAN TZ   │   │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  │  Tag vmk2 for vSAN; verify unicast agents    │  │  Create Uplink Profile: MTU 9000, LAG mode   │   │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│  │  MTU test: vmkping -I vmk2 -d -s 8972        │  │  Config host transport nodes (TEP vmk)       │   │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  │  Skyline Health: all checks green            │  │  Deploy Edge nodes ×2  ·  Edge Cluster       │   │
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│  │  Create SPBM policies (FTT level, RAID type) │  │  T0 Gateway: BGP or static peer to router    │   │
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>│  │  Enable Performance Service                  │  │  T1 Gateway: connected to T0, NAT + LB       │   │
+<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>│  │  Enable dedup + compression if applicable    │  │  Create overlay segments for workloads        │   │
+<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>│  │  Verify object policy compliance: all green  │  │  DFW: define groups + firewall rule sets     │   │
+<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>│  └──────────────────────────────────────────────┘  └──────────────────────────────────────────────┘   │
+<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>│      │                                                               │                                │
+<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>│      └──────────────────────────────┬────────────────────────────────┘                               │
+<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>│                                     │  (optional) deploy monitoring layer                             │
+<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>│                                     ▼                                                                 │
+<a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a>│  Step 6 · Aria Suite  (optional — deploy after vCenter is stable)                                     │
+<a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+<a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a>│  Deploy Aria Suite Lifecycle Manager (LCM) OVA first — LCM manages all Aria installs + upgrades      │
+<a id="__codelineno-1-56" name="__codelineno-1-56" href="#__codelineno-1-56"></a>│  Via LCM → Aria Operations (vROps): register vCenter adapter, import vSAN + NSX mgmt packs           │
+<a id="__codelineno-1-57" name="__codelineno-1-57" href="#__codelineno-1-57"></a>│  Via LCM → Aria Operations for Logs: deploy log agents on ESXi, configure syslog forwarding          │
+<a id="__codelineno-1-58" name="__codelineno-1-58" href="#__codelineno-1-58"></a>│  Via LCM → Aria Automation: connect vCenter + NSX endpoints, create cloud accounts + blueprints      │
+<a id="__codelineno-1-59" name="__codelineno-1-59" href="#__codelineno-1-59"></a>│  Via LCM → Aria Operations for Networks (optional): NSX flow analysis + physical switch visibility   │
+<a id="__codelineno-1-60" name="__codelineno-1-60" href="#__codelineno-1-60"></a>│  Configure alert policies: capacity &gt; 70%, health score &lt; 80%, resync throughput, cert expiry        │
+<a id="__codelineno-1-61" name="__codelineno-1-61" href="#__codelineno-1-61"></a>│                                                                                                       │
+<a id="__codelineno-1-62" name="__codelineno-1-62" href="#__codelineno-1-62"></a>│                                     │  (optional) add-on products — any order after Step 3            │
+<a id="__codelineno-1-63" name="__codelineno-1-63" href="#__codelineno-1-63"></a>│                                     ▼                                                                 │
+<a id="__codelineno-1-64" name="__codelineno-1-64" href="#__codelineno-1-64"></a>│  Step 7 · Add-on Products                                                                             │
+<a id="__codelineno-1-65" name="__codelineno-1-65" href="#__codelineno-1-65"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+<a id="__codelineno-1-66" name="__codelineno-1-66" href="#__codelineno-1-66"></a>│  SRM: deploy SRM appliance + vSphere Replication at both sites  ·  configure recovery plans          │
+<a id="__codelineno-1-67" name="__codelineno-1-67" href="#__codelineno-1-67"></a>│  Horizon: deploy Connection Servers + Unified Access Gateway  ·  configure desktop + app pools       │
+<a id="__codelineno-1-68" name="__codelineno-1-68" href="#__codelineno-1-68"></a>│  HCX: deploy HCX Manager  ·  activate licence  ·  pair sites  ·  create service mesh                 │
+<a id="__codelineno-1-69" name="__codelineno-1-69" href="#__codelineno-1-69"></a>│  Tanzu: enable Workload Management on cluster  ·  deploy Supervisor  ·  create namespaces + classes  │
+<a id="__codelineno-1-70" name="__codelineno-1-70" href="#__codelineno-1-70"></a>│                                                                                                       │
+<a id="__codelineno-1-71" name="__codelineno-1-71" href="#__codelineno-1-71"></a>│  VCF path:    SDDC Manager automates steps 2–5 via a single guided bringup workflow                   │
+<a id="__codelineno-1-72" name="__codelineno-1-72" href="#__codelineno-1-72"></a>│  VxRail path: Dell HCI appliance — VxRail Manager handles ESXi + vCenter + vSAN automatically        │
+<a id="__codelineno-1-73" name="__codelineno-1-73" href="#__codelineno-1-73"></a>│                                                                                                       │
+<a id="__codelineno-1-74" name="__codelineno-1-74" href="#__codelineno-1-74"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
 <div class="kb-grid kb-grid-3">
 
