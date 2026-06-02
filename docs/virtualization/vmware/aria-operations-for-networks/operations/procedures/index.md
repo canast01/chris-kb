@@ -85,50 +85,6 @@ curl -sk -X POST "${PLATFORM}/api/ni/datasources/vcenter" \
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌───────────────────────────────────── vRNI Operational Procedures ─────────────────────────────────────┐
-│                                                                                                       │
-│  Add data source, certificate rotation, and credential rotation procedures for vRNI.                  │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Add Data Source                │  │             Certificate Rotation            │   │
-│   │          1. Settings > Data Sources          │  │           1. Generate new cert/CSR          │   │
-│   │            2. Select source type             │  │           2. Upload cert via VAMI           │   │
-│   │          3. Enter IP + credentials           │  │            3. Restart UI service            │   │
-│   │         4. Test + Save; verify green         │  │          4. Validate browser trust          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Data source addition and cert rotation are common day-2 operational tasks.                           │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Credential Rotation              │  │            Application Definition           │   │
-│   │         1. Update source account pw          │  │          1. Applications > Add New          │   │
-│   │         2. Edit data source in vRNI          │  │          2. Define VM/IP membership         │   │
-│   │           3. Enter new credential            │  │           3. Name tiers and groups          │   │
-│   │         4. Test + Save; verify green         │  │           4. View app in Flow Map           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  vRNI platform VM; vCenter and NSX as credential targets; CA for cert signing                         │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Data Source         = vRNI connection object; requires valid credentials to collect                  │
-│  Credential Rotation = Updating stored API/service account password in vRNI source config             │
-│  Certificate         = TLS cert for vRNI web UI; uploaded via VAMI SSL settings                       │
-│  CSR                 = Certificate Signing Request; generated for CA-signed cert flow                 │
-│  VAMI                = Virtual Appliance Management Interface; used for cert upload                   │
-│  Application         = Logical grouping of VMs/IPs in vRNI for Flow Map filtering                     │
-│  Tier                = Sub-group within an Application; e.g. Web, App, DB layers                      │
-│  Flow Map            = Visual traffic graph; Applications appear as named nodes                       │
-│  Green Status        = Data source successfully syncing; last seen < 15 minutes ago                   │
-│  Service Account     = Dedicated read-only account used by vRNI for API polling                       │
-│  LDAP Credential     = Directory service account for vRNI group-based auth mapping                    │
-│  Test Connection     = vRNI built-in check that validates API reachability + auth                     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Verify in AON within 5–10 minutes:
 

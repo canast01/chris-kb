@@ -55,37 +55,6 @@ FROM pg_replication_slots;
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌──────────────────────────────────── Database — Replication Check ─────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │        Verify replication lag, sync state, and replica health for all HA database pairs       │   │
-│   │        PostgreSQL: pg_stat_replication + replication slots; MySQL: SHOW REPLICA STATUS        │   │
-│   │            Alert: lag > 30s; replica stopped; WAL slot bloat; disconnected replica            │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Replication Status              │  │              Lag Investigation              │   │
-│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
-│   │           PG: pg_stat_replication            │  │            Check replica I/O load           │   │
-│   │           PG: pg_replication_slots           │  │            WAL slot size growing?           │   │
-│   │          MySQL: SHOW REPLICA STATUS          │  │            Seconds_Behind_Source            │   │
-│   │           MSSQL: AG sync state DMV           │  │           Log send/redo queue size          │   │
-│   │          Oracle: V$DATAGUARD_STATS           │  │             DG apply lag metric             │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Replication slot  = PostgreSQL object that tracks WAL position for a replica; prevents WAL purge   │
-│    Slot bloat        = Inactive replication slot retaining WAL; can fill disk; drop if unused         │
-│    Seconds_Behind_Source= MySQL metric; seconds replica is behind primary; 0 = caught up              │
-│    Log send queue    = SQL Server AG: bytes of log not yet sent to replica; measures send lag         │
-│    Redo queue        = SQL Server AG: bytes received but not yet applied; measures apply lag          │
-│    Synchronous rep   = Primary waits for replica ACK before committing; zero data loss; slower        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ```bash
 # Quick one-liner — show lag and thread status

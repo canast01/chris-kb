@@ -60,43 +60,6 @@ flowchart TD
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌──────────────────────────────────── Dell Data Domain Diagnostics ─────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │            Diagnose DD issues with DDOS CLI commands and support bundle collection            │   │
-│   │          support bundle save: bundles logs, config, and diagnostics for Dell support          │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                   # Step 1 — System overview                                  │   │
-│   │                       system show version      — DDOS version and serial                      │   │
-│   │                      system show hardware     — hardware components state                     │   │
-│   │                                                                                               │   │
-│   │                                # Step 2 — Filesystem and space                                │   │
-│   │                 filesys show space       — total/used/available + dedup ratio                 │   │
-│   │                      filesys show status      — filesystem health status                      │   │
-│   │                                                                                               │   │
-│   │                                     # Step 3 — Disk health                                    │   │
-│   │              disk show state          — show all disk states (OK/Unknown/Absent)              │   │
-│   │              disk show detailed-info  — S.M.A.R.T. data and error counts per disk             │   │
-│   │                                                                                               │   │
-│   │                                  # Step 4 — Alerts and events                                 │   │
-│   │                     alerts show current      — active alerts with severity                    │   │
-│   │                        alerts show history      — recent alert history                        │   │
-│   │                                                                                               │   │
-│   │                               # Step 5 — Collect support bundle                               │   │
-│   │                 support bundle save /data/col1/support/bundle-$(date +%F).tar                 │   │
-│   │                 # SCP bundle off DD to workstation for upload to Dell support                 │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    support bundle = Comprehensive DDOS diagnostic archive; always collect before calling Dell         │
-│    disk show state= Verify no drives in Unknown or Reconstructing state                               │
-│    alerts show    = Check for active hardware or software alerts; review before escalating            │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

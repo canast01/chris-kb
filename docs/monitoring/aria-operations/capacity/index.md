@@ -49,49 +49,6 @@ Aria Operations: Capacity Analytics and Rightsizing reference covering Rightsizi
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌───────────────────────────────────── Aria Operations — Capacity ──────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │          Aria Operations Capacity Management — Forecasting, Right-Sizing, and What-If         │   │
-│   │      Capacity models: Demand model (usage trend) · Allocation model (provisioned CPU/mem)     │   │
-│   │                Forecast horizon: 30 / 60 / 90 days configurable per object type               │   │
-│   │           Right-sizing: oversized VMs flagged; reclaim CPU/mem/disk recommendations           │   │
-│   │                What-if: add N VMs and see projected impact on cluster headroom                │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Run what-if analysis before any major workload migration to validate headroom                      │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │       Capacity Models       │  │         Forecasting         │  │         Right-Sizing        │   │
-│   │         Demand model        │  │        30-day horizon       │  │        Oversized VMs        │   │
-│   │       Allocation model      │  │        60-day horizon       │  │        Undersized VMs       │   │
-│   │        Custom buffers       │  │        90-day horizon       │  │       Reclaim CPU/mem       │   │
-│   │       Policy overrides      │  │       What-if: add VMs      │  │         Reclaim disk        │   │
-│   │      Per-cluster scope      │  │       Trend visualise       │  │         Batch action        │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Capacity analytics on Aria Ops master · data feeds: vCenter/vSAN/storage adapters                    │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Demand model      = Capacity model tracking actual usage trend over time                             │
-│  Allocation model  = Capacity model tracking provisioned (allocated) CPU and memory                   │
-│  Buffer            = Reserved headroom percentage excluded from usable capacity calc                  │
-│  Forecast horizon  = Number of days projected; longer = less accurate but more strategic              │
-│  What-if analysis  = Simulation adding/removing workloads to predict capacity impact                  │
-│  Right-sizing      = Recommendation to adjust vCPU/vMem to match actual usage patterns                │
-│  Reclaim           = Action recovering idle CPU, memory, or disk from oversized VMs                   │
-│  Oversized VM      = VM provisioned significantly above its measured peak utilisation                 │
-│  Undersized VM     = VM hitting its provisioned limits; causes performance degradation                │
-│  Batch action      = Applying right-size recommendations to multiple VMs simultaneously               │
-│  Policy override   = Cluster-specific capacity policy overriding global default settings              │
-│  Headroom          = Remaining available capacity before the configured utilisation limit             │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Capacity Planning Reports
 

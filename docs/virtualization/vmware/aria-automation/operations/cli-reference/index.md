@@ -80,50 +80,6 @@ kubectl get svc -n prelude
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌─────────────────────────────────── Aria Automation — CLI Reference ───────────────────────────────────┐
-│                                                                                                       │
-│  vRA is operated via REST API, vracli, and VAMI; no traditional SSH-heavy CLI.                        │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │            vracli (appliance CLI)            │  │         REST API (primary interface)        │   │
-│   │        vracli status: service health         │  │        POST /csp/gateway/am/api/login       │   │
-│   │        vracli certificate: cert mgmt         │  │       GET /deployment/api/deployments       │   │
-│   │           vracli vidm: vIDM config           │  │        POST /blueprint/api/blueprints       │   │
-│   │         vracli proxy: proxy settings         │  │            GET /catalog/api/items           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Service and log commands run on the vRA appliance via SSH as root.                                   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Service Management              │  │                Log Locations                │   │
-│   │         systemctl status vra-cluster         │  │             /var/log/vmware/vra/            │   │
-│   │         kubectl get pods -n prelude          │  │          journalctl -u vra-cluster          │   │
-│   │        kubectl logs <pod> -n prelude         │  │         /var/log/vmware/vlcm/ (LCM)         │   │
-│   │       vracli status --all (full check)       │  │        kubectl logs <pod> -n prelude        │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  vRA Linux appliance VMs · internal Kubernetes (k3s/Rancher) · Postgres · vIDM VM                     │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  vracli            = Appliance CLI shipped with vRA; manages certs, vIDM config, proxy, NTP           │
-│  prelude namespace  = Kubernetes namespace where vRA microservices run inside the appliance           │
-│  kubectl           = Kubernetes CLI; used on vRA appliance to inspect pods and logs                   │
-│  REST API          = Primary programmatic interface; all UI actions use the same API underneath       │
-│  Bearer token      = JWT returned by /csp/gateway/am/api/login; passed as Authorization header        │
-│  Swagger UI        = /vco/api/docs (Orchestrator) and /automation-ui/api/docs (vRA) for REST docs     │
-│  vracli status     = Reports health of each microservice; green/red output per service                │
-│  systemctl         = Linux service manager; vra-cluster is main managed service                       │
-│  journalctl        = Linux log viewer; use -u vra-cluster for appliance startup logs                  │
-│  VAMI              = Web-based appliance management at :5480; configure network/NTP/proxy             │
-│  ABX CLI           = No dedicated CLI; ABX actions tested via vRA UI Run or REST trigger              │
-│  Orchestrator CLI  = vco-controlcenter at :8283 for Orchestrator admin and log download               │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Deployments
 

@@ -82,50 +82,6 @@ flowchart TD
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌────────────────────────────────────── Confluence — Diagnostics ───────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                 Confluence Diagnostic Runbook                                 │   │
-│   │             Step 1: curl -s http://localhost:8090/status — confirms app is RUNNING            │   │
-│   │                 Step 2: grep -i "ERROR|OOM|Exception" catalina.out | tail -100                │   │
-│   │            Step 3: psql -U confluence -c "SELECT count(*) FROM content;" — DB alive           │   │
-│   │          Step 4: df -h $CONFLUENCE_HOME — check disk; ls $CONFLUENCE_HOME/attachments         │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Run diagnostic steps in order; stop at first anomaly and remediate before continuing               │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │           Application Diagnostics            │  │             Infrastructure Diag             │   │
-│   │            curl /status endpoint             │  │                df -h home dir               │   │
-│   │              grep catalina.out               │  │               mount | grep nfs              │   │
-│   │             Thread dump: kill -3             │  │               pg_stat_activity              │   │
-│   │              Heap: jmap -histo               │  │              netstat / ss ports             │   │
-│   │             Admin > System Info              │  │                top / free -h                │   │
-│   │              support-zip export              │  │           journalctl -u confluence          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  SSH access to Confluence VMs · PostgreSQL admin access · NFS mount visibility                        │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  kill -3 PID    = sends SIGQUIT to JVM; prints thread dump to catalina.out                            │
-│  jmap -histo    = prints histogram of JVM heap object counts by class                                 │
-│  pg_stat_activity = PostgreSQL view of active queries; find long-running DB queries                   │
-│  catalina.out   = Tomcat stdout; primary log for startup errors and exceptions                        │
-│  atlassian-confluence.log = application log; verbose errors and warning messages                      │
-│  support-zip    = Admin > Troubleshooting > Create Support Zip; bundles all logs                      │
-│  top            = real-time process view; check CPU and memory for java process                       │
-│  netstat / ss   = list open ports; confirm 8090 and 8091 are listening                                │
-│  mount          = list mounted filesystems; confirm NFS home is mounted correctly                     │
-│  journalctl     = systemd log reader; useful if Confluence runs as a systemd service                  │
-│  free -h        = show available system memory; check if OS swapping under pressure                   │
-│  df -h          = disk usage; alert if CONFLUENCE_HOME volume >80% full                               │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Useful Log Grep Patterns
 

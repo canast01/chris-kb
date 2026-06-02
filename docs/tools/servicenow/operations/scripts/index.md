@@ -55,50 +55,6 @@ export SN_PASS="your-password"
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌─────────────────────────────────── ServiceNow — Operations Scripts ───────────────────────────────────┐
-│                                                                                                       │
-│  GlideRecord scripts, background scripts, and automation used in day-to-day operations.               │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Background Script Patterns          │  │              GlideRecord Basics             │   │
-│   │        Run in: System > Scripts > BG         │  │       var gr = new GlideRecord(table)       │   │
-│   │        Always scope to specific table        │  │          gr.addQuery(field, value)          │   │
-│   │      Use setLimit() to avoid full scan       │  │         gr.query(); while(gr.next())        │   │
-│   │       Log output: gs.info() / gs.log()       │  │          gr.setValue(); gr.update()         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Script development in sub-prod → tested → promoted via Update Set to production                    │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Common Admin Scripts             │  │          Scheduled Script Execution         │   │
-│   │       Bulk-close old incidents by age        │  │        Trigger: scheduled job record        │   │
-│   │      Reassign tasks from inactive user       │  │       Script Include for shared logic       │   │
-│   │         Sync CMDB CIs from discovery         │  │      Business Rule: on-save automation      │   │
-│   │        Purge expired export job logs         │  │       Flow Designer for no-code flows       │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  ServiceNow SaaS · background script engine · scheduler · sub-prod test instance                      │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Background Script= server-side JS run immediately; use for one-off admin tasks                       │
-│  GlideRecord      = server-side API for DB operations; analogous to ORM query                         │
-│  gs.info()        = writes to system log (syslog); use for script output                              │
-│  setLimit()       = limits GlideRecord result set; prevents accidental full-table scan                │
-│  Script Include   = reusable server-side library called from other scripts                            │
-│  Business Rule    = server-side trigger on DB operation (before/after insert/update)                  │
-│  Flow Designer    = low-code/no-code automation builder using actions and triggers                    │
-│  Scheduled Job    = record in sysauto_script; runs script on cron schedule                            │
-│  Update Set       = change container; promotes script customisations to production                    │
-│  Scope            = application scope; isolates customisations to prevent conflicts                   │
-│  setValue()       = sets field value in memory before gr.update() commits to DB                       │
-│  addQuery()       = adds WHERE clause condition to GlideRecord query                                  │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 **Expected CSV format:**
 

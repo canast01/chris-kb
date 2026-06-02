@@ -86,52 +86,6 @@ show feature | include telnet|http|tftp|ftp|snmp|ssh
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌─────────────────────────────────── Cisco MDS — Security Hardening ────────────────────────────────────┐
-│                                                                                                       │
-│  Baseline hardening checklist: disable unused services, enforce encrypted protocols, RBAC.            │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Service Hardening               │  │              Network Hardening              │   │
-│   │           Disable Telnet: SSH only           │  │        Mgmt ACL: restrict source IPs        │   │
-│   │           Disable HTTP: HTTPS only           │  │        OOB management: dedicated VLAN       │   │
-│   │          Disable SNMPv1/v2: v3 only          │  │            No in-band management            │   │
-│   │        Disable unused features (FCIP)        │  │          NTP auth: MD5 key required         │   │
-│   │         Enable FIPS mode if required         │  │         Syslog: encrypted TLS remote        │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Disable cleartext protocols first; then restrict source access; then enable logging                  │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Fabric Hardening               │  │             Audit and Compliance            │   │
-│   │        Port security: WWN allow-list         │  │         Syslog: auth events to SIEM         │   │
-│   │         FC-SP: ISL authentication on         │  │         TACACS+ accounting: all cmds        │   │
-│   │         DPVM: dynamic port VSAN map          │  │          Config diff: track changes         │   │
-│   │         SAN zoning: single-initiator         │  │        Baseline: show running-config        │   │
-│   │         E_Port isolation on mismatch         │  │         Annual access review policy         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  MDS chassis · OOB management Ethernet · TACACS+/SIEM server · NTP server                             │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  FIPS mode      = Federal Information Processing Standard; disables non-compliant algos               │
-│  OOB management = Out-of-Band; dedicated management network isolated from data path                   │
-│  DPVM           = Dynamic Port VSAN Membership; assigns VSAN based on WWN at login                    │
-│  E_Port isolation= Quarantining a trunk ISL due to fabric-parameter mismatch                          │
-│  Port security  = Locks a switch port to allow only whitelisted WWNs to log in                        │
-│  FC-SP          = Fibre Channel Security Protocol; authenticates ISL neighbors                        │
-│  FCIP           = Fibre Channel over IP; WAN extension feature; disable if unused                     │
-│  Single-initiator= Zoning best practice: each zone has exactly one host HBA                           │
-│  TACACS+ accounting= Records every command executed; stored centrally for audit                       │
-│  Config baseline= Saved known-good running-config snapshot for change detection                       │
-│  NTP auth       = MD5-keyed authentication of NTP packets to prevent time spoofing                    │
-│  SIEM           = Security Information and Event Management; aggregates log analysis                  │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

@@ -1477,14 +1477,6 @@ A 2-node vSAN cluster uses a witness appliance at a third site to form quorum. T
 
 ### Architecture
 
-```
-Site A                    Site B                    Witness Site
-┌──────────┐             ┌──────────┐              ┌──────────────┐
-│ ESXi-01  │◄──vSAN──►  │ ESXi-02  │  ◄──mgmt──► │ Witness VM   │
-│ (data)   │             │ (data)   │              │ (metadata    │
-└──────────┘             └──────────┘              │  only)       │
-                                                    └──────────────┘
-```
 
 - Each data node holds a full copy of all objects (effective RAID-1 across 2 nodes).
 - The witness holds metadata only — no VM data. It provides quorum when one data node fails.

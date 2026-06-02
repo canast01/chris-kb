@@ -116,37 +116,6 @@ graph TD
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌─────────────────────────────── Architecture — High Availability Design ───────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │         HA design: eliminate single points of failure; automate detection and failover        │   │
-│   │        Layers: compute (vSphere HA), storage (multi-path/RAID), network (bonding/LACP)        │   │
-│   │        Rule: every component has a redundant path; failure triggers automatic recovery        │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                 HA Patterns                  │  │              Redundancy Layers              │   │
-│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
-│   │          Active-active: both serve           │  │              Compute: N+1 hosts             │   │
-│   │        Active-passive: auto failover         │  │           Storage: dual paths MPIO          │   │
-│   │           N+1 / N+2 host capacity            │  │           Network: bonding / LACP           │   │
-│   │             Anti-affinity rules              │  │            Power: dual PSU + PDU            │   │
-│   │             Heartbeat monitoring             │  │             Site: AZ or DC pair             │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    SPOF         = Single Point of Failure; any component whose failure stops the service              │
-│    MPIO         = Multi-Path I/O; multiple physical paths to storage; path failure is transparent     │
-│    LACP         = Link Aggregation Control Protocol; bonds multiple NICs into one logical link        │
-│    vSphere HA   = Restarts VMs on surviving hosts within minutes of host failure                      │
-│    Fencing      = Isolate a failed node before failover to prevent split-brain                        │
-│    Quorum       = Cluster consensus mechanism; majority of nodes must agree on cluster state          │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 **vSAN Stretched Cluster requirements:**
 - Intersite latency: ≤5 ms RTT (synchronous replication)

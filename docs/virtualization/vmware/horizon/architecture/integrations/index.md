@@ -72,52 +72,6 @@ nslookup _ldap._tcp.dc._msdcs.<your-domain>
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌──────────────────────────────────── VMware Horizon — Integrations ────────────────────────────────────┐
-│                                                                                                       │
-│  Horizon integrates with AD for identity, vCenter for VM management, Workspace ONE                    │
-│  for unified endpoint management, and third-party printing/profile solutions.                         │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Identity & Auth                │  │                Infrastructure               │   │
-│   │          Active Directory: required          │  │            vCenter: VM lifecycle            │   │
-│   │           RADIUS: MFA integration            │  │          vSAN/NFS: desktop storage          │   │
-│   │              RSA/Duo: OTP token              │  │         NSX: micro-seg desktop VLAN         │   │
-│   │             Smart card: PIV/CAC              │  │          vSphere HA: pool recovery          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  AD is mandatory; all other integrations are optional but recommended for enterprise.                 │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Workspace ONE Integration           │  │              Profile & Printing             │   │
-│   │           W1 Access: SAML gateway            │  │           DEM: profile management           │   │
-│   │            W1 UEM: policy + apps             │  │          FSLogix: profile container         │   │
-│   │          Digital workspace: unified          │  │         ThinPrint: virtual printing         │   │
-│   │          App Volumes: app delivery           │  │           CIFS/NFS: profile share           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  All Horizon components on management network; UAG on DMZ; desktop VMs on                             │
-│  dedicated VLAN; profile shares on NAS over CIFS/NFS.                                                 │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Workspace ONE Access= SAML-based app portal; unified access layer                                    │
-│  Workspace ONE UEM  = Unified Endpoint Management; policy/app delivery                                │
-│  App Volumes        = app delivery via AppStacks; no per-desktop install                              │
-│  DEM               = Dynamic Environment Manager; profile personalisation                             │
-│  FSLogix           = Microsoft profile container; VHDX per user on share                              │
-│  RADIUS            = Multi-Factor Auth backend protocol                                               │
-│  Smart card        = PIV/CAC certificate login; AD smart card auth                                    │
-│  NSX               = micro-segment desktop VMs from each other                                        │
-│  ThinPrint         = virtual printing solution for VDI                                                │
-│  AppStack          = App Volumes package; writable volume or app layer                                │
-│  SAML gateway      = W1 Access presents SAML to Horizon Connection Server                             │
-│  CIFS              = file share protocol; desktop profiles stored here                                │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Key GPO paths (in GPMC):
 - `Computer Configuration > Administrative Templates > VMware Blast` — display protocol settings

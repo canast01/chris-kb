@@ -50,28 +50,6 @@ graph LR
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌────────────────────────────────────────── Ansible — Scripts ──────────────────────────────────────────┐
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │          Utility scripts: inventory validation, bulk vault re-key, job report export          │   │
-│   │   Scripts live in scripts/ at repo root; documented with usage header and example invocation  │   │
-│   │     AWX API scripts: list failed jobs, cancel stuck jobs, export all job templates to JSON    │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Inventory Scripts               │  │               AWX API Scripts               │   │
-│   │            validate_inventory.py             │  │             list_failed_jobs.py             │   │
-│   │             compare_inventory.py             │  │             cancel_stuck_jobs.py            │   │
-│   │            generate_host_vars.py             │  │           export_job_templates.py           │   │
-│   │             prune_stale_hosts.py             │  │            rotate_credentials.py            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │  AWX API     = REST API at /api/v2/; authenticate with bearer token; paginated JSON responses │   │
-│   │        awx CLI     = official AWX CLI; wraps the REST API; install: pip install awxkit        │   │
-│   │      awxkit     = Python library for AWX API; used by the awx CLI; importable in scripts      │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 **What you should see**
 

@@ -70,42 +70,6 @@ graph TD
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌─────────────────────────────────── Dell Data Domain Authentication ───────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │               DD admin auth: LDAP/AD preferred; local admin as break-glass only               │   │
-│   │           SSH key authentication supported for CLI; disable password auth post-setup          │   │
-│   │             DDOS does not support native MFA; place jump server with MFA in front             │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Admin Authentication             │  │                Configuration                │   │
-│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
-│   │           LDAP/AD: primary method            │  │        authgroup add group-name role        │   │
-│   │        Local admin: break-glass only         │  │          auth ldap set server <IP>          │   │
-│   │           SSH key: scripted access           │  │             user ssh-pubkeys add            │   │
-│   │      Roles: admin, limited admin, user       │  │            Audit: log all logins            │   │
-│   │         Session timeout configurable         │  │           No shared admin accounts          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   │      Method      │     Use case     │      Command      │     Standard     │     MFA path     │   │
-│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
-│   │     LDAP/AD      │   Daily admin    │   auth ldap set   │     Required     │   Jump server    │   │
-│   │   Local admin    │   Break-glass    │    User add/mod   │    Vault only    │N/A (break-glass) │   │
-│   │     SSH key      │    Automation    │  ssh-pubkeys add  │     Required     │ Key + passphrase │   │
-│   │  DD Boost user   │    Backup app    │    ddboost user   │     Per app      │    App-level     │   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    authgroup  = LDAP/AD group mapped to DDOS admin role; members inherit role permissions             │
-│    Break-glass= Local admin account in vault; used only when LDAP unavailable                         │
-│    Jump server= Hardened host with MFA in front of DD; all SSH tunnels through jump server            │
-│    Session timeout= Idle CLI session terminates; default 10 min; configurable                         │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### LDAP Role Mapping
 

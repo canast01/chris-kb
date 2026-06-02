@@ -82,50 +82,6 @@ flowchart TD
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌───────────────────────────────────── ServiceNow — Health Checks ──────────────────────────────────────┐
-│                                                                                                       │
-│  Proactive health monitoring for instance performance, integrations, and ITSM data quality.           │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Instance Performance             │  │              Integration Health             │   │
-│   │      Instance Stats: thread pool usage       │  │      MID server: connected + version OK     │   │
-│   │        DB statistics: slow query log         │  │         ECC queue: no stuck messages        │   │
-│   │         Memory: GC frequency + heap          │  │      REST: endpoint connectivity tests      │   │
-│   │          Scheduled jobs: no backlog          │  │       LDAP: last sync timestamp < 24 h      │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Performance and integration checks → escalate to ServiceNow support if thresholds exceeded         │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              ITSM Data Quality               │  │               Security Posture              │   │
-│   │         Open P1/P2 incidents: < SLA          │  │    ACL audit: no over-permissioned roles    │   │
-│   │         SLA compliance rate: > 95 %          │  │     Login failures: review sys_log_auth     │   │
-│   │       Stale changes: review RFC queue        │  │      Admin count: minimum required only     │   │
-│   │        CMDB coverage: CI pop. > 90 %         │  │      MFA enforcement: all users enabled     │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  ServiceNow SaaS nodes · MID server hosts · LDAP/AD · monitoring dashboard                            │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Instance Stats  = stats.do page; shows node thread pool, DB pool, memory usage                       │
-│  Slow query log  = DB performance log; identifies queries > threshold (default 5 s)                   │
-│  GC frequency    = Java garbage collection rate; high frequency indicates memory pressure             │
-│  ECC queue       = External Communication Channel; integration message buffer                         │
-│  MID server      = on-prem agent for discovery/integrations; version must match instance              │
-│  SLA compliance  = % of SLA goals met; breach indicates staffing or workflow issue                    │
-│  RFC queue       = Request for Change queue; stale records indicate process gaps                      │
-│  CMDB coverage   = % of expected CIs populated; low coverage weakens impact analysis                  │
-│  sys_log_auth    = authentication log table; failed logins visible here                               │
-│  ACL audit       = review of access control lists for over-permissioned roles                         │
-│  Heap            = JVM memory space; approaching limit causes slowness before OOM                     │
-│  Sched job backlog= queued jobs not yet executed; indicates thread starvation                         │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Baseline your active session count over 2 weeks to establish normal business-hours peaks. An unexplained 3x spike often indicates a script loop or runaway REST integration.
 

@@ -99,52 +99,6 @@ das.usedefaultisolationaddress = false
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌────────────────────────────────── vCenter Server — Design Standards ──────────────────────────────────┐
-│                                                                                                       │
-│  Design standards define sizing, HA topology, network placement, and upgrade                          │
-│  sequencing to ensure a stable and supportable vCenter deployment.                                    │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Sizing Standards               │  │               HA & Resilience               │   │
-│   │           Tiny: ≤10 hosts, 100 VMs           │  │          vCenter HA: active-passive         │   │
-│   │          Small: ≤100 hosts, 1k VMs           │  │           Witness node: tiebreaker          │   │
-│   │          Medium: ≤400 hosts, 4k VMs          │  │           Backup: file-based daily          │   │
-│   │          Large: ≤1k hosts, 10k VMs           │  │              RPO: 24h; RTO: <1h             │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Size to the largest projected inventory; HA mode requires 3 VCSA nodes.                              │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Network Placement               │  │              Upgrade Sequencing             │   │
-│   │         Mgmt network: dedicated NIC          │  │           Always upgrade VC first           │   │
-│   │            DNS: A + PTR required             │  │           Then upgrade ESXi hosts           │   │
-│   │          NTP: same source as hosts           │  │             Then NSX, then tools            │   │
-│   │          Static IP: no DHCP for VC           │  │           Snapshot VC before patch          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  VCSA runs on an ESXi host with local/shared storage; management network is separate                  │
-│  from VM network; dedicated NIC or VLAN on management vDS.                                            │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  vCenter HA   = active/passive VCSA pair + witness; auto-failover in ~60s                             │
-│  Witness      = third VCSA node providing quorum vote; no data replica                                │
-│  File-based   = VCSA built-in backup; schedule via VAMI; excludes stats DB                            │
-│  VAMI         = vCenter Appliance Management Interface; port 5480                                     │
-│  RPO          = Recovery Point Objective; max data loss window                                        │
-│  RTO          = Recovery Time Objective; max acceptable downtime                                      │
-│  NTP          = time sync; clock skew >5min breaks SSO certificates                                   │
-│  DNS PTR      = reverse lookup record; required for FQDN-based trust                                  │
-│  Upgrade seq  = vCenter first; NSX/tools after; prevents API mismatch                                 │
-│  Snapshot     = pre-upgrade rollback point; remove within 24–72h                                      │
-│  Management vDS= dedicated distributed switch for management traffic                                  │
-│  Static IP    = required; DHCP lease expiry causes cert/DNS mismatch                                  │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Tools must report `running` status in vCenter. A stale or not-running Tools status blocks live migration.
 

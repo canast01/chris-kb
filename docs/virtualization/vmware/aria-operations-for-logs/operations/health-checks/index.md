@@ -61,50 +61,6 @@ curl -sk -u 'admin:<password>' \
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌────────────────────────────── Aria Operations for Logs — Health Checks ───────────────────────────────┐
-│                                                                                                       │
-│  Daily vRLI health check: disk, ingestion rate, cluster nodes, alerts, and source flow.               │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                Cluster Health                │  │               Ingestion Health              │   │
-│   │     All nodes: green in Cluster section      │  │       Events/sec: steady baseline rate      │   │
-│   │        Disk: hot partition <80% used         │  │      Sources: all expected sending logs     │   │
-│   │          CPU/RAM: under 80% average          │  │      vSphere sources: heartbeat recent      │   │
-│   │          NTP: all nodes time-synced          │  │       Drop rate: near zero if healthy       │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Alert and forwarding health confirm the notification pipeline is operational.                        │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                 Alert Health                 │  │              Integration Health             │   │
-│   │     Alerts: all enabled (none disabled)      │  │          Aria Ops connection: green         │   │
-│   │     Test alert: fire and receive notify      │  │      SIEM forward: test event received      │   │
-│   │      Alert history: no unexpected gaps       │  │        SSO: AD login test user works        │   │
-│   │        Webhook: HTTP 200 from target         │  │      Archive: last export job succeeded     │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  vRLI master/worker VMs · disk storage · NTP · ESXi syslog config · SIEM target                       │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Hot partition      = /storage/var/loginsight/ disk; fills with indexed log data                      │
-│  Events/sec         = Real-time ingestion rate; baseline varies by environment size                   │
-│  Drop rate          = Percentage of received syslog messages discarded; should be ~0%                 │
-│  Heartbeat          = vSphere agent sends periodic log; gap indicates source disconnected             │
-│  Cluster nodes      = Master + workers visible in Administration → Cluster section                    │
-│  Alert test         = Manually trigger alert query to confirm notification delivery                   │
-│  Webhook 200        = Successful HTTP response from notification target on alert fire                 │
-│  Archive job        = Scheduled task exporting logs to NFS/S3; check last success time                │
-│  Aria Ops conn      = vRLI integration with Aria Operations; shows in Aria Ops admin page             │
-│  SSO test           = Browser login test confirming LDAP/AD authentication still working              │
-│  SIEM test event    = Send synthetic log and verify it appears in SIEM after forwarding               │
-│  NTP sync           = All vRLI nodes must be NTP-synced; time skew breaks cluster consensus           │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Via UI: **Administration → Agents** — agents with a last check-in older than 15 minutes are potentially offline.
 

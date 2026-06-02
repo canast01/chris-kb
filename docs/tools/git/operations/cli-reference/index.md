@@ -79,50 +79,6 @@ git remote set-url origin <new_url>
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌───────────────────────────────────────── Git — CLI Reference ─────────────────────────────────────────┐
-│                                                                                                       │
-│  Essential Git CLI commands grouped by workflow area with common flags and usage patterns.            │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Basic Operations               │  │                  Branching                  │   │
-│   │          git init / git clone <url>          │  │           git branch [-a|-r|-d|-D]          │   │
-│   │         git add [-p | .] / git reset         │  │            git checkout -b <name>           │   │
-│   │             git commit -m "msg"              │  │            git switch [-c] <name>           │   │
-│   │       git status / git diff [--cached]       │  │         git merge [--no-ff] <branch>        │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    add -p stages hunks interactively; diff --cached shows staged vs last commit                       │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Remote and History              │  │                   Advanced                  │   │
-│   │        git fetch [--prune] / git pull        │  │            git rebase [-i] <base>           │   │
-│   │      git push [-u] [--force-with-lease]      │  │          git stash [push|pop|list]          │   │
-│   │         git log [--oneline --graph]          │  │            git cherry-pick <sha>            │   │
-│   │        git tag -a <v> -m / push <tag>        │  │          git bisect start/good/bad          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Developer workstation · terminal / shell · Git remote server                                         │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  git add -p        = interactive hunk staging; review each change before staging                      │
-│  diff --cached     = shows staged changes relative to last commit                                     │
-│  --force-with-lease= safe force push; fails if remote has unexpected commits                          │
-│  rebase -i         = interactive rebase; squash/edit/reorder commits                                  │
-│  git bisect        = binary search commits to find regression-introducing commit                      │
-│  stash push        = save dirty working tree with optional message                                    │
-│  stash pop         = restore last stash and remove from stash stack                                   │
-│  cherry-pick       = apply diff of specific commit to current branch                                  │
-│  --no-ff           = always create merge commit even for fast-forward                                 │
-│  branch -D         = force-delete branch even if not merged                                           │
-│  git switch -c     = create and switch (modern alternative to checkout -b)                            │
-│  log --graph       = ASCII graph of branch/merge topology in terminal                                 │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

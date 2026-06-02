@@ -77,48 +77,6 @@ flowchart TD
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌────────────────────────────────────── Linux — System Hardening ───────────────────────────────────────┐
-│                                                                                                       │
-│  CIS benchmark-aligned Linux hardening: kernel, network, packages, and auditing.                      │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Kernel Hardening               │  │              Network Hardening              │   │
-│   │           sysctl: disable IPv6 fwd           │  │             firewalld / nftables            │   │
-│   │           kernel.dmesg_restrict=1            │  │           deny all inbound default          │   │
-│   │              fs.suid_dumpable=0              │  │              TCP SYN cookies on             │   │
-│   │             kernel.yama.ptrace=1             │  │              RP filter enabled              │   │
-│   │             randomize_va_space=2             │  │           No ICMP redirect accept           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Package & Service               │  │              Audit & Monitoring             │   │
-│   │            Remove unused packages            │  │            auditd: syscall rules            │   │
-│   │           Disable unused services            │  │            AIDE: integrity checks           │   │
-│   │          Auto-patch: dnf-automatic           │  │             logwatch / journald             │   │
-│   │            RPM GPG verify always             │  │               oscap: CIS scan               │   │
-│   │           noexec on /tmp /var/tmp            │  │            fail2ban: brute force            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  x86-64 servers · hardware firewall · TPM 2.0 · NIC with port security · physical locks               │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  CIS Benchmark= Consensus security configuration standard for OS and apps                             │
-│  ASLR        = Address Space Layout Randomization; randomize_va_space=2                               │
-│  sysctl      = Kernel runtime parameters in /proc/sys; persisted via sysctl.conf                      │
-│  AIDE        = Advanced Intrusion Detection Environment; compares file hashes                         │
-│  auditd      = Records security-relevant syscalls; stores in /var/log/audit/                          │
-│  oscap       = OpenSCAP tool; applies and reports on SCAP/CIS benchmarks                              │
-│  noexec      = Mount option preventing execution of binaries from that filesystem                     │
-│  nftables    = Modern Linux firewall framework replacing iptables                                     │
-│  fail2ban    = Bans IPs after repeated failed auth attempts via iptables/nftables                     │
-│  ptrace      = Kernel syscall for process tracing; restrict to prevent privilege esc                  │
-│  RP filter   = Reverse path filter; drops packets with spoofed source addresses                       │
-│  SYN cookie  = Defense against SYN flood DoS by encoding state in SYN-ACK                             │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Kernel Hardening — sysctl
 

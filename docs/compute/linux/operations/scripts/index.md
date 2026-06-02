@@ -65,49 +65,6 @@ flowchart LR
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌──────────────────────────────────── Linux — Scripts & Automation ─────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                      Scripting Standards                                      │   │
-│   │         Bash: shebang #!/bin/bash; set -euo pipefail; trap ERR for safe error handling        │   │
-│   │          Python: use venv / pipenv; type hints; logging module; argparse for CLI args         │   │
-│   │        Idempotency: scripts must be safely re-runnable without double-applying changes        │   │
-│   │        Storage: version-controlled in Git; tested in staging before production rollout        │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Well-structured scripts reduce human error and enable reliable automation at scale                 │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                Bash Patterns                 │  │               Python Patterns               │   │
-│   │          set -euo pipefail: strict           │  │          subprocess.run: exec cmds          │   │
-│   │            trap cleanup EXIT ERR             │  │           paramiko: SSH automation          │   │
-│   │         getopts / getopt: arg parse          │  │           fabric: remote execution          │   │
-│   │          logger: syslog from script          │  │             click: CLI framework            │   │
-│   │          lockfile: prevent parallel          │  │          jinja2: config templating          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  x86-64 servers · Git repo server · cron/systemd timers · NIC · Power & Cooling                       │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  set -e      = Exit immediately if any command returns non-zero exit code                             │
-│  set -u      = Treat unset variables as errors; prevents typo variable bugs                           │
-│  set -o pipefail= Propagate pipeline failures; catches errors in piped commands                       │
-│  trap        = Register signal/event handler; useful for cleanup on EXIT or ERR                       │
-│  idempotency = Property of an operation that produces same result on repeated runs                    │
-│  getopts     = Bash built-in for short option parsing (-v, -f); POSIX compliant                       │
-│  logger      = Shell command that writes messages to syslog / systemd journal                         │
-│  paramiko    = Python SSH library; programmatic remote command execution                              │
-│  fabric      = Python SSH automation; high-level remote task execution over SSH                       │
-│  click       = Python CLI framework; decorators for commands, options, arguments                      │
-│  jinja2      = Python template engine; used by Ansible for config file rendering                      │
-│  shebang     = First line of script (#!/bin/bash); tells kernel which interpreter to use              │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## patch-status-report.sh
 

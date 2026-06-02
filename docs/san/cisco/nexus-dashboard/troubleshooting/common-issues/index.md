@@ -72,52 +72,6 @@ kubectl get nodes
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌──────────────────────── Cisco Nexus Dashboard — Troubleshooting Common Issues ────────────────────────┐
-│                                                                                                       │
-│  Most frequent ND issues: cluster quorum, app failures, site disconnects, auth errors.                │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Cluster Problems               │  │           Authentication Failures           │   │
-│   │         Node unreachable: NIC/cable          │  │         Login fail: AAA unreachable         │   │
-│   │          Quorum lost: 2+ nodes down          │  │          SAML error: cert mismatch          │   │
-│   │         Disk full: Elasticsearch log         │  │          Token expired: re-auth API         │   │
-│   │         NTP drift: TLS cert failure          │  │             LDAP: bind DN wrong             │   │
-│   │          etcd crash: restore backup          │  │           401 REST: creds rotated           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Check acs health first; auth issues need AAA server reachability confirmed                           │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Site and App Issues              │  │               Resolution Steps              │   │
-│   │          Site offline: REST timeout          │  │           acs health: check nodes           │   │
-│   │           NDFC: pod crash-looping            │  │          acs logs <app>: pod errors         │   │
-│   │            NDI: no telemetry data            │  │            Renew cert or fix NTP            │   │
-│   │          NDO: deploy stuck/timeout           │  │           Restart app: acs restart          │   │
-│   │         SSL cert expired: 503 error          │  │          TAC: quorum unrecoverable          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  ND cluster nodes · management switch · NTP · AAA server · APIC · firewall                            │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  acs health     = ND CLI command; shows cluster node and service health at a glance                   │
-│  Quorum         = Requires 2 of 3 nodes; loss makes cluster read-only                                 │
-│  etcd crash     = State-store failure; requires cluster restore from backup                           │
-│  Disk full      = Elasticsearch retains telemetry; purge old data or expand volume                    │
-│  NTP drift      = Clock skew breaks TLS validation and JWT expiry calculations                        │
-│  Crash-loop     = Pod restarting repeatedly; acs logs shows root cause                                │
-│  503 error      = HTTP Service Unavailable; typically expired TLS cert on ND                          │
-│  401 error      = HTTP Unauthorized; API credentials rotated but not updated in ND                    │
-│  Bind DN        = LDAP distinguished name ND uses to connect; fails if password changed               │
-│  SAML cert mismatch= IdP signing cert changed but not updated in ND SP config                         │
-│  acs restart    = ND CLI command to restart a specific app service gracefully                         │
-│  TAC            = Cisco TAC; escalate cluster quorum loss or etcd corruption                          │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 **Resolution:**
 

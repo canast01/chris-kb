@@ -62,52 +62,6 @@ aws configure list
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌─────────────────────────────── AWS Diagnostics — Investigation Toolset ───────────────────────────────┐
-│                                                                                                       │
-│  Diagnostic tools and investigation procedures for AWS infrastructure and application issues.         │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                 Log Sources                  │  │               Metrics & Traces              │   │
-│   │      CloudTrail: who did what and when       │  │         CloudWatch: CPU/mem/disk/net        │   │
-│   │        VPC Flow Logs: network traffic        │  │         Enhanced Monitoring: RDS OS         │   │
-│   │       CloudWatch Logs: app/system logs       │  │        X-Ray: distributed service map       │   │
-│   │      ELB access logs: per-request data       │  │        Performance Insights: RDS SQL        │   │
-│   │      S3 server access logs: object ops       │  │        CloudWatch Logs Insights query       │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  CloudTrail is the first stop for any "who changed what" investigation.                               │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │           Diagnostic CLI Commands            │  │             Network Diagnostics             │   │
-│   │         aws cloudtrail lookup-events         │  │          VPC Reachability Analyzer          │   │
-│   │          aws logs filter-log-events          │  │           Network Access Analyzer           │   │
-│   │       aws ec2 describe-instance-status       │  │        Flow Logs: find REJECT entries       │   │
-│   │      aws iam simulate-principal-policy       │  │        Traceroute via SSM Session Mgr       │   │
-│   │           aws support create-case            │  │        ELB access logs: Athena query        │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  CloudTrail storage infrastructure · CloudWatch Logs backend · X-Ray sampling plane                   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  CloudTrail lookup= API returning recent management events for an account and region                  │
-│  filter-log-events= CLI command searching CloudWatch Logs for a pattern in a time range               │
-│  Reachability Analyzer= VPC tool that traces the network path between two resources                   │
-│  Network Access Analyzer= Identifies unintended network access paths to resources                     │
-│  simulate-principal-policy= IAM CLI command checking if a principal can perform an action             │
-│  X-Ray service map= Visual graph of microservices and latency between them                            │
-│  ELB access log  = Per-request record with response time, backend, status, client IP                  │
-│  Flow Log REJECT = Indicates SG or NACL denied the packet; starting point for firewall debug          │
-│  SSM Session Manager= Browser/CLI shell to instance without SSH; useful for diagnostics               │
-│  Athena on logs  = SQL queries over ELB or S3 access logs stored in S3                                │
-│  Logs Insights   = CloudWatch Logs query engine; supports time-series and aggregation                 │
-│  aws support     = Open AWS support case via CLI with describe-trusted-advisor-checks                 │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

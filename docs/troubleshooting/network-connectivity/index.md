@@ -86,42 +86,6 @@ flowchart TD
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌──────────────────────────────── Network Connectivity Troubleshooting ─────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │               Network troubleshooting: isolate at which layer connectivity fails              │   │
-│   │             Methodology: ping gateway → trace route → check firewall → MTU → VLAN             │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Diagnostic Steps               │  │                Common Causes                │   │
-│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
-│   │         1. ping 127.0.0.1 (loopback)         │  │         Firewall rule blocking port         │   │
-│   │           2. ping default gateway            │  │              Wrong VLAN tagging             │   │
-│   │         3. traceroute to destination         │  │         MTU mismatch (jumbo frames)         │   │
-│   │           4. Test on specific port           │  │              NIC or vmnic down              │   │
-│   │            5. Check firewall logs            │  │                Route missing                │   │
-│   │            6. Verify VLAN config             │  │               ARP table stale               │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   │      Layer       │      Check       │      Command      │       Fix        │     Platform     │   │
-│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
-│   │    L2 / VLAN     │   VLAN tagging   │   show int trunk  │     Fix VLAN     │ Switch / vSwitch │   │
-│   │    L3 / Route    │   Route table    │  ip route / route │    Add route     │     All OSes     │   │
-│   │     Firewall     │    Port block    │    Test-NetConn   │   Open FW rule   │     All OSes     │   │
-│   │       MTU        │   Jumbo frames   │ ping -s 8972 -M do│    Match MTU     │      Linux       │   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    MTU mismatch  = Jumbo frame configured on one side but not other; packets silently dropped         │
-│    ARP stale     = ARP cache holds wrong MAC; clear with arp -d or wait for TTL expiry                │
-│    Test-NetConn  = PowerShell: tests TCP connectivity to specific host and port                       │
-│    traceroute    = Shows each hop to destination; identifies where path breaks                        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

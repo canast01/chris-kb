@@ -59,37 +59,6 @@ ORDER BY pg_relation_size(indexname::regclass) DESC LIMIT 20;
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌─────────────────────────────────── Database — Capacity Monitoring ────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │        Track database growth, tablespace usage, log space, and forecast expansion needs       │   │
-│   │     Alert at 75% usage; plan expansion at 85%; emergency at 90%; autogrow is a safety net     │   │
-│   │     Monitor: data files, log files, temp/undo space, index fragmentation, row growth rate     │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Current Capacity               │  │              Growth Forecasting             │   │
-│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
-│   │            PG: pg_database_size()            │  │          Trend: 30/60/90 day growth         │   │
-│   │         MSSQL: sys.dm_db_file_space          │  │          Forecast to 90% threshold          │   │
-│   │          MySQL: information_schema           │  │         Alert: % full + growth rate         │   │
-│   │          Log space: VLF / undo seg           │  │          Capacity request lead time         │   │
-│   │          Temp: active session usage          │  │         Archive + partition old data        │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Tablespace   = Named storage container for database objects; monitored per datafile                │
-│    VLF          = Virtual Log File (SQL Server); fragmented log slows backup and recovery             │
-│    Autogrow     = Auto-expand datafile; emergency safety net — not a capacity management plan         │
-│    Undo segment = Oracle/MySQL space for rolled-back transactions; ORA-01555 on shortage              │
-│    pg_database_size= PostgreSQL function returning total size of named database in bytes              │
-│    Partitioning = Split large tables by range/list/hash; move old partitions to cheaper storage       │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Filesystem / Volume Capacity
 

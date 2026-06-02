@@ -94,50 +94,6 @@ Collect all of the following **before** contacting L3 or Atlassian. Providing th
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌───────────────────────────────── Confluence — Escalation Procedures ──────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                  Confluence Escalation Tiers                                  │   │
-│   │              Tier 1: Ops team — restart, reindex, check logs, restore from backup             │   │
-│   │           Tier 2: Senior engineer — JVM tuning, DB query analysis, plugin conflicts           │   │
-│   │       Tier 3: Atlassian Support — open ticket with support-zip; attach thread/heap dump       │   │
-│   │          Tier 4: Atlassian escalation — P1 production down; 24x7 critical support SLA         │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Escalation criteria: T1 > 30 min no resolution; T2 > 2 hr; T3 > 4 hr production down               │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Escalation Criteria              │  │             Artifacts to Gather             │   │
-│   │            Service down > 30 min             │  │              support-zip bundle             │   │
-│   │             Data loss suspected              │  │               Thread dumps x3               │   │
-│   │              Security incident               │  │               Heap dump (OOM)               │   │
-│   │              Repeated OOM crash              │  │              catalina.out tail              │   │
-│   │             Corruption suspected             │  │              DB slow query log              │   │
-│   │            Plugin breaks upgrade             │  │             Version + patch info            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Confluence VMs · PostgreSQL DB · monitoring/alerting · Atlassian Support portal                      │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  support-zip    = Admin > Troubleshooting > Create Support Zip; logs, config, thread dumps            │
-│  Thread dump    = JVM thread snapshot; take 3 dumps 10 seconds apart for deadlock analysis            │
-│  Heap dump      = full JVM memory capture; large file; required for OOM analysis                      │
-│  P1 incident    = production service down; page on-call immediately; escalate within 30 min           │
-│  Atlassian Support = support.atlassian.com; requires valid license; submit with support-zip           │
-│  Atlassian escalation = request via account team; for critical production outages                     │
-│  DB slow query  = pg_stat_statements or log_min_duration_statement=1000ms in postgresql.conf          │
-│  Plugin conflict = disable plugins one-by-one in safe mode to isolate culprit                         │
-│  Safe mode      = Confluence starts without any user-installed plugins for diagnostics                │
-│  Corruption     = DB or index inconsistency; run reindex; compare DB row counts                       │
-│  Data loss      = page versions allow recovery; check DB for deleted content                          │
-│  SLA            = Atlassian support SLA: P1 1hr response, P2 4hr, P3/P4 next business day             │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

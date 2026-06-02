@@ -67,50 +67,6 @@ flowchart TD
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌────────────────────────────────────────── Git — Escalation ───────────────────────────────────────────┐
-│                                                                                                       │
-│  Escalation paths for Git issues: corrupt repos, leaked secrets, and access incidents.                │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Corrupt Repository              │  │                Leaked Secrets               │   │
-│   │      1. git fsck: identify bad objects       │  │         1. Rotate secret immediately        │   │
-│   │        2. Restore from mirror backup         │  │           2. BFG: rewrite history           │   │
-│   │        3. Re-push from backup mirror         │  │        3. Force-push cleaned history        │   │
-│   │       4. Notify teams + update remotes       │  │         4. Audit access logs for use        │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Corruption → restore from backup; secrets → rotate first, clean history second                     │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Access Incident                │  │              Data Loss Recovery             │   │
-│   │           1. Revoke PAT + SSH key            │  │         1. git reflog: find lost SHA        │   │
-│   │           2. Remove user from org            │  │           2. git fsck --lost-found          │   │
-│   │       3. Review audit log for actions        │  │           3. git cherry-pick <sha>          │   │
-│   │         4. Escalate to security team         │  │       4. Restore from mirror if needed      │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  GitHub/GitLab audit log · mirror backup · security team · SIEM alerting                              │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  BFG Repo Cleaner= fast history rewriter; removes files or strings from all commits                   │
-│  Force-push      = required after BFG history rewrite; coordinate with all cloners                    │
-│  git reflog      = local ref movement log; finds commits lost after reset/rebase                      │
-│  fsck --lost-found= writes dangling objects to .git/lost-found/ for inspection                        │
-│  Audit log       = org-level event history on GitHub; available 90 days default                       │
-│  Rotate secret   = change credential before cleaning history; assume it was used                      │
-│  Mirror restore  = push --mirror from backup to new/repaired remote URL                               │
-│  Revoke PAT      = Settings → Developer Settings → Personal access tokens → Revoke                    │
-│  Access incident = unauthorised access to repo; treat as security incident                            │
-│  Cherry-pick     = recover specific commit without full branch merge                                  │
-│  Notify teams    = after force-push all cloners must git fetch + reset --hard                         │
-│  SIEM alert      = audit log webhook to SIEM; enables real-time access alerts                         │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

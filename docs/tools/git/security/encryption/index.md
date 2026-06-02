@@ -73,50 +73,6 @@ Host github.com gitlab.corp.example.com
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌────────────────────────────────────────── Git — Encryption ───────────────────────────────────────────┐
-│                                                                                                       │
-│  Encryption in transit (TLS/SSH), commit signing (GPG/SSH), and encrypted secret storage.             │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Transport Encryption             │  │             Commit Signing (GPG)            │   │
-│   │       SSH: encrypted transport default       │  │     gpg --gen-key (RSA 4096 or Ed25519)     │   │
-│   │         HTTPS: TLS 1.2/1.3 enforced          │  │       git config user.signingkey <id>       │   │
-│   │       Verify cert: no --insecure flag        │  │            git commit -S / tag -s           │   │
-│   │         Proxy: use CONNECT over TLS          │  │      Upload pub key to GitHub settings      │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    All Git traffic encrypted in transit; signing provides author authenticity                         │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             SSH Signing (modern)             │  │                Secret Storage               │   │
-│   │          git config gpg.format ssh           │  │         Never commit secrets to repo        │   │
-│   │          gpg.ssh.allowedSignersFile          │  │       Use git-secret or SOPS for files      │   │
-│   │         Reuses existing SSH key pair         │  │       GitHub Secrets for CI variables       │   │
-│   │        Simpler key management vs GPG         │  │        Vault agent: inject at runtime       │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  GitHub/GitLab TLS termination · GPG keyserver · Vault · CI secret store                              │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  GPG signing  = commit signed with private key; verified by public key on GitHub                      │
-│  SSH signing  = use SSH key for commits; simpler than GPG; supported since git 2.34                   │
-│  signingkey   = config option pointing to GPG key ID or SSH public key file                           │
-│  git commit -S= sign commit with configured key; -s (lowercase) adds Signed-off-by                    │
-│  allowedSigners= file listing trusted SSH public keys for signature verification                      │
-│  git-secret   = GPG-based tool encrypting files stored in repo; decrypts for users                    │
-│  SOPS         = Mozilla secret management tool; encrypts YAML/JSON with KMS/PGP                       │
-│  GitHub Secrets= encrypted vars in repo/org settings; injected into Actions workflows                 │
-│  Vault agent  = HashiCorp Vault sidecar; injects secrets to app at pod startup                        │
-│  TLS 1.3      = current recommended TLS version; enforced by GitHub/GitLab                            │
-│  CONNECT proxy= HTTP CONNECT tunnel; forwards SSH/HTTPS through corporate proxy                       │
-│  No --insecure= never disable TLS cert verification; risk of MITM attack                              │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 **TLS version enforcement** (server-side, nginx/Apache reverse proxy in front of GitLab):
 

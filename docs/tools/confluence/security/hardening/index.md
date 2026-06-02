@@ -62,50 +62,6 @@ Administrator account policy:
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌─────────────────────────────────────── Confluence — Hardening ────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                   Confluence Hardening Guide                                  │   │
-│   │                 Disable anonymous access and guest users in global permissions                │   │
-│   │             Restrict /admin path to corp IP ranges via reverse proxy or WAF rules             │   │
-│   │                Apply all Atlassian security advisories; keep within n-1 version               │   │
-│   │               Remove default admin account; use named accounts with MFA via IdP               │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Hardening reduces the attack surface across network, application, and OS layers                    │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │            Application Hardening             │  │             OS/Network Hardening            │   │
-│   │             Disable anon access              │  │           Firewall: allow 443 only          │   │
-│   │             Remove default admin             │  │              SSH key auth only              │   │
-│   │           Enforce strong passwords           │  │             SELinux/AppArmor on             │   │
-│   │              Audit log enabled               │  │             Minimal OS packages             │   │
-│   │              Plugin allow-list               │  │             Regular OS patching             │   │
-│   │          Headers: CSP/HSTS/X-Frame           │  │             WAF rules for /admin            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Reverse proxy (WAF) · Confluence VMs with SELinux · DB VM · firewall segmentation                    │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Anonymous access = global toggle; disable to require login for all page views                        │
-│  CSP              = Content Security Policy header; prevents XSS by restricting script sources        │
-│  X-Frame-Options  = HTTP header preventing clickjacking via iframe embedding                          │
-│  WAF              = Web Application Firewall; inspects HTTP and blocks malicious requests             │
-│  Plugin allow-list = restrict UPM to approved Marketplace apps; block unsigned plugins                │
-│  Audit log        = Confluence Admin > Audit Log; records admin actions and permission changes        │
-│  SELinux          = mandatory access control on RHEL/CentOS; enforcing mode recommended               │
-│  AppArmor         = MAC on Debian/Ubuntu; profile-based confinement for Tomcat process                │
-│  n-1 version      = stay within one major version behind latest; apply critical patches same-day      │
-│  Default admin    = built-in admin account in fresh installs; rename and rotate password              │
-│  SSH key auth     = disable password SSH; require public key for all admin access                     │
-│  MFA              = enforced at IdP; admins must pass MFA before receiving SAML assertion             │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Security Configuration Hardening
 

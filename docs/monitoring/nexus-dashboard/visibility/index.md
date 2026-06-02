@@ -37,37 +37,6 @@ Nexus Dashboard: Endpoint Tracking, Flow Visibility, and Topology View reference
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌──────────────────────────────────── Nexus Dashboard — Visibility ─────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │        NDI Visibility: comprehensive view of fabric state — topology, endpoints, flows        │   │
-│   │             Topology view: interactive map of spine/leaf/border-leaf interconnects            │   │
-│   │           Endpoint tracking: VM/container moves, dual-home detection, stale entries           │   │
-│   │              Flow analytics: per-flow visibility with source/dest/protocol/bytes              │   │
-│   │              Audit trail: who changed what and when across ACI and NX-OS fabrics              │   │
-│   │               Multi-site: unified view across multiple ACI domains in single UI               │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Visibility data from APIC REST + MDT streaming · stored in NDI DB · rendered in ND UI                │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Topology view = Interactive fabric map showing switch interconnects and health                       │
-│  Endpoint = VM, container, or bare-metal IP/MAC connected to fabric leaf                              │
-│  Dual-home = Endpoint connected to two leaf switches for redundancy                                   │
-│  Stale endpoint = Endpoint record remaining after VM is deleted; detected by NDI                      │
-│  Flow analytics = NDI tracking actual traffic flows through fabric for visibility                     │
-│  Audit trail = NDI logging all APIC configuration changes with user and timestamp                     │
-│  Multi-site view = Single ND UI showing health and state for all registered ACI sites                 │
-│  EPG = Endpoint Group; ACI policy construct; endpoints grouped by EPG                                 │
-│  Contract = ACI inter-EPG connectivity policy; NDI verifies enforcement                               │
-│  BD = Bridge Domain; ACI Layer-2 forwarding domain containing EPGs                                    │
-│  Border leaf = Leaf switch connecting ACI fabric to external L3 networks                              │
-│  Delta analysis = NDI showing configuration changes between two epochs                                │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Common Visibility Issues
 

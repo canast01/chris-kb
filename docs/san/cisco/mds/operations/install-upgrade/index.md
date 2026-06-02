@@ -121,52 +121,6 @@ show zoneset active   # zoning intact
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌──────────────────────────────── Cisco MDS 9000 — Install and Upgrade ─────────────────────────────────┐
-│                                                                                                       │
-│  MDS initial setup: rack, cable, NX-OS boot, initial config; ISSU upgrade procedure.                  │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                Initial Setup                 │  │         NX-OS Initial Configuration         │   │
-│   │           1. Rack and cable switch           │  │          1. Set hostname + IP mgmt          │   │
-│   │          2. Console: 9600 baud 8N1           │  │           2. Configure NTP servers          │   │
-│   │          3. Power on: boot sequence          │  │            3. Set admin password            │   │
-│   │           4. Initial config wizard           │  │           4. Configure TACACS+ ISE          │   │
-│   │          5. Set management IP + SSH          │  │            5. Add to DCNM fabric            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Console access required for initial setup; TACACS+ and NTP before adding to fabric.                  │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │            ISSU Upgrade Procedure            │  │           Post-Upgrade Validation           │   │
-│   │         1. Backup config + zone set          │  │          1. show version: new NX-OS         │   │
-│   │          2. Copy NX-OS to bootflash          │  │          2. show system health: OK          │   │
-│   │          3. show install all impact          │  │         3. show interface: no errors        │   │
-│   │         4. install all nxos <image>          │  │          4. Host I/O: verify access         │   │
-│   │           5. copy run start after            │  │           5. DCNM: verify version           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  MDS director chassis · console cable · management Ethernet · SFP transceivers                        │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  ISSU            = In-Service Software Upgrade; NX-OS upgrade without traffic drop                    │
-│  show install all impact= previews ISSU upgrade impact; shows module reloads                          │
-│  install all     = ISSU trigger; upgrades standby supervisor first then failover                      │
-│  bootflash       = switch internal flash storage; holds NX-OS images                                  │
-│  copy run start  = saves running config to startup; required after every change                       │
-│  Console         = serial connection; 9600 baud 8N1; required for initial setup                       │
-│  Initial config wizard= first-boot setup; sets admin password and IP                                  │
-│  TACACS+         = configure before adding to fabric; ISE must be reachable                           │
-│  NTP             = configure before DCNM discovery; event timestamps must sync                        │
-│  DCNM            = add switch to DCNM after SSH is configured; enables zone mgmt                      │
-│  show version    = verify NX-OS version after ISSU upgrade completes                                  │
-│  show system health= post-upgrade health check; all modules should be online                          │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 5. Configure VSANs on the ISL trunk port to allow only the required VSANs.
 6. Update CMDB and SAN design register with the new switch domain ID and port allocation.

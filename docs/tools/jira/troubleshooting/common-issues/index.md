@@ -89,50 +89,6 @@ jcmd "${JIRA_PID}" GC.heap_info
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌──────────────────────────────────────── Jira — Common Issues ─────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                  Jira Frequent Issue Patterns                                 │   │
-│   │         OOM crash: heap too small; increase -Xmx in setenv.sh; check for plugin leaks         │   │
-│   │          Slow issues: DB slow queries or GC pressure; check pg_stat_activity + GC log         │   │
-│   │         Search broken: Lucene index stale; trigger full reindex from Admin > Indexing         │   │
-│   │         Workflow stuck: check conditions/validators; view workflow in project settings        │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Most Jira issues: memory, performance, search, workflow, or authentication                         │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                    Issue                     │  │                  Resolution                 │   │
-│   │                 OOM / crash                  │  │         Increase -Xmx; check plugins        │   │
-│   │               Slow page loads                │  │              DB index; tune GC              │   │
-│   │                 Search stale                 │  │           Full reindex from admin           │   │
-│   │                Workflow stuck                │  │         Check conditions/validators         │   │
-│   │               SAML login fails               │  │            Check IdP cert expiry            │   │
-│   │               Attachments 404                │  │            Remount NFS JIRA_HOME            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Jira VMs · PostgreSQL · NFS home · IdP (Okta/ADFS) · load balancer                                   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  -Xmx         = JVM max heap; set in JIRA_INSTALL/bin/setenv.sh                                       │
-│  GC pressure  = excessive garbage collection; heap too small; increase -Xmx                           │
-│  Full reindex = Admin > System > Indexing > Full Re-Index; fixes search issues                        │
-│  Condition    = workflow transition prerequisite; check in Project > Workflows                        │
-│  Validator    = field check before transition; fix fields or disable validator                        │
-│  SAML cert    = IdP signing certificate; expires on schedule; update in SAML config                   │
-│  NFS remount  = umount && mount JIRA_HOME; or restart nfs-client.target                               │
-│  DB index     = PostgreSQL indexes on jiraissue; check with EXPLAIN ANALYZE                           │
-│  Plugin leak  = disable suspect plugin to confirm memory leak                                         │
-│  LDAP sync    = Admin > User Management > User Directories > Synchronise                              │
-│  Indexing     = Admin > System > Indexing; check index status and last run time                       │
-│  GC log       = enable -Xlog:gc* in JVM_SUPPORT_RECOMMENDED_ARGS for analysis                         │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Analyse with Eclipse Memory Analyser Tool (MAT) to identify leaking object graph.
 

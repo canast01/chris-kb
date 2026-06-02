@@ -50,30 +50,6 @@ ansible --version
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌───────────────────────────────────── Ansible — Install & Upgrade ─────────────────────────────────────┐
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │ Ansible core: install via pip (recommended) or OS package manager; pin version in requirements│   │
-│   │   AWX: deployed on Kubernetes via the AWX Operator; upgrade by updating operator CRD version  │   │
-│   │ Collections: install via ansible-galaxy; pin in requirements.yml for reproducible environments│   │
-│   │       Execution envs: built with ansible-builder; push to registry; update AWX EE config      │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Install Ansible Core             │  │             Upgrade AWX Operator            │   │
-│   │         python3 -m venv ansible-env          │  │          1. Edit kustomization.yaml         │   │
-│   │        pip install ansible-core==2.17        │  │         2. Set newTag: <new-version>        │   │
-│   │       pip install -r requirements.txt        │  │            3. kubectl apply -k .            │   │
-│   │        ansible-galaxy install -r reqs        │  │            4. Monitor pod rollout           │   │
-│   │          ansible --version (verify)          │  │       5. Verify UI login, run test job      │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │     ansible-builder = tool to create EE container images; reads execution-environment.yml     │   │
-│   │   AWX Operator    = Kubernetes operator managing AWX deployment lifecycle; CRD-driven config  │   │
-│   │requirements.yml= collections/roles dependency file; ansible-galaxy install -r requirements.yml│   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Install Collections and Roles
 

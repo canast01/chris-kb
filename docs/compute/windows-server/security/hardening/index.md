@@ -75,53 +75,6 @@ Import-GPO -BackupGpoName "MSFT Windows Server 2022 - Domain Security" `
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌───────────────────────────────────── Windows Server — Hardening ──────────────────────────────────────┐
-│                                                                                                       │
-│  OS hardening: CIS Benchmark baseline, GPO policies, attack surface reduction, Defender.              │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │            OS & Service Hardening            │  │           Attack Surface Reduction          │   │
-│   │           CIS Benchmark L1/L2 GPOs           │  │        Disable unused roles/features        │   │
-│   │         STIG SCAP scan and remediate         │  │          Close unused TCP/UDP ports         │   │
-│   │       Disable SMBv1, TelnetFTP,WDigest       │  │        ASR rules: Office macro block        │   │
-│   │        Enable Secure Boot + UEFI lock        │  │           AppLocker/WDAC whitelist          │   │
-│   │          Patch: patch Tuesday + OOB          │  │         RDP: restrict to jump server        │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  GPO baseline locks config; ASR rules reduce malware execution paths.                                 │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                Defender & EDR                │  │              Account Hardening              │   │
-│   │         Defender: real-time + cloud          │  │          Rename built-in Admin acct         │   │
-│   │         Defender ATP: EDR telemetry          │  │            Disable Guest account            │   │
-│   │            Tamper protection: on             │  │         Fine-grained password policy        │   │
-│   │        Credential Guard: LSASS in VBS        │  │         Account lockout: 5 attempts         │   │
-│   │          Device Guard: HVCI kernel           │  │          LAPS for all local admins          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Physical server · TPM 2.0 · UEFI Secure Boot · dedicated management NIC (iDRAC/iLO)                  │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  CIS Benchmark  = Center for Internet Security; numbered controls for OS hardening                    │
-│  STIG           = Security Technical Implementation Guide; DoD hardening standard                     │
-│  SCAP           = Security Content Automation Protocol; machine-readable STIG scanning                │
-│  WDigest        = legacy auth provider; caches cleartext passwords in LSASS memory                    │
-│  ASR            = Attack Surface Reduction rules; Defender policies blocking exploit paths            │
-│  AppLocker      = Windows policy engine; whitelist which executables/scripts can run                  │
-│  WDAC           = Windows Defender Application Control; kernel code integrity policy                  │
-│  Credential Guard= VBS-isolated LSASS; prevents pass-the-hash/ticket attacks                          │
-│  Device Guard   = HVCI: Hypervisor-Protected Code Integrity; kernel driver validation                 │
-│  HVCI           = Hypervisor Protected Code Integrity; kernel runs in VBS environment                 │
-│  VBS            = Virtualisation-Based Security; Hyper-V isolates security features                   │
-│  LAPS           = Local Admin Password Solution; rotates local admin passwords in AD                  │
-│  Defender ATP   = Microsoft Defender for Endpoint; EDR platform with SIEM integration                 │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Security Event Log Size
 

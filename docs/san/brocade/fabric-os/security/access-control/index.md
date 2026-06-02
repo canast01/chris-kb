@@ -76,52 +76,6 @@ graph TB
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌───────────────────────────────── Brocade Fabric OS — Access Control ──────────────────────────────────┐
-│                                                                                                       │
-│  Access control: RBAC roles, login accounts, TACACS+/RADIUS, SCC/DCC zoning policies.                 │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             User Accounts & RBAC             │  │         Remote Auth (TACACS+/RADIUS)        │   │
-│   │        Built-in roles: admin/user/ops        │  │         TACACS+ server primary/back         │   │
-│   │         Custom roles via roleConfig          │  │          RADIUS: fallback to local          │   │
-│   │        userconfig: create/modify user        │  │          aaaconfig: set auth order          │   │
-│   │         Account lockout: 3 attempts          │  │          acp filter: ACL on switch          │   │
-│   │       Virtual Fabric RBAC per chassis        │  │          Audit log for all CLI cmds         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Local RBAC and remote TACACS+/RADIUS enforce who can run CLI commands on the switch.                 │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              SCC / DCC Policies              │  │          Management Access Control          │   │
-│   │        SCC: switch connection control        │  │           SSH only: no Telnet/FTP           │   │
-│   │        DCC: device connection control        │  │           HTTPS for Web GUI / API           │   │
-│   │        SCC: limit which switches join        │  │         IP filter: src IP whitelist         │   │
-│   │         DCC: bind ports to WWN list          │  │          Out-of-band mgmt: eth port         │   │
-│   │         secpolicyadd to build policy         │  │          SNMPv3 only: disable v1/v2         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Brocade switch chassis · management Ethernet port · TACACS+ / RADIUS server                          │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  RBAC           = Role-Based Access Control; Fabric OS roles control CLI permissions                  │
-│  roleConfig     = CLI command to create/modify custom RBAC role definitions                           │
-│  userconfig     = Fabric OS CLI to create, modify, or delete local user accounts                      │
-│  TACACS+        = Terminal Access Controller Access Control System; centralized CLI auth              │
-│  aaaconfig      = CLI to set authentication order (local, TACACS+, RADIUS)                            │
-│  SCC            = Switch Connection Control policy; restricts which switches join fabric              │
-│  DCC            = Device Connection Control policy; binds host WWNs to specific ports                 │
-│  secpolicyadd   = CLI to add members to SCC/DCC security policies                                     │
-│  Virtual Fabric = logical switch partitioning on Brocade directors; per-VF RBAC                       │
-│  acp            = Access Control Policy; IP-level ACL for switch management access                    │
-│  SNMPv3         = SNMP version 3; provides authentication and encryption for SNMP                     │
-│  WWN            = World Wide Name; 64-bit FC identifier for HBAs and switch ports                     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 > **Warning:** Always verify your management workstation's source IP is in the permitted range before activating an IPfilter policy. An incorrect policy will lock you out of the switch — recovery requires console access.
 

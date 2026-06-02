@@ -53,43 +53,6 @@ show interface <int> status
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌────────────────────────────────── Networking — Switching & Routing ───────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │       VLANs segment broadcast domains; trunk ports carry multiple VLANs between switches      │   │
-│   │       Routing: OSPF for internal; BGP for DC fabric and WAN; static for management paths      │   │
-│   │          Subnetting: plan IP space per VLAN; document in IPAM; leave growth headroom          │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                  Switching                   │  │                   Routing                   │   │
-│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
-│   │            VLAN: show vlan brief             │  │           OSPF: show ip ospf neigh          │   │
-│   │            Trunk: show int trunk             │  │            BGP: show bgp summary            │   │
-│   │             STP: show span brief             │  │          Route table: show ip route         │   │
-│   │           LACP: show etherchannel            │  │           Ping + traceroute verify          │   │
-│   │           MAC table: show mac addr           │  │          MTU: ping with df-bit set          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   │       VLAN       │       Name       │       Subnet      │     Gateway      │     Purpose      │   │
-│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
-│   │        10        │    Management    │    10.0.10.0/24   │    10.0.10.1     │    OOB / IPMI    │   │
-│   │        20        │     vMotion      │    10.0.20.0/24   │    10.0.20.1     │  VMware vMotion  │   │
-│   │        30        │     Storage      │    10.0.30.0/24   │    10.0.30.1     │   iSCSI / NFS    │   │
-│   │       100        │    Production    │    10.1.0.0/22    │     10.1.0.1     │   VM workloads   │   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Trunk port   = Switch port carrying multiple VLANs with 802.1Q tagging                             │
-│    Native VLAN  = Untagged VLAN on a trunk; must match both sides; mismatch causes loops              │
-│    SVI          = Switched Virtual Interface; L3 gateway for a VLAN on a layer-3 switch               │
-│    ECMP         = Equal-Cost Multi-Path; multiple routes to destination; load balanced                │
-│    IPAM         = IP Address Management; tracks allocations; prevents duplicate IPs                   │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Configure a Trunk Port
 

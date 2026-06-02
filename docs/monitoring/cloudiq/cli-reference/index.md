@@ -49,37 +49,6 @@ curl -X POST https://cloudiq.apis.dell.com/auth/oauth/v2/token   -H "Content-Typ
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌─────────────────────────────────── CloudIQ — CLI and API Reference ───────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │             CloudIQ REST API — Base URL: https://cloudiq.dell.com/cloudiq/rest/v1             │   │
-│   │          Auth: Bearer token from POST /rest/v1/auth/token (client_id + client_secret)         │   │
-│   │               Systems: GET /rest/v1/storage-systems — list all registered arrays              │   │
-│   │           Health: GET /rest/v1/storage-systems/{id}/health — health score and issues          │   │
-│   │            Alerts: GET /rest/v1/alerts?filter=acknowledged eq false — active alerts           │   │
-│   │          Capacity: GET /rest/v1/storage-systems/{id}/capacity — current and forecast          │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  REST API hosted at cloudiq.dell.com · API client runs from any host with internet access             │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  REST API = HTTP-based programmatic interface for CloudIQ data and configuration                      │
-│  Bearer token = Short-lived auth credential; obtained via client_id/client_secret exchange            │
-│  client_id = OAuth application identifier registered in CloudIQ account settings                      │
-│  client_secret = OAuth secret paired with client_id; treat as password                                │
-│  OData filter = Query parameter for filtering (e.g., acknowledged eq false)                           │
-│  storage-systems = API resource representing a registered Dell storage array                          │
-│  Health endpoint = Returns score, issue list, and component-level details for an array                │
-│  Capacity endpoint = Returns raw/usable/used capacity and forecast data                               │
-│  Alerts endpoint = Returns list of alerts with severity, state, and linked recommendations            │
-│  Pagination = API uses limit/offset parameters; max 100 records per request                           │
-│  Rate limiting = API enforces request limits; retry with backoff on 429 responses                     │
-│  JSON response = All API responses in JSON; use jq for command-line parsing                           │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

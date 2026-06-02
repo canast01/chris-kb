@@ -80,50 +80,6 @@ df -h /var/log/loginsight
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌──────────────────────────── Aria Operations for Logs — Backup and Restore ────────────────────────────┐
-│                                                                                                       │
-│  Backup vRLI config, dashboards, and alerts; log data is archived separately to NFS/S3.               │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               What to Back Up                │  │                Backup Methods               │   │
-│   │      Config: alerts, dashboards, packs       │  │         vRLI UI: export config JSON         │   │
-│   │     Field extractions and custom queries     │  │     REST API: GET /api/v1/config/export     │   │
-│   │       Log archive: NFS/S3 (long-term)        │  │         VM snapshot before upgrades         │   │
-│   │          TLS certs and LDAP config           │  │      LCM: logscraper for support bundle     │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Restore imports config JSON then repoints sources; log data is not restorable from config.           │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Restore Sequence               │  │              Restore Validation             │   │
-│   │           1. Deploy fresh vRLI OVA           │  │        Import: all dashboards visible       │   │
-│   │         2. Import config JSON backup         │  │        Alerts: re-enabled and firing        │   │
-│   │         3. Restore LDAP/cert config          │  │          Sources: syslog flowing in         │   │
-│   │       4. Repoint ESXi/vCenter sources        │  │            SSO: AD login working            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  vRLI Linux VM · NFS/S3 archive storage · vCenter · ESXi syslog config · LCM                          │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Config export     = vRLI JSON export containing all settings (alerts/dashboards/sources/packs)       │
-│  Config import     = vRLI UI or API import of JSON; overwrites current configuration                  │
-│  Log archive       = Compressed export of log data to NFS/S3; not part of config backup               │
-│  VM snapshot       = vCenter snapshot before vRLI upgrade; fast rollback if upgrade fails             │
-│  syslog.global.logHost= Must be re-set on ESXi hosts after vRLI IP changes on restore                 │
-│  LDAP restore      = AD directory integration must be reconfigured manually after fresh deploy        │
-│  Content pack      = Must be reinstalled from marketplace if not in config export                     │
-│  RPO               = Config RPO: ≤24h (daily export); log RPO: archive job interval                   │
-│  RTO               = Target: fresh vRLI operational in <2h using config import                        │
-│  Alert re-enable   = Imported alerts may be disabled; manually enable after import                    │
-│  Source repoint    = Update syslog destination on devices after vRLI IP/FQDN changes                  │
-│  LCM logscraper    = Diagnostic tool; not a backup tool; used for support bundles only                │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

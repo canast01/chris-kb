@@ -82,36 +82,6 @@ For each application, document:
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌─────────────────────────────────── Inventory — Environment Mapping ───────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Environment map: production, staging, dev, DR — document dependencies and data flows     │   │
-│   │      Identify: shared services (AD, DNS, NTP) vs environment-specific (app, DB, storage)      │   │
-│   │       DR site must mirror prod sizing; test failover path; document RTO/RPO per service       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │          Production         │  │        Non-Production       │  │        DR / Recovery        │   │
-│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
-│   │        Live workloads       │  │     Staging mirrors prod    │  │      Replication target     │   │
-│   │        Change managed       │  │        Dev = isolated       │  │       Tested annually       │   │
-│   │        Monitored 24/7       │  │     No prod data in dev     │  │       RTO/RPO defined       │   │
-│   │         SLA enforced        │  │      Refresh from prod      │  │      Activation runbook     │   │
-│   │      Access controlled      │  │     Config parity check     │  │        Config in sync       │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Config parity = Staging config matches prod (versions, settings) for realistic testing             │
-│    Data masking  = Replace prod PII with synthetic data before copying to non-prod environments       │
-│    Shared service= Component used across environments (AD, DNS, NTP); single point of attention       │
-│    Blast radius  = Scope of impact if an environment fails; keep prod isolated from dev               │
-│    DR activation = Switch workloads to DR site; requires tested runbook and communications plan       │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Change Impact Assessment
 

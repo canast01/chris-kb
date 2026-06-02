@@ -35,35 +35,6 @@ Capacity reference covering Capacity via Pure1 API, Capacity Alerts, Capacity Pl
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌───────────────────────────────────── Pure1 — Capacity Management ─────────────────────────────────────┐
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Capacity Overview               │  │                 Forecasting                 │   │
-│   │              Total raw capacity              │  │             30/60/90 day horizon            │   │
-│   │               Effective used %               │  │               ML growth model               │   │
-│   │              Data reduction 1:X              │  │             Projected full date             │   │
-│   │              Unique vs reduced               │  │               Seasonal adjust               │   │
-│   │                Snapshot space                │  │              Capacity alert 90d             │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Capacity metrics from Purity OS via phonehome · Pure1 processes and forecasts                        │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Effective capacity = Usable capacity after RAID; starting point for data placement                   │
-│  Data reduction = Combined dedup + compression ratio (e.g., 3.5:1)                                    │
-│  Unique data = Data before dedup; actual bytes written by hosts                                       │
-│  Reduced data = Physical footprint after dedup and compression                                        │
-│  Snapshot space = Physical space used by snapshots; tracked separately                                │
-│  Projected full date = ML forecast of when effective capacity will be exhausted                       │
-│  30/60/90 day = Default forecast horizons; Pure1 alerts at < 90 days                                  │
-│  Seasonal adjust = ML accounting for periodic usage spikes in forecast                                │
-│  Capacity alert = Pure1 alert + TAC case when horizon < 90 days                                       │
-│  Evergreen refresh = Capacity expansion via Pure subscription hardware refresh                        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Capacity Alerts
 

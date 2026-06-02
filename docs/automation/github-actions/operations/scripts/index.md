@@ -63,27 +63,6 @@ echo "All secrets rotated."
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌────────────────────────────────────── GitHub Actions — Scripts ───────────────────────────────────────┐
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │ Utility scripts for GitHub Actions operations: bulk secret update, runner status report, audit│   │
-│   │  Use gh CLI or GitHub REST API (PyGitHub / requests) for scripting GitHub Actions management  │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Management Scripts              │  │                Audit Scripts                │   │
-│   │             bulk_set_secrets.py              │  │             audit_action_pins.py            │   │
-│   │            list_runner_status.py             │  │        check_workflow_permissions.py        │   │
-│   │             cancel_stuck_runs.py             │  │          report_billing_minutes.py          │   │
-│   │              migrate_secrets.py              │  │           find_unpinned_actions.py          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    PyGitHub       = Python GitHub API client; pip install PyGithub; wraps REST and GraphQL    │   │
-│   │         gh api --paginate = fetch all pages of a paginated API response automatically         │   │
-│   │    Action audit   = scan all workflow YAML for uses: lines; verify each is pinned to a SHA    │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Bulk Secret Audit Script
 

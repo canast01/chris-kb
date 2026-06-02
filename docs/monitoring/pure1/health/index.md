@@ -37,37 +37,6 @@ Array Health reference covering FlashBlade Health, Health via Pure1 REST API, Co
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌────────────────────────────────────── Pure1 — Health Monitoring ──────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │        Pure1 Health: continuous monitoring of array hardware, software, and performance       │   │
-│   │      Component inputs: drives, controllers, power supplies, fans, network, Purity events      │   │
-│   │           Health score: OK / Degraded / Unhealthy per array based on component state          │   │
-│   │           Fleet view: all arrays ranked by health; filter by tag, model, or location          │   │
-│   │            Drill-down: click array to see component-level detail and active alerts            │   │
-│   │               30-day history: health trend; identify recurring degraded periods               │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Health from Purity OS via phonehome · Pure cloud ML processes · UI updated every 2 min               │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Health score = OK (all green) / Degraded (non-critical fault) / Unhealthy (critical)                 │
-│  Fleet view = Pure1 UI showing all arrays ordered by health state                                     │
-│  Drill-down = Clicking array opens component view: drives, controllers, shelves                       │
-│  Unhealthy = Critical component failure; TAC case auto-opened if enabled                              │
-│  Degraded = Non-critical fault (e.g., single drive pre-failure); warning state                        │
-│  OK = All components healthy; no active alerts                                                        │
-│  30-day history = Pure1 stores health state over time; shows trend per array                          │
-│  Component = Physical part: drive, DIMM, NIC, controller, power supply, fan                           │
-│  Purity event = Software-level error logged by array OS; contributes to health                        │
-│  Pre-failure = Pure1 ML detecting imminent component failure before it occurs                         │
-│  Phonehome = Array sending hardware sensor data to Pure cloud every 30 seconds                        │
-│  Proactive swap = Pure staging replacement and dispatching before customer impact                     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Connectivity Health — Phone Home
 

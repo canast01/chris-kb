@@ -62,49 +62,6 @@ flowchart TD
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌────────────────────────────────────── Linux — Install & Upgrade ──────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                    OS Installation Methods                                    │   │
-│   │        Manual: boot ISO → Anaconda/text installer → partition → packages → GRUB install       │   │
-│   │       Kickstart (RHEL/Rocky): ks.cfg defines locale, packages, disk, users, post-scripts      │   │
-│   │            Preseed (Debian/Ubuntu): auto-installs from netboot DHCP + TFTP PXE boot           │   │
-│   │        Cloud-init: first-boot configuration for cloud/VM images via user-data metadata        │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Automated installs ensure repeatable, drift-free builds across the fleet                           │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Package Upgrades               │  │              In-Place Upgrades              │   │
-│   │           dnf update: all packages           │  │           RHEL 8→9: leapp upgrade           │   │
-│   │          dnf update kernel: kernel           │  │          Ubuntu: do-release-upgrade         │   │
-│   │           dnf history: audit trail           │  │         leapp preupgrade: pre-check         │   │
-│   │          apt upgrade / dist-upgrade          │  │            ELevate: CentOS 7→8→9            │   │
-│   │          unattended-upgrades: auto           │  │           Snapshot before upgrade           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  x86-64 servers · PXE/TFTP network · SSD/NVMe · iDRAC virtual media · Power & Cooling                 │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Kickstart   = RHEL/Rocky automated install file; defines all install parameters                      │
-│  Preseed     = Debian/Ubuntu automated install; answers installer questions via DHCP                  │
-│  Anaconda    = Red Hat graphical/TUI installer; interprets kickstart files                            │
-│  PXE         = Preboot Execution Environment; boots host over network from TFTP server                │
-│  cloud-init  = First-boot tool for cloud VMs; applies user-data from metadata service                 │
-│  leapp       = Red Hat in-place upgrade tool; RHEL 7→8 and RHEL 8→9 migration                         │
-│  ELevate     = AlmaLinux project tool; migrates CentOS 7/8 to RHEL-compatible distros                 │
-│  do-release-upgrade= Ubuntu official in-place major version upgrade command                           │
-│  unattended-upgrades= Debian/Ubuntu daemon for automatic security patch application                   │
-│  GRUB2       = Boot loader installed to MBR/EFI; presents kernel selection menu                       │
-│  dnf history = Audit log of all dnf transactions; allows undo of package changes                      │
-│  leapp preupgrade= Pre-flight check for RHEL upgrades; reports inhibitors before proceeding           │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## In-Place Upgrade (RHEL 8 → 9)
 

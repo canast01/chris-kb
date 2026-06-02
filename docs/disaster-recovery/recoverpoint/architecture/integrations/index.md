@@ -73,47 +73,6 @@ graph TD
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌───────────────────────────────────── RecoverPoint — Integrations ─────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      RP4VM integrates with vCenter, VMware SRM, PowerMax/VMAX array splitters, and VPLEX      │   │
-│   │    SRM integration: RP4VM SRA enables SRM to orchestrate failover via RecoverPoint journals   │   │
-│   │       Array splitter (PowerMax): writes intercepted at array; no ESXi splitter required       │   │
-│   │     VPLEX integration: RP4VM protects VPLEX virtual volumes across geo-stretched clusters     │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    vCenter ◄──► RP4VM plugin ◄──► RPA cluster ◄──► SRM SRA ◄──► SRM recovery plans                    │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          vSphere / SRM Integration           │  │          Array / VPLEX Integration          │   │
-│   │             RP4VM vCenter plugin             │  │           PowerMax array splitter           │   │
-│   │           SRM SRA for RecoverPoint           │  │             VMAX array splitter             │   │
-│   │           Protection group mapping           │  │            VPLEX virtual volumes            │   │
-│   │           Recovery plan execution            │  │           No ESXi splitter needed           │   │
-│   │           Test failover automation           │  │             XtremIO integration             │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: SRA plugin on SRM server; array splitter on PowerMax; VPLEX needs RP licence             │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    SRA              = Storage Replication Adapter; on SRM server; translates SRM → RP API             │
-│    RP4VM plugin     = vCenter plugin; CG management, failover, image access in UI                     │
-│    Array splitter   = Intercepts writes in array firmware; higher performance than ESXi               │
-│    VPLEX integration= RP journals VPLEX virtual volumes; enables CDP for geo-stretched metro clusters │
-│    Protection group = SRM construct; maps to RP4VM consistency group; defines what SRM protects       │
-│    Recovery plan    = SRM ordered script of steps for failover; calls RP4VM SRA at failover step      │
-│    XtremIO          = All-flash array from Dell; supports RP4VM via array splitter licence            │
-│    PowerMax splitter= Writes forked inside PowerMax engine; RPA receives copy without ESXi module     │
-│    API endpoint     = RP REST API on RPA management IP; used by SRA and automation scripts            │
-│    CG-to-PG mapping = Each SRM protection group maps 1:1 to an RP4VM consistency group                │
-│    Bubble network   = Isolated VLAN created by SRM for test failover; test VMs unreachable from prod  │
-│    VPLEX Metro      = Synchronous stretch cluster; RP adds CDP layer for any-point recovery on top    │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

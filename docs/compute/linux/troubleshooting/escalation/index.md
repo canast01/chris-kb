@@ -68,48 +68,6 @@ flowchart TD
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌──────────────────────────────────── Linux — Escalation Procedures ────────────────────────────────────┐
-│                                                                                                       │
-│  Escalation paths, contacts, and runbooks when Linux issues exceed local resolution.                  │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Escalation Triggers              │  │               Escalation Path               │   │
-│   │            Production outage >15m            │  │               L1: ops on-call               │   │
-│   │           Data loss risk detected            │  │            L2: senior Linux admin           │   │
-│   │            Kernel panic recurring            │  │              L3: vendor support             │   │
-│   │          Security breach suspected           │  │             CISO + legal notify             │   │
-│   │           Hardware fault confirmed           │  │           DC ops + hardware vendor          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │            Information to Gather             │  │               Post-Escalation               │   │
-│   │            hostname / kernel ver             │  │             Create RCA document             │   │
-│   │           dmesg + journalctl dump            │  │                Update runbook               │   │
-│   │             sar / vmstat output              │  │             File bug with vendor            │   │
-│   │              Recent change log               │  │             Apply preventive fix            │   │
-│   │             Network topology map             │  │             Schedule post-mortem            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  x86-64 servers · IPMI/iDRAC OOB · phone bridge · monitoring dashboards                               │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  escalation  = Formal handover of an issue to a higher-tier resolver or vendor                        │
-│  RCA         = Root Cause Analysis; document explaining what failed and why                           │
-│  post-mortem = Blameless review meeting after incident; produces action items                         │
-│  runbook     = Step-by-step procedure document for known operational tasks                            │
-│  P1/P2       = Priority classification; P1 = critical production impact                               │
-│  on-call     = Rotation of engineers responsible for responding outside hours                         │
-│  CISO        = Chief Information Security Officer; leads security escalations                         │
-│  OOB         = Out-of-Band management; IPMI/iDRAC for access when OS is down                          │
-│  change log  = Record of recent system changes; critical for incident correlation                     │
-│  SLA         = Service Level Agreement; defines uptime and response targets                           │
-│  MTTR        = Mean Time To Repair; average time to restore service after failure                     │
-│  war room    = Bridge call with all stakeholders during major incident                                │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Checking Subscription Status
 

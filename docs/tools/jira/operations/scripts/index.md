@@ -44,36 +44,6 @@ export PGPASSWORD="${JIRA_DB_PASSWORD}"
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌────────────────────────────────────── Jira — Operations Scripts ──────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                               Jira Operational Script Reference                               │   │
-│   │             backup.sh: pg_dump jira → tar JIRA_HOME/data/attachments → push to S3             │   │
-│   │         reindex.sh: POST /rest/api/2/reindex → poll /rest/api/2/reindex until COMPLETE        │   │
-│   │                health-check.sh: curl /status, heap via JMX, DB conn, disk check               │   │
-│   │            user-deactivate.sh: REST PUT /rest/api/2/user?username=X → active: false           │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Jira app VMs · PostgreSQL DB · NFS for JIRA_HOME · S3 backup target                                  │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  backup.sh      = nightly cron: pg_dump + tar attachments + s3 cp off-site                            │
-│  reindex.sh     = triggers Jira REST reindex; polls until COMPLETE state                              │
-│  health-check.sh = checks Jira status endpoint, JVM heap, DB, disk, and NFS                           │
-│  user-deactivate = REST API to deactivate user; used in offboarding automation                        │
-│  pg_dump        = PostgreSQL utility; custom format dump for parallel restore                         │
-│  s3 cp          = AWS CLI upload to S3; add --sse for server-side encryption                          │
-│  JMX            = Java Management Extensions; Jira exposes heap via JMX beans                         │
-│  REST auth      = scripts use PAT in Authorization: Bearer header                                     │
-│  cron           = schedule backup.sh and health-check.sh via crontab                                  │
-│  /rest/api/2    = Jira REST API v2; still widely used; v3 for cloud                                   │
-│  Reindex poll   = GET /rest/api/2/reindex → check currentProgress and type                            │
-│  Attachment tar = tar -czf; compress JIRA_HOME/data/attachments/                                      │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Inactive User Report (SQL)
 

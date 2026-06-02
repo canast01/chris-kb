@@ -45,66 +45,6 @@ Use it when you need quick notes, runbooks, checks, standards, commands, or trou
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌───────────────────────────────── Start Here — How to Navigate the KB ─────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      This KB is built for practical infrastructure work: quick notes, runbooks, standards     │   │
-│   │           Navigate: top platform → vendor/product → specific procedure or reference           │   │
-│   │       Add field notes as issues come up; keep it current; link from tickets and runbooks      │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                  How to Use                  │  │                Main Workflows               │   │
-│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
-│   │            Start with major area             │  │         Incident: go straight to TS         │   │
-│   │           Open vendor or platform            │  │           Change: use runbook page          │   │
-│   │           Use cards for deep dives           │  │         New system: check arch page         │   │
-│   │          Add notes after field work          │  │         Audit: use inventory section        │   │
-│   │           Site Map for full index            │  │          Learning: browse by topic          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Site Map     = Full index of all KB pages; use to find content when browsing fails                 │
-│    Card grid    = Landing page layout; click a card to go to a specific sub-topic                     │
-│    kb-summary   = Concise overview block at the top of every landing page                             │
-│    Runbook      = Step-by-step procedure for a common operational task                                │
-│    Field notes  = Observations from real incidents; add to relevant page for future reference         │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-┌───────────────────────────────── Start Here — How to Navigate the KB ─────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      This KB is built for practical infrastructure work: quick notes, runbooks, standards     │   │
-│   │           Navigate: top platform → vendor/product → specific procedure or reference           │   │
-│   │       Add field notes as issues come up; keep it current; link from tickets and runbooks      │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                  How to Use                  │  │                Main Workflows               │   │
-│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
-│   │            Start with major area             │  │         Incident: go straight to TS         │   │
-│   │           Open vendor or platform            │  │           Change: use runbook page          │   │
-│   │           Use cards for deep dives           │  │         New system: check arch page         │   │
-│   │          Add notes after field work          │  │         Audit: use inventory section        │   │
-│   │           Site Map for full index            │  │          Learning: browse by topic          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Site Map     = Full index of all KB pages; use to find content when browsing fails                 │
-│    Card grid    = Landing page layout; click a card to go to a specific sub-topic                     │
-│    kb-summary   = Concise overview block at the top of every landing page                             │
-│    Runbook      = Step-by-step procedure for a common operational task                                │
-│    Field notes  = Observations from real incidents; add to relevant page for future reference         │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 <div class="kb-grid kb-grid-4">
 
 <a class="kb-card kb-card--accent" href="../virtualization/operations/health-checks/">

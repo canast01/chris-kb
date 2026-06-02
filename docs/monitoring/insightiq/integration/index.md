@@ -48,35 +48,6 @@ Configuration: InsightIQ web UI > Administration > Clusters > Add Cluster
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌──────────────────────────────────── InsightIQ — Integration Guide ────────────────────────────────────┐
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Email Notifications              │  │                External Tools               │   │
-│   │              SMTP configuration              │  │              REST API (limited)             │   │
-│   │               Threshold alerts               │  │               CSV for BI tools              │   │
-│   │               Report delivery                │  │              Grafana REST proxy             │   │
-│   │                Recipient list                │  │              Scheduled reports              │   │
-│   │              Alert cadence cfg               │  │              PDF to management              │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  InsightIQ VM → SMTP relay → email · PDF/CSV download from UI · REST on TCP 443                       │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  SMTP = Email relay configured in InsightIQ for threshold alerts and report delivery                  │
-│  Threshold alert = Email when a metric (latency, utilisation) exceeds defined limit                   │
-│  Report delivery = Scheduled InsightIQ report emailed as PDF to recipient list                        │
-│  REST API = InsightIQ exposes limited REST for programmatic data retrieval                            │
-│  CSV for BI = Metric data exported as CSV for Power BI, Tableau, or Excel                             │
-│  Grafana proxy = REST proxy exposing InsightIQ metrics as Grafana data source                         │
-│  Scheduled report = Weekly/monthly report generated and emailed automatically                         │
-│  PDF to management = Formatted performance report for storage operations review                       │
-│  Recipient list = Email addresses configured in InsightIQ notification settings                       │
-│  Alert cadence = How often InsightIQ re-sends alert if threshold remains exceeded                     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Alert rules are configured per metric threshold under: **Administration > Alert Settings > Add Alert**
 

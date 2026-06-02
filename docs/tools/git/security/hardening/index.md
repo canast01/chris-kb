@@ -71,50 +71,6 @@ pre-commit install --hook-type pre-push
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌─────────────────────────────────────────── Git — Hardening ───────────────────────────────────────────┐
-│                                                                                                       │
-│  Hardening Git: branch protection, dependency scanning, server-side hooks, and audit logging.         │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │           Branch Protection Rules            │  │             Dependency Scanning             │   │
-│   │         Require pull request reviews         │  │        Dependabot: auto security PRs        │   │
-│   │        Require status checks to pass         │  │        npm audit / pip-audit / trivy        │   │
-│   │            Require linear history            │  │       SBOM: software bill of materials      │   │
-│   │         Restrict force push + delete         │  │       Renovate: automated dep upgrades      │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Branch rules prevent history rewrite; scanning catches vulnerable dependencies                     │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Server-Side Hooks               │  │                Audit Logging                │   │
-│   │       pre-receive: block secrets push        │  │       Org audit log: 90-day retention       │   │
-│   │        update: enforce naming policy         │  │          Stream to SIEM via webhook         │   │
-│   │         post-receive: notify + scan          │  │       Alert on admin permission grant       │   │
-│   │        GHE: custom pre-receive hooks         │  │      Alert on outside collaborator add      │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  GitHub/GitLab server · SIEM · Dependabot · secret scanning engine · hooks                            │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Branch protection= GitHub/GitLab rule set; enforces review, CI, and push restrictions                │
-│  Linear history   = requires rebase/squash merge; no merge commits on protected branch                │
-│  Dependabot       = GitHub bot; opens PRs for vulnerable dependency updates                           │
-│  SBOM             = software bill of materials; lists all dependencies and versions                   │
-│  Renovate         = open-source dependency update bot; alternative to Dependabot                      │
-│  pre-receive hook = runs on server before refs update; blocks push on failure                         │
-│  update hook      = per-ref variant of pre-receive; granular branch-level control                     │
-│  post-receive     = runs after successful push; async scan or notification                            │
-│  GHE hooks        = GitHub Enterprise custom pre-receive hooks via admin console                      │
-│  Audit log webhook= sends org events (push/access change) to SIEM in real time                        │
-│  npm audit        = checks package.json deps against known vulnerability database                     │
-│  trivy            = container + filesystem vulnerability scanner; works on Git repos                  │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

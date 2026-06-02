@@ -81,50 +81,6 @@ curl -u user:token -X PUT \
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌───────────────────────────────── Confluence — Operations Procedures ──────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                            Confluence Standard Operating Procedures                           │   │
-│   │         Planned restart: drain LB → stop Confluence → maintenance → start → add to LB         │   │
-│   │             Space archival: export as XML → disable space → move to archive space             │   │
-│   │         User offboard: deactivate LDAP account → remove group memberships → audit log         │   │
-│   │           Plugin update: test in staging → UPM update in prod → verify functionality          │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    SOPs reduce error rates and ensure consistent execution of routine operations                      │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Maintenance SOPs               │  │                 Content SOPs                │   │
-│   │             Planned restart SOP              │  │              Space archival SOP             │   │
-│   │              Plugin update SOP               │  │              User offboard SOP              │   │
-│   │              DB maintenance SOP              │  │            Content migration SOP            │   │
-│   │                 Upgrade SOP                  │  │             Audit log review SOP            │   │
-│   │              Backup verify SOP               │  │            Permission review SOP            │   │
-│   │                 Reindex SOP                  │  │              GDPR deletion SOP              │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Confluence VMs · LB for draining · PostgreSQL · NFS · UPM for plugins                                │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  LB drain       = remove node from load balancer pool before maintenance; in-flight reqs complete     │
-│  UPM            = Universal Plugin Manager; Admin > Manage Apps for add-on updates                    │
-│  Space archival = export space as XML; disable space; accessible via search but read-only             │
-│  User offboard  = deactivate in LDAP; Confluence sync picks up deactivation within poll interval      │
-│  DB maintenance = VACUUM ANALYZE in PostgreSQL; run during low-traffic windows                        │
-│  GDPR deletion  = remove personal data; Confluence has no native right-to-erasure tool                │
-│  Content migrate = use Confluence space import/export to move content between instances               │
-│  Permission review = quarterly review of space admin list and global permission groups                │
-│  Audit log review = Admin > Audit Log; monthly review of privilege escalation events                  │
-│  Upgrade SOP    = snapshot VMs → backup DB → run installer → verify → cutover                         │
-│  Reindex SOP    = Admin > Content Indexing > Rebuild; during off-peak; takes 30+ min for large        │
-│  VACUUM ANALYZE = PostgreSQL command; reclaims storage and updates query planner statistics           │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Add a version comment when saving: **Edit → Save → enter comment** — this helps trace why content changed.
 

@@ -87,47 +87,6 @@ uemcli /sys/setting show
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌────────────────────────────────────────── RASR — Hardening ───────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                   RASR — Hardening Checklist                                  │   │
-│   │               [ ] Disable default/admin accounts; create named admin accounts only            │   │
-│   │                   [ ] Enable MFA for all interactive logins via IdP / SAML SSO                │   │
-│   │        [ ] Restrict management port (443 (PPDM REST API)) to jump host / management VLAN      │   │
-│   │               [ ] Enable audit logging and forward to SIEM (syslog, TLS port 6514)            │   │
-│   │                 [ ] Apply all security patches within 30 days of vendor release               │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                       Network Hardening                                       │   │
-│   │               [ ] Separate backup VLAN — no direct production host access to repo             │   │
-│   │       [ ] Firewall: allow only 443 (PPDM REST API) · 2049 (NFS vault) · 9080 (CyberSense)     │   │
-│   │                  [ ] Disable unused ports and protocols on management interface               │   │
-│   │              [ ] Immutable repository: enable WORM or object lock on backup target            │   │
-│   │                 [ ] Encryption in transit: disable TLS 1.0/1.1; enforce TLS 1.2+              │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Isolated network segment (airgap switch) · Vault PowerStore/DD appliance · Clean-room ESXi hosts     │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  RASR          = Ransomware Air-gap Secure Recovery; full workflow from detection to clean rest       │
-│  Vault         = isolated, air-gapped storage appliance receiving periodic replication copies         │
-│  Vault Lock    = WORM lock applied after sync; prevents modification or deletion of vault copies      │
-│  CyberSense    = ML analytics engine scanning vault data for corruption, encryption signatures        │
-│  PPDM          = PowerProtect Data Manager; orchestrates protection policies, jobs, and recovery      │
-│  Air Gap       = physical or logical network isolation preventing attacker lateral movement to        │
-│  Delta Set     = incremental changed blocks replicated from production to vault each cycle            │
-│  Clean Room    = isolated recovery environment: separate vCenter, network, and workstations           │
-│  Recovery Point= specific vault snapshot timestamp from which clean recovery is performed             │
-│  Integrity Lock= two-person authorization required to open vault; prevents insider unlock attac       │
-│  Journal       = write-order-consistent journal on vault enabling point-in-time recovery              │
-│  Scan Report   = CyberSense output: clean/suspect classification per file and block                   │
-│  Retention     = vault copy lifespan; typically 30–90 days of daily snapshots kept                    │
-│  RTO           = Recovery Time Objective; time from failover decision to restored service             │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## iDRAC Hardening
 

@@ -86,53 +86,6 @@ flowchart TD
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌───────────────────────────────────── Windows Server — Encryption ─────────────────────────────────────┐
-│                                                                                                       │
-│  Encryption at rest via BitLocker/EFS; in transit via TLS 1.2/1.3, WinRM HTTPS, IPsec.                │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Encryption at Rest              │  │            Encryption in Transit            │   │
-│   │        BitLocker: full-volume AES-256        │  │         TLS 1.2/1.3 on all services         │   │
-│   │         TPM 2.0 seals BitLocker key          │  │        WinRM: HTTPS only; cert bound        │   │
-│   │          Network unlock for DC boot          │  │          IPsec: transport mode AES          │   │
-│   │         EFS: per-file cert-based enc         │  │          SMB 3.x encryption enforce         │   │
-│   │         Recovery key in AD BitLocker         │  │         Disable SSL 3.0/TLS 1.0/1.1         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  BitLocker protects against physical theft; TLS/SMB encryption protects data in motion.               │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                Key Management                │  │              Protocol Hardening             │   │
-│   │          AD MBAM for BitLocker keys          │  │            Disable RC4, 3DES, MD5           │   │
-│   │           PKI CA issues TLS certs            │  │         Cipher suite: AES-GCM first         │   │
-│   │        KMS / Azure Key Vault for apps        │  │          SCHANNEL reg hardening GPO         │   │
-│   │           Auto-enroll cert renewal           │  │         IIS: TLS binding on port 443        │   │
-│   │         HSM for CA root key protect          │  │           RDP: TLS + NLA required           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  TPM 2.0 chip on server · HSM for CA keys · UEFI Secure Boot · SAS/NVMe storage                       │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  BitLocker      = Windows full-volume encryption; AES-256-XTS; TPM-protected key                      │
-│  TPM            = Trusted Platform Module; hardware security chip; seals BitLocker key                │
-│  EFS            = Encrypting File System; per-file NTFS encryption using user cert                    │
-│  MBAM           = Microsoft BitLocker Administration and Monitoring; key escrow to AD                 │
-│  TLS 1.3        = Transport Layer Security 1.3; forward secrecy; removes legacy ciphers               │
-│  IPsec          = IP Security; encrypts/authenticates IP packets; transport or tunnel mode            │
-│  SMB encryption = SMB 3.0+ per-share or per-server AES-GCM encryption                                 │
-│  SCHANNEL       = Windows SSL/TLS implementation; configured via registry or GPO                      │
-│  NLA            = Network Level Authentication; pre-auth for RDP; requires Kerberos/NTLM              │
-│  Cipher suite   = algorithm bundle: key exchange + auth + encryption + MAC                            │
-│  AES-GCM        = Advanced Encryption Standard Galois/Counter Mode; authenticated enc                 │
-│  PKI            = Public Key Infrastructure; CA hierarchy issuing X.509 certificates                  │
-│  HSM            = Hardware Security Module; tamper-proof key storage for CA root keys                 │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Enable BitLocker on Data Drives
 

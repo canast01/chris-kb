@@ -87,52 +87,6 @@ flowchart TD
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌───────────────────────────── VMware Cloud Foundation — Backup & Restore ──────────────────────────────┐
-│                                                                                                       │
-│  VCF backup covers SDDC Manager, all vCenters, and NSX managers; each component                       │
-│  has its own backup mechanism; orchestrated via SDDC Manager.                                         │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             SDDC Manager Backup              │  │                vCenter Backup               │   │
-│   │          SFTP-based external backup          │  │             File-based via VAMI             │   │
-│   │           Schedule: daily minimum            │  │              SFTP or SCP target             │   │
-│   │        Config: domains + credentials         │  │               Schedule: daily               │   │
-│   │       Encryption: optional passphrase        │  │            All domains backed up            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  SDDC Manager backup is critical; without it domain topology cannot be recovered.                     │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              NSX Manager Backup              │  │              Restore Procedure              │   │
-│   │         NSX UI: Operations > Backup          │  │            Restore SDDC Mgr first           │   │
-│   │         SFTP target: external server         │  │            Then restore vCenters            │   │
-│   │           Per-domain NSX backed up           │  │          Then restore NSX managers          │   │
-│   │        Encryption passphrase: store!         │  │          Validate: all services up          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Backup target SFTP server must be on management network; store passphrase in                         │
-│  separate secure location from backup files.                                                          │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  SDDC Manager backup= JSON export of all domain topology and credentials                              │
-│  SFTP          = Secure File Transfer Protocol; backup transport                                      │
-│  Passphrase    = encrypts NSX backup; must be stored separately                                       │
-│  File-based    = VCSA native backup; config + DB; not full image                                      │
-│  Restore order = SDDC Mgr → vCenter → NSX; sequence is critical                                       │
-│  Domain topology= SDDC Mgr stores which hosts/clusters/domains exist                                  │
-│  NSX backup    = includes all routing, firewall, segment config                                       │
-│  vCenter backup= inventory, policies, permissions, alarms                                             │
-│  vSAN VMs      = backed up separately via VADP tools                                                  │
-│  Encryption    = backup passphrase; AES encryption of backup files                                    │
-│  VAMI          = vCenter Appliance Management; port 5480; backup UI                                   │
-│  RPO           = daily backup = 24h RPO for config; VMs = per backup tool                             │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

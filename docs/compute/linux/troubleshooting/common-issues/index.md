@@ -77,48 +77,6 @@ flowchart TD
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌──────────────────────────────── Linux — Troubleshooting Common Issues ────────────────────────────────┐
-│                                                                                                       │
-│  Quick-reference for the most frequently encountered Linux operational problems.                      │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │            Boot & Startup Issues             │  │              Performance Issues             │   │
-│   │            grub rescue: grub.cfg             │  │            CPU spike: top -o %CPU           │   │
-│   │          initramfs: dracut --force           │  │               RAM low: free -h              │   │
-│   │           fstab error: nofail opt            │  │             Disk wait: iostat -x            │   │
-│   │            SELinux relabel needed            │  │             Network slow: iperf3            │   │
-│   │             Kernel panic: dmesg              │  │             Zombie procs: pstree            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Auth & Access Issues             │  │               Disk & FS Issues              │   │
-│   │              SSH deny: auth.log              │  │            ENOSPC: df -h / df -i            │   │
-│   │            sudo fail: sudoers -l             │  │              FS ro: remount rw              │   │
-│   │            SSSD down: sssd status            │  │             fsck -y: auto repair            │   │
-│   │            Lock: faillock --reset            │  │             LVM snap for backup             │   │
-│   │           PAM deny: /var/log/auth            │  │             xfs_repair: XFS fix             │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  x86-64 servers · BIOS/UEFI · RAID controller · NIC · IPMI for OOB console                            │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  initramfs   = Temporary root FS loaded by kernel at boot before real root                            │
-│  dracut      = Tool to build initramfs images on RHEL/Fedora systems                                  │
-│  GRUB        = GRand Unified Bootloader; chainloads kernel at system start                            │
-│  nofail      = fstab option; system boots even if that mount point is unavailable                     │
-│  kernel panic= Unrecoverable kernel error; system halts/reboots automatically                         │
-│  ENOSPC      = Error No Space; filesystem has no free blocks or inodes                                │
-│  zombie proc = Process that has exited but parent has not yet waited on it                            │
-│  iostat      = Reports CPU and I/O stats; -x for extended disk utilisation                            │
-│  iperf3      = Network throughput test tool; client/server model                                      │
-│  faillock    = PAM tool to show and reset account lockout records                                     │
-│  xfs_repair  = Offline XFS filesystem repair utility                                                  │
-│  fsck        = Filesystem check and repair; must be run on unmounted filesystem                       │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## High Disk I/O or Latency
 

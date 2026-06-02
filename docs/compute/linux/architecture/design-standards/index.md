@@ -53,49 +53,6 @@ Sizing guidelines, design standards, and best practices.
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌────────────────────────────────────── Linux — Design Standards ───────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                    Build & Naming Standards                                   │   │
-│   │         Hostname convention: role-dc-seq (e.g. web-lon-001); FQDN in /etc/hosts + DNS         │   │
-│   │             Approved distros: RHEL 8/9 · Rocky 8/9 · Ubuntu 22.04 LTS · Debian 12             │   │
-│   │             Kernel: maintain vendor-supported; custom kernels require CAB approval            │   │
-│   │            Time: chronyd synced to internal NTP; timezone UTC for all server builds           │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Consistent build standards reduce configuration drift and simplify troubleshooting                 │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Partition Layout               │  │              Hardening Baseline             │   │
-│   │          /boot: 1 GB xfs (separate)          │  │        SSH: PasswordAuth no; root no        │   │
-│   │             /: 20 GB xfs on LVM              │  │           SELinux: enforcing mode           │   │
-│   │           /var: 20 GB (log growth)           │  │        firewalld: default-deny zones        │   │
-│   │           /var/log: separate 10 GB           │  │         auditd: CIS rule set enabled        │   │
-│   │            /home: separate 10 GB             │  │        AIDE: file integrity baseline        │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  x86-64 servers · SSD/NVMe boot · LVM volumes · iDRAC BMC · NIC · Power & Cooling                     │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  LVM         = Logical Volume Manager; enables flexible resizing of volumes without repartition       │
-│  SELinux     = Security-Enhanced Linux; MAC enforcement with targeted/enforcing policy                │
-│  firewalld   = Dynamic firewall daemon using zones and nftables rules under the hood                  │
-│  auditd      = Linux audit daemon; records syscall events for CIS/STIG compliance                     │
-│  AIDE        = Advanced Intrusion Detection Environment; detects file system changes                  │
-│  chronyd     = NTP client/server daemon; preferred over ntpd on RHEL/Rocky/Ubuntu                     │
-│  FQDN        = Fully Qualified Domain Name; hostname + domain (host.example.com)                      │
-│  CIS         = Center for Internet Security; publishes hardening benchmarks for Linux                 │
-│  STIG        = Security Technical Implementation Guide; DoD hardening specification                   │
-│  CAB         = Change Advisory Board; reviews and approves infrastructure changes                     │
-│  UTC         = Coordinated Universal Time; used on servers to avoid DST ambiguity                     │
-│  XFS         = High-performance journaling filesystem; default on RHEL/Rocky Linux                    │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Sudo access granted via AD group membership:
 ```bash

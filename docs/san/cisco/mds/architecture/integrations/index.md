@@ -97,52 +97,6 @@ sequenceDiagram
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌──────────────────────────────────── Cisco MDS 9000 — Integrations ────────────────────────────────────┐
-│                                                                                                       │
-│  MDS integrations: DCNM, Cisco ISE, SIEM, storage arrays, VMware vSphere, automation.                 │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │           Management Integrations            │  │            Security Integrations            │   │
-│   │          DCNM: zone + firmware mgmt          │  │           ISE: TACACS+/RADIUS auth          │   │
-│   │             SNMP v3: NMS polling             │  │           Syslog: SIEM forwarding           │   │
-│   │           NETCONF/gRPC: automation           │  │          DH-CHAP: switch-to-switch          │   │
-│   │          NTP: time sync all events           │  │           AES-256: link encryption          │   │
-│   │           DNS: hostname resolution           │  │             SNMPv3 auth+privacy             │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  DCNM manages zones; ISE provides TACACS+; SIEM gets syslog for security events.                      │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Storage & Compute Connect           │  │           Automation Integrations           │   │
-│   │         NetApp ONTAP: FC LUN target          │  │             Ansible: cisco.nxos             │   │
-│   │          Pure FlashArray: FC target          │  │           Terraform: DCNM provider          │   │
-│   │          Dell PowerStore: FC target          │  │          Python: NX-API / RESTCONF          │   │
-│   │          VMware vSphere: VMFS LUNs           │  │             GitOps: zone as code            │   │
-│   │         IBM mainframe: FICON zoning          │  │           ServiceNow: CMDB CI sync          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  MDS switch chassis · FC cables · management Ethernet · Cisco ISE appliance                           │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  DCNM            = Data Center Network Manager; zones, firmware, topology for MDS                     │
-│  ISE             = Cisco Identity Services Engine; TACACS+ and RADIUS source                          │
-│  TACACS+         = centralised CLI auth; every MDS command logged with username                       │
-│  NETCONF         = XML-based configuration protocol; supported on MDS NX-OS                           │
-│  gRPC            = modern API transport; MDS telemetry streaming protocol                             │
-│  DH-CHAP         = Diffie-Hellman CHAP; ISL authentication between switches                           │
-│  AES-256 link    = optional MDS port-level encryption; requires AES license                           │
-│  NX-API          = NX-OS REST-like API; JSON over HTTP for automation                                 │
-│  RESTCONF        = YANG-based configuration protocol; RFC 8040                                        │
-│  cisco.nxos      = Ansible Galaxy collection for MDS and Nexus NX-OS automation                       │
-│  FICON           = IBM mainframe FC I/O protocol; requires FICON zone on MDS                          │
-│  VMFS            = VMware File System; FC LUN presented to ESXi as datastore                          │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

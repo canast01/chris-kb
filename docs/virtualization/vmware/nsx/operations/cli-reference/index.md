@@ -77,52 +77,6 @@ get service controller
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌───────────────────────────────────────── NSX — CLI Reference ─────────────────────────────────────────┐
-│                                                                                                       │
-│  NSX Manager CLI, Edge Node CLI, and REST API commands for operations.                                │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               NSX Manager CLI                │  │                Edge Node CLI                │   │
-│   │              get cluster status              │  │             get logical-routers             │   │
-│   │             get management-plane             │  │           get bgp neighbor summary          │   │
-│   │               get certificate                │  │               get route table               │   │
-│   │             start service <svc>              │  │              ping <IP> vrf <n>              │   │
-│   │                get node-uuid                 │  │               traceroute <IP>               │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Manager CLI for cluster health; Edge CLI for routing/BGP/path checks.                                │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             NSX Policy REST API              │  │             Useful curl Examples            │   │
-│   │           GET /policy/api/v1/infra           │  │           curl -k -u admin:pass \           │   │
-│   │          GET /api/v1/cluster/status          │  │            -X GET https://mgr/...           │   │
-│   │          POST /policy/api/v1/infra/          │  │             jq .results[].status            │   │
-│   │         GET /api/v1/transport-nodes          │  │           Token auth: Bearer token          │   │
-│   │          DELETE /policy/api/v1/...           │  │            Postman collection NSX           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  NSX Manager cluster VMs, Edge VMs on ESXi, management network, vCenter                               │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  NSX Manager CLI = SSH to manager appliance; admin account access                                     │
-│  Edge CLI      = SSH to edge node; routing, BGP, NAT diagnostics                                      │
-│  Policy API    = NSX REST API /policy/api/v1; primary config interface                                │
-│  Management API= NSX REST API /api/v1; legacy + infra ops endpoints                                   │
-│  Transport node= ESXi or Edge with N-VDS installed; dataplane element                                 │
-│  BGP neighbor  = Edge peers; get bgp shows session state + prefixes                                   │
-│  VRF           = Virtual Routing and Forwarding; per-router context                                   │
-│  cluster status= manager API; shows CCP/MP health of all 3 nodes                                      │
-│  Bearer token  = JWT token for NSX API auth; alternative to Basic auth                                │
-│  jq            = JSON query tool; parses NSX API responses in shell                                   │
-│  logical-router= Edge data structure; mapped to T0/T1 gateway object                                  │
-│  node-uuid     = unique ID of NSX appliance; used in API paths                                        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### NTP and Time
 

@@ -76,49 +76,6 @@ flowchart TD
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌──────────────────────────────────────── Linux — Health Checks ────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                     Health Check Framework                                    │   │
-│   │           Daily: check failed services · disk usage · load average · OOM log entries          │   │
-│   │        Weekly: review auditd logs · zombie processes · swap usage · NIC error counters        │   │
-│   │        Monthly: kernel errata check · LVM free extents · certificate expiry · cron jobs       │   │
-│   │             Alerting: Prometheus rules → Alertmanager → PagerDuty / Slack / email             │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Proactive health checks prevent incidents; alerts surface issues before users notice               │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Resource Checks                │  │             Service & Log Checks            │   │
-│   │           top/htop: CPU + mem live           │  │           systemctl --failed: list          │   │
-│   │           df -h: filesystem usage            │  │          journalctl -p err: errors          │   │
-│   │           free -h: RAM + swap view           │  │          dmesg -T: kernel messages          │   │
-│   │          iostat -x: disk await/util          │  │            ss -s: socket summary            │   │
-│   │           uptime: load avg 1/5/15            │  │          ip -s link: NIC error ctrs         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  x86-64 servers · RAM DIMMs · NVMe/SSD · NIC · iDRAC/iLO IPMI · Power & Cooling                       │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  load average= 1/5/15-min exponential moving avg of runnable + uninterruptible tasks                  │
-│  OOM         = Out-of-Memory; kernel kills processes when physical + swap RAM exhausted               │
-│  zombie      = Process in Z state; exited but parent has not called wait(); check ppid                │
-│  df          = Disk Free; reports filesystem usage by mount point; -h for human-readable              │
-│  iostat      = I/O Stat; reports device utilisation, IOPS, await (ms), and throughput                 │
-│  dmesg       = Kernel ring buffer; shows hardware errors, driver messages, and panics                 │
-│  Prometheus  = Time-series metrics database; scrapes exporters on configured intervals                │
-│  Alertmanager= Prometheus companion; routes alerts to receivers (PagerDuty, email, Slack)             │
-│  ss          = Socket Statistics; replacement for netstat; faster via kernel netlink                  │
-│  journalctl  = Query systemd journal; use -p err for errors, -b for current boot                      │
-│  LVM extents = Free PE (Physical Extents) in a VG; available for LV growth                            │
-│  NIC error counters= rx_errors/tx_errors on interface; indicate cabling or driver issues              │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## CPU and Load
 

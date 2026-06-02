@@ -75,43 +75,6 @@
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌──────────────────────────────────── Runbook — Disk Space Cleanup ─────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │          Free disk space: identify large files, clear logs/temp, delete old snapshots         │   │
-│   │        Alert threshold: > 80% full; critical > 90%; action required before writes fail        │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │            Linux            │  │           Windows           │  │            VMware           │   │
-│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
-│   │        df -h / lsblk        │  │       WinDirStat / DU       │  │       Datastore report      │   │
-│   │     du -sh /* | sort -rh    │  │       C:\Windows\Temp       │  │       Delete snapshots      │   │
-│   │     journalctl --vacuum     │  │      Disk Cleanup util      │  │         Remove ISOs         │   │
-│   │     find /tmp -mtime +7     │  │        C:\Logs rotate       │  │        Thin provision       │   │
-│   │         logrotate -f        │  │       WER dumps delete      │  │       Storage vMotion       │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                            # Linux: find top 10 largest directories                           │   │
-│   │                    du -ah / --max-depth=3 2>/dev/null | sort -rh | head -10                   │   │
-│   │                             # Clear journal logs older than 7 days                            │   │
-│   │                                  journalctl --vacuum-time=7d                                  │   │
-│   │                                       # Find core dumps                                       │   │
-│   │                        find /var/core /tmp -name "core.*" -mtime +1 -ls                       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    journalctl vacuum= Deletes old systemd journal logs; use --vacuum-time or --vacuum-size            │
-│    WER dumps        = Windows Error Reporting crash dumps in C:\ProgramData\Microsoft\Windows\WER     │
-│    Snapshot cleanup = Old VM snapshots accumulate delta VMDKs; delete via vCenter snapshot manager    │
-│    Thin provision   = Reclaim unused blocks on thin-provisioned VMDK via Storage vMotion              │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Step 3 — Package Cache
 

@@ -96,52 +96,6 @@ scp root@dcnm-dc1.corp.example.com:/tmp/dcnm-support-$(date +%Y%m%d).tar.gz ./
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌────────────────────────────────────── Cisco DCNM — Diagnostics ───────────────────────────────────────┐
-│                                                                                                       │
-│  DCNM diagnostics: service logs, DB health, REST health endpoint, NX-OS show commands.                │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          DCNM Platform Diagnostics           │  │             Database Diagnostics            │   │
-│   │         appmgr status: all services          │  │           appmgr db-status: check           │   │
-│   │         GET /rest/health: API check          │  │            PostgreSQL: pg_isready           │   │
-│   │           journalctl -u dcnm: log            │  │         Elasticsearch cluster health        │   │
-│   │          netstat -tlnp 443: listen           │  │           df -h: disk usage check           │   │
-│   │           top: CPU/RAM on DCNM VM            │  │         du -sh: data directory sizes        │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  appmgr status and journalctl are first-line; DB and disk status if data issues.                      │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │           Switch-Level Diagnostics           │  │             TAC Escalation Data             │   │
-│   │          show interface fc: errors           │  │            Export DCNM logs: GUI            │   │
-│   │             show flogi database              │  │            show tech-support: MDS           │   │
-│   │             show zoneset active              │  │            Audit log export: CSV            │   │
-│   │              show system health              │  │           API debug: verbose mode           │   │
-│   │          show environment: sensors           │  │            Screenshots: UI issue            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  DCNM VM · vSphere monitoring · Cisco MDS switch management ports · syslog server                     │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  appmgr status   = DCNM VM CLI; shows all service health in one view                                  │
-│  GET /rest/health = DCNM REST health endpoint; returns service status JSON                            │
-│  journalctl      = systemd log viewer; shows DCNM service errors and restarts                         │
-│  pg_isready      = PostgreSQL CLI; checks if DB accepts connections                                   │
-│  Elasticsearch   = DCNM analytics DB; cluster health API shows shard status                           │
-│  df -h           = disk free check; Elasticsearch fills disk causing failures                         │
-│  show tech-support= NX-OS MDS full diagnostic bundle; required for Cisco TAC                          │
-│  show flogi database= FC login database on MDS; verifies HBA access                                   │
-│  show zoneset active= NX-OS active zone set verification                                              │
-│  show system health= MDS overall health; checks modules and fabric state                              │
-│  show environment= MDS sensor data: temperature, fan, PSU readings                                    │
-│  Audit log CSV   = DCNM user action export; shared during security investigations                     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

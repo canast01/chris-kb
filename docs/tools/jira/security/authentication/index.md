@@ -99,50 +99,6 @@ Administration → User Management → User Directories → Add Directory → Mi
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌──────────────────────────────────────── Jira — Authentication ────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                  Jira Authentication Methods                                  │   │
-│   │           LDAP: user/group sync from AD; Jira binds with user credentials for login           │   │
-│   │          SAML SSO: Jira as SP; Okta/ADFS as IdP; signed assertion; no password stored         │   │
-│   │              PAT: Personal Access Token; HTTP Bearer; profile-managed; revocable              │   │
-│   │               Crowd: optional Atlassian SSO; centralises auth across DC products              │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    SSO preferred for humans; PAT for automation; local break-glass for emergencies                    │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                  Human Auth                  │  │               Service/API Auth              │   │
-│   │            SAML 2.0 SSO (primary)            │  │              PAT: Bearer token              │   │
-│   │              LDAP bind fallback              │  │             Basic auth (legacy)             │   │
-│   │             Crowd SSO (optional)             │  │                OAuth app link               │   │
-│   │               MFA at IdP layer               │  │               Service account               │   │
-│   │             Session: 30 min idle             │  │             API rate: via proxy             │   │
-│   │              Local: break-glass              │  │              Scope: read/write              │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  LDAP/AD DCs · IdP (Okta/ADFS) with HA · Crowd server (optional) · Jira app VMs                       │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  SAML 2.0     = federated SSO; Jira validates signed IdP XML assertion                                │
-│  LDAP bind    = Jira binds to LDAP with user creds; auth happens at directory                         │
-│  PAT          = Personal Access Token; Jira Profile > Personal Access Tokens                          │
-│  Basic auth   = base64 user:pass; deprecated; disable in favour of PAT                                │
-│  Crowd        = Atlassian SSO; issues Crowd token accepted by all linked products                     │
-│  OAuth app link = OAuth 1.0a/2.0 for trusted Jira-to-Confluence API calls                             │
-│  Break-glass  = local admin; used when LDAP/IdP is unreachable                                        │
-│  Session      = idle timeout; Admin > Security > Session Configuration                                │
-│  MFA          = enforced at IdP; Jira trusts SAML assertion without extra factor                      │
-│  Service account = dedicated LDAP user for automation; prefer PAT instead                             │
-│  Rate limiting = no native Jira rate limit; implement at reverse proxy (nginx)                        │
-│  Assertion    = SAML XML signed by IdP; contains user attributes and groups                           │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Enforcing SSO (Data Center)
 

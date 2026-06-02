@@ -95,50 +95,6 @@ Recommended SAML configuration:
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌───────────────────────────────────── Confluence — Authentication ─────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                               Confluence Authentication Methods                               │   │
-│   │           LDAP: user/group sync from AD/OpenLDAP; Confluence handles credential bind          │   │
-│   │    SAML SSO: Confluence as SP; IdP (Okta/ADFS) issues signed assertion; no password stored    │   │
-│   │        Crowd: Atlassian SSO server; centralized auth across Confluence, Jira, Bitbucket       │   │
-│   │         PAT: Personal Access Token; HTTP Bearer header; scoped; revocable via profile         │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Multiple auth methods serve different user types; SSO preferred for all human login                │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Human Auth Methods              │  │               Service/API Auth              │   │
-│   │            SAML 2.0 SSO (primary)            │  │              PAT: Bearer token              │   │
-│   │              LDAP bind fallback              │  │             Basic auth (legacy)             │   │
-│   │            Crowd SSO (DC option)             │  │                OAuth app link               │   │
-│   │               MFA at IdP layer               │  │               Service account               │   │
-│   │             Session: 30 min idle             │  │              API rate limiting              │   │
-│   │          Local account: break-glass          │  │              Scope: read/write              │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  LDAP/AD DCs · IdP (Okta/ADFS) with HA · Crowd server (if used) · Confluence app VMs                  │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  SAML 2.0     = federated SSO standard; Confluence validates IdP-signed XML assertion                 │
-│  LDAP bind    = Confluence authenticates user by binding to LDAP with their credentials               │
-│  Crowd        = Atlassian identity server; issues Crowd SSO token shared across products              │
-│  PAT          = Personal Access Token; created in Confluence profile; used as Bearer token            │
-│  Basic auth   = Base64-encoded user:pass in Authorization header; deprecated; use PAT                 │
-│  OAuth app link = OAuth 1.0a/2.0 trust between Confluence and Jira for macros/API                     │
-│  Break-glass  = local admin account used when IdP/LDAP is unavailable                                 │
-│  Session timeout = idle session expiry; set in Admin > Security Configuration                         │
-│  MFA          = second factor enforced at IdP; Confluence receives only the SAML assertion            │
-│  Service account = dedicated LDAP account for automation; PAT preferred for API                       │
-│  Rate limiting = Confluence REST API: no native limit; rely on reverse proxy throttling               │
-│  Assertion    = SAML XML document signed by IdP containing user identity and attributes               │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Local Accounts
 

@@ -82,50 +82,6 @@ git mergetool
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌───────────────────────────────────────── Git — Common Issues ─────────────────────────────────────────┐
-│                                                                                                       │
-│  Common Git problems: detached HEAD, wrong commits, line endings, and submodule errors.               │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                Detached HEAD                 │  │             Wrong Branch Commit             │   │
-│   │          Cause: git checkout <sha>           │  │          Save: git stash or branch          │   │
-│   │          Fix: git checkout <branch>          │  │        Move: git cherry-pick + reset        │   │
-│   │        Keep work: git checkout -b new        │  │          Undo pushed: revert commit         │   │
-│   │       HEAD moves on checkout / switch        │  │         Undo local: git reset HEAD~1        │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Revert for pushed commits (safe); reset for local-only commits (destructive)                       │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Line Ending Issues              │  │               Submodule Errors              │   │
-│   │          core.autocrlf: true (Win)           │  │     Update: git submodule update --init     │   │
-│   │       core.autocrlf: input (Unix/Mac)        │  │       Detached: cd sub && git checkout      │   │
-│   │        .gitattributes: text=auto eol         │  │        Wrong URL: .gitmodules update        │   │
-│   │       Normalize: git add --renormalize       │  │        Remove: git rm --cached <path>       │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Developer workstation · OS (CRLF vs LF) · Git remote · submodule repos                               │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Detached HEAD   = HEAD points to commit, not branch; commits not saved to branch                     │
-│  git revert      = creates new commit that undoes a previous commit; safe for shared                  │
-│  git reset HEAD~1= undo last commit; --soft keeps changes staged, --hard discards                     │
-│  CRLF            = Windows line ending (\r\n); causes diffs across OS boundaries                      │
-│  core.autocrlf   = convert CRLF↔LF on checkout/commit; "true" on Windows                              │
-│  .gitattributes  = per-path line ending rules; text=auto normalises to LF in repo                     │
-│  add --renormalize= re-stages all files with correct line endings after attr change                   │
-│  Submodule       = embedded Git repo; tracked as commit SHA in parent repo                            │
-│  update --init   = clone submodule if missing and check out pinned commit                             │
-│  .gitmodules     = file listing submodule paths and remote URLs                                       │
-│  git rm --cached = removes file/submodule from index without deleting from disk                       │
-│  cherry-pick     = apply specific commit to current branch; use to move work                          │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Using `git rerere` to Remember Resolutions
 

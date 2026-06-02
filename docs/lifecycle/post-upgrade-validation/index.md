@@ -52,40 +52,6 @@ flowchart TD
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌─────────────────────────────────────── Post-Upgrade Validation ───────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │       Post-upgrade: verify service health, performance baseline, monitoring alerts clear      │   │
-│   │         Monitor for 24–72 hours post-change; keep rollback path available until stable        │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Immediate (0–30 min)             │  │            Soak Period (24–72 hr)           │   │
-│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
-│   │              Version confirmed               │  │            No error rate increase           │   │
-│   │             Services all running             │  │             Latency at baseline             │   │
-│   │                No new alerts                 │  │             Backup job completes            │   │
-│   │             Basic function test              │  │             Replication in sync             │   │
-│   │            Log review for errors             │  │              Monitoring stable              │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   │      Check       │      Method      │        Pass       │   Fail action    │      Window      │   │
-│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
-│   │     Version      │     CLI/GUI      │    Expected ver   │     Rollback     │    Immediate     │   │
-│   │     Services     │   systemctl/SC   │    All running    │     Rollback     │    Immediate     │   │
-│   │    Monitoring    │  Alert console   │   No new alerts   │   Investigate    │  Ongoing 72 hr   │   │
-│   │  Perf baseline   │    Dashboard     │     Within 5%     │   Investigate    │  Ongoing 72 hr   │   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Soak period    = Extended monitoring after change; typically 24–72 hours for major upgrades        │
-│    Version confirm= Verify upgrade completed to expected target version; not partial                  │
-│    Error rate     = Application error rate; an increase post-upgrade indicates regression             │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### VMware ESXi
 

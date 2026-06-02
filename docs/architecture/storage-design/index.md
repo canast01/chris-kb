@@ -108,37 +108,6 @@ flowchart TD
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌──────────────────────────────────── Architecture — Storage Design ────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │        Storage design: tier workloads by I/O profile; select protocol; plan redundancy        │   │
-│   │            Tiers: NVMe (< 0.1ms) → SSD (< 1ms) → SAS/NL-SAS (2-5ms) → archive/cloud           │   │
-│   │          Protocol: FC (SAN/high perf), iSCSI (SAN/cost), NFS/SMB (file), S3 (object)          │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │            Design Considerations             │  │                  Redundancy                 │   │
-│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
-│   │             Workload I/O profile             │  │           RAID 5/6 or erasure code          │   │
-│   │              Capacity now + 3yr              │  │               Dual controllers              │   │
-│   │              Protocol selection              │  │               Multipath (MPIO)              │   │
-│   │              Thin vs thick prov              │  │            Replication to DR site           │   │
-│   │              Encryption at rest              │  │               Snapshot policy               │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    NVMe         = Non-Volatile Memory Express; PCIe-attached flash; lowest latency storage            │
-│    FC           = Fibre Channel; dedicated SAN fabric; high performance and reliability               │
-│    iSCSI        = SCSI over IP; block storage over Ethernet; lower cost than FC                       │
-│    Erasure code = Striping with parity across drives; space-efficient; used in scale-out arrays       │
-│    Thin prov    = Space allocated on-demand; must monitor actual usage vs overcommit                  │
-│    MPIO         = Multi-Path I/O; multiple paths to array; transparent failover on path loss          │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Where:
 - **RAID Efficiency**: RAID-1 = 50%; RAID-5 (4+1) = 80%; RAID-6 (4+2) = 67%; RAID-10 = 50%

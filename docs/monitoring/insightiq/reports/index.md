@@ -36,36 +36,6 @@ InsightIQ: Scheduled Reports, CSV Export, and SLA Reporting reference covering C
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌───────────────────────────────────────── InsightIQ — Reports ─────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Built-in Reports               │  │             Scheduling & Export             │   │
-│   │             Performance summary              │  │             Daily/weekly/monthly            │   │
-│   │                Capacity trend                │  │                Email delivery               │   │
-│   │              Top clients/shares              │  │                  PDF format                 │   │
-│   │              Protocol breakdown              │  │                  CSV format                 │   │
-│   │             Latency distribution             │  │              Custom time range              │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Reports built in InsightIQ · PDF/CSV download · scheduled email via SMTP                             │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Performance summary = Cluster IOPS, latency, throughput over selected time window                    │
-│  Capacity trend = Space usage over time with growth rate and projected full date                      │
-│  Top clients = Ranked list of clients by IO volume; useful for chargeback                             │
-│  Top shares = Ranked NFS/SMB shares by IO; identify active workloads                                  │
-│  Protocol breakdown = IO split by NFS v3, NFS v4, SMB, S3, HDFS                                       │
-│  Latency distribution = Histogram of operation latencies; shows p50/p95/p99                           │
-│  Scheduled email = InsightIQ sending report to recipient list on configured cadence                   │
-│  Custom time range = User-defined start and end dates for report data window                          │
-│  Chargeback = Using top-client IO data to attribute storage cost to teams                             │
-│  PDF = Formatted document; suitable for management review or compliance audit                         │
-│  CSV = Raw metric data for import into BI tools or spreadsheets                                       │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Typical SLA thresholds for NAS workloads:
 

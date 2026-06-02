@@ -59,35 +59,6 @@ purearray set --proxy https://<proxy>:<port>   # if behind a proxy
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌──────────────────────────────────── Pure1 — Lifecycle Management ─────────────────────────────────────┐
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                  Onboarding                  │  │                   Ongoing                   │   │
-│   │              Activate Pure1 org              │  │              Monitor phonehome              │   │
-│   │              Add arrays via SN               │  │             Keep Purity current             │   │
-│   │               Enable phonehome               │  │             Renew Evergreen sub             │   │
-│   │               Configure alerts               │  │              Rotate API tokens              │   │
-│   │               Set up webhooks                │  │             Annual access review            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Pure1 is SaaS — no on-prem component to maintain · Purity upgrades handled by ops team               │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Pure1 org = Customer organisation in Pure1; all arrays grouped under one org                         │
-│  Activate = Creating Pure1 org via Pure portal using Evergreen contract                               │
-│  Add arrays via SN = Arrays register to Pure1 using serial number + phonehome                         │
-│  Enable phonehome = purearray setattr --phonehome enabled on FlashArray                               │
-│  Purity current = Keep array OS on supported release; Pure1 tracks versions                           │
-│  Evergreen subscription = Annual renewal; includes Pure1, support, and hardware refresh               │
-│  Rotate API tokens = Pure1 API tokens have no expiry; rotate annually per policy                      │
-│  Access review = Yearly audit of Pure1 org users; remove departed staff                               │
-│  Monitor phonehome = Daily check that all arrays show Connected in Pure1                              │
-│  SaaS = Pure1 platform updated by Pure Storage; no customer upgrade action                            │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Purity Version Compatibility
 

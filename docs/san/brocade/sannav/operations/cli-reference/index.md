@@ -88,52 +88,6 @@ sannav license
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌─────────────────────────────────── Brocade SANnav — CLI Reference ────────────────────────────────────┐
-│                                                                                                       │
-│  SANnav management CLI: sannav-admin for system tasks; FOS CLI for fabric operations.                 │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          SANnav Admin CLI (VM-side)          │  │            FOS CLI (Switch-side)            │   │
-│   │        sannav-admin status: services         │  │           switchshow: port + state          │   │
-│   │           sannav-admin backup now            │  │            cfgshow: zone database           │   │
-│   │        sannav-admin restart: service         │  │            nsshow: device logins            │   │
-│   │          sannav-admin logs: tail -f          │  │              errshow: error log             │   │
-│   │        sannav-admin upgrade: initiate        │  │           supportshow: TAC bundle           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  sannav-admin controls the VM appliance; FOS CLI controls individual fabric switches.                 │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │           REST API Quick Reference           │  │          Common Troubleshooting CLI         │   │
-│   │          POST /api/v1/login → token          │  │          curl /api/v1/health check          │   │
-│   │          GET /api/v1/fabric → list           │  │            sannav-admin db-status           │   │
-│   │         GET /api/v1/switch/{id}/port         │  │            netstat -tlnp port 443           │   │
-│   │           POST /api/v1/zoning/zone           │  │             journalctl -u sannav            │   │
-│   │         DELETE /api/v1/zoning/alias          │  │           df -h: check disk space           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  SANnav Linux VM · SSH access · REST API port 443 · Brocade FC switch management                      │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  sannav-admin    = SANnav VM system CLI; manages services, backups, logs, upgrades                    │
-│  status          = sannav-admin subcommand; shows all SANnav service health                           │
-│  switchshow      = FOS CLI; primary per-switch port status and fabric state view                      │
-│  cfgshow         = FOS CLI; displays all zones, aliases, and active zone config                       │
-│  nsshow          = FOS CLI; Name Server; lists device logins on this switch                           │
-│  errshow         = FOS CLI; fabric error log with timestamps                                          │
-│  supportshow     = FOS CLI; generates complete diagnostic bundle for TAC                              │
-│  POST /login     = REST API login; returns JWT token valid for session duration                       │
-│  journalctl      = systemd log viewer; shows SANnav service stdout/stderr                             │
-│  db-status       = sannav-admin check; shows PostgreSQL and Elasticsearch health                      │
-│  REST token      = JWT Bearer token; required header on all subsequent API calls                      │
-│  curl            = command-line HTTP client; used to test SANnav REST API endpoints                   │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Network Configuration
 

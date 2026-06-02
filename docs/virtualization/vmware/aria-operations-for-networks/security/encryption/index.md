@@ -91,50 +91,6 @@ Settings → SSL Certificate → Upload Certificate
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌─────────────────────────────────────────── vRNI Encryption ───────────────────────────────────────────┐
-│                                                                                                       │
-│  TLS 1.2+, LDAPS, data-at-rest encryption, and certificate management for vRNI.                       │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │            In-Transit Encryption             │  │            Certificate Management           │   │
-│   │           TLS 1.2+ for all web UI            │  │           Upload cert via VAMI SSL          │   │
-│   │          TLS for collector-platform          │  │           CA-signed cert preferred          │   │
-│   │          LDAPS (port 636) for auth           │  │          Monitor cert expiry dates          │   │
-│   │         HTTPS for all REST API calls         │  │             Rotate before expiry            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  All communications use TLS; data at rest protected by vSphere D@RE; certs monitored.                 │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │           Data-at-Rest Encryption            │  │            Weak Cipher Hardening            │   │
-│   │          vSphere D@RE on datastore           │  │            Disable TLS 1.0 / 1.1            │   │
-│   │           vSAN encryption optional           │  │          Disable RC4 / 3DES ciphers         │   │
-│   │           No native vRNI disk enc            │  │             Enforce AES-256-GCM             │   │
-│   │         KMS integration via vSphere          │  │          Review cipher via openssl          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  vSphere with D@RE; KMS server for key management; CA for cert signing                                │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  TLS 1.2+            = Minimum transport security for all vRNI communications                         │
-│  LDAPS               = LDAP over TLS port 636; replaces plain LDAP port 389                           │
-│  D@RE                = Data-at-Rest Encryption via vSphere encrypted datastores                       │
-│  KMS                 = Key Management Server; manages encryption keys for D@RE                        │
-│  CA-Signed Cert      = Certificate from internal or public CA; replaces self-signed                   │
-│  Self-Signed Cert    = Default vRNI cert; replace before production use                               │
-│  Cipher Suite        = Combination of key exchange, bulk encryption, and MAC algorithm                │
-│  AES-256-GCM         = Preferred symmetric cipher for TLS in vRNI communications                      │
-│  Cert Expiry         = Certificate validity end date; monitor to avoid outage                         │
-│  VAMI SSL Settings   = Page in VAMI where cert and key are uploaded for vRNI                          │
-│  vSAN Encryption     = Optional vSAN data-at-rest encryption for VM storage                           │
-│  openssl s_client    = CLI tool to verify TLS version and cipher negotiated                           │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

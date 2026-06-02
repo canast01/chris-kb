@@ -99,41 +99,6 @@ flowchart TD
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌─────────────────────────────────── VM Performance Troubleshooting ────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │          Slow VM: check CPU ready, memory balloon/swap, disk DAVG, and network drops          │   │
-│   │                 Use esxtop to triage all four resource domains simultaneously                 │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │             CPU             │  │            Memory           │  │          Disk / Net         │   │
-│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
-│   │        CPU ready > 5%       │  │         Balloon > 0         │  │         DAVG > 10ms         │   │
-│   │         Co-stop high        │  │           Swap > 0          │  │          Net drops          │   │
-│   │          Overcommit         │  │       Mem compression       │  │        IOPS saturate        │   │
-│   │        CPU limit set        │  │       Reservation miss      │  │         Rx/Tx drops         │   │
-│   │        NUMA mismatch        │  │          Guest leak         │  │       Snapshot present      │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│   │     Symptom      │    esxtop key    │     Threshold     │    Root cause    │       Fix        │   │
-│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
-│   │     CPU slow     │     c → %RDY     │        > 5%       │    Overcommit    │Reduce vCPU or DRS│   │
-│   │     Mem slow     │     m → MCTL     │       > 0 MB      │    Overcommit    │ Add RAM/reserv.  │   │
-│   │    Disk slow     │     d → DAVG     │       > 10ms      │  Array latency   │→ storage-latency │   │
-│   │    Net drops     │    n → Drp/s     │        > 0        │   NIC saturate   │Increase vNIC/QoS │   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    CPU ready  = vCPU waiting for physical CPU; reduce vCPU count or migrate VM to less loaded host    │
-│    Balloon    = VMware reclaiming guest RAM via balloon driver; guest must free its own memory        │
-│    Swap       = VMware swapping guest RAM to host swap file; causes severe performance impact         │
-│    NUMA miss  = vCPU accesses RAM from remote NUMA node; size VMs within physical NUMA boundary       │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### Memory Reclamation States
 

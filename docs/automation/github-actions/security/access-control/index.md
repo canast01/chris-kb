@@ -46,28 +46,6 @@ flowchart TD
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌─────────────────────────────────── GitHub Actions — Access Control ───────────────────────────────────┐
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │     GitHub Actions access: who can trigger workflows, approve deployments, manage secrets     │   │
-│   │    Repo permissions: read (view logs), write (trigger/cancel runs), admin (manage settings)   │   │
-│   │  Environment protection: required reviewers, wait timers, branch restrictions for deployments │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Workflow Permissions             │  │              Environment Gates              │   │
-│   │         GITHUB_TOKEN scoped per job          │  │          Required reviewers (team)          │   │
-│   │        permissions: read-all default         │  │            Wait timer: 10 min min           │   │
-│   │         Fork PRs: no secrets access          │  │        Branch restriction: main only        │   │
-│   │         workflow_dispatch: user auth         │  │          Deployment logs: auditable         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      CODEOWNERS     = file mapping code paths to review teams; auto-request review on PR      │   │
-│   │     Branch protection = require PR + CI pass + review before merge; enforces pipeline gate    │   │
-│   │        Deployment review = env requires named team approval; reviewer approves/rejects        │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ```yaml
 permissions:
