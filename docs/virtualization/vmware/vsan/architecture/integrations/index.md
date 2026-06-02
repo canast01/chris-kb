@@ -42,8 +42,6 @@ vSAN INTEGRATION MAP
   │  host, IP pool req.   │   │                      │
   └───────────────────────┘   └──────────────────────┘
 ```
-```
-```
 
 Key vCenter-managed vSAN functions:
 
