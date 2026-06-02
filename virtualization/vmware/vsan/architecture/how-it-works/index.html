@@ -4566,6 +4566,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#object-placement-ftt1-raid-5-4-hosts-minimum_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Object Placement — FTT=1 RAID-5 (4 hosts minimum)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#ftt-and-raid-policy-reference_1" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4638,7 +4649,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#object-placement-ftt1-raid-5-4-hosts-minimum_1" class="md-nav__link">
+  <a href="#object-placement-ftt1-raid-5-4-hosts-minimum_2" class="md-nav__link">
     <span class="md-ellipsis">
       
         Object Placement — FTT=1 RAID-5 (4 hosts minimum)
@@ -4721,7 +4732,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#object-placement-ftt1-raid-5-4-hosts-minimum_2" class="md-nav__link">
+  <a href="#object-placement-ftt1-raid-5-4-hosts-minimum_3" class="md-nav__link">
     <span class="md-ellipsis">
       
         Object Placement — FTT=1 RAID-5 (4 hosts minimum)
@@ -4804,7 +4815,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#object-placement-ftt1-raid-5-4-hosts-minimum_3" class="md-nav__link">
+  <a href="#object-placement-ftt1-raid-5-4-hosts-minimum_4" class="md-nav__link">
     <span class="md-ellipsis">
       
         Object Placement — FTT=1 RAID-5 (4 hosts minimum)
@@ -4887,7 +4898,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#object-placement-ftt1-raid-5-4-hosts-minimum_4" class="md-nav__link">
+  <a href="#object-placement-ftt1-raid-5-4-hosts-minimum_5" class="md-nav__link">
     <span class="md-ellipsis">
       
         Object Placement — FTT=1 RAID-5 (4 hosts minimum)
@@ -4970,7 +4981,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#object-placement-ftt1-raid-5-4-hosts-minimum_5" class="md-nav__link">
+  <a href="#object-placement-ftt1-raid-5-4-hosts-minimum_6" class="md-nav__link">
     <span class="md-ellipsis">
       
         Object Placement — FTT=1 RAID-5 (4 hosts minimum)
@@ -5053,7 +5064,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#object-placement-ftt1-raid-5-4-hosts-minimum_6" class="md-nav__link">
+  <a href="#object-placement-ftt1-raid-5-4-hosts-minimum_7" class="md-nav__link">
     <span class="md-ellipsis">
       
         Object Placement — FTT=1 RAID-5 (4 hosts minimum)
@@ -5608,60 +5619,59 @@ How It Works reference covering Storage Architecture Modes, Objects and Componen
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>
 </code></pre></div>
-┌───────────────────────────────────────── vSAN — How It Works ─────────────────────────────────────────┐
-│                                                                                                       │
-│  vSAN pools local disks from ESXi hosts into a shared datastore; data is                              │
-│  distributed across hosts using a policy-driven object-based storage model.                           │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                  Data Path                   │  │                 Disk Groups                 │   │
-│   │            VM write → vSAN object            │  │          1 cache NVMe/SSD per group         │   │
-│   │           Policy: FTT + RAID type            │  │         1-7 capacity disks per group        │   │
-│   │          Components placed on hosts          │  │          Express Storage Arch (ESA)         │   │
-│   │           Witness: metadata quorum           │  │              All-NVMe: ESA only             │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Each object (VMDK) is split into components placed across hosts per the storage policy.              │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Cluster Requirements             │  │                Fault Domains                │   │
-│   │             Min 3 hosts (FTT=1)              │  │         Rack awareness: per-rack FD         │   │
-│   │             10GbE+ vSAN VMkernel             │  │         Stretched: 2 sites + witness        │   │
-│   │         Unicast: no multicast needed         │  │          FD isolates host failures          │   │
-│   │           Health: periodic resync            │  │             Min 3 FDs for FTT=1             │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  vSAN requires dedicated SSDs/NVMe for cache and HDDs/SSDs for capacity on each host;                 │
-│  10GbE+ network with dedicated vSAN VMkernel adapter.                                                 │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Object        = vSAN storage unit; one VMDK = one or more objects                                    │
-│  Component     = slice of an object placed on a single host                                           │
-│  Witness       = metadata-only component; tie-breaker for quorum                                      │
-│  FTT           = Failures To Tolerate; policy setting; FTT=1 needs 3 hosts                            │
-│  RAID-1        = mirroring; FTT=1: 2 data + 1 witness                                                 │
-│  RAID-5        = erasure coding; FTT=1: 4 hosts; more space-efficient                                 │
-│  Disk group    = cache + capacity disks on one host; O(SA: per host)                                  │
-│  ESA           = Express Storage Architecture; vSAN 8+; all-NVMe only                                 │
-│  Fault domain  = logical grouping of hosts; failure unit for placement                                │
-│  Stretched cluster= 2 active sites + 1 witness site; RPO=0 across sites                               │
-│  Resync        = after host failure/return, components rebalanced                                     │
-│  VMkernel      = special NIC adapter; vSAN uses vmk for cluster traffic                               │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>### Object Placement — FTT=1 RAID-5 (4 hosts minimum)
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>```text
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>VM VMDK Object
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>├── Data stripe 1 → ESXi-01
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>├── Data stripe 2 → ESXi-02
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>├── Data stripe 3 → ESXi-03
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>└── Parity stripe → ESXi-04
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>┌───────────────────────────────────────── vSAN — How It Works ─────────────────────────────────────────┐
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>│                                                                                                       │
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>│  vSAN pools local disks from ESXi hosts into a shared datastore; data is                              │
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>│  distributed across hosts using a policy-driven object-based storage model.                           │
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>│                                                                                                       │
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>│   │                  Data Path                   │  │                 Disk Groups                 │   │
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>│   │            VM write → vSAN object            │  │          1 cache NVMe/SSD per group         │   │
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>│   │           Policy: FTT + RAID type            │  │         1-7 capacity disks per group        │   │
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>│   │          Components placed on hosts          │  │          Express Storage Arch (ESA)         │   │
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>│   │           Witness: metadata quorum           │  │              All-NVMe: ESA only             │   │
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>│                                                                                                       │
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>│  Each object (VMDK) is split into components placed across hosts per the storage policy.              │
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>│                                                                                                       │
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>│                                                                                                       │
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>│   │             Cluster Requirements             │  │                Fault Domains                │   │
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>│   │             Min 3 hosts (FTT=1)              │  │         Rack awareness: per-rack FD         │   │
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>│   │             10GbE+ vSAN VMkernel             │  │         Stretched: 2 sites + witness        │   │
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>│   │         Unicast: no multicast needed         │  │          FD isolates host failures          │   │
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>│   │           Health: periodic resync            │  │             Min 3 FDs for FTT=1             │   │
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>│                                                                                                       │
+<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a>│  vSAN requires dedicated SSDs/NVMe for cache and HDDs/SSDs for capacity on each host;                 │
+<a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a>│  10GbE+ network with dedicated vSAN VMkernel adapter.                                                 │
+<a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a>│                                                                                                       │
+<a id="__codelineno-7-30" name="__codelineno-7-30" href="#__codelineno-7-30"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-7-31" name="__codelineno-7-31" href="#__codelineno-7-31"></a>│                                                                                                       │
+<a id="__codelineno-7-32" name="__codelineno-7-32" href="#__codelineno-7-32"></a>│  Object        = vSAN storage unit; one VMDK = one or more objects                                    │
+<a id="__codelineno-7-33" name="__codelineno-7-33" href="#__codelineno-7-33"></a>│  Component     = slice of an object placed on a single host                                           │
+<a id="__codelineno-7-34" name="__codelineno-7-34" href="#__codelineno-7-34"></a>│  Witness       = metadata-only component; tie-breaker for quorum                                      │
+<a id="__codelineno-7-35" name="__codelineno-7-35" href="#__codelineno-7-35"></a>│  FTT           = Failures To Tolerate; policy setting; FTT=1 needs 3 hosts                            │
+<a id="__codelineno-7-36" name="__codelineno-7-36" href="#__codelineno-7-36"></a>│  RAID-1        = mirroring; FTT=1: 2 data + 1 witness                                                 │
+<a id="__codelineno-7-37" name="__codelineno-7-37" href="#__codelineno-7-37"></a>│  RAID-5        = erasure coding; FTT=1: 4 hosts; more space-efficient                                 │
+<a id="__codelineno-7-38" name="__codelineno-7-38" href="#__codelineno-7-38"></a>│  Disk group    = cache + capacity disks on one host; O(SA: per host)                                  │
+<a id="__codelineno-7-39" name="__codelineno-7-39" href="#__codelineno-7-39"></a>│  ESA           = Express Storage Architecture; vSAN 8+; all-NVMe only                                 │
+<a id="__codelineno-7-40" name="__codelineno-7-40" href="#__codelineno-7-40"></a>│  Fault domain  = logical grouping of hosts; failure unit for placement                                │
+<a id="__codelineno-7-41" name="__codelineno-7-41" href="#__codelineno-7-41"></a>│  Stretched cluster= 2 active sites + 1 witness site; RPO=0 across sites                               │
+<a id="__codelineno-7-42" name="__codelineno-7-42" href="#__codelineno-7-42"></a>│  Resync        = after host failure/return, components rebalanced                                     │
+<a id="__codelineno-7-43" name="__codelineno-7-43" href="#__codelineno-7-43"></a>│  VMkernel      = special NIC adapter; vSAN uses vmk for cluster traffic                               │
+<a id="__codelineno-7-44" name="__codelineno-7-44" href="#__codelineno-7-44"></a>│                                                                                                       │
+<a id="__codelineno-7-45" name="__codelineno-7-45" href="#__codelineno-7-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
+<h3 id="object-placement-ftt1-raid-5-4-hosts-minimum_1">Object Placement — FTT=1 RAID-5 (4 hosts minimum)<a class="headerlink" href="#object-placement-ftt1-raid-5-4-hosts-minimum_1" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>VM VMDK Object
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>├── Data stripe 1 → ESXi-01
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>├── Data stripe 2 → ESXi-02
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>├── Data stripe 3 → ESXi-03
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>└── Parity stripe → ESXi-04
+</code></pre></div>
 <h3 id="ftt-and-raid-policy-reference_1">FTT and RAID Policy Reference<a class="headerlink" href="#ftt-and-raid-policy-reference_1" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -5870,64 +5880,64 @@ How It Works reference covering Storage Architecture Modes, Objects and Componen
 </ul>
 <hr />
 <h2 id="sioc-storage-io-control_1">SIOC — Storage I/O Control<a class="headerlink" href="#sioc-storage-io-control_1" title="Permanent link">&para;</a></h2>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>┌───────────────────────────────────────── vSAN — How It Works ─────────────────────────────────────────┐
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>│                                                                                                       │
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>│  vSAN pools local disks from ESXi hosts into a shared datastore; data is                              │
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>│  distributed across hosts using a policy-driven object-based storage model.                           │
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>│                                                                                                       │
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>│   │                  Data Path                   │  │                 Disk Groups                 │   │
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>│   │            VM write → vSAN object            │  │          1 cache NVMe/SSD per group         │   │
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>│   │           Policy: FTT + RAID type            │  │         1-7 capacity disks per group        │   │
-<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>│   │          Components placed on hosts          │  │          Express Storage Arch (ESA)         │   │
-<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>│   │           Witness: metadata quorum           │  │              All-NVMe: ESA only             │   │
-<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>│                                                                                                       │
-<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>│  Each object (VMDK) is split into components placed across hosts per the storage policy.              │
-<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>│                                                                                                       │
-<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>│                          ▼                                                 ▼                          │
-<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>│                                                                                                       │
-<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>│   │             Cluster Requirements             │  │                Fault Domains                │   │
-<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>│   │             Min 3 hosts (FTT=1)              │  │         Rack awareness: per-rack FD         │   │
-<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>│   │             10GbE+ vSAN VMkernel             │  │         Stretched: 2 sites + witness        │   │
-<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>│   │         Unicast: no multicast needed         │  │          FD isolates host failures          │   │
-<a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a>│   │           Health: periodic resync            │  │             Min 3 FDs for FTT=1             │   │
-<a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a>│                                                                                                       │
-<a id="__codelineno-11-26" name="__codelineno-11-26" href="#__codelineno-11-26"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
-<a id="__codelineno-11-27" name="__codelineno-11-27" href="#__codelineno-11-27"></a>│  vSAN requires dedicated SSDs/NVMe for cache and HDDs/SSDs for capacity on each host;                 │
-<a id="__codelineno-11-28" name="__codelineno-11-28" href="#__codelineno-11-28"></a>│  10GbE+ network with dedicated vSAN VMkernel adapter.                                                 │
-<a id="__codelineno-11-29" name="__codelineno-11-29" href="#__codelineno-11-29"></a>│                                                                                                       │
-<a id="__codelineno-11-30" name="__codelineno-11-30" href="#__codelineno-11-30"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-11-31" name="__codelineno-11-31" href="#__codelineno-11-31"></a>│                                                                                                       │
-<a id="__codelineno-11-32" name="__codelineno-11-32" href="#__codelineno-11-32"></a>│  Object        = vSAN storage unit; one VMDK = one or more objects                                    │
-<a id="__codelineno-11-33" name="__codelineno-11-33" href="#__codelineno-11-33"></a>│  Component     = slice of an object placed on a single host                                           │
-<a id="__codelineno-11-34" name="__codelineno-11-34" href="#__codelineno-11-34"></a>│  Witness       = metadata-only component; tie-breaker for quorum                                      │
-<a id="__codelineno-11-35" name="__codelineno-11-35" href="#__codelineno-11-35"></a>│  FTT           = Failures To Tolerate; policy setting; FTT=1 needs 3 hosts                            │
-<a id="__codelineno-11-36" name="__codelineno-11-36" href="#__codelineno-11-36"></a>│  RAID-1        = mirroring; FTT=1: 2 data + 1 witness                                                 │
-<a id="__codelineno-11-37" name="__codelineno-11-37" href="#__codelineno-11-37"></a>│  RAID-5        = erasure coding; FTT=1: 4 hosts; more space-efficient                                 │
-<a id="__codelineno-11-38" name="__codelineno-11-38" href="#__codelineno-11-38"></a>│  Disk group    = cache + capacity disks on one host; O(SA: per host)                                  │
-<a id="__codelineno-11-39" name="__codelineno-11-39" href="#__codelineno-11-39"></a>│  ESA           = Express Storage Architecture; vSAN 8+; all-NVMe only                                 │
-<a id="__codelineno-11-40" name="__codelineno-11-40" href="#__codelineno-11-40"></a>│  Fault domain  = logical grouping of hosts; failure unit for placement                                │
-<a id="__codelineno-11-41" name="__codelineno-11-41" href="#__codelineno-11-41"></a>│  Stretched cluster= 2 active sites + 1 witness site; RPO=0 across sites                               │
-<a id="__codelineno-11-42" name="__codelineno-11-42" href="#__codelineno-11-42"></a>│  Resync        = after host failure/return, components rebalanced                                     │
-<a id="__codelineno-11-43" name="__codelineno-11-43" href="#__codelineno-11-43"></a>│  VMkernel      = special NIC adapter; vSAN uses vmk for cluster traffic                               │
-<a id="__codelineno-11-44" name="__codelineno-11-44" href="#__codelineno-11-44"></a>│                                                                                                       │
-<a id="__codelineno-11-45" name="__codelineno-11-45" href="#__codelineno-11-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>┌───────────────────────────────────────── vSAN — How It Works ─────────────────────────────────────────┐
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>│                                                                                                       │
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>│  vSAN pools local disks from ESXi hosts into a shared datastore; data is                              │
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>│  distributed across hosts using a policy-driven object-based storage model.                           │
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>│                                                                                                       │
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>│   │                  Data Path                   │  │                 Disk Groups                 │   │
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>│   │            VM write → vSAN object            │  │          1 cache NVMe/SSD per group         │   │
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>│   │           Policy: FTT + RAID type            │  │         1-7 capacity disks per group        │   │
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>│   │          Components placed on hosts          │  │          Express Storage Arch (ESA)         │   │
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>│   │           Witness: metadata quorum           │  │              All-NVMe: ESA only             │   │
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>│                                                                                                       │
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>│  Each object (VMDK) is split into components placed across hosts per the storage policy.              │
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>│                                                                                                       │
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>│                                                                                                       │
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a>│   │             Cluster Requirements             │  │                Fault Domains                │   │
+<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a>│   │             Min 3 hosts (FTT=1)              │  │         Rack awareness: per-rack FD         │   │
+<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a>│   │             10GbE+ vSAN VMkernel             │  │         Stretched: 2 sites + witness        │   │
+<a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a>│   │         Unicast: no multicast needed         │  │          FD isolates host failures          │   │
+<a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a>│   │           Health: periodic resync            │  │             Min 3 FDs for FTT=1             │   │
+<a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-12-25" name="__codelineno-12-25" href="#__codelineno-12-25"></a>│                                                                                                       │
+<a id="__codelineno-12-26" name="__codelineno-12-26" href="#__codelineno-12-26"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-12-27" name="__codelineno-12-27" href="#__codelineno-12-27"></a>│  vSAN requires dedicated SSDs/NVMe for cache and HDDs/SSDs for capacity on each host;                 │
+<a id="__codelineno-12-28" name="__codelineno-12-28" href="#__codelineno-12-28"></a>│  10GbE+ network with dedicated vSAN VMkernel adapter.                                                 │
+<a id="__codelineno-12-29" name="__codelineno-12-29" href="#__codelineno-12-29"></a>│                                                                                                       │
+<a id="__codelineno-12-30" name="__codelineno-12-30" href="#__codelineno-12-30"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-12-31" name="__codelineno-12-31" href="#__codelineno-12-31"></a>│                                                                                                       │
+<a id="__codelineno-12-32" name="__codelineno-12-32" href="#__codelineno-12-32"></a>│  Object        = vSAN storage unit; one VMDK = one or more objects                                    │
+<a id="__codelineno-12-33" name="__codelineno-12-33" href="#__codelineno-12-33"></a>│  Component     = slice of an object placed on a single host                                           │
+<a id="__codelineno-12-34" name="__codelineno-12-34" href="#__codelineno-12-34"></a>│  Witness       = metadata-only component; tie-breaker for quorum                                      │
+<a id="__codelineno-12-35" name="__codelineno-12-35" href="#__codelineno-12-35"></a>│  FTT           = Failures To Tolerate; policy setting; FTT=1 needs 3 hosts                            │
+<a id="__codelineno-12-36" name="__codelineno-12-36" href="#__codelineno-12-36"></a>│  RAID-1        = mirroring; FTT=1: 2 data + 1 witness                                                 │
+<a id="__codelineno-12-37" name="__codelineno-12-37" href="#__codelineno-12-37"></a>│  RAID-5        = erasure coding; FTT=1: 4 hosts; more space-efficient                                 │
+<a id="__codelineno-12-38" name="__codelineno-12-38" href="#__codelineno-12-38"></a>│  Disk group    = cache + capacity disks on one host; O(SA: per host)                                  │
+<a id="__codelineno-12-39" name="__codelineno-12-39" href="#__codelineno-12-39"></a>│  ESA           = Express Storage Architecture; vSAN 8+; all-NVMe only                                 │
+<a id="__codelineno-12-40" name="__codelineno-12-40" href="#__codelineno-12-40"></a>│  Fault domain  = logical grouping of hosts; failure unit for placement                                │
+<a id="__codelineno-12-41" name="__codelineno-12-41" href="#__codelineno-12-41"></a>│  Stretched cluster= 2 active sites + 1 witness site; RPO=0 across sites                               │
+<a id="__codelineno-12-42" name="__codelineno-12-42" href="#__codelineno-12-42"></a>│  Resync        = after host failure/return, components rebalanced                                     │
+<a id="__codelineno-12-43" name="__codelineno-12-43" href="#__codelineno-12-43"></a>│  VMkernel      = special NIC adapter; vSAN uses vmk for cluster traffic                               │
+<a id="__codelineno-12-44" name="__codelineno-12-44" href="#__codelineno-12-44"></a>│                                                                                                       │
+<a id="__codelineno-12-45" name="__codelineno-12-45" href="#__codelineno-12-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
-<h3 id="object-placement-ftt1-raid-5-4-hosts-minimum_1">Object Placement — FTT=1 RAID-5 (4 hosts minimum)<a class="headerlink" href="#object-placement-ftt1-raid-5-4-hosts-minimum_1" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>VM VMDK Object
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>├── Data stripe 1 → ESXi-01
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>├── Data stripe 2 → ESXi-02
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>├── Data stripe 3 → ESXi-03
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>└── Parity stripe → ESXi-04
+<h3 id="object-placement-ftt1-raid-5-4-hosts-minimum_2">Object Placement — FTT=1 RAID-5 (4 hosts minimum)<a class="headerlink" href="#object-placement-ftt1-raid-5-4-hosts-minimum_2" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>VM VMDK Object
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>├── Data stripe 1 → ESXi-01
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>├── Data stripe 2 → ESXi-02
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>├── Data stripe 3 → ESXi-03
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>└── Parity stripe → ESXi-04
 </code></pre></div>
 <h3 id="ftt-and-raid-policy-reference_2">FTT and RAID Policy Reference<a class="headerlink" href="#ftt-and-raid-policy-reference_2" title="Permanent link">&para;</a></h3>
 <table>
@@ -6137,64 +6147,64 @@ How It Works reference covering Storage Architecture Modes, Objects and Componen
 </ul>
 <hr />
 <h2 id="sioc-storage-io-control_2">SIOC — Storage I/O Control<a class="headerlink" href="#sioc-storage-io-control_2" title="Permanent link">&para;</a></h2>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>┌───────────────────────────────────────── vSAN — How It Works ─────────────────────────────────────────┐
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>│                                                                                                       │
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>│  vSAN pools local disks from ESXi hosts into a shared datastore; data is                              │
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>│  distributed across hosts using a policy-driven object-based storage model.                           │
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>│                                                                                                       │
-<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>│   │                  Data Path                   │  │                 Disk Groups                 │   │
-<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>│   │            VM write → vSAN object            │  │          1 cache NVMe/SSD per group         │   │
-<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>│   │           Policy: FTT + RAID type            │  │         1-7 capacity disks per group        │   │
-<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>│   │          Components placed on hosts          │  │          Express Storage Arch (ESA)         │   │
-<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>│   │           Witness: metadata quorum           │  │              All-NVMe: ESA only             │   │
-<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a>│                                                                                                       │
-<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>│  Each object (VMDK) is split into components placed across hosts per the storage policy.              │
-<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a>│                                                                                                       │
-<a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a>│                          ▼                                                 ▼                          │
-<a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a>│                                                                                                       │
-<a id="__codelineno-16-18" name="__codelineno-16-18" href="#__codelineno-16-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-16-19" name="__codelineno-16-19" href="#__codelineno-16-19"></a>│   │             Cluster Requirements             │  │                Fault Domains                │   │
-<a id="__codelineno-16-20" name="__codelineno-16-20" href="#__codelineno-16-20"></a>│   │             Min 3 hosts (FTT=1)              │  │         Rack awareness: per-rack FD         │   │
-<a id="__codelineno-16-21" name="__codelineno-16-21" href="#__codelineno-16-21"></a>│   │             10GbE+ vSAN VMkernel             │  │         Stretched: 2 sites + witness        │   │
-<a id="__codelineno-16-22" name="__codelineno-16-22" href="#__codelineno-16-22"></a>│   │         Unicast: no multicast needed         │  │          FD isolates host failures          │   │
-<a id="__codelineno-16-23" name="__codelineno-16-23" href="#__codelineno-16-23"></a>│   │           Health: periodic resync            │  │             Min 3 FDs for FTT=1             │   │
-<a id="__codelineno-16-24" name="__codelineno-16-24" href="#__codelineno-16-24"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-16-25" name="__codelineno-16-25" href="#__codelineno-16-25"></a>│                                                                                                       │
-<a id="__codelineno-16-26" name="__codelineno-16-26" href="#__codelineno-16-26"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
-<a id="__codelineno-16-27" name="__codelineno-16-27" href="#__codelineno-16-27"></a>│  vSAN requires dedicated SSDs/NVMe for cache and HDDs/SSDs for capacity on each host;                 │
-<a id="__codelineno-16-28" name="__codelineno-16-28" href="#__codelineno-16-28"></a>│  10GbE+ network with dedicated vSAN VMkernel adapter.                                                 │
-<a id="__codelineno-16-29" name="__codelineno-16-29" href="#__codelineno-16-29"></a>│                                                                                                       │
-<a id="__codelineno-16-30" name="__codelineno-16-30" href="#__codelineno-16-30"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-16-31" name="__codelineno-16-31" href="#__codelineno-16-31"></a>│                                                                                                       │
-<a id="__codelineno-16-32" name="__codelineno-16-32" href="#__codelineno-16-32"></a>│  Object        = vSAN storage unit; one VMDK = one or more objects                                    │
-<a id="__codelineno-16-33" name="__codelineno-16-33" href="#__codelineno-16-33"></a>│  Component     = slice of an object placed on a single host                                           │
-<a id="__codelineno-16-34" name="__codelineno-16-34" href="#__codelineno-16-34"></a>│  Witness       = metadata-only component; tie-breaker for quorum                                      │
-<a id="__codelineno-16-35" name="__codelineno-16-35" href="#__codelineno-16-35"></a>│  FTT           = Failures To Tolerate; policy setting; FTT=1 needs 3 hosts                            │
-<a id="__codelineno-16-36" name="__codelineno-16-36" href="#__codelineno-16-36"></a>│  RAID-1        = mirroring; FTT=1: 2 data + 1 witness                                                 │
-<a id="__codelineno-16-37" name="__codelineno-16-37" href="#__codelineno-16-37"></a>│  RAID-5        = erasure coding; FTT=1: 4 hosts; more space-efficient                                 │
-<a id="__codelineno-16-38" name="__codelineno-16-38" href="#__codelineno-16-38"></a>│  Disk group    = cache + capacity disks on one host; O(SA: per host)                                  │
-<a id="__codelineno-16-39" name="__codelineno-16-39" href="#__codelineno-16-39"></a>│  ESA           = Express Storage Architecture; vSAN 8+; all-NVMe only                                 │
-<a id="__codelineno-16-40" name="__codelineno-16-40" href="#__codelineno-16-40"></a>│  Fault domain  = logical grouping of hosts; failure unit for placement                                │
-<a id="__codelineno-16-41" name="__codelineno-16-41" href="#__codelineno-16-41"></a>│  Stretched cluster= 2 active sites + 1 witness site; RPO=0 across sites                               │
-<a id="__codelineno-16-42" name="__codelineno-16-42" href="#__codelineno-16-42"></a>│  Resync        = after host failure/return, components rebalanced                                     │
-<a id="__codelineno-16-43" name="__codelineno-16-43" href="#__codelineno-16-43"></a>│  VMkernel      = special NIC adapter; vSAN uses vmk for cluster traffic                               │
-<a id="__codelineno-16-44" name="__codelineno-16-44" href="#__codelineno-16-44"></a>│                                                                                                       │
-<a id="__codelineno-16-45" name="__codelineno-16-45" href="#__codelineno-16-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>┌───────────────────────────────────────── vSAN — How It Works ─────────────────────────────────────────┐
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>│                                                                                                       │
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>│  vSAN pools local disks from ESXi hosts into a shared datastore; data is                              │
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>│  distributed across hosts using a policy-driven object-based storage model.                           │
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>│                                                                                                       │
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>│   │                  Data Path                   │  │                 Disk Groups                 │   │
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>│   │            VM write → vSAN object            │  │          1 cache NVMe/SSD per group         │   │
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>│   │           Policy: FTT + RAID type            │  │         1-7 capacity disks per group        │   │
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>│   │          Components placed on hosts          │  │          Express Storage Arch (ESA)         │   │
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>│   │           Witness: metadata quorum           │  │              All-NVMe: ESA only             │   │
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>│                                                                                                       │
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>│  Each object (VMDK) is split into components placed across hosts per the storage policy.              │
+<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>│                                                                                                       │
+<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a>│                                                                                                       │
+<a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-17-19" name="__codelineno-17-19" href="#__codelineno-17-19"></a>│   │             Cluster Requirements             │  │                Fault Domains                │   │
+<a id="__codelineno-17-20" name="__codelineno-17-20" href="#__codelineno-17-20"></a>│   │             Min 3 hosts (FTT=1)              │  │         Rack awareness: per-rack FD         │   │
+<a id="__codelineno-17-21" name="__codelineno-17-21" href="#__codelineno-17-21"></a>│   │             10GbE+ vSAN VMkernel             │  │         Stretched: 2 sites + witness        │   │
+<a id="__codelineno-17-22" name="__codelineno-17-22" href="#__codelineno-17-22"></a>│   │         Unicast: no multicast needed         │  │          FD isolates host failures          │   │
+<a id="__codelineno-17-23" name="__codelineno-17-23" href="#__codelineno-17-23"></a>│   │           Health: periodic resync            │  │             Min 3 FDs for FTT=1             │   │
+<a id="__codelineno-17-24" name="__codelineno-17-24" href="#__codelineno-17-24"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-17-25" name="__codelineno-17-25" href="#__codelineno-17-25"></a>│                                                                                                       │
+<a id="__codelineno-17-26" name="__codelineno-17-26" href="#__codelineno-17-26"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-17-27" name="__codelineno-17-27" href="#__codelineno-17-27"></a>│  vSAN requires dedicated SSDs/NVMe for cache and HDDs/SSDs for capacity on each host;                 │
+<a id="__codelineno-17-28" name="__codelineno-17-28" href="#__codelineno-17-28"></a>│  10GbE+ network with dedicated vSAN VMkernel adapter.                                                 │
+<a id="__codelineno-17-29" name="__codelineno-17-29" href="#__codelineno-17-29"></a>│                                                                                                       │
+<a id="__codelineno-17-30" name="__codelineno-17-30" href="#__codelineno-17-30"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-17-31" name="__codelineno-17-31" href="#__codelineno-17-31"></a>│                                                                                                       │
+<a id="__codelineno-17-32" name="__codelineno-17-32" href="#__codelineno-17-32"></a>│  Object        = vSAN storage unit; one VMDK = one or more objects                                    │
+<a id="__codelineno-17-33" name="__codelineno-17-33" href="#__codelineno-17-33"></a>│  Component     = slice of an object placed on a single host                                           │
+<a id="__codelineno-17-34" name="__codelineno-17-34" href="#__codelineno-17-34"></a>│  Witness       = metadata-only component; tie-breaker for quorum                                      │
+<a id="__codelineno-17-35" name="__codelineno-17-35" href="#__codelineno-17-35"></a>│  FTT           = Failures To Tolerate; policy setting; FTT=1 needs 3 hosts                            │
+<a id="__codelineno-17-36" name="__codelineno-17-36" href="#__codelineno-17-36"></a>│  RAID-1        = mirroring; FTT=1: 2 data + 1 witness                                                 │
+<a id="__codelineno-17-37" name="__codelineno-17-37" href="#__codelineno-17-37"></a>│  RAID-5        = erasure coding; FTT=1: 4 hosts; more space-efficient                                 │
+<a id="__codelineno-17-38" name="__codelineno-17-38" href="#__codelineno-17-38"></a>│  Disk group    = cache + capacity disks on one host; O(SA: per host)                                  │
+<a id="__codelineno-17-39" name="__codelineno-17-39" href="#__codelineno-17-39"></a>│  ESA           = Express Storage Architecture; vSAN 8+; all-NVMe only                                 │
+<a id="__codelineno-17-40" name="__codelineno-17-40" href="#__codelineno-17-40"></a>│  Fault domain  = logical grouping of hosts; failure unit for placement                                │
+<a id="__codelineno-17-41" name="__codelineno-17-41" href="#__codelineno-17-41"></a>│  Stretched cluster= 2 active sites + 1 witness site; RPO=0 across sites                               │
+<a id="__codelineno-17-42" name="__codelineno-17-42" href="#__codelineno-17-42"></a>│  Resync        = after host failure/return, components rebalanced                                     │
+<a id="__codelineno-17-43" name="__codelineno-17-43" href="#__codelineno-17-43"></a>│  VMkernel      = special NIC adapter; vSAN uses vmk for cluster traffic                               │
+<a id="__codelineno-17-44" name="__codelineno-17-44" href="#__codelineno-17-44"></a>│                                                                                                       │
+<a id="__codelineno-17-45" name="__codelineno-17-45" href="#__codelineno-17-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
-<h3 id="object-placement-ftt1-raid-5-4-hosts-minimum_2">Object Placement — FTT=1 RAID-5 (4 hosts minimum)<a class="headerlink" href="#object-placement-ftt1-raid-5-4-hosts-minimum_2" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>VM VMDK Object
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>├── Data stripe 1 → ESXi-01
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>├── Data stripe 2 → ESXi-02
-<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>├── Data stripe 3 → ESXi-03
-<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>└── Parity stripe → ESXi-04
+<h3 id="object-placement-ftt1-raid-5-4-hosts-minimum_3">Object Placement — FTT=1 RAID-5 (4 hosts minimum)<a class="headerlink" href="#object-placement-ftt1-raid-5-4-hosts-minimum_3" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>VM VMDK Object
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>├── Data stripe 1 → ESXi-01
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>├── Data stripe 2 → ESXi-02
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>├── Data stripe 3 → ESXi-03
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>└── Parity stripe → ESXi-04
 </code></pre></div>
 <h3 id="ftt-and-raid-policy-reference_3">FTT and RAID Policy Reference<a class="headerlink" href="#ftt-and-raid-policy-reference_3" title="Permanent link">&para;</a></h3>
 <table>
@@ -6404,62 +6414,62 @@ How It Works reference covering Storage Architecture Modes, Objects and Componen
 </ul>
 <hr />
 <h2 id="sioc-storage-io-control_3">SIOC — Storage I/O Control<a class="headerlink" href="#sioc-storage-io-control_3" title="Permanent link">&para;</a></h2>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>┌───────────────────────────────────────── vSAN — How It Works ─────────────────────────────────────────┐
-<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>│                                                                                                       │
-<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>│  vSAN pools local disks from ESXi hosts into a shared datastore; data is                              │
-<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>│  distributed across hosts using a policy-driven object-based storage model.                           │
-<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>│                                                                                                       │
-<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>│   │                  Data Path                   │  │                 Disk Groups                 │   │
-<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>│   │            VM write → vSAN object            │  │          1 cache NVMe/SSD per group         │   │
-<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>│   │           Policy: FTT + RAID type            │  │         1-7 capacity disks per group        │   │
-<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a>│   │          Components placed on hosts          │  │          Express Storage Arch (ESA)         │   │
-<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>│   │           Witness: metadata quorum           │  │              All-NVMe: ESA only             │   │
-<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a>│                                                                                                       │
-<a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a>│  Each object (VMDK) is split into components placed across hosts per the storage policy.              │
-<a id="__codelineno-20-15" name="__codelineno-20-15" href="#__codelineno-20-15"></a>│                                                                                                       │
-<a id="__codelineno-20-16" name="__codelineno-20-16" href="#__codelineno-20-16"></a>│                          ▼                                                 ▼                          │
-<a id="__codelineno-20-17" name="__codelineno-20-17" href="#__codelineno-20-17"></a>│                                                                                                       │
-<a id="__codelineno-20-18" name="__codelineno-20-18" href="#__codelineno-20-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-20-19" name="__codelineno-20-19" href="#__codelineno-20-19"></a>│   │             Cluster Requirements             │  │                Fault Domains                │   │
-<a id="__codelineno-20-20" name="__codelineno-20-20" href="#__codelineno-20-20"></a>│   │             Min 3 hosts (FTT=1)              │  │         Rack awareness: per-rack FD         │   │
-<a id="__codelineno-20-21" name="__codelineno-20-21" href="#__codelineno-20-21"></a>│   │             10GbE+ vSAN VMkernel             │  │         Stretched: 2 sites + witness        │   │
-<a id="__codelineno-20-22" name="__codelineno-20-22" href="#__codelineno-20-22"></a>│   │         Unicast: no multicast needed         │  │          FD isolates host failures          │   │
-<a id="__codelineno-20-23" name="__codelineno-20-23" href="#__codelineno-20-23"></a>│   │           Health: periodic resync            │  │             Min 3 FDs for FTT=1             │   │
-<a id="__codelineno-20-24" name="__codelineno-20-24" href="#__codelineno-20-24"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-20-25" name="__codelineno-20-25" href="#__codelineno-20-25"></a>│                                                                                                       │
-<a id="__codelineno-20-26" name="__codelineno-20-26" href="#__codelineno-20-26"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
-<a id="__codelineno-20-27" name="__codelineno-20-27" href="#__codelineno-20-27"></a>│  vSAN requires dedicated SSDs/NVMe for cache and HDDs/SSDs for capacity on each host;                 │
-<a id="__codelineno-20-28" name="__codelineno-20-28" href="#__codelineno-20-28"></a>│  10GbE+ network with dedicated vSAN VMkernel adapter.                                                 │
-<a id="__codelineno-20-29" name="__codelineno-20-29" href="#__codelineno-20-29"></a>│                                                                                                       │
-<a id="__codelineno-20-30" name="__codelineno-20-30" href="#__codelineno-20-30"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-20-31" name="__codelineno-20-31" href="#__codelineno-20-31"></a>│                                                                                                       │
-<a id="__codelineno-20-32" name="__codelineno-20-32" href="#__codelineno-20-32"></a>│  Object        = vSAN storage unit; one VMDK = one or more objects                                    │
-<a id="__codelineno-20-33" name="__codelineno-20-33" href="#__codelineno-20-33"></a>│  Component     = slice of an object placed on a single host                                           │
-<a id="__codelineno-20-34" name="__codelineno-20-34" href="#__codelineno-20-34"></a>│  Witness       = metadata-only component; tie-breaker for quorum                                      │
-<a id="__codelineno-20-35" name="__codelineno-20-35" href="#__codelineno-20-35"></a>│  FTT           = Failures To Tolerate; policy setting; FTT=1 needs 3 hosts                            │
-<a id="__codelineno-20-36" name="__codelineno-20-36" href="#__codelineno-20-36"></a>│  RAID-1        = mirroring; FTT=1: 2 data + 1 witness                                                 │
-<a id="__codelineno-20-37" name="__codelineno-20-37" href="#__codelineno-20-37"></a>│  RAID-5        = erasure coding; FTT=1: 4 hosts; more space-efficient                                 │
-<a id="__codelineno-20-38" name="__codelineno-20-38" href="#__codelineno-20-38"></a>│  Disk group    = cache + capacity disks on one host; O(SA: per host)                                  │
-<a id="__codelineno-20-39" name="__codelineno-20-39" href="#__codelineno-20-39"></a>│  ESA           = Express Storage Architecture; vSAN 8+; all-NVMe only                                 │
-<a id="__codelineno-20-40" name="__codelineno-20-40" href="#__codelineno-20-40"></a>│  Fault domain  = logical grouping of hosts; failure unit for placement                                │
-<a id="__codelineno-20-41" name="__codelineno-20-41" href="#__codelineno-20-41"></a>│  Stretched cluster= 2 active sites + 1 witness site; RPO=0 across sites                               │
-<a id="__codelineno-20-42" name="__codelineno-20-42" href="#__codelineno-20-42"></a>│  Resync        = after host failure/return, components rebalanced                                     │
-<a id="__codelineno-20-43" name="__codelineno-20-43" href="#__codelineno-20-43"></a>│  VMkernel      = special NIC adapter; vSAN uses vmk for cluster traffic                               │
-<a id="__codelineno-20-44" name="__codelineno-20-44" href="#__codelineno-20-44"></a>│                                                                                                       │
-<a id="__codelineno-20-45" name="__codelineno-20-45" href="#__codelineno-20-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>┌───────────────────────────────────────── vSAN — How It Works ─────────────────────────────────────────┐
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>│                                                                                                       │
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>│  vSAN pools local disks from ESXi hosts into a shared datastore; data is                              │
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>│  distributed across hosts using a policy-driven object-based storage model.                           │
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>│                                                                                                       │
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>│   │                  Data Path                   │  │                 Disk Groups                 │   │
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>│   │            VM write → vSAN object            │  │          1 cache NVMe/SSD per group         │   │
+<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>│   │           Policy: FTT + RAID type            │  │         1-7 capacity disks per group        │   │
+<a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a>│   │          Components placed on hosts          │  │          Express Storage Arch (ESA)         │   │
+<a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a>│   │           Witness: metadata quorum           │  │              All-NVMe: ESA only             │   │
+<a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a>│                                                                                                       │
+<a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a>│  Each object (VMDK) is split into components placed across hosts per the storage policy.              │
+<a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a>│                                                                                                       │
+<a id="__codelineno-21-16" name="__codelineno-21-16" href="#__codelineno-21-16"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-21-17" name="__codelineno-21-17" href="#__codelineno-21-17"></a>│                                                                                                       │
+<a id="__codelineno-21-18" name="__codelineno-21-18" href="#__codelineno-21-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-21-19" name="__codelineno-21-19" href="#__codelineno-21-19"></a>│   │             Cluster Requirements             │  │                Fault Domains                │   │
+<a id="__codelineno-21-20" name="__codelineno-21-20" href="#__codelineno-21-20"></a>│   │             Min 3 hosts (FTT=1)              │  │         Rack awareness: per-rack FD         │   │
+<a id="__codelineno-21-21" name="__codelineno-21-21" href="#__codelineno-21-21"></a>│   │             10GbE+ vSAN VMkernel             │  │         Stretched: 2 sites + witness        │   │
+<a id="__codelineno-21-22" name="__codelineno-21-22" href="#__codelineno-21-22"></a>│   │         Unicast: no multicast needed         │  │          FD isolates host failures          │   │
+<a id="__codelineno-21-23" name="__codelineno-21-23" href="#__codelineno-21-23"></a>│   │           Health: periodic resync            │  │             Min 3 FDs for FTT=1             │   │
+<a id="__codelineno-21-24" name="__codelineno-21-24" href="#__codelineno-21-24"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-21-25" name="__codelineno-21-25" href="#__codelineno-21-25"></a>│                                                                                                       │
+<a id="__codelineno-21-26" name="__codelineno-21-26" href="#__codelineno-21-26"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-21-27" name="__codelineno-21-27" href="#__codelineno-21-27"></a>│  vSAN requires dedicated SSDs/NVMe for cache and HDDs/SSDs for capacity on each host;                 │
+<a id="__codelineno-21-28" name="__codelineno-21-28" href="#__codelineno-21-28"></a>│  10GbE+ network with dedicated vSAN VMkernel adapter.                                                 │
+<a id="__codelineno-21-29" name="__codelineno-21-29" href="#__codelineno-21-29"></a>│                                                                                                       │
+<a id="__codelineno-21-30" name="__codelineno-21-30" href="#__codelineno-21-30"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-21-31" name="__codelineno-21-31" href="#__codelineno-21-31"></a>│                                                                                                       │
+<a id="__codelineno-21-32" name="__codelineno-21-32" href="#__codelineno-21-32"></a>│  Object        = vSAN storage unit; one VMDK = one or more objects                                    │
+<a id="__codelineno-21-33" name="__codelineno-21-33" href="#__codelineno-21-33"></a>│  Component     = slice of an object placed on a single host                                           │
+<a id="__codelineno-21-34" name="__codelineno-21-34" href="#__codelineno-21-34"></a>│  Witness       = metadata-only component; tie-breaker for quorum                                      │
+<a id="__codelineno-21-35" name="__codelineno-21-35" href="#__codelineno-21-35"></a>│  FTT           = Failures To Tolerate; policy setting; FTT=1 needs 3 hosts                            │
+<a id="__codelineno-21-36" name="__codelineno-21-36" href="#__codelineno-21-36"></a>│  RAID-1        = mirroring; FTT=1: 2 data + 1 witness                                                 │
+<a id="__codelineno-21-37" name="__codelineno-21-37" href="#__codelineno-21-37"></a>│  RAID-5        = erasure coding; FTT=1: 4 hosts; more space-efficient                                 │
+<a id="__codelineno-21-38" name="__codelineno-21-38" href="#__codelineno-21-38"></a>│  Disk group    = cache + capacity disks on one host; O(SA: per host)                                  │
+<a id="__codelineno-21-39" name="__codelineno-21-39" href="#__codelineno-21-39"></a>│  ESA           = Express Storage Architecture; vSAN 8+; all-NVMe only                                 │
+<a id="__codelineno-21-40" name="__codelineno-21-40" href="#__codelineno-21-40"></a>│  Fault domain  = logical grouping of hosts; failure unit for placement                                │
+<a id="__codelineno-21-41" name="__codelineno-21-41" href="#__codelineno-21-41"></a>│  Stretched cluster= 2 active sites + 1 witness site; RPO=0 across sites                               │
+<a id="__codelineno-21-42" name="__codelineno-21-42" href="#__codelineno-21-42"></a>│  Resync        = after host failure/return, components rebalanced                                     │
+<a id="__codelineno-21-43" name="__codelineno-21-43" href="#__codelineno-21-43"></a>│  VMkernel      = special NIC adapter; vSAN uses vmk for cluster traffic                               │
+<a id="__codelineno-21-44" name="__codelineno-21-44" href="#__codelineno-21-44"></a>│                                                                                                       │
+<a id="__codelineno-21-45" name="__codelineno-21-45" href="#__codelineno-21-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
-<h3 id="object-placement-ftt1-raid-5-4-hosts-minimum_3">Object Placement — FTT=1 RAID-5 (4 hosts minimum)<a class="headerlink" href="#object-placement-ftt1-raid-5-4-hosts-minimum_3" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>VM VMDK Object
-<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>├── Data stripe 1 → ESXi-01
-<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>├── Data stripe 2 → ESXi-02
-<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>├── Data stripe 3 → ESXi-03
-<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>└── Parity stripe → ESXi-04
+<h3 id="object-placement-ftt1-raid-5-4-hosts-minimum_4">Object Placement — FTT=1 RAID-5 (4 hosts minimum)<a class="headerlink" href="#object-placement-ftt1-raid-5-4-hosts-minimum_4" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>VM VMDK Object
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>├── Data stripe 1 → ESXi-01
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>├── Data stripe 2 → ESXi-02
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>├── Data stripe 3 → ESXi-03
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>└── Parity stripe → ESXi-04
 </code></pre></div>
 <h3 id="ftt-and-raid-policy-reference_4">FTT and RAID Policy Reference<a class="headerlink" href="#ftt-and-raid-policy-reference_4" title="Permanent link">&para;</a></h3>
 <table>
@@ -6669,62 +6679,62 @@ How It Works reference covering Storage Architecture Modes, Objects and Componen
 </ul>
 <hr />
 <h2 id="sioc-storage-io-control_4">SIOC — Storage I/O Control<a class="headerlink" href="#sioc-storage-io-control_4" title="Permanent link">&para;</a></h2>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>┌───────────────────────────────────────── vSAN — How It Works ─────────────────────────────────────────┐
-<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>│                                                                                                       │
-<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>│  vSAN pools local disks from ESXi hosts into a shared datastore; data is                              │
-<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a>│  distributed across hosts using a policy-driven object-based storage model.                           │
-<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>│                                                                                                       │
-<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a>│   │                  Data Path                   │  │                 Disk Groups                 │   │
-<a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a>│   │            VM write → vSAN object            │  │          1 cache NVMe/SSD per group         │   │
-<a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a>│   │           Policy: FTT + RAID type            │  │         1-7 capacity disks per group        │   │
-<a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a>│   │          Components placed on hosts          │  │          Express Storage Arch (ESA)         │   │
-<a id="__codelineno-24-11" name="__codelineno-24-11" href="#__codelineno-24-11"></a>│   │           Witness: metadata quorum           │  │              All-NVMe: ESA only             │   │
-<a id="__codelineno-24-12" name="__codelineno-24-12" href="#__codelineno-24-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-24-13" name="__codelineno-24-13" href="#__codelineno-24-13"></a>│                                                                                                       │
-<a id="__codelineno-24-14" name="__codelineno-24-14" href="#__codelineno-24-14"></a>│  Each object (VMDK) is split into components placed across hosts per the storage policy.              │
-<a id="__codelineno-24-15" name="__codelineno-24-15" href="#__codelineno-24-15"></a>│                                                                                                       │
-<a id="__codelineno-24-16" name="__codelineno-24-16" href="#__codelineno-24-16"></a>│                          ▼                                                 ▼                          │
-<a id="__codelineno-24-17" name="__codelineno-24-17" href="#__codelineno-24-17"></a>│                                                                                                       │
-<a id="__codelineno-24-18" name="__codelineno-24-18" href="#__codelineno-24-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-24-19" name="__codelineno-24-19" href="#__codelineno-24-19"></a>│   │             Cluster Requirements             │  │                Fault Domains                │   │
-<a id="__codelineno-24-20" name="__codelineno-24-20" href="#__codelineno-24-20"></a>│   │             Min 3 hosts (FTT=1)              │  │         Rack awareness: per-rack FD         │   │
-<a id="__codelineno-24-21" name="__codelineno-24-21" href="#__codelineno-24-21"></a>│   │             10GbE+ vSAN VMkernel             │  │         Stretched: 2 sites + witness        │   │
-<a id="__codelineno-24-22" name="__codelineno-24-22" href="#__codelineno-24-22"></a>│   │         Unicast: no multicast needed         │  │          FD isolates host failures          │   │
-<a id="__codelineno-24-23" name="__codelineno-24-23" href="#__codelineno-24-23"></a>│   │           Health: periodic resync            │  │             Min 3 FDs for FTT=1             │   │
-<a id="__codelineno-24-24" name="__codelineno-24-24" href="#__codelineno-24-24"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-24-25" name="__codelineno-24-25" href="#__codelineno-24-25"></a>│                                                                                                       │
-<a id="__codelineno-24-26" name="__codelineno-24-26" href="#__codelineno-24-26"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
-<a id="__codelineno-24-27" name="__codelineno-24-27" href="#__codelineno-24-27"></a>│  vSAN requires dedicated SSDs/NVMe for cache and HDDs/SSDs for capacity on each host;                 │
-<a id="__codelineno-24-28" name="__codelineno-24-28" href="#__codelineno-24-28"></a>│  10GbE+ network with dedicated vSAN VMkernel adapter.                                                 │
-<a id="__codelineno-24-29" name="__codelineno-24-29" href="#__codelineno-24-29"></a>│                                                                                                       │
-<a id="__codelineno-24-30" name="__codelineno-24-30" href="#__codelineno-24-30"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-24-31" name="__codelineno-24-31" href="#__codelineno-24-31"></a>│                                                                                                       │
-<a id="__codelineno-24-32" name="__codelineno-24-32" href="#__codelineno-24-32"></a>│  Object        = vSAN storage unit; one VMDK = one or more objects                                    │
-<a id="__codelineno-24-33" name="__codelineno-24-33" href="#__codelineno-24-33"></a>│  Component     = slice of an object placed on a single host                                           │
-<a id="__codelineno-24-34" name="__codelineno-24-34" href="#__codelineno-24-34"></a>│  Witness       = metadata-only component; tie-breaker for quorum                                      │
-<a id="__codelineno-24-35" name="__codelineno-24-35" href="#__codelineno-24-35"></a>│  FTT           = Failures To Tolerate; policy setting; FTT=1 needs 3 hosts                            │
-<a id="__codelineno-24-36" name="__codelineno-24-36" href="#__codelineno-24-36"></a>│  RAID-1        = mirroring; FTT=1: 2 data + 1 witness                                                 │
-<a id="__codelineno-24-37" name="__codelineno-24-37" href="#__codelineno-24-37"></a>│  RAID-5        = erasure coding; FTT=1: 4 hosts; more space-efficient                                 │
-<a id="__codelineno-24-38" name="__codelineno-24-38" href="#__codelineno-24-38"></a>│  Disk group    = cache + capacity disks on one host; O(SA: per host)                                  │
-<a id="__codelineno-24-39" name="__codelineno-24-39" href="#__codelineno-24-39"></a>│  ESA           = Express Storage Architecture; vSAN 8+; all-NVMe only                                 │
-<a id="__codelineno-24-40" name="__codelineno-24-40" href="#__codelineno-24-40"></a>│  Fault domain  = logical grouping of hosts; failure unit for placement                                │
-<a id="__codelineno-24-41" name="__codelineno-24-41" href="#__codelineno-24-41"></a>│  Stretched cluster= 2 active sites + 1 witness site; RPO=0 across sites                               │
-<a id="__codelineno-24-42" name="__codelineno-24-42" href="#__codelineno-24-42"></a>│  Resync        = after host failure/return, components rebalanced                                     │
-<a id="__codelineno-24-43" name="__codelineno-24-43" href="#__codelineno-24-43"></a>│  VMkernel      = special NIC adapter; vSAN uses vmk for cluster traffic                               │
-<a id="__codelineno-24-44" name="__codelineno-24-44" href="#__codelineno-24-44"></a>│                                                                                                       │
-<a id="__codelineno-24-45" name="__codelineno-24-45" href="#__codelineno-24-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>┌───────────────────────────────────────── vSAN — How It Works ─────────────────────────────────────────┐
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>│                                                                                                       │
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>│  vSAN pools local disks from ESXi hosts into a shared datastore; data is                              │
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>│  distributed across hosts using a policy-driven object-based storage model.                           │
+<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>│                                                                                                       │
+<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a>│   │                  Data Path                   │  │                 Disk Groups                 │   │
+<a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a>│   │            VM write → vSAN object            │  │          1 cache NVMe/SSD per group         │   │
+<a id="__codelineno-25-9" name="__codelineno-25-9" href="#__codelineno-25-9"></a>│   │           Policy: FTT + RAID type            │  │         1-7 capacity disks per group        │   │
+<a id="__codelineno-25-10" name="__codelineno-25-10" href="#__codelineno-25-10"></a>│   │          Components placed on hosts          │  │          Express Storage Arch (ESA)         │   │
+<a id="__codelineno-25-11" name="__codelineno-25-11" href="#__codelineno-25-11"></a>│   │           Witness: metadata quorum           │  │              All-NVMe: ESA only             │   │
+<a id="__codelineno-25-12" name="__codelineno-25-12" href="#__codelineno-25-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-25-13" name="__codelineno-25-13" href="#__codelineno-25-13"></a>│                                                                                                       │
+<a id="__codelineno-25-14" name="__codelineno-25-14" href="#__codelineno-25-14"></a>│  Each object (VMDK) is split into components placed across hosts per the storage policy.              │
+<a id="__codelineno-25-15" name="__codelineno-25-15" href="#__codelineno-25-15"></a>│                                                                                                       │
+<a id="__codelineno-25-16" name="__codelineno-25-16" href="#__codelineno-25-16"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-25-17" name="__codelineno-25-17" href="#__codelineno-25-17"></a>│                                                                                                       │
+<a id="__codelineno-25-18" name="__codelineno-25-18" href="#__codelineno-25-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-25-19" name="__codelineno-25-19" href="#__codelineno-25-19"></a>│   │             Cluster Requirements             │  │                Fault Domains                │   │
+<a id="__codelineno-25-20" name="__codelineno-25-20" href="#__codelineno-25-20"></a>│   │             Min 3 hosts (FTT=1)              │  │         Rack awareness: per-rack FD         │   │
+<a id="__codelineno-25-21" name="__codelineno-25-21" href="#__codelineno-25-21"></a>│   │             10GbE+ vSAN VMkernel             │  │         Stretched: 2 sites + witness        │   │
+<a id="__codelineno-25-22" name="__codelineno-25-22" href="#__codelineno-25-22"></a>│   │         Unicast: no multicast needed         │  │          FD isolates host failures          │   │
+<a id="__codelineno-25-23" name="__codelineno-25-23" href="#__codelineno-25-23"></a>│   │           Health: periodic resync            │  │             Min 3 FDs for FTT=1             │   │
+<a id="__codelineno-25-24" name="__codelineno-25-24" href="#__codelineno-25-24"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-25-25" name="__codelineno-25-25" href="#__codelineno-25-25"></a>│                                                                                                       │
+<a id="__codelineno-25-26" name="__codelineno-25-26" href="#__codelineno-25-26"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-25-27" name="__codelineno-25-27" href="#__codelineno-25-27"></a>│  vSAN requires dedicated SSDs/NVMe for cache and HDDs/SSDs for capacity on each host;                 │
+<a id="__codelineno-25-28" name="__codelineno-25-28" href="#__codelineno-25-28"></a>│  10GbE+ network with dedicated vSAN VMkernel adapter.                                                 │
+<a id="__codelineno-25-29" name="__codelineno-25-29" href="#__codelineno-25-29"></a>│                                                                                                       │
+<a id="__codelineno-25-30" name="__codelineno-25-30" href="#__codelineno-25-30"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-25-31" name="__codelineno-25-31" href="#__codelineno-25-31"></a>│                                                                                                       │
+<a id="__codelineno-25-32" name="__codelineno-25-32" href="#__codelineno-25-32"></a>│  Object        = vSAN storage unit; one VMDK = one or more objects                                    │
+<a id="__codelineno-25-33" name="__codelineno-25-33" href="#__codelineno-25-33"></a>│  Component     = slice of an object placed on a single host                                           │
+<a id="__codelineno-25-34" name="__codelineno-25-34" href="#__codelineno-25-34"></a>│  Witness       = metadata-only component; tie-breaker for quorum                                      │
+<a id="__codelineno-25-35" name="__codelineno-25-35" href="#__codelineno-25-35"></a>│  FTT           = Failures To Tolerate; policy setting; FTT=1 needs 3 hosts                            │
+<a id="__codelineno-25-36" name="__codelineno-25-36" href="#__codelineno-25-36"></a>│  RAID-1        = mirroring; FTT=1: 2 data + 1 witness                                                 │
+<a id="__codelineno-25-37" name="__codelineno-25-37" href="#__codelineno-25-37"></a>│  RAID-5        = erasure coding; FTT=1: 4 hosts; more space-efficient                                 │
+<a id="__codelineno-25-38" name="__codelineno-25-38" href="#__codelineno-25-38"></a>│  Disk group    = cache + capacity disks on one host; O(SA: per host)                                  │
+<a id="__codelineno-25-39" name="__codelineno-25-39" href="#__codelineno-25-39"></a>│  ESA           = Express Storage Architecture; vSAN 8+; all-NVMe only                                 │
+<a id="__codelineno-25-40" name="__codelineno-25-40" href="#__codelineno-25-40"></a>│  Fault domain  = logical grouping of hosts; failure unit for placement                                │
+<a id="__codelineno-25-41" name="__codelineno-25-41" href="#__codelineno-25-41"></a>│  Stretched cluster= 2 active sites + 1 witness site; RPO=0 across sites                               │
+<a id="__codelineno-25-42" name="__codelineno-25-42" href="#__codelineno-25-42"></a>│  Resync        = after host failure/return, components rebalanced                                     │
+<a id="__codelineno-25-43" name="__codelineno-25-43" href="#__codelineno-25-43"></a>│  VMkernel      = special NIC adapter; vSAN uses vmk for cluster traffic                               │
+<a id="__codelineno-25-44" name="__codelineno-25-44" href="#__codelineno-25-44"></a>│                                                                                                       │
+<a id="__codelineno-25-45" name="__codelineno-25-45" href="#__codelineno-25-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
-<h3 id="object-placement-ftt1-raid-5-4-hosts-minimum_4">Object Placement — FTT=1 RAID-5 (4 hosts minimum)<a class="headerlink" href="#object-placement-ftt1-raid-5-4-hosts-minimum_4" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>VM VMDK Object
-<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>├── Data stripe 1 → ESXi-01
-<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>├── Data stripe 2 → ESXi-02
-<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>├── Data stripe 3 → ESXi-03
-<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>└── Parity stripe → ESXi-04
+<h3 id="object-placement-ftt1-raid-5-4-hosts-minimum_5">Object Placement — FTT=1 RAID-5 (4 hosts minimum)<a class="headerlink" href="#object-placement-ftt1-raid-5-4-hosts-minimum_5" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>VM VMDK Object
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>├── Data stripe 1 → ESXi-01
+<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>├── Data stripe 2 → ESXi-02
+<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a>├── Data stripe 3 → ESXi-03
+<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>└── Parity stripe → ESXi-04
 </code></pre></div>
 <h3 id="ftt-and-raid-policy-reference_5">FTT and RAID Policy Reference<a class="headerlink" href="#ftt-and-raid-policy-reference_5" title="Permanent link">&para;</a></h3>
 <table>
@@ -6934,60 +6944,60 @@ How It Works reference covering Storage Architecture Modes, Objects and Componen
 </ul>
 <hr />
 <h2 id="sioc-storage-io-control_5">SIOC — Storage I/O Control<a class="headerlink" href="#sioc-storage-io-control_5" title="Permanent link">&para;</a></h2>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>┌───────────────────────────────────────── vSAN — How It Works ─────────────────────────────────────────┐
-<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>│                                                                                                       │
-<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>│  vSAN pools local disks from ESXi hosts into a shared datastore; data is                              │
-<a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a>│  distributed across hosts using a policy-driven object-based storage model.                           │
-<a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a>│                                                                                                       │
-<a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-27-7" name="__codelineno-27-7" href="#__codelineno-27-7"></a>│   │                  Data Path                   │  │                 Disk Groups                 │   │
-<a id="__codelineno-27-8" name="__codelineno-27-8" href="#__codelineno-27-8"></a>│   │            VM write → vSAN object            │  │          1 cache NVMe/SSD per group         │   │
-<a id="__codelineno-27-9" name="__codelineno-27-9" href="#__codelineno-27-9"></a>│   │           Policy: FTT + RAID type            │  │         1-7 capacity disks per group        │   │
-<a id="__codelineno-27-10" name="__codelineno-27-10" href="#__codelineno-27-10"></a>│   │          Components placed on hosts          │  │          Express Storage Arch (ESA)         │   │
-<a id="__codelineno-27-11" name="__codelineno-27-11" href="#__codelineno-27-11"></a>│   │           Witness: metadata quorum           │  │              All-NVMe: ESA only             │   │
-<a id="__codelineno-27-12" name="__codelineno-27-12" href="#__codelineno-27-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-27-13" name="__codelineno-27-13" href="#__codelineno-27-13"></a>│                                                                                                       │
-<a id="__codelineno-27-14" name="__codelineno-27-14" href="#__codelineno-27-14"></a>│  Each object (VMDK) is split into components placed across hosts per the storage policy.              │
-<a id="__codelineno-27-15" name="__codelineno-27-15" href="#__codelineno-27-15"></a>│                                                                                                       │
-<a id="__codelineno-27-16" name="__codelineno-27-16" href="#__codelineno-27-16"></a>│                          ▼                                                 ▼                          │
-<a id="__codelineno-27-17" name="__codelineno-27-17" href="#__codelineno-27-17"></a>│                                                                                                       │
-<a id="__codelineno-27-18" name="__codelineno-27-18" href="#__codelineno-27-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-27-19" name="__codelineno-27-19" href="#__codelineno-27-19"></a>│   │             Cluster Requirements             │  │                Fault Domains                │   │
-<a id="__codelineno-27-20" name="__codelineno-27-20" href="#__codelineno-27-20"></a>│   │             Min 3 hosts (FTT=1)              │  │         Rack awareness: per-rack FD         │   │
-<a id="__codelineno-27-21" name="__codelineno-27-21" href="#__codelineno-27-21"></a>│   │             10GbE+ vSAN VMkernel             │  │         Stretched: 2 sites + witness        │   │
-<a id="__codelineno-27-22" name="__codelineno-27-22" href="#__codelineno-27-22"></a>│   │         Unicast: no multicast needed         │  │          FD isolates host failures          │   │
-<a id="__codelineno-27-23" name="__codelineno-27-23" href="#__codelineno-27-23"></a>│   │           Health: periodic resync            │  │             Min 3 FDs for FTT=1             │   │
-<a id="__codelineno-27-24" name="__codelineno-27-24" href="#__codelineno-27-24"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-27-25" name="__codelineno-27-25" href="#__codelineno-27-25"></a>│                                                                                                       │
-<a id="__codelineno-27-26" name="__codelineno-27-26" href="#__codelineno-27-26"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
-<a id="__codelineno-27-27" name="__codelineno-27-27" href="#__codelineno-27-27"></a>│  vSAN requires dedicated SSDs/NVMe for cache and HDDs/SSDs for capacity on each host;                 │
-<a id="__codelineno-27-28" name="__codelineno-27-28" href="#__codelineno-27-28"></a>│  10GbE+ network with dedicated vSAN VMkernel adapter.                                                 │
-<a id="__codelineno-27-29" name="__codelineno-27-29" href="#__codelineno-27-29"></a>│                                                                                                       │
-<a id="__codelineno-27-30" name="__codelineno-27-30" href="#__codelineno-27-30"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-27-31" name="__codelineno-27-31" href="#__codelineno-27-31"></a>│                                                                                                       │
-<a id="__codelineno-27-32" name="__codelineno-27-32" href="#__codelineno-27-32"></a>│  Object        = vSAN storage unit; one VMDK = one or more objects                                    │
-<a id="__codelineno-27-33" name="__codelineno-27-33" href="#__codelineno-27-33"></a>│  Component     = slice of an object placed on a single host                                           │
-<a id="__codelineno-27-34" name="__codelineno-27-34" href="#__codelineno-27-34"></a>│  Witness       = metadata-only component; tie-breaker for quorum                                      │
-<a id="__codelineno-27-35" name="__codelineno-27-35" href="#__codelineno-27-35"></a>│  FTT           = Failures To Tolerate; policy setting; FTT=1 needs 3 hosts                            │
-<a id="__codelineno-27-36" name="__codelineno-27-36" href="#__codelineno-27-36"></a>│  RAID-1        = mirroring; FTT=1: 2 data + 1 witness                                                 │
-<a id="__codelineno-27-37" name="__codelineno-27-37" href="#__codelineno-27-37"></a>│  RAID-5        = erasure coding; FTT=1: 4 hosts; more space-efficient                                 │
-<a id="__codelineno-27-38" name="__codelineno-27-38" href="#__codelineno-27-38"></a>│  Disk group    = cache + capacity disks on one host; O(SA: per host)                                  │
-<a id="__codelineno-27-39" name="__codelineno-27-39" href="#__codelineno-27-39"></a>│  ESA           = Express Storage Architecture; vSAN 8+; all-NVMe only                                 │
-<a id="__codelineno-27-40" name="__codelineno-27-40" href="#__codelineno-27-40"></a>│  Fault domain  = logical grouping of hosts; failure unit for placement                                │
-<a id="__codelineno-27-41" name="__codelineno-27-41" href="#__codelineno-27-41"></a>│  Stretched cluster= 2 active sites + 1 witness site; RPO=0 across sites                               │
-<a id="__codelineno-27-42" name="__codelineno-27-42" href="#__codelineno-27-42"></a>│  Resync        = after host failure/return, components rebalanced                                     │
-<a id="__codelineno-27-43" name="__codelineno-27-43" href="#__codelineno-27-43"></a>│  VMkernel      = special NIC adapter; vSAN uses vmk for cluster traffic                               │
-<a id="__codelineno-27-44" name="__codelineno-27-44" href="#__codelineno-27-44"></a>│                                                                                                       │
-<a id="__codelineno-27-45" name="__codelineno-27-45" href="#__codelineno-27-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>┌───────────────────────────────────────── vSAN — How It Works ─────────────────────────────────────────┐
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>│                                                                                                       │
+<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a>│  vSAN pools local disks from ESXi hosts into a shared datastore; data is                              │
+<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a>│  distributed across hosts using a policy-driven object-based storage model.                           │
+<a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a>│                                                                                                       │
+<a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-28-7" name="__codelineno-28-7" href="#__codelineno-28-7"></a>│   │                  Data Path                   │  │                 Disk Groups                 │   │
+<a id="__codelineno-28-8" name="__codelineno-28-8" href="#__codelineno-28-8"></a>│   │            VM write → vSAN object            │  │          1 cache NVMe/SSD per group         │   │
+<a id="__codelineno-28-9" name="__codelineno-28-9" href="#__codelineno-28-9"></a>│   │           Policy: FTT + RAID type            │  │         1-7 capacity disks per group        │   │
+<a id="__codelineno-28-10" name="__codelineno-28-10" href="#__codelineno-28-10"></a>│   │          Components placed on hosts          │  │          Express Storage Arch (ESA)         │   │
+<a id="__codelineno-28-11" name="__codelineno-28-11" href="#__codelineno-28-11"></a>│   │           Witness: metadata quorum           │  │              All-NVMe: ESA only             │   │
+<a id="__codelineno-28-12" name="__codelineno-28-12" href="#__codelineno-28-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-28-13" name="__codelineno-28-13" href="#__codelineno-28-13"></a>│                                                                                                       │
+<a id="__codelineno-28-14" name="__codelineno-28-14" href="#__codelineno-28-14"></a>│  Each object (VMDK) is split into components placed across hosts per the storage policy.              │
+<a id="__codelineno-28-15" name="__codelineno-28-15" href="#__codelineno-28-15"></a>│                                                                                                       │
+<a id="__codelineno-28-16" name="__codelineno-28-16" href="#__codelineno-28-16"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-28-17" name="__codelineno-28-17" href="#__codelineno-28-17"></a>│                                                                                                       │
+<a id="__codelineno-28-18" name="__codelineno-28-18" href="#__codelineno-28-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-28-19" name="__codelineno-28-19" href="#__codelineno-28-19"></a>│   │             Cluster Requirements             │  │                Fault Domains                │   │
+<a id="__codelineno-28-20" name="__codelineno-28-20" href="#__codelineno-28-20"></a>│   │             Min 3 hosts (FTT=1)              │  │         Rack awareness: per-rack FD         │   │
+<a id="__codelineno-28-21" name="__codelineno-28-21" href="#__codelineno-28-21"></a>│   │             10GbE+ vSAN VMkernel             │  │         Stretched: 2 sites + witness        │   │
+<a id="__codelineno-28-22" name="__codelineno-28-22" href="#__codelineno-28-22"></a>│   │         Unicast: no multicast needed         │  │          FD isolates host failures          │   │
+<a id="__codelineno-28-23" name="__codelineno-28-23" href="#__codelineno-28-23"></a>│   │           Health: periodic resync            │  │             Min 3 FDs for FTT=1             │   │
+<a id="__codelineno-28-24" name="__codelineno-28-24" href="#__codelineno-28-24"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-28-25" name="__codelineno-28-25" href="#__codelineno-28-25"></a>│                                                                                                       │
+<a id="__codelineno-28-26" name="__codelineno-28-26" href="#__codelineno-28-26"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-28-27" name="__codelineno-28-27" href="#__codelineno-28-27"></a>│  vSAN requires dedicated SSDs/NVMe for cache and HDDs/SSDs for capacity on each host;                 │
+<a id="__codelineno-28-28" name="__codelineno-28-28" href="#__codelineno-28-28"></a>│  10GbE+ network with dedicated vSAN VMkernel adapter.                                                 │
+<a id="__codelineno-28-29" name="__codelineno-28-29" href="#__codelineno-28-29"></a>│                                                                                                       │
+<a id="__codelineno-28-30" name="__codelineno-28-30" href="#__codelineno-28-30"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-28-31" name="__codelineno-28-31" href="#__codelineno-28-31"></a>│                                                                                                       │
+<a id="__codelineno-28-32" name="__codelineno-28-32" href="#__codelineno-28-32"></a>│  Object        = vSAN storage unit; one VMDK = one or more objects                                    │
+<a id="__codelineno-28-33" name="__codelineno-28-33" href="#__codelineno-28-33"></a>│  Component     = slice of an object placed on a single host                                           │
+<a id="__codelineno-28-34" name="__codelineno-28-34" href="#__codelineno-28-34"></a>│  Witness       = metadata-only component; tie-breaker for quorum                                      │
+<a id="__codelineno-28-35" name="__codelineno-28-35" href="#__codelineno-28-35"></a>│  FTT           = Failures To Tolerate; policy setting; FTT=1 needs 3 hosts                            │
+<a id="__codelineno-28-36" name="__codelineno-28-36" href="#__codelineno-28-36"></a>│  RAID-1        = mirroring; FTT=1: 2 data + 1 witness                                                 │
+<a id="__codelineno-28-37" name="__codelineno-28-37" href="#__codelineno-28-37"></a>│  RAID-5        = erasure coding; FTT=1: 4 hosts; more space-efficient                                 │
+<a id="__codelineno-28-38" name="__codelineno-28-38" href="#__codelineno-28-38"></a>│  Disk group    = cache + capacity disks on one host; O(SA: per host)                                  │
+<a id="__codelineno-28-39" name="__codelineno-28-39" href="#__codelineno-28-39"></a>│  ESA           = Express Storage Architecture; vSAN 8+; all-NVMe only                                 │
+<a id="__codelineno-28-40" name="__codelineno-28-40" href="#__codelineno-28-40"></a>│  Fault domain  = logical grouping of hosts; failure unit for placement                                │
+<a id="__codelineno-28-41" name="__codelineno-28-41" href="#__codelineno-28-41"></a>│  Stretched cluster= 2 active sites + 1 witness site; RPO=0 across sites                               │
+<a id="__codelineno-28-42" name="__codelineno-28-42" href="#__codelineno-28-42"></a>│  Resync        = after host failure/return, components rebalanced                                     │
+<a id="__codelineno-28-43" name="__codelineno-28-43" href="#__codelineno-28-43"></a>│  VMkernel      = special NIC adapter; vSAN uses vmk for cluster traffic                               │
+<a id="__codelineno-28-44" name="__codelineno-28-44" href="#__codelineno-28-44"></a>│                                                                                                       │
+<a id="__codelineno-28-45" name="__codelineno-28-45" href="#__codelineno-28-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
-<h3 id="object-placement-ftt1-raid-5-4-hosts-minimum_5">Object Placement — FTT=1 RAID-5 (4 hosts minimum)<a class="headerlink" href="#object-placement-ftt1-raid-5-4-hosts-minimum_5" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>VM VMDK Object
-<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>├── Data stripe 1 → ESXi-01
-<a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a>├── Data stripe 2 → ESXi-02
-<a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a>├── Data stripe 3 → ESXi-03
-<a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a>└── Parity stripe → ESXi-04
+<h3 id="object-placement-ftt1-raid-5-4-hosts-minimum_6">Object Placement — FTT=1 RAID-5 (4 hosts minimum)<a class="headerlink" href="#object-placement-ftt1-raid-5-4-hosts-minimum_6" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>VM VMDK Object
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>├── Data stripe 1 → ESXi-01
+<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>├── Data stripe 2 → ESXi-02
+<a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a>├── Data stripe 3 → ESXi-03
+<a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a>└── Parity stripe → ESXi-04
 </code></pre></div>
 <h3 id="ftt-and-raid-policy-reference_6">FTT and RAID Policy Reference<a class="headerlink" href="#ftt-and-raid-policy-reference_6" title="Permanent link">&para;</a></h3>
 <table>
@@ -7197,60 +7207,60 @@ How It Works reference covering Storage Architecture Modes, Objects and Componen
 </ul>
 <hr />
 <h2 id="sioc-storage-io-control_6">SIOC — Storage I/O Control<a class="headerlink" href="#sioc-storage-io-control_6" title="Permanent link">&para;</a></h2>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>┌───────────────────────────────────────── vSAN — How It Works ─────────────────────────────────────────┐
-<a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>│                                                                                                       │
-<a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a>│  vSAN pools local disks from ESXi hosts into a shared datastore; data is                              │
-<a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a>│  distributed across hosts using a policy-driven object-based storage model.                           │
-<a id="__codelineno-30-5" name="__codelineno-30-5" href="#__codelineno-30-5"></a>│                                                                                                       │
-<a id="__codelineno-30-6" name="__codelineno-30-6" href="#__codelineno-30-6"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-30-7" name="__codelineno-30-7" href="#__codelineno-30-7"></a>│   │                  Data Path                   │  │                 Disk Groups                 │   │
-<a id="__codelineno-30-8" name="__codelineno-30-8" href="#__codelineno-30-8"></a>│   │            VM write → vSAN object            │  │          1 cache NVMe/SSD per group         │   │
-<a id="__codelineno-30-9" name="__codelineno-30-9" href="#__codelineno-30-9"></a>│   │           Policy: FTT + RAID type            │  │         1-7 capacity disks per group        │   │
-<a id="__codelineno-30-10" name="__codelineno-30-10" href="#__codelineno-30-10"></a>│   │          Components placed on hosts          │  │          Express Storage Arch (ESA)         │   │
-<a id="__codelineno-30-11" name="__codelineno-30-11" href="#__codelineno-30-11"></a>│   │           Witness: metadata quorum           │  │              All-NVMe: ESA only             │   │
-<a id="__codelineno-30-12" name="__codelineno-30-12" href="#__codelineno-30-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-30-13" name="__codelineno-30-13" href="#__codelineno-30-13"></a>│                                                                                                       │
-<a id="__codelineno-30-14" name="__codelineno-30-14" href="#__codelineno-30-14"></a>│  Each object (VMDK) is split into components placed across hosts per the storage policy.              │
-<a id="__codelineno-30-15" name="__codelineno-30-15" href="#__codelineno-30-15"></a>│                                                                                                       │
-<a id="__codelineno-30-16" name="__codelineno-30-16" href="#__codelineno-30-16"></a>│                          ▼                                                 ▼                          │
-<a id="__codelineno-30-17" name="__codelineno-30-17" href="#__codelineno-30-17"></a>│                                                                                                       │
-<a id="__codelineno-30-18" name="__codelineno-30-18" href="#__codelineno-30-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-30-19" name="__codelineno-30-19" href="#__codelineno-30-19"></a>│   │             Cluster Requirements             │  │                Fault Domains                │   │
-<a id="__codelineno-30-20" name="__codelineno-30-20" href="#__codelineno-30-20"></a>│   │             Min 3 hosts (FTT=1)              │  │         Rack awareness: per-rack FD         │   │
-<a id="__codelineno-30-21" name="__codelineno-30-21" href="#__codelineno-30-21"></a>│   │             10GbE+ vSAN VMkernel             │  │         Stretched: 2 sites + witness        │   │
-<a id="__codelineno-30-22" name="__codelineno-30-22" href="#__codelineno-30-22"></a>│   │         Unicast: no multicast needed         │  │          FD isolates host failures          │   │
-<a id="__codelineno-30-23" name="__codelineno-30-23" href="#__codelineno-30-23"></a>│   │           Health: periodic resync            │  │             Min 3 FDs for FTT=1             │   │
-<a id="__codelineno-30-24" name="__codelineno-30-24" href="#__codelineno-30-24"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-30-25" name="__codelineno-30-25" href="#__codelineno-30-25"></a>│                                                                                                       │
-<a id="__codelineno-30-26" name="__codelineno-30-26" href="#__codelineno-30-26"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
-<a id="__codelineno-30-27" name="__codelineno-30-27" href="#__codelineno-30-27"></a>│  vSAN requires dedicated SSDs/NVMe for cache and HDDs/SSDs for capacity on each host;                 │
-<a id="__codelineno-30-28" name="__codelineno-30-28" href="#__codelineno-30-28"></a>│  10GbE+ network with dedicated vSAN VMkernel adapter.                                                 │
-<a id="__codelineno-30-29" name="__codelineno-30-29" href="#__codelineno-30-29"></a>│                                                                                                       │
-<a id="__codelineno-30-30" name="__codelineno-30-30" href="#__codelineno-30-30"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-30-31" name="__codelineno-30-31" href="#__codelineno-30-31"></a>│                                                                                                       │
-<a id="__codelineno-30-32" name="__codelineno-30-32" href="#__codelineno-30-32"></a>│  Object        = vSAN storage unit; one VMDK = one or more objects                                    │
-<a id="__codelineno-30-33" name="__codelineno-30-33" href="#__codelineno-30-33"></a>│  Component     = slice of an object placed on a single host                                           │
-<a id="__codelineno-30-34" name="__codelineno-30-34" href="#__codelineno-30-34"></a>│  Witness       = metadata-only component; tie-breaker for quorum                                      │
-<a id="__codelineno-30-35" name="__codelineno-30-35" href="#__codelineno-30-35"></a>│  FTT           = Failures To Tolerate; policy setting; FTT=1 needs 3 hosts                            │
-<a id="__codelineno-30-36" name="__codelineno-30-36" href="#__codelineno-30-36"></a>│  RAID-1        = mirroring; FTT=1: 2 data + 1 witness                                                 │
-<a id="__codelineno-30-37" name="__codelineno-30-37" href="#__codelineno-30-37"></a>│  RAID-5        = erasure coding; FTT=1: 4 hosts; more space-efficient                                 │
-<a id="__codelineno-30-38" name="__codelineno-30-38" href="#__codelineno-30-38"></a>│  Disk group    = cache + capacity disks on one host; O(SA: per host)                                  │
-<a id="__codelineno-30-39" name="__codelineno-30-39" href="#__codelineno-30-39"></a>│  ESA           = Express Storage Architecture; vSAN 8+; all-NVMe only                                 │
-<a id="__codelineno-30-40" name="__codelineno-30-40" href="#__codelineno-30-40"></a>│  Fault domain  = logical grouping of hosts; failure unit for placement                                │
-<a id="__codelineno-30-41" name="__codelineno-30-41" href="#__codelineno-30-41"></a>│  Stretched cluster= 2 active sites + 1 witness site; RPO=0 across sites                               │
-<a id="__codelineno-30-42" name="__codelineno-30-42" href="#__codelineno-30-42"></a>│  Resync        = after host failure/return, components rebalanced                                     │
-<a id="__codelineno-30-43" name="__codelineno-30-43" href="#__codelineno-30-43"></a>│  VMkernel      = special NIC adapter; vSAN uses vmk for cluster traffic                               │
-<a id="__codelineno-30-44" name="__codelineno-30-44" href="#__codelineno-30-44"></a>│                                                                                                       │
-<a id="__codelineno-30-45" name="__codelineno-30-45" href="#__codelineno-30-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>┌───────────────────────────────────────── vSAN — How It Works ─────────────────────────────────────────┐
+<a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>│                                                                                                       │
+<a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a>│  vSAN pools local disks from ESXi hosts into a shared datastore; data is                              │
+<a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a>│  distributed across hosts using a policy-driven object-based storage model.                           │
+<a id="__codelineno-31-5" name="__codelineno-31-5" href="#__codelineno-31-5"></a>│                                                                                                       │
+<a id="__codelineno-31-6" name="__codelineno-31-6" href="#__codelineno-31-6"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-31-7" name="__codelineno-31-7" href="#__codelineno-31-7"></a>│   │                  Data Path                   │  │                 Disk Groups                 │   │
+<a id="__codelineno-31-8" name="__codelineno-31-8" href="#__codelineno-31-8"></a>│   │            VM write → vSAN object            │  │          1 cache NVMe/SSD per group         │   │
+<a id="__codelineno-31-9" name="__codelineno-31-9" href="#__codelineno-31-9"></a>│   │           Policy: FTT + RAID type            │  │         1-7 capacity disks per group        │   │
+<a id="__codelineno-31-10" name="__codelineno-31-10" href="#__codelineno-31-10"></a>│   │          Components placed on hosts          │  │          Express Storage Arch (ESA)         │   │
+<a id="__codelineno-31-11" name="__codelineno-31-11" href="#__codelineno-31-11"></a>│   │           Witness: metadata quorum           │  │              All-NVMe: ESA only             │   │
+<a id="__codelineno-31-12" name="__codelineno-31-12" href="#__codelineno-31-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-31-13" name="__codelineno-31-13" href="#__codelineno-31-13"></a>│                                                                                                       │
+<a id="__codelineno-31-14" name="__codelineno-31-14" href="#__codelineno-31-14"></a>│  Each object (VMDK) is split into components placed across hosts per the storage policy.              │
+<a id="__codelineno-31-15" name="__codelineno-31-15" href="#__codelineno-31-15"></a>│                                                                                                       │
+<a id="__codelineno-31-16" name="__codelineno-31-16" href="#__codelineno-31-16"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-31-17" name="__codelineno-31-17" href="#__codelineno-31-17"></a>│                                                                                                       │
+<a id="__codelineno-31-18" name="__codelineno-31-18" href="#__codelineno-31-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-31-19" name="__codelineno-31-19" href="#__codelineno-31-19"></a>│   │             Cluster Requirements             │  │                Fault Domains                │   │
+<a id="__codelineno-31-20" name="__codelineno-31-20" href="#__codelineno-31-20"></a>│   │             Min 3 hosts (FTT=1)              │  │         Rack awareness: per-rack FD         │   │
+<a id="__codelineno-31-21" name="__codelineno-31-21" href="#__codelineno-31-21"></a>│   │             10GbE+ vSAN VMkernel             │  │         Stretched: 2 sites + witness        │   │
+<a id="__codelineno-31-22" name="__codelineno-31-22" href="#__codelineno-31-22"></a>│   │         Unicast: no multicast needed         │  │          FD isolates host failures          │   │
+<a id="__codelineno-31-23" name="__codelineno-31-23" href="#__codelineno-31-23"></a>│   │           Health: periodic resync            │  │             Min 3 FDs for FTT=1             │   │
+<a id="__codelineno-31-24" name="__codelineno-31-24" href="#__codelineno-31-24"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-31-25" name="__codelineno-31-25" href="#__codelineno-31-25"></a>│                                                                                                       │
+<a id="__codelineno-31-26" name="__codelineno-31-26" href="#__codelineno-31-26"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-31-27" name="__codelineno-31-27" href="#__codelineno-31-27"></a>│  vSAN requires dedicated SSDs/NVMe for cache and HDDs/SSDs for capacity on each host;                 │
+<a id="__codelineno-31-28" name="__codelineno-31-28" href="#__codelineno-31-28"></a>│  10GbE+ network with dedicated vSAN VMkernel adapter.                                                 │
+<a id="__codelineno-31-29" name="__codelineno-31-29" href="#__codelineno-31-29"></a>│                                                                                                       │
+<a id="__codelineno-31-30" name="__codelineno-31-30" href="#__codelineno-31-30"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-31-31" name="__codelineno-31-31" href="#__codelineno-31-31"></a>│                                                                                                       │
+<a id="__codelineno-31-32" name="__codelineno-31-32" href="#__codelineno-31-32"></a>│  Object        = vSAN storage unit; one VMDK = one or more objects                                    │
+<a id="__codelineno-31-33" name="__codelineno-31-33" href="#__codelineno-31-33"></a>│  Component     = slice of an object placed on a single host                                           │
+<a id="__codelineno-31-34" name="__codelineno-31-34" href="#__codelineno-31-34"></a>│  Witness       = metadata-only component; tie-breaker for quorum                                      │
+<a id="__codelineno-31-35" name="__codelineno-31-35" href="#__codelineno-31-35"></a>│  FTT           = Failures To Tolerate; policy setting; FTT=1 needs 3 hosts                            │
+<a id="__codelineno-31-36" name="__codelineno-31-36" href="#__codelineno-31-36"></a>│  RAID-1        = mirroring; FTT=1: 2 data + 1 witness                                                 │
+<a id="__codelineno-31-37" name="__codelineno-31-37" href="#__codelineno-31-37"></a>│  RAID-5        = erasure coding; FTT=1: 4 hosts; more space-efficient                                 │
+<a id="__codelineno-31-38" name="__codelineno-31-38" href="#__codelineno-31-38"></a>│  Disk group    = cache + capacity disks on one host; O(SA: per host)                                  │
+<a id="__codelineno-31-39" name="__codelineno-31-39" href="#__codelineno-31-39"></a>│  ESA           = Express Storage Architecture; vSAN 8+; all-NVMe only                                 │
+<a id="__codelineno-31-40" name="__codelineno-31-40" href="#__codelineno-31-40"></a>│  Fault domain  = logical grouping of hosts; failure unit for placement                                │
+<a id="__codelineno-31-41" name="__codelineno-31-41" href="#__codelineno-31-41"></a>│  Stretched cluster= 2 active sites + 1 witness site; RPO=0 across sites                               │
+<a id="__codelineno-31-42" name="__codelineno-31-42" href="#__codelineno-31-42"></a>│  Resync        = after host failure/return, components rebalanced                                     │
+<a id="__codelineno-31-43" name="__codelineno-31-43" href="#__codelineno-31-43"></a>│  VMkernel      = special NIC adapter; vSAN uses vmk for cluster traffic                               │
+<a id="__codelineno-31-44" name="__codelineno-31-44" href="#__codelineno-31-44"></a>│                                                                                                       │
+<a id="__codelineno-31-45" name="__codelineno-31-45" href="#__codelineno-31-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
-<h3 id="object-placement-ftt1-raid-5-4-hosts-minimum_6">Object Placement — FTT=1 RAID-5 (4 hosts minimum)<a class="headerlink" href="#object-placement-ftt1-raid-5-4-hosts-minimum_6" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>VM VMDK Object
-<a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>├── Data stripe 1 → ESXi-01
-<a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a>├── Data stripe 2 → ESXi-02
-<a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a>├── Data stripe 3 → ESXi-03
-<a id="__codelineno-31-5" name="__codelineno-31-5" href="#__codelineno-31-5"></a>└── Parity stripe → ESXi-04
+<h3 id="object-placement-ftt1-raid-5-4-hosts-minimum_7">Object Placement — FTT=1 RAID-5 (4 hosts minimum)<a class="headerlink" href="#object-placement-ftt1-raid-5-4-hosts-minimum_7" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>VM VMDK Object
+<a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>├── Data stripe 1 → ESXi-01
+<a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a>├── Data stripe 2 → ESXi-02
+<a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a>├── Data stripe 3 → ESXi-03
+<a id="__codelineno-32-5" name="__codelineno-32-5" href="#__codelineno-32-5"></a>└── Parity stripe → ESXi-04
 </code></pre></div>
 <h3 id="ftt-and-raid-policy-reference_7">FTT and RAID Policy Reference<a class="headerlink" href="#ftt-and-raid-policy-reference_7" title="Permanent link">&para;</a></h3>
 <table>
@@ -7460,38 +7470,38 @@ How It Works reference covering Storage Architecture Modes, Objects and Componen
 </ul>
 <hr />
 <h2 id="sioc-storage-io-control_7">SIOC — Storage I/O Control<a class="headerlink" href="#sioc-storage-io-control_7" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>┌────────────────────────── SIOC — Storage I/O Control Congestion Management ───────────────────────────┐
-<a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>│                                                                                                       │
-<a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a>│  SIOC monitors a shared datastore for latency congestion. When latency exceeds the                    │
-<a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a>│  threshold, it enforces per-VM I/O shares to prevent noisy VMs starving others.                       │
-<a id="__codelineno-32-5" name="__codelineno-32-5" href="#__codelineno-32-5"></a>│                                                                                                       │
-<a id="__codelineno-32-6" name="__codelineno-32-6" href="#__codelineno-32-6"></a>│    Normal state (latency below threshold):                                                            │
-<a id="__codelineno-32-7" name="__codelineno-32-7" href="#__codelineno-32-7"></a>│    │  No SIOC enforcement  ·  All VMs issue I/O at full speed  ·  Threshold: 30 ms default            │
-<a id="__codelineno-32-8" name="__codelineno-32-8" href="#__codelineno-32-8"></a>│                                                                                                       │
-<a id="__codelineno-32-9" name="__codelineno-32-9" href="#__codelineno-32-9"></a>│    Congested state (latency ≥ threshold):                                                             │
-<a id="__codelineno-32-10" name="__codelineno-32-10" href="#__codelineno-32-10"></a>│    │                                                                                                  │
-<a id="__codelineno-32-11" name="__codelineno-32-11" href="#__codelineno-32-11"></a>│    ├── SIOC activates — measures each VM I/O demand                                                   │
-<a id="__codelineno-32-12" name="__codelineno-32-12" href="#__codelineno-32-12"></a>│    ├── Distributes IOPS proportionally according to per-VM shares:                                    │
-<a id="__codelineno-32-13" name="__codelineno-32-13" href="#__codelineno-32-13"></a>│    │     VM-A  shares: High  (2000) → gets 4× more IOPS than VM-C                                     │
-<a id="__codelineno-32-14" name="__codelineno-32-14" href="#__codelineno-32-14"></a>│    │     VM-B  shares: Normal (1000) → gets 2× more IOPS than VM-C                                    │
-<a id="__codelineno-32-15" name="__codelineno-32-15" href="#__codelineno-32-15"></a>│    │     VM-C  shares: Low   (500)  → gets baseline allocation                                        │
-<a id="__codelineno-32-16" name="__codelineno-32-16" href="#__codelineno-32-16"></a>│    └── SIOC throttles VMs exceeding their share allocation via I/O scheduler                          │
-<a id="__codelineno-32-17" name="__codelineno-32-17" href="#__codelineno-32-17"></a>│                                                                                                       │
-<a id="__codelineno-32-18" name="__codelineno-32-18" href="#__codelineno-32-18"></a>│    SIOC vs NIOC:                                                                                      │
-<a id="__codelineno-32-19" name="__codelineno-32-19" href="#__codelineno-32-19"></a>│    ┌──────────────────────────────────────┬───────────────────────────────────────┐                   │
-<a id="__codelineno-32-20" name="__codelineno-32-20" href="#__codelineno-32-20"></a>│    │  SIOC                                │  NIOC                                 │                   │
-<a id="__codelineno-32-21" name="__codelineno-32-21" href="#__codelineno-32-21"></a>│    │  Storage I/O Control                 │  Network I/O Control                  │                   │
-<a id="__codelineno-32-22" name="__codelineno-32-22" href="#__codelineno-32-22"></a>│    │  Shared datastore throttling         │  Shared uplink throttling             │                   │
-<a id="__codelineno-32-23" name="__codelineno-32-23" href="#__codelineno-32-23"></a>│    │  Triggered by latency threshold      │  Triggered by uplink % saturation     │                   │
-<a id="__codelineno-32-24" name="__codelineno-32-24" href="#__codelineno-32-24"></a>│    │  Per-VM shares on VMDK               │  Per traffic-class shares             │                   │
-<a id="__codelineno-32-25" name="__codelineno-32-25" href="#__codelineno-32-25"></a>│    └──────────────────────────────────────┴───────────────────────────────────────┘                   │
-<a id="__codelineno-32-26" name="__codelineno-32-26" href="#__codelineno-32-26"></a>│                                                                                                       │
-<a id="__codelineno-32-27" name="__codelineno-32-27" href="#__codelineno-32-27"></a>│    SIOC        = Storage I/O Control; requires Enterprise Plus; enabled per datastore                 │
-<a id="__codelineno-32-28" name="__codelineno-32-28" href="#__codelineno-32-28"></a>│    Threshold   = latency (ms) that triggers SIOC; default 30 ms; tune per array type                  │
-<a id="__codelineno-32-29" name="__codelineno-32-29" href="#__codelineno-32-29"></a>│    Shares      = per-VM relative priority; same High/Normal/Low as CPU/mem shares                     │
-<a id="__codelineno-32-30" name="__codelineno-32-30" href="#__codelineno-32-30"></a>│    IOPS limit  = absolute cap per VM VMDK; enforced regardless of contention                          │
-<a id="__codelineno-32-31" name="__codelineno-32-31" href="#__codelineno-32-31"></a>│                                                                                                       │
-<a id="__codelineno-32-32" name="__codelineno-32-32" href="#__codelineno-32-32"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>┌────────────────────────── SIOC — Storage I/O Control Congestion Management ───────────────────────────┐
+<a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a>│                                                                                                       │
+<a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a>│  SIOC monitors a shared datastore for latency congestion. When latency exceeds the                    │
+<a id="__codelineno-33-4" name="__codelineno-33-4" href="#__codelineno-33-4"></a>│  threshold, it enforces per-VM I/O shares to prevent noisy VMs starving others.                       │
+<a id="__codelineno-33-5" name="__codelineno-33-5" href="#__codelineno-33-5"></a>│                                                                                                       │
+<a id="__codelineno-33-6" name="__codelineno-33-6" href="#__codelineno-33-6"></a>│    Normal state (latency below threshold):                                                            │
+<a id="__codelineno-33-7" name="__codelineno-33-7" href="#__codelineno-33-7"></a>│    │  No SIOC enforcement  ·  All VMs issue I/O at full speed  ·  Threshold: 30 ms default            │
+<a id="__codelineno-33-8" name="__codelineno-33-8" href="#__codelineno-33-8"></a>│                                                                                                       │
+<a id="__codelineno-33-9" name="__codelineno-33-9" href="#__codelineno-33-9"></a>│    Congested state (latency ≥ threshold):                                                             │
+<a id="__codelineno-33-10" name="__codelineno-33-10" href="#__codelineno-33-10"></a>│    │                                                                                                  │
+<a id="__codelineno-33-11" name="__codelineno-33-11" href="#__codelineno-33-11"></a>│    ├── SIOC activates — measures each VM I/O demand                                                   │
+<a id="__codelineno-33-12" name="__codelineno-33-12" href="#__codelineno-33-12"></a>│    ├── Distributes IOPS proportionally according to per-VM shares:                                    │
+<a id="__codelineno-33-13" name="__codelineno-33-13" href="#__codelineno-33-13"></a>│    │     VM-A  shares: High  (2000) → gets 4× more IOPS than VM-C                                     │
+<a id="__codelineno-33-14" name="__codelineno-33-14" href="#__codelineno-33-14"></a>│    │     VM-B  shares: Normal (1000) → gets 2× more IOPS than VM-C                                    │
+<a id="__codelineno-33-15" name="__codelineno-33-15" href="#__codelineno-33-15"></a>│    │     VM-C  shares: Low   (500)  → gets baseline allocation                                        │
+<a id="__codelineno-33-16" name="__codelineno-33-16" href="#__codelineno-33-16"></a>│    └── SIOC throttles VMs exceeding their share allocation via I/O scheduler                          │
+<a id="__codelineno-33-17" name="__codelineno-33-17" href="#__codelineno-33-17"></a>│                                                                                                       │
+<a id="__codelineno-33-18" name="__codelineno-33-18" href="#__codelineno-33-18"></a>│    SIOC vs NIOC:                                                                                      │
+<a id="__codelineno-33-19" name="__codelineno-33-19" href="#__codelineno-33-19"></a>│    ┌──────────────────────────────────────┬───────────────────────────────────────┐                   │
+<a id="__codelineno-33-20" name="__codelineno-33-20" href="#__codelineno-33-20"></a>│    │  SIOC                                │  NIOC                                 │                   │
+<a id="__codelineno-33-21" name="__codelineno-33-21" href="#__codelineno-33-21"></a>│    │  Storage I/O Control                 │  Network I/O Control                  │                   │
+<a id="__codelineno-33-22" name="__codelineno-33-22" href="#__codelineno-33-22"></a>│    │  Shared datastore throttling         │  Shared uplink throttling             │                   │
+<a id="__codelineno-33-23" name="__codelineno-33-23" href="#__codelineno-33-23"></a>│    │  Triggered by latency threshold      │  Triggered by uplink % saturation     │                   │
+<a id="__codelineno-33-24" name="__codelineno-33-24" href="#__codelineno-33-24"></a>│    │  Per-VM shares on VMDK               │  Per traffic-class shares             │                   │
+<a id="__codelineno-33-25" name="__codelineno-33-25" href="#__codelineno-33-25"></a>│    └──────────────────────────────────────┴───────────────────────────────────────┘                   │
+<a id="__codelineno-33-26" name="__codelineno-33-26" href="#__codelineno-33-26"></a>│                                                                                                       │
+<a id="__codelineno-33-27" name="__codelineno-33-27" href="#__codelineno-33-27"></a>│    SIOC        = Storage I/O Control; requires Enterprise Plus; enabled per datastore                 │
+<a id="__codelineno-33-28" name="__codelineno-33-28" href="#__codelineno-33-28"></a>│    Threshold   = latency (ms) that triggers SIOC; default 30 ms; tune per array type                  │
+<a id="__codelineno-33-29" name="__codelineno-33-29" href="#__codelineno-33-29"></a>│    Shares      = per-VM relative priority; same High/Normal/Low as CPU/mem shares                     │
+<a id="__codelineno-33-30" name="__codelineno-33-30" href="#__codelineno-33-30"></a>│    IOPS limit  = absolute cap per VM VMDK; enforced regardless of contention                          │
+<a id="__codelineno-33-31" name="__codelineno-33-31" href="#__codelineno-33-31"></a>│                                                                                                       │
+<a id="__codelineno-33-32" name="__codelineno-33-32" href="#__codelineno-33-32"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
 
 

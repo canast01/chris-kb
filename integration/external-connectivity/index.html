@@ -2815,8 +2815,41 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="On-Premises to Cloud — Network Topology">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#connectivity-paths" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connectivity Paths
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#health-check-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Health Check Commands
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Health Check Commands">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#outbound-internet-reachability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Outbound internet reachability
+      
+    </span>
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#route-and-latency" class="md-nav__link">
@@ -3096,95 +3129,114 @@
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>
 </code></pre></div>
-┌───────────────────────────────── Integration — External Connectivity ─────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Outbound internet access: proxy config, allowed destinations, firewall rule requests     │   │
-│   │         Proxy: set http_proxy/https_proxy env vars; add no_proxy for internal subnets         │   │
-│   │  Document all outbound FW rules: source, destination, port, protocol, business justification  │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Proxy Configuration              │  │            Firewall Rule Process            │   │
-│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
-│   │         http_proxy=http://proxy:3128         │  │         Request: src/dst/port/proto         │   │
-│   │            https_proxy same value            │  │         Business justification reqd         │   │
-│   │        no_proxy=.internal,10.0.0.0/8         │  │           Change ticket + approval          │   │
-│   │           yum/apt: proxy in config           │  │          Test after implementation          │   │
-│   │          Container: env in compose           │  │              Annual rule review             │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    http_proxy   = Environment variable; tool (curl, yum, apt) uses this for HTTP connections          │
-│    no_proxy     = Comma-separated list of hosts/CIDRs to bypass proxy; add all internal ranges        │
-│    Egress rule  = Outbound firewall rule; controls what the server can connect to externally          │
-│    FQDN filter  = Firewall rules by hostname instead of IP; needs DNS-aware inspection                │
-│    Transparent proxy= Intercepts traffic without client config; needs CA cert for HTTPS inspection    │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>---
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>## Connectivity Paths
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>| Path Type | Description | Typical Components |
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>|---|---|---|
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>| **Internet egress (NAT/proxy)** | Outbound traffic from servers or VMs to the public internet, routed via NAT gateway or explicit proxy | NAT gateway, forward proxy (Squid/Zscaler), firewall outbound policy |
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>| **WAN / MPLS** | Private layer-3 connectivity between data centres or branch offices without traversing the public internet | MPLS PE router, CE router, BGP or OSPF peering, QoS policy |
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>| **Cloud Direct Connect / ExpressRoute** | Dedicated private circuit from on-premises to AWS (Direct Connect) or Azure (ExpressRoute) — bypasses the public internet | Direct Connect hosted connection or dedicated connection, Virtual Private Gateway or Transit Gateway; Azure: ExpressRoute circuit, virtual network gateway |
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>| **Partner API connections** | Outbound HTTPS calls from internal systems to third-party APIs (payment processors, SaaS platforms, suppliers) | Application server, proxy or NAT, firewall allow rule for destination CIDR/FQDN, partner-provided credentials |
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>---
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>## Health Check Commands
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>### Outbound internet reachability
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>```bash
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a># HTTP/HTTPS reachability and response code
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>curl -o /dev/null -s -w &quot;%{http_code}  %{time_total}s\n&quot; https://api.example.com/health
-<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>
-<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a># TLS certificate expiry check (days remaining)
-<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>echo | openssl s_client -connect api.example.com:443 -servername api.example.com 2&gt;/dev/null \
-<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>  | openssl x509 -noout -dates
-<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>
-<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a># MTU path discovery — detect PMTUD black holes (Linux)
-<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>ping -M do -s 1400 -c 4 8.8.8.8
-<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>
-<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a># Windows equivalent
-<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>ping -f -l 1400 8.8.8.8
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>┌───────────────────────────────── Integration — External Connectivity ─────────────────────────────────┐
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>│                                                                                                       │
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>│   │      Outbound internet access: proxy config, allowed destinations, firewall rule requests     │   │
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>│   │         Proxy: set http_proxy/https_proxy env vars; add no_proxy for internal subnets         │   │
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>│   │  Document all outbound FW rules: source, destination, port, protocol, business justification  │   │
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>│                                                                                                       │
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>│                                                                                                       │
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>│   │             Proxy Configuration              │  │            Firewall Rule Process            │   │
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>│   │         http_proxy=http://proxy:3128         │  │         Request: src/dst/port/proto         │   │
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>│   │            https_proxy same value            │  │         Business justification reqd         │   │
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>│   │        no_proxy=.internal,10.0.0.0/8         │  │           Change ticket + approval          │   │
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>│   │           yum/apt: proxy in config           │  │          Test after implementation          │   │
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>│   │          Container: env in compose           │  │              Annual rule review             │   │
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>│                                                                                                       │
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>│    Key terms:                                                                                         │
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>│                                                                                                       │
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>│    http_proxy   = Environment variable; tool (curl, yum, apt) uses this for HTTP connections          │
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>│    no_proxy     = Comma-separated list of hosts/CIDRs to bypass proxy; add all internal ranges        │
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>│    Egress rule  = Outbound firewall rule; controls what the server can connect to externally          │
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>│    FQDN filter  = Firewall rules by hostname instead of IP; needs DNS-aware inspection                │
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>│    Transparent proxy= Intercepts traffic without client config; needs CA cert for HTTPS inspection    │
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>│                                                                                                       │
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
-<h3 id="route-and-latency">Route and latency<a class="headerlink" href="#route-and-latency" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Traceroute to confirm path and hop count (Linux)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>traceroute<span class="w"> </span>-n<span class="w"> </span>api.example.com
+<hr />
+<h2 id="connectivity-paths">Connectivity Paths<a class="headerlink" href="#connectivity-paths" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Path Type</th>
+<th>Description</th>
+<th>Typical Components</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Internet egress (NAT/proxy)</strong></td>
+<td>Outbound traffic from servers or VMs to the public internet, routed via NAT gateway or explicit proxy</td>
+<td>NAT gateway, forward proxy (Squid/Zscaler), firewall outbound policy</td>
+</tr>
+<tr>
+<td><strong>WAN / MPLS</strong></td>
+<td>Private layer-3 connectivity between data centres or branch offices without traversing the public internet</td>
+<td>MPLS PE router, CE router, BGP or OSPF peering, QoS policy</td>
+</tr>
+<tr>
+<td><strong>Cloud Direct Connect / ExpressRoute</strong></td>
+<td>Dedicated private circuit from on-premises to AWS (Direct Connect) or Azure (ExpressRoute) — bypasses the public internet</td>
+<td>Direct Connect hosted connection or dedicated connection, Virtual Private Gateway or Transit Gateway; Azure: ExpressRoute circuit, virtual network gateway</td>
+</tr>
+<tr>
+<td><strong>Partner API connections</strong></td>
+<td>Outbound HTTPS calls from internal systems to third-party APIs (payment processors, SaaS platforms, suppliers)</td>
+<td>Application server, proxy or NAT, firewall allow rule for destination CIDR/FQDN, partner-provided credentials</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="health-check-commands">Health Check Commands<a class="headerlink" href="#health-check-commands" title="Permanent link">&para;</a></h2>
+<h3 id="outbound-internet-reachability">Outbound internet reachability<a class="headerlink" href="#outbound-internet-reachability" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># HTTP/HTTPS reachability and response code</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-s<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}  %{time_total}s\n&quot;</span><span class="w"> </span>https://api.example.com/health
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Windows equivalent</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>tracert<span class="w"> </span>-d<span class="w"> </span>api.example.com
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Test TCP reachability on a specific port (Windows)</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>Test-NetConnection<span class="w"> </span>-ComputerName<span class="w"> </span>api.example.com<span class="w"> </span>-Port<span class="w"> </span><span class="m">443</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Test TCP port reachability (Linux)</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>nc<span class="w"> </span>-zv<span class="w"> </span>api.example.com<span class="w"> </span><span class="m">443</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># TLS certificate expiry check (days remaining)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>api.example.com:443<span class="w"> </span>-servername<span class="w"> </span>api.example.com<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># MTU path discovery — detect PMTUD black holes (Linux)</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>ping<span class="w"> </span>-M<span class="w"> </span><span class="k">do</span><span class="w"> </span>-s<span class="w"> </span><span class="m">1400</span><span class="w"> </span>-c<span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="m">8</span>.8.8.8
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Windows equivalent</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>ping<span class="w"> </span>-f<span class="w"> </span>-l<span class="w"> </span><span class="m">1400</span><span class="w"> </span><span class="m">8</span>.8.8.8
+</code></pre></div>
+<h3 id="route-and-latency">Route and latency<a class="headerlink" href="#route-and-latency" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Traceroute to confirm path and hop count (Linux)</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>traceroute<span class="w"> </span>-n<span class="w"> </span>api.example.com
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Windows equivalent</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>tracert<span class="w"> </span>-d<span class="w"> </span>api.example.com
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Test TCP reachability on a specific port (Windows)</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>Test-NetConnection<span class="w"> </span>-ComputerName<span class="w"> </span>api.example.com<span class="w"> </span>-Port<span class="w"> </span><span class="m">443</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Test TCP port reachability (Linux)</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>nc<span class="w"> </span>-zv<span class="w"> </span>api.example.com<span class="w"> </span><span class="m">443</span>
 </code></pre></div>
 <h3 id="dns-resolution">DNS resolution<a class="headerlink" href="#dns-resolution" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Confirm DNS resolves to expected addresses</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>dig<span class="w"> </span>+short<span class="w"> </span>api.example.com
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Test with a specific resolver (check split-DNS behaviour)</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>dig<span class="w"> </span>@10.0.0.53<span class="w"> </span>api.example.com
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Windows</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>Resolve-DnsName<span class="w"> </span>api.example.com
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Confirm DNS resolves to expected addresses</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>dig<span class="w"> </span>+short<span class="w"> </span>api.example.com
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Test with a specific resolver (check split-DNS behaviour)</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>dig<span class="w"> </span>@10.0.0.53<span class="w"> </span>api.example.com
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Windows</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>Resolve-DnsName<span class="w"> </span>api.example.com
 </code></pre></div>
 <h3 id="cloud-direct-connect-expressroute">Cloud Direct Connect / ExpressRoute<a class="headerlink" href="#cloud-direct-connect-expressroute" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># AWS: verify BGP session state on a virtual interface</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>aws<span class="w"> </span>directconnect<span class="w"> </span>describe-virtual-interfaces<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;virtualInterfaces[*].[virtualInterfaceId,bgpPeers[*].bgpStatus]&#39;</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Azure: verify ExpressRoute circuit peering state</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>az<span class="w"> </span>network<span class="w"> </span>express-route<span class="w"> </span>show<span class="w"> </span>--name<span class="w"> </span>&lt;circuit-name&gt;<span class="w"> </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;serviceProviderProvisioningState&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># AWS: verify BGP session state on a virtual interface</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>aws<span class="w"> </span>directconnect<span class="w"> </span>describe-virtual-interfaces<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;virtualInterfaces[*].[virtualInterfaceId,bgpPeers[*].bgpStatus]&#39;</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Azure: verify ExpressRoute circuit peering state</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>az<span class="w"> </span>network<span class="w"> </span>express-route<span class="w"> </span>show<span class="w"> </span>--name<span class="w"> </span>&lt;circuit-name&gt;<span class="w"> </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;serviceProviderProvisioningState&#39;</span>
 </code></pre></div>
 <hr />
 <h2 id="firewall-rule-verification">Firewall Rule Verification<a class="headerlink" href="#firewall-rule-verification" title="Permanent link">&para;</a></h2>
