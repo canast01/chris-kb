@@ -88,6 +88,60 @@ VMware platform knowledge base covering the full VMware stack — vCenter, ESXi,
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+```text
+┌──────────────────────────── VMware Platform — Installation Sequence ──────────────────────────────────┐
+│                                                                                                       │
+│  Step 1 · Physical Infrastructure                                                                     │
+│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+│  Rack and cable servers  ·  Configure ToR switches — VLANs: Mgmt | vMotion | vSAN | TEP | VM         │
+│  IPMI / iDRAC accessible on all hosts  ·  DNS A-records for hosts + VIPs  ·  NTP source confirmed     │
+│                                                                                                       │
+│                                      │  install ESXi ISO on each host                                 │
+│                                      ▼                                                                │
+│  Step 2 · ESXi  (repeat for every host in the cluster)                                                │
+│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+│  Install ESXi on bare metal  ·  vmk0 management IP  ·  Hostname · DNS · NTP · SSH (temporary)        │
+│  Confirm all hosts reachable on management VLAN before deploying vCenter                              │
+│                                                                                                       │
+│                                      │  deploy VCSA OVA to first ESXi host                            │
+│                                      ▼                                                                │
+│  Step 3 · vCenter Server (VCSA)                                                                       │
+│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+│  Deploy VCSA OVA  ·  Create Datacenter + Cluster  ·  Add all ESXi hosts to inventory                 │
+│  Create vDS + migrate vmk adapters  ·  Enable HA · DRS · vLCM  ·  Configure SSO / LDAP · Roles       │
+│                                                                                                       │
+│      │  enable vSAN on cluster                                       │  deploy NSX Manager OVA (×3)   │
+│      ▼                                                               ▼                                │
+│  ┌──────────────────────────────────────────────┐  ┌──────────────────────────────────────────────┐   │
+│  │  Step 4 · vSAN                               │  │  Step 5 · NSX                                │   │
+│  │  Enable vSAN on cluster via vCenter          │  │  Deploy NSX Manager (3-node HA cluster)      │   │
+│  │  Claim cache + capacity disks per host       │  │  Register vCenter as compute manager         │   │
+│  │  Tag vmk2 for vSAN traffic                   │  │  Configure host transport nodes (TEP vmk)    │   │
+│  │  Skyline Health: all tests green             │  │  Deploy Edge nodes  ·  T0/T1 gateways        │   │
+│  │  Create storage policies (SPBM)              │  │  Create overlay segments  ·  Configure DFW   │   │
+│  └──────────────────────────────────────────────┘  └──────────────────────────────────────────────┘   │
+│      │                                                               │                                │
+│      └──────────────────────────────┬────────────────────────────────┘                               │
+│                                     │  (optional) deploy monitoring layer                             │
+│                                     ▼                                                                 │
+│  Step 6 · Aria Suite  (optional — deploy after vCenter is stable)                                     │
+│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+│  Deploy Aria Suite Lifecycle Manager (LCM) first — LCM orchestrates all Aria product installs         │
+│  Via LCM: Aria Operations (vROps)  ·  Aria Operations for Logs  ·  Aria Automation                    │
+│  Register vCenter adapter  ·  Import vSAN + NSX mgmt packs  ·  Configure alert policies               │
+│                                                                                                       │
+│                                     │  (optional) add-on products — any order after Step 3            │
+│                                     ▼                                                                 │
+│  Step 7 · Add-on Products                                                                             │
+│  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
+│  SRM + vSphere Replication (DR)  │  Horizon (VDI desktops)  │  HCX (migration)  │  Tanzu (K8s)       │
+│                                                                                                       │
+│  VCF path:    SDDC Manager automates steps 2–5 via a single guided bringup workflow                   │
+│  VxRail path: Dell HCI appliance — VxRail Manager handles ESXi + vCenter + vSAN automatically        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="vcenter/">
