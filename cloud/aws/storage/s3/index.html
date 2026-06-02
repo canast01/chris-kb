@@ -4384,49 +4384,91 @@ AWS S3 reference covering Overview, Where It Fits, Daily Checks, Health Commands
 </table>
 <hr />
 <h2 id="s3-storage-classes">S3 Storage Classes<a class="headerlink" href="#s3-storage-classes" title="Permanent link">&para;</a></h2>
-<hr />
-<h2 id="aws-storage-services-comparison">AWS Storage Services Comparison<a class="headerlink" href="#aws-storage-services-comparison" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>┌────────────────── AWS Storage Services — S3 vs EBS vs EFS vs FSx vs Instance Store ───────────────────┐
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>┌─────────────────────── S3 Storage Classes — Availability, Retrieval, and Cost ────────────────────────┐
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>│                                                                                                       │
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>│    Five main storage types; choose by access pattern, sharing, and persistence needs.                 │
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>│    Seven storage classes balance retrieval latency, availability, and storage cost.                   │
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>│                                                                                                       │
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>│   │      S3 (Object Storage)                     │  │      EBS (Block Storage)                    │   │
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>│   │  Objects in buckets; unlimited scale         │  │  Persistent block volumes for EC2           │   │
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>│   │  Globally unique bucket name                 │  │  Bound to a single AZ                       │   │
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>│   │  HTTP API (PUT/GET); not mountable           │  │  Mountable like a local disk (ext4)         │   │
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>│   │  11 nines durability; 3+ AZ by default       │  │  SSD (gp3/io2) or HDD (st1/sc1)             │   │
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>│   │  Use: backups, static web, data lake         │  │  Use: OS disk, DB, boot volume              │   │
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>│   │     Frequent Access Classes                  │  │      Infrequent Access Classes              │   │
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>│   │  Standard: 99.99% avail; 3+ AZ               │  │  Standard-IA: 99.9%; 3+ AZ; fee/get         │   │
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>│   │  Standard: no retrieval fee; default         │  │  Standard-IA: 30-day minimum storage        │   │
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>│   │  Intelligent-Tiering: auto-moves tiers       │  │  One Zone-IA: 99.5%; 1 AZ; cheaper          │   │
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>│   │  IT: monitoring fee; no retrieval fee        │  │  One Zone-IA: re-creatable data only        │   │
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>│   │  IT: moves after 30 days of no access        │  │  Both: per-GB retrieval fee applies         │   │
 <a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 <a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>│                                                                                                       │
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>│    EBS is block (like a hard drive); EFS is shared NFS; S3 is object (HTTP API).                      │
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>│    Standard for frequent access; IA tiers for data accessed less than once a month.                   │
 <a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>│                                                                                                       │
 <a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>│                          ▼                                                 ▼                          │
 <a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>│                                                                                                       │
 <a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>│   │     EFS (Elastic File System)                │  │      Instance Store / FSx                   │   │
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>│   │  NFSv4 shared file system                    │  │  Instance Store: ephemeral local NVMe       │   │
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>│   │  Multi-AZ; automatically scales              │  │  Lost on stop/terminate/host failure        │   │
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>│   │  Mount simultaneously to many EC2            │  │  Highest I/O throughput; no extra $         │   │
-<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>│   │  Linux only; no Windows                      │  │  FSx for Windows: SMB, AD-integrated        │   │
-<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>│   │  Standard + Infrequent Access tiers          │  │  FSx for Lustre: HPC parallel FS            │   │
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>│   │     Glacier Archive Classes                  │  │      Retrieval Comparison                   │   │
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>│   │  Glacier Instant: ms retrieval; 90-day       │  │  Standard: ms; no retrieval fee             │   │
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>│   │  Glacier Flexible: mins-hrs; 90-day          │  │  Standard-IA: ms; retrieval fee/GB          │   │
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>│   │  Glacier Deep Archive: 12-hr; 180-day        │  │  Glacier Instant: ms; per GB fee            │   │
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>│   │  Deep Archive: cheapest storage class        │  │  Glacier Flexible: bulk=5-12h, free         │   │
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>│   │  All Glacier: 11-nines durability; 3AZ       │  │  Deep Archive: standard=12h retrieval       │   │
 <a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 <a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>│                                                                                                       │
 <a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>│    Physical Infrastructure (the hardware everything above runs on):                                   │
-<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>│    S3 infrastructure (3+ AZ) · EBS volumes in AZ · NFS cluster (EFS) · local NVMe                     │
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>│    S3 stores objects across 3+ AZs in a Region; 11 nines (99.999999999%) durability                   │
 <a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>│                                                                                                       │
 <a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a>│    Key terms:                                                                                         │
 <a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>│                                                                                                       │
-<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>│    S3         = Object storage; buckets + keys; unlimited scale; HTTP GET/PUT API                     │
-<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a>│    EBS        = Elastic Block Store; like a virtual hard drive; attached to one EC2                   │
-<a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a>│    EFS        = Elastic File System; NFS v4; shared across many Linux EC2 instances                   │
-<a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a>│    Instance Store = Local NVMe on the physical host; ephemeral; fastest raw IOPS                      │
-<a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a>│    FSx for Windows= Fully managed Windows file server; SMB protocol; AD integration                   │
-<a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a>│    FSx for Lustre = High-performance parallel file system; integrates with S3                         │
-<a id="__codelineno-2-38" name="__codelineno-2-38" href="#__codelineno-2-38"></a>│    Storage Gateway= Hybrid storage; connects on-prem to S3/EBS/Tape via iSCSI/NFS                     │
-<a id="__codelineno-2-39" name="__codelineno-2-39" href="#__codelineno-2-39"></a>│    Snow Family    = Physical devices (Snowcone/Snowball/Snowmobile) for data transfer                 │
+<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>│    S3 Standard     = Default; frequent access; 3+ AZ; 99.99% availability                             │
+<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a>│    Intelligent-Tiering = Auto-moves objects between tiers; monitoring fee per 1000                    │
+<a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a>│    Standard-IA     = Infrequent Access; 3+ AZ; lower storage cost; retrieval fee                      │
+<a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a>│    One Zone-IA     = Single AZ; 20% cheaper than Standard-IA; risk of AZ loss                         │
+<a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a>│    Glacier Instant = Archive; millisecond retrieval; 90-day minimum; per-GB fee                       │
+<a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a>│    Glacier Flexible= Archive; expedited(1-5min)/standard(3-5h)/bulk(5-12h) retrieval                  │
+<a id="__codelineno-2-38" name="__codelineno-2-38" href="#__codelineno-2-38"></a>│    Deep Archive    = Cheapest; 12-hour standard retrieval; 180-day minimum                            │
+<a id="__codelineno-2-39" name="__codelineno-2-39" href="#__codelineno-2-39"></a>│    Minimum duration= Classes have minimum storage billing periods; charged even if deleted            │
 <a id="__codelineno-2-40" name="__codelineno-2-40" href="#__codelineno-2-40"></a>│                                                                                                       │
 <a id="__codelineno-2-41" name="__codelineno-2-41" href="#__codelineno-2-41"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<hr />
+<h2 id="aws-storage-services-comparison">AWS Storage Services Comparison<a class="headerlink" href="#aws-storage-services-comparison" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>┌────────────────── AWS Storage Services — S3 vs EBS vs EFS vs FSx vs Instance Store ───────────────────┐
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>│                                                                                                       │
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>│    Five main storage types; choose by access pattern, sharing, and persistence needs.                 │
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>│                                                                                                       │
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>│   │      S3 (Object Storage)                     │  │      EBS (Block Storage)                    │   │
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>│   │  Objects in buckets; unlimited scale         │  │  Persistent block volumes for EC2           │   │
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>│   │  Globally unique bucket name                 │  │  Bound to a single AZ                       │   │
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>│   │  HTTP API (PUT/GET); not mountable           │  │  Mountable like a local disk (ext4)         │   │
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>│   │  11 nines durability; 3+ AZ by default       │  │  SSD (gp3/io2) or HDD (st1/sc1)             │   │
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>│   │  Use: backups, static web, data lake         │  │  Use: OS disk, DB, boot volume              │   │
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>│                                                                                                       │
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>│    EBS is block (like a hard drive); EFS is shared NFS; S3 is object (HTTP API).                      │
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>│                                                                                                       │
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>│                                                                                                       │
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>│   │     EFS (Elastic File System)                │  │      Instance Store / FSx                   │   │
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>│   │  NFSv4 shared file system                    │  │  Instance Store: ephemeral local NVMe       │   │
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>│   │  Multi-AZ; automatically scales              │  │  Lost on stop/terminate/host failure        │   │
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>│   │  Mount simultaneously to many EC2            │  │  Highest I/O throughput; no extra $         │   │
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>│   │  Linux only; no Windows                      │  │  FSx for Windows: SMB, AD-integrated        │   │
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>│   │  Standard + Infrequent Access tiers          │  │  FSx for Lustre: HPC parallel FS            │   │
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>│                                                                                                       │
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>│    Physical Infrastructure (the hardware everything above runs on):                                   │
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>│    S3 infrastructure (3+ AZ) · EBS volumes in AZ · NFS cluster (EFS) · local NVMe                     │
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>│                                                                                                       │
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>│    Key terms:                                                                                         │
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>│                                                                                                       │
+<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>│    S3         = Object storage; buckets + keys; unlimited scale; HTTP GET/PUT API                     │
+<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a>│    EBS        = Elastic Block Store; like a virtual hard drive; attached to one EC2                   │
+<a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a>│    EFS        = Elastic File System; NFS v4; shared across many Linux EC2 instances                   │
+<a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a>│    Instance Store = Local NVMe on the physical host; ephemeral; fastest raw IOPS                      │
+<a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a>│    FSx for Windows= Fully managed Windows file server; SMB protocol; AD integration                   │
+<a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a>│    FSx for Lustre = High-performance parallel file system; integrates with S3                         │
+<a id="__codelineno-3-38" name="__codelineno-3-38" href="#__codelineno-3-38"></a>│    Storage Gateway= Hybrid storage; connects on-prem to S3/EBS/Tape via iSCSI/NFS                     │
+<a id="__codelineno-3-39" name="__codelineno-3-39" href="#__codelineno-3-39"></a>│    Snow Family    = Physical devices (Snowcone/Snowball/Snowmobile) for data transfer                 │
+<a id="__codelineno-3-40" name="__codelineno-3-40" href="#__codelineno-3-40"></a>│                                                                                                       │
+<a id="__codelineno-3-41" name="__codelineno-3-41" href="#__codelineno-3-41"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
 
 
