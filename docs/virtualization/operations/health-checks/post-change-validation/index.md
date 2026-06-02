@@ -77,7 +77,34 @@ Post-Change Validation Flow
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```bash
+┌─────────────────────────────────────── Post-Change Validation ────────────────────────────────────────┐
+│                                                                                                       │
+│    Run after any change — maintenance, upgrade, patch, or config modification                         │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Immediate — within 5 min           │  │           Extended — within 1 hour          │   │
+│   │        ──────────────────────────────        │  │        ─────────────────────────────        │   │
+│   │          Hosts connected to vCenter          │  │           Monitoring alerts clear           │   │
+│   │           Cluster HA / DRS active            │  │            App owner confirms OK            │   │
+│   │          No VMs in unexpected state          │  │             Backup job succeeds             │   │
+│   │          Datastore paths accessible          │  │            Snapshot count stable            │   │
+│   │            No new critical alarms            │  │          Performance metrics normal         │   │
+│   │              vSAN health green               │  │             Change record closed            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Unexpected state = VM powered off, suspended, or orphaned unexpectedly after change                │
+│    Datastore paths  = Storage I/O paths from ESXi; check via esxcli storage core path list            │
+│    Snapshot stable  = No new snapshots created by backup; no stale snapshots accumulating             │
+│    App owner        = Business stakeholder; must confirm application is healthy post-change           │
+│    Change record    = Close only after all checks pass and app owner sign-off is documented           │
+│    Monitoring alert = Any new alert fired after change = likely caused by the change; triage          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 ## NSX (if change was NSX-related)
 

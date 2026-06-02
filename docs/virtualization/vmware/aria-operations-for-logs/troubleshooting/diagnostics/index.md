@@ -70,7 +70,50 @@ grep -i "error\|warn"           /var/log/loginsight/cassandra/system.log | tail 
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```bash
+┌─────────────────────────────── Aria Operations for Logs — Diagnostics ────────────────────────────────┐
+│                                                                                                       │
+│  Diagnose vRLI problems using system monitor, runtime logs, API checks, and support bundle.           │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Built-in Diagnostics             │  │               Log File Review               │   │
+│   │       Admin → System Monitor: disk/CPU       │  │       /var/log/loginsight/runtime.log       │   │
+│   │         Admin → Cluster: node status         │  │       /var/log/loginsight/queries.log       │   │
+│   │        API: GET /api/v1/cluster/nodes        │  │        /var/log/loginsight/alerts.log       │   │
+│   │      Explore: search for ingest errors       │  │        /var/log/vmware/vra/ (if LCM)        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Generate support bundle from VAMI before contacting VMware support for complex issues.               │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Support Bundle                │  │             Network Diagnostics             │   │
+│   │       VAMI → Support → Download bundle       │  │       netstat -tulpn: ports listening       │   │
+│   │      Includes: logs + config + DB state      │  │        tcpdump: verify syslog packets       │   │
+│   │      LCM logscraper: multi-product diag      │  │       nc -zv host 514: test port reach      │   │
+│   │       Upload to VMware SR for analysis       │  │      curl -k :443/api/v1: API reachable     │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  vRLI appliance · VAMI at :9543 · LCM logscraper · AD/LDAP · firewall                                 │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  System Monitor    = vRLI Admin section showing real-time disk/CPU/RAM/ingestion metrics              │
+│  runtime.log       = Main vRLI log; Java exceptions, startup errors, cluster events                   │
+│  queries.log       = Records slow or failed queries; diagnose search performance                      │
+│  alerts.log        = Alert firing log; check if alerts fired and notifications sent                   │
+│  Cluster nodes API = GET /api/v1/cluster/nodes; shows node state and role                             │
+│  VAMI support bundle= Downloads all vRLI logs and config in one archive                               │
+│  LCM logscraper    = Multi-product diagnostic tool for Aria Suite managed environments                │
+│  tcpdump           = Capture syslog packets on vRLI NIC to confirm devices are sending                │
+│  nc -zv            = Netcat port test; confirm syslog port reachable from source host                 │
+│  curl -k           = Quick API connectivity test; check vRLI REST API responds                        │
+│  netstat -tulpn     = List listening ports; verify 514, 6514, 443, 9543 are open                      │
+│  VMware SR         = Support Request; provide bundle + timeline + version details                     │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 Via UI: **Administration → Cluster → Support Bundle → Generate and Download**.
 

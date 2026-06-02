@@ -59,60 +59,6 @@ Hardening reference covering Hardening Checklist, Network Requirements Summary.
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
-┌──────────────────────────────────────── Dell FoD — Hardening ─────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │     FoD hardening: secure the portal account, vault, array management, and audit workflow     │   │
-│   │        Portal hardening: enforce MFA, IP allowlist, session timeout, and account review       │   │
-│   │         Vault hardening: short-lived leases, MFA auth, LDAP backend, access log review        │   │
-│   │         Array hardening: disable unused protocols, enforce LDAP auth, SSH key-only CLI        │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Harden portal account → harden vault → harden array → audit controls → quarterly review            │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │       Portal Hardening      │  │       Vault Hardening       │  │       Array Hardening       │   │
-│   │         Enforce MFA         │  │       Short TTL lease       │  │         SSH key-only        │   │
-│   │         IP allowlist        │  │          MFA + LDAP         │  │         Disable HTTP        │   │
-│   │       Session timeout       │  │       Audit log review      │  │          LDAP auth          │   │
-│   │        Account review       │  │         Sealed vault        │  │          Mgmt VLAN          │   │
-│   │         Offboard SOP        │  │        Policy-as-code       │  │         FW restrict         │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    Vault sealed when not in use; unseal requires quorum of key shares; reduces breach window          │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Layer       │     Control      │      Setting      │     Standard     │      Owner       │   │
-│   │   Dell portal    │   Enforce MFA    │      Org-wide     │   NIST 800-63    │   Storage lead   │   │
-│   │      Vault       │    Short TTL     │    1h lease max   │  CIS benchmark   │     Sec team     │   │
-│   │      Array       │   SSH key-only   │   Disable pw SSH  │      CIS L1      │    Infra team    │   │
-│   │     Network      │    Mgmt VLAN     │   Isolated VLAN   │    Sec policy    │   Network team   │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: array management interface on isolated VLAN; only jumphost or VPN can reach it           │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Portal MFA     = Enforce MFA for all Dell portal accounts; disable accounts that bypass it         │
-│    IP allowlist   = Restrict portal login to corporate egress IPs; block personal/home access         │
-│    Session timeout = Portal logs out after 30 min idle; vault lease expires in 1h                     │
-│    Sealed vault   = HashiCorp Vault sealed state; no secrets accessible until quorum unseal           │
-│    Short TTL      = Vault leases expire in 1 hour; limits window of access after key retrieval        │
-│    Policy-as-code = Vault ACL policies in HCL files under version control; reviewed each quarter      │
-│    SSH key-only   = Disable password-based SSH on array; only pre-approved public keys allowed        │
-│    Disable HTTP   = Array management only on HTTPS 443; no plaintext HTTP redirect                    │
-│    LDAP auth      = Array and vault use corporate AD/LDAP; no local service accounts for FoD          │
-│    Mgmt VLAN      = Array management IPs on isolated VLAN; not reachable from user workstations       │
-│    FW restrict    = Firewall allows only jumphost IP to reach array management VLAN                   │
-│    CIS L1         = Center for Internet Security Level 1 baseline applied to array OS                 │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 > Part of the [Flex on Demand](../../index.md) reference.
 

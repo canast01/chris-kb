@@ -76,7 +76,30 @@ echo "0 2 * * * /usr/local/bin/github-repo-mirror.sh" | crontab -
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```sql
+┌────────────────────────────────── GitHub Actions — Backup & Restore ──────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   GitHub Actions workflow state lives in the git repo — workflow YAML is the source of truth  │   │
+│   │  Secrets cannot be exported via API; document secret names and re-inject after repo migration │   │
+│   │    Self-hosted runner: re-register after host rebuild; runner config stored in .runner file   │   │
+│   │    Environments: document protection rules (reviewers, wait timers) — export via GitHub API   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               What to Back Up                │  │                Restore Steps                │   │
+│   │         Git repo (all workflow YAML)         │  │             1. Restore git repo             │   │
+│   │        Secret names list (not values)        │  │           2. Re-inject all secrets          │   │
+│   │       Environment config (API export)        │  │          3. Re-create environments          │   │
+│   │        Self-hosted runner config docs        │  │            4. Re-register runners           │   │
+│   │           Variable list and values           │  │           5. Trigger test workflow          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │    GitHub API      = REST API to export environments, protection rules, and variable names    │   │
+│   │   Variables       = non-sensitive config; visible in logs; exportable via API unlike secrets  │   │
+│   │        OIDC trust      = re-configure cloud OIDC trust relationship if repo moves orgs        │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 ### Recreate Secrets After Repository Loss
 

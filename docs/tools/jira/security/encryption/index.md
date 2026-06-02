@@ -100,7 +100,50 @@ server {
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
+┌────────────────────────────────────────── Jira — Encryption ──────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                            Jira Encryption — In Transit and At Rest                           │   │
+│   │               In transit: TLS 1.2+ via reverse proxy; Tomcat internal HTTP only               │   │
+│   │             At rest: DB encryption with dm-crypt/LUKS or PostgreSQL TDE extension             │   │
+│   │               JIRA_HOME: NFS datastore encrypted at storage or hypervisor level               │   │
+│   │             Secrets: DB password in dbconfig.xml; store in Vault or encrypted env             │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Every data path must be encrypted: browser, app-to-DB, and storage volumes                         │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                  In Transit                  │  │                   At Rest                   │   │
+│   │             TLS 1.2+ at LB/proxy             │  │              DB: dm-crypt/LUKS              │   │
+│   │             HTTP Tomcat internal             │  │             NFS: storage encrypt            │   │
+│   │             LDAP: LDAPS port 636             │  │             Backup: GPG encrypt             │   │
+│   │             DB: SSL JDBC sslmode             │  │             VM: vSphere encrypt             │   │
+│   │            HSTS: enabled at proxy            │  │             Vault: secret store             │   │
+│   │              Cert: RSA 2048 min              │  │             Key rotation: annual            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Reverse proxy VM · Jira app VMs · PostgreSQL VM encrypted disk · NFS datastore                       │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  TLS 1.2+     = minimum TLS version; disable TLS 1.0/1.1 at proxy level                               │
+│  HSTS         = Strict-Transport-Security header; forces HTTPS after first visit                      │
+│  LDAPS        = LDAP over SSL port 636; encrypts directory sync                                       │
+│  SSL JDBC     = sslmode=require in dbconfig.xml JDBC URL                                              │
+│  dm-crypt     = Linux kernel encryption; LUKS partition on DB data volume                             │
+│  LUKS         = Linux Unified Key Setup; standard partition encryption                                │
+│  GPG backup   = gpg --symmetric backup.tar.gz; passphrase stored in Vault                             │
+│  vSphere encrypt = VM-level encryption using vSphere Native Key Provider                              │
+│  Vault        = HashiCorp Vault; stores dbconfig.xml DB password                                      │
+│  dbconfig.xml = Jira DB connection config; in JIRA_HOME; contains JDBC URL                            │
+│  Key rotation = annual encryption key change; planned maintenance window                              │
+│  TDE          = Transparent Data Encryption at PostgreSQL level (pgcrypto)                            │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 ### LDAPS for Directory Connectivity
 

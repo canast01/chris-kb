@@ -47,7 +47,26 @@ flowchart TD
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```sql
+┌──────────────────────────────────── GitHub Actions — Diagnostics ─────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │GitHub Actions diagnostic sequence: enable debug → inspect logs → check runner → verify secrets│   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Debug Logging                 │  │                  Log Access                 │   │
+│   │         Set ACTIONS_STEP_DEBUG=true          │  │            gh run view --log <id>           │   │
+│   │        Set ACTIONS_RUNNER_DEBUG=true         │  │        gh run view --log-failed <id>        │   │
+│   │        Re-run with debug enabled (UI)        │  │           Download log ZIP from UI          │   │
+│   │        Add: run: env (print env vars)        │  │        API: /repos/.../runs/{id}/logs       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   Debug secrets   = ACTIONS_STEP_DEBUG and ACTIONS_RUNNER_DEBUG are set as repo/env secrets   │   │
+│   │     Log retention   = 90 days default; configurable per repo; ZIP downloadable for archive    │   │
+│   │       run: env      = add as a step to print all env vars; helps trace secret injection       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 ## Inspecting Workflow Runs
 

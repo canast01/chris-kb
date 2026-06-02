@@ -68,7 +68,44 @@ psql -U postgres -c "SELECT now() AS current_time;"
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
+┌──────────────────────────────────── Database — Failover Procedure ────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     Promote standby to primary when primary becomes unavailable or for planned maintenance    │   │
+│   │    Pre-check: confirm failure (not network partition); check replication lag; notify teams    │   │
+│   │     Post-failover: update DNS/VIP; rebuild old primary as new standby; monitor replication    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │         Pre-Failover        │  │       Promote Standby       │  │        Post-Failover        │   │
+│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
+│   │     Confirm primary down    │  │      PG: pg_ctl promote     │  │       Update DNS / VIP      │   │
+│   │      Check repl lag/RPO     │  │      MSSQL: AG failover     │  │       Notify app teams      │   │
+│   │      Notify: DBA + app      │  │     MySQL: STOP REPLICA     │  │      Validate app login     │   │
+│   │   Identify failover method  │  │      CHANGE REPL SOURCE     │  │      Rebuild as standby     │   │
+│   │      Open change ticket     │  │    Oracle: DG switchover    │  │     Monitor replication     │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│   │     Platform     │   Promote cmd    │     DNS update    │   Rebuild cmd    │   RTO estimate   │   │
+│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+│   │    PostgreSQL    │  pg_ctl promote  │  pg_hba + reload  │    pg_rewind     │     5-15 min     │   │
+│   │    SQL Server    │ AG failover wiz  │   Listener auto   │  Resync replica  │  < 30s auto AG   │   │
+│   │      MySQL       │   STOP REPLICA   │   Update app DSN  │  CHANGE SOURCE   │     5-30 min     │   │
+│   │      Oracle      │  DG switchover   │  TNS alias update │    reinstate     │   DG: < 1 min    │   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    pg_ctl promote = Promotes PostgreSQL standby to primary; creates recovery.signal removal           │
+│    pg_rewind      = Resync old primary to new primary using WAL; avoids full re-base copy             │
+│    Always On AG   = SQL Server availability group; listener DNS auto-redirects after failover         │
+│    GTID           = MySQL Global Transaction Identifier; simplifies replica reconnect after failover  │
+│    Data Guard     = Oracle HA/DR product; synchronous/async standby; switchover/failover modes        │
+│    Split-brain    = Two nodes both believe they are primary; never promote without fencing            │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 ### MySQL — MHA (Master High Availability)
 

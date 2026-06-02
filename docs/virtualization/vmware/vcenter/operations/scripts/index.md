@@ -52,53 +52,6 @@ Scripts reference covering VM Health and Inventory Report (PowerShell / PowerCLI
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```powershell
-┌──────────────────────────────── vCenter Server — Operational Scripts ─────────────────────────────────┐
-│                                                                                                       │
-│  PowerCLI and govc scripts automate routine vCenter operations: VM reporting,                         │
-│  bulk host operations, snapshot cleanup, and permission auditing.                                     │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             VM & Host Reporting              │  │             Maintenance Scripts             │   │
-│   │             Get-VM | Export-Csv              │  │          Get snapshots >7 days old          │   │
-│   │           VM tools version report            │  │             Remove-Snapshot bulk            │   │
-│   │            Host NTP config audit             │  │           Set-VMHostNtpServer bulk          │   │
-│   │            Datastore usage report            │  │           Move-VM for DRS balance           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Reporting scripts run read-only; maintenance scripts require administrator role.                     │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Permission & Cert Scripts           │  │               Alarms & Events               │   │
-│   │          Audit all role assignments          │  │             Get-VIEvent last 24h            │   │
-│   │            List SSO users/groups             │  │           Export alarm definitions          │   │
-│   │          Certificate expiry checker          │  │           Alert on critical events          │   │
-│   │             Token expiry script              │  │            Bulk alarm acknowledge           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Scripts run from a management jump host with PowerCLI/govc installed;                                │
-│  service account with minimum required permissions is recommended.                                    │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Export-Csv    = PowerCLI cmdlet output to CSV for reporting                                          │
-│  Get-Snapshot  = PowerCLI; returns all VM snapshots across inventory                                  │
-│  Remove-Snapshot= PowerCLI; deletes snapshot; runs consolidation                                      │
-│  Get-VIEvent   = PowerCLI; retrieves vCenter event log entries                                        │
-│  Set-VMHostNtpServer= configures NTP on ESXi hosts in bulk                                            │
-│  govc ls       = list inventory objects; similar to PowerCLI Get-*                                    │
-│  Service account= dedicated low-privilege account for automation                                      │
-│  Jump host     = management server running PowerCLI/govc scripts                                      │
-│  DRS balance   = Move-VM vMotions to equalize host utilisation                                        │
-│  Cert checker  = script: check cert.Subject.NotAfter vs today                                         │
-│  Token expiry  = SSO session token TTL; default 8h; renew on expiry                                   │
-│  Alarm ack     = acknowledges triggered alarm; stops repeat notifications                             │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## VM Health and Inventory Report (PowerShell / PowerCLI)
 

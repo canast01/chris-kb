@@ -104,4 +104,30 @@ The underlying storage is standard ONTAP or StorageGRID — all ONTAP security c
 - Keystone service is ISO 27001 certified at the service delivery level
 - SOC 2 Type II attestation available — request the report via the Keystone Success Manager or NetApp trust portal
 - Data residency is guaranteed on-premises (or at the agreed colocation facility); customer data does not leave the contracted location
+
+---
+
+<div class="kb-grid kb-grid-3">
+
+<a class="kb-card" href="authentication/">
+  <strong>Authentication</strong>
+  <span>Identity sources, MFA, and service account configuration.</span>
+</a>
+
+<a class="kb-card" href="access-control/">
+  <strong>Access Control</strong>
+  <span>RBAC roles, least-privilege, and tenant access boundaries.</span>
+</a>
+
+<a class="kb-card" href="encryption/">
+  <strong>Encryption</strong>
+  <span>Data-at-rest and in-transit encryption for Keystone services.</span>
+</a>
+
+<a class="kb-card" href="hardening/">
+  <strong>Hardening</strong>
+  <span>Security baseline, audit logging, and compliance controls.</span>
+</a>
+
+</div>
 - For regulated workloads, confirm compliance scope with NetApp legal and the KSM — Keystone's compliance certifications cover the infrastructure service, not the customer's data processing activities

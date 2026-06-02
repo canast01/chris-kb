@@ -71,7 +71,35 @@ graph TD
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```bash
+┌────────────────────────────────────── Terraform — CLI Reference ──────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │              Essential Terraform CLI commands for daily infrastructure operations             │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Workflow Commands               │  │               Utility Commands              │   │
+│   │          terraform init [-upgrade]           │  │           terraform fmt -recursive          │   │
+│   │          terraform plan -out=tfplan          │  │              terraform validate             │   │
+│   │            terraform apply tfplan            │  │            terraform graph | dot            │   │
+│   │        terraform destroy [-target=X]         │  │            terraform output -json           │   │
+│   │              terraform refresh               │  │           terraform providers lock          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                State Commands                │  │              Workspace Commands             │   │
+│   │             terraform state list             │  │           terraform workspace list          │   │
+│   │          terraform state show <res>          │  │         terraform workspace new prod        │   │
+│   │            terraform state mv A B            │  │       terraform workspace select prod       │   │
+│   │           terraform import addr id           │  │           terraform workspace show          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     terraform graph = exports dependency graph (DOT format); pipe to graphviz for diagram     │   │
+│   │      terraform refresh= updates state to match real-world without applying config changes     │   │
+│   │  providers lock   = regenerates .terraform.lock.hcl with all platforms; use before committing │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 ---
 

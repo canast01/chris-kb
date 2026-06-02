@@ -83,7 +83,50 @@ GIT_TRACE_PERFORMANCE=1 git log --oneline -100 2>&1 | grep "performance"
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```sql
+┌────────────────────────────────────────── Git — Diagnostics ──────────────────────────────────────────┐
+│                                                                                                       │
+│  Diagnostic tools for Git: verbose output, trace logs, fsck, and performance profiling.               │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Verbose / Trace Flags             │  │             Object Store Checks             │   │
+│   │            GIT_TRACE=1 git <cmd>             │  │              git fsck [--full]              │   │
+│   │       GIT_TRACE_PACKET=1: proto debug        │  │            git count-objects -vH            │   │
+│   │        GIT_CURL_VERBOSE=1: HTTP trace        │  │  git verify-pack -v .git/objects/pack/*.idx │   │
+│   │       GIT_SSH_COMMAND: custom SSH opts       │  │    git cat-file -t/-p <sha>: inspect obj    │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Trace env vars show protocol-level detail; fsck validates object integrity                         │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               History Analysis               │  │            Performance Profiling            │   │
+│   │       git log --all --oneline --graph        │  │         git clone --depth 1: measure        │   │
+│   │          git blame -L 10,20 <file>           │  │        git maintenance run --task gc        │   │
+│   │       git bisect: find regression SHA        │  │      Large file finder: git lfs migrate     │   │
+│   │     git shortlog -sn: contributor count      │  │         git-sizer: repo stats report        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Developer workstation · terminal · Git remote · pack file storage                                    │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  GIT_TRACE       = env var enabling debug trace output for git commands                               │
+│  GIT_TRACE_PACKET= logs pack protocol negotiation; useful for clone/fetch issues                      │
+│  GIT_CURL_VERBOSE= logs HTTP request/response headers for HTTPS debugging                             │
+│  git fsck        = file system check; verifies object store consistency                               │
+│  cat-file -t/-p  = -t shows object type, -p pretty-prints content                                     │
+│  verify-pack     = lists all objects in a pack file with their types and sizes                        │
+│  git bisect      = binary search commits; mark good/bad to isolate regression                         │
+│  git blame       = shows last commit touching each line; -L limits to line range                      │
+│  git-sizer       = GitHub tool generating report on repo blob/tree/commit sizes                       │
+│  lfs migrate     = moves large files from history to LFS; rewrites commits                            │
+│  git maintenance = modern replacement for git gc; safe background maintenance                         │
+│  shortlog -sn    = summary of commits per author sorted by count                                      │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 ### Stripping Sensitive Data from Trace Logs
 

@@ -58,7 +58,40 @@ flowchart TD
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
+┌─────────────────────────────────── Dell Data Domain Health Checks ────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │         Daily: filesys space < 80%, replication in sync, no disk faults, alerts clear         │   │
+│   │            Weekly: verify cleaning completed, check NVRAM, review dedup efficiency            │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                 Daily Checks                 │  │                Weekly Checks                │   │
+│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+│   │           filesys show space < 80%           │  │        Cleaning: completed this week        │   │
+│   │          Replication lag < 4 hours           │  │          Dedup ratio not degrading          │   │
+│   │             No disk fault alerts             │  │               NVRAM no errors               │   │
+│   │            Backup jobs succeeded             │  │            Hardware health clean            │   │
+│   │             CloudIQ health score             │  │             License utilisation             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   │      Check       │     Command      │   Pass criteria   │   Fail action    │    Frequency     │   │
+│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+│   │     FS space     │filesys show space│     < 80% used    │  Expire backups  │      Daily       │   │
+│   │     Rep lag      │ replication show │       < 4 hr      │  Check WAN/link  │      Daily       │   │
+│   │   Disk health    │ disk show state  │       All OK      │   Replace disk   │      Daily       │   │
+│   │     Cleaning     │filesys clean show│   Ran this week   │  Manual trigger  │      Weekly      │   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    80% threshold  = DDOS performance degrades significantly above 80% full; expand or expire          │
+│    Cleaning cycle = Weekly automatic cleaning; reclaims space; takes 2–12 hours to complete           │
+│    Dedup efficiency= data factor (logical/physical) should be consistent; drop signals a change       │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 ## Health Check — Pre-Change
 

@@ -36,37 +36,6 @@ Disaster Recovery reference: SRDF/S, SRDF/A, RecoverPoint, SRM, and 4 more.
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
-┌────────────────────────────────────────── Disaster Recovery ──────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Disaster Recovery — overview of all DR tools, replication methods, and recovery procedures  │   │
-│   │                   See product-specific sub-sections for detailed procedures                   │   │
-│   │          DR success depends on: documented runbooks · tested failover · validated RTO         │   │
-│   │          Minimum DR posture: defined RPO/RTO · tested backups · known escalation path         │   │
-│   │        Test DR procedures quarterly; document results; update runbooks after each test        │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Production site · DR site · Replication link · Management network · Vault network                    │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  RPO           = Recovery Point Objective; max acceptable data loss window                            │
-│  RTO           = Recovery Time Objective; max acceptable downtime before restore                      │
-│  Failover      = activating the DR site; redirecting hosts to replica resources                       │
-│  Failback      = returning operations to production site after DR resolved                            │
-│  Runbook       = step-by-step documented procedure for a specific DR scenario                         │
-│  IRE           = Isolated Recovery Environment; air-gapped clean-room for recovery                    │
-│  Clean Room    = isolated vCenter + workstations for cyber recovery validation                        │
-│  Air Gap       = network isolation preventing attacker lateral movement to vault                      │
-│  DR Test       = planned failover test; validates RTO without real disaster                           │
-│  Replication   = continuous or periodic data copy to secondary site or vault                          │
-│  Recovery Tier = classification: hot/warm/cold based on RTO requirement                               │
-│  BIA           = Business Impact Analysis; drives RPO/RTO targets per system                          │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="srdf-s/"><strong>SRDF/S</strong><span>Dell SRDF Synchronous — zero RPO replication between PowerMax arrays.</span></a>
 <a class="kb-card" href="srdf-a/"><strong>SRDF/A</strong><span>Dell SRDF Asynchronous — configurable RPO replication with delta-set consistency.</span></a>

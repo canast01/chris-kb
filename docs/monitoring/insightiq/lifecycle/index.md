@@ -54,7 +54,35 @@ Key compatibility rules:
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```sql
+┌────────────────────────────────── InsightIQ — Lifecycle Management ───────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                    Deploy                    │  │                   Upgrade                   │   │
+│   │            Deploy OVA to vCenter             │  │                 Backup first                │   │
+│   │              Assign IP and DNS               │  │                 Snapshot VM                 │   │
+│   │             Add clusters via UI              │  │              Apply upgrade pkg              │   │
+│   │                Configure SMTP                │  │              Verify collection              │   │
+│   │             Set retention policy             │  │               Rollback if fail              │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  OVA on vSphere management cluster · VM snapshot before upgrade · backup to NFS                       │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  OVA deployment = Importing InsightIQ as VM; set 4 vCPU, 8 GB RAM, 200+ GB disk                       │
+│  Cluster registration = Adding PowerScale cluster in InsightIQ UI with PAPI credentials               │
+│  Retention policy = Configured in InsightIQ settings; default 2 years raw data                        │
+│  SMTP configuration = InsightIQ settings for email alerts and scheduled reports                       │
+│  Upgrade package = Dell-provided upgrade file; applied via iiq_upgrade command                        │
+│  Snapshot = VM snapshot taken before upgrade; enables rollback if data is lost                        │
+│  Backup = iiq_backup run before upgrade; stored off-VM on NFS                                         │
+│  Verify collection = Check InsightIQ is collecting new data after upgrade                             │
+│  Rollback = Revert to VM snapshot if upgrade corrupts DB or stops collection                          │
+│  Decommission = iiq_backup → save archive → power off VM → remove from vCenter                        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 Backup files should be replicated to an external backup target (NAS, S3-compatible, or enterprise backup solution).
 

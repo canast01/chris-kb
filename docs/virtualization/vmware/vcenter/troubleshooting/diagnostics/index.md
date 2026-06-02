@@ -95,7 +95,52 @@ Diagnostic Chain — Priority Order
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```bash
+┌──────────────────────────────────── vCenter Server — Diagnostics ─────────────────────────────────────┐
+│                                                                                                       │
+│  vCenter diagnostics use log bundles, service status checks, and database queries                     │
+│  to identify root causes of connectivity, performance, and auth failures.                             │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Log Collection                │  │             Service Diagnostics             │   │
+│   │            Support bundle: VC UI             │  │             vmon-cli -l (status)            │   │
+│   │          vc-support.sh on appliance          │  │            journalctl -u vmware-*           │   │
+│   │              Key logs: vpxd.log              │  │           service-control --status          │   │
+│   │           SSO: ssoAdminServer.log            │  │           Check port 443/9443 open          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Collect support bundle first; vpxd.log and SSO logs cover 90% of issues.                             │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            DB & Performance Diag             │  │             Network Diagnostics             │   │
+│   │      Postgres: select pg_stat_activity       │  │            Ping VC from ESXi host           │   │
+│   │          DB size: /storage/db usage          │  │           nslookup: VC FQDN + PTR           │   │
+│   │           Slow UI: vpxd CPU usage            │  │         traceroute: management path         │   │
+│   │          Stats rollup: latency logs          │  │           Port test: nc -zv vc 443          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  All diagnostic access is via SSH to VCSA appliance or via browser to vSphere Client;                 │
+│  support bundles are downloaded via browser UI.                                                       │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  vc-support.sh = generates support bundle on VCSA; exports to /tmp                                    │
+│  vpxd.log      = main vCenter Server log; task, event, error messages                                 │
+│  ssoAdminServer= SSO authentication service log; login failures here                                  │
+│  pg_stat_activity= Postgres view; shows active DB queries                                             │
+│  vmon-cli      = service monitor; RUNNING/STOPPED states                                              │
+│  journalctl    = systemd log; vmware-* services write here                                            │
+│  /storage      = VCSA data partition; contains DB, logs, stats                                        │
+│  nc -zv        = netcat; test TCP port reachability                                                   │
+│  nslookup PTR  = reverse DNS check; must match forward A record                                       │
+│  Support bundle= ZIP of all VCSA logs + config; send to GSS                                           │
+│  Stats rollup  = scheduled job; aggregates perf metrics; latency = problem                            │
+│  vpxd CPU      = high vCenter process CPU = query storm or stuck tasks                                │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 ### Disk Partition Usage
 

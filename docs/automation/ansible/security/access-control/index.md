@@ -42,7 +42,29 @@ graph TD
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```bash
+┌────────────────────────────────────── Ansible — Access Control ───────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   Ansible access control: who can run which playbooks against which hosts — enforced via AWX  │   │
+│   │      AWX RBAC: organizations → teams → users; permissions per job template and credential     │   │
+│   │     CLI access: limit SSH key distribution; service accounts only; no shared personal keys    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              AWX RBAC Hierarchy              │  │              Permission Levels              │   │
+│   │          Organization → Team → User          │  │               Admin: full CRUD              │   │
+│   │           Credentials: team-scoped           │  │            Execute: run jobs only           │   │
+│   │           Inventories: team-scoped           │  │            Read: view job output            │   │
+│   │          Job templates: team-scoped          │  │           Use: attach to template           │   │
+│   │            LDAP/SAML sync for SSO            │  │           Approval: require review          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │        AWX organization = top-level RBAC container; isolate business units or customers       │   │
+│   │   Team             = group of users within an organization; assign permissions at team level  │   │
+│   │ Approval workflow= AWX Workflow Job Template can require human approval step before execution │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 ### Sudoers — Scope Privilege Escalation
 

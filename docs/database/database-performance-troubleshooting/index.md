@@ -52,7 +52,44 @@ free -h           # check swap usage — DB paging = critical
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```sql
+┌─────────────────────────────── Database — Performance Troubleshooting ────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │    Diagnose DB performance: slow queries, blocking chains, lock contention, I/O saturation    │   │
+│   │    Start with wait events to identify bottleneck type before looking at individual queries    │   │
+│   │    Use EXPLAIN ANALYZE to confirm query plan; index changes need testing before production    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                   Diagnose                   │  │                   Resolve                   │   │
+│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+│   │           Identify wait event type           │  │           Kill blocking head query          │   │
+│   │           Find top CPU/IO queries            │  │          Add/rebuild missing index          │   │
+│   │          EXPLAIN ANALYZE slow query          │  │          Rewrite query (avoid N+1)          │   │
+│   │          Check index usage/missing           │  │          Increase work_mem / buffer         │   │
+│   │          Review I/O wait on storage          │  │          Partition or archive data          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   │     Symptom      │   Likely cause   │   Diagnose with   │    Resolution    │     Validate     │   │
+│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+│   │   Slow SELECT    │  Missing index   │  EXPLAIN ANALYZE  │   CREATE INDEX   │ Query time drop  │   │
+│   │    High wait     │ Lock contention  │    pg_locks/DMV   │   Kill blocker   │   Wait clears    │   │
+│   │    I/O spike     │ Full table scan  │  iostat + EXPLAIN │Index + partition │  I/O normalises  │   │
+│   │    CPU spike     │  Bad query plan  │   AWR / top SQLs  │   Stats update   │    CPU drops     │   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Wait event    = Reason a DB session is idle; lock/IO/CPU waits indicate bottleneck type            │
+│    EXPLAIN ANALYZE= PostgreSQL; shows actual execution plan with row counts and timings               │
+│    N+1 problem   = Loop issuing one query per item instead of one bulk query; kills DB                │
+│    work_mem      = PostgreSQL per-sort memory; increase to avoid temp file disk spills                │
+│    DMV           = SQL Server Dynamic Management View; real-time query and session stats              │
+│    Seq scan      = Full table scan; normal for small tables; bad for large + OLTP queries             │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 ## SQL Server — Slow Query Analysis
 

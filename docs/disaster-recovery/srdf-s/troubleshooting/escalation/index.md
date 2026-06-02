@@ -46,47 +46,6 @@ Escalation reference covering Required Information for Support Request, Support 
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
-┌───────────────────────────────────────── SRDF/S — Escalation ─────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                    SRDF/S — Escalation Path                                   │   │
-│   │              L1 Triage: review logs, match to known issues in runbook (0–30 min)              │   │
-│   │         L2 Engineering: deep analysis, config review, lab reproduction (30 min – 4 h)         │   │
-│   │             Vendor Support: open case with log bundle if unresolved at L2 (> 4 h)             │   │
-│   │            Sev1 (data loss / production impact): page on-call + open critical case            │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                            Information to Collect Before Escalating                           │   │
-│   │               Product version: SRDF/S version string from About / version command             │   │
-│   │                                  Full log bundle: symrdf query                                │   │
-│   │                     Symptom timeline: when first occurred; any changes made                   │   │
-│   │                Scope: single job / all jobs / all components — narrows root cause             │   │
-│   │                    Error codes: exact error messages and exit codes from logs                 │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Two PowerMax arrays · Dark fiber / DWDM FC link · Low-latency network (< 200 km) · RF director ports │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  SRDF/S        = Synchronous SRDF; every R1 write is mirrored to R2 before host acknowledgment        │
-│  R1            = source volume; write is held pending R2 confirmation — adds WAN RTT to latency       │
-│  R2            = target volume; must acknowledge each write; acts as synchronous mirror               │
-│  RTT           = Round-Trip Time between R1 and R2 arrays; directly added to host write latency       │
-│  RPO=0         = zero recovery point objective; no data loss possible under normal operation          │
-│  RTO           = Recovery Time Objective; SRDF/S failover typically < 5 minutes manual, < 1 min       │
-│  symrdf        = CLI for all SRDF operations: establish, split, suspend, failover, restore, ver       │
-│  Pair State    = Synchronized | Consistent | Suspended | Failed Over | Split                          │
-│  Consistent    = transient state where R1 write is in transit but not yet confirmed on R2             │
-│  Failover      = makes R2 read-write; production continues from DR site after R1 failure              │
-│  Restore       = re-synchronises after failover; direction is reversed until R1 catches up            │
-│  RDFG          = RDF Group: logical grouping of SRDF pairs sharing same link and parameters           │
-│  FA Port       = Front-End Adapter port on PowerMax; used for host connectivity (non-SRDF)            │
-│  RF Port       = Remote Fabric port on PowerMax; used exclusively for SRDF replication traffic        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 > Part of the [SRDF/S Troubleshooting](../index.md) reference.
 
 Dell SRDF/S support cases are opened at support.dell.com under the relevant PowerMax array service tag. P1 cases (active production replication failure with data risk) trigger a 30-minute callback SLA under ProSupport Plus and Mission Critical contracts. Collect all required diagnostics before calling to avoid delays during triage.

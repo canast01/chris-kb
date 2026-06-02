@@ -86,7 +86,59 @@ echo "Token acquired"
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```bash
+┌─────────────────────────────────── NetApp Keystone — CLI Reference ───────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │        CLI interfaces: ONTAP CLI (SSH), Keystone Collector CLI (Linux), Active IQ REST        │   │
+│   │        ONTAP CLI: volume show, vserver show, storage aggregate show, net interface show       │   │
+│   │         Collector CLI: keystone-collector status, collect, upload, logs, config-check         │   │
+│   │          Active IQ REST: GET /v1/keystone/capacity, GET /v1/keystone/billing/invoices         │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    SSH to cluster mgmt LIF -> ONTAP CLI; SSH to Collector VM -> collector-manager CLI                 │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │          ONTAP CLI          │  │        Collector CLI        │  │        Active IQ API        │   │
+│   │         volume show         │  │          ks status          │  │        GET /capacity        │   │
+│   │         vserver show        │  │          ks collect         │  │        GET /invoices        │   │
+│   │          aggr show          │  │          ks upload          │  │         GET /billing        │   │
+│   │         net int show        │  │           ks logs           │  │         Auth: Bearer        │   │
+│   │      storage disk show      │  │       ks config-check       │  │         TLS required        │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    ONTAP CLI privilege levels: admin (default), advanced (diag-level commands)                        │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     Command      │   Description    │     Interface     │      Level       │      Notes       │   │
+│   │   volume show    │   List volumes   │     ONTAP CLI     │      admin       │     Per SVM      │   │
+│   │    aggr show     │    List aggrs    │     ONTAP CLI     │      admin       │    Disk usage    │   │
+│   │    ks status     │   Coll. health   │     Collector     │    Linux root    │    Svc status    │   │
+│   │    ks upload     │   Force upload   │     Collector     │    Linux root    │    Debug use     │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: SSH from jump host to cluster mgmt LIF (22/TCP); HTTPS to Active IQ (443)                │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    ONTAP CLI          = SSH-based command shell on cluster mgmt LIF; fsm-driven                       │
+│    Privilege level    = admin (normal) vs advanced (set -priv advanced); diag for support             │
+│    vserver show       = Lists all SVMs; use -vserver <name> to filter                                 │
+│    volume show -space = Adds used/available columns; key for Keystone sizing                          │
+│    aggr show -space   = Aggregate capacity; Keystone committed is at aggr level                       │
+│    ks status          = Keystone Collector service status; checks upload backlog                      │
+│    ks collect         = Manually trigger ONTAP REST poll; useful after fix                            │
+│    ks upload          = Force metric upload to Active IQ; bypasses schedule                           │
+│    ks config-check    = Validates Collector config (API creds, endpoints, proxy)                      │
+│    Bearer token       = Active IQ REST auth; retrieved via NetApp SSO login                           │
+│    net int show       = Lists all LIFs; confirms data/mgmt LIF status and IP                          │
+│    storage disk show  = Physical disk info; checks spares, broken, and RAID groups                    │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 ### Service Level Listing
 

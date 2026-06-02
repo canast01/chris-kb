@@ -59,7 +59,40 @@ flowchart TD
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```sql
+┌───────────────────────────────── Dell Data Domain Operational Issues ─────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │        Common operational issues: space full, replication lag, cleaning not completing        │   │
+│   │              Space: expire old backups; increase retention policy review cadence              │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │         Space Issues        │  │      Replication Issues     │  │      Performance Issues     │   │
+│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
+│   │       Filesystem > 80%      │  │       Replication lag       │  │       Slow backup jobs      │   │
+│   │       Cleaning blocked      │  │        Context broken       │  │        Slow restores        │   │
+│   │       MTree quota hit       │  │       Bandwidth limit       │  │         NVRAM errors        │   │
+│   │      Expired not freed      │  │       WAN instability       │  │       High dedupe miss      │   │
+│   │       No COD available      │  │        Authentication       │  │       Disk contention       │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│   │      Issue       │    Root cause    │        Fix        │      Verify      │     Prevent      │   │
+│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+│   │     FS full      │Retention too long│  Expire old data  │  Space recovers  │  Monitor < 80%   │   │
+│   │     Rep lag      │  WAN congestion  │   Throttle/time   │  Lag decreases   │  QoS WAN policy  │   │
+│   │  Cleaning stuck  │  Active writes   │   Run off-hours   │ Clean completes  │  Schedule cron   │   │
+│   │   Slow backup    │  Network/NVRAM   │    Check NVRAM    │  Throughput up   │  Health monitor  │   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Cleaning blocked = Active writes/replication prevent cleaning from completing; run off-hours       │
+│    High dedupe miss = New data with low dedup ratio arriving; check for new backup type or agent      │
+│    Context broken   = Replication context in error state; replication resync to re-establish          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 ### Recovery Steps
 

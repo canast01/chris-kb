@@ -36,37 +36,6 @@ Virtualization Network Validation reference covering Overview, Pre-Checks, Steps
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
-┌────────────────────────────── Virtualization Network Validation Runbook ──────────────────────────────┐
-│                                                                                                       │
-│    Use after network changes, VLAN changes, host work, NSX changes, or VM connectivity issues         │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                Check Sequence                │  │                 Common Fixes                │   │
-│   │        ──────────────────────────────        │  │        ─────────────────────────────        │   │
-│   │           1. VM network assignment           │  │             Reassign port group             │   │
-│   │          2. Port group VLAN config           │  │             Fix VLAN ID mismatch            │   │
-│   │            3. Host uplink status             │  │              Check NIC / cable              │   │
-│   │           4. VLAN / overlay config           │  │            Fix switch VLAN trunk            │   │
-│   │         5. NSX segment (if overlay)          │  │             Re-deploy NSX config            │   │
-│   │               6. Ping from VM                │  │             Check firewall rule             │   │
-│   │           7. DNS resolution in VM            │  │             Check DNS server IP             │   │
-│   │           8. App connectivity test           │  │              App owner confirms             │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Port group    = Named network on a vSwitch or dvSwitch; VMs connect to port groups                 │
-│    dvSwitch      = Distributed virtual switch; managed centrally from vCenter                         │
-│    VLAN trunk    = Physical switch port allowing multiple VLANs; must match port group                │
-│    NSX segment   = Overlay network (GENEVE); not tied to physical VLANs                               │
-│    Uplink        = Physical NIC on ESXi connected to physical switch; check link state                │
-│    Teaming       = NIC bonding policy on vSwitch; active/standby or load balance                      │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 ## Overview
 
 Use this after network changes, VLAN changes, host work, NSX changes, or VM connectivity issues.

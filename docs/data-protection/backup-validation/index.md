@@ -82,7 +82,43 @@ flowchart TD
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```powershell
+┌───────────────────────────────── Data Protection — Backup Validation ─────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     Backup validation: confirm jobs complete, data is intact, restores work before needed     │   │
+│   │              Automated: every job — checksums + VM boot test; evidence in job log             │   │
+│   │      Manual: quarterly — full application restore with user acceptance and signed report      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Automated Validation             │  │            Manual Restore Testing           │   │
+│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+│   │        Veeam SureBackup: boot VM test        │  │         Quarterly full restore test         │   │
+│   │         Commvault: snap verify mount         │  │         Application-level acceptance        │   │
+│   │        NBU bpverify: media integrity         │  │         User validates restored data        │   │
+│   │         Checksum validation on file          │  │          Document result + sign-off         │   │
+│   │         Alert on job failure or skip         │  │          Update test calendar entry         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   │       Tier       │      Method      │     Frequency     │ Success criteria │     Evidence     │   │
+│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+│   │    Auto/basic    │  Job log check   │    Every backup   │   Job success    │  Job log entry   │   │
+│   │    Auto/deep     │  Mount/boot VM   │    Daily/weekly   │  VM boots clean  │  SureBackup log  │   │
+│   │      Manual      │   Full restore   │     Quarterly     │  App functional  │  Signed report   │   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    SureBackup  = Veeam automated recovery verification; boots VM from backup in isolated sandbox      │
+│    bpverify    = NetBackup command; reads backup image and verifies data integrity on media           │
+│    Checksum    = Hash of backup data; mismatch indicates corruption in backup storage                 │
+│    RTO         = Recovery Time Objective; max time to restore; verified in manual restore tests       │
+│    RPO         = Recovery Point Objective; max data loss; validated by backup job frequency           │
+│    Snap verify = Mount snapshot in sandbox and run application check scripts                          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 Expected output columns: `Name` (VM name), `Status` (Success / Warning / Failed), timing. Any `Failed` row requires immediate investigation and re-run after remediation.
 

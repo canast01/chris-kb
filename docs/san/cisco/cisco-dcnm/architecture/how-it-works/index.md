@@ -52,53 +52,6 @@ How It Works reference covering Overview, Deployment Models, Management Flow, Ne
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
-┌────────────────────────────────────── Cisco DCNM — How It Works ──────────────────────────────────────┐
-│                                                                                                       │
-│  DCNM discovers via SNMP, manages VSAN zones, pushes NX-OS configs, monitors performance.             │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Discovery & Polling              │  │             VSAN Zone Management            │   │
-│   │         Add switch IP → SNMP v3 poll         │  │          GUI: browse VSAN topology          │   │
-│   │         SSH/NETCONF credential auth          │  │          Zone wizard: alias + zone          │   │
-│   │        Topology built: domain + ports        │  │           Push zone config to VSAN          │   │
-│   │          SFP/HBA inventory per port          │  │          zoneset activate on switch         │   │
-│   │        SNMP alerts: event forwarding         │  │         Zone diff: before push view         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  DCNM polls switches for state; zone changes staged and pushed via SSH/NETCONF.                       │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │            Performance Monitoring            │  │             Firmware Management             │   │
-│   │         Port utilisation: 5-min poll         │  │          Upload NX-OS image to DCNM         │   │
-│   │           VSAN traffic dashboards            │  │         Install via ISSU per switch         │   │
-│   │         Historical: 90-day retention         │  │         Schedule: maintenance window        │   │
-│   │         Alerts: email/SNMP threshold         │  │         Verify version post-upgrade         │   │
-│   │          Top ISL bottleneck report           │  │          Rollback: prior image kept         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  DCNM VM · management network · Cisco MDS/Nexus switches · NTP for time sync                          │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  VSAN            = Virtual SAN; logical FC fabric on MDS; zones exist per VSAN                        │
-│  SNMPv3          = polling protocol; DCNM uses for MDS discovery and event alerts                     │
-│  NETCONF         = XML-based config protocol; DCNM uses for switch configuration push                 │
-│  Zone wizard     = DCNM GUI workflow for creating FC zones and aliases step-by-step                   │
-│  zoneset activate= NX-OS command; activates zone set in VSAN; DCNM triggers remotely                  │
-│  Zone diff       = DCNM shows before/after view of zone changes before pushing                        │
-│  ISSU            = In-Service Software Upgrade; NX-OS upgrade without traffic disruption              │
-│  NX-OS           = Cisco operating system for MDS and Nexus switches                                  │
-│  5-min poll      = default DCNM performance collection interval per port                              │
-│  90-day retention= default performance history in DCNM Elasticsearch store                            │
-│  Top bottleneck  = DCNM identifies overutilised ISLs and credit-starved ports                         │
-│  ISSU rollback   = prior NX-OS image kept on bootflash; used if upgrade fails                         │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 ## Overview
 
 Cisco Data Center Network Manager (DCNM) is Cisco's SAN and LAN management platform for Cisco MDS 9000 Fibre Channel switches. DCNM 11.x is the last standalone appliance release. Starting with version 12.0 (2022), DCNM was renamed **Nexus Dashboard Fabric Controller (NDFC)** and runs as an application on the Cisco Nexus Dashboard platform.

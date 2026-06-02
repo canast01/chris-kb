@@ -190,6 +190,7 @@ Christos Anastasiadis  |  May 2026
     ```text
     RESPONSIBILITY STACK
 ```
+```
     ┌──────────────────────────────────────────────┐
     │           IaaS        PaaS        SaaS       │
     │        ┌────────┐  ┌────────┐  ┌────────┐   │
@@ -201,7 +202,6 @@ Christos Anastasiadis  |  May 2026
     │  AWS → │  HW/DC │  │manages │  │        │   │
     │        └────────┘  └────────┘  └────────┘   │
 ```
-```text
     │  Control: HIGH         MID          LOW      │
     └──────────────────────────────────────────────┘
     ```
@@ -319,6 +319,7 @@ Christos Anastasiadis  |  May 2026
     ```text
     AWS REGION (e.g. us-east-1)
 ```
+```
     ┌─────────────────────────────────────┐
     │  ┌─────────┐  ┌─────────┐  ┌─────┐  │
 ```text
@@ -326,7 +327,6 @@ Christos Anastasiadis  |  May 2026
     │  │(min req)│  │(min req)│  │     │  │
     │  └─────────┘  └─────────┘  └─────┘  │
 ```
-```text
     │       └────────────┴────────────┘    │
     │         High-bandwidth private fiber  │
     └─────────────────────────────────────┘
@@ -340,6 +340,7 @@ Christos Anastasiadis  |  May 2026
     ```text
     AVAILABILITY ZONE
 ```
+```
     ┌──────────────────────────────────┐
     │  ┌──────────┐  ┌──────────┐      │
 ```text
@@ -347,7 +348,6 @@ Christos Anastasiadis  |  May 2026
     │  │ Center A │  │ Center B │      │
     │  └──────────┘  └──────────┘      │
 ```
-```text
     │  Independent power and cooling    │
     │  Connected to other AZs via       │
     │  private high-bandwidth fiber     │
@@ -366,6 +366,7 @@ Christos Anastasiadis  |  May 2026
     ```text
     SINGLE AZ (bad)          MULTI-AZ (good)
 ```
+```
     ┌─────────────┐          ┌─────────────────────┐
     │     AZ-1    │          │  AZ-1    │  AZ-2    │
     │  ┌────────┐ │          │ ┌──────┐ │ ┌──────┐ │
@@ -373,7 +374,6 @@ Christos Anastasiadis  |  May 2026
     │  │  App   │ │          │ │ App  │ │ │ App  │ │
     │  └────────┘ │          │ └──────┘ │ └──────┘ │
 ```
-```text
     │  AZ fails   │          │ AZ fails │ Still UP!│
     │  OUTAGE!    │          │          │    ✓     │
     └─────────────┘          └─────────────────────┘

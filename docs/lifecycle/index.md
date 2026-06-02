@@ -35,37 +35,6 @@ Infrastructure lifecycle management covering installation, upgrade, patching, de
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
-┌──────────────────────────────────────── Lifecycle Management ─────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │         System lifecycle: plan → onboard → operate → upgrade → migrate → decommission         │   │
-│   │        Each phase documented; no phase skipped without CAB approval and risk assessment       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Procure → build → onboard → BAU → upgrade readiness → migration → decommission                     │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │           Onboard           │  │      Operate / Upgrade      │  │            Retire           │   │
-│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
-│   │       System readiness      │  │      Upgrade readiness      │  │      Decommission plan      │   │
-│   │          CMDB entry         │  │      Upgrade execution      │  │        Data migration       │   │
-│   │       Monitoring setup      │  │      Post-upgrade check     │  │       Backup retention      │   │
-│   │       Runbook creation      │  │        Rollback path        │  │        Asset disposal       │   │
-│   │       Handover to ops       │  │        Migration plan       │  │         CMDB retire         │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Onboarding    = Process of introducing a new system into BAU operations with documentation         │
-│    Decommission  = Formal retirement of a system; data migration, backup, and asset recovery          │
-│    CMDB          = Configuration Management Database; track system attributes through lifecycle       │
-│    Upgrade window= Scheduled maintenance period for OS/firmware/software upgrades                     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 ## Articles
 
 <div class="kb-grid kb-grid-3">

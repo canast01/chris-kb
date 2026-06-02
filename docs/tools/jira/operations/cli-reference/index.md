@@ -49,7 +49,36 @@ export JIRA_AUTH=$(echo -n "${JIRA_USER}:${JIRA_TOKEN}" | base64)
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```bash
+┌──────────────────────────────────────── Jira — CLI Reference ─────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                         Jira Admin CLI — run on server as jira OS user                        │   │
+│   │             ./start-jira.sh / ./stop-jira.sh — start/stop Jira application server             │   │
+│   │               curl http://localhost:8080/status — returns JSON with state field               │   │
+│   │             psql -U jira jira -c "SELECT count(*) FROM jiraissue;" — count issues             │   │
+│   │                 pg_dump -Fc -U jira jira -f /backup/jira_$(date +%Y%m%d).dump                 │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  SSH to Jira server · run as jira OS user · DB on PostgreSQL VM                                       │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  start-jira.sh  = JIRA_INSTALL/bin/start-jira.sh; starts Tomcat JVM process                           │
+│  stop-jira.sh   = graceful shutdown; waits for active requests to complete                            │
+│  GET /status    = REST endpoint; returns state: RUNNING, STARTING, STOPPING, ERROR                    │
+│  jiraissue table = PostgreSQL table containing all Jira issues                                        │
+│  pg_dump -Fc    = custom format dump; required for parallel pg_restore -j                             │
+│  kill -3 PID    = SIGQUIT to JVM; thread dump printed to catalina.out                                 │
+│  JIRA_INSTALL   = installation directory; contains bin/, conf/, atlassian-jira/                       │
+│  JIRA_HOME      = data directory; attachments/, indexes/, plugins/, log/                              │
+│  catalina.out   = Tomcat stdout; JIRA_INSTALL/logs/catalina.out                                       │
+│  atlassian-jira.log = Jira application log; JIRA_HOME/log/atlassian-jira.log                          │
+│  jira-application.properties = JIRA_HOME config; sets jira.home and cluster config                    │
+│  dbconfig.xml   = JIRA_HOME; JDBC connection settings; edit to change DB params                       │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 ---
 

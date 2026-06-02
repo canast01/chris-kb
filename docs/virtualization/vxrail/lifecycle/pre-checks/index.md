@@ -17,13 +17,6 @@ Pre-Upgrade Checklist Flow
 └──────────────────────────────────────────────────────────────┘
                                │
 ```
-```text
-┌──────────────────────────────▼──────────────────────────────┐
-│  Hardware (each node via iDRAC)                              │
-│  PSU · memory · CPU · fans · NICs · disks all green          │
-│  no predictive failures · firmware inventory available       │
-└──────────────────────────────┬──────────────────────────────┘
-```
                                │
 ┌──────────────────────────────▼──────────────────────────────┐
 │  Infrastructure + Backup                                     │

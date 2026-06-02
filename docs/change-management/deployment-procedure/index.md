@@ -68,7 +68,41 @@ curl -sf http://localhost:<port>/health
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```sql
+┌──────────────────────────────────────── Deployment Procedure ─────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │          Deployment: execute change per approved RFC; document each step and outcome          │   │
+│   │         No deviation from approved steps without ECAB approval; call out any variance         │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Deployment Steps               │  │                Documentation                │   │
+│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+│   │          1. Go/No-Go decision call           │  │                Log start time               │   │
+│   │        2. Confirm attendees on bridge        │  │           Capture each step output          │   │
+│   │        3. Execute RFC steps in order         │  │             Note any deviations             │   │
+│   │        4. Checkpoint after each tier         │  │            Screenshot key states            │   │
+│   │           5. Run validation checks           │  │            Log end time + outcome           │   │
+│   │          6. Go/No-Go for next phase          │  │             Notify stakeholders             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   │    Checkpoint    │     Trigger      │      Decision     │     If pass      │     If fail      │   │
+│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+│   │     Go/No-Go     │   Before exec    │     Team vote     │     Proceed      │   Defer change   │   │
+│   │    Mid-change    │ After each tier  │    Lead decides   │    Next step     │     Rollback     │   │
+│   │    Validation    │ After last step  │    Test results   │   Close change   │     Rollback     │   │
+│   │   Time overrun   │  Beyond window   │    Lead decides   │   Brief extend   │     Rollback     │   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Go/No-Go   = Explicit decision call before proceeding; requires confirmation from lead             │
+│    Deviation   = Any step that differs from approved RFC; document and get verbal ECAB approval       │
+│    Time overrun= Execution exceeds approved window; decision: extend (if safe) or rollback            │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 ## Phase 4 — Monitoring Soak
 

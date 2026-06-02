@@ -59,7 +59,38 @@ curl -s -X POST \
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```powershell
+┌─────────────────────────────────── Integration — API Connectivity ────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │    Test REST API connectivity: reachability, authentication, TLS cert chain, response codes   │   │
+│   │       Auth types: API key (header), Bearer token (OAuth2/JWT), Basic (base64), mTLS cert      │   │
+│   │          TLS: verify cert chain with curl -v; check expiry; confirm CA in trust store         │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Connectivity Testing             │  │                Common Issues                │   │
+│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+│   │           curl -v https://endpoint           │  │        SSL: unable to verify → add CA       │   │
+│   │       curl -H "Authorization: Bearer"        │  │          401 = bad token or expired         │   │
+│   │          openssl s_client -connect           │  │         403 = auth OK; no permission        │   │
+│   │         Check cert expiry (s_client)         │  │          502/504 = upstream timeout         │   │
+│   │         Test via proxy: curl --proxy         │  │         Connection refused = FW/DNS         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Bearer token   = Short-lived JWT or opaque token; sent in Authorization: Bearer <token>            │
+│    OAuth2         = Delegation framework; client obtains token from IdP; presents to API              │
+│    mTLS           = Mutual TLS; both client and server authenticate with certificates                 │
+│    SNI            = Server Name Indication; TLS extension; server selects correct cert by hostname    │
+│    HTTP 401       = Unauthorized; credentials missing or invalid; re-authenticate                     │
+│    HTTP 403       = Forbidden; authenticated but not authorised for the resource                      │
+│    openssl s_client= Test TLS handshake; shows cert chain, expiry, cipher negotiated                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 ## Authentication Checks
 

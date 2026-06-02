@@ -38,40 +38,6 @@ Networking knowledge base covering switching, routing, security, and network ser
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
-┌──────────────────────── Networking — Switching, Routing, Security & Services ─────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │     Networking KB: design references, configuration procedures, and troubleshooting guides    │   │
-│   │     Covers: VLANs, BGP/OSPF, firewall validation, DNS, load balancing, connectivity tests     │   │
-│   │        Foundation: segment by function, redundant paths, document every rule and change       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │     Switching & Routing     │  │           Security          │  │        Services & TS        │   │
-│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
-│   │       VLANs / trunking      │  │        Firewall rules       │  │        DNS resolution       │   │
-│   │      BGP / OSPF routing     │  │         VPN tunnels         │  │        Load balancer        │   │
-│   │      Subnetting / CIDR      │  │        ACL validation       │  │      Connectivity tests     │   │
-│   │          STP / LACP         │  │          NAT / PAT          │  │        Packet capture       │   │
-│   │         QoS marking         │  │        IDS/IPS rules        │  │         Path tracing        │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    VLAN         = Virtual LAN; logical broadcast domain; isolates traffic by function or tenant       │
-│    BGP          = Border Gateway Protocol; path-vector routing; used for WAN and DC fabric            │
-│    OSPF         = Open Shortest Path First; link-state IGP; used within a campus or data centre       │
-│    LACP         = Link Aggregation; bonds NICs for bandwidth + redundancy; IEEE 802.3ad               │
-│    STP          = Spanning Tree Protocol; loop prevention; RSTP preferred; MSTP for VLANs             │
-│    ECMP         = Equal-Cost Multi-Path; load-balance across redundant L3 paths                       │
-│    NAT          = Network Address Translation; maps private IPs to public; hides topology             │
-│    QoS          = Quality of Service; priority marking to protect latency-sensitive traffic           │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="switching-routing/">

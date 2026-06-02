@@ -38,6 +38,7 @@ vSAN HEALTH CHECK SCOPE
            ▼
   Skyline Health (vCenter UI) + esxcli vsan health cluster list
 ```
+```
 ┌──────────────────────────────────────── vSAN — Health Checks ─────────────────────────────────────────┐
 │                                                                                                       │
 │  vSAN health checks verify cluster, network, disk, and object health; run daily                       │
@@ -84,7 +85,137 @@ vSAN HEALTH CHECK SCOPE
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+
+## Run This Routine
+
+Paste this block into an ESXi host shell to get a full cluster health snapshot in under 2 minutes. Run from any host in the cluster.
+
 ```bash
+echo "=== 1. Cluster membership ==="
+esxcli vsan cluster get | grep -E "Member|Master|Sub-Cluster UUID|Health"
+
+echo "=== 2. Overall health tests ==="
+esxcli vsan health cluster get | grep -E "TestName|Health:" | grep -v "PASS"
+
+echo "=== 3. Disk group state ==="
+esxcli vsan storage list | grep -E "Disk Group UUID|Is SSD|Health|State|Tier"
+
+echo "=== 4. Object health summary ==="
+esxcli vsan debug object list | grep -v healthy | wc -l
+echo "unhealthy objects (0 = all good)"
+
+echo "=== 5. Resync queue ==="
+esxcli vsan debug resync summary get
+
+echo "=== 6. Capacity ==="
+esxcli vsan storage list | grep -E "Used Capacity|Total Capacity|Free Capacity"
+
+echo "=== 7. Non-compliant policy check ==="
+esxcli vsan debug object list | grep -i "non-compliant"
+
+echo "=== 8. Network MTU test (update IPs) ==="
+vmkping -I vmk2 -d -s 8972 <host2-vsan-ip> -c 3 | grep -E "loss|received"
+vmkping -I vmk2 -d -s 8972 <host3-vsan-ip> -c 3 | grep -E "loss|received"
+
+echo "=== 9. NIC error check ==="
+esxcli network nic stats get -n vmnic2 | grep -E "Errors|Dropped"
+
+echo "=== Done ==="
+```
+
+**What to look for:**
+
+| Section | Green | Investigate |
+|---|---|---|
+| Cluster membership | All hosts listed, one master | Any host missing |
+| Health tests | All PASS | Any FAIL or WARN |
+| Disk group state | All Healthy | Degraded or Error |
+| Unhealthy objects | 0 | > 0 |
+| Resync queue | 0 bytes remaining | > 0 — note ETA |
+| Capacity | Used < 70% | > 70% — plan expansion |
+| Non-compliant | No output | Any — see Procedures → Remediate |
+| MTU test | 0% loss | Any loss — check switch MTU |
+| NIC errors | 0 errors, 0 drops | Non-zero — check cabling |
+
+---
+
+## Disk Group Health
+
+```bash
+# List all disk groups — cache and capacity disks per host
+esxcli vsan storage list | grep -E "Is SSD|Disk Group UUID|naa\.|Display Name|Tier|Health"
+
+# Check SMART data on a specific disk (replace naa with actual device ID)
+esxcli storage core device smart get -d naa.xxxxxxxxxxxxxxxx
+# Reallocated Sectors, Pending Sectors, Uncorrectable Errors — any non-zero = failing disk
+
+# Check for LSOM disk errors in kernel log
+grep -i "lsom\|diskgroup" /var/log/vmkernel.log | grep -i "err\|fail" | tail -20
+
+# Disk group congestion (should be 0 per group)
+esxcli vsan debug disk list | grep -i "congestion\|Disk Group"
+```
+
+**Disk states to know:**
+
+| State | Meaning | Action |
+|---|---|---|
+| Healthy | Normal operation | None |
+| Degraded | Disk group has a failed component | Replace disk within 60 min window |
+| Absent | Component temporarily missing (host rebooted etc.) | Wait 60 min; if no recovery, replace |
+| Error | LSOM-level I/O error on disk | Immediate — check SMART data, replace |
+
+---
+
+## Object Health
+
+```bash
+# Count of objects by health state
+esxcli vsan debug object list | awk '{print $NF}' | sort | uniq -c | sort -rn
+
+# List all non-healthy objects with UUIDs
+esxcli vsan debug object list | grep -v "Healthy"
+
+# Show detail for a specific object (get UUID from above)
+esxcli vsan debug object get -u <object-uuid>
+
+# List all absent components (quick degradation indicator)
+esxcli vsan debug component list | grep -i "absent"
+
+# Resync detail — which objects are currently rebuilding
+esxcli vsan debug resync list
+```
+
+**Object states:**
+
+| State | Meaning | Action |
+|---|---|---|
+| Healthy | Policy met, all components accessible | None |
+| Degraded | One component lost; no redundancy | Monitor — rebuild should start within 60 min |
+| Absent | Component host is offline temporarily | Wait for host to return; set repair timer appropriately |
+| Non-compliant | Policy cannot be met (capacity/host count) | See Procedures → Remediate Non-Compliant Objects |
+| Inaccessible | All copies unavailable — VMs offline | P1 — escalate immediately |
+
+---
+
+## Skyline Health Categories
+
+Skyline Health in vCenter groups all checks into categories. The most important ones:
+
+**From vCenter UI:** Cluster → Monitor → vSAN → Skyline Health
+
+| Category | Key checks | Common failures |
+|---|---|---|
+| Cluster | Cluster membership, software version, time config | Host disconnected, version mismatch, NTP drift |
+| Network | MTU, multicast/unicast, host connectivity | MTU mismatch on switch, vmk tag missing |
+| Physical disk | Capacity remaining, disk health, HCL status | Disk not on HCL, capacity > 75%, SMART warn |
+| Data | Object health, policy compliance, resync | Non-compliant VMs, high resync queue |
+| Performance | Latency, IOPS, throughput baseline | Cache pressure, congestion > 0 |
+| vSAN build recommendation | Known issues for current version | Apply recommended patches |
+| Limits | Hosts, disk groups, VMs per cluster | Approaching vSAN cluster maximums |
+| Encryption | KMS connectivity, key status | KMS unreachable, key rotation needed |
+
+Run `Get-VsanClusterHealthSummary -Cluster (Get-Cluster "VSAN-LON-01") -FetchFromCache:$false` in PowerCLI for a full programmatic health report.
 
 ---
 

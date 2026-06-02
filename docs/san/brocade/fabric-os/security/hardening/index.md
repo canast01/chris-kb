@@ -75,7 +75,52 @@ flowchart TD
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```sql
+┌─────────────────────────────── Brocade Fabric OS — Security Hardening ────────────────────────────────┐
+│                                                                                                       │
+│  Hardening: disable legacy protocols, enforce RBAC, enable security policies, patch FOS.              │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │         Protocol & Service Hardening         │  │           Account & Auth Hardening          │   │
+│   │       Disable Telnet: sshutil disable        │  │          TACACS+ for all admin auth         │   │
+│   │        Disable FTP: no sftp fallback         │  │        Remove default admin password        │   │
+│   │           Disable HTTP: HTTPS only           │  │       Lockout after 3 failed attempts       │   │
+│   │         SNMPv3 only: disable v1/v2c          │  │         Complexity: 10 char + mixed         │   │
+│   │         Restrict management IP range         │  │        Expiry: 90-day password policy       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Disable all legacy protocols; enforce TACACS+; limit management access to known IPs.                 │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Fabric Security Policies           │  │         Firmware & Patch Management         │   │
+│   │        SCC: restrict switch ISL joins        │  │          FOS patch cycle: quarterly         │   │
+│   │          DCC: bind devices to ports          │  │         Check PSIRTs before upgrade         │   │
+│   │           DH-CHAP on all ISL ports           │  │        Test upgrade in non-prod first       │   │
+│   │           Zoning: deny-by-default            │  │         HA firmware: no-disrupt path        │   │
+│   │           MAPS: alert on anomalies           │  │        Rollback plan if upgrade fails       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Brocade FC switch · dedicated mgmt Ethernet · serial console for recovery                            │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  sshutil         = Fabric OS CLI to enable/disable SSH and Telnet services                            │
+│  SCC             = Switch Connection Control; restricts which FC switches can form ISLs               │
+│  DCC             = Device Connection Control; binds HBA WWNs to specific switch ports                 │
+│  DH-CHAP         = Diffie-Hellman CHAP; authenticates switches before ISL formation                   │
+│  MAPS            = Monitoring and Alerting Policy Suite; threshold-based anomaly detection            │
+│  PSIRT           = Product Security Incident Response Team advisory; vendor security bulletin         │
+│  HA firmware     = non-disruptive FOS upgrade; active CP reboots while standby takes over             │
+│  SNMPv3          = SNMP v3; authentication (MD5/SHA) + privacy (AES) mode required                    │
+│  Deny-by-default = zone policy: traffic allowed only if explicitly zoned together                     │
+│  TACACS+         = centralised CLI auth; all switch admin commands audited centrally                  │
+│  Lockout policy  = account locked after N failed logins; unlocked by admin or timeout                 │
+│  IP whitelist    = management source IP restriction; configured via acp filter command                │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 ### Remove Default SNMP Community Strings
 

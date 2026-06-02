@@ -83,7 +83,52 @@ ESXi Common Issue Resolution Paths
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```bash
+┌──────────────────────────────────────── ESXi — Common Issues ─────────────────────────────────────────┐
+│                                                                                                       │
+│  Host disconnect, PSOD, storage APD/PDL, VM power-on failures, and fixes.                             │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Host Connectivity Issues           │  │             PSOD / Kernel Crash             │   │
+│   │          vCenter shows disconnected          │  │           Purple screen on console          │   │
+│   │           Check mgmt vmk0 IP/VLAN            │  │           Note error code + offset          │   │
+│   │             Restart hostd / vpxa             │  │          Collect vm-support bundle          │   │
+│   │             Check DNS resolution             │  │           Review /var/log/vmkernel          │   │
+│   │          Reconnect from vCenter UI           │  │              Engage VMware GSS              │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Diagnose host/network issues first; storage APD/PDL separate path below.                             │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Storage Issues                │  │             VM Power-On Failures            │   │
+│   │            APD: check path state             │  │            Insufficient resources           │   │
+│   │         PDL: array controller check          │  │          Lock file from prior crash         │   │
+│   │           esxcli storage core path           │  │            Remove stale .lck file           │   │
+│   │           Latency: check DAVG/KAVG           │  │             Disk space exhausted            │   │
+│   │           Rescan storage adapters            │  │           VMtools version mismatch          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  x86 hosts, SAN/NAS/vSAN storage, ToR switches, management network, vCenter                           │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  PSOD     = Purple Screen Of Death; ESXi kernel panic; host reboots                                   │
+│  APD      = All Paths Down; storage paths lost; VM I/O paused                                         │
+│  PDL      = Permanent Device Loss; device signals permanent failure                                   │
+│  hostd    = ESXi host agent; manages host locally; restart to recover                                 │
+│  vpxa     = vCenter agent on ESXi; communicates with vCenter                                          │
+│  DAVG     = Device Average latency; measured at storage adapter layer                                 │
+│  KAVG     = Kernel Average latency; delay in VMkernel queue                                           │
+│  .lck     = VM lock file; stale lock prevents VM power-on                                             │
+│  vm-support = bundle command to collect ESXi diagnostic data                                          │
+│  vmkernel.log = main ESXi system log; first check for any issue                                       │
+│  Reconnect = vCenter action to re-establish agent connection to host                                  │
+│  vmk0     = management VMkernel adapter; ping test first step                                         │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 2. **Check for clock skew** — certificate validation fails if the host clock is more than 5 minutes off:
 

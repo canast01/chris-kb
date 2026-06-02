@@ -88,7 +88,52 @@ VCSA Procedure Flow — Maintenance Window
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```powershell
+┌───────────────────────────────── vCenter Server — Common Procedures ──────────────────────────────────┐
+│                                                                                                       │
+│  Routine vCenter procedures: certificate renewal, host add/remove, cluster                            │
+│  configuration, permissions management, and licence assignment.                                       │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Certificate Procedures            │  │               Host Procedures               │   │
+│   │           Renew machine cert: VAMI           │  │          Add host: Hosts & Clusters         │   │
+│   │          Replace cert: certmgr CLI           │  │            Enter maintenance mode           │   │
+│   │          STS cert: scripted renewal          │  │           Remove host: disconnect           │   │
+│   │        Renew all: certificate-manager        │  │          Reconnect: fix vpxa creds          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Certificate procedures require SSO admin; host procedures require host permissions.                  │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Permissions & Licences            │  │              Cluster Procedures             │   │
+│   │         Assign role at object level          │  │           Enable DRS: auto/manual           │   │
+│   │            SSO groups: AD mapped             │  │          Enable HA: configure slots         │   │
+│   │         Licence: Administration tab          │  │           vSAN: create diskgroups           │   │
+│   │         Global perm: cross-DC roles          │  │            EVC: set CPU baseline            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  All procedures run over vCenter management network; certificate operations                           │
+│  cause brief service interruption (~2 min) during VCSA service restart.                               │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  certificate-manager = VCSA interactive script; renews/replaces all certs                             │
+│  certmgr       = low-level cert tool; used for individual cert replacement                            │
+│  STS cert      = Security Token Service cert; 2-year validity; manual renew                           │
+│  VAMI          = Appliance Management; port 5480; auto-renew machine cert                             │
+│  Maintenance mode= drain host of VMs before patching or removal                                       │
+│  vpxa creds    = host agent credentials; reconnect if changed via VC UI                               │
+│  EVC           = Enhanced vMotion Compatibility; CPU instruction masking                              │
+│  DRS slots     = admission control slots; HA reserves resources per policy                            │
+│  Global perm   = permission applies to all objects in all datacentres                                 │
+│  Role          = named permission set; e.g., Administrator, ReadOnly                                  │
+│  Licence key   = applied per product; vSAN, DRS, HA all need VC licence                               │
+│  Diskgroup     = vSAN storage unit; one cache tier + capacity tier per host                           │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 Service restart order for manual recovery:
 1. `vmware-vpostgres` — database must be running before vpxd

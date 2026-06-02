@@ -88,7 +88,51 @@ RBAC Permission Model
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
+┌─────────────────────────────────── vCenter Server — Access Control ───────────────────────────────────┐
+│                                                                                                       │
+│  vCenter access control uses SSO for authentication and a role-based permission                       │
+│  system applied at inventory object level for authorisation.                                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Role-Based Access               │  │            Permission Inheritance           │   │
+│   │           Roles: built-in + custom           │  │            Propagate to children            │   │
+│   │         Admin / ReadOnly / NoAccess          │  │           Override at child object          │   │
+│   │           Privilege sets per role            │  │             Global perm: all DCs            │   │
+│   │           Apply role to user/group           │  │         No propagate: exact obj only        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Assign minimum roles at highest useful object; propagate down the hierarchy.                         │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Identity Sources               │  │           Admin Lockout Prevention          │   │
+│   │               SSO local domain               │  │      Always keep administrator@vsphere      │   │
+│   │           Active Directory joined            │  │         Break-glass: local SSO user         │   │
+│   │            LDAP: OpenLDAP support            │  │        Audit: review perms quarterly        │   │
+│   │          AD groups mapped to roles           │  │         Log: all permission changes         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  SSO identity store traffic goes over LDAP/LDAPS to AD DCs on management network.                     │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SSO           = Single Sign-On; vCenter identity service; issues SAML tokens                         │
+│  Role          = named collection of privileges; applied to user+object pair                          │
+│  Privilege     = atomic permission; e.g., VirtualMachine.Power.On                                     │
+│  Propagate     = permission flows to all child objects in hierarchy                                   │
+│  Global perm   = permission applied at root level across all datacentres                              │
+│  administrator@vsphere.local= built-in SSO admin; never remove                                        │
+│  Break-glass   = local SSO account for use when AD/LDAP is down                                       │
+│  Identity source= AD, LDAP, or local domain; multiple sources allowed                                 │
+│  AD group      = Active Directory security group mapped to vCenter role                               │
+│  NoAccess role = explicitly blocks access at that object level                                        │
+│  Audit         = review all admin-role assignments at least quarterly                                 │
+│  Hierarchy     = DC → cluster → host → VM; permissions flow downward                                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 **VM Operator** — day-to-day VM management without storage or host access:
 ```text

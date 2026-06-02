@@ -88,7 +88,52 @@ graph TD
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```sql
+┌───────────────────────────────── Cisco MDS — Security Access Control ─────────────────────────────────┐
+│                                                                                                       │
+│  Role-based access control for MDS fabric using local and AAA-backed user accounts.                   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Local User Accounts              │  │              AAA Authentication             │   │
+│   │     Built-in roles: admin, network-admin     │  │          TACACS+: centralized auth          │   │
+│   │     Custom roles: granular command sets      │  │           RADIUS: fallback option           │   │
+│   │      Password policy: min length, aging      │  │         LDAP: directory integration         │   │
+│   │       Account lockout: failed attempts       │  │        Server groups: priority order        │   │
+│   │         SSH key-based login support          │  │          Local fallback if AAA down         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  RBAC model enforced: user role determines CLI command access scope                                   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Role Assignments               │  │             VSAN Access Control             │   │
+│   │        Map users to predefined roles         │  │         VSAN admin: per-fabric scope        │   │
+│   │      Role inheritance: none (explicit)       │  │        Zoning auth: FC-SP frame auth        │   │
+│   │          Audit: role change logging          │  │        Port security: WWN allow-list        │   │
+│   │         Show users: current sessions         │  │           SNMPv3 with auth+privacy          │   │
+│   │       Terminal session timeout config        │  │         No SNMP v1/v2 in production         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  MDS chassis · supervisor modules · AAA servers (TACACS+/RADIUS) · management network                 │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  RBAC           = Role-Based Access Control; maps users to permitted CLI commands                     │
+│  TACACS+        = Terminal Access Controller Access Control System Plus; centralized AAA              │
+│  RADIUS         = Remote Authentication Dial-In User Service; alternative AAA protocol                │
+│  AAA            = Authentication, Authorization, Accounting; security framework                       │
+│  FC-SP          = Fibre Channel Security Protocol; switch-to-switch frame authentication              │
+│  Port Security  = Feature restricting which WWNs can log into a given FC port                         │
+│  SNMPv3         = SNMP version 3 with user-based security model; supports auth+encryption             │
+│  WWN            = World Wide Name; 64-bit unique identifier for FC devices                            │
+│  VSAN           = Virtual SAN; logical fabric partition with independent access controls              │
+│  Server group   = Ordered list of AAA servers tried in sequence for authentication                    │
+│  Local fallback = If all AAA servers unreachable, switch authenticates from local DB                  │
+│  Account lockout= Security policy disabling login after N consecutive failed attempts                 │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 ### VSAN-Scoped Roles
 

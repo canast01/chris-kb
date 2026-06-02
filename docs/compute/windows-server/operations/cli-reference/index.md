@@ -77,7 +77,50 @@ flowchart LR
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```powershell
+┌─────────────────────────────────── Windows Server — CLI Reference ────────────────────────────────────┐
+│                                                                                                       │
+│  Essential Windows Server CLI: PowerShell, cmd.exe, and server management commands.                   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            PowerShell Essentials             │  │               Network Commands              │   │
+│   │            Get-Command / Get-Help            │  │           ipconfig /all, /flushdns          │   │
+│   │        Get-Member: object properties         │  │          ping / tracert / nslookup          │   │
+│   │         Select-Object / Where-Object         │  │             netstat -ano / netsh            │   │
+│   │          Format-Table / Export-CSV           │  │           Test-NetConnection port           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    PowerShell is primary CLI; cmd.exe for legacy/batch; PS remoting via WinRM                         │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Disk and Services               │  │                 AD Commands                 │   │
+│   │           diskpart / diskmgmt.msc            │  │          gpresult /r /h report.html         │   │
+│   │           sc query / sc start/stop           │  │               gpupdate /force               │   │
+│   │           sfc /scannow: file check           │  │           nltest /sc_query:domain           │   │
+│   │          chkdsk /f /r: disk repair           │  │            repadmin /replsummary            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Physical or virtual server · terminal (local/RDP/WinRM) · Domain Controllers                         │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Get-Help -Online= opens online docs for cmdlet; -Examples shows usage                                │
+│  Where-Object = filters pipeline objects by condition; alias: where or ?                              │
+│  Test-NetConnection= tests TCP port reachability; -ComputerName -Port                                 │
+│  netstat -ano = shows all connections with PID; -a all, -n numeric, -o pid                            │
+│  netsh        = network configuration tool; interface, firewall, wlan contexts                        │
+│  diskpart     = interactive disk partitioning; use select disk/volume                                 │
+│  sc query     = query service status; sc config changes service config                                │
+│  sfc /scannow = System File Checker; verifies and repairs protected system files                      │
+│  chkdsk /f /r = fix file system errors and recover data from bad sectors                              │
+│  gpresult /h  = generates HTML GP report; shows applied policies                                      │
+│  nltest       = network logon test; /sc_query verifies secure channel to DC                           │
+│  repadmin     = AD replication diagnostics; /replsummary shows health                                 │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 ## Disk and Storage
 

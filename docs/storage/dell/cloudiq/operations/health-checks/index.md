@@ -40,41 +40,6 @@ Health Checks reference covering Daily Checks, Health Check Commands, Change Rea
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
-┌───────────────────────────────────── Dell CloudIQ Health Checks ──────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │       Verify CloudIQ and SCG health: telemetry currency, SCG connectivity, alert review       │   │
-│   │        Check last telemetry timestamp per system; red/yellow health scores; open alerts       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                  SCG Health                  │  │                CloudIQ Health               │   │
-│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
-│   │         SCG service status: running          │  │       All systems: last seen < 15 min       │   │
-│   │           Outbound connectivity OK           │  │        Health scores: no red systems        │   │
-│   │        All devices: poll state green         │  │            Active alerts reviewed           │   │
-│   │             SCG version current              │  │          Capacity runway > 30 days          │   │
-│   │             Certificate validity             │  │        No stale/disconnected systems        │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   │      Check       │      Where       │   Pass criteria   │   Fail action    │    Frequency     │   │
-│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
-│   │    SCG status    │     SCG CLI      │     All green     │   Restart SCG    │      Daily       │   │
-│   │  Telemetry age   │    CloudIQ UI    │      < 15 min     │  Test SCG conn   │      Daily       │   │
-│   │  Health scores   │   CloudIQ dash   │     All green     │  Review alerts   │      Daily       │   │
-│   │   Capacity IQ    │   CloudIQ dash   │      >30 days     │   Expand pools   │      Weekly      │   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Telemetry age  = Time since last successful telemetry upload per system; > 15 min = gap            │
-│    Stale system   = System in CloudIQ with no telemetry for > 1 hour; SCG poll failure                │
-│    Capacity runway= Days until storage pool reaches fill threshold based on growth rate               │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Change Readiness
 

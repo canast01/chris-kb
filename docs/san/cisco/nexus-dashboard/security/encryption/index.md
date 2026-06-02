@@ -79,7 +79,52 @@ nmap --script ssl-enum-ciphers -p 443 nd-dc1.corp.example.com
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```bash
+┌───────────────────────────── Cisco Nexus Dashboard — Security Encryption ─────────────────────────────┐
+│                                                                                                       │
+│  TLS for all management interfaces; AES-256 for backup data and secrets at rest.                      │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            In-Transit Encryption             │  │              At-Rest Encryption             │   │
+│   │         HTTPS: TLS 1.2+ on port 443          │  │             Backup: AES-256-GCM             │   │
+│   │         Inter-node: mTLS cluster bus         │  │           Secrets: etcd encrypted           │   │
+│   │          Syslog: TLS transport opt.          │  │           Passwords: bcrypt hashed          │   │
+│   │           API: TLS cert validation           │  │          Keys: stored in K8s secret         │   │
+│   │          Disable TLS 1.0/1.1 + RC4           │  │        Disk: OS-level encryption opt        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  All external traffic TLS 1.2+; inter-node cluster traffic uses mutual TLS                            │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Certificate Management            │  │                  Compliance                 │   │
+│   │         Default: self-signed on init         │  │          FIPS 140-2 mode: optional          │   │
+│   │        Replace: upload CA-signed cert        │  │         Cipher suite: AES-GCM pref.         │   │
+│   │         SAN: cluster VIP + hostnames         │  │         TLS 1.3: supported on newer         │   │
+│   │          Expiry alert: UI + syslog           │  │         Audit: TLS handshake errors         │   │
+│   │           Auto-renew: not built-in           │  │         Annual cipher review policy         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  ND cluster nodes · CA server · management switch · backup storage target                             │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  mTLS           = Mutual TLS; both client and server present certificates                             │
+│  AES-256-GCM    = Symmetric cipher providing confidentiality + integrity for backups                  │
+│  etcd encrypted = Kubernetes encrypts secret objects in etcd using AES-CBC/GCM                        │
+│  K8s secret     = Kubernetes object storing sensitive data (keys, tokens, passwords)                  │
+│  FIPS 140-2     = US federal crypto module standard; disables non-compliant algos                     │
+│  SAN cert       = TLS cert with Subject Alternative Names for VIP and all node FQDNs                  │
+│  Self-signed    = Default ND cert; must be replaced with CA-signed for production                     │
+│  Bcrypt         = One-way hash for passwords; not reversible even with DB access                      │
+│  TLS 1.3        = Latest TLS version; eliminates weak handshake options                               │
+│  Cipher suite   = Negotiated algorithm set: key exchange + auth + encryption + hash                   │
+│  Auto-renew     = ND does not auto-renew certs; monitor expiry and replace manually                   │
+│  Disk encryption= OS-level feature (LUKS) optional on bare-metal ND deployments                       │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 ### Backup Encryption
 

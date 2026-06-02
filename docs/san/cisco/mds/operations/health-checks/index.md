@@ -78,7 +78,52 @@ show version
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```sql
+┌─────────────────────────────────── Cisco MDS 9000 — Health Checks ────────────────────────────────────┐
+│                                                                                                       │
+│  MDS health: show system, show interface, VSAN state, ISL utilisation, zone sync.                     │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Hardware Health                │  │          Fabric Connectivity Health         │   │
+│   │          show system health: all OK          │  │            show vsan: all active            │   │
+│   │          show environment: temp/PSU          │  │          show interface trunk: ISL          │   │
+│   │           show module: all online            │  │          show port-channel: member          │   │
+│   │         show version: correct NX-OS          │  │          show flogi database: count         │   │
+│   │         show redundancy: sup active          │  │           ISL util < 70% sustained          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  show system health and show environment cover hardware; VSAN/ISL cover fabric.                       │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Port & Zone Health              │  │              Performance Health             │   │
+│   │         show interface fc: no errors         │  │           show analytics ITL flow           │   │
+│   │         CRC errors: 0 per day target         │  │            show interface counter           │   │
+│   │          show zone active: matches           │  │          BB credits: no starvation          │   │
+│   │         show device-alias: no stale          │  │            SFP optical: > -3 dBm            │   │
+│   │         CFS: zone in sync on all sw          │  │            Latency < 1ms per ITL            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  MDS director chassis · supervisor module · line card blades · SFP transceivers                       │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  show system health= NX-OS; overall switch health including modules and fabric                        │
+│  show environment = NX-OS; temperature, fan RPM, and PSU voltage readings                             │
+│  show module      = NX-OS; line card / supervisor status and operational state                        │
+│  show redundancy  = supervisor HA state; active + standby both must be present                        │
+│  show flogi database= FC login database; count should match expected device list                      │
+│  show interface fc= per-port counters: CRC, loss-of-sync, credit starvation                           │
+│  show zone active = active zone set members per VSAN; verify correct aliases                          │
+│  show device-alias= CFS-distributed device alias database; check for orphans                          │
+│  CRC errors       = Cyclic Redundancy Check; non-zero = bad SFP or cable                              │
+│  BB credits       = Buffer-to-Buffer credits; zero = port paused; check starvation                    │
+│  SFP optical      = signal power in dBm; < -3 dBm indicates degraded transceiver                      │
+│  show analytics   = MDS 9700 ITL flow analytics: IOPS, throughput, latency                            │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 Compare the list against the expected device register (CMDB or SAN design spreadsheet). A host HBA or storage target missing from this output is a fault condition.
 

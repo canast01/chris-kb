@@ -50,7 +50,40 @@ flowchart LR
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```powershell
+┌────────────────────────────────────────── System Onboarding ──────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │         Onboarding: register new system in CMDB, configure monitoring, create runbooks        │   │
+│   │           Gate: system not in BAU until all checklist items complete and signed off           │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Technical Checklist              │  │            Operational Checklist            │   │
+│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+│   │              CMDB entry created              │  │               Runbook created               │   │
+│   │            Monitoring configured             │  │           On-call schedule updated          │   │
+│   │              Backup configured               │  │           Support contract linked           │   │
+│   │            Patching schedule set             │  │          Admin credentials in vault         │   │
+│   │            Network/DNS configured            │  │           Team training completed           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   │       Item       │      Owner       │        Tool       │  Pass criteria   │     Sign-off     │   │
+│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+│   │       CMDB       │    Infra team    │     CMDB tool     │    All fields    │    Infra lead    │   │
+│   │    Monitoring    │     Ops team     │     Zabbix/etc    │  Alerts active   │     Ops lead     │   │
+│   │      Backup      │   Backup team    │     Backup app    │   Job verified   │   Backup lead    │   │
+│   │     Runbook      │    Infra team    │         KB        │    Published     │   Peer review    │   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    BAU gate      = System accepted into Business As Usual operations only after all items complete    │
+│    Onboarding doc= System record: owner, contacts, dependencies, SLA, backup, change history          │
+│    Vault entry   = Admin credentials stored in CyberArk/vault; no shared spreadsheet creds            │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 ## 2. OS Hardening and Security Baseline
 

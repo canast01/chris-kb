@@ -83,7 +83,52 @@ curl -sk -u 'admin:password' \
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```sql
+┌────────────────────────────────────── NSX — Standard Procedures ──────────────────────────────────────┐
+│                                                                                                       │
+│  Segment creation, T0/T1 gateway config, DFW rule changes, and change control.                        │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Add New Segment                │  │              T1 Gateway Config              │   │
+│   │        Policy > Networking > Segments        │  │                Add T1 gateway               │   │
+│   │           Set VNI / transport zone           │  │              Link to T0 gateway             │   │
+│   │           Set VLAN or overlay mode           │  │             Advertise connected             │   │
+│   │            Connect to T1 gateway             │  │               Set edge cluster              │   │
+│   │          Attach segment to VM vNIC           │  │            Apply DNS/DHCP profile           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Network change → DFW policy update → change control record → verify.                                 │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               DFW Rule Changes               │  │              Change Management              │   │
+│   │            Add to security policy            │  │            Raise CR before change           │   │
+│   │          Define source/dest groups           │  │           Pre-change packet trace           │   │
+│   │           Set service (port/proto)           │  │             Change window agreed            │   │
+│   │            Publish policy changes            │  │           Post-change connectivity          │   │
+│   │             Verify in traceflow              │  │            Close CR with evidence           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  NSX Manager VMs, Edge VMs, ESXi hosts, ToR switches, vCenter, management net                         │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Segment     = logical L2 overlay network; mapped to a transport zone                                 │
+│  VNI         = VXLAN Network ID; unique per segment in overlay                                        │
+│  Transport zone = scope of overlay or VLAN segment reachability                                       │
+│  T1 gateway  = distributed L3 gateway; service router on edge cluster                                 │
+│  T0 gateway  = north-south routing gateway; BGP peers with fabric                                     │
+│  DFW         = Distributed Firewall; L4 stateful firewall per vNIC                                    │
+│  Security policy = DFW container grouping rules by purpose                                            │
+│  Groups      = NSX dynamic member sets (tag, OS, name, IP criteria)                                   │
+│  Traceflow   = NSX UI tool; injects synthetic packet to trace path/drops                              │
+│  Publish     = NSX action; commits policy changes to dataplane                                        │
+│  Packet trace= captures before change; confirms expected traffic flow                                 │
+│  CR          = Change Request; ITSM record authorising change                                         │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 **Step 4 — Functional test**
 

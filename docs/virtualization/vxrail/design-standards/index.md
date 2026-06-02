@@ -18,13 +18,6 @@ VxRail Design Requirements — Key Standards
 └──────────────────────────────┬──────────────────────────────┘
                                │
 ```
-```text
-┌──────────────────────────────▼──────────────────────────────┐
-│  Cluster Sizing Rules                                        │
-│  min 3 nodes (FTT=1) · min 4 nodes (production safe)        │
-│  min 6 nodes for FTT=2 · same SKU required per cluster      │
-└──────────────────────────────┬──────────────────────────────┘
-```
                                │
 ┌──────────────────────────────▼──────────────────────────────┐
 │  Firmware / Software Rule                                    │

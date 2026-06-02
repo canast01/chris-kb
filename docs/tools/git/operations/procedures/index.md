@@ -66,7 +66,50 @@ release/  — Release preparation (release/v2.4.0)
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```powershell
+┌───────────────────────────────────── Git — Operations Procedures ─────────────────────────────────────┐
+│                                                                                                       │
+│  Standard procedures: branch lifecycle, tagging releases, access management, and repo setup.          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Branch Lifecycle               │  │               Release Tagging               │   │
+│   │      Create from main: git checkout -b       │  │           Tag on main after merge           │   │
+│   │      Push: git push -u origin <branch>       │  │       Annotated: git tag -a v1.2.3 -m       │   │
+│   │      Open PR: link issue, add reviewers      │  │       Push tag: git push origin <tag>       │   │
+│   │        Delete after merge: branch -d         │  │        Create GitHub Release from tag       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Feature branches are short-lived; delete after merge to keep repo clean                            │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Access Management               │  │             New Repository Setup            │   │
+│   │        Add collaborator via GitHub UI        │  │             git init / git clone            │   │
+│   │           Use teams for org repos            │  │           Add .gitignore + README           │   │
+│   │        Roles: Read/Triage/Write/Admin        │  │        Set branch protection on main        │   │
+│   │        Audit log: org → Security tab         │  │         Add CODEOWNERS + CI workflow        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  GitHub/GitLab server · branch protection rules · CI pipeline · team permissions                      │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  git checkout -b = create and switch to new branch in one command                                     │
+│  git push -u     = push and set upstream tracking reference                                           │
+│  Annotated tag   = tag object with tagger, date, message; preferred for releases                      │
+│  GitHub Release  = web UI release tied to tag; includes changelog and assets                          │
+│  Collaborator    = individual user added to repo with explicit permission level                       │
+│  Team            = GitHub/GitLab group; manage access at team level, not per-user                     │
+│  Triage role     = can manage issues/PRs but not write code                                           │
+│  Audit log       = org-level event log; tracks access changes and admin actions                       │
+│  CODEOWNERS      = auto-assign reviewers to PRs touching specific paths                               │
+│  Branch prot.    = rules enforcing CI, reviews, linear history on protected branches                  │
+│  .gitignore      = lists patterns for files Git should not track                                      │
+│  Short-lived     = feature branches should be merged within days, not weeks                           │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 ## Tracking Remote Branches
 

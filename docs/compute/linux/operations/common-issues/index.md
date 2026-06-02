@@ -77,7 +77,48 @@ flowchart TD
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```bash
+┌────────────────────────────────── Linux — Common Operational Issues ──────────────────────────────────┐
+│                                                                                                       │
+│  Recurring Linux issues and their triage steps for quick resolution.                                  │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Performance Issues              │  │                Storage Issues               │   │
+│   │              High CPU: top/htop              │  │            Disk full: df -h / du            │   │
+│   │             OOM: journalctl grep             │  │             Inode exhaust: df -i            │   │
+│   │            High LA: check iowait             │  │              Mount fail: dmesg              │   │
+│   │              Memory leak: pmap               │  │               FS errors: fsck               │   │
+│   │             Swap thrash: vmstat              │  │             LVM resize: lvextend            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Network Issues                │  │                Service Issues               │   │
+│   │              No route: ip route              │  │             Service fail: status            │   │
+│   │           DNS fail: dig / nslookup           │  │           Port conflict: ss -tlnp           │   │
+│   │            MTU mismatch: ping -M             │  │             Dep missing: rpm -q             │   │
+│   │            FW block: iptables -L             │  │             Config error: syslog            │   │
+│   │            SSH timeout: tcp dumps            │  │           SELinux deny: audit2why           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  x86-64 servers · NIC · storage arrays · network switches · out-of-band IPMI                          │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  OOM killer  = Kernel mechanism that kills processes when RAM is exhausted                            │
+│  load avg    = 1/5/15 min averages of runnable + uninterruptible processes                            │
+│  iowait      = CPU time spent waiting for I/O; high value indicates disk bottleneck                   │
+│  inode       = Fixed-count metadata structures; can exhaust independently of disk space               │
+│  fsck        = Filesystem consistency check and repair tool; run on unmounted FS                      │
+│  vmstat      = Reports virtual memory stats: swap, io, cpu, processes                                 │
+│  pmap        = Displays memory map of a process; useful for leak investigation                        │
+│  audit2why   = Explains SELinux denials in human-readable form from audit.log                         │
+│  MTU         = Maximum Transmission Unit; packet size limit on a network interface                    │
+│  dmesg       = Kernel ring buffer log; first place to check hardware/driver errors                    │
+│  lvextend    = LVM command to grow a logical volume; paired with resize2fs/xfs_growfs                 │
+│  ss          = Socket statistics; replaces netstat; shows ports, states, processes                    │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 ## High Disk I/O or Latency
 

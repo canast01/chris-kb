@@ -48,50 +48,6 @@ Dell CloudIQ cloud-based monitoring platform — architecture, health scoring, c
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
-┌───────────────────────── CloudIQ — Dell Cloud-Based AI/ML Storage Monitoring ─────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │ CloudIQ: SaaS monitoring platform for Dell infrastructure — PowerStore, PowerScale, PowerFlex │   │
-│   │    AI/ML engine analyses telemetry to predict failures, score health, and recommend actions   │   │
-│   │      Data collected by secure gateway (or direct) and pushed to Dell cloud over HTTPS/443     │   │
-│   │       No on-premises agent required for most Dell storage — native telemetry forwarding       │   │
-│   │    Access via cloudiq.dell.com — browser-based; no software to install at the customer site   │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Health score, anomaly detection, and capacity forecasting cover entire Dell storage estate         │
-│                                                                                                       │
-│                ▼                                 ▼                                 ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │       Health & Alerts       │  │           Capacity          │  │         Performance         │   │
-│   │      Health score 0-100     │  │     Forecast 30-90 days     │  │     Latency/IOPS trends     │   │
-│   │      AI anomaly detect      │  │       Thin provision %      │  │      Bandwidth metrics      │   │
-│   │       Email / webhook       │  │        Tier breakdown       │  │       Per-volume stats      │   │
-│   │       Severity levels       │  │       Growth rate calc      │  │         Heatmap view        │   │
-│   │      Acknowledge/snooze     │  │       Reclamation tips      │  │       Baseline compare      │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  On-prem: Dell storage arrays · Gateway VM (if used) · Outbound TCP 443 to cloudiq.dell.com           │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  CloudIQ = Dell SaaS monitoring platform with AI/ML engine; browser-based at cloudiq.dell.com         │
-│  Health score = 0-100 composite score for an array; red <70, yellow 70-89, green ≥90                  │
-│  Anomaly = Statistically unusual metric behaviour detected by ML model                                │
-│  Secure gateway = Optional on-prem VM proxying telemetry to Dell cloud for air-gapped environments    │
-│  Telemetry = Metrics, events, and configuration data forwarded from Dell arrays to CloudIQ            │
-│  Forecast = ML-based capacity prediction showing projected full date at current growth rate           │
-│  Thin provisioning % = Ratio of allocated capacity to physical capacity; over-commit risk indicator   │
-│  Reclamation = Identifying and freeing unused or wasted allocated capacity on volumes                 │
-│  Recommendation = AI-generated action to improve health score or avoid predicted issue                │
-│  IOPS = Input/Output Operations Per Second; primary storage performance metric                        │
-│  Latency = Average time from request to completion; target <1ms for all-flash arrays                  │
-│  Bandwidth = Data throughput in MB/s; complements IOPS for large-block workload sizing                │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 <div class="kb-grid kb-grid-5">
 <a class="kb-card" href="architecture/"><strong>Architecture</strong><span>SaaS data pipeline, SCG gateway integration, phone-home telemetry collection, and supported array types.</span></a>

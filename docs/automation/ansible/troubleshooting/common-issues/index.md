@@ -51,7 +51,32 @@ flowchart TD
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```bash
+┌─────────────────────────────────────── Ansible — Common Issues ───────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      Most frequent Ansible failures: SSH, Python errors, Vault decrypt, module not found      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                    Issue: UNREACHABLE — SSH connection refused or timed out                   │   │
+│   │               Cause A: SSH service stopped on target → fix: start sshd on target              │   │
+│   │           Cause B: firewall blocking port 22 → fix: open port 22 in host/network FW           │   │
+│   │         Cause C: wrong ansible_host or ansible_port → fix: correct inventory variable         │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                 Issue: Vault decryption failed                                │   │
+│   │           Cause A: wrong password → fix: verify vault password; check vault_id label          │   │
+│   │         Cause B: wrong vault_id → fix: pass --vault-id prod@prompt if using vault IDs         │   │
+│   │      Cause C: AWX vault credential missing → fix: re-add vault credential to job template     │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                          Issue: module not found / collection missing                         │   │
+│   │    Fix: ansible-galaxy collection install <namespace.collection> or add to requirements.yml   │   │
+│   │               Fix: rebuild EE image with collection included if running via AWX               │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 ## Common Module Errors
 

@@ -23,6 +23,7 @@ vSphere SSO (Platform Services Controller embedded in VCSA)
                 ├── Active Directory (LDAP / Integrated Windows Auth)
                 └── OpenLDAP
 ```
+```
 ┌──────────────────────────────────────── vSAN — Authentication ────────────────────────────────────────┐
 │                                                                                                       │
 │  vSAN cluster nodes authenticate each other using the ESXi host SSL certificates;                     │
@@ -69,18 +70,6 @@ vSphere SSO (Platform Services Controller embedded in VCSA)
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```sql
-
-**Post-join verification:**
-
-```bash
-/opt/likewise/bin/lwsm status
-# lsass service should be running
-```
-
-**Add AD groups to vCenter permissions after joining:**
-
-vSphere Client → vCenter → Permissions → Add → select identity source → search AD group → assign role
 
 ### Multi-Factor Authentication
 
@@ -239,6 +228,17 @@ esxcli system settings advanced set \
 ```
 
 When joined to AD, members of the `ESX Admins` group (or the configured group) receive Administrator access to the ESXi host.
+
+**Post-join verification:**
+
+```bash
+/opt/likewise/bin/lwsm status
+# lsass service should be running
+```
+
+**Add AD groups to vCenter permissions after joining:**
+
+vSphere Client → vCenter → Permissions → Add → select identity source → search AD group → assign role
 
 ---
 

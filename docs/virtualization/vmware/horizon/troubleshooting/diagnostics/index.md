@@ -71,7 +71,52 @@ Diagnostics reference covering Collect Horizon Support Bundle, Windows Event Log
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```powershell
+┌──────────────────────────────────── VMware Horizon — Diagnostics ─────────────────────────────────────┐
+│                                                                                                       │
+│  Horizon diagnostics use Connection Server logs, support bundles, Horizon admin UI,                   │
+│  and desktop agent logs to identify root causes of session and provisioning failures.                 │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Connection Server Logs            │  │                  Agent Logs                 │   │
+│   │          C:\ProgramData\VMware\VDM           │  │          C:\ProgramData\VMware\VDM          │   │
+│   │           debug-*.log: main broker           │  │          debug-*.log on desktop VM          │   │
+│   │           vlsi-*.log: vCenter ops            │  │           wsnm_*.log: display path          │   │
+│   │          support bundle: zip via UI          │  │            Event log: Windows App           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Start with CS debug log; if session connects but black screen, check agent logs.                     │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Admin UI Diagnostics             │  │               UAG Diagnostics               │   │
+│   │           Horizon Admin: Dashboard           │  │              UAG admin UI: 9443             │   │
+│   │          Events: filter by severity          │  │           /rest/healthcheck: 200?           │   │
+│   │          Pool: provisioning errors           │  │           UAG log: /opt/vmware/etc          │   │
+│   │          Sessions: filter by state           │  │          Cert: check UAG cert date          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Collect CS support bundle via Horizon Admin UI; agent logs from desktop VM;                          │
+│  UAG logs via SSH to UAG appliance.                                                                   │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  debug-*.log   = CS main log; broker decisions, auth, pool operations                                 │
+│  vlsi-*.log    = vCenter API interaction log; provisioning details                                    │
+│  wsnm_*.log    = agent display protocol log; Blast/PCoIP session                                      │
+│  ProgramData   = Windows hidden folder; Horizon stores logs here                                      │
+│  Support bundle= Horizon Admin UI > Support > Generate Bundle                                         │
+│  Horizon Admin = web UI for Horizon management; port 443 on CS                                        │
+│  Events tab    = Horizon UI event log; filter by error/warning                                        │
+│  UAG admin     = port 9443; cert, edge service, health config                                         │
+│  /rest/healthcheck= UAG health endpoint; returns 200 OK if healthy                                    │
+│  UAG log       = /opt/vmware/etc/esmanager/; edge service logs                                        │
+│  Windows App log= Windows Event Viewer; Horizon Agent events here                                     │
+│  Pool error    = UI shows red error; hover for provisioning reason                                    │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 ---
 

@@ -51,7 +51,40 @@ flowchart LR
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
+┌────────────────────────────────────────── Upgrade Readiness ──────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      Upgrade readiness: verify compatibility, backup, backout plan, and test in lab first     │   │
+│   │      Never upgrade production without lab validation; always have a tested rollback path      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Pre-Upgrade Checks              │  │                Readiness Gate               │   │
+│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+│   │          Vendor release notes read           │  │               Lab test passed               │   │
+│   │        Compatibility matrix verified         │  │           Config backup confirmed           │   │
+│   │            Known issues reviewed             │  │           Backout plan documented           │   │
+│   │             Dependencies checked             │  │                 RFC approved                │   │
+│   │            Lab upgrade completed             │  │            Stakeholders notified            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   │      Check       │      Source      │   Pass criteria   │   Fail action    │      Owner       │   │
+│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+│   │  Compat matrix   │   Vendor docs    │    All deps OK    │  Defer upgrade   │    Infra lead    │   │
+│   │     Lab test     │     Lab env      │   No regressions  │    Fix first     │    Infra lead    │   │
+│   │  Config backup   │  Backup system   │  Verified restore │   Backup first   │   Backup team    │   │
+│   │   Backout plan   │     RFC doc      │    Steps tested   │  Document first  │    Infra lead    │   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Compatibility matrix= Vendor document; shows which versions of deps are supported together         │
+│    Lab upgrade    = Full upgrade rehearsal in non-production; validates procedure and time estimate   │
+│    Known issues   = Vendor-published list of bugs in release; check for impact on your environment    │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 | Health Check | Pass Criteria |
 |---|---|

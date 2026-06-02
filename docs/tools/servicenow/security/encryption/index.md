@@ -83,7 +83,55 @@ gs.getProperty('glide.http.ssl_check_cert')  // Should return 'true'
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```sql
+┌──────────────────────────────────────── ServiceNow Encryption ────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                       Encryption Layers                                       │   │
+│   │                  Transit: TLS 1.2+ browser↔instance; TLS on all integrations                  │   │
+│   │                  At rest: AES-256 DB encryption (ServiceNow managed or BYOK)                  │   │
+│   │                Field-level: Edge Encryption proxy encrypts before cloud upload                │   │
+│   │                  Attachments: encrypted in object storage; scanned on upload                  │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    In-transit TLS → at-rest DB encryption → field-level Edge Encryption                               │
+│                                                                                                       │
+│                                                   ▼                                                   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐                                                    │
+│   │               Edge Encryption                │                                                    │
+│   │              On-prem proxy node              │                                                    │
+│   │            Encrypts before cloud             │                                                    │
+│   │              Customer holds key              │                                                    │
+│   │             AES-256 field cipher             │                                                    │
+│   └──────────────────────────────────────────────┘                                                    │
+│                                                     ┌─────────────────────────────────────────────┐   │
+│                                                     │                Key Management               │   │
+│                                                     │           ServiceNow KMS (default)          │   │
+│                                                     │           BYOK via AWS KMS / Azure          │   │
+│                                                     │            Key rotation schedule            │   │
+│                                                     │           HSM integration optional          │   │
+│                                                     └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  ServiceNow SaaS datacentres · HSM appliances (BYOK) · TLS termination at load balancer               │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Edge Encryption = on-prem proxy that encrypts field values before sending to ServiceNow              │
+│  BYOK       = Bring Your Own Key; customer manages encryption keys in their KMS                       │
+│  KMS        = Key Management Service; stores and rotates encryption keys                              │
+│  HSM        = Hardware Security Module; tamper-proof key storage device                               │
+│  AES-256    = Advanced Encryption Standard 256-bit; symmetric cipher for data at rest                 │
+│  TLS 1.2+   = Transport Layer Security; encrypts data in transit                                      │
+│  Field-level= per-field encryption; fields marked "encrypted" stored as ciphertext                    │
+│  Attachment = files stored in object storage; encrypted independently of DB records                   │
+│  BYOK proxy = Edge Encryption node hosted on-prem; only encrypted data leaves network                 │
+│  Key rotation= periodic replacement of encryption keys; reduces exposure window                       │
+│  Object store= S3-compatible storage for attachments; AES-256 server-side encryption                  │
+│  Cipher suite= agreed TLS algorithms; ServiceNow enforces strong suites only                          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 ---
 

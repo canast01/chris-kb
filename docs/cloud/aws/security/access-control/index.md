@@ -87,7 +87,52 @@ Access Control reference covering IAM Fundamentals, Least-Privilege Policy Desig
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```sql
+┌─────────────────────────── AWS Access Control — Least-Privilege IAM Design ───────────────────────────┐
+│                                                                                                       │
+│  Layered access control using IAM policies, SCPs, permission boundaries, and resource policies.       │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                 Policy Types                 │  │               Evaluation Order              │   │
+│   │       Identity: user/role/group policy       │  │       1. Explicit deny anywhere → DENY      │   │
+│   │      Resource: bucket/key/queue policy       │  │             2. SCP denies → DENY            │   │
+│   │           SCP: org-level guardrail           │  │        3. Permission boundary limits        │   │
+│   │       Permission boundary: max allowed       │  │       4. Session policy reduces scope       │   │
+│   │       Session: temporary scoped token        │  │    5. Identity or resource allows → ALLOW   │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Default deny: no explicit allow means denied; all policy types must allow for access.                │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Least Privilege Design            │  │            Access Analysis Tools            │   │
+│   │         Start with managed policies          │  │        IAM Access Analyzer: findings        │   │
+│   │       Generate policy from CloudTrail        │  │          CloudTrail: last-used data         │   │
+│   │     Remove unused permissions quarterly      │  │        Credential report: stale keys        │   │
+│   │        Conditions: IP, time, MFA, tag        │  │       Config rule: no wildcard actions      │   │
+│   │    Tag-based access: aws:RequestedRegion     │  │          Security Hub: IAM findings         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  AWS IAM control plane · Global IAM service · Regional enforcement at API endpoints                   │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Explicit deny   = Deny statement that overrides any allow; highest priority in evaluation            │
+│  SCP             = Service Control Policy; org-level ceiling; cannot grant new permissions            │
+│  Permission boundary= IAM policy limiting the maximum permissions an entity can have                  │
+│  Resource policy = Policy attached to a resource (S3 bucket, KMS key) controlling access              │
+│  Session policy  = Policy passed with AssumeRole to further restrict the session                      │
+│  Default deny    = No explicit allow = implicit deny; AWS denies by default                           │
+│  IAM condition   = Policy element adding constraints: IP, MFA, time, tag, region                      │
+│  Access Analyzer = Service that identifies cross-account or public resource access                    │
+│  Policy generator= Tool that analyses CloudTrail to generate least-privilege policy                   │
+│  aws:RequestedRegion= Condition key restricting actions to specified AWS regions                      │
+│  Credential report= CSV of all IAM users with last sign-in and key usage timestamps                   │
+│  Wildcard action = iam:* or s3:* in a policy grants all actions — avoid in production                 │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 ---
 

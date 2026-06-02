@@ -64,7 +64,50 @@ flowchart LR
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```powershell
+┌───────────────────────────────── Windows Server — Operations Scripts ─────────────────────────────────┐
+│                                                                                                       │
+│  PowerShell scripts for Windows Server operations: AD, disk, patching, and health checks.             │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            AD Management Scripts             │  │                System Scripts               │   │
+│   │           New-ADUser + Set-ADUser            │  │        Get-EventLog: filtered export        │   │
+│   │         Get-ADGroupMember -Recursive         │  │           Get-Disk + Get-Partition          │   │
+│   │          Search-ADAccount -Inactive          │  │             Get-WindowsUpdateLog            │   │
+│   │         repadmin /replsummary parse          │  │         Restart-Service, Get-Service        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Scripts in version control; test in non-prod; log all changes                                      │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Scheduled Task Scripts            │  │               Hyper-V Scripts               │   │
+│   │            Register-ScheduledTask            │  │            Get-VM + Start/Stop-VM           │   │
+│   │       Log to event log: Write-EventLog       │  │           Checkpoint-VM: snapshot           │   │
+│   │          Error handling: try/catch           │  │          Get-VMReplication: status          │   │
+│   │           Send-MailMessage: alerts           │  │           Move-VM: live migration           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Domain Controllers · WSUS · Hyper-V hosts · task scheduler on managed servers                        │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  New-ADUser   = creates AD user; must set -AccountPassword -Enabled $true                             │
+│  Search-ADAccount= finds inactive/locked/expired accounts in AD                                       │
+│  Get-EventLog = queries Windows Event Log; use -EntryType Error to filter                             │
+│  Write-EventLog= writes entry to event log; use registered event source                               │
+│  Register-ScheduledTask= creates Windows scheduled task via PowerShell                                │
+│  Checkpoint-VM= creates Hyper-V checkpoint (snapshot); state + disk                                   │
+│  Get-VMReplication= shows Hyper-V Replica status and lag                                              │
+│  Move-VM      = live migration of running VM to another host                                          │
+│  try/catch    = error handling in PowerShell; $_ contains error details                               │
+│  Send-MailMessage= sends email from script; SMTP relay required                                       │
+│  Get-WindowsUpdateLog= converts ETW trace to readable Windows Update log                              │
+│  repadmin     = AD replication tool; output parsed by PS for reporting                                │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 ## Service Monitor
 

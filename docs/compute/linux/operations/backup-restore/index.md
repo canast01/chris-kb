@@ -68,7 +68,49 @@ veeamconfig ui   # Opens text-based configuration UI
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```bash
+┌────────────────────────────────────── Linux — Backup & Restore ───────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                        Backup Strategy                                        │   │
+│   │           3-2-1 rule: 3 copies · 2 different media · 1 offsite / cloud (S3/Glacier)           │   │
+│   │         Full weekly + incremental daily; retention: 30 days local, 1 year tape/object         │   │
+│   │        LVM snapshots: instant consistent point-in-time for live volumes before changes        │   │
+│   │           Test restores: monthly drill to verify backup integrity and RTO compliance          │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Backup strategy must balance recovery time objective with storage cost                             │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               File-Level Tools               │  │              Enterprise Backup              │   │
+│   │         rsync -avz: incremental sync         │  │          Bacula: client/director/SD         │   │
+│   │         tar czf: archive + compress          │  │            Veeam Agent for Linux            │   │
+│   │          dd if=/dev/sda: disk image          │  │          Amanda: open-source backup         │   │
+│   │         duplicati: encrypted backup          │  │          Commvault: enterprise CBM          │   │
+│   │          restic: dedup + encryption          │  │          NBU: NetBackup agent mode          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  x86-64 servers · NAS/SAN storage · tape library · S3 object store · Power & Cooling                  │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  3-2-1 rule  = 3 copies of data on 2 different media with 1 copy offsite                              │
+│  RTO         = Recovery Time Objective; max acceptable time to restore a service                      │
+│  RPO         = Recovery Point Objective; max acceptable data loss measured in time                    │
+│  LVM snapshot= CoW point-in-time copy of an LV; consistent backup without stopping service            │
+│  rsync       = Remote sync tool; copies only changed blocks; supports SSH transport                   │
+│  tar         = Tape ARchive; bundles files into a single stream; combined with gzip/bzip2             │
+│  dd          = Data Duplicator; copies raw blocks; used for disk imaging and cloning                  │
+│  restic      = Modern backup tool; content-addressable dedup with AES-256 encryption                  │
+│  Bacula      = Open-source network backup; director/storage daemon/file daemon model                  │
+│  Veeam Agent = Physical Linux backup agent; image-level backup to Veeam repository                    │
+│  CBM         = Changed Block Monitoring; Commvault incremental-forever backup method                  │
+│  NBU         = NetBackup; Veritas enterprise backup platform with agent and catalog                   │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 ### Run a Backup Job Manually
 

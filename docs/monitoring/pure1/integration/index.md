@@ -52,7 +52,35 @@ purearray set --proxy https://<proxy-host>:<port>
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```sql
+┌────────────────────────────────────── Pure1 — Integration Guide ──────────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               ITSM Integration               │  │               Monitoring Stack              │   │
+│   │              ServiceNow webhook              │  │                 Aria Ops PAK                │   │
+│   │                Auto-incident                 │  │                Grafana panels               │   │
+│   │               PagerDuty events               │  │                  Splunk HEC                 │   │
+│   │                Slack webhook                 │  │              Custom REST script             │   │
+│   │                 Email alerts                 │  │                py-pure-client               │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Pure1 in cloud · webhooks outbound to ITSM SaaS · REST API for on-prem consumers                     │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  ServiceNow webhook = Pure1 POST to ServiceNow event endpoint on proactive alert                      │
+│  Auto-incident = ServiceNow incident created from Pure1 alert payload                                 │
+│  PagerDuty = On-call routing; Pure1 webhook delivers to PagerDuty Events API v2                       │
+│  Slack webhook = Pure1 proactive alert posted to storage channel                                      │
+│  Aria Ops PAK = VMware adapter pulling FlashArray/FlashBlade metrics into Aria Ops                    │
+│  Grafana panels = Pure1 REST API proxied as Grafana data source                                       │
+│  Splunk HEC = Pure1 alerts forwarded as events to Splunk for SIEM correlation                         │
+│  py-pure-client = Pure-provided Python library for Pure1 and Purity REST APIs                         │
+│  Custom REST script = Polling Pure1 API and pushing to proprietary dashboard/tooling                  │
+│  Email = Pure1 SMTP notification for proactive alerts; configure in org settings                      │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 Separate rules for WARNING (email) and CRITICAL (PagerDuty + ServiceNow) are the recommended pattern.
 

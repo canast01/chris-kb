@@ -5,27 +5,6 @@
 Design Standards reference covering Cluster Configuration, Stretched Cluster Architecture, Storage Policy Baseline, Naming Conventions, Capacity Management.
 </div>
 
-## Cluster Configuration
-
-Apply the following configuration baseline to every vSAN cluster before placing it in production.
-
-**Host requirements:**
-
-| Item | Requirement |
-|---|---|
-| Minimum nodes | 3 (FTT=1 RAID-1); 4 for RAID-5; 6 for RAID-6 |
-| vSAN vmkernel adapter | Dedicated vmk on each host (vmk2 by convention) |
-| Network speed | 10 GbE minimum; 25 GbE recommended for ESA or high-density |
-| MTU | 9000 (jumbo frames) end-to-end on vSAN network |
-| NIC allocation | Dedicated NIC or NIC pair for vSAN traffic (separate from management and vMotion) |
-| RDMA | Optional (RDMA over RoCE v2) for ESA ultra-low latency |
-| All hosts identical | Identical CPU, RAM, and disk group configuration per cluster for balanced capacity |
-
-**Network validation before cluster creation:**
-
-```bash
-# Verify MTU 9000 end-to-end
-vmkping -I vmk2 -d -s 8972 <remote-vsan-vmk-ip>
 ```
 ┌─────────────────────────────────────── vSAN — Design Standards ───────────────────────────────────────┐
 │                                                                                                       │
@@ -73,9 +52,31 @@ vmkping -I vmk2 -d -s 8972 <remote-vsan-vmk-ip>
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```powershell
 
-**Stretched cluster requirements:**
+## Cluster Configuration
+
+Apply the following configuration baseline to every vSAN cluster before placing it in production.
+
+**Host requirements:**
+
+| Item | Requirement |
+|---|---|
+| Minimum nodes | 3 (FTT=1 RAID-1); 4 for RAID-5; 6 for RAID-6 |
+| vSAN vmkernel adapter | Dedicated vmk on each host (vmk2 by convention) |
+| Network speed | 10 GbE minimum; 25 GbE recommended for ESA or high-density |
+| MTU | 9000 (jumbo frames) end-to-end on vSAN network |
+| NIC allocation | Dedicated NIC or NIC pair for vSAN traffic (separate from management and vMotion) |
+| RDMA | Optional (RDMA over RoCE v2) for ESA ultra-low latency |
+| All hosts identical | Identical CPU, RAM, and disk group configuration per cluster for balanced capacity |
+
+**Network validation before cluster creation:**
+
+```bash
+# Verify MTU 9000 end-to-end
+vmkping -I vmk2 -d -s 8972 <remote-vsan-vmk-ip>
+```
+
+### Stretched Cluster Requirements
 
 | Item | Requirement |
 |---|---|
@@ -175,3 +176,119 @@ Get-VsanSpaceUsage -Cluster <clustername>
 ```
 
 Capacity monitoring should also be configured in Aria Operations with an alert policy targeting the 70% threshold.
+
+---
+
+## Sizing Guidance
+
+Use this section to size a new vSAN cluster or validate whether an existing cluster can absorb additional workload.
+
+### Input Variables
+
+Before sizing, collect the following from the workload team:
+
+| Variable | Description | Example |
+|---|---|---|
+| VM count | Total VMs to run on the cluster | 200 VMs |
+| vCPU per VM (average) | Average virtual CPU count | 4 vCPUs |
+| RAM per VM (average) | Average VM memory | 16 GB |
+| Storage per VM (average) | Usable disk space needed per VM | 200 GB |
+| I/O profile | Mostly read, mostly write, mixed | 70/30 read/write |
+| Peak IOPS per VM | Maximum sustained IOPS for busy VMs | 500 IOPS |
+| FTT policy | Failures to tolerate | FTT=1 RAID-5 |
+
+### CPU Sizing
+
+vSAN has minimal CPU overhead on each host (typically < 5%). CPU sizing is driven by VM workload, not vSAN itself.
+
+```
+Total vCPUs needed = VM count × average vCPUs per VM
+Target vCPU:pCPU ratio = 4:1 to 8:1 (compute-light) or 2:1 to 4:1 (compute-heavy)
+Physical cores per host = Total vCPUs / ratio / number of hosts
+```
+
+**Example:** 200 VMs × 4 vCPUs = 800 vCPUs. At 4:1 ratio across 6 hosts = 34 physical cores per host. A dual-socket host with 18 cores per socket (36 pCPU) satisfies this.
+
+### RAM Sizing
+
+vSAN reserves memory for its own processes (~5–8 GB per host for OSA; ~8–12 GB for ESA). Account for this in host RAM sizing.
+
+```
+Total VM RAM = VM count × average RAM per VM
+vSAN overhead per host = 8 GB (add to host RAM requirement)
+Target RAM per host = (Total VM RAM / hosts) + 8 GB vSAN overhead
+```
+
+**Example:** 200 VMs × 16 GB = 3,200 GB total. Across 6 hosts = 534 GB per host + 8 GB overhead = 542 GB. Size to 512 GB or 768 GB DIMMs depending on available configurations.
+
+### Storage Capacity Sizing
+
+vSAN capacity is calculated after accounting for FTT overhead and the required 30% slack:
+
+```
+Raw storage per VM = usable storage × FTT overhead multiplier
+FTT overhead:
+  RAID-1 (FTT=1): 2× (each object stored twice)
+  RAID-5 (FTT=1): 1.33× (4 data + 1 parity stripe; 33% overhead)
+  RAID-6 (FTT=2): 1.5×  (4 data + 2 parity; 50% overhead)
+
+Total raw storage = VM count × storage per VM × FTT multiplier
+Add 30% slack: total_with_slack = total_raw / 0.70
+Capacity per host = total_with_slack / host count
+```
+
+**Example (RAID-5, FTT=1):**
+- 200 VMs × 200 GB = 40 TB usable
+- × 1.33 RAID-5 overhead = 53.2 TB raw
+- ÷ 0.70 (30% slack) = 76 TB total raw needed
+- ÷ 6 hosts = 12.7 TB raw capacity per host
+- Round up to 14 TB per host (e.g. 2× 7.68 TB NVMe SSDs per disk group)
+
+### IOPS and Throughput Sizing
+
+| Disk type | Typical sustained IOPS per disk | Notes |
+|---|---|---|
+| NVMe SSD (capacity, ESA) | 200,000–500,000 | Depends on queue depth and I/O size |
+| SATA/SAS SSD (OSA capacity) | 50,000–100,000 | Lower throughput than NVMe |
+| NVMe SSD (OSA cache) | 300,000+ | Cache layer absorbs writes; capacity IOPS matter for reads |
+
+```
+Total IOPS needed = VM count × peak IOPS per VM × write amplification
+Write amplification (RAID-1 FTT=1) = 2× (write goes to 2 hosts)
+Write amplification (RAID-5 FTT=1) = ~1.33× (parity compute overhead)
+
+IOPS per host = total IOPS / host count
+Disk groups per host = IOPS per host / per-disk IOPS
+```
+
+For most all-flash vSAN deployments, IOPS is not the bottleneck — latency and capacity are. Only size for IOPS if running extremely latency-sensitive workloads (OLTP databases, NVMe-backed VDI).
+
+### Reference Cluster Sizes
+
+| Use case | Hosts | Config per host | Estimated usable capacity | Notes |
+|---|---|---|---|---|
+| Small production (FTT=1 RAID-5) | 4 | 2× 7.68 TB NVMe, 256 GB RAM | ~46 TB usable | Minimum for RAID-5 |
+| Medium production (FTT=1 RAID-5) | 6 | 2× 7.68 TB NVMe, 512 GB RAM | ~70 TB usable | Recommended starting point |
+| Large production (FTT=2 RAID-6) | 8 | 4× 7.68 TB NVMe, 768 GB RAM | ~164 TB usable | Tier-1 databases |
+| ROBO 2-node | 2 + witness | 2× 3.84 TB NVMe, 128 GB RAM | ~7.7 TB usable | Branch office |
+| ESA cluster | 4–8 | 4× 7.68 TB NVMe (no cache tier), 512 GB RAM | Varies | All-NVMe; simpler disk management |
+
+### Scaling Rules
+
+- **Scale out (add hosts):** preferred method. More hosts = more IOPS, more capacity, and better FTT coverage. Minimum increment: 1 host.
+- **Scale up (add disks to existing hosts):** adds capacity only, not IOPS headroom. Useful for capacity-bound clusters.
+- **Never scale below minimum FTT host count:** removing a host from a 4-node RAID-5 cluster breaks FTT=1 compliance for all objects.
+- **Homogeneous hosts:** all hosts in a cluster should have identical disk configurations. Heterogeneous disk groups cause uneven utilisation and complicate capacity planning.
+
+### vSAN Cluster Maximums (vSAN 8.x)
+
+| Parameter | Maximum |
+|---|---|
+| Hosts per cluster | 64 |
+| Disk groups per host (OSA) | 5 |
+| Capacity disks per disk group (OSA) | 7 |
+| VMs per cluster | 6,400 |
+| Objects per cluster | 45,000 |
+| Clusters per vCenter | 128 |
+
+Do not size clusters close to these maximums — leave at least 20% headroom for growth and operational overhead.

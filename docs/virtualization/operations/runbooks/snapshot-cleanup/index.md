@@ -32,33 +32,6 @@ vSAN Degraded Object Runbook reference covering Confirm vSAN Health State, Ident
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
-┌──────────────────────────────────── vSAN Snapshot Cleanup Runbook ────────────────────────────────────┐
-│                                                                                                       │
-│    Identify degraded vSAN objects; check disks and hosts; restore or rebuild                          │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │       Step       │      Action      │       Check       │     On FAIL      │       Tool       │   │
-│   │  ──────────────  │  ──────────────  │  ───────────────  │  ──────────────  │  ──────────────  │   │
-│   │  1  vSAN health  │   Open Skyline   │   No red checks   │  Note failures   │    vCenter UI    │   │
-│   │    2  Objects    │ Virtual Objects  │   Degraded list   │  Note VM names   │    vCenter UI    │   │
-│   │  3  Disk check   │  Physical Disk   │  No failed disks  │   Replace disk   │    iDRAC / UI    │   │
-│   │  4  Host check   │   Host status    │   All connected   │  Rejoin cluster  │    vCenter UI    │   │
-│   │    5  Rebuild    │  Policy repair   │  Objects rebuild  │ Escalate VMware  │    vCenter UI    │   │
-│   │    6  Verify     │  Skyline green   │  No degraded obj  │   Re-run steps   │    vCenter UI    │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Skyline Health = vSAN built-in health checks UI; vCenter → Cluster → vSAN → Skyline                │
-│    Degraded obj   = vSAN object with fewer mirrors than the storage policy requires                   │
-│    Non-compliant  = vSAN object exists but does not meet current storage policy                       │
-│    Absent         = vSAN object has no accessible components; VM may be impacted                      │
-│    Policy repair  = vSAN automatically rebuilds objects after a host or disk returns                  │
-│    FTT            = Failures To Tolerate; storage policy setting; FTT=1 needs 3 hosts min             │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 Active resync is expected after a host returns from maintenance — wait for it to complete before taking further action.
 

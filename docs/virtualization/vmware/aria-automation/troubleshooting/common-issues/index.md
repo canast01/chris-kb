@@ -63,7 +63,50 @@ python3 -c "import yaml,sys; yaml.safe_load(open('blueprint.yaml'))" \
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```sql
+┌─────────────────────────────────── Aria Automation — Common Issues ───────────────────────────────────┐
+│                                                                                                       │
+│  Common vRA issues: failed requests, data collection errors, SSO failures, Orchestrator faults.       │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Provisioning Failures             │  │             Integration Failures            │   │
+│   │       Network: NSX segment not created       │  │       vIDM SSO: cert mismatch/expired       │   │
+│   │      Storage: no datastore match policy      │  │       Cloud acct: data collect failed       │   │
+│   │      Quota exceeded: project limit hit       │  │      Orchestrator: endpoint unreachable     │   │
+│   │      Template invalid: YAML syntax err       │  │       ABX timeout: action >5 min fails      │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Check deployment events tab and pod logs for root cause before escalating.                           │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Diagnostic Steps               │  │                 Quick Fixes                 │   │
+│   │     Deployment events tab: error detail      │  │      YAML error: vRA template validator     │   │
+│   │      kubectl logs <pod>: service error       │  │       SSO: re-import vIDM cert in VAMI      │   │
+│   │      Cloud acct: check data collect log      │  │     Quota: increase or reassign project     │   │
+│   │      vracli status: find failed service      │  │       ABX: increase timeout in action       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  vRA appliance · kubectl (k3s) · Postgres · vIDM · NSX manager · vCenter                              │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Deployment events = vRA timeline of provisioning steps; shows which step and why it failed           │
+│  Data collection   = vRA polling cloud endpoints; failure means stale or missing resource list        │
+│  NSX segment fail  = vRA cannot create network; check NSX account connection and permissions          │
+│  Storage policy    = Placement rule matching VM to datastore; fails if no datastore matches           │
+│  Quota exceeded    = Project hit CPU/mem/count limit; admin must raise quota or delete unused         │
+│  YAML validation   = vRA cloud template syntax check; run in template editor before publish           │
+│  ABX timeout       = Default 5-minute action limit; increase for long-running tasks                   │
+│  vIDM cert mismatch= TLS cert on vIDM does not match SAN expected by vRA; update VAMI                 │
+│  Orch endpoint     = Aria Orchestrator endpoint registered in vRA; must be reachable on 443           │
+│  Pod log           = kubectl logs <pod-name> -n prelude; per-microservice diagnostic output           │
+│  vracli status     = Summary health; find which service is failing before diving into pods            │
+│  Cloud acct log    = vRA data collection history; shows timestamps and errors per account             │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 If the VM was created in vCenter but the deployment is stuck:
 - Do not delete the VM from vCenter directly — this orphans the deployment record

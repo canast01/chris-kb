@@ -99,7 +99,50 @@ echo "XML backup triggered at ${TIMESTAMP}"
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
+┌────────────────────────────────────── Jira — Backup and Restore ──────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                Jira Backup and Restore Strategy                               │   │
+│   │            Backup: pg_dump nightly + tar JIRA_HOME/data/attachments + push off-site           │   │
+│   │             Restore: stop Jira → restore DB → restore home → start Jira → reindex             │   │
+│   │          XML backup: Admin > Backup System; not for production restores; content only         │   │
+│   │              RTO target: 4 hours; RPO target: 24 hours (nightly backup interval)              │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Always restore DB before home directory; reindex after any restore                                 │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Backup Strategy                │  │              Restore Procedure              │   │
+│   │             DB: pg_dump nightly              │  │              Stop Jira service              │   │
+│   │              Home: tar nightly               │  │              Drop + recreate DB             │   │
+│   │              Off-site: S3 copy               │  │               pg_restore dump               │   │
+│   │             Verify backup daily              │  │               Restore home dir              │   │
+│   │             XML: weekly (small)              │  │                  Start Jira                 │   │
+│   │           Test restore: quarterly            │  │             Trigger full reindex            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Jira app VMs · PostgreSQL DB with SSD · NFS/SAN for JIRA_HOME · S3 off-site storage                  │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  pg_dump      = PostgreSQL backup; use --format=custom for parallel pg_restore                        │
+│  pg_restore   = restore custom-format pg_dump; use -j for parallel job count                          │
+│  JIRA_HOME    = Jira data directory; contains attachments, indexes, plugins, and config               │
+│  XML backup   = Jira built-in export; useful for small instances or content migration only            │
+│  Off-site     = backup copy to secondary site or S3; required for DR compliance                       │
+│  Reindex      = always reindex after restore; DB and index must be in sync                            │
+│  RTO          = Recovery Time Objective; target restore completion time                               │
+│  RPO          = Recovery Point Objective; maximum acceptable data loss                                │
+│  Quarterly test = restore to isolated test environment; verify data integrity                         │
+│  Tar archive  = tar -czf jira_home_$(date +%Y%m%d).tar.gz JIRA_HOME/                                  │
+│  Drop+recreate = DROP DATABASE jira; CREATE DATABASE jira; before pg_restore                          │
+│  Verify       = compare row counts: SELECT count(*) FROM jiraissue;                                   │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 Run this as a cron job:
 

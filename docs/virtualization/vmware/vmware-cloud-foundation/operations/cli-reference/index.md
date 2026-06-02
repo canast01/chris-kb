@@ -76,7 +76,6 @@ VCF CLI Tool Map — Where to Run What
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```powershell
 ┌─────────────────────────────── VMware Cloud Foundation — CLI Reference ───────────────────────────────┐
 │                                                                                                       │
 │  VCF is primarily managed via SDDC Manager UI and REST API; PowerVCF and lcm-cli                      │
@@ -123,7 +122,53 @@ VCF CLI Tool Map — Where to Run What
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```bash
+```
+┌─────────────────────────────── VMware Cloud Foundation — CLI Reference ───────────────────────────────┐
+│                                                                                                       │
+│  VCF is primarily managed via SDDC Manager UI and REST API; PowerVCF and lcm-cli                      │
+│  provide CLI automation for lifecycle, password, and certificate operations.                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              PowerVCF Commands               │  │            SDDC Manager REST API            │   │
+│   │           Connect-VCFManager -fqdn           │  │             GET /v1/sddcs (list)            │   │
+│   │         Get-VCFDomain (list domains)         │  │               GET /v1/domains               │   │
+│   │         Get-VCFHost (host inventory)         │  │                GET /v1/hosts                │   │
+│   │          Start-VCFUpgrade (trigger)          │  │              POST /v1/upgrades              │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  PowerVCF wraps SDDC Manager REST API; all ops require SDDC Manager admin credentials.                │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Password & Cert CLI              │  │            LCM CLI (on appliance)           │   │
+│   │           Request-VCFToken (auth)            │  │                  lcm status                 │   │
+│   │           Get-VCFCredential (list)           │  │             lcm bundle-download             │   │
+│   │          Set-VCFCredential (rotate)          │  │              lcm upgrade-status             │   │
+│   │         Get-VCFCertificate (status)          │  │                lcm remediate                │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  PowerVCF connects over HTTPS to SDDC Manager; lcm-cli runs on SDDC Manager appliance                 │
+│  shell accessed via SSH on port 22.                                                                   │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  PowerVCF     = PowerShell module for SDDC Manager REST API automation                                │
+│  SDDC Manager = VCF control plane; REST API on port 443                                               │
+│  Request-VCFToken= obtain bearer token for API auth                                                   │
+│  lcm-cli      = Lifecycle Manager CLI on SDDC Manager appliance                                       │
+│  lcm bundle   = upgrade package downloaded from VMware depot                                          │
+│  Get-VCFCredential= list all managed passwords (rotated by SDDC Mgr)                                  │
+│  Set-VCFCredential= trigger password rotation for a component                                         │
+│  Get-VCFDomain = list all workload and management domains                                             │
+│  Get-VCFHost  = list all hosts; free pool or assigned to domain                                       │
+│  Bearer token = JWT token; obtained via API; expires after 24h                                        │
+│  lcm remediate= fix failed upgrade tasks; retry individual steps                                      │
+│  upgrade-status= show current upgrade state across all components                                     │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 ---
 

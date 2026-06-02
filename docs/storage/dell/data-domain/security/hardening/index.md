@@ -67,7 +67,41 @@ graph TD
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
+┌───────────────────────────────────── Dell Data Domain Hardening ──────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │         Hardening: disable unused protocols, enforce TLS, LDAP auth, syslog, audit log        │   │
+│   │            Restrict management access to dedicated OOB network; enable login banner           │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Disable / Restrict              │  │               Enable / Require              │   │
+│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+│   │         Disable Telnet (default off)         │  │        Enable LDAP/AD authentication        │   │
+│   │          Disable older TLS versions          │  │            Enable syslog to SIEM            │   │
+│   │        Disable unused protocols (FTP)        │  │             Enable login banner             │   │
+│   │         Restrict SSH to OOB network          │  │             Enable audit logging            │   │
+│   │        Limit NFS export to backup IPs        │  │                 SNMP v3 only                │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   │     Control      │     Command      │      Standard     │      Verify      │    Frequency     │   │
+│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+│   │   TLS min 1.2    │ adminaccess set  │      Required     │     ssl show     │    Quarterly     │   │
+│   │   Login banner   │system banner set │      Required     │     SSH test     │      Annual      │   │
+│   │   Syslog/SIEM    │log enable syslog │      Required     │   SIEM verify    │    Quarterly     │   │
+│   │     SNMP v3      │   snmp set v3    │      Required     │    snmp show     │    Quarterly     │   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    adminaccess   = DDOS command namespace for restricting management protocols and TLS version        │
+│    Login banner  = Legal notice displayed at SSH/GUI login; required by many compliance standards     │
+│    OOB network   = Out-of-band management VLAN; DD management IP should only route from OOB           │
+│    Audit logging = DDOS logs all admin commands with user, timestamp, and command text                │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 ### Login Banner
 

@@ -53,7 +53,27 @@ flowchart TD
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```powershell
+┌────────────────────────────────────── PowerShell — Diagnostics ───────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │  PowerShell diagnostic sequence: check error object → enable verbose → trace script execution │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Error Inspection               │  │               Trace and Debug               │   │
+│   │          $Error[0] | Format-List *           │  │             Set-PSDebug -Trace 2            │   │
+│   │           $Error[0].InnerException           │  │        $VerbosePreference = Continue        │   │
+│   │          $Error[0].ScriptStackTrace          │  │        Set-StrictMode -Version Latest       │   │
+│   │         Resolve-Error function (ISE)         │  │        Start-Transcript for full log        │   │
+│   │        Get-PSCallStack (in debugger)         │  │        Test-Path, Test-NetConnection        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   Set-PSDebug -Trace 2 = traces every line executed with variable assignments; very verbose   │   │
+│   │    Set-StrictMode       = raises errors on undefined vars and bad index; catches bugs early   │   │
+│   │   ScriptStackTrace     = call stack at the point of error; shows which function called what   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 > Warning: `-Trace 2` is very verbose. Redirect output to a file for scripts with large loops: `Set-PSDebug -Trace 2; .\MyScript.ps1 *>&1 | Out-File trace.txt`
 

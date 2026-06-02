@@ -33,6 +33,7 @@ CLI TOOL CHAIN
                            ▼
                vSAN Kernel Modules (LSOM / CLOM / DOM / CMMDS)
 ```
+```
 ┌──────────────────────────────────────── vSAN — CLI Reference ─────────────────────────────────────────┐
 │                                                                                                       │
 │  vSAN CLI operations use esxcli on hosts, RVC (Ruby vSphere Console), PowerCLI,                       │
@@ -79,18 +80,45 @@ CLI TOOL CHAIN
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```sql
 
-### Skyline Health (vSphere Client Context)
+## Quick Reference
 
-Accessed in vSphere Client → Cluster → Monitor → vSAN → Skyline Health
+| Task | Command |
+|---|---|
+| Cluster membership and health | `esxcli vsan cluster get` |
+| Run all health checks | `esxcli vsan health cluster get` |
+| Health failures only | `esxcli vsan health cluster get \| grep -i fail` |
+| List disk groups | `esxcli vsan storage list` |
+| Object health summary | `esxcli vsan debug object list \| grep -v healthy` |
+| Resync queue | `esxcli vsan debug resync summary get` |
+| Resync detail | `esxcli vsan debug resync list` |
+| Check resync throttle | `esxcli vsan debug resync throttle get` |
+| Set resync throttle | `esxcli vsan debug resync throttle set --throttle 500` |
+| Network connectivity test | `esxcli vsan debug network test` |
+| MTU jumbo frame test | `vmkping -I vmk2 -d -s 8972 <peer_vmk_ip>` |
+| Add disk group | `esxcli vsan storage add -s <ssd_naa> -d <cap_naa>` |
+| Remove disk group | `esxcli vsan storage remove -s <ssd_naa>` |
+| Performance service status | `esxcli vsan perf get` |
+| Per-VMDK performance stats | `esxcli vsan debug vmdk list` |
+| Disk-level IOPS/latency stats | `esxcli vsan storage stats get` |
+
+---
+
+## Skyline Health
+
+**From vCenter UI:**
+Cluster → Monitor → vSAN → Skyline Health
+
+Equivalent CLI commands (run from any host in the cluster):
 
 ```bash
-# From ESXi — equivalent health checks
 esxcli vsan health cluster get | grep -i fail
 esxcli vsan health cluster get | grep -i warning
+```
 
-# vSAN performance service status
+Check performance service status:
+
+```bash
 esxcli vsan perf get
 ```
 
@@ -377,3 +405,79 @@ vsan.resync_dashboard <cluster_path> --refresh-rate 10
 | `vsan.obj_status_report` | `esxcli vsan debug object list` |
 
 RVC is still useful for scripted checks against older vSAN clusters (6.0–6.5) where `esxcli vsan` commands are limited.
+
+---
+
+## Performance Commands
+
+Use these when investigating latency, IOPS, or throughput issues. Run from the ESXi host shell.
+
+### Performance Service Status
+
+```bash
+# Confirm performance service is collecting data
+esxcli vsan perf get
+```
+
+### Per-VMDK Stats
+
+```bash
+# IOPS, latency, and throughput per virtual disk
+esxcli vsan debug vmdk list
+```
+
+Look for high `ReadLatency` or `WriteLatency` values (milliseconds). Sustained values above 10 ms read / 20 ms write indicate a problem.
+
+### Disk-Level Stats
+
+```bash
+# Per-physical-disk IOPS, latency, and error counters
+esxcli vsan storage stats get
+```
+
+### Cache Buffer Utilisation (OSA only)
+
+```bash
+# Write buffer usage per disk group — high value = cache SSD bottleneck
+esxcli vsan debug disk list | grep -i "cache\|write buffer\|congestion"
+```
+
+Cache write buffer > 95% sustained = cache SSD is a bottleneck. Options: reduce write IOPS, add capacity disks to the group, or upgrade the cache SSD.
+
+### Congestion
+
+```bash
+# Congestion count per disk group — must be 0 in healthy operation
+esxcli vsan debug disk list | grep -i congestion
+```
+
+### Historical Performance (PowerCLI)
+
+```powershell
+# Query cluster-level performance data (requires Performance Service enabled)
+$cluster = Get-Cluster "VSAN-LON-01"
+$end = Get-Date
+$start = $end.AddHours(-1)
+
+Get-VM -Location $cluster | ForEach-Object {
+    $stats = Get-Stat -Entity $_ -Stat "disk.read.latency.average","disk.write.latency.average" `
+        -Start $start -Finish $end -IntervalMins 5 -ErrorAction SilentlyContinue
+    if ($stats) {
+        [PSCustomObject]@{
+            VM         = $_.Name
+            AvgReadMs  = [Math]::Round(($stats | Where-Object Stat -eq "disk.read.latency.average"  | Measure-Object Value -Average).Average, 2)
+            AvgWriteMs = [Math]::Round(($stats | Where-Object Stat -eq "disk.write.latency.average" | Measure-Object Value -Average).Average, 2)
+        }
+    }
+} | Sort-Object AvgWriteMs -Descending | Select -First 20
+```
+
+### Latency Alert Thresholds
+
+| Metric | Normal | Investigate | Escalate |
+|---|---|---|---|
+| Read latency (all-flash OSA) | < 1 ms | > 5 ms sustained | > 10 ms |
+| Write latency (all-flash OSA) | < 2 ms | > 10 ms sustained | > 20 ms |
+| Read latency (ESA) | < 0.5 ms | > 2 ms sustained | > 5 ms |
+| Write latency (ESA) | < 1 ms | > 5 ms sustained | > 10 ms |
+| Congestion | 0 | Any non-zero | Sustained > 0 |

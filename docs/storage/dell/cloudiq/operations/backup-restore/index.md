@@ -78,7 +78,48 @@ curl -s -X POST "https://cloudiq.apis.dell.com/auth/oauth/v2/token" \
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
+┌─────────────────────────────────── Dell CloudIQ Backup and Restore ───────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │          CloudIQ SaaS platform backed up by Dell; SCG configuration exported manually         │   │
+│   │            SCG VM snapshot or OVA export preserves system credentials and settings            │   │
+│   │              CloudIQ telemetry data retained in Dell cloud for 90 days by default             │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    SCG VM snapshot → export settings → restore to new SCG VM → re-register in CloudIQ                 │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                  SCG Backup                  │  │                 CloudIQ SaaS                │   │
+│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+│   │          VM snapshot (ESXi/Hyper-V)          │  │           Dell manages SaaS backup          │   │
+│   │          Settings export via SCG UI          │  │           Historical data: 90 days          │   │
+│   │           System credential backup           │  │            Config replicated geo            │   │
+│   │              Certificate backup              │  │          No customer action needed          │   │
+│   │             OVA re-deploy for DR             │  │       Org data persists after SCG loss      │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    SCG restore: deploy new OVA → import settings → re-register with CloudIQ org → verify              │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                  Restore procedure: 1) Deploy fresh SCG OVA on VMware/Hyper-V                 │   │
+│   │                       2) Import exported settings file via SCG admin UI                       │   │
+│   │                       3) Re-register SCG with CloudIQ organisation token                      │   │
+│   │                   4) Verify storage systems reconnect and telemetry resumes                   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    SCG settings export = JSON export of all system credentials, proxy config, and certs               │
+│    Org token          = CloudIQ organisation registration token; links SCG to correct tenant          │
+│    90-day retention   = CloudIQ keeps 90 days of telemetry; older data rolled off automatically       │
+│    SaaS backup        = Dell guarantees CloudIQ platform HA and geo-redundant backup                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 ### Audit Log Exports
 

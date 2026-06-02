@@ -73,7 +73,50 @@ Common Issues reference covering Upgrade Gets Stuck or Times Out, NFS Mount Lost
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```bash
+┌──────────────────────────────────── Aria Suite LCM Common Issues ─────────────────────────────────────┐
+│                                                                                                       │
+│  Common LCM issues: deployment failure, certificate mismatch, and disk full.                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Deployment Failure              │  │             Certificate Mismatch            │   │
+│   │            Check pre-check result            │  │           Verify SAN matches FQDN           │   │
+│   │            DNS: FQDN resolvable?             │  │            Re-import correct cert           │   │
+│   │           vCenter: credentials OK?           │  │           LCM: replace cert action          │   │
+│   │            Disk: LCM VM not full?            │  │           Check product cert trust          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Deployment failure and cert mismatch are most frequent; disk full causes both.                       │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Disk Full Issue                │  │              vIDM / SSO Failure             │   │
+│   │          df -h: find full partition          │  │            vIDM: service running?           │   │
+│   │             Delete old PAK files             │  │           Check vIDM cert validity          │   │
+│   │           Clean /tmp and log dirs            │  │           Test SSO login manually           │   │
+│   │          Expand disk if persistent           │  │           Re-register LCM in vIDM           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  LCM VM on vSphere; vCenter for deploy; vIDM for auth; NFS for depot and backup                       │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Deployment Failure  = LCM deploy action failed; check pre-check and installer.log                    │
+│  Pre-check Result    = LCM validation output; shows root cause before deploy fails                    │
+│  Cert Mismatch       = Product cert SAN does not match FQDN; causes TLS errors                        │
+│  SAN                 = Subject Alternative Name; must include product FQDN                            │
+│  Replace Cert Action = LCM-orchestrated cert replacement; resolves mismatch                           │
+│  Disk Full           = LCM VM /storage or / partition full; blocks all operations                     │
+│  PAK Cleanup         = Delete old PAK binaries from LCM depot to free disk                            │
+│  /tmp Cleanup        = Clear temp files accumulated during failed deployments                         │
+│  vIDM SSO Failure    = LCM cannot redirect auth; all users locked out                                 │
+│  vIDM Re-register    = Re-add LCM as vIDM app if SSO trust is broken                                  │
+│  installer.log       = Deployment log; shows exact step and error for failures                        │
+│  df -h               = Disk usage check; first step for any disk-related issue                        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 If the upgrade is truly stuck (no log activity for 30+ minutes):
 1. Do NOT power off product VMs — this risks split-brain state

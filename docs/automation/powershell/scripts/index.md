@@ -54,7 +54,28 @@ graph TD
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
+┌──────────────────────────────────── PowerShell — Scripts Library ─────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │ PowerShell scripts library: reusable scripts for Active Directory, Azure, VMware, and storage │   │
+│   │     Organised by platform: scripts/ad/, scripts/azure/, scripts/vmware/, scripts/storage/     │   │
+│   │        All scripts: version header, help block, error handling, Pester test counterpart       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │       Active Directory      │  │        Azure / Cloud        │  │        Infrastructure       │   │
+│   │     New-ADUser-Bulk.ps1     │  │      Get-AzVMReport.ps1     │  │      Get-VMwareVMs.ps1      │   │
+│   │  Disable-StaleAccounts.ps1  │  │      Set-AzTagsBulk.ps1     │  │     Get-DellHWAlert.ps1     │   │
+│   │    Get-ADGroupMembers.ps1   │  │   New-AzResourceGroup.ps1   │  │   Test-SANConnectivity.ps1  │   │
+│   │    Sync-ADAttributes.ps1    │  │   Export-AzCostReport.ps1   │  │    Invoke-VeeamReport.ps1   │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │  Script versioning = use semantic version in script header; update on every meaningful change │   │
+│   │   Pester test       = scripts/tests/<ScriptName>.Tests.ps1; run: Invoke-Pester -Path tests/   │   │
+│   │       Code review       = all new scripts reviewed via pull request before merge to main      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 **Step 5 — Run it**
 

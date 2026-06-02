@@ -48,7 +48,29 @@ graph LR
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```bash
+┌──────────────────────────────────────── Ansible — Encryption ─────────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     Ansible encryption: Vault (var files), SSH transport (TLS), AWX credential encryption     │   │
+│   │Ansible Vault: AES-256-CTR encryption; password protects vault files; vault ID for multiple PWs│   │
+│   │    AWX: credentials encrypted at rest using SECRET_KEY; rotated during AWX rekey procedure    │   │
+│   │    Transport: SSH always encrypted; WinRM must use HTTPS (TLS) — reject HTTP WinRM in prod    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                 Vault Usage                  │  │          AWX Credential Encryption          │   │
+│   │         ansible-vault encrypt_string         │  │         Stored: AES-256 + SECRET_KEY        │   │
+│   │            Encrypt full var files            │  │           Injected at job runtime           │   │
+│   │          vault_id: prod, dev labels          │  │           Never logged or exposed           │   │
+│   │        Password in external vault/HSM        │  │          SECRET_KEY backup required         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │ vault_id       = label for a vault password; allows different passwords for prod vs dev vaults│   │
+│   │  SECRET_KEY     = AWX Django secret key; used to encrypt credentials in DB; MUST be backed up │   │
+│   │   encrypt_string = encrypts a single string value; embed inline in plain YAML variable files  │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 ### Recommended Layout
 

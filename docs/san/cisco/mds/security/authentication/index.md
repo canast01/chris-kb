@@ -99,7 +99,52 @@ flowchart TD
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
+┌───────────────────────────────── Cisco MDS — Security Authentication ─────────────────────────────────┐
+│                                                                                                       │
+│  Multi-layer authentication covering management plane, fabric login, and data-plane security.         │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Management Auth                │  │             Fabric Auth (FC-SP)             │   │
+│   │          SSH: key exchange + cipher          │  │        DHCHAP: switch-to-switch auth        │   │
+│   │         HTTPS: TLS 1.2+ for DCNM/GUI         │  │        DHCHAP group: DH key strength        │   │
+│   │        Console: local auth + timeout         │  │         Hash algorithm: MD5 / SHA-1         │   │
+│   │           AAA login: TACACS+ first           │  │         Password db: local or RADIUS        │   │
+│   │         MFA via TACACS+ server side          │  │         Per-VSAN DHCHAP enable flag         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Management auth and FC-SP fabric auth operate independently on the same switch                       │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Session Security               │  │            Certificate Management           │   │
+│   │        Idle timeout: auto-disconnect         │  │         PKI: local CA or external CA        │   │
+│   │         Max sessions: limit per user         │  │         Trustpoint: CA anchor config        │   │
+│   │          Login banner: legal notice          │  │       Cert enrollment: SCEP or manual       │   │
+│   │        Exec timeout: per line config         │  │          CRL: revocation list check         │   │
+│   │        Logging: auth success/failure         │  │          OCSP: online status check          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  MDS supervisor · TACACS+/RADIUS server · CA server · management Ethernet port                        │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  DHCHAP         = Diffie-Hellman Challenge Handshake Authentication Protocol; FC-SP method            │
+│  FC-SP          = Fibre Channel Security Protocol; authenticates switches at FLOGI                    │
+│  TACACS+        = AAA protocol; separates auth, authz, accounting for per-command logging             │
+│  SCEP           = Simple Certificate Enrollment Protocol; automates cert requests to CA               │
+│  Trustpoint     = Named CA anchor in NX-OS/MDS; used to validate server certificates                  │
+│  CRL            = Certificate Revocation List; list of invalidated certs to reject                    │
+│  OCSP           = Online Certificate Status Protocol; real-time cert validity check                   │
+│  PKI            = Public Key Infrastructure; framework managing digital certificates                  │
+│  MFA            = Multi-Factor Authentication; adds OTP/push beyond password                          │
+│  SSH key        = Public-key authentication; eliminates password for admin sessions                   │
+│  Login banner   = Legal warning displayed before credential prompt                                    │
+│  FLOGI          = Fabric Login; N_Port to switch handshake where FC-SP auth occurs                    │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 ### TACACS+ Key Encryption
 

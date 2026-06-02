@@ -99,7 +99,44 @@ flowchart TD
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
+┌─────────────────────────────────────── SRDF/A — Common Issues ────────────────────────────────────────┐
+│                                                                                                       │
+│   │     Symptom      │   Likely Cause   │    First Check    │       Fix        │      Verify      │   │
+│   │     High RPO     │cycle time exceed │ symrdf query -cyc │increase bandwidt │    symrdf -v     │   │
+│   │    Link down     │ RF port failure  │ symrdf query stat │  failover ports  │  symcfg list -r  │   │
+│   │   Pair invalid   │  R1/R2 mismatch  │   symrdf verify   │re-establish pair │  symrdf establi  │   │
+│   │  Failover fail   │   R2 not ready   │   check R2 state  │split then failov │   symrdf -sid    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                     General Triage Pattern                                    │   │
+│   │          Is the issue new or recurring? New = recent change; Recurring = config problem       │   │
+│   │             Is it isolated to one source or all? Isolated = agent; All = server/repo          │   │
+│   │                                  Check logs first: symrdf query                               │   │
+│   │                    If unresolved in 2h: open vendor case with full log bundle                 │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Two PowerMax arrays (production + DR site) · FC/FCIP SRDF link (dedicated bandwidth) · RF ports      │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SRDF          = Symmetrix Remote Data Facility; EMC array-based replication technology               │
+│  R1            = source SRDF volume on production array; host writes flow here                        │
+│  R2            = target SRDF volume on DR array; receives replicated data asynchronously              │
+│  Delta Set     = batch of host writes accumulated per SRDF/A cycle; shipped to R2 atomically          │
+│  Cycle Time    = SRDF/A replication interval (15–60 seconds); determines maximum RPO                  │
+│  symrdf        = Solutions Enabler CLI for SRDF operations: establish, split, failover, restore       │
+│  SRDF Link     = FC or FCIP path between R1 and R2 arrays; dedicated, monitored bandwidth             │
+│  Suspended     = SRDF pair state where replication is paused; R2 data frozen at last cycle            │
+│  Failover      = SRDF operation making R2 read-write; R1 becomes Not Ready to hosts                   │
+│  Restore       = after failover resolution, re-establishes replication with R1 as source              │
+│  Establish     = initial sync or re-sync operation that copies R1 to R2 in full                       │
+│  Split         = breaks SRDF pair temporarily; both R1 and R2 are R/W; no replication                 │
+│  FCIP          = Fibre Channel over IP; tunnels FC SRDF traffic over IP WAN link                      │
+│  Unisphere     = Dell PowerMax management GUI; REST API; array health and provisioning                │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 **Root causes:**
 

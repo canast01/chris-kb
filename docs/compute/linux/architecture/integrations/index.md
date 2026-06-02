@@ -67,7 +67,49 @@ sequenceDiagram
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```sql
+┌────────────────────────────────── Linux Architecture — Integrations ──────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                       Integration Points                                      │   │
+│   │        Identity: SSSD + realmd joins Linux hosts to Active Directory via Kerberos/LDAP        │   │
+│   │            Storage: NFS/CIFS mounts, iSCSI initiator, multipath-tools for SAN LUNs            │   │
+│   │       Monitoring: node_exporter → Prometheus → Grafana; rsyslog/journald → Elasticsearch      │   │
+│   │       Config mgmt: Ansible (agentless SSH) · Puppet (agent) · Chef · SaltStack (minion)       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Linux integrates with enterprise identity, storage, and observability stacks                       │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Identity & Auth                │  │              Storage & Network              │   │
+│   │           SSSD: caches AD queries            │  │          NFS v4.1: Kerberos mounts          │   │
+│   │           realmd: domain join tool           │  │         iSCSI: open-iscsi initiator         │   │
+│   │           Kerberos: kinit / klist            │  │         multipath: dm-multipath I/O         │   │
+│   │           PAM: sssd module for AD            │  │         autofs: automount on demand         │   │
+│   │           sudo rules: LDAP-sourced           │  │         CIFS/SMB: mount.cifs shares         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  x86-64 servers · HBAs/NICs · SAN switches · NAS appliances · iDRAC · Power & Cooling                 │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SSSD        = System Security Services Daemon; caches LDAP/Kerberos identity lookups                 │
+│  realmd      = Realm Discovery daemon; simplifies domain join with a single command                   │
+│  Kerberos    = Ticket-based auth protocol; kinit obtains TGT from AD KDC                              │
+│  NFS v4.1    = Network File System v4.1; adds pNFS parallel I/O and session trunking                  │
+│  iSCSI       = IP-based SCSI protocol; carries SCSI commands over TCP/IP networks                     │
+│  dm-multipath= Device Mapper multipath; aggregates multiple HBA paths to one block device             │
+│  autofs      = Kernel automounter; mounts NFS/CIFS shares on access and unmounts on idle              │
+│  node_exporter= Prometheus agent; exposes host metrics (CPU, mem, disk, net) on port 9100             │
+│  Ansible     = Agentless automation over SSH; uses YAML playbooks for idempotent config               │
+│  Puppet      = Agent-based config mgmt; enforces declared resource state on each run                  │
+│  rsyslog     = Reliable syslog daemon; forwards structured log messages over UDP/TCP                  │
+│  Elasticsearch= Distributed search and analytics engine for log aggregation at scale                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 **Troubleshoot AD authentication:**
 

@@ -48,50 +48,6 @@ Cluster sizing, Management Pack governance, alert configuration baselines, namin
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
-┌─────────────────────────── Aria Operations — Architecture Design Standards ───────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │         Aria Operations Design Standards — Sizing, HA, Network, and Naming Conventions        │   │
-│   │       Sizing: Master 4vCPU/16GB · Replica 4vCPU/16GB · Collector 2vCPU/8GB per 3000 obj       │   │
-│   │         HA: always deploy Replica node; target RPO<5 min, RTO<10 min on master failure        │   │
-│   │                 Naming: vrops-master-01, vrops-replica-01, vrops-col-<site>-01                │   │
-│   │        Network: dedicate monitoring VLAN; allow TCP 443 collector→master; TLS enforced        │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Design decisions must be documented in the platform design record before deployment                │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │         Sizing Rules        │  │          HA Design          │  │        Network Design       │   │
-│   │      Master: 4vCPU/16G      │  │      Replica: mandatory     │  │       VLAN: monitoring      │   │
-│   │       Collector: 2vCPU      │  │         RPO: <5 min         │  │       TCP 443 col→mstr      │   │
-│   │      3000 obj/collector     │  │         RTO: <10 min        │  │       TLS 1.2 minimum       │   │
-│   │       Data node @5000+      │  │       Auto-failover on      │  │       DNS round-robin       │   │
-│   │        Disk: SSD/NVMe       │  │       vSphere DRS anti      │  │      Firewall rule doc      │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Master and Replica on separate ESXi hosts (DRS anti-affinity rule) · SSD datastore required          │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Anti-affinity rule= DRS rule keeping Master and Replica VMs on separate physical hosts               │
-│  RPO               = Recovery Point Objective; maximum data loss acceptable (5 min for Aria Ops)      │
-│  RTO               = Recovery Time Objective; maximum time to restore service (10 min target)         │
-│  Monitoring VLAN   = Dedicated network segment for monitoring traffic; isolates collection            │
-│  SSD datastore     = Solid-state backed storage; required for Cassandra write performance             │
-│  TLS 1.2           = Minimum transport security version; TLS 1.3 preferred                            │
-│  DNS round-robin   = Multiple A records for load distribution across collector endpoints              │
-│  Platform design record= Document capturing all design decisions for audit and review                 │
-│  Auto-failover     = Automatic promotion of replica without operator intervention                     │
-│  DRS               = Distributed Resource Scheduler; manages VM placement on vSphere                  │
-│  Firewall rule doc = Documented ACL entries for all monitoring-plane TCP/UDP flows                    │
-│  NVMe              = Non-Volatile Memory Express; fastest storage interface for DB workloads          │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 ## Cluster Sizing Standards
 
 | Environment | Topology | Rationale |

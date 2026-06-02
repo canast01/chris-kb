@@ -86,7 +86,41 @@ flowchart TD
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
+┌─────────────────────────────────────────── Backup Failures ───────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │         Backup failures: job errors, proxy overload, repo full, snapshot stun, network        │   │
+│   │             First check: job log → error code → check proxy/repo/network → resolve            │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │            Veeam            │  │          NetBackup          │  │          Commvault          │   │
+│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
+│   │      Proxy agent error      │  │       Media server err      │  │        MA agent error       │   │
+│   │       Repository full       │  │           STU full          │  │      Disk library full      │   │
+│   │       Snapshot removal      │  │       Snapshot timeout      │  │         VSS failure         │   │
+│   │       VMware tools err      │  │        Client network       │  │        Subclient miss       │   │
+│   │        Transport mode       │  │        Expired certs        │  │         Job schedule        │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│   │     Problem      │   First check    │        Fix        │      Verify      │   Escalate if    │   │
+│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+│   │    Job failed    │  Job log error   │   Per error code  │   Job retry OK   │ Persistent fail  │   │
+│   │    Repo full     │  Repo capacity   │   Expire/expand   │   Space freed    │  No space avail  │   │
+│   │  Snapshot fail   │   VMware tools   │    Update tools   │   Snapshot OK    │  Datastore full  │   │
+│   │    Proxy err     │  Proxy CPU/RAM   │    Reduce tasks   │  Job completes   │ Agent reinstall  │   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Transport mode= Veeam: HotAdd, NBD, Direct SAN; wrong mode causes snapshot or perf issues          │
+│    VSS           = Windows Volume Shadow Copy Service; required for consistent Windows backups        │
+│    STU           = NetBackup Storage Unit; target for backup data; check capacity and path            │
+│    Snapshot stun = ESXi: brief VM pause during snapshot create/commit; worse on large disks           │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 ### VSS Error Investigation
 

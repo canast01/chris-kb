@@ -58,59 +58,6 @@ Known Issues reference covering Incident Triage, Port Issues, Zoning Issues, Swi
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
-┌────────────────────────────────────── FabricOS — Common Issues ───────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │               Most common FabricOS issues with root causes and resolution steps               │   │
-│   │     Port issues: flapping (bad SFP/cable), offline (config/speed mismatch), BB credit zero    │   │
-│   │ Zone issues: zone conflict (cfgmerge fail), alias not found, zoning mismatch between switches │   │
-│   │     Fabric issues: segmented fabric (principal switch conflict), ISL degraded, E_Port down    │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Port-level issues → zone issues → fabric-wide issues → login storms → escalation                   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │         Port Issues         │  │         Zone Issues         │  │        Fabric Issues        │   │
-│   │        Port flapping        │  │        Zone conflict        │  │       Segmented fabric      │   │
-│   │         Port offline        │  │       Alias not found       │  │         ISL degraded        │   │
-│   │        BB credit = 0        │  │       Zoning mismatch       │  │         E_Port down         │   │
-│   │          CRC errors         │  │        cfgmerge fail        │  │         FLOGI storm         │   │
-│   │        Bad SFP/cable        │  │       Zone not active       │  │          RSCN loop          │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    supportshow output is the primary diagnostic artifact for TAC escalation                           │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Issue       │      Check       │      Command      │       Fix        │    Escalation    │   │
-│   │    Port flap     │  SFP Tx/Rx dBm   │      sfpshow      │   Replace SFP    │  TAC if persist  │   │
-│   │    Segmented     │ Domain IDs same  │     fabricshow    │ Reset domain ID  │    TAC merge     │   │
-│   │   FLOGI storm    │  HBA log events  │    portlogdump    │ portdisable HBA  │  TAC + OS team   │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: SFP optics · OM4 LC fibre cables · ISL trunk cables · HBA drivers                        │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Port flapping = Port cycling online/offline rapidly; bad SFP, cable, or HBA driver                 │
-│    BB credit     = Buffer-to-buffer credit; zero means port stalled waiting to send frames            │
-│    CRC error     = Cyclic Redundancy Check failure; bad cable, SFP, or dirty connector                │
-│    Zone conflict = cfgmerge failure when two fabrics with incompatible zones are merged               │
-│    cfgmerge      = Automatic zone config merge when ISL established; fails on name conflict           │
-│    Zoning mismatch = Zone config differs between switches; clear and reactivate                       │
-│    Segmented fabric = ISL in E_Port Isolated state; domain ID or principal switch conflict            │
-│    E_Port        = Expansion Port; ISL port type; isolated state = fabric segment                     │
-│    FLOGI storm   = HBA flooding fabric with Fabric Login requests; disable port to stop               │
-│    RSCN          = Registered State Change Notification; excessive RSCNs disrupt I/O                  │
-│    ISL degraded  = ISL link showing errors or reduced bandwidth; check SFPs and cables                │
-│    portlogdump   = Per-port event log dump; captures FLOGI, PLOGI, and error events                   │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 > Part of the [Operations](../index.md) reference.
 

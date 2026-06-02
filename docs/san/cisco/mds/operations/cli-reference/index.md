@@ -68,7 +68,52 @@ show feature           # enabled features (zone, dpvm, fcsp, etc.)
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
+┌─────────────────────────────────── Cisco MDS 9000 — CLI Reference ────────────────────────────────────┐
+│                                                                                                       │
+│  MDS NX-OS CLI: fabric commands, zone commands, port commands, diagnostics.                           │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Fabric & VSAN Commands            │  │                Zone Commands                │   │
+│   │             show flogi database              │  │          show zone active vsan <n>          │   │
+│   │            show vsan: all states             │  │           zone name <n> vsan <id>           │   │
+│   │           show fcns database vsan            │  │          zoneset name <n> vsan <id>         │   │
+│   │          show fcdomain: domain IDs           │  │          zoneset activate name <n>          │   │
+│   │            show topology: ISL map            │  │          show device-alias database         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  show flogi and show zone are the two most-used daily operational commands.                           │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │          Port & Interface Commands           │  │             Diagnostic & Support            │   │
+│   │             show interface fc1/1             │  │              show system health             │   │
+│   │          show interface trunk: ISLs          │  │               show environment              │   │
+│   │          show port-channel summary           │  │               show module all               │   │
+│   │             shut / no shut fc1/1             │  │            show tech-support: TAC           │   │
+│   │          show interface transceiver          │  │             debug zone basic-er             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  MDS director chassis · supervisor module · line card blades · management Ethernet                    │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  show flogi database= FC fabric login database; shows all device logins                               │
+│  show vsan        = VSAN states; all should show active                                               │
+│  show fcns database= FC Name Server database; registered devices in VSAN                              │
+│  show fcdomain    = domain ID assignment; shows principal switch                                      │
+│  show topology    = ISL map showing connected switches and port numbers                               │
+│  show zone active = active zone set members and zone names per VSAN                                   │
+│  device-alias     = WWN alias; CFS-distributed across fabric                                          │
+│  zoneset activate = activates named zone set in specified VSAN                                        │
+│  show interface fc= per-port FC counters: CRC, credit, throughput                                     │
+│  show interface trunk= ISL trunk status and allowed VSAN list                                         │
+│  show transceiver = SFP optical power level and signal status                                         │
+│  show tech-support= full diagnostic bundle for Cisco TAC escalation                                   │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 All modules should show status `ok`. A `failed` or `powered-dn` module requires immediate investigation.
 

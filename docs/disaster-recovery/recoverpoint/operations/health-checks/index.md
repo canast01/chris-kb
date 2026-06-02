@@ -100,7 +100,45 @@ cluster quorum check
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
+┌──────────────────────────────────── RecoverPoint — Health Checks ─────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      Health check cadence: daily CG lag/journal, weekly test copy, monthly failover drill     │   │
+│   │       Critical alerts: CG in error state, journal >90% full, RPA node failure, link down      │   │
+│   │         Check sources: Unisphere for RP, vCenter plugin, SNMP traps, REST API polling         │   │
+│   │            Baseline: all CGs Active; lag <30 s; journal <70%; all RPA nodes Online            │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │          RPA Health         │  │          CG Health          │  │         Link Health         │   │
+│   │      Node state: Online     │  │        State: Active        │  │        Link state: Up       │   │
+│   │          CPU < 80%          │  │         Lag < 30 sec        │  │       Latency < 100 ms      │   │
+│   │         Memory < 85%        │  │        Journal < 70%        │  │        Packet loss 0%       │   │
+│   │          Fan/PSU OK         │  │       Splitter loaded       │  │        BW util < 80%        │   │
+│   │          NTP synced         │  │        No errors 24 h       │  │        Compression OK       │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: RPA hardware health viewable in Unisphere; splitter state visible per ESXi host          │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    CG state Active  = Replication is running; writes being journaled; lag within RPO target           │
+│    Lag (RPO lag)    = Seconds between last source write and journal apply on target; primary KPI      │
+│    Journal fill %   = Consumed / allocated journal VMDK; >90% causes CG to pause replication          │
+│    Splitter loaded  = ESXi kernel module active; check per host in Unisphere splitter view            │
+│    SNMP traps       = RPA sends traps to NMS on CG error, journal fill, and RPA node failure          │
+│    Link utilisation = WAN replication bandwidth; sustained >80% may cause lag increase                │
+│    NTP sync         = Critical for journal timestamps and cross-site consistency; must be in sync     │
+│    Packet loss      = Any loss on replication link degrades throughput; investigate immediately       │
+│    RPA node failure = Surviving RPA takes over all CGs; CGs continue with reduced throughput          │
+│    Unisphere alert  = Red badge in Unisphere dashboard; drill down to CG, link, or hardware           │
+│    REST poll        = GET /system/clusters; /groups; /links; use for monitoring integration           │
+│    Monthly drill    = Full failover test with VM power-on at DR site; documents RTO achieved          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 | RPO Tier | Target | Alert Threshold |
 |---|---|---|

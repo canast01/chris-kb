@@ -59,60 +59,6 @@ Procedures reference covering Overview, 1. Registering a New Site (Fabric), 2. D
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
-┌─────────────────────────── Cisco Nexus Dashboard — Operational Procedures ────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │        ND operational procedures: cluster upgrade, node replacement, backup and restore       │   │
-│   │          Upgrade: backup first → upload image → trigger upgrade → validate each node          │   │
-│   │          Node replace: cordon node → drain pods → decommission → rejoin with same IP          │   │
-│   │          Restore: deploy fresh cluster → import backup → validate site and app config         │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Pre-check → backup → execute → verify cluster health → verify apps → document                      │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │       Cluster Upgrade       │  │         Node Replace        │  │        Backup/Restore       │   │
-│   │         Check compat        │  │         Cordon node         │  │        Backup cluster       │   │
-│   │         Take backup         │  │          Drain pods         │  │       Copy off-cluster      │   │
-│   │         Upload image        │  │         Decommission        │  │        Deploy new ND        │   │
-│   │       Trigger upgrade       │  │       Replace hardware      │  │        Import backup        │   │
-│   │       Validate health       │  │        Rejoin cluster       │  │         Verify apps         │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    ND upgrade is rolling (one node at a time); cluster remains available during upgrade               │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Procedure     │       Step       │     Command/UI    │      Verify      │      Notes       │   │
-│   │     Upgrade      │    Pre-check     │   Admin>Upgrade   │    Compat ok     │   Backup first   │   │
-│   │   Node replace   │      Cordon      │    Admin>Nodes    │   Pods drained   │  Same IP reuse   │   │
-│   │      Backup      │     Schedule     │    Admin>Backup   │    File size     │   Off-cluster    │   │
-│   │     Restore      │   Fresh deploy   │   Import backup   │   Apps healthy   │   Sites re-add   │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: ND VM snapshots before upgrade · replacement hardware in rack · OOB cables               │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Rolling upgrade   = ND upgrades one node at a time; other nodes serve traffic                      │
-│    Cordon            = Mark node unschedulable so no new pods land on it before replacement           │
-│    Drain             = Move all running pods off a node before maintenance                            │
-│    Decommission      = Remove node from ND cluster database; do before physical replacement           │
-│    Rejoin            = New or replaced node boots and joins cluster using same IP and certs           │
-│    Backup import     = ND restore: import cluster config + app state from backup file                 │
-│    Compat check      = Confirm ND release supports all installed app versions before upgrade          │
-│    Off-cluster copy  = Transfer backup file to external storage before proceeding                     │
-│    Pre-upgrade check = ND built-in upgrade readiness validator; run before uploading image            │
-│    Cluster health    = All nodes Healthy, all pods Running; check after every procedure               │
-│    VM snapshot       = Take vSphere snapshot of ND VMs before upgrade; rollback option                │
-│    Sites re-add      = After restore, verify all site credentials still work in Admin>Sites           │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 > Part of the [Nexus Dashboard](../../index.md) reference.
 

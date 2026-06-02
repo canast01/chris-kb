@@ -63,7 +63,50 @@ flowchart LR
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```powershell
+┌──────────────────────────────── Windows Server — Install and Upgrade ─────────────────────────────────┐
+│                                                                                                       │
+│  Windows Server installation and in-place upgrade procedures including AD DS promotion.               │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Fresh Install                 │  │               In-Place Upgrade              │   │
+│   │          Boot from ISO / WDS / PXE           │  │         Support: 2016 → 2019 → 2022         │   │
+│   │        Partition: C: + separate data         │  │        Compatibility check: setup.exe       │   │
+│   │         Unattend.xml: silent install         │  │            Backup before upgrade            │   │
+│   │        Sysprep: image generalisation         │  │         Driver compatibility verify         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Fresh install preferred for major upgrades; in-place for patch-level change                        │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             DC Promotion (AD DS)             │  │            Post-Install Hardening           │   │
+│   │         Install-WindowsFeature AD-DS         │  │         Apply CIS/STIG baseline GPO         │   │
+│   │         Install-ADDSForest / replica         │  │           Enable Windows Defender           │   │
+│   │        Raise domain/forest FFL level         │  │              Join to AD domain              │   │
+│   │           Verify replication + DNS           │  │             Activate: AVMA / KMS            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Physical or virtual server · ISO/WDS · KMS server · existing Domain Controllers                      │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  WDS          = Windows Deployment Services; PXE-based OS deployment                                  │
+│  Unattend.xml = answer file; automates install choices for unattended setup                           │
+│  Sysprep      = strips machine-specific info from image; required for cloning                         │
+│  FFL          = Forest Functional Level; enables features across all domains                          │
+│  DFL          = Domain Functional Level; enables domain-wide AD features                              │
+│  Replica DC   = additional DC in existing domain; joined via dcpromo/PS                               │
+│  STIG         = Security Technical Implementation Guide; DoD hardening standard                       │
+│  KMS          = Key Management Service; volume activation server                                      │
+│  AVMA         = Automatic VM Activation; VMs activate via licensed Hyper-V host                       │
+│  In-place upgrade= runs setup.exe on existing OS; preserves apps + settings                           │
+│  Compatibility check= setup /compat scanonly; identifies blockers before upgrade                      │
+│  Generalise   = sysprep step to remove SIDs; must do before capturing image                           │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 ---
 

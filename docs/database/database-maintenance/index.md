@@ -65,7 +65,37 @@ FROM pg_stat_user_indexes ORDER BY pg_relation_size(indexname::regclass) DESC LI
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```sql
+┌────────────────────────────────── Database — Maintenance Procedures ──────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │        Scheduled DB maintenance keeps performance stable and prevents space exhaustion        │   │
+│   │      Index maintenance: rebuild (>30% fragmentation) or reorganise (10-30% fragmentation)     │   │
+│   │       Run during low-traffic maintenance windows; monitor impact on production workloads      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │      Index Maintenance      │  │      Statistics Update      │  │        Log Management       │   │
+│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
+│   │      PG: REINDEX TABLE      │  │      PG: ANALYZE / auto     │  │      PG: WAL truncation     │   │
+│   │       PG: VACUUM FULL       │  │     MSSQL: UPDATE STATS     │  │      MSSQL: DBCC SHRINK     │   │
+│   │      MSSQL: ALTER INDEX     │  │     MySQL: ANALYZE TABLE    │  │     MySQL: PURGE BINARY     │   │
+│   │     Check fragmentation     │  │    Stale stats = bad plan   │  │       Log backup first      │   │
+│   │      Online vs offline      │  │   Trigger after bulk load   │  │      Monitor VLF count      │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    VACUUM        = PostgreSQL process; reclaims dead row space; VACUUM FULL rewrites table            │
+│    autovacuum    = PostgreSQL background process; runs VACUUM/ANALYZE automatically                   │
+│    Fragmentation = Index leaf pages out of order; > 30% triggers REBUILD (full rewrite)               │
+│    REORGANIZE    = Online defrag (SQL Server); moves leaf pages in-place; low-impact                  │
+│    Statistics    = Histogram of data distribution; query planner uses them for plan selection         │
+│    VLF           = Virtual Log File (SQL Server); many small VLFs slow log operations                 │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 ```sql
 -- Check table status

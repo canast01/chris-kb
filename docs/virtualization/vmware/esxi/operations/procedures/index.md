@@ -52,53 +52,6 @@ Procedures reference covering Change Readiness, Maintenance Window, Post-Change 
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
-┌───────────────────────────────────── ESXi — Standard Procedures ──────────────────────────────────────┐
-│                                                                                                       │
-│  Maintenance mode, change control, and host decommission standard procedures.                         │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Maintenance Mode Procedure          │  │              Change Management              │   │
-│   │          Drain VMs via vMotion/DRS           │  │          Raise change request (CR)          │   │
-│   │        Enter maintenance: vCenter UI         │  │          Pre-change health snapshot         │   │
-│   │        esxcli system maintenanceMode         │  │          Maintenance window agreed          │   │
-│   │         Verify no VMs remain on host         │  │            Post-change validation           │   │
-│   │        Perform task, exit maintenance        │  │            Close CR with evidence           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Maintenance mode drains VMs; change control wraps every host-level change.                           │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Host Decommission               │  │             Emergency Procedures            │   │
-│   │           Migrate all VMs off host           │  │           Force maintenance if HA           │   │
-│   │         Remove from vSAN disk group          │  │          PSOD: capture vmkernel log         │   │
-│   │           Disconnect from vCenter            │  │          Isolate host from network          │   │
-│   │             Remove from cluster              │  │            Power off affected VMs           │   │
-│   │           Deregister from vCenter            │  │            Escalate to VMware GSS           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  x86 host, iDRAC/IPMI for OOB control, management network, vCenter appliance                          │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Maintenance mode = host state; vCenter stops VM placement; drains existing                           │
-│  vMotion     = live VM migration; used to drain host before maintenance                               │
-│  PSOD        = Purple Screen Of Death; ESXi kernel panic / crash dump                                 │
-│  CR          = Change Request; ITSM ticket authorising planned changes                                │
-│  DRS         = Distributed Resource Scheduler; auto-migrates VMs                                      │
-│  HA          = High Availability; restarts VMs on remaining hosts                                     │
-│  Decommission= formal process to remove host from inventory and cluster                               │
-│  iDRAC       = Dell OOB management; power control when host unresponsive                              │
-│  vmkernel log= /var/log/vmkernel.log; primary diagnostic log on ESXi                                  │
-│  vSAN evac   = removes host disks from vSAN before decommission                                       │
-│  Force maint = maintenance without VM evacuation; HA failure scenario only                            │
-│  Health snap = pre/post change comparison of alarms/metrics/log tail                                  │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Change Readiness
 

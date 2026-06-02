@@ -26,28 +26,6 @@ Cross-platform automation shell on .NET; execution engine processes input throug
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```powershell
-┌────────────────────────────────────── PowerShell — Architecture ──────────────────────────────────────┐
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   PowerShell architecture: runtime on .NET; cmdlets call .NET APIs; pipeline passes objects   │   │
-│   │    Remoting: Invoke-Command, Enter-PSSession → WinRM (Windows) or SSH transport (PS7/Linux)   │   │
-│   │          Modules: binary (compiled .dll) or script (.psm1); loaded from PSModulePath          │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                 How It Works                 │  │               Design Standards              │   │
-│   │        Script → PSParser → AST → exec        │  │      Verb-Noun naming (approved verbs)      │   │
-│   │         Pipeline: object not string          │  │         CmdletBinding + param block         │   │
-│   │          Module autoload from path           │  │          Error handling: try/catch          │   │
-│   │        Runspaces: parallel execution         │  │        Pester tests for all functions       │   │
-│   │            Remoting: WinRM / SSH             │  │            PSScriptAnalyzer lint            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │     Physical: PS runs on Windows, Linux, macOS; remoting requires WinRM (Win) or SSH (PS7)    │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 ![PowerShell Architecture](../../../assets/powershell-architecture-overview.svg)
 
 <div class="kb-grid kb-grid-3">

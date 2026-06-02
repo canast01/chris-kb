@@ -139,7 +139,52 @@ top -b -n 1 > /tmp/top-snapshot-$(date +%Y%m%d).txt
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```sql
+┌─────────────────────────────── Cisco DCNM — Troubleshooting Escalation ───────────────────────────────┐
+│                                                                                                       │
+│  DCNM escalation: internal L2/L3 → Cisco TAC with log bundle, case severity, remote.                  │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Internal Escalation Path           │  │             Cisco TAC Escalation            │   │
+│   │         L1 → L2: basic checks + logs         │  │            Open case: TAC portal            │   │
+│   │          L2 → L3: logs + show-tech           │  │           DCNM version + NX-OS ver          │   │
+│   │         L3 → TAC: full data package          │  │           Sev-1: fabric management          │   │
+│   │          Incident bridge for Sev-1           │  │           Remote: TAC SSH to DCNM           │   │
+│   │        No config changes during inc.         │  │           RCA expected post-close           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Collect DCNM logs and MDS show tech-support before opening a Cisco TAC case.                         │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Escalation Data Package            │  │           Severity Classification           │   │
+│   │          DCNM logs: journalctl dump          │  │           Sev-1: DCNM down; fabric          │   │
+│   │          appmgr status + db-status           │  │           Sev-2: zone push failing          │   │
+│   │          show tech-support: per MDS          │  │          Sev-3: partial monitoring          │   │
+│   │             Audit log CSV export             │  │           Sev-4: general question           │   │
+│   │        Timeline: events before issue         │  │            CSAT after case close            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  DCNM VM · management Ethernet · Cisco TAC upload portal · serial console access                      │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  journalctl dump = full DCNM service log; gzip and share to Cisco TAC                                 │
+│  appmgr status   = DCNM VM CLI; service health output for TAC review                                  │
+│  show tech-support= NX-OS MDS full diagnostic bundle; one per affected switch                         │
+│  Audit log CSV   = DCNM action log export; shows what changed before incident                         │
+│  Sev-1           = DCNM completely down; fabric management unavailable                                │
+│  Sev-2           = DCNM partially working; zone changes or discovery failing                          │
+│  Cisco TAC       = Technical Assistance Center; opened at tools.cisco.com                             │
+│  TAC remote      = Cisco engineer SSHs into DCNM VM with customer permission                          │
+│  RCA             = Root Cause Analysis; Cisco provides after Sev-1 case closure                       │
+│  CSAT            = Customer Satisfaction survey; sent after TAC case closure                          │
+│  Incident bridge = conference call coordinating all responders during Sev-1                           │
+│  No config changes= freeze all DCNM and MDS changes during active incident                            │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 ### For Performance / DB Issues
 

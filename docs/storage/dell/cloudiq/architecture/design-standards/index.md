@@ -59,60 +59,6 @@ Standards reference covering Sizing and Capacity Model, Naming Conventions, Buil
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
-┌──────────────────────────── Dell CloudIQ — Architecture Design Standards ─────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │  Design standards: SCG sizing, connectivity, naming, and integration for CloudIQ deployments  │   │
-│   │   One SCG per physical site; isolated management VLAN; outbound-only 443 to cloudiq.dell.com  │   │
-│   │      SCG VM spec: minimum 4 vCPU, 8 GB RAM, 100 GB thin disk on supported VMware version      │   │
-│   │     All integrations use REST API with OAuth2; webhook URLs must be HTTPS with valid cert     │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Site design → SCG sizing → connectivity rules → integration standards → naming convention          │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │        SCG Standards        │  │         Connectivity        │  │         Integration         │   │
-│   │       One SCG per site      │  │      Outbound 443 only      │  │         REST API v2+        │   │
-│   │      4 vCPU / 8 GB RAM      │  │       No inbound ports      │  │        OAuth2 tokens        │   │
-│   │       100 GB thin disk      │  │       Proxy if needed       │  │        Webhook HTTPS        │   │
-│   │        Mgmt VLAN only       │  │        DNS resolution       │  │         SNMP bridge         │   │
-│   │      VMware OVA deploy      │  │        NTP time sync        │  │         ITSM tokens         │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    Naming: SCG-<SITE>-<NUMBER>; alert policies use <SITE>-<SEVERITY>-<ARRAY> naming scheme            │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │     Standard     │   Requirement    │       Reason      │    Reference     │      Owner       │   │
-│   │   SCG per site   │    One per DC    │ Latency/isolation │   Deploy guide   │    Infra team    │   │
-│   │  Outbound only   │   443 to cloud   │  Security posture │    Sec policy    │   Network team   │   │
-│   │   REST API v2    │ Minimum version  │ Stability/support │   CloudIQ docs   │     Dev team     │   │
-│   │  Token rotation  │   90-day cycle   │ Credential hygiene│   Sec standard   │     Ops team     │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: SCG OVA on VMware management cluster · management VLAN · no storage-facing VLAN          │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    OVA            = Open Virtualization Archive; SCG VM image downloaded from Dell support site       │
-│    Management VLAN = Dedicated VLAN for array management IPs; SCG must reach all array mgmt IPs       │
-│    Outbound-only  = SCG initiates all connections to cloud; no inbound firewall rules needed          │
-│    REST API v2    = CloudIQ stable API version; avoid v1 (deprecated); use v2 for all tooling         │
-│    OAuth2 token   = Bearer token for CloudIQ API; generated in portal; store in vault not scripts     │
-│    Webhook        = HTTP POST callback CloudIQ sends to external system when alert fires              │
-│    SNMP bridge    = SCG feature translating CloudIQ alerts to SNMP traps for legacy NMS               │
-│    ITSM token     = Service token for ServiceNow / Jira integration; scoped to alert write only       │
-│    NTP sync       = Required on SCG; clock skew > 5min causes telemetry rejection at cloud            │
-│    Proxy config   = HTTP/HTTPS proxy on SCG if direct 443 to cloud is blocked by firewall             │
-│    Naming scheme  = Consistent SCG and policy names; aids multi-site management and audit             │
-│    Thin disk      = SCG disk is thin-provisioned; grows to 100 GB as telemetry cache fills            │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Sizing and Capacity Model
 

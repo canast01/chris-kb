@@ -60,7 +60,44 @@ dig <hostname> @<dns_server_ip>    # query a specific server directly
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```bash
+┌──────────────────────────────────── Networking — Troubleshooting ─────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │         Network troubleshooting: work from layer 1 up; isolate the failure layer first        │   │
+│   │      Tools: ping (L3 reachability), traceroute (path), tcpdump/Wireshark (packet capture)     │   │
+│   │      Process: define symptom → test from multiple points → narrow to single failure point     │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Diagnostic Steps               │  │                Common Causes                │   │
+│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+│   │           L1: link up? SFP seated?           │  │           FW rule blocking traffic          │   │
+│   │          L2: MAC learned? VLAN OK?           │  │           VLAN mismatch / missing           │   │
+│   │           L3: ping gateway + dest            │  │          Routing missing/incorrect          │   │
+│   │            Trace: traceroute path            │  │            MTU mismatch (DF bit)            │   │
+│   │           Capture: tcpdump src/dst           │  │           DNS: name not resolving           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   │      Layer       │      Check       │        Tool       │     Symptom      │  Fix direction   │   │
+│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+│   │   L1 Physical    │    Link state    │      show int     │   err-disabled   │    Cable/SFP     │   │
+│   │   L2 Data link   │    MAC + VLAN    │      show mac     │   No L2 learn    │   VLAN config    │   │
+│   │    L3 Network    │   Route + ping   │     traceroute    │   Unreachable    │     Route/FW     │   │
+│   │     L4+ App      │   Port + cert    │    nc / curl -v   │   Conn refused   │    FW/app/TLS    │   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    OSI model    = 7-layer reference model; troubleshoot from bottom up (L1 → L7)                      │
+│    MTU          = Maximum Transmission Unit; 1500B Ethernet; jumbo = 9000; mismatch = drops           │
+│    DF bit       = Do Not Fragment; test MTU by pinging with DF set and large payload                  │
+│    tcpdump      = Packet capture on Linux; filter by host, port, protocol; save to pcap               │
+│    err-disabled = Switch port auto-disabled; cause: BPDU guard, port security, duplex mismatch        │
+│    Asymmetric   = Forward and return path differ; FW stateful check fails; causes drops               │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 #### 3. Test DNS Server Reachability
 

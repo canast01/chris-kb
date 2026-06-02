@@ -32,34 +32,6 @@ Secure Connect Gateway deployment standards, SCG sizing, network requirements, a
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
-┌───────────────────────────────────── CloudIQ — Design Standards ──────────────────────────────────────┐
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │            Registration Standards            │  │                 Alert Policy                │   │
-│   │            All arrays registered             │  │             Email: ops-storage@             │   │
-│   │            Naming: site-model-id             │  │           Webhook: monitoring tool          │   │
-│   │               Tag by env+team                │  │           Severity thresholds doc           │   │
-│   │             Single org per site              │  │                Review monthly               │   │
-│   │             Service account only             │  │              Escalation runbook             │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  All Dell arrays must be registered · TCP 443 outbound required from storage management network       │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Organisation = CloudIQ tenant; group all arrays from one customer/site into a single org             │
-│  Service account = Dedicated Dell account for CloudIQ integration; not a personal login               │
-│  Tag = Metadata label applied in CloudIQ to group arrays by environment, team, or location            │
-│  Naming convention = Standardised array name in CloudIQ: site-model-serial or similar                 │
-│  Alert threshold = Score or metric value at which CloudIQ generates a notification                    │
-│  Webhook = HTTP endpoint receiving CloudIQ alert POSTs for integration with Slack/ITSM                │
-│  Monthly review = Regular cadence to validate alert thresholds and clear stale recommendations        │
-│  Escalation runbook = Documented steps for P1 storage alert from CloudIQ to on-call engineer          │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 ## SCG Deployment Standards
 
 | Parameter | Standard |

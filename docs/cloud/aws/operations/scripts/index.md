@@ -161,7 +161,52 @@ bash aws-health-check.sh
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```powershell
+┌──────────────────────────────── AWS Operations — Scripts & Automation ────────────────────────────────┐
+│                                                                                                       │
+│  Operational scripts for resource inventory, cost reporting, and routine automation tasks.            │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Inventory Scripts               │  │                 Cost Scripts                │   │
+│   │      List EC2: describe-instances query      │  │        Unattached EBS: cost recovery        │   │
+│   │      IAM report: credential report CSV       │  │      Unused EIPs: identify and release      │   │
+│   │       Security groups: find 0.0.0.0/0        │  │        Rightsizing: low CPU instances       │   │
+│   │      S3 bucket sizes: list-buckets loop      │  │        Snapshot age: old snap cleanup       │   │
+│   │      Tag compliance: untagged resources      │  │        Reserved vs on-demand analysis       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Lambda + EventBridge schedules operationalise scripts without managing servers.                      │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Security Scripts               │  │               Script Delivery               │   │
+│   │     Rotate access keys: detect old keys      │  │      Lambda: scheduled via EventBridge      │   │
+│   │       GuardDuty findings: export to S3       │  │      SSM Run Command: push to instances     │   │
+│   │     Config non-compliant: list resources     │  │       Step Functions: multi-step flows      │   │
+│   │         MFA audit: users without MFA         │  │       S3 + Athena: output query result      │   │
+│   │        CloudTrail: detect root usage         │  │       SNS: notify on script completion      │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Lambda compute · EventBridge scheduling plane · S3 output storage · Regional endpoints               │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  aws ec2 describe-instances= List all EC2 instances with attributes; filter with --query              │
+│  credential report= IAM-generated CSV of all users with last-activity timestamps                      │
+│  Unattached EBS  = Volume in available state; incurring cost with no instance attached                │
+│  Unused EIP      = Elastic IP not associated with a running instance; billed hourly                   │
+│  Rightsizing     = Identifying oversized instances based on CloudWatch CPU/memory data                │
+│  EventBridge schedule= Cron or rate rule triggering Lambda or SSM on a timed basis                    │
+│  SSM Run Command = Execute scripts on EC2 instances without SSH access                                │
+│  Step Functions  = Serverless workflow orchestrator for multi-step operational flows                  │
+│  Tag compliance  = Checking resources have required tags: env, owner, team, cost-center               │
+│  GuardDuty findings= Security threat detections exported via EventBridge to S3/SIEM                   │
+│  Config non-compliant= AWS Config rule evaluation returning NON_COMPLIANT for resources               │
+│  Root usage detect= CloudTrail filter for events where userIdentity.type = Root                       │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 **What you should see**
 

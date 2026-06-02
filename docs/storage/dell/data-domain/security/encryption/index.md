@@ -66,7 +66,43 @@ graph TD
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
+┌───────────────────────────────────── Dell Data Domain Encryption ─────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │           DD supports data-at-rest encryption (DAR) and in-transit encryption (TLS)           │   │
+│   │            DAR: AES-256-GCM; key managed internally (keystore) or externally (KMIP)           │   │
+│   │              In-transit: replication TLS, DD Boost over TLS, management HTTPS/SSH             │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │         Data at Rest        │  │       Data in Transit       │  │        Key Management       │   │
+│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
+│   │         AES-256-GCM         │  │       Replication TLS       │  │      Internal keystore      │   │
+│   │       FIPS 140-2 mode       │  │         DD Boost TLS        │  │        KMIP external        │   │
+│   │       Filesystem level      │  │        Mgmt HTTPS/SSH       │  │      RSA/Thales/SafeNet     │   │
+│   │       License required      │  │           TLS 1.2+          │  │         Key rotation        │   │
+│   │        Enable via GUI       │  │       Certificate mgmt      │  │      Backup key escrow      │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│   │     Feature      │     Standard     │      Command      │     License      │      Notes       │   │
+│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+│   │       DAR        │  Enable at init  │  filesys encrypt  │  DD Encryption   │  One-time setup  │   │
+│   │       KMIP       │   External KMS   │    kmip enable    │  DD Encryption   │  Venafi/SafeNet  │   │
+│   │     Rep TLS      │    Always on     │      Default      │       None       │     TLS 1.2+     │   │
+│   │    FIPS mode     │ Gov requirement  │    fips enable    │   FIPS license   │ Restrict ciphers │   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    DAR          = Data At Rest encryption; encrypts DDOS filesystem on disk using AES-256-GCM         │
+│    KMIP         = Key Management Interoperability Protocol; external KMS for DD encryption keys       │
+│    FIPS 140-2   = US federal cryptographic standard; DD can enforce FIPS-approved cipher suites       │
+│    Key rotation = Periodic re-encryption with new key; online operation in newer DDOS versions        │
+│    Key escrow   = Backup copy of encryption key in separate secure vault; needed for recovery         │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 ### Enable Encryption at Initial Commissioning
 

@@ -92,7 +92,50 @@ gs.info('LDAP test result: ' + JSON.stringify(result));
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
+┌────────────────────────────────────── ServiceNow Authentication ──────────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐                                                    │
+│   │                 SSO Methods                  │                                                    │
+│   │          SAML 2.0 (Okta/ADFS/Azure)          │                                                    │
+│   │               OIDC / OAuth 2.0               │                                                    │
+│   │              Multi-provider SSO              │                                                    │
+│   │          Just-in-time provisioning           │                                                    │
+│   └──────────────────────────────────────────────┘                                                    │
+│                                                     ┌─────────────────────────────────────────────┐   │
+│                                                     │                 MFA Options                 │   │
+│                                                     │            TOTP authenticator app           │   │
+│                                                     │           Push notification (Duo)           │   │
+│                                                     │              SMS OTP (fallback)             │   │
+│                                                     │              Hardware FIDO2 key             │   │
+│                                                     └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                            Local Authentication (break-glass only)                            │   │
+│   │                      Local admin account: used only when IdP unavailable                      │   │
+│   │                    Password policy: 16+ chars, complexity, 90-day rotation                    │   │
+│   │                       Failed login lockout: 5 attempts → 30-min lockout                       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  IdP servers (Okta/ADFS/Azure AD) · RADIUS/LDAP · ServiceNow SaaS                                     │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SAML 2.0   = XML-based SSO protocol; IdP asserts identity; SP trusts assertion                       │
+│  OIDC       = OpenID Connect; JSON-based identity layer on OAuth 2.0                                  │
+│  JIT        = Just-In-Time provisioning; creates user on first SSO login                              │
+│  MFA        = Multi-Factor Authentication; requires second factor after password                      │
+│  TOTP       = Time-based One-Time Password; 6-digit code from authenticator app                       │
+│  FIDO2      = hardware security key standard; phishing-resistant authentication                       │
+│  Break-glass= emergency local account; used only when SSO/IdP is unavailable                          │
+│  IdP        = Identity Provider; Okta, Azure AD, or ADFS asserting user identity                      │
+│  SP         = Service Provider; ServiceNow instance trusting the IdP assertion                        │
+│  OAuth 2.0  = authorisation framework; used by OIDC and REST API integrations                         │
+│  Lockout    = account locked after N failed attempts; prevents brute-force                            │
+│  Duo        = MFA provider; push notification to mobile app for approval                              │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 ### ServiceNow IdP Configuration
 

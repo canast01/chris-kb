@@ -135,7 +135,52 @@ kubectl get events --all-namespaces --sort-by='.lastTimestamp' > /tmp/k8s-events
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```sql
+┌───────────────────────── Cisco Nexus Dashboard — Troubleshooting Escalation ──────────────────────────┐
+│                                                                                                       │
+│  Escalation path for ND: internal triage → Cisco TAC → cluster restore or rebuild.                    │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Internal Triage (L1/L2)            │  │                Cisco TAC (L3)               │   │
+│   │         Confirm impact: cluster/app          │  │            Open SR: severity 1-4            │   │
+│   │           Collect: acs techsupport           │  │          Upload bundle to CX Cloud          │   │
+│   │         Check: recent config changes         │  │          TAC WebEx: remote session          │   │
+│   │        Check: Cisco PSIRT advisories         │  │         Patch or restore if directed        │   │
+│   │         Try: acs restart failing app         │  │         Rebuild cluster: last resort        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Collect tech-support before any restart; TAC needs state data from failure moment                    │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Escalation Criteria              │  │               Recovery Actions              │   │
+│   │         Sev 1: all apps unavailable          │  │           App restart: acs restart          │   │
+│   │            Sev 2: one app failed             │  │         Backup restore: full cluster        │   │
+│   │          Sev 3: degraded telemetry           │  │         Node replace: rejoin cluster        │   │
+│   │            Sev 4: config question            │  │          Rebuild: deploy + restore          │   │
+│   │           Always document timeline           │  │          Post-mortem: RCA document          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  ND cluster nodes · backup storage · management network · spare node for rebuild                      │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SR             = Service Request; Cisco TAC case number                                              │
+│  TAC            = Technical Assistance Center; Cisco L3 support                                       │
+│  CX Cloud       = Cisco portal for SR management and tech-support file upload                         │
+│  PSIRT          = Cisco security advisory team; check for relevant CVEs first                         │
+│  acs restart    = Gracefully restarts a named ND app without rebooting the node                       │
+│  Backup restore = Full cluster config recovery from most recent scheduled backup                      │
+│  Node replace   = Remove failed node, add new node, rejoin cluster automatically                      │
+│  Rebuild        = Deploy fresh cluster and restore from backup; last-resort recovery                  │
+│  Severity 1     = Production down; Cisco SLA: 1-hour initial response                                 │
+│  RCA            = Root Cause Analysis; post-incident document for future prevention                   │
+│  Timeline       = Chronological log of symptoms, actions, and outcomes for TAC                        │
+│  Tech-support   = Collected before any recovery action; preserves failure state                       │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 ### For Cluster Formation or etcd Issues
 

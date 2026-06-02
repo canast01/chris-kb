@@ -74,7 +74,52 @@ flowchart TD
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
+┌────────────────────────── Brocade Fabric OS — Troubleshooting Common Issues ──────────────────────────┐
+│                                                                                                       │
+│  Common Fabric OS issues: ISL bounce, zone merge fail, port offline, MAPS alerts, login err.          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             ISL & Fabric Issues              │  │             Port & Login Issues             │   │
+│   │         ISL bounce: check SFP/cable          │  │        Port offline: portenable check       │   │
+│   │         Zone merge conflict: cfgshow         │  │         nsshow: device not logged in        │   │
+│   │       Fabric split: check E_Port state       │  │        CRC errors: replace SFP/cable        │   │
+│   │        DH-CHAP fail: secret mismatch         │  │         Speed mismatch: portcfgspeed        │   │
+│   │       Domain conflict: isolate switch        │  │          F_Port G_Port state error          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  ISL and zone issues affect whole fabric; port and login issues affect specific devices.              │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │          Performance & MAPS Issues           │  │             Firmware & Recovery             │   │
+│   │        MAPS: threshold exceeded alert        │  │          firmwareshow: mismatch VER         │   │
+│   │        Credit starvation: BB credits         │  │         HA reboot: trigger failover         │   │
+│   │          Utilisation: portperfshow           │  │          supportshow for TAC bundle         │   │
+│   │         FCIP tunnel congestion drop          │  │         Factory reset: switchdisable        │   │
+│   │         Queue depth: host HBA adjust         │  │        Serial console: recovery boot        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Brocade FC switch · SFP transceivers · FC cables · management Ethernet · serial console              │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  ISL             = Inter-Switch Link; E_Port connection between FC switches                           │
+│  Zone merge      = zone database conflict between two fabrics joining; requires resolve               │
+│  CRC error       = Cyclic Redundancy Check error on FC frame; indicates bad SFP/cable                 │
+│  BB credits      = Buffer-to-Buffer credits; flow control for FC frames between switches              │
+│  Credit starvation= receiver has no BB credits; sender must pause; causes latency                     │
+│  MAPS            = Monitoring and Alerting Policy Suite; rule-based threshold alerting                │
+│  portperfshow    = CLI to display per-port throughput and error counters                              │
+│  nsshow          = Name Server show; lists all devices logged into the local switch                   │
+│  DH-CHAP fail    = ISL authentication failure; both switches must share same secret                   │
+│  Domain conflict = two switches with same domain ID; isolate and renumber one                         │
+│  supportshow     = generates full diagnostic tech-support bundle for TAC upload                       │
+│  HA reboot       = High Availability failover; active CP reboots to standby CP                        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 **Resolution steps:**
 

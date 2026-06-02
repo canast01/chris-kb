@@ -56,7 +56,35 @@ InsightIQ web UI > Administration > Authentication > LDAP
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```sql
+┌──────────────────────────────────────── InsightIQ — Security ─────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Access Control                │  │               Network Security              │   │
+│   │             Local admin account              │  │              HTTPS only TCP 443             │   │
+│   │               LDAP/AD optional               │  │                Mgmt VLAN only               │   │
+│   │              RBAC: Admin/Viewer              │  │                SSH restricted               │   │
+│   │               Audit log local                │  │                 TLS to PAPI                 │   │
+│   │             Annual access audit              │  │             Firewall inbound 443            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  InsightIQ VM on management cluster · SSH from jump host only · PAPI on TLS                           │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Local admin = InsightIQ admin user; strong password; not shared                                      │
+│  LDAP integration = Optional AD/LDAP for InsightIQ UI login; centralises auth                         │
+│  RBAC = Admin (full) vs Viewer (read-only) roles in InsightIQ                                         │
+│  PAPI user = Read-only account on PowerScale; InsightIQ credential; rotate annually                   │
+│  TLS to PAPI = HTTPS connection to PAPI TCP 8083; verify or accept self-signed                        │
+│  SSH restriction = Limit SSH to InsightIQ VM to jump host IP only via firewall                        │
+│  Audit log = InsightIQ logs login and config changes locally                                          │
+│  Mgmt VLAN = InsightIQ on management network; no direct access from user VLANs                        │
+│  Firewall inbound 443 = Allow only management hosts to reach InsightIQ UI                             │
+│  Annual review = Yearly audit of InsightIQ users and PAPI credentials                                 │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 Rotate the service account password on the 12-month schedule. Update the credential in InsightIQ immediately after rotation.
 

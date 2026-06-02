@@ -74,7 +74,48 @@ flowchart LR
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```bash
+┌───────────────────────────────────────── Linux — Diagnostics ─────────────────────────────────────────┐
+│                                                                                                       │
+│  Diagnostic tools and techniques for deep Linux system investigation.                                 │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                 Log Analysis                 │  │               Process Tracing               │   │
+│   │             journalctl -b -p err             │  │           strace -p PID: syscalls           │   │
+│   │            dmesg -T: timestamped             │  │              ltrace: lib calls              │   │
+│   │           /var/log/messages syslog           │  │                gdb attach PID               │   │
+│   │            ausearch: audit events            │  │           lsof -p PID: open files           │   │
+│   │              grep -r /var/log/               │  │           /proc/PID/: process info          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Performance Profiling             │  │             Network Diagnostics             │   │
+│   │               perf stat ./cmd                │  │           tcpdump -i eth0 port 80           │   │
+│   │          perf top: live flamegraph           │  │             ss -anp: all sockets            │   │
+│   │            bpftrace: eBPF scripts            │  │            nmap -sV: service scan           │   │
+│   │             vmstat 1: mem/io/cpu             │  │             mtr: traceroute+ping            │   │
+│   │            sar -u 1 10: CPU hist             │  │            wireshark: packet GUI            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  x86-64 servers · NIC · SAN storage · out-of-band IPMI · monitoring endpoints                         │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  strace      = System call tracer; shows every kernel interaction of a process                        │
+│  ltrace      = Library call tracer; intercepts dynamic library function calls                         │
+│  perf        = Linux profiler; samples CPU, traces events, generates flamegraphs                      │
+│  bpftrace    = High-level eBPF tracing; scripts kernel and application events                         │
+│  eBPF        = Extended Berkeley Packet Filter; in-kernel sandboxed programs                          │
+│  lsof        = List open files; shows files, sockets, pipes held by processes                         │
+│  ausearch    = Searches auditd log for specific events by user, key, syscall                          │
+│  sar         = System Activity Reporter; collects and reports performance data                        │
+│  vmstat      = Virtual memory statistics; shows proc, swap, io, cpu per interval                      │
+│  mtr         = Combines traceroute and ping; shows per-hop latency and loss                           │
+│  tcpdump     = CLI packet capture; filter by port, host, protocol                                     │
+│  /proc/PID   = Virtual filesystem exposing process state: maps, fd, stat, cmdline                     │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 ## Audit Log (auditd)
 

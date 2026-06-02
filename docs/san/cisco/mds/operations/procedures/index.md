@@ -120,7 +120,52 @@ flowchart TD
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
+┌─────────────────────────────── Cisco MDS 9000 — Operations Procedures ────────────────────────────────┐
+│                                                                                                       │
+│  MDS day-2 operations: zone changes, VSAN management, firmware ISSU, health checks.                   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Zone Change Procedure             │  │               VSAN Management               │   │
+│   │        1. Create device alias in CFS         │  │          Create VSAN: vsan database         │   │
+│   │          2. Create zone with alias           │  │           Add port to VSAN: vsan-m          │   │
+│   │           3. Add zone to zone set            │  │           ISL trunk: trunk allowed          │   │
+│   │         4. zoneset activate vsan ID          │  │          CFS commit: zone propagate         │   │
+│   │         5. Verify: show zone active          │  │              Verify: show vsan              │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Zone changes via DCNM preferred; CFS propagates zone set to all fabric switches.                     │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Firmware ISSU Procedure            │  │          Health Monitoring Routine          │   │
+│   │           1. copy bootflash: NX-OS           │  │          Daily: show system health          │   │
+│   │         2. install all nxos <image>          │  │          Weekly: port error report          │   │
+│   │          3. ISSU: standby sup first          │  │           Monthly: ISL utilisation          │   │
+│   │           4. show version: verify            │  │            Quarterly: zone audit            │   │
+│   │           5. copy run start: save            │  │            Annual: fabric review            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  MDS director chassis · supervisor modules · line card blades · SFP transceivers                      │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Device alias    = named WWN; managed via CFS to all switches simultaneously                          │
+│  zoneset activate= NX-OS; activates zone set in specified VSAN                                        │
+│  show zone active= NX-OS; verifies active zone set and member list in VSAN                            │
+│  CFS             = Cisco Fabric Services; distributes device aliases and zones                        │
+│  vsan database   = NX-OS mode for VSAN creation and management                                        │
+│  trunk allowed   = ISL VSAN list; controls which VSANs travel over ISL                                │
+│  ISSU            = In-Service Software Upgrade; standby sup upgraded first                            │
+│  install all     = NX-OS ISSU trigger command; activates new image non-disruptively                   │
+│  copy run start  = saves running config to startup-config; prevents config loss                       │
+│  show system health= MDS overall health; checks all modules, fans, PSUs                               │
+│  Port error report= weekly show interface fc counters; CRC and discard checks                         │
+│  Zone audit      = quarterly review: remove stale aliases and unused zones                            │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 ### Device Aliases
 

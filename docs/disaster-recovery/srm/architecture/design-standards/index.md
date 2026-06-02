@@ -49,50 +49,6 @@ Standards reference covering Naming Conventions, Priority Tiers, Recovery Plan D
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```powershell
-┌─────────────────────────────────────── SRM — Design Standards ────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Sizing Guidelines               │  │               HA Requirements               │   │
-│   │         Deduplicate where supported          │  │           N+1 component redundancy          │   │
-│   │          Bandwidth: 10 GbE minimum           │  │          Heartbeat / health monitor         │   │
-│   │          Storage: 130% of raw data           │  │          Separate mgmt / data VLANs         │   │
-│   │         Latency: < 10 ms to storage          │  │          Out-of-band access (IPMI)          │   │
-│   │           CPU: 8+ vCPU for engine            │  │          Anti-affinity VM placement         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Ports: 443 (SRM HTTPS) · 9086 (SRM-SRM pairing) · 443 (vCenter)                                    │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                   Standard SRM Design Rules                                   │   │
-│   │            RPO target drives snapshot/cycle frequency — document in service design            │   │
-│   │            RTO target drives recovery tier: instant, warm standby, or cold restore            │   │
-│   │                  Dedicated backup network VLAN — no shared production traffic                 │   │
-│   │      Encryption: SRM management TLS; replication encryption controlled by array/SRA layer     │   │
-│   │               Service accounts: minimum privilege; rotate credentials quarterly               │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Two vCenter instances (protected + recovery) · SRA on SRM server · Array replication link            │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  SRM           = Site Recovery Manager; VMware product for DR orchestration and testing               │
-│  SRA           = Storage Replication Adapter; plugin linking SRM to specific array replication        │
-│  Protection Group= logical grouping of VMs covered by a single replication consistency group          │
-│  Recovery Plan = automated DR runbook: power-off order, datastore failover, IP customization          │
-│  IP Customization= per-VM network settings applied at recovery site (different subnet/gateway)        │
-│  Test Failover = non-disruptive plan validation using snapshot; production unaffected                 │
-│  Planned Migration= graceful workload movement; VMs shutdown at protected, started at recovery        │
-│  Emergency Failover= disaster scenario; VMs powered on from latest available replica                  │
-│  Failback      = after recovery, re-protect VMs and migrate back to production site                   │
-│  Re-protect    = reverses replication direction; DR site becomes new protected site                   │
-│  Recovery Point= specific replication snapshot used for VM recovery; RPO = interval                   │
-│  vCenter Pair  = SRM connection between two vCenter instances enables cross-site orchestration        │
-│  Startup Priority= ordering within recovery plan; lower number = powers on first                      │
-│  Site Pair     = trust relationship between protected and recovery SRM servers                        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 > Part of the [SRM](../../index.md) reference.
 
 ---

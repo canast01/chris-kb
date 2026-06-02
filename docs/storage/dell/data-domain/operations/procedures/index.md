@@ -86,7 +86,43 @@ flowchart TD
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```bash
+┌───────────────────────────────────── Dell Data Domain Procedures ─────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │       Standard procedures: create MTree, configure replication, set quota, run cleaning       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                      # Create a new MTree                                     │   │
+│   │                                mtree create /data/col1/mybackup                               │   │
+│   │            mtree modify /data/col1/mybackup quota soft-limit 10 TB hard-limit 12 TB           │   │
+│   │                                                                                               │   │
+│   │                                 # Create NFS export from MTree                                │   │
+│   │                        nfs add /data/col1/mybackup clients 10.0.0.0/24                        │   │
+│   │                                                                                               │   │
+│   │                                   # Configure DD Boost user                                   │   │
+│   │                           ddboost user assign myboostuser role admin                          │   │
+│   │                        ddboost storage-unit create /data/col1/mybackup                        │   │
+│   │                                                                                               │   │
+│   │                      # Configure replication context (MTree replication)                      │   │
+│   │                 replication add source mtree://dd-primary/data/col1/mybackup \                │   │
+│   │                           destination mtree://dd-dr/data/col1/mybackup                        │   │
+│   │                  replication initialize mtree://dd-primary/data/col1/mybackup                 │   │
+│   │                                                                                               │   │
+│   │                                     # Run manual cleaning                                     │   │
+│   │                                      filesys clean start                                      │   │
+│   │                             filesys clean show  # monitor progress                            │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    mtree create      = Creates logical partition in DDOS; quota enforced per MTree                    │
+│    ddboost storage-unit= Registers MTree as DD Boost storage unit; backup app connects here           │
+│    replication initialize= Seeds initial MTree copy to DR DD; only sends unique segments              │
+│    filesys clean     = Manually triggers cleaning cycle; normally automated off-peak                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 ### Replication State
 

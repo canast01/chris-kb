@@ -101,7 +101,50 @@ for c in data.get('results', []):
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```sql
+┌───────────────────────────────────────── vRNI Health Checks ──────────────────────────────────────────┐
+│                                                                                                       │
+│  Data source status, flow freshness, and collector health checks for vRNI.                            │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Data Source Health              │  │               Collector Health              │   │
+│   │          All sources: green status?          │  │           Collector: online in UI?          │   │
+│   │         Last sync time < 15 minutes          │  │             Flow rate: non-zero?            │   │
+│   │          Credential test: passing?           │  │         Collector service: running?         │   │
+│   │         Red source: check API access         │  │            proxy.log: no errors?            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Source and collector health feed into overall platform flow freshness validation.                    │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Flow Freshness Checks             │  │               Platform Health               │   │
+│   │          Flows updated < 5 min ago?          │  │              Disk usage < 80%?              │   │
+│   │          Flow Map: traffic visible?          │  │            CPU/RAM within sizing?           │   │
+│   │         Search returns live results?         │  │              NTP sync: in sync?             │   │
+│   │        Alert rules: firing correctly?        │  │            Services: all running?           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  vRNI platform VM on vSphere; collector VMs per segment; monitoring via vROps optional                │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Data Source Status  = Green/Yellow/Red indicator in vRNI UI for each configured source               │
+│  Flow Freshness      = Time since last flow record received; should be < 5 minutes                    │
+│  Collector Online    = Collector registered and heartbeating to platform                              │
+│  proxy.log           = Collector log file; shows flow receipt rate and forwarding errors              │
+│  Credential Test     = vRNI API validation that stored source credentials still work                  │
+│  Flow Map            = Real-time traffic topology view; blank = no flows received                     │
+│  NTP Sync            = Time accuracy required for flow timestamp correlation                          │
+│  Disk Usage          = Platform datastore; >80% causes flow drop and performance issues               │
+│  Alert Rule          = Configured threshold; validate firing on known traffic pattern                 │
+│  Service Status      = SSH: service network-insight status; collector: service collector              │
+│  Support Bundle      = Full diagnostic archive; generate if platform health is degraded               │
+│  Sizing Headroom     = CPU/RAM utilisation should stay below 75% for stable operation                 │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 This returns a count of flows grouped by East-West / North-South. If the count is 0 or the query returns no results, flow data is not arriving.
 

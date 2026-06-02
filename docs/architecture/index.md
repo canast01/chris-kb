@@ -36,38 +36,6 @@ Enterprise infrastructure architecture design guides covering high availability 
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
-┌────────────────── Architecture — HA Design, Storage, Networking & Disaster Recovery ──────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │       Architecture design guides for enterprise infrastructure: HA, storage, network, DR      │   │
-│   │    Design principles: eliminate single points of failure; automate failover; test recovery    │   │
-│   │     All designs must state: RPO/RTO targets, failure domain boundaries, and recovery path     │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │         Compute & HA        │  │      Storage & Network      │  │        DR & Recovery        │   │
-│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
-│   │      N+1 host capacity      │  │       Storage tiering       │  │      RPO / RTO targets      │   │
-│   │       DRS + vSphere HA      │  │       Redundant paths       │  │      Active-passive DR      │   │
-│   │     Failure domain plan     │  │       L3 segmentation       │  │      Replication design     │   │
-│   │     Anti-affinity rules     │  │     Spine-leaf topology     │  │       Failover runbook      │   │
-│   │        Resource pools       │  │      BGP peering design     │  │       Recovery testing      │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    N+1          = One more host than minimum required; one failure without service impact             │
-│    Failure domain= Boundary within which a single failure has impact; AZ / rack / PDU                 │
-│    Anti-affinity = Rule keeping workloads on different hosts for HA; opposite of affinity             │
-│    Spine-leaf   = Data centre switching topology; spine = core, leaf = ToR; no STP needed             │
-│    Active-passive= Primary handles all traffic; standby takes over on failure (vs active-active)      │
-│    RPO/RTO      = Recovery Point/Time Objectives; quantify acceptable data loss and downtime          │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 ## Articles
 
 <div class="kb-grid kb-grid-3">

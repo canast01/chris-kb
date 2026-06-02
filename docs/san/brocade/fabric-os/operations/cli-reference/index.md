@@ -68,7 +68,52 @@ slotShow           # blade/slot population
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
+┌────────────────────────────────── Brocade Fabric OS — CLI Reference ──────────────────────────────────┐
+│                                                                                                       │
+│  Fabric OS CLI commands: fabric management, port control, zoning, diagnostics, firmware.              │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Fabric & Switch Commands           │  │             Port & ISL Commands             │   │
+│   │       switchshow: port + fabric state        │  │             portshow <slot/port>            │   │
+│   │         fabricshow: fabric topology          │  │            portenable/portdisable           │   │
+│   │          nsshow: name server logins          │  │           islshow: ISL utilisation          │   │
+│   │       switchstatusshow: overall health       │  │         portcfgspeed: set port speed        │   │
+│   │         chassisshow: blade inventory         │  │          portloginshow: login list          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  switchshow is the first command for any Fabric OS health check; nsshow shows device logins.          │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │          Zoning & Security Commands          │  │            Firmware & Diagnostics           │   │
+│   │         cfgshow: display zone config         │  │         firmwareshow: version check         │   │
+│   │            zonecreate/zonedelete             │  │        firmwaredownload: upgrade FOS        │   │
+│   │          cfgsave + cfgenable <cfg>           │  │         porttest: run loopback test         │   │
+│   │          secpolicyadd/secpolicydel           │  │         diagstatus: diagnostic state        │   │
+│   │           authutil: FCAP / DH-CHAP           │  │        supportshow: full tech bundle        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Brocade FC switch chassis · blades · SFP transceivers · FC host bus adapters                         │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  switchshow      = primary CLI for port status, fabric domain ID, and zoning state                    │
+│  nsshow          = Name Server show; lists all devices logged into fabric on local switch             │
+│  fabricshow      = displays fabric principal switch, all domain IDs, and topology                     │
+│  cfgshow         = zone config show; lists all zones, aliases, and active config                      │
+│  cfgsave         = saves zone database changes to flash; required before cfgenable                    │
+│  cfgenable       = activates named zone configuration across the fabric                               │
+│  islshow         = Inter-Switch Link show; displays ISL bandwidth utilisation per port                │
+│  firmwaredownload= downloads and installs new Fabric OS version via non-disruptive HA                 │
+│  supportshow     = generates full diagnostic bundle; upload to Broadcom TAC                           │
+│  porttest        = runs loopback diagnostic on a port; requires port offline                          │
+│  DH-CHAP         = Diffie-Hellman Challenge Handshake Auth Protocol; FC switch auth                   │
+│  FCAP            = Fibre Channel Authentication Protocol; cert-based switch auth                      │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 ### Fan, Power, Temperature
 

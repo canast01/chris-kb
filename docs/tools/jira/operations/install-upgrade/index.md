@@ -110,7 +110,50 @@ cat /tmp/jira-plugins-before.txt
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```bash
+┌───────────────────────────────────── Jira — Install and Upgrade ──────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                            Jira Installation and Upgrade Procedure                            │   │
+│   │           Install: JDK 11/17 → download installer → set JIRA_HOME → run setup wizard          │   │
+│   │                DB: PostgreSQL 14+ → create DB/role → configure via setup wizard               │   │
+│   │              Upgrade: snapshot → pg_dump → stop → new installer → start → verify              │   │
+│   │            DC node add: install on new VM → same DB + NFS JIRA_HOME → cluster joins           │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Snapshot VMs and backup DB before every upgrade; prepare rollback plan                             │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Fresh Install Steps              │  │                Upgrade Steps                │   │
+│   │              Install JDK 11/17               │  │               Snapshot VM + DB              │   │
+│   │              Download Jira .bin              │  │                pg_dump backup               │   │
+│   │              Set JIRA_HOME env               │  │                Stop all nodes               │   │
+│   │             Create PostgreSQL DB             │  │              Run new installer              │   │
+│   │               Run setup wizard               │  │               Start and verify              │   │
+│   │              Apply license key               │  │              Test key workflows             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Fresh VM (RHEL/CentOS) · PostgreSQL VM · NFS for shared home · load balancer                         │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  JIRA_HOME    = data directory; set in jira-application.properties; NFS mount for DC                  │
+│  JDK 11/17    = Jira 9.x supports JDK 11 and 17; check Jira version compatibility matrix              │
+│  Setup wizard = browser-based config: DB, license, admin account, project template                    │
+│  License key  = Atlassian Jira DC or Server license; apply in setup or Admin panel                    │
+│  Installer    = Atlassian-provided .bin for Linux; chmod +x; run as root                              │
+│  Snapshot     = VM snapshot before upgrade; revert if upgrade fails                                   │
+│  Plugin compat = check app compatibility before upgrade; UPM shows incompatible apps                  │
+│  setenv.sh    = JVM flags; JIRA_INSTALL/bin/setenv.sh; set -Xmx here                                  │
+│  Rollback     = revert VM snapshot; restore pg_dump; restart previous version                         │
+│  Upgrade path = some Jira versions require intermediate upgrade steps; check docs                     │
+│  DC cluster   = additional node joins when same DB and NFS home configured                            │
+│  PostgreSQL 14 = minimum recommended for Jira 9.x; check matrix for exact version                     │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 ### Install Jira
 

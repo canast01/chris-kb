@@ -38,6 +38,7 @@ AUTOMATION FLOW
                  ├── Exit code (0=PASS, 1=WARN, 2=CRIT)
                  └── Alert / notification (email, webhook)
 ```
+```
 ┌───────────────────────────────────── vSAN — Operational Scripts ──────────────────────────────────────┐
 │                                                                                                       │
 │  PowerCLI and esxcli scripts automate vSAN health checks, capacity reporting,                         │
@@ -83,7 +84,6 @@ AUTOMATION FLOW
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
 
 **What you should see**
 
@@ -975,4 +975,445 @@ vsan_diskgroup_check.bat
    ...
 
 === vSAN check complete ===
+```
+
+---
+
+## Storage Policy Audit Report (PowerShell / PowerCLI)
+
+Lists every VM in the cluster with its assigned storage policy, FTT setting, and compliance status. Exports to CSV for quarterly audits and capacity planning.
+
+~~~powershell
+#Requires -Modules VMware.PowerCLI
+# vsan_policy_audit.ps1
+# Usage: pwsh -File vsan_policy_audit.ps1 [-OutputPath report.csv]
+
+param(
+    [string]$VCenterHost = $env:VCENTER_HOST,
+    [string]$VCUser      = $env:VC_USER,
+    [string]$VCPass      = $env:VC_PASS,
+    [string]$ClusterName = $env:CLUSTER_NAME,
+    [string]$OutputPath  = "vsan_policy_audit_$(Get-Date -Format yyyyMMdd).csv"
+)
+
+Set-PowerCLIConfiguration -InvalidCertificateAction Ignore -Confirm:$false | Out-Null
+$cred = New-Object System.Management.Automation.PSCredential(
+    $VCUser, (ConvertTo-SecureString $VCPass -AsPlainText -Force)
+)
+Connect-VIServer -Server $VCenterHost -Credential $cred -ErrorAction Stop | Out-Null
+
+$cluster = Get-Cluster -Name $ClusterName -ErrorAction Stop
+Write-Host "=== vSAN Policy Audit: $ClusterName ===" -ForegroundColor Cyan
+
+$results = @()
+
+Get-SpbmEntityConfiguration -Entity (Get-VM -Location $cluster) | ForEach-Object {
+    $vm     = $_.Entity
+    $policy = $_.StoragePolicy
+    $status = $_.ComplianceStatus
+
+    $ftt = "unknown"
+    if ($policy) {
+        $rules = Get-SpbmRule -StoragePolicy $policy -ErrorAction SilentlyContinue
+        $fttRule = $rules | Where-Object { $_.Capability.Name -eq "VSAN.hostFailuresToTolerate" }
+        if ($fttRule) { $ftt = $fttRule.Value }
+    }
+
+    $results += [PSCustomObject]@{
+        VM             = $vm.Name
+        PowerState     = $vm.PowerState
+        Policy         = if ($policy) { $policy.Name } else { "Default" }
+        FTT            = $ftt
+        ComplianceStatus = $status
+        LastChecked    = (Get-Date -Format "yyyy-MM-dd HH:mm")
+    }
+}
+
+$results | Sort-Object ComplianceStatus, VM | Format-Table -AutoSize
+
+$nonCompliant = $results | Where-Object { $_.ComplianceStatus -ne "compliant" }
+Write-Host "`n--- Summary ---"
+Write-Host "Total VMs: $($results.Count)"
+Write-Host "Compliant: $(($results | Where-Object ComplianceStatus -eq 'compliant').Count)" -ForegroundColor Green
+if ($nonCompliant.Count -gt 0) {
+    Write-Host "Non-compliant: $($nonCompliant.Count)" -ForegroundColor Red
+    $nonCompliant | Select VM, Policy, FTT, ComplianceStatus | Format-Table -AutoSize
+} else {
+    Write-Host "Non-compliant: 0" -ForegroundColor Green
+}
+
+$results | Export-Csv -Path $OutputPath -NoTypeInformation
+Write-Host "`nReport saved to: $OutputPath"
+
+Disconnect-VIServer -Confirm:$false
+~~~
+
+### How to run this script — step by step
+
+**Before you start — what you need**
+- PowerCLI installed: `Install-Module -Name VMware.PowerCLI`
+- vCenter credentials with at minimum Read Only access to the cluster
+
+**Step 1 — Set credentials as environment variables**
+
+```powershell
+$env:VCENTER_HOST = "vcenter.example.com"
+$env:VC_USER      = "readonly@vsphere.local"
+$env:VC_PASS      = "yourpassword"
+$env:CLUSTER_NAME = "VSAN-LON-01"
+```
+
+**Step 2 — Run the script**
+
+```powershell
+pwsh -File vsan_policy_audit.ps1
+```
+
+**Step 3 — Review the CSV output**
+
+Opens in Excel. Filter column `ComplianceStatus` for `non-compliant` to find VMs requiring attention.
+
+**What you should see**
+
+```text
+=== vSAN Policy Audit: VSAN-LON-01 ===
+
+VM              PowerState  Policy               FTT  ComplianceStatus
+-----------     ----------  -------------------  ---  ----------------
+sql-prod-01     PoweredOn   VSAN-T1-FTT2-RAID6   2    compliant
+web-app-03      PoweredOn   VSAN-T2-FTT1-RAID5   1    compliant
+dev-test-07     PoweredOff  VSAN-DEV-FTT1-RAID1  1    non-compliant
+
+--- Summary ---
+Total VMs: 47
+Compliant: 46
+Non-compliant: 1
+
+Report saved to: vsan_policy_audit_20260601.csv
+```
+
+---
+
+## Non-Compliant Object Remediation (PowerShell / PowerCLI)
+
+Finds all non-compliant VMs, re-applies their assigned storage policy, and logs each action. Safe to run on production clusters — re-applying an existing policy only triggers rebuilds if components are missing.
+
+~~~powershell
+#Requires -Modules VMware.PowerCLI
+# vsan_remediate_noncompliant.ps1
+# Usage: pwsh -File vsan_remediate_noncompliant.ps1 [-DryRun]
+
+param(
+    [string]$VCenterHost = $env:VCENTER_HOST,
+    [string]$VCUser      = $env:VC_USER,
+    [string]$VCPass      = $env:VC_PASS,
+    [string]$ClusterName = $env:CLUSTER_NAME,
+    [switch]$DryRun
+)
+
+Set-PowerCLIConfiguration -InvalidCertificateAction Ignore -Confirm:$false | Out-Null
+$cred = New-Object System.Management.Automation.PSCredential(
+    $VCUser, (ConvertTo-SecureString $VCPass -AsPlainText -Force)
+)
+Connect-VIServer -Server $VCenterHost -Credential $cred -ErrorAction Stop | Out-Null
+
+$cluster = Get-Cluster -Name $ClusterName -ErrorAction Stop
+$mode = if ($DryRun) { "[DRY RUN] " } else { "" }
+Write-Host "=== ${mode}vSAN Non-Compliant Remediation: $ClusterName ===" -ForegroundColor Cyan
+
+$nonCompliant = Get-SpbmEntityConfiguration -Entity (Get-VM -Location $cluster) |
+    Where-Object { $_.ComplianceStatus -ne "compliant" -and $_.StoragePolicy -ne $null }
+
+if ($nonCompliant.Count -eq 0) {
+    Write-Host "All objects compliant — nothing to remediate." -ForegroundColor Green
+    Disconnect-VIServer -Confirm:$false
+    exit 0
+}
+
+Write-Host "Found $($nonCompliant.Count) non-compliant VM(s):`n"
+
+foreach ($item in $nonCompliant) {
+    $vmName = $item.Entity.Name
+    $policy = $item.StoragePolicy
+    Write-Host "  $vmName — re-applying policy: $($policy.Name)"
+
+    if (-not $DryRun) {
+        try {
+            Get-HardDisk -VM $item.Entity |
+                Set-SpbmEntityConfiguration -StoragePolicy $policy -ErrorAction Stop
+            Write-Host "    -> Done" -ForegroundColor Green
+        } catch {
+            Write-Host "    -> FAILED: $_" -ForegroundColor Red
+        }
+    }
+}
+
+Write-Host "`n${mode}Remediation complete. Monitor resync:"
+Write-Host "  esxcli vsan debug resync summary get"
+
+Disconnect-VIServer -Confirm:$false
+~~~
+
+### How to run this script — step by step
+
+**Before you start — what you need**
+- PowerCLI installed and vCenter credentials with Storage Administrator role on the cluster
+
+**Step 1 — Dry run first to preview what will be changed**
+
+```powershell
+pwsh -File vsan_remediate_noncompliant.ps1 -DryRun
+```
+
+**Step 2 — Run remediation**
+
+```powershell
+pwsh -File vsan_remediate_noncompliant.ps1
+```
+
+**Step 3 — Monitor resync from any ESXi host shell**
+
+```bash
+watch -n 30 "esxcli vsan debug resync summary get"
+```
+
+**What you should see**
+
+```text
+=== vSAN Non-Compliant Remediation: VSAN-LON-01 ===
+Found 2 non-compliant VM(s):
+
+  dev-test-07 — re-applying policy: VSAN-DEV-FTT1-RAID1
+    -> Done
+  legacy-app-02 — re-applying policy: VSAN-T2-FTT1-RAID5
+    -> Done
+
+Remediation complete. Monitor resync:
+  esxcli vsan debug resync summary get
+```
+
+---
+
+## Capacity Forecast Report (PowerShell / PowerCLI)
+
+Queries vSAN capacity usage and projects the date at which the cluster will reach 70% and 80% utilisation based on the last 30 days of growth. Requires the vSAN Performance Service to be enabled.
+
+~~~powershell
+#Requires -Modules VMware.PowerCLI
+# vsan_capacity_forecast.ps1
+# Usage: pwsh -File vsan_capacity_forecast.ps1
+
+param(
+    [string]$VCenterHost = $env:VCENTER_HOST,
+    [string]$VCUser      = $env:VC_USER,
+    [string]$VCPass      = $env:VC_PASS,
+    [string]$ClusterName = $env:CLUSTER_NAME,
+    [int]$LookbackDays   = 30
+)
+
+Set-PowerCLIConfiguration -InvalidCertificateAction Ignore -Confirm:$false | Out-Null
+$cred = New-Object System.Management.Automation.PSCredential(
+    $VCUser, (ConvertTo-SecureString $VCPass -AsPlainText -Force)
+)
+Connect-VIServer -Server $VCenterHost -Credential $cred -ErrorAction Stop | Out-Null
+
+$cluster = Get-Cluster -Name $ClusterName -ErrorAction Stop
+$usage   = Get-VsanSpaceUsage -Cluster $cluster
+
+$totalGB = [Math]::Round($usage.TotalCapacityGB, 1)
+$usedGB  = [Math]::Round($usage.UsedCapacityGB, 1)
+$freeGB  = [Math]::Round($usage.FreeCapacityGB, 1)
+$pct     = [Math]::Round($usedGB / $totalGB * 100, 1)
+
+Write-Host "=== vSAN Capacity Forecast: $ClusterName ===" -ForegroundColor Cyan
+Write-Host ""
+Write-Host "Current state:"
+Write-Host "  Total: ${totalGB} GB"
+Write-Host "  Used:  ${usedGB} GB  (${pct}%)"
+Write-Host "  Free:  ${freeGB} GB"
+
+$warn  = [Math]::Round($totalGB * 0.70 - $usedGB, 1)
+$crit  = [Math]::Round($totalGB * 0.80 - $usedGB, 1)
+
+Write-Host ""
+Write-Host "Headroom to thresholds:"
+Write-Host "  To 70% (alert):    ${warn} GB remaining"
+Write-Host "  To 80% (critical): ${crit} GB remaining"
+
+$end   = Get-Date
+$start = $end.AddDays(-$LookbackDays)
+
+$stats = Get-Stat -Entity $cluster -Stat "vsanDomUsedCapacity" `
+    -Start $start -Finish $end -IntervalMins 1440 -ErrorAction SilentlyContinue
+
+if ($stats -and $stats.Count -ge 2) {
+    $oldest = ($stats | Sort-Object Timestamp | Select-Object -First 1).Value / 1GB
+    $newest = ($stats | Sort-Object Timestamp | Select-Object -Last  1).Value / 1GB
+    $growthGB    = [Math]::Round($newest - $oldest, 2)
+    $growthPerDay = [Math]::Round($growthGB / $LookbackDays, 2)
+
+    Write-Host ""
+    Write-Host "Growth over last ${LookbackDays} days: ${growthGB} GB  (${growthPerDay} GB/day)"
+
+    if ($growthPerDay -gt 0) {
+        $daysTo70 = [Math]::Round($warn / $growthPerDay)
+        $daysTo80 = [Math]::Round($crit / $growthPerDay)
+        $date70   = (Get-Date).AddDays($daysTo70).ToString("yyyy-MM-dd")
+        $date80   = (Get-Date).AddDays($daysTo80).ToString("yyyy-MM-dd")
+
+        Write-Host ""
+        Write-Host "Forecast (at current growth rate):" -ForegroundColor Yellow
+        Write-Host "  70% threshold: ~$daysTo70 days  ($date70)"
+        Write-Host "  80% threshold: ~$daysTo80 days  ($date80)"
+    } else {
+        Write-Host "  Growth rate is zero or negative — no forecast applicable."
+    }
+} else {
+    Write-Host "  Insufficient historical data for forecast (need >= 2 data points over $LookbackDays days)."
+    Write-Host "  Ensure vSAN Performance Service is enabled: Cluster -> Configure -> vSAN -> Services"
+}
+
+Disconnect-VIServer -Confirm:$false
+~~~
+
+### How to run this script — step by step
+
+**Before you start — what you need**
+- PowerCLI installed and vCenter credentials with Read Only access
+- vSAN Performance Service enabled on the cluster (Cluster → Configure → vSAN → Services → Performance Service)
+
+**Step 1 — Set credentials**
+
+```powershell
+$env:VCENTER_HOST = "vcenter.example.com"
+$env:VC_USER      = "readonly@vsphere.local"
+$env:VC_PASS      = "yourpassword"
+$env:CLUSTER_NAME = "VSAN-LON-01"
+```
+
+**Step 2 — Run the report**
+
+```powershell
+pwsh -File vsan_capacity_forecast.ps1
+```
+
+**What you should see**
+
+```text
+=== vSAN Capacity Forecast: VSAN-LON-01 ===
+
+Current state:
+  Total: 24576.0 GB
+  Used:  14336.2 GB  (58.3%)
+  Free:  10239.8 GB
+
+Headroom to thresholds:
+  To 70% (alert):    2867.0 GB remaining
+  To 80% (critical): 5324.6 GB remaining
+
+Growth over last 30 days: 614.4 GB  (20.48 GB/day)
+
+Forecast (at current growth rate):
+  70% threshold: ~140 days  (2026-10-19)
+  80% threshold: ~260 days  (2027-02-16)
+```
+
+---
+
+## Resync Progress Monitor (PowerShell / PowerCLI)
+
+Polls resync status every 30 seconds and prints a running summary until the queue is empty or a timeout is reached. Useful during maintenance windows to track rebuild progress.
+
+~~~powershell
+#Requires -Modules VMware.PowerCLI
+# vsan_resync_monitor.ps1
+# Usage: pwsh -File vsan_resync_monitor.ps1 [-TimeoutMinutes 120]
+
+param(
+    [string]$VCenterHost     = $env:VCENTER_HOST,
+    [string]$VCUser          = $env:VC_USER,
+    [string]$VCPass          = $env:VC_PASS,
+    [string]$ClusterName     = $env:CLUSTER_NAME,
+    [int]$PollIntervalSeconds = 30,
+    [int]$TimeoutMinutes     = 120
+)
+
+Set-PowerCLIConfiguration -InvalidCertificateAction Ignore -Confirm:$false | Out-Null
+$cred = New-Object System.Management.Automation.PSCredential(
+    $VCUser, (ConvertTo-SecureString $VCPass -AsPlainText -Force)
+)
+Connect-VIServer -Server $VCenterHost -Credential $cred -ErrorAction Stop | Out-Null
+
+$cluster  = Get-Cluster -Name $ClusterName -ErrorAction Stop
+$deadline = (Get-Date).AddMinutes($TimeoutMinutes)
+
+Write-Host "=== vSAN Resync Monitor: $ClusterName ===" -ForegroundColor Cyan
+Write-Host "Polling every ${PollIntervalSeconds}s — timeout at $($deadline.ToString('HH:mm'))`n"
+Write-Host ("{0,-8} {1,-25} {2,-15} {3,-15}" -f "Time", "Active Components", "Bytes Remaining", "Status")
+Write-Host ("-" * 70)
+
+while ((Get-Date) -lt $deadline) {
+    $status = Get-VsanResyncStatus -Cluster $cluster
+    $active = $status.ActiveResyncComponentCount
+    $bytes  = if ($status.BytesToSync -gt 0) {
+                  "$([Math]::Round($status.BytesToSync / 1GB, 2)) GB"
+              } else { "0" }
+
+    $color = if ($active -eq 0) { "Green" } else { "Yellow" }
+    $state = if ($active -eq 0) { "COMPLETE" } else { "IN PROGRESS" }
+
+    Write-Host ("{0,-8} {1,-25} {2,-15} {3,-15}" -f `
+        (Get-Date -Format "HH:mm:ss"), $active, $bytes, $state) -ForegroundColor $color
+
+    if ($active -eq 0) {
+        Write-Host "`nResync complete." -ForegroundColor Green
+        Disconnect-VIServer -Confirm:$false
+        exit 0
+    }
+
+    Start-Sleep -Seconds $PollIntervalSeconds
+}
+
+Write-Host "`nTimeout reached — resync still in progress." -ForegroundColor Red
+Write-Host "Run 'esxcli vsan debug resync summary get' from an ESXi host to check current state."
+Disconnect-VIServer -Confirm:$false
+exit 1
+~~~
+
+### How to run this script — step by step
+
+**Before you start — what you need**
+- PowerCLI installed and vCenter credentials with Read Only access to the cluster
+
+**Step 1 — Set credentials and run**
+
+```powershell
+$env:VCENTER_HOST = "vcenter.example.com"
+$env:VC_USER      = "readonly@vsphere.local"
+$env:VC_PASS      = "yourpassword"
+$env:CLUSTER_NAME = "VSAN-LON-01"
+
+pwsh -File vsan_resync_monitor.ps1 -TimeoutMinutes 240
+```
+
+**Step 2 — Wait for completion**
+
+The script polls every 30 seconds and exits automatically when resync reaches zero.
+
+**What you should see**
+
+```text
+=== vSAN Resync Monitor: VSAN-LON-01 ===
+Polling every 30s — timeout at 14:30
+
+Time     Active Components         Bytes Remaining  Status
+----------------------------------------------------------------------
+09:12:04 47                        382.14 GB        IN PROGRESS
+09:12:34 47                        378.92 GB        IN PROGRESS
+09:13:04 43                        371.55 GB        IN PROGRESS
+...
+10:44:11 2                         0.18 GB          IN PROGRESS
+10:44:41 0                         0                COMPLETE
+
+Resync complete.
 ```

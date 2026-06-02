@@ -59,60 +59,6 @@ How It Works reference covering Overview, Use Cases, How It Works, Underlying Pl
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
-┌─────────────────────────────────── Dell Apex STaaS — How It Works ────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │        Apex STaaS workflow: order → Dell installs → customer connects → consume and pay       │   │
-│   │       SCG gateway transmits array telemetry to CloudIQ for health and capacity analytics      │   │
-│   │       Billing: monthly invoice for committed tier + any burst above committed threshold       │   │
-│   │         Lifecycle: Dell manages firmware, hardware replacement, and capacity expansion        │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Apex Console order → Dell field install → customer network config → host connect → use             │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │           Ordering          │  │          Monitoring         │  │           Billing           │   │
-│   │         Apex Console        │  │        SCG telemetry        │  │        Committed fee        │   │
-│   │       Tier/size select      │  │        CloudIQ health       │  │        Burst overage        │   │
-│   │       Dell field svc.       │  │         Health score        │  │       Monthly invoice       │   │
-│   │       Rack/cable/init       │  │       Alert thresholds      │  │       Usage dashboard       │   │
-│   │       Customer network      │  │      Capacity forecast      │  │        Contract renew       │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    Dell SupportAssist remotely monitors controller health; dispatches parts proactively               │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Phase       │      Actor       │       Action      │     Duration     │      Notes       │   │
-│   │      Order       │     Customer     │    Apex Console   │     1–5 days     │  Contract first  │   │
-│   │     Install      │     Dell FSE     │     Rack/cable    │     1–2 days     │  Site prep req.  │   │
-│   │     Connect      │     Customer     │    Network/host   │      1 day       │    SAN/iSCSI     │   │
-│   │     Consume      │     Customer     │   Provision vols  │     Ongoing      │  Monitor burst   │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: Dell array shipped to site · SCG virtual appliance on customer management VM             │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    FSE            = Field Service Engineer; Dell technician who installs and maintains hardware       │
-│    SCG            = Secure Connect Gateway; virtual appliance sending telemetry to Dell cloud         │
-│    SupportAssist  = Dell remote support; uses SCG to proactively detect and resolve faults            │
-│    Health score   = CloudIQ 0–100 score per system; below 80 triggers investigation                   │
-│    Burst billing  = Monthly charge for capacity consumed above the committed baseline                 │
-│    Site prep      = Customer responsibility: power (kVA), cooling, rack space, network drops          │
-│    Capacity forecast = CloudIQ predictive model showing when committed tier will run out              │
-│    Contract renew = Annual or multi-year renewal; adjust committed tier at renewal                    │
-│    Proactive part = Dell dispatches replacement before failure based on predictive analytics          │
-│    Apex Console   = Web portal for ordering, provisioning, billing, and support requests              │
-│    Monthly invoice = Bill showing committed fee + burst overage + data services usage                 │
-│    Host connect   = Customer installs multipath, registers initiators, mounts volumes                 │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ## Overview
 

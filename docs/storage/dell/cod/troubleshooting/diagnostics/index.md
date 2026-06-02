@@ -68,7 +68,40 @@ symaudit -sid <SID> list -action "license"
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
+┌──────────────────────────────────────── Dell COD Diagnostics ─────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │         COD diagnostics: key rejected, capacity not increasing, license portal errors         │   │
+│   │               Key rejection: wrong serial number, duplicate use, corrupted file               │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Common Problems                │  │               Diagnostic Steps              │   │
+│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+│   │        Key rejected: serial mismatch         │  │        Verify array serial in portal        │   │
+│   │             Key already applied              │  │          Check license list in GUI          │   │
+│   │           Capacity not increasing            │  │         Verify pool expansion needed        │   │
+│   │         Portal error generating key          │  │            Open Dell licensing SR           │   │
+│   │              Key file corrupted              │  │           Re-download from portal           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   │     Problem      │    Root cause    │        Fix        │      Verify      │   Escalate if    │   │
+│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+│   │   Key rejected   │   Wrong serial   │  Get correct key  │  Apply succeeds  │  Portal issues   │   │
+│   │  No cap change   │Pool not expanded │    Expand pool    │  Capacity grows  │  HW not visible  │   │
+│   │     Key used     │ Duplicate apply  │   Check lic list  │  Already active  │        —         │   │
+│   │   File corrupt   │  Download issue  │    Re-download    │  Apply succeeds  │    Portal SR     │   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Serial mismatch = License key generated for different array serial; portal may have wrong SN       │
+│    Pool expansion  = After COD unlock, pool must be expanded to include new drives in capacity        │
+│    Duplicate apply = Applying same key twice; array reports already activated; not an error           │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 3. Check current license state:
 

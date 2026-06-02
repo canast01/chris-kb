@@ -72,7 +72,37 @@ graph TD
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```sql
+┌──────────────────────────────────── Architecture — Network Design ────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      Enterprise network design: spine-leaf topology, L3 segmentation, security zones, BGP     │   │
+│   │         Spine-leaf: no STP; any leaf to any leaf = 2 hops; ECMP for load distribution         │   │
+│   │          Zones: untrusted → DMZ → internal → restricted; firewalls at zone boundaries         │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                   Topology                   │  │                 Segmentation                │   │
+│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+│   │           Spine: 2+ core switches            │  │           VLANs per function/zone           │   │
+│   │              Leaf: ToR per rack              │  │             L3 boundary per zone            │   │
+│   │             ECMP load balancing              │  │               FW between zones              │   │
+│   │              BGP for DC routing              │  │               Micro-seg (NSX)               │   │
+│   │            Dual uplinks per leaf             │  │               ACL on VLAN SVIs              │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Spine-leaf   = Two-tier DC fabric; spines interconnect all leaves; no STP; predictable latency     │
+│    ECMP         = Equal-Cost Multi-Path; traffic distributed across multiple equal-cost paths         │
+│    ToR          = Top of Rack switch; leaf switch physically mounted at top of server rack            │
+│    BGP          = Border Gateway Protocol; used for DC internal routing and WAN peering               │
+│    SVI          = Switched Virtual Interface; L3 gateway for a VLAN; ACLs applied here                │
+│    Micro-seg    = Per-VM firewall rules (NSX DFW); east-west traffic control inside DC                │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 **Zone definitions:**
 

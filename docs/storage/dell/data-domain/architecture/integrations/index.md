@@ -59,7 +59,41 @@ graph TD
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```sql
+┌──────────────────────────────────── Dell Data Domain Integrations ────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │         Data Domain integrates with major backup applications via DD Boost or NFS/CIFS        │   │
+│   │           DDMC (Data Domain Management Center) manages multiple DD systems centrally          │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │         Backup Apps         │  │          Management         │  │        Cloud/Archive        │   │
+│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
+│   │        Dell Networker       │  │             DDMC            │  │        DD Cloud Tier        │   │
+│   │      Veritas NetBackup      │  │           CloudIQ           │  │            AWS S3           │   │
+│   │         Veeam Backup        │  │        Secure Connect       │  │          Azure Blob         │   │
+│   │         Dell Avamar         │  │         SNMP alerts         │  │        S3-compatible        │   │
+│   │          Commvault          │  │         Syslog/SIEM         │  │          ECS object         │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│   │   Integration    │     Protocol     │      Feature      │      Config      │      Notes       │   │
+│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+│   │    Networker     │     DD Boost     │   App-side dedup  │   DDBDA plugin   │    Preferred     │   │
+│   │      Veeam       │     DD Boost     │   App-side dedup  │   Boost plugin   │      v9.5+       │   │
+│   │    NetBackup     │   OST/DD Boost   │   Optimised dup   │    OST plugin    │    Preferred     │   │
+│   │       DDMC       │      HTTPS       │    Central mgmt   │  Add DD to DDMC  │     Multi-DD     │   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    DDBDA  = Dell Data Domain Boost for Backup Application; Networker integration library              │
+│    DDMC   = Data Domain Management Center; central web UI managing multiple DD systems                │
+│    OST    = OpenStorage Technology; NetBackup plugin enabling direct API integration with DD          │
+│    Cloud Tier= DDOS tier moving aged data to object storage; read-back transparent                    │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 ## CommVault (SISL + DD Boost)
 

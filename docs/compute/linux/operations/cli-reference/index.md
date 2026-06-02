@@ -74,7 +74,48 @@ flowchart LR
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```bash
+┌──────────────────────────────────────── Linux — CLI Reference ────────────────────────────────────────┐
+│                                                                                                       │
+│  Command-line reference for day-to-day Linux administration tasks.                                    │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               System & Process               │  │                 File & Disk                 │   │
+│   │            ps aux: all processes             │  │            ls -lah: list w/ sizes           │   │
+│   │            top / htop: live view             │  │              df -h: disk usage              │   │
+│   │           kill / killall: signals            │  │             du -sh *: dir sizes             │   │
+│   │             systemctl status svc             │  │              find / grep / awk              │   │
+│   │             journalctl -u svc -f             │  │            rsync / scp: transfer            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                   Network                    │  │              User & Permissions             │   │
+│   │              ip addr / ip route              │  │              useradd / usermod              │   │
+│   │             ss -tlnp: open ports             │  │                passwd / chage               │   │
+│   │              ping / traceroute               │  │                chmod / chown                │   │
+│   │                nmap / netstat                │  │                sudo / visudo                │   │
+│   │                tcpdump / curl                │  │              id / groups / who              │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  x86-64 servers · terminal emulator · SSH client · NIC · storage mounts                               │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  stdin/stdout= Standard input (fd 0) and output (fd 1); pipes connect them                            │
+│  stderr      = Standard error (fd 2); separate from stdout for clean pipelines                        │
+│  pipe |      = Passes stdout of left command as stdin of right command                                │
+│  redirect >  = Sends stdout to a file; >> appends; 2>&1 merges stderr                                 │
+│  signal      = IPC mechanism: SIGTERM (15) graceful, SIGKILL (9) immediate                            │
+│  PID         = Process ID; unique integer assigned by kernel to each process                          │
+│  UID / GID   = User/Group ID; integers that control file permission checks                            │
+│  sudo        = Run command as another user (default root) via policy in sudoers                       │
+│  sticky bit  = Restricts file deletion in shared dir to owner only (e.g. /tmp)                        │
+│  inode       = Metadata structure on disk: permissions, owner, size, timestamps                       │
+│  hard link   = Directory entry pointing to same inode; same data, diff name                           │
+│  symlink     = Symbolic link; pointer to another path, can cross filesystems                          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 ## Process Management
 

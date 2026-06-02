@@ -74,7 +74,36 @@ tc qdisc del dev eth0 root
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```sql
+┌──────────────────────────────────── Performance — Failure Testing ────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │         Failure testing: deliberately inject faults to verify HA and DR actually work         │   │
+│   │      Test in isolation first; graduate to production with maintenance window and rollback     │   │
+│   │            Document hypothesis, expected result, actual result, and any gaps found            │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                  Test Types                  │  │                   Process                   │   │
+│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+│   │        Node/host failure (power off)         │  │              Define hypothesis              │   │
+│   │            Network partition test            │  │             Raise change ticket             │   │
+│   │             Storage path failure             │  │                 Inject fault                │   │
+│   │             Service kill / crash             │  │              Measure RTO actual             │   │
+│   │             Resource exhaustion              │  │             Document gaps found             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Chaos engineering= Deliberate fault injection to reveal weaknesses before they cause incidents     │
+│    Game day       = Scheduled failure testing exercise; all stakeholders notified; results shared     │
+│    Blast radius   = Scope of failure; limit during tests by isolating to one component                │
+│    Steady state   = Known-good performance baseline before fault injection begins                     │
+│    Rollback       = Restore normal state after test; documented before injection starts               │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 ## Application Resilience Tests
 

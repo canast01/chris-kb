@@ -56,7 +56,50 @@ VAMI (https://vra-prod-01.example.local:5480) → Services → Change Admin Pass
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```bash
+┌───────────────────────────────────── Aria Automation — Hardening ─────────────────────────────────────┐
+│                                                                                                       │
+│  Harden vRA by disabling unused services, enforcing TLS, MFA, and minimal access.                     │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Network Hardening               │  │               Access Hardening              │   │
+│   │       Firewall: allow only 443 inbound       │  │       MFA mandatory for all vRA users       │   │
+│   │      Disable SSH after setup (use VAMI)      │  │     Minimum privilege: member not admin     │   │
+│   │       Management VLAN: restrict access       │  │      Break-glass: change after each use     │   │
+│   │      No direct DB access from prod nets      │  │       vIDM: enforce device compliance       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Configuration hardening removes attack surface and enforces secure defaults.                         │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Configuration Hardening            │  │             Audit and Compliance            │   │
+│   │      TLS 1.2+ only; disable TLS 1.0/1.1      │  │        Aria Ops: vRA operations audit       │   │
+│   │      No self-signed certs in production      │  │       vRA activity log: 90d retention       │   │
+│   │     Approval policies on all prod items      │  │       SIEM: forward vRA syslog events       │   │
+│   │       Lease policies: no unlimited VMs       │  │       VMware STIG: apply vRA hardening      │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  vRA appliance VMs · management VLAN · firewall rules · vIDM · SIEM for log forwarding                │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  VAMI SSH disable  = After setup, SSH on vRA appliance is disabled; use VAMI for mgmt tasks           │
+│  Management VLAN   = Isolated network segment for vRA appliance management interfaces                 │
+│  Break-glass acct  = Local admin used only in emergency; password rotated after every use             │
+│  Device compliance = vIDM policy requiring managed/enrolled device for vRA access                     │
+│  TLS enforcement   = vRA config disabling TLS 1.0 and 1.1 on all endpoints                            │
+│  VMware STIG       = Security Technical Implementation Guide published by VMware/DISA                 │
+│  Syslog forwarding = vRA sends audit events to SIEM via rsyslog or vRealize Log Insight               │
+│  Lease policy      = Enforces time limit on deployments; prevents VM sprawl                           │
+│  Approval policy   = Prevents unreviewed production deployments; mandatory for prod catalog           │
+│  Minimum privilege = Users assigned lowest role that meets their work requirements                    │
+│  Activity log      = vRA built-in audit trail of all requests, approvals, and actions                 │
+│  SIEM integration  = Security Information and Event Management; aggregates vRA and vIDM logs          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 **Via vracli (standalone deployments):**
 

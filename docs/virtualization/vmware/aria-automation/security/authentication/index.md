@@ -57,7 +57,50 @@ API clients → Aria Automation /csp/gateway/am/api/login → VIDM credentials �
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```bash
+┌────────────────────────────────── Aria Automation — Authentication ───────────────────────────────────┐
+│                                                                                                       │
+│  vRA authentication flows through vIDM (Workspace ONE) via SAML; local accounts are minimal.          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Authentication Methods            │  │               vIDM / SSO Flow               │   │
+│   │          Primary: SAML via vIDM/WS1          │  │        Browser → vRA → redirect vIDM        │   │
+│   │       API: Bearer JWT from CSP gateway       │  │        vIDM → LDAP/SAML IdP validate        │   │
+│   │        Local admin: break-glass only         │  │         vIDM returns SAML assertion         │   │
+│   │        MFA: enforced via vIDM policy         │  │     vRA validates assertion, issues JWT     │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  API authentication uses a short-lived JWT; service accounts use refresh tokens.                      │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                API Auth Flow                 │  │                MFA and Policy               │   │
+│   │        POST /csp/gateway/am/api/login        │  │       MFA: TOTP, push, or hardware key      │   │
+│   │        Payload: {username, password}         │  │      Policy: step-up for admin actions      │   │
+│   │      Returns: access_token (JWT/1h TTL)      │  │         Session timeout: 8h default         │   │
+│   │     Refresh: use refresh_token to renew      │  │        Failed logins: lockout after 5       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  vIDM/WS1 appliance · vRA appliance · AD/LDAP directory · NTP (for SAML timestamps)                   │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  vIDM              = VMware Identity Manager; SAML IdP for all Aria suite products                    │
+│  SAML assertion    = XML token vIDM returns after authenticating user; vRA validates signature        │
+│  JWT               = JSON Web Token; short-lived bearer token for vRA REST API calls                  │
+│  CSP gateway       = Cloud Services Platform auth gateway endpoint in vRA                             │
+│  Refresh token     = Long-lived token for service accounts; exchange for new access token             │
+│  MFA               = Multi-Factor Authentication; enforced via vIDM access policy                     │
+│  TOTP              = Time-based One-Time Password; one MFA method supported by vIDM                   │
+│  Break-glass admin = Local vRA admin account used only when vIDM is unavailable                       │
+│  Access policy     = vIDM policy defining auth method, MFA, and device requirements                   │
+│  Session timeout   = Duration before vRA redirects user back to vIDM for re-authentication            │
+│  Lockout           = Account locked after N failed logins; admin must unlock via vIDM                 │
+│  Token TTL         = Access token expires in 1 hour; refresh token lasts days/weeks                   │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 **Acquire a token (AD user):**
 

@@ -80,7 +80,50 @@ flowchart TD
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
+┌──────────────────────────────────── Jira — Escalation Procedures ─────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                     Jira Escalation Tiers                                     │   │
+│   │                Tier 1: Ops — restart, reindex, check logs, restore from backup                │   │
+│   │           Tier 2: Senior engineer — JVM tuning, DB query analysis, plugin isolation           │   │
+│   │            Tier 3: Atlassian Support — ticket with support-zip; thread + heap dumps           │   │
+│   │              Tier 4: Atlassian escalation — P1 production down; 24x7 critical SLA             │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Escalate: T1 > 30 min no resolution; T2 > 2 hr; T3 > 4 hr production down                          │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Escalation Criteria              │  │             Artifacts to Gather             │   │
+│   │             Service down >30 min             │  │              support-zip bundle             │   │
+│   │             Data loss suspected              │  │               Thread dumps x3               │   │
+│   │              Security incident               │  │               Heap dump (OOM)               │   │
+│   │              Repeated OOM crash              │  │              catalina.out tail              │   │
+│   │             Corruption suspected             │  │              DB slow query log              │   │
+│   │            Plugin breaks upgrade             │  │             Version + patch info            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Jira VMs · PostgreSQL DB · monitoring/alerting · Atlassian Support portal                            │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  support-zip    = Admin > System > Troubleshooting > Create Support Zip                               │
+│  Thread dump    = 3 dumps 10 seconds apart; detect deadlocks in worker threads                        │
+│  Heap dump      = full JVM memory; jmap -dump:format=b,file=jira.hprof <pid>                          │
+│  P1 incident    = production down; page on-call; escalate within 30 minutes                           │
+│  Atlassian Support = support.atlassian.com; valid license required                                    │
+│  Safe mode      = start without plugins; -Djira.startup.options=safe-mode                             │
+│  Plugin isolate = disable plugins one by one until issue resolves                                     │
+│  DB slow query  = set log_min_duration_statement=1000 in postgresql.conf                              │
+│  Corruption     = DB row count vs index count mismatch; reindex if different                          │
+│  Data loss      = check jiraissue table; deleted issues have DELETED status                           │
+│  SLA            = P1 1hr response, P2 4hr, P3/P4 next business day                                    │
+│  Critical escalation = request via Atlassian account team for P1 outages                              │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 ### Resolution Notification
 

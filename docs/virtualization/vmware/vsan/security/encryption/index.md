@@ -22,6 +22,7 @@ vCenter (Key Management Service client)
                     └── Data Encryption Key (DEK) — per disk group
                             └── Encrypted data on disk
 ```
+```
 ┌────────────────────────────────────────── vSAN — Encryption ──────────────────────────────────────────┐
 │                                                                                                       │
 │  vSAN offers cluster-level data-at-rest encryption (OSA) and inline encryption                        │
@@ -68,7 +69,8 @@ vCenter (Key Management Service client)
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```powershell
+
+### KMS Setup
 
 **From vCenter UI:**
 vSphere Client → vCenter → Configure → Key Providers → Add Standard Key Provider

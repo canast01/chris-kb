@@ -7649,6 +7649,180 @@ def vsan_ops_scripts():
 
 
 @kb_diagram(
+    'vsan-arch-comp-states',
+    'docs/virtualization/vmware/vsan/architecture/component-states/index.md',
+    'vSAN — Component State Lifecycle',
+)
+def vsan_arch_comp_states():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    L1, R1, L2, R2 = 3, 50, 53, 99
+    lines = []
+    lines.append(title_border(W2, 'vSAN — Component State Lifecycle'))
+    lines.append(txt_row())
+    lines.append(txt_row('Every vSAN object is made of components distributed across hosts. Each component has a state'))
+    lines.append(txt_row('that determines whether the object\'s protection policy is currently being met.'))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(L1, R1), bTop(L2, R2))))
+    lines.append(R(merge(bMid(L1, R1, 'ABSENT (transient)'), bMid(L2, R2, 'DEGRADED (at risk)'))))
+    lines.append(R(merge(bMid(L1, R1, 'Host rebooted or lost temporarily'), bMid(L2, R2, 'Component confirmed lost'))))
+    lines.append(R(merge(bMid(L1, R1, 'vSAN waits clomRepairDelay (default 60m)'), bMid(L2, R2, 'VM at risk: one more failure = loss'))))
+    lines.append(R(merge(bMid(L1, R1, 'No rebuild triggered during wait'), bMid(L2, R2, 'CLOM schedules rebuild immediately'))))
+    lines.append(R(merge(bMid(L1, R1, 'If host returns: component goes Healthy'), bMid(L2, R2, 'Rebuild needs capacity + healthy hosts'))))
+    lines.append(R(merge(bBot(L1, R1), bBot(L2, R2))))
+    lines.append(txt_row())
+    lines.append(txt_row('ABSENT → wait → host returns = Healthy. ABSENT → timer expires = DEGRADED → REBUILDING'))
+    lines.append(txt_row())
+    lines.append(R(arrow([26, 76])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(L1, R1), bTop(L2, R2))))
+    lines.append(R(merge(bMid(L1, R1, 'STALE (outdated)'), bMid(L2, R2, 'REBUILDING (recovering)'))))
+    lines.append(R(merge(bMid(L1, R1, 'Component exists but data is behind'), bMid(L2, R2, 'New component being written'))))
+    lines.append(R(merge(bMid(L1, R1, 'Host was offline while writes occurred'), bMid(L2, R2, 'Bytes remaining shown in resync queue'))))
+    lines.append(R(merge(bMid(L1, R1, 'Must sync before becoming healthy again'), bMid(L2, R2, 'I/O continues during rebuild'))))
+    lines.append(R(merge(bMid(L1, R1, 'Can become healthy without full rebuild'), bMid(L2, R2, 'Completes to HEALTHY when done'))))
+    lines.append(R(merge(bBot(L1, R1), bBot(L2, R2))))
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('Component placement is managed by CLOM (Cluster Level Object Manager); each component'))
+    lines.append(txt_row('lives on a specific disk group on a specific ESXi host; hardware health drives state changes.'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('Component      = one piece of a vSAN object stored on a specific disk group'))
+    lines.append(txt_row('CLOM           = Cluster Level Object Manager; decides placement and rebuild'))
+    lines.append(txt_row('clomRepairDelay= minutes vSAN waits before treating ABSENT as DEGRADED (default: 60)'))
+    lines.append(txt_row('Resync         = the rebuild process — copies data from healthy to new component'))
+    lines.append(txt_row('Object         = full logical unit (e.g. a VMDK); made of multiple components'))
+    lines.append(txt_row('FTT            = Failures to Tolerate; determines how many components exist per object'))
+    lines.append(txt_row('Witness        = metadata-only component; used for quorum, holds no data'))
+    lines.append(txt_row('INACCESSIBLE   = all copies of a component are unavailable; VM stops I/O'))
+    lines.append(txt_row())
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'vsan-arch-resync',
+    'docs/virtualization/vmware/vsan/architecture/resync-mechanics/index.md',
+    'vSAN — Resync Mechanics',
+)
+def vsan_arch_resync():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    L1, R1, L2, R2 = 3, 50, 53, 99
+    lines = []
+    lines.append(title_border(W2, 'vSAN — Resync Mechanics'))
+    lines.append(txt_row())
+    lines.append(txt_row('Resync is vSAN rebuilding or rebalancing component data. Every disk replacement, host failure,'))
+    lines.append(txt_row('policy change, or rebalance triggers it. Understanding resync mechanics prevents surprises.'))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(L1, R1), bTop(L2, R2))))
+    lines.append(R(merge(bMid(L1, R1, 'Why Resync Triggers'), bMid(L2, R2, 'How CLOM Decides'))))
+    lines.append(R(merge(bMid(L1, R1, 'Component goes DEGRADED'), bMid(L2, R2, 'Scan all degraded objects'))))
+    lines.append(R(merge(bMid(L1, R1, 'Storage policy changes'), bMid(L2, R2, 'Find host + disk with free capacity'))))
+    lines.append(R(merge(bMid(L1, R1, 'Host added (rebalance)'), bMid(L2, R2, 'Check FTT policy requirements'))))
+    lines.append(R(merge(bMid(L1, R1, 'Dedup/encryption enabled'), bMid(L2, R2, 'Schedule rebuild operations'))))
+    lines.append(R(merge(bMid(L1, R1, 'On-disk format upgrade'), bMid(L2, R2, 'Prioritise by object criticality'))))
+    lines.append(R(merge(bBot(L1, R1), bBot(L2, R2))))
+    lines.append(txt_row())
+    lines.append(txt_row('Resync competes with VM I/O for disk and network bandwidth on all participating hosts.'))
+    lines.append(txt_row())
+    lines.append(R(arrow([26, 76])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(L1, R1), bTop(L2, R2))))
+    lines.append(R(merge(bMid(L1, R1, 'Bandwidth and Duration'), bMid(L2, R2, 'Capacity Headroom Rule'))))
+    lines.append(R(merge(bMid(L1, R1, 'Throughput limited by slowest disk'), bMid(L2, R2, '30% free required to rebuild'))))
+    lines.append(R(merge(bMid(L1, R1, 'Network bottleneck on small clusters'), bMid(L2, R2, 'Without headroom: resync queued'))))
+    lines.append(R(merge(bMid(L1, R1, 'Throttle: 0 = unlimited (fast)'), bMid(L2, R2, 'Over-commit blocks all future rebuilds'))))
+    lines.append(R(merge(bMid(L1, R1, 'Throttle: 500 IOPS = business-safe'), bMid(L2, R2, 'Alert at 70%; hard stop near 80%'))))
+    lines.append(R(merge(bBot(L1, R1), bBot(L2, R2))))
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure (the hardware everything above runs on):'))
+    lines.append(txt_row('Resync I/O travels over the vSAN VMkernel network (25 GbE recommended); disk throughput'))
+    lines.append(txt_row('on destination host limits rebuild speed; CLOM runs on the cluster master host.'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('CLOM           = Cluster Level Object Manager; schedules and tracks all rebuild operations'))
+    lines.append(txt_row('DOM            = Distributed Object Manager; handles per-object I/O and component writes'))
+    lines.append(txt_row('Resync         = the actual data copy operation from source to destination component'))
+    lines.append(txt_row('Delta-sync     = partial resync for STALE components — only changed blocks, not full copy'))
+    lines.append(txt_row('Throttle       = IOPS limit applied to resync I/O; 0 = unlimited; 500 = production-safe'))
+    lines.append(txt_row('Headroom       = free capacity needed to place the new component before old is removed'))
+    lines.append(txt_row('Rebalance      = proactive move of components to equalise utilisation across hosts'))
+    lines.append(txt_row('Policy resync  = triggered by FTT change, stripe width change, or dedup/encrypt toggle'))
+    lines.append(txt_row('clomRepairDelay= minutes between component going ABSENT and CLOM starting rebuild'))
+    lines.append(txt_row())
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
+    'vsan-deploy',
+    'docs/virtualization/vmware/vsan/deploy/index.md',
+    'vSAN — Deployment Phases',
+)
+def vsan_deploy():
+    W2 = 103
+    R, txt_row = make_helpers(W2)
+    L1, R1 = 3, 29
+    L2, R2 = 32, 59
+    L3, R3 = 62, 97
+    L7, R7 = 35, 70
+    lines = []
+    lines.append(title_border(W2, 'vSAN — Deployment Phases'))
+    lines.append(txt_row())
+    lines.append(txt_row('Seven phases from bare metal to operational vSAN cluster. Each phase has a clear exit criterion.'))
+    lines.append(txt_row('Do not proceed to the next phase until the current phase validates clean.'))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(L1, R1), bTop(L2, R2), bTop(L3, R3))))
+    lines.append(R(merge(bMid(L1, R1, 'Phase 1: Physical'), bMid(L2, R2, 'Phase 2: ESXi'), bMid(L3, R3, 'Phase 3: vCenter'))))
+    lines.append(R(merge(bMid(L1, R1, 'BIOS/UEFI settings'), bMid(L2, R2, 'Boot from ISO/PXE'), bMid(L3, R3, 'Deploy VCSA OVA'))))
+    lines.append(R(merge(bMid(L1, R1, 'Network cabling'), bMid(L2, R2, 'First-boot config'), bMid(L3, R3, 'Configure SSO + inventory'))))
+    lines.append(R(merge(bMid(L1, R1, 'iDRAC/iLO config'), bMid(L2, R2, 'vmk0 management IP'), bMid(L3, R3, 'Add hosts to datacenter'))))
+    lines.append(R(merge(bMid(L1, R1, 'HCL verification'), bMid(L2, R2, 'NTP + DNS'), bMid(L3, R3, 'Create cluster object'))))
+    lines.append(R(merge(bBot(L1, R1), bBot(L2, R2), bBot(L3, R3))))
+    lines.append(txt_row())
+    lines.append(R(arrow([16, 45, 79])))
+    lines.append(txt_row())
+    lines.append(R(merge(bTop(L1, R1), bTop(L2, R2), bTop(L3, R3))))
+    lines.append(R(merge(bMid(L1, R1, 'Phase 4: Networking'), bMid(L2, R2, 'Phase 5: vSAN Enable'), bMid(L3, R3, 'Phase 6: Aria Suite (optional)'))))
+    lines.append(R(merge(bMid(L1, R1, 'dvSwitch creation'), bMid(L2, R2, 'Enable vSAN on cluster'), bMid(L3, R3, 'Aria Suite Lifecycle deploy'))))
+    lines.append(R(merge(bMid(L1, R1, 'vSAN VMkernel + tag'), bMid(L2, R2, 'Disk group claim'), bMid(L3, R3, 'Aria Operations config'))))
+    lines.append(R(merge(bMid(L1, R1, 'MTU 9000 end-to-end'), bMid(L2, R2, 'Storage policies'), bMid(L3, R3, 'vSAN adapter + dashboards'))))
+    lines.append(R(merge(bMid(L1, R1, 'NIOC if shared NICs'), bMid(L2, R2, 'Health validation'), bMid(L3, R3, 'Alert thresholds'))))
+    lines.append(R(merge(bBot(L1, R1), bBot(L2, R2), bBot(L3, R3))))
+    lines.append(txt_row())
+    lines.append(R(arrow([52])))
+    lines.append(txt_row())
+    lines.append(R(bTop(L7, R7)))
+    lines.append(R(bMid(L7, R7, 'Phase 7: Validation')))
+    lines.append(R(bMid(L7, R7, 'Skyline Health all green')))
+    lines.append(R(bMid(L7, R7, 'Storage policy compliance')))
+    lines.append(R(bMid(L7, R7, 'Failover simulation')))
+    lines.append(R(bMid(L7, R7, 'Performance baseline')))
+    lines.append(R(bBot(L7, R7)))
+    lines.append(txt_row())
+    lines.append(txt_row('Physical Infrastructure: All phases run on physical ESXi hosts with NVMe/SSD disks,'))
+    lines.append(txt_row('ToR switches (MTU 9000), OOB management (iDRAC/iLO), and DNS/NTP infrastructure.'))
+    lines.append(txt_row())
+    lines.append(txt_row('Key terms:'))
+    lines.append(txt_row())
+    lines.append(txt_row('dvSwitch       = Distributed Virtual Switch; managed from vCenter across all hosts'))
+    lines.append(txt_row('vmk            = VMkernel adapter; IP interface for vSAN, vMotion, management traffic'))
+    lines.append(txt_row('VCSA           = vCenter Server Appliance; the VM running vCenter'))
+    lines.append(txt_row('HCL            = Hardware Compatibility List; required for vSAN support'))
+    lines.append(txt_row('NIOC           = Network I/O Control; traffic shaping on shared NICs'))
+    lines.append(txt_row('Disk group     = one cache device + 1-7 capacity devices per ESXi host (OSA)'))
+    lines.append(txt_row('SPBM           = Storage Policy-Based Management; policies applied per VM'))
+    lines.append(txt_row('Skyline Health = built-in vSAN health dashboard in vCenter'))
+    lines.append(txt_row())
+    lines.append('└' + '─' * W2 + '┘')
+    return lines
+
+
+@kb_diagram(
     'vsan-sec-access',
     'docs/virtualization/vmware/vsan/security/access-control/index.md',
     'vSAN — Access Control',

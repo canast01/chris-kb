@@ -68,7 +68,50 @@ flowchart TD
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```powershell
+┌──────────────────────────────────── Windows Server — Integrations ────────────────────────────────────┐
+│                                                                                                       │
+│  Windows Server integrations: Azure AD, VMware, monitoring tools, and enterprise apps.                │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Identity Integrations             │  │                Virtualisation               │   │
+│   │        Azure AD Connect: hybrid sync         │  │         Hyper-V: built-in hypervisor        │   │
+│   │         AD FS: SAML/OAuth federation         │  │          VMware Tools: guest agent          │   │
+│   │          LDAPS: secure LDAP queries          │  │           System Center VMM: mgmt           │   │
+│   │         Certificate Services (AD CS)         │  │           Azure Arc: cloud-managed          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    AD integrates with cloud via Connect/ADFS; Arc extends cloud management on-prem                    │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                  Monitoring                  │  │              Storage and Backup             │   │
+│   │        Windows Events: WinRM forward         │  │            Windows Server Backup            │   │
+│   │          Azure Monitor Agent (AMA)           │  │           DFS Replication: shares           │   │
+│   │         SCOM: enterprise monitoring          │  │          SAN: iSCSI / FC initiator          │   │
+│   │          Splunk UF: log forwarding           │  │        Storage Spaces: software RAID        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Physical or virtual server · NIC · SAN/NAS · Azure connectivity                                      │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Azure AD Connect= synchronises on-prem AD users/groups to Azure AD (Entra)                           │
+│  AD FS         = Active Directory Federation Services; SAML/OAuth IdP                                 │
+│  AD CS         = Certificate Services; internal PKI for cert issuance                                 │
+│  Azure Arc     = extends Azure management plane to on-prem Windows servers                            │
+│  AMA           = Azure Monitor Agent; replaces Log Analytics agent                                    │
+│  SCOM          = System Center Operations Manager; enterprise monitoring                              │
+│  WinRM         = Windows Remote Management; used for PS remoting + event forward                      │
+│  LDAPS         = LDAP over TLS; requires DC certificate; port 636                                     │
+│  Storage Spaces= Windows software-defined storage; RAID-like redundancy                               │
+│  VMM           = Virtual Machine Manager; Hyper-V cluster management                                  │
+│  DFS-R         = DFS Replication; multi-master file replication between servers                       │
+│  iSCSI initiator= Windows built-in iSCSI client for SAN block access                                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 Maintenance windows control reboot scheduling:
 - Development: patching on Tuesdays, auto-reboot allowed

@@ -38,7 +38,29 @@ Get-Verb | Sort-Object Group, Verb | Format-Table -AutoSize
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```powershell
+┌──────────────────────────────────── PowerShell — Design Standards ────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │    PowerShell standards: approved verbs, CmdletBinding, proper error handling, Pester tests   │   │
+│   │ Use PSScriptAnalyzer in CI; pin module versions with #Requires or RequiredModules in manifest │   │
+│   │         All scripts require help block: .SYNOPSIS, .DESCRIPTION, .PARAMETER, .EXAMPLE         │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Script Structure               │  │                Error Handling               │   │
+│   │    [CmdletBinding(SupportsShouldProcess)]    │  │        $ErrorActionPreference = Stop        │   │
+│   │           param() block with types           │  │         try { } catch { } finally {}        │   │
+│   │           begin/process/end blocks           │  │           Write-Error -ErrorRecord          │   │
+│   │           comment-based help block           │  │         Throw for terminating errors        │   │
+│   │            #Requires -Version 7.0            │  │            Log with Write-Verbose           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   SupportsShouldProcess = enables -WhatIf and -Confirm; use $PSCmdlet.ShouldProcess() guard   │   │
+│   │ PSScriptAnalyzer      = static analysis; run in CI with Invoke-ScriptAnalyzer -Severity Error │   │
+│   │   Pester                = PS testing framework; Describe/Context/It blocks; mock with Mock{}  │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 Key attributes reference:
 

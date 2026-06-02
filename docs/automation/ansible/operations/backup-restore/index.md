@@ -54,7 +54,30 @@ git push backup --mirror
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```bash
+┌───────────────────────────────────── Ansible — Backup & Restore ──────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │ Ansible backup: the source of truth is the git repository — playbooks, roles, inventory, vars │   │
+│   │   AWX state: export via awx CLI or AWX API; includes job templates, credentials, inventories  │   │
+│   │  Restore: re-deploy AWX (Kubernetes operator or RPM), re-import exported objects, reconfigure │   │
+│   │    Critical: Vault password must be stored out-of-band (password manager, HSM) — not in git   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               What to Back Up                │  │                Restore Steps                │   │
+│   │        Git repo (all automation code)        │  │           1. Redeploy AWX instance          │   │
+│   │         AWX export: awx export --all         │  │      2. Import AWX objects from export      │   │
+│   │        Vault password (offline safe)         │  │          3. Restore Vault password          │   │
+│   │          AWX PostgreSQL DB snapshot          │  │        4. Verify job template runs OK       │   │
+│   │       Execution environment OCI images       │  │       5. Test connectivity to targets       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   awx CLI     = command-line client for AWX API; awx export --all dumps all objects to JSON   │   │
+│   │     AWX DB      = PostgreSQL database; stores job history, credentials (encrypted), config    │   │
+│   │     Vault PW    = Ansible Vault password; if lost, all vault-encrypted vars are unreadable    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 
 ## AWX / AAP Export
 
