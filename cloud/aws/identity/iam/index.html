@@ -3974,6 +3974,28 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#iam-identity-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IAM Identity Model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#iam-policy-evaluation-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IAM Policy Evaluation Order
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -4302,6 +4324,52 @@ IAM reference covering Overview, Where It Fits, Daily Checks, Health Commands, C
 </tr>
 </tbody>
 </table>
+<hr />
+<h2 id="iam-identity-model">IAM Identity Model<a class="headerlink" href="#iam-identity-model" title="Permanent link">&para;</a></h2>
+<hr />
+<h2 id="iam-policy-evaluation-order">IAM Policy Evaluation Order<a class="headerlink" href="#iam-policy-evaluation-order" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>┌──────────────────────────────── IAM Policy Evaluation — Decision Flow ────────────────────────────────┐
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>│                                                                                                       │
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>│    Every AWS API call follows this exact evaluation order; explicit deny always wins.                 │
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>│                                                                                                       │
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>│   │      Evaluation Steps (in order)             │  │      Details                                │   │
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>│   │  1. Explicit Deny in any policy              │  │  Any deny = DENY; no override               │   │
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>│   │  2. AWS Organizations SCP                    │  │  Must allow the action at OU level          │   │
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>│   │  3. Resource-based policy                    │  │  S3 bucket/KMS key/SQS policy check         │   │
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>│   │  4. IAM Permission Boundary                  │  │  Sets maximum allowed permissions           │   │
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>│   │  5. Session Policy (AssumeRole)              │  │  Further limits role session                │   │
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>│                                                                                                       │
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>│    After step 5: if no explicit allow found in identity policy, default = DENY.                       │
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>│                                                                                                       │
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>│                                                                                                       │
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>│   │      Common Deny Scenarios                   │  │      Common Allow Scenarios                 │   │
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>│   │  SCP blocks action in OU                     │  │  SCP allows + identity policy allows        │   │
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>│   │  Explicit Deny in identity policy            │  │  Resource policy grants cross-account       │   │
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>│   │  Permission boundary excludes action         │  │  Role trust policy allows AssumeRole        │   │
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>│   │  No identity policy allows action            │  │  Session + identity policy both allow       │   │
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>│   │  KMS key policy denies user access           │  │  Least privilege: narrowest allow set       │   │
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>│                                                                                                       │
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>│    Physical Infrastructure (the hardware everything above runs on):                                   │
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>│    IAM policy engine (global service) · STS · CloudTrail logging all API decisions                    │
+<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>│                                                                                                       │
+<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a>│    Key terms:                                                                                         │
+<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>│                                                                                                       │
+<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>│    Explicit Deny   = Deny statement in any policy; overrides all allows; step 1                       │
+<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a>│    SCP             = Service Control Policy; restricts max perms at OU/account level                  │
+<a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a>│    Resource policy = Policy attached to a resource (S3, KMS); can allow cross-account                 │
+<a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a>│    Permission boundary = IAM policy capping the maximum perms a principal can have                    │
+<a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a>│    Session policy  = Passed during AssumeRole; further restricts session permissions                  │
+<a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a>│    Identity policy = Policy attached to user/group/role via managed or inline                         │
+<a id="__codelineno-2-38" name="__codelineno-2-38" href="#__codelineno-2-38"></a>│    Default deny    = Implicit deny when no explicit allow is found; not logged                        │
+<a id="__codelineno-2-39" name="__codelineno-2-39" href="#__codelineno-2-39"></a>│    Cross-account   = Resource policy can grant access from another AWS account                        │
+<a id="__codelineno-2-40" name="__codelineno-2-40" href="#__codelineno-2-40"></a>│                                                                                                       │
+<a id="__codelineno-2-41" name="__codelineno-2-41" href="#__codelineno-2-41"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 
 
 
