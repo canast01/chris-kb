@@ -19,7 +19,7 @@ graph TD
     ORG --> JT[Job Templates]
     USER --> ROLE[Role Assignment\nAdmin / Execute / Use / Read]
 ```
-```
+```text
 ┌────────────────────────────────────── Ansible — Access Control ───────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   Ansible access control: who can run which playbooks against which hosts — enforced via AWX  │   │

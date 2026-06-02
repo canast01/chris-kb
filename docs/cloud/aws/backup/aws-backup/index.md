@@ -5,7 +5,7 @@
 AWS AWS Backup reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
 
-```
+```text
 ┌─────────────────────────────────── AWS Backup — AWS Backup Service ───────────────────────────────────┐
 │                                                                                                       │
 │  Centralised backup service managing policies, jobs, and vaults across AWS services.                  │

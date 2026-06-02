@@ -42,7 +42,7 @@ VSAN UPGRADE SEQUENCE (host-by-host rolling)
   ├── Disk format version current
   └── Object compliance 100%
 ```
-```
+```text
 ┌────────────────────────────────────── vSAN — Install & Upgrade ───────────────────────────────────────┐
 │                                                                                                       │
 │  vSAN is enabled per cluster in vCenter; hardware must be on the HCL; upgrades                        │

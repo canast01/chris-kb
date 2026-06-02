@@ -39,7 +39,7 @@ AllowUsers ubuntu
 
 sudo systemctl restart sshd
 ```
-```
+```text
 ┌─────────────────────────────────────── vRNI Security Hardening ───────────────────────────────────────┐
 │                                                                                                       │
 │  Firewall rules, LDAPS enforcement, minimal accounts, and audit hardening for vRNI.                   │

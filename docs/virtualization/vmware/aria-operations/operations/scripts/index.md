@@ -11,7 +11,7 @@ Aria Operations API — Script Interaction Pattern
 │  Script / Automation Pipeline                                                                         │
 └──────────────────────┬──────────────────────────────┘
 ```
-```
+```text
 ┌─────────────────────────────────────── Aria Operations Scripts ───────────────────────────────────────┐
 │                                                                                                       │
 │  REST API scripts for alert management, metric queries, and resource ops in vROps.                    │
@@ -60,7 +60,7 @@ Aria Operations API — Script Interaction Pattern
                        ▼
 ```text
 ```
-```
+```text
 ┌─────────────────────────────────────────────────────┐
 │  Output / Integration                                                                                 │
 │  → CSV export (alerts, capacity, idle VMs)                                                            │

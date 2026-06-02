@@ -42,7 +42,7 @@ get corfu-cluster status
 get services | grep -v " running"
 # The above grep shows any service NOT in running state — output should be empty
 ```
-```
+```text
 ┌───────────────────────────────────────── NSX — Health Checks ─────────────────────────────────────────┐
 │                                                                                                       │
 │  Daily/weekly health runbook: cluster, transport nodes, edges, and DFW state.                         │

@@ -12,7 +12,7 @@ Aria Operations — CLI Command Reference Map
 │       (sudo -i for advanced maintenance tasks)                                                        │
 └──────────────────────┬──────────────────────────────┘
 ```
-```
+```text
 ┌──────────────────────────────────── Aria Operations CLI Reference ────────────────────────────────────┐
 │                                                                                                       │
 │  REST API, VAMI, and SSH service commands for Aria Operations (vROps).                                │
@@ -57,7 +57,7 @@ Aria Operations — CLI Command Reference Map
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```
+```text
 ┌──────────────────────────────────── Aria Operations CLI Reference ────────────────────────────────────┐
 │                                                                                                       │
 │  REST API, VAMI, and SSH service commands for Aria Operations (vROps).                                │
@@ -102,7 +102,7 @@ Aria Operations — CLI Command Reference Map
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```
+```text
 ┌─────────────────────────────────────────────────────┐
 │  REST API  base: https://<aria-ops>/suite-api/api                                                     │
 │  POST /api/auth/token/acquire   authenticate                                                          │
@@ -111,7 +111,7 @@ Aria Operations — CLI Command Reference Map
 │  GET  /api/cluster/nodes        node status                                                           │
 └─────────────────────────────────────────────────────┘
 ```
-```
+```text
 ┌──────────────────────────────────── Aria Operations CLI Reference ────────────────────────────────────┐
 │                                                                                                       │
 │  REST API, VAMI, and SSH service commands for Aria Operations (vROps).                                │

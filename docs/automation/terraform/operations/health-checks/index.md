@@ -30,7 +30,7 @@ flowchart TD
     parsePlan --> alertOps
     alertOps --> remediate
 ```
-```
+```text
 ┌────────────────────────────────────── Terraform — Health Checks ──────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │ Terraform health checks: state drift, stale lock, provider version currency, CI pipeline pass │   │

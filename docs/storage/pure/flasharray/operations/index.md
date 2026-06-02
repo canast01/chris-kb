@@ -8,7 +8,7 @@ FlashArray — Operations reference: Health Checks, Procedures, CLI Reference, I
 FlashArray Day-to-Day Operations Flow
 ```text
 ```
-```
+```text
 ┌───────────────────────────────────────────────────────┐
 │  Pure1 Cloud                                                                                          │
 │  ├── Fleet health dashboard + AI anomaly alerts                                                       │

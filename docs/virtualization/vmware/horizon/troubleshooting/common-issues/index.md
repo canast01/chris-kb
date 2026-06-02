@@ -5,7 +5,7 @@
 Common Issues reference covering Desktop Stuck in "Provisioning", "No Desktop Sources Available", Black Screen After Login, Slow Login, UAG Shows Disconnected from Connection Server and 1 more sections.
 </div>
 
-```
+```text
 ┌─────────────────────────────────── VMware Horizon — Common Issues ────────────────────────────────────┐
 │                                                                                                       │
 │  Common Horizon issues: black screen, pool provisioning failure, Connection Server                    │

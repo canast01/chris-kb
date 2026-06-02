@@ -28,7 +28,7 @@ graph TD
     secureString -->|New-PSSession -UseSSL| winrmHTTPS
     winrmHTTPS --> remoteSession
 ```
-```
+```text
 ┌─────────────────────────────────────── PowerShell — Encryption ───────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │      PS encryption: SecureString in-memory, DPAPI user-scope, SecretManagement for vaults     │   │

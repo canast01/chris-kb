@@ -48,7 +48,7 @@ flowchart TD
     K -- Fail --> L --> J
     K -- Pass --> M --> N --> O --> P
 ```
-```
+```text
 ┌────────────────────────────────── ServiceNow — Install and Upgrade ───────────────────────────────────┐
 │                                                                                                       │
 │  ServiceNow upgrade process: SN delivers patches; tenant validates and activates via HI.              │

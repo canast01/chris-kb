@@ -22,7 +22,7 @@ ESXi Backup & Restore Flow
 └───────────────────────┬────────────────────────────────┘
                         │
 ```
-```
+```text
 ┌────────────────────────────────────── ESXi — Backup and Restore ──────────────────────────────────────┐
 │                                                                                                       │
 │  configBundle backup, Host Profiles, and full reinstall restore procedure.                            │

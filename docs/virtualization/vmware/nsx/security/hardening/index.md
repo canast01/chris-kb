@@ -66,7 +66,7 @@ for r in d.get('results', []):
 "
 # Expected: action=DROP
 ```
-```
+```text
 ┌─────────────────────────────────────────── NSX — Hardening ───────────────────────────────────────────┐
 │                                                                                                       │
 │  CIS NSX benchmark, API security, DFW default-deny, and lockdown posture.                             │

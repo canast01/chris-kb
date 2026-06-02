@@ -4,7 +4,7 @@
 End-to-end deployment guide from bare metal to a validated vSAN cluster. Phases 1–3 cover the physical and hypervisor foundation; Phases 4–7 cover vSAN-specific enablement, policy configuration, and end-to-end validation.
 </div>
 
-```
+```text
 ┌────────────────────────────────────── vSAN — Deployment Phases ───────────────────────────────────────┐
 │                                                                                                       │
 │  Seven phases from bare metal to operational vSAN cluster. Each phase has a clear exit criterion.     │
@@ -123,7 +123,7 @@ Recommended boot device: dedicated M.2 SSD, SD card (with a 2-card redundant BOS
 
 Immediately after first boot, via the Direct Console User Interface (F2 → System Customization):
 
-```
+```text
 Configure Management Network:
   → Network Adapters: select the correct management NIC (vmnic0 or vmnic1)
   → IP Configuration: set static IP, subnet, gateway
@@ -192,7 +192,7 @@ Repeat for every host. All must have working forward and reverse DNS before vCen
 
 ### License Assignment
 
-```
+```text
 vSphere Client → Administration → Licenses → Add License Key
 → assign vSphere + vSAN licenses to cluster and hosts
 ```
@@ -215,7 +215,7 @@ chronyc tracking
 
 ### Create the Distributed Virtual Switch
 
-```
+```text
 vSphere Client → Datacenter → Actions → Distributed Switch → New Distributed Switch
 → Name: vDS-Prod
 → Version: match ESXi version
@@ -225,7 +225,7 @@ vSphere Client → Datacenter → Actions → Distributed Switch → New Distrib
 
 Add all hosts to the dvSwitch and assign physical uplinks:
 
-```
+```text
 dvSwitch → Actions → Add and Manage Hosts
 → Add hosts → assign vmnic2 to Uplink 1, vmnic3 to Uplink 2 (adjust for your hardware)
 ```
@@ -245,7 +245,7 @@ dvSwitch → Actions → Add and Manage Hosts
 
 For each host: Host → Configure → Networking → VMkernel adapters → Add Networking
 
-```
+```text
 → Select: Existing distributed port group → PG-vSAN
 → Enable: vSAN traffic service tag
 → IP: static, e.g. 192.168.100.1x/24 (per host)
@@ -284,7 +284,7 @@ Any packet loss means MTU 9000 is not configured somewhere in the path (switch p
 
 If vSAN, vMotion, and VM traffic share the same uplinks, configure Network I/O Control:
 
-```
+```text
 dvSwitch → Configure → Network I/O Control → Enable
 → System Traffic → vSAN: set reservation to 50% (minimum)
 → System Traffic → vMotion: set reservation to 25%
@@ -300,7 +300,7 @@ dvSwitch → Configure → Network I/O Control → Enable
 
 **From vSphere Client:**
 
-```
+```text
 Cluster → Configure → vSAN → Services → Configure
 → Select: Single site cluster (or 2-node / Stretched)
 → Deduplication and Compression: disable for now (enable after validation)
@@ -381,7 +381,7 @@ New-SpbmStoragePolicy -Name "VSAN-DEV-FTT1-RAID1" `
 
 ### Enable vSAN Performance Service
 
-```
+```text
 Cluster → Configure → vSAN → Services → Performance Service → Enable
 ```
 
@@ -428,7 +428,7 @@ Aria Suite Lifecycle (previously vRealize Suite Lifecycle Manager) is the deploy
 
 ### Skyline Health — All Green
 
-```
+```text
 Cluster → Monitor → vSAN → Skyline Health
 → All categories must show green
 → Resolve every warning before sign-off

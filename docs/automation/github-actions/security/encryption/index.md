@@ -22,7 +22,7 @@ flowchart LR
     ghEncrypted -->|"injected at runtime\nnot stored on disk"| wfRun
     wfRun --> step --> logs
 ```
-```
+```text
 ┌───────────────────────────────────── GitHub Actions — Encryption ─────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │    GitHub Actions encrypts secrets at rest and in transit; secrets masked in all log output   │   │

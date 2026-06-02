@@ -5,7 +5,7 @@
 AWS CloudWatch Logs reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
 
-```
+```text
 ┌────────────────────────────────── CloudWatch Logs — Log Management ───────────────────────────────────┐
 │                                                                                                       │
 │  CloudWatch Logs ingests, stores, and queries log data from AWS services and applications.            │

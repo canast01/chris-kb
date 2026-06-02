@@ -30,7 +30,7 @@ The Keystone Collector reports consumption telemetry continuously. NetApp aggreg
 ```text
 Monthly Invoice = (Committed capacity × committed rate) + (Burst TiB × burst rate)
 ```
-```
+```text
 ┌───────────────────────────────────── NetApp Keystone — Lifecycle ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

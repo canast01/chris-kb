@@ -40,7 +40,7 @@ Health Check Flows
                   │ Escalate P1/P2 │
                   └────────────────┘
 ```
-```
+```text
 ┌──────────────────────────────────── Virtualization Health Checks ─────────────────────────────────────┐
 │                                                                                                       │
 │    Structured checks across daily operations, capacity planning, and change management                │

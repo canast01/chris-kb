@@ -5,7 +5,7 @@
 AWS Cost Anomaly Detection reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
 
-```
+```text
 ┌────────────────────────────────── AWS Cost — Cost Anomaly Detection ──────────────────────────────────┐
 │                                                                                                       │
 │  ML-based service detecting unexpected cost spikes across services, accounts, and tags.               │

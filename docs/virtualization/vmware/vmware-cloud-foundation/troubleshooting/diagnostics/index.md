@@ -40,7 +40,7 @@ flowchart TD
     G --> G1[Run vSAN\nhealth check]
     H --> H1[GET /v1/system/health-summary]
 ```
-```
+```text
 ┌──────────────────────────────── VMware Cloud Foundation — Diagnostics ────────────────────────────────┐
 │                                                                                                       │
 │  VCF diagnostics use SDDC Manager task logs, SOS utility, component logs, and                         │

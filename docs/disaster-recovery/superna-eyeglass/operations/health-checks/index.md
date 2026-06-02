@@ -40,7 +40,7 @@ flowchart TD
     result -->|Yes| ok([DR Ready - Score 100%])
     result -->|No| investigate([Investigate and remediate])
 ```
-```
+```text
 ┌────────────────────────────────── Superna Eyeglass — Health Checks ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

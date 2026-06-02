@@ -28,7 +28,7 @@ graph LR
     runPlaybook -->|exit 0| success
     runPlaybook -->|exit 1| rollback
 ```
-```
+```text
 ┌────────────────────────────────────────── Ansible — Scripts ──────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │          Utility scripts: inventory validation, bulk vault re-key, job report export          │   │

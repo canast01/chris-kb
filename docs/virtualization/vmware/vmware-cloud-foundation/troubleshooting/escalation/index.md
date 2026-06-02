@@ -5,7 +5,7 @@
 Escalation reference covering Information to Collect Before Opening an SR, Support Tiers.
 </div>
 
-```
+```text
 ┌──────────────────────────────── VMware Cloud Foundation — Escalation ─────────────────────────────────┐
 │                                                                                                       │
 │  Escalate VCF issues to VMware GSS when upgrade is stuck, data is at risk,                            │

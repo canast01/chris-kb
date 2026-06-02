@@ -4,7 +4,7 @@
 Python infrastructure automation knowledge base covering virtual environment management, dependency tooling, asyncio concurrency patterns, Docker containerisation, CLI script design, and integration with cloud and infrastructure APIs.
 </div>
 
-```
+```text
 ┌────────────────────────── Python — Infrastructure Scripting and Automation ───────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │ Python: dominant language for infrastructure automation, API integration, and data processing │   │

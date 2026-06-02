@@ -5,7 +5,7 @@
 Health Checks reference covering Daily Checks, Health Check Checklist, Post-Change Validation.
 </div>
 
-```
+```text
 ┌────────────────────────────────── Brocade Fabric OS — Health Checks ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

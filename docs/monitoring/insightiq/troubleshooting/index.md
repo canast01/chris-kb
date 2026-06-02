@@ -26,7 +26,7 @@ sudo tail -f /var/log/insightiq/collector.log
 # Restart the collector if it has stopped
 sudo systemctl restart iiq-collector
 ```
-```
+```text
 ┌───────────────────────────────────── InsightIQ — Troubleshooting ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │

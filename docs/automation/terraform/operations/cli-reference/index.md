@@ -42,7 +42,7 @@ graph TD
     tfClient -->|backend remote| tfcState
     tfcState --> tfcRuns
 ```
-```
+```text
 ┌────────────────────────────────────── Terraform — CLI Reference ──────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │              Essential Terraform CLI commands for daily infrastructure operations             │   │

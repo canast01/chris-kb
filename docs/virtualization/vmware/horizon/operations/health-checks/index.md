@@ -13,7 +13,7 @@ Health Checks reference covering Desktop Pool Health, Active Session Count vs Li
 │  (all green?)    │    │  (healthy?)      │    │   capacity?)                                          │
 └──────────────────┘    └──────────────────┘    └──────────────────┘
 ```
-```
+```text
 ┌─────────────────────────────────── VMware Horizon — Health Checks ────────────────────────────────────┐
 │                                                                                                       │
 │  Horizon health checks verify Connection Server status, pool availability, agent                      │
@@ -64,7 +64,7 @@ Health Checks reference covering Desktop Pool Health, Active Session Count vs Li
          ▼
 ```text
 ```
-```
+```text
 ┌──────────────────┐
 │  Desktop Pools                                                                                        │
 │  (Available > 0,                                                                                      │

@@ -26,7 +26,7 @@ flowchart TD
     openSR --> monitor
     monitor -->|"No progress 24h"| escalateAccount
 ```
-```
+```text
 ┌──────────────────────────────────── Linux — Escalation Procedures ────────────────────────────────────┐
 │                                                                                                       │
 │  Escalation paths, contacts, and runbooks when Linux issues exceed local resolution.                  │

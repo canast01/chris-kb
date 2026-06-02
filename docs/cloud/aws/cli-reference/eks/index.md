@@ -33,7 +33,7 @@ EKS CLI: Cluster → Nodes → Workloads
          │proxy   │   │         │   │            │
          └────────┘   └─────────┘   └────────────┘
 ```
-```
+```text
 ┌──────────────────────────────────────────── AWS CLI — EKS ────────────────────────────────────────────┐
 │                                                                                                       │
 │  EKS CLI commands for cluster management, node groups, add-ons, and kubeconfig.                       │

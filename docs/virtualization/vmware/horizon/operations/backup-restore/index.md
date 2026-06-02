@@ -21,7 +21,7 @@ Backup and Restore reference covering Verify the Backup, App Volumes Manager Dat
 │  + AppStack VMDKs   │               │  on datastore                                                   │
 └─────────────────────┘               └────────────────────────────┘
 ```
-```
+```text
 ┌────────────────────────────────── VMware Horizon — Backup & Restore ──────────────────────────────────┐
 │                                                                                                       │
 │  Horizon backup covers the LDAP config database on Connection Servers, golden image                   │
@@ -68,7 +68,7 @@ Backup and Restore reference covering Verify the Backup, App Volumes Manager Dat
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```
+```text
 ┌────────────────────────────────── VMware Horizon — Backup & Restore ──────────────────────────────────┐
 │                                                                                                       │
 │  Horizon backup covers the LDAP config database on Connection Servers, golden image                   │

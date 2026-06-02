@@ -33,7 +33,7 @@ graph TD
     r1array -->|"SRDF/A async replication"| r2array
     srmProd <-->|"SRM pairing channel"| srmDr
 ```
-```
+```text
 ┌───────────────────────────────── SRDF/A — Architecture Integrations ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

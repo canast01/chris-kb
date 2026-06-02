@@ -23,7 +23,7 @@ flowchart TD
     w32time --> netlogon
     bfe --> winrm
 ```
-```
+```text
 ┌─────────────────────────────── Windows Server — Operations Procedures ────────────────────────────────┐
 │                                                                                                       │
 │  Standard procedures: user provisioning, server decommission, patch process, and AD cleanup.          │

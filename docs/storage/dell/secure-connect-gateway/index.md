@@ -4,7 +4,7 @@
 Dell Secure Connect Gateway navigation for Operations, CLI Reference, Scripts.
 </div>
 
-```
+```text
 ┌────────────────────────────────── Dell Secure Connect Gateway (SCG) ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

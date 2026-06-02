@@ -42,7 +42,7 @@ flowchart LR
     EG --> NFS
     EG --> SFTP
 ```
-```
+```text
 ┌───────────────────────────────── Superna Eyeglass — Backup & Restore ─────────────────────────────────┐
 │                                                                                                       │
 │    Backup flow: quiesce source → snapshot/copy → transfer → write to target → catalog                 │

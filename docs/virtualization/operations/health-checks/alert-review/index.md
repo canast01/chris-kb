@@ -5,7 +5,7 @@
 Alert Health Check reference covering Active Alerts Review, Aria Operations Alerts, Hardware Alerts, Backup Alerts, Repeat Alerts and 2 more sections.
 </div>
 
-```
+```text
 ┌────────────────────────────────── Alert Health Check — Review Flow ───────────────────────────────────┐
 │                                                                                                       │
 │    Review all active alerts every morning; triage by priority; assign or suppress                     │

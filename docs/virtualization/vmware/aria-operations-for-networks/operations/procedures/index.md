@@ -41,7 +41,7 @@ curl -sk -X POST "${PLATFORM}/api/ni/datasources/vcenter" \
     "enabled": true
   }' | python3 -m json.tool
 ```
-```
+```text
 ┌───────────────────────────────────── vRNI Operational Procedures ─────────────────────────────────────┐
 │                                                                                                       │
 │  Add data source, certificate rotation, and credential rotation procedures for vRNI.                  │

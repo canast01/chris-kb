@@ -8,7 +8,7 @@ title: VxRail
 Operational reference for Dell VxRail HCI. Covers architecture, lifecycle management, operations, CLI reference, troubleshooting, integration, and vendor support for VxRail clusters running vSphere and vSAN.
 </div>
 
-```
+```text
 ┌──────────────────────────────────────── VxRail Platform Stack ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -79,7 +79,7 @@ Operational reference for Dell VxRail HCI. Covers architecture, lifecycle manage
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-```
+```text
 ┌─────────────────────────────── VxRail Platform — Installation Sequence ───────────────────────────────┐
 │                                                                                                       │
 │  Step 1 · Physical Infrastructure                                                                     │

@@ -4,7 +4,7 @@
 vSphere Replication knowledge base — architecture, operations, CLI references, security, and troubleshooting. Content being built out.
 </div>
 
-```
+```text
 ┌────────────────────────────────────── vSphere Replication Stack ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -61,7 +61,7 @@ vSphere Replication knowledge base — architecture, operations, CLI references,
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-```
+```text
 ┌───────────────────────────── vSphere Replication — Installation Sequence ─────────────────────────────┐
 │                                                                                                       │
 │  Step 1 · Pre-Deploy Checks                                                                           │

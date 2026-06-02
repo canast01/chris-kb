@@ -25,7 +25,7 @@ VCF Encryption — Certificate and Data Flow
 │  Timeline:  60d → plan   30d → schedule   7d → P2                                                     │
 └──────────────────────────┬──────────────────────────┘
 ```
-```
+```text
 ┌──────────────────────────────── VMware Cloud Foundation — Encryption ─────────────────────────────────┐
 │                                                                                                       │
 │  VCF encryption covers transport (TLS 1.2+), vSAN at-rest encryption, VM encryption,                  │
@@ -72,7 +72,7 @@ VCF Encryption — Certificate and Data Flow
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```
+```text
 ┌─────────────────────────────────────────────────────┐
 │  vSAN Data-at-Rest Encryption                                                                         │
 │                                                                                                       │

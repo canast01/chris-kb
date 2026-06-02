@@ -26,7 +26,7 @@ CLI Reference reference covering Session Management, vdmexport / vdmimport, UAG 
 │                        │  │ GET  /rest/inventory/v1/sessions  │                                       │
 └───────────────────────────┴──────────────────────────────────────┘
 ```
-```
+```text
 ┌─────────────────────────────────── VMware Horizon — CLI Reference ────────────────────────────────────┐
 │                                                                                                       │
 │  Horizon CLI tools: vdmadmin.exe on Connection Server, PowerCLI Horizon module,                       │
@@ -73,7 +73,7 @@ CLI Reference reference covering Session Management, vdmexport / vdmimport, UAG 
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```
+```text
 ┌─────────────────────────────────── VMware Horizon — CLI Reference ────────────────────────────────────┐
 │                                                                                                       │
 │  Horizon CLI tools: vdmadmin.exe on Connection Server, PowerCLI Horizon module,                       │

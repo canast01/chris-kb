@@ -53,7 +53,7 @@ Copy-Item "$logDir\*.log" $archive
 # Also collect RASR application event log
 Get-EventLog -LogName Application -Source "RASR*" -Newest 50 | Export-Csv "$archive\RASR-AppEvents.csv" -NoTypeInformation
 ```
-```
+```text
 ┌────────────────────────────────────────── RASR — Escalation ──────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

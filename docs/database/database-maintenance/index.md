@@ -34,7 +34,7 @@ SELECT indexname, pg_size_pretty(pg_relation_size(indexname::regclass)) AS index
        idx_scan AS scans
 FROM pg_stat_user_indexes ORDER BY pg_relation_size(indexname::regclass) DESC LIMIT 20;
 ```
-```
+```text
 ┌────────────────────────────────── Database — Maintenance Procedures ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -76,7 +76,7 @@ PURGE BINARY LOGS BEFORE DATE_SUB(NOW(), INTERVAL 7 DAY);
 -- Update InnoDB statistics
 mysql -u root -e "CALL sys.ps_setup_enable_consumer('events_statements_history_long');"
 ANALYZE TABLE <table>;
-```
+```text
 
 ## SQL Server Maintenance
 

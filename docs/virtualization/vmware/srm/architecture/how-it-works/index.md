@@ -18,7 +18,7 @@ The two SRM Servers form a **site pair**. Communication between them uses TCP 44
 Protected Site                        Recovery Site
 ```text
 ```
-```
+```text
 ┌────────────────────────────────────── VMware SRM — How It Works ──────────────────────────────────────┐
 │                                                                                                       │
 │  SRM orchestrates VM failover between a protected site and recovery site using                        │

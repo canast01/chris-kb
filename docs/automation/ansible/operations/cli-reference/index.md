@@ -34,7 +34,7 @@ graph TD
     groupDB -->|SSH| db02["db02"]
     groupNet -->|SSH| router01["router01"]
 ```
-```
+```text
 ┌─────────────────────────────────────── Ansible — CLI Reference ───────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │ Ansible CLI tools: ansible, ansible-playbook, ansible-inventory, ansible-vault, ansible-galaxy│   │

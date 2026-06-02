@@ -12,7 +12,7 @@ CLI Reference reference covering rasrutil.exe — Primary Command-Line Interface
 ```text
 C:\Program Files\Dell\RASR\rasrutil.exe
 ```
-```
+```text
 ┌──────────────────────────────────────── RASR — CLI Reference ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

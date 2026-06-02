@@ -40,7 +40,7 @@ Emergency changes bypass the standard CAB cycle to address active outages or cri
 4. Confirm with stakeholders that service is restored
 5. Remove any temporary workarounds (firewall rules, bypasses)
 ```
-```
+```text
 ┌────────────────────────────────────────── Emergency Change ───────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

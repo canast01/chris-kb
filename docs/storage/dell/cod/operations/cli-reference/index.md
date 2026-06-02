@@ -60,7 +60,7 @@ symcfg -sid <sid> list -disk
 # Show only thin/EFD disks with capacity summary
 symcfg -sid <sid> list -disk -thin
 ```
-```
+```text
 ┌─────────────────────────────────────── Dell COD CLI Reference ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

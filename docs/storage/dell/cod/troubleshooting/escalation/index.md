@@ -5,7 +5,7 @@
 Escalation reference covering Support Portal, Information to Collect, Escalation Path.
 </div>
 
-```
+```text
 ┌──────────────────────────────────────── Dell CoD — Escalation ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

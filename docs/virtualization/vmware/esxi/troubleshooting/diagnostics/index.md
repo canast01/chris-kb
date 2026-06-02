@@ -33,7 +33,7 @@ ESXi Diagnostic Data Sources
 │  └── DS Latency   < 10ms  │ > 20ms → investigate                                                      │
 └──────────────────────────────────────────────────────────┘
 ```
-```
+```text
 ┌───────────────────────────────────────── ESXi — Diagnostics ──────────────────────────────────────────┐
 │                                                                                                       │
 │  Log file locations, esxcli diagnostic commands, and support bundle collection.                       │
@@ -80,7 +80,7 @@ ESXi Diagnostic Data Sources
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```
+```text
 ┌───────────────────────────────────────── ESXi — Diagnostics ──────────────────────────────────────────┐
 │                                                                                                       │
 │  Log file locations, esxcli diagnostic commands, and support bundle collection.                       │

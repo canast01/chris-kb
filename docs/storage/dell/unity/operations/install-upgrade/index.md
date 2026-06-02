@@ -5,7 +5,7 @@
 Install & Upgrade reference covering Unity OE Version Matrix, Upgrade Paths, Hardware Refresh, EOL Tracking.
 </div>
 
-```
+```text
 ┌─────────────────────────────────── Dell Unity Install and Upgrade ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

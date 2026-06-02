@@ -5,7 +5,7 @@
 Health Checks reference covering Ansible Health Check Flow.
 </div>
 
-```
+```text
 ┌─────────────────────────────────────── Ansible — Health Checks ───────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │ Ansible health checks: verify control node, AWX services, connectivity, and job success rates │   │

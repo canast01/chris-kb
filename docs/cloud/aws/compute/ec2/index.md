@@ -5,7 +5,7 @@
 AWS EC2 reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
 
-```
+```text
 ┌────────────────────────────────────────── AWS Compute — EC2 ──────────────────────────────────────────┐
 │                                                                                                       │
 │  Elastic Compute Cloud: instance types, purchasing options, networking, and storage.                  │
@@ -111,7 +111,7 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## EC2 Purchase Options
 
-```
+```text
 ┌────────────────────── EC2 Purchase Options — Discount and Commitment Comparison ──────────────────────┐
 │                                                                                                       │
 │    Six purchase options balance cost, flexibility, and availability guarantees.                       │
@@ -162,7 +162,7 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## EC2 Instance Type Families
 
-```
+```text
 ┌───────────────────────── EC2 Instance Type Families — Workload Optimisation ──────────────────────────┐
 │                                                                                                       │
 │    Instance family letter tells you the workload optimisation; generation number follows.             │
@@ -211,7 +211,7 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## Compute Services Comparison
 
-```
+```text
 ┌─────────────────────── AWS Compute Services — EC2 vs Containers vs Serverless ────────────────────────┐
 │                                                                                                       │
 │    Choose compute based on control needed, workload type, and management overhead.                    │
@@ -260,7 +260,7 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## EC2 Auto Scaling and Load Balancing
 
-```
+```text
 ┌────────────────────── EC2 Auto Scaling + Elastic Load Balancing — Architecture ───────────────────────┐
 │                                                                                                       │
 │    ALB/NLB distribute traffic; Auto Scaling Group adjusts capacity automatically.                     │

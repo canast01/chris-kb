@@ -16,7 +16,7 @@ ESXi Escalation Path — Broadcom Support
 └──────────────────────────┬──────────────────────────────┘
                            │
 ```
-```
+```text
 ┌────────────────────────────────────────── ESXi — Escalation ──────────────────────────────────────────┐
 │                                                                                                       │
 │  VMware GSS escalation, support bundle collection, and severity level matrix.                         │
@@ -63,7 +63,7 @@ ESXi Escalation Path — Broadcom Support
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```
+```text
 ┌──────────────────────────▼──────────────────────────────┐
 │  Escalation Triggers                                                                                  │
 │  ├── Case not progressing → request internal escalation                                               │

@@ -33,7 +33,7 @@ TOKEN=$(curl -s -X POST "https://netapp-cloud-account.auth0.com/oauth/token" \
 
 echo "Token acquired"
 ```
-```
+```text
 ┌─────────────────────────────────── NetApp Keystone — CLI Reference ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

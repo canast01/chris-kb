@@ -26,7 +26,6 @@ Maintenance Window Flow
                    │  → escalate with logs   │
                    │  → contact Dell support │
                    └─────────────────────────┘
-```
 
 ## Overview
 

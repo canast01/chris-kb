@@ -28,7 +28,7 @@ graph TB
   class VPC,PUB,PRIV net
   class IGW,TGW cloud
 ```
-```
+```text
 ┌─────────────────────────────────── AWS Architecture — How It Works ───────────────────────────────────┐
 │                                                                                                       │
 │  Multi-account org: management root governs OUs; workload accounts isolated by purpose.               │
@@ -98,7 +98,7 @@ graph TB
 
 ## AWS Global Infrastructure
 
-```
+```text
 ┌──────────────────── AWS Global Infrastructure — Regions, AZs, and Edge Locations ─────────────────────┐
 │                                                                                                       │
 │    33+ Regions, 105+ AZs, 400+ CloudFront edge locations; foundation of all AWS services.             │
@@ -152,7 +152,7 @@ graph TB
 
 ## AWS Shared Responsibility Model
 
-```
+```text
 ┌──────────────────── AWS Shared Responsibility Model — Security OF vs IN the Cloud ────────────────────┐
 │                                                                                                       │
 │    AWS secures the infrastructure; customers secure what they run on it.                              │
@@ -201,7 +201,7 @@ graph TB
 
 ## AWS Well-Architected Framework — 6 Pillars
 
-```
+```text
 ┌───────────────────────────── AWS Well-Architected Framework — 6 Pillars ──────────────────────────────┐
 │                                                                                                       │
 │    Framework guides cloud architecture decisions; assessed via Well-Architected Tool.                 │
@@ -258,7 +258,7 @@ graph TB
 
 ## AWS Cloud Adoption Framework — 6 Perspectives
 
-```
+```text
 ┌───────────────────────── AWS Cloud Adoption Framework (CAF) — 6 Perspectives ─────────────────────────┐
 │                                                                                                       │
 │    CAF organises guidance into Business and Technology perspectives for cloud adoption.               │
@@ -304,7 +304,7 @@ graph TB
 
 ## AWS Migration Strategies — 7 Rs
 
-```
+```text
 ┌───────────────────────────────── AWS Migration Strategies — The 7 Rs ─────────────────────────────────┐
 │                                                                                                       │
 │    7 Rs describe how an application moves to or is handled in the cloud migration.                    │

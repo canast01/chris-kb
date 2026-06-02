@@ -30,7 +30,7 @@ VCF CLI Tool Map — Where to Run What
 │    PATCH /v1/credentials rotate a credential                                                          │
 └─────────────────────────────────────────────────────┘
 ```
-```
+```text
 ┌─────────────────────────────── VMware Cloud Foundation — CLI Reference ───────────────────────────────┐
 │                                                                                                       │
 │  VCF is primarily managed via SDDC Manager UI and REST API; PowerVCF and lcm-cli                      │
@@ -77,7 +77,7 @@ VCF CLI Tool Map — Where to Run What
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```
+```text
 ┌─────────────────────────────── VMware Cloud Foundation — CLI Reference ───────────────────────────────┐
 │                                                                                                       │
 │  VCF is primarily managed via SDDC Manager UI and REST API; PowerVCF and lcm-cli                      │
@@ -124,7 +124,7 @@ VCF CLI Tool Map — Where to Run What
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```
+```text
 ┌─────────────────────────────── VMware Cloud Foundation — CLI Reference ───────────────────────────────┐
 │                                                                                                       │
 │  VCF is primarily managed via SDDC Manager UI and REST API; PowerVCF and lcm-cli                      │

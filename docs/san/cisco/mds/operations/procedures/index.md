@@ -74,7 +74,7 @@ flowchart TD
   class A,B,C,D,E,F,G,H,I step
   class J verify
 ```
-```
+```text
 ┌─────────────────────────────── Cisco MDS 9000 — Operations Procedures ────────────────────────────────┐
 │                                                                                                       │
 │  MDS day-2 operations: zone changes, VSAN management, firmware ISSU, health checks.                   │

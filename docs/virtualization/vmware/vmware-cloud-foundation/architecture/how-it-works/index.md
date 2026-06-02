@@ -12,7 +12,7 @@ VCF Bring-Up and Lifecycle Flow
 │  reads deployment parameter workbook                                                                  │
 └──────────────────────┬───────────────────────────────┘
 ```
-```
+```text
 ┌─────────────────────────────── VMware Cloud Foundation — How It Works ────────────────────────────────┐
 │                                                                                                       │
 │  VCF bundles vSphere, vSAN, NSX, and Aria into a single SDDC stack; SDDC Manager                      │
@@ -77,7 +77,7 @@ VCF Bring-Up and Lifecycle Flow
           ▼
 ```text
 ```
-```
+```text
 ┌─────────────────────────────────────────────────────┐
 │  Workload Domain Provisioning                                                                         │
 │  Commission hosts → Create domain → SDDC Manager                                                      │

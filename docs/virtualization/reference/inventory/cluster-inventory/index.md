@@ -5,7 +5,7 @@
 Cluster Inventory reference covering Overview, Cluster Inventory Table, Fields Reference, Cluster Configuration Checklist.
 </div>
 
-```
+```text
 ┌───────────────────────────────────── vSphere — Cluster Inventory ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

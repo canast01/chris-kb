@@ -40,7 +40,7 @@ BACKUP FLOW — vSAN VM TO TARGET
          ▼
   VM powered on + validated
 ```
-```
+```text
 ┌─────────────────────────────────────── vSAN — Backup & Restore ───────────────────────────────────────┐
 │                                                                                                       │
 │  vSAN itself is not a backup solution; VMs on vSAN are backed up via VADP;                            │

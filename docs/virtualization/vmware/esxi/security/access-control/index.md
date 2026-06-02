@@ -15,7 +15,7 @@ ESXi Access Control Model
 └──────────────────────┬───────────────────────────────┘
                        │ vpxa / hostd (HTTPS 443/902)
 ```
-```
+```text
 ┌──────────────────────────────────────── ESXi — Access Control ────────────────────────────────────────┐
 │                                                                                                       │
 │  RBAC via vCenter roles, lockdown mode, and direct host permission management.                        │
@@ -62,7 +62,7 @@ ESXi Access Control Model
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```
+```text
 ┌──────────────────────────────────────── ESXi — Access Control ────────────────────────────────────────┐
 │                                                                                                       │
 │  RBAC via vCenter roles, lockdown mode, and direct host permission management.                        │
@@ -109,7 +109,7 @@ ESXi Access Control Model
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```
+```text
 ┌──────────────────────────────────────── ESXi — Access Control ────────────────────────────────────────┐
 │                                                                                                       │
 │  RBAC via vCenter roles, lockdown mode, and direct host permission management.                        │

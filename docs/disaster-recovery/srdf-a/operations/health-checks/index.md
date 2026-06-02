@@ -37,7 +37,7 @@ symrdf -g 20 -type A query -detail | grep -E "Lag|Cycle Age"
 LAG=$(symrdf -g 20 -type A query -detail | grep "Lag" | awk '{print $NF}')
 echo "Current lag: ${LAG} seconds"
 ```
-```
+```text
 ┌─────────────────────────────────────── SRDF/A — Health Checks ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

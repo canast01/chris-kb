@@ -49,7 +49,7 @@ ls /data/support-bundles/
 # Transfer via SCP:
 scp ubuntu@vrni.example.local:/data/support-bundles/<bundle>.tar.gz /local/path/
 ```
-```
+```text
 ┌─────────────────────────────────────────── vRNI Escalation ───────────────────────────────────────────┐
 │                                                                                                       │
 │  Escalation triggers, Support Request process, and TAM engagement for vRNI.                           │

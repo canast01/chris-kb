@@ -15,7 +15,7 @@ AWS VPC — Virtual Private Cloud
 │     routing, and security
                                           │
 ```
-```
+```text
 ┌───────────────────────────────────── VPC — Virtual Private Cloud ─────────────────────────────────────┐
 │                                                                                                       │
 │  VPC is an isolated virtual network within AWS; you control CIDR, subnets, and routing.               │
@@ -104,7 +104,7 @@ aws ec2 describe-vpn-connections --query 'VpnConnections[*].[VpnConnectionId,Sta
 
 ## VPC Subnet Architecture
 
-```
+```text
 ┌────────────────────── VPC Subnet Architecture — Public, Private, and Data Tiers ──────────────────────┐
 │                                                                                                       │
 │    Multi-tier VPC: public (internet-facing), private (app), data (DB) subnets per AZ.                 │
@@ -155,7 +155,7 @@ aws ec2 describe-vpn-connections --query 'VpnConnections[*].[VpnConnectionId,Sta
 
 ## AWS Network Connectivity Options
 
-```
+```text
 ┌────────────────────────────────── AWS Network Connectivity Options ───────────────────────────────────┐
 │                                                                                                       │
 │    Multiple options connect on-prem to AWS or VPCs to each other; choose by need.                     │
@@ -205,7 +205,7 @@ aws ec2 describe-vpn-connections --query 'VpnConnections[*].[VpnConnectionId,Sta
 
 ## Route 53 Routing Policies
 
-```
+```text
 ┌─────────────────────────────── Route 53 Routing Policies — Comparison ────────────────────────────────┐
 │                                                                                                       │
 │    Route 53 supports 7 routing policies; choose based on traffic distribution goal.                   │

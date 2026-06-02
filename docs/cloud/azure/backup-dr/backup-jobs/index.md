@@ -10,7 +10,7 @@ Azure Backup jobs represent discrete backup, restore, and configuration operatio
      │
      ▼
 ```
-```
+```text
 ┌────────────────────────────────────────────────────────┐
 │              Backup Job Lifecycle                                                                     │
 │                                                                                                       │

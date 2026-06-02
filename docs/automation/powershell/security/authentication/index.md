@@ -36,7 +36,7 @@ graph TD
     azKeyVault --> psCred
     psCred --> cmdlet
 ```
-```
+```text
 ┌───────────────────────────────────── PowerShell — Authentication ─────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │ PowerShell authentication: Kerberos (domain), NTLM (fallback), certificate-based for remoting │   │

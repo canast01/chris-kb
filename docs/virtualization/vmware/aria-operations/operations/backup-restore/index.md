@@ -14,7 +14,7 @@ Aria Operations — Backup Architecture
 │  └──────────┘  └──────────┘  └────────────────┘                                                       │
 └──────────────────────┬──────────────────────────────┘
 ```
-```
+```text
 ┌────────────────────────────────── Aria Operations Backup & Restore ───────────────────────────────────┐
 │                                                                                                       │
 │  Backup CaSA store and configuration; restore steps for Aria Operations (vROps).                      │
@@ -63,7 +63,7 @@ Aria Operations — Backup Architecture
                        ▼
 ```text
 ```
-```
+```text
 ┌─────────────────────────────────────────────────────┐
 │  Restore Process                                                                                      │
 │  Admin → Backup/Restore → select backup → Restore                                                     │

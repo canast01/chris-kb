@@ -27,7 +27,7 @@ graph LR
     apply --> postPlan
     apply --> stateBackup
 ```
-```
+```text
 ┌─────────────────────────────────────── Terraform — Procedures ────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │     TF procedures: new module creation, import existing infra, state migration, workspaces    │   │

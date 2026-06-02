@@ -26,7 +26,7 @@ CLI Reference reference covering SRM REST API — Recovery Plans, PowerCLI for S
 │  └──────────────────────────────────────────────────────┘                                             │
 └──────────────────────────────────────────────────────────────┘
 ```
-```
+```text
 ┌───────────────────────────────────── VMware SRM — CLI Reference ──────────────────────────────────────┐
 │                                                                                                       │
 │  SRM is managed primarily via the vSphere Client plugin; srm-util.exe and the SRM                     │
@@ -73,7 +73,7 @@ CLI Reference reference covering SRM REST API — Recovery Plans, PowerCLI for S
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```
+```text
 ┌───────────────────────────────────── VMware SRM — CLI Reference ──────────────────────────────────────┐
 │                                                                                                       │
 │  SRM is managed primarily via the vSphere Client plugin; srm-util.exe and the SRM                     │

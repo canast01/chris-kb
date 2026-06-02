@@ -38,7 +38,7 @@ CloudIQ portal > Settings > Notifications > Add Notification Rule
     "assignment_group": "storage-ops"
   }
 ```
-```
+```text
 ┌───────────────────────────────────── CloudIQ — Integration Guide ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │

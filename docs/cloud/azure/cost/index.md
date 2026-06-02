@@ -4,7 +4,7 @@
 Azure Cost articles, operational checks, troubleshooting notes, and references.
 </div>
 
-```
+```text
 ┌──────────────────────────────────────── Azure Cost Management ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

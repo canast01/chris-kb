@@ -26,7 +26,6 @@ Post-Upgrade Validation Sequence
                          │  YES → close change │
                          │  NO  → investigate  │
                          └─────────────────────┘
-```
 
 ## Overview
 

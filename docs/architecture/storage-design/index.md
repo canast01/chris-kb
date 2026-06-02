@@ -77,7 +77,7 @@ flowchart TD
     A --> K{Archive or\ncloud tiering?}
     K -->|Yes| L["S3 Object Storage\n(Dell ECS, AWS S3, Azure Blob)"]
 ```
-```
+```text
 ┌──────────────────────────────────── Architecture — Storage Design ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

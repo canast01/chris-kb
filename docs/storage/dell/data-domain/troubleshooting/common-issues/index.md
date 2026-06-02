@@ -46,7 +46,7 @@ Common Issues reference covering Issue Reference, Error Code Reference, Replicat
 replication disable <context>
 replication enable <context>
 ```
-```
+```text
 ┌─────────────────────────────────── Dell Data Domain Common Issues ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -5,7 +5,7 @@
 References for infrastructure service integrations and connectivity patterns.
 </div>
 
-```
+```text
 ┌─────────────────────── Integration — API, Certificate, Directory, Email & NTP ────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

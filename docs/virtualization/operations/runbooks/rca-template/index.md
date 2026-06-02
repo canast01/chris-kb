@@ -9,7 +9,7 @@ title: RCA Template
 RCA Template reference covering Summary, Impact, Timeline, Root Cause, Resolution and 2 more sections.
 </div>
 
-```
+```text
 ┌───────────────────────────────── RCA Template — Root Cause Analysis ──────────────────────────────────┐
 │                                                                                                       │
 │    Complete after every P1/P2 incident; attach to change record and share with team                   │

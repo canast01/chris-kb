@@ -27,7 +27,7 @@ vCenter Outage Runbook reference covering Confirm Outage Scope, Check VCSA VM Po
 ping <vcenter-ip>
 nslookup <vcenter-fqdn>
 ```
-```
+```text
 ┌─────────────────────────────────────── vCenter Outage Runbook ────────────────────────────────────────┐
 │                                                                                                       │
 │    ESXi hosts continue running VMs independently; vCenter is management plane only                    │

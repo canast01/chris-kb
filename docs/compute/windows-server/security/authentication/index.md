@@ -25,7 +25,7 @@ sequenceDiagram
     server-->>client: AP-REP — mutual auth confirmation
     client->>server: Application request (authorised session)
 ```
-```
+```text
 ┌─────────────────────────────────── Windows Server — Authentication ───────────────────────────────────┐
 │                                                                                                       │
 │  Authentication stack: Kerberos primary, NTLM fallback, certificate-based, MFA enforcement.           │
@@ -76,7 +76,7 @@ sequenceDiagram
 
 REM Command-line alternative
 netdom join %COMPUTERNAME% /domain:corp.local /userd:corp\administrator /passwordd:* /reboot:30
-```
+```text
 
 ## Kerberos
 

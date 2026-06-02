@@ -126,7 +126,7 @@ Edit these lines near the top of the script:
 chmod +x mds_fabric_health.sh
 MDS_HOST=192.168.1.20 MDS_USER=admin ./mds_fabric_health.sh
 ```
-```
+```text
 ┌───────────────────────────────── Cisco MDS 9000 — Operations Scripts ─────────────────────────────────┐
 │                                                                                                       │
 │  MDS scripting: NX-API, Ansible cisco.nxos, Python NETCONF, zone automation, reports.                 │

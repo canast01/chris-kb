@@ -5,7 +5,7 @@
 How It Works reference covering Overview, Architecture, Supported Platforms, Retention Schedule, Sizing Guidelines and 1 more sections.
 </div>
 
-```
+```text
 ┌──────────────────────────────────────── Veeam — How It Works ─────────────────────────────────────────┐
 │                                                                                                       │
 │    Veeam data flow — from source to target through the protection pipeline:                           │

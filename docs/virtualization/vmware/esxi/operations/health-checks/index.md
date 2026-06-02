@@ -5,7 +5,7 @@
 Health Checks reference covering Health Checklist.
 </div>
 
-```
+```text
 ┌──────────────────────────────────────── ESXi — Health Checks ─────────────────────────────────────────┐
 │                                                                                                       │
 │  Daily/weekly health runbook: hardware sensors, alarms, capacity, and storage.                        │

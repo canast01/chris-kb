@@ -8,7 +8,7 @@ Install and Upgrade reference covering vSphere Replication Appliance Deployment,
   SRM Upgrade Sequence (strictly ordered)
 ```text
 ```
-```
+```text
 ┌─────────────────────────────────── VMware SRM — Install & Upgrade ────────────────────────────────────┐
 │                                                                                                       │
 │  SRM is installed on Windows Server VMs with SQL Server; both sites must have                         │

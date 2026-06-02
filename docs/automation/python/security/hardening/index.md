@@ -30,7 +30,7 @@ flowchart TD
     filePerms --> noLogs
     noLogs --> ready
 ```
-```
+```text
 ┌───────────────────────────────────────── Python — Hardening ──────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │  Harden Python automation: input validation, subprocess safety, dep pinning, pre-commit hooks │   │

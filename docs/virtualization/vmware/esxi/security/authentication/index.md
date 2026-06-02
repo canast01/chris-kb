@@ -16,7 +16,7 @@ ESXi Authentication Paths
 └──────────────────────────┬───────────────────────────────┘
                            │
 ```
-```
+```text
 ┌──────────────────────────────────────── ESXi — Authentication ────────────────────────────────────────┐
 │                                                                                                       │
 │  SSO, AD/LDAP join, smart card (CAC), and MFA configuration for ESXi access.                          │
@@ -63,7 +63,7 @@ ESXi Authentication Paths
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```
+```text
 ┌──────────────────────────────────────── ESXi — Authentication ────────────────────────────────────────┐
 │                                                                                                       │
 │  SSO, AD/LDAP join, smart card (CAC), and MFA configuration for ESXi access.                          │
@@ -110,7 +110,7 @@ ESXi Authentication Paths
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```
+```text
 ┌──────────────────────────────────────────────────────────┐
 │  /Security/PasswordQualityControl                                                                     │
 │  ├── Minimum length: 12 chars                                                                         │
@@ -121,7 +121,7 @@ ESXi Authentication Paths
 │  /Config/Etc/issue             = login banner text                                                    │
 └──────────────────────────────────────────────────────────┘
 ```
-```
+```text
 ┌──────────────────────────────────────── ESXi — Authentication ────────────────────────────────────────┐
 │                                                                                                       │
 │  SSO, AD/LDAP join, smart card (CAC), and MFA configuration for ESXi access.                          │

@@ -38,7 +38,7 @@ vSAN HEALTH CHECK SCOPE
            ▼
   Skyline Health (vCenter UI) + esxcli vsan health cluster list
 ```
-```
+```text
 ┌──────────────────────────────────────── vSAN — Health Checks ─────────────────────────────────────────┐
 │                                                                                                       │
 │  vSAN health checks verify cluster, network, disk, and object health; run daily                       │

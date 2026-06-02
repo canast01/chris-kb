@@ -5,7 +5,7 @@
 Maintenance Window Runbook reference covering Before Maintenance, During Maintenance, After Maintenance.
 </div>
 
-```
+```text
 ┌───────────────────────────────────── Maintenance Window Runbook ──────────────────────────────────────┐
 │                                                                                                       │
 │    Use for all planned VMware work; follow pre/execute/post phases in order                           │

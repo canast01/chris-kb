@@ -6,7 +6,7 @@
 Python Automation — Operations reference.
 </div>
 
-```
+```text
 ┌───────────────────────────────────────── Python — Operations ─────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │       Python operations: venv management, package updates, test runs, script deployment       │   │

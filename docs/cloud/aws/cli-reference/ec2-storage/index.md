@@ -28,7 +28,7 @@ EC2 Storage CLI: AMIs · EBS Volumes · Snapshots
                                         │  (cross-region)  │
                                         └──────────────────┘
 ```
-```
+```text
 ┌──────────────────────────────────────── AWS CLI — EC2 Storage ────────────────────────────────────────┐
 │                                                                                                       │
 │  EBS volume and snapshot CLI commands for provisioning, attaching, and DR operations.                 │

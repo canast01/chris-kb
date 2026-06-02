@@ -36,7 +36,7 @@ kubectl describe pod <pod-name> -n prelude
 # List services
 kubectl get svc -n prelude
 ```
-```
+```text
 ┌─────────────────────────────────── Aria Automation — CLI Reference ───────────────────────────────────┐
 │                                                                                                       │
 │  vRA is operated via REST API, vracli, and VAMI; no traditional SSH-heavy CLI.                        │

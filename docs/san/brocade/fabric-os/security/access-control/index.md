@@ -30,7 +30,7 @@ graph TB
     switches["Switches / ISLs"] --> scc
     devices["Host HBAs\nStorage Targets"] --> dcc
 ```
-```
+```text
 ┌───────────────────────────────── Brocade Fabric OS — Access Control ──────────────────────────────────┐
 │                                                                                                       │
 │  Access control: RBAC roles, login accounts, TACACS+/RADIUS, SCC/DCC zoning policies.                 │

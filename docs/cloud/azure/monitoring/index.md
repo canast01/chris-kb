@@ -4,7 +4,7 @@
 Azure Monitoring articles, operational checks, troubleshooting notes, and references.
 </div>
 
-```
+```text
 ┌────────────────────────────────────── Azure Monitoring Overview ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

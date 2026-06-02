@@ -5,7 +5,7 @@
 Authentication reference covering Credential Rotation, Service Account Policy.
 </div>
 
-```
+```text
 ┌─────────────────────────────────────── SRDF/A — Authentication ───────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

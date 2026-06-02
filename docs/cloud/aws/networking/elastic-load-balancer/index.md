@@ -5,7 +5,7 @@
 AWS Elastic Load Balancer reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
 
-```
+```text
 ┌────────────────────────────── Elastic Load Balancer — ALB / NLB / GWLB ───────────────────────────────┐
 │                                                                                                       │
 │  ELB distributes inbound traffic across targets; ALB for HTTP, NLB for TCP, GWLB for appliances.      │

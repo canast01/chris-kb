@@ -53,7 +53,7 @@ flowchart TD
     U -- Yes --> V[Working set exceeds cache\nTiering or capacity expansion needed]
     U -- No --> W[Check for snapshot/replication I/O\nSchedule during maintenance window]
 ```
-```
+```text
 ┌─────────────────────────────────── Storage Latency Troubleshooting ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

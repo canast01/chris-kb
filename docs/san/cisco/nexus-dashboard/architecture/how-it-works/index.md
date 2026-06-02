@@ -5,7 +5,7 @@
 How It Works reference covering Overview, Key Hosted Applications, Deployment Topology, Node Types, Network Interfaces Per Node and 3 more sections.
 </div>
 
-```
+```text
 ┌──────────────────────────────── Cisco Nexus Dashboard — How It Works ─────────────────────────────────┐
 │                                                                                                       │
 │  ND cluster discovers fabric sites, streams telemetry, and orchestrates multi-site policy.            │

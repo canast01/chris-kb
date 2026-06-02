@@ -34,7 +34,7 @@ Get-Module | Select-Object Name, Version, Path | ConvertTo-Json
 [System.Environment]::Is64BitOperatingSystem
 [System.Environment]::Is64BitProcess
 ```
-```
+```text
 ┌─────────────────────────────────────── PowerShell — Escalation ───────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │ Escalate PowerShell issues to: infra team (remoting), vendor support (module bugs), Microsoft │   │

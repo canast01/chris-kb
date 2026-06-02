@@ -57,7 +57,7 @@ aws rds modify-db-instance \
 aws rds stop-db-instance --db-instance-identifier <db-id>
 aws rds start-db-instance --db-instance-identifier <db-id>
 ```
-```
+```text
 ┌─────────────────────────────── AWS Operations — Procedures & Runbooks ────────────────────────────────┐
 │                                                                                                       │
 │  Standard operating procedures for AWS change management, incident response, and routine ops.         │

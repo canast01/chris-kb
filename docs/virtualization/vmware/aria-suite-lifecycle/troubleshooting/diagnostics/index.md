@@ -27,7 +27,7 @@ Diagnostics reference covering Service Status Verification, Certificate Expiry C
 │  └───────────────────────────┘                                                                        │
 └─────────────────────────────────────────────────────────────────┘
 ```
-```
+```text
 ┌───────────────────────────────────── Aria Suite LCM Diagnostics ──────────────────────────────────────┐
 │                                                                                                       │
 │  Logscraper, vlcm log analysis, and environment health checks for LCM.                                │
@@ -72,7 +72,7 @@ Diagnostics reference covering Service Status Verification, Certificate Expiry C
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```
+```text
 ┌───────────────────────────────────── Aria Suite LCM Diagnostics ──────────────────────────────────────┐
 │                                                                                                       │
 │  Logscraper, vlcm log analysis, and environment health checks for LCM.                                │

@@ -4,7 +4,7 @@
 AWS security layers authentication (IAM Identity Center SSO, MFA), encryption (KMS, Secrets Manager, ACM), and threat detection (GuardDuty, Security Hub, Inspector). SCPs provide org-wide preventive guardrails; Config and Security Hub score detective compliance posture.
 </div>
 
-```
+```text
 ┌──────────────────────────────────────── AWS Security Overview ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -91,7 +91,7 @@ AWS security layers authentication (IAM Identity Center SSO, MFA), encryption (K
 
 ## AWS Security Services Map
 
-```
+```text
 ┌───────────────────── AWS Security Services — Prevention, Detection, and Response ─────────────────────┐
 │                                                                                                       │
 │    Security services span prevention, detection, and response; many can be centralised.               │

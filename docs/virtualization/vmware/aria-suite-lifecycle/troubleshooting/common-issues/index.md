@@ -29,7 +29,7 @@ Common Issues reference covering Upgrade Gets Stuck or Times Out, NFS Mount Lost
 │  └─────────────────┘      └──────────────────┘                                                        │
 └─────────────────────────────────────────────────────────────────┘
 ```
-```
+```text
 ┌──────────────────────────────────── Aria Suite LCM Common Issues ─────────────────────────────────────┐
 │                                                                                                       │
 │  Common LCM issues: deployment failure, certificate mismatch, and disk full.                          │
@@ -74,7 +74,7 @@ Common Issues reference covering Upgrade Gets Stuck or Times Out, NFS Mount Lost
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```
+```text
 ┌──────────────────────────────────── Aria Suite LCM Common Issues ─────────────────────────────────────┐
 │                                                                                                       │
 │  Common LCM issues: deployment failure, certificate mismatch, and disk full.                          │

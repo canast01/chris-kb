@@ -5,7 +5,7 @@
 Hardening reference covering Hardening Checklist, Compliance.
 </div>
 
-```
+```text
 ┌────────────────────────────────── Dell PowerPath Security Hardening ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -20,7 +20,7 @@ Access Control reference covering Pool-Level Admin Delegation, Desktop Pool Enti
 │ -Pool-Admins │    │ (scoped to group) │    │ └─────────────────┘                                      │
 └──────────────┘    └───────────────────┘    └─────────────────────┘
 ```
-```
+```text
 ┌─────────────────────────────────── VMware Horizon — Access Control ───────────────────────────────────┐
 │                                                                                                       │
 │  Horizon access control uses AD groups for pool entitlements, Horizon admin roles                     │
@@ -67,7 +67,7 @@ Access Control reference covering Pool-Level Admin Delegation, Desktop Pool Enti
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```
+```text
 ┌─────────────────────────────────── VMware Horizon — Access Control ───────────────────────────────────┐
 │                                                                                                       │
 │  Horizon access control uses AD groups for pool entitlements, Horizon admin roles                     │

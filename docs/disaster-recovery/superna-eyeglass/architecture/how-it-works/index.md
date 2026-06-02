@@ -27,7 +27,7 @@ graph LR
   class EG mgmt
   class ADMIN,DNS host
 ```
-```
+```text
 ┌─────────────────────────────────── Superna Eyeglass — How It Works ───────────────────────────────────┐
 │                                                                                                       │
 │    Superna Eyeglass data flow — from source to target through the protection pipeline:                │

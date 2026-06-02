@@ -12,7 +12,7 @@ VCF API Automation — Data Flow
 │  (Python / Bash / PowerShell)                                                                         │
 └──────────────────────┬──────────────────────────────┘
 ```
-```
+```text
 ┌──────────────────────────── VMware Cloud Foundation — Operational Scripts ────────────────────────────┐
 │                                                                                                       │
 │  PowerVCF scripts automate VCF operations: domain inventory, upgrade status,                          │
@@ -63,7 +63,7 @@ VCF API Automation — Data Flow
                        ▼
 ```text
 ```
-```
+```text
 ┌─────────────────────────────────────────────────────┐
 │  Script Output / Integration                                                                          │
 │  → stdout / CSV / JSON                                                                                │

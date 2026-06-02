@@ -26,7 +26,7 @@ Hardening reference covering Least-Privilege SRA Service Accounts, Rotate SRA Cr
 │                              └──────────────────────────┘                                             │
 └──────────────────────────────────────────────────────────────┘
 ```
-```
+```text
 ┌─────────────────────────────────────── VMware SRM — Hardening ────────────────────────────────────────┐
 │                                                                                                       │
 │  SRM hardening: restrict failover to authorised users, enforce TLS 1.2+, isolate                      │
@@ -73,7 +73,7 @@ Hardening reference covering Least-Privilege SRA Service Accounts, Rotate SRA Cr
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```
+```text
 ┌─────────────────────────────────────── VMware SRM — Hardening ────────────────────────────────────────┐
 │                                                                                                       │
 │  SRM hardening: restrict failover to authorised users, enforce TLS 1.2+, isolate                      │

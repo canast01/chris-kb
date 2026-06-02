@@ -5,7 +5,7 @@
 Diagnostics reference covering Log Locations, Diagnostic Commands, Support Bundle Collection.
 </div>
 
-```
+```text
 ┌───────────────────────────────────────── Veeam — Diagnostics ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -33,7 +33,7 @@ openssl s_client -tls1_3 -connect nd-dc1.corp.example.com:443 </dev/null 2>&1 | 
 nmap --script ssl-enum-ciphers -p 443 nd-dc1.corp.example.com
 # Acceptable: ECDHE+AESGCM, ECDHE+CHACHA20; No RC4, DES, 3DES, NULL
 ```
-```
+```text
 ┌───────────────────────────── Cisco Nexus Dashboard — Security Encryption ─────────────────────────────┐
 │                                                                                                       │
 │  TLS for all management interfaces; AES-256 for backup data and secrets at rest.                      │

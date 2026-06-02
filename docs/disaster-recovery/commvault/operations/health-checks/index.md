@@ -5,7 +5,7 @@
 Health Checks reference covering Daily Checklist, Weekly Checks.
 </div>
 
-```
+```text
 ┌───────────────────────────── Commvault Health Checks — Daily and Weekly ──────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │

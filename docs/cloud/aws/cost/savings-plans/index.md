@@ -5,7 +5,7 @@
 AWS Savings Plans reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
 
-```
+```text
 ┌────────────────────────────────────── AWS Cost — Savings Plans ───────────────────────────────────────┐
 │                                                                                                       │
 │  Savings Plans commit $/hour across EC2, Lambda, and Fargate for up to 66% savings.                   │

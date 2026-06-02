@@ -4,7 +4,7 @@
 AWS cost management combines visibility tools (Cost Explorer, Anomaly Detection) with spend optimisation (Reserved Instances, Savings Plans) and governance via Budgets and cost allocation tags. Coverage includes chargeback tagging, RI/Savings Plan planning, and anomaly investigation workflows.
 </div>
 
-```
+```text
 ┌───────────────────────────────────────── AWS Cost Management ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -101,7 +101,7 @@ AWS cost management combines visibility tools (Cost Explorer, Anomaly Detection)
 
 ## EC2 Pricing Models
 
-```
+```text
 ┌───────────────────────────── EC2 Pricing Models — Commitment vs Discount ─────────────────────────────┐
 │                                                                                                       │
 │    Longer commitment = larger discount; Spot gives biggest saving with interruption risk.             │
@@ -151,7 +151,7 @@ AWS cost management combines visibility tools (Cost Explorer, Anomaly Detection)
 
 ## AWS Support Tiers
 
-```
+```text
 ┌─────────────────────────── AWS Support Plans — Features and Response Times ───────────────────────────┐
 │                                                                                                       │
 │    Five support tiers; higher tiers add TAMs, faster response, and architectural guidance.            │

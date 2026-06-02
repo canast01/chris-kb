@@ -11,7 +11,7 @@ VCF Authentication Flow
 │  Operator / Admin                                                                                     │
 └──────────────────────┬──────────────────────────────┘
 ```
-```
+```text
 ┌────────────────────────────── VMware Cloud Foundation — Authentication ───────────────────────────────┐
 │                                                                                                       │
 │  VCF authentication flows through SDDC Manager (API token), vCenter SSO (per domain),                 │
@@ -63,7 +63,7 @@ VCF Authentication Flow
           ▼            ▼            ▼
 ```text
 ```
-```
+```text
 ┌──────────────┐ ┌──────────────┐ ┌──────────────────┐
 │ vCenter SSO  │ │ NSX Manager  │ │ SDDC Manager                                                        │
 │              │ │              │ │ Password Manager                                                    │

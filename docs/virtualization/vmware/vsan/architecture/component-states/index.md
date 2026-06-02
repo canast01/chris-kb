@@ -4,7 +4,7 @@
 How vSAN classifies each object component's health — from the initial ABSENT state through DEGRADED and STALE to REBUILDING — and what each state means operationally for data protection and admin action.
 </div>
 
-```
+```text
 ┌────────────────────────────────── vSAN — Component State Lifecycle ───────────────────────────────────┐
 │                                                                                                       │
 │  Every vSAN object is made of components distributed across hosts. Each component has a state         │
@@ -170,7 +170,7 @@ esxcli vsan debug resync throttle set --throttle 0
 
 ## State Transition Diagram
 
-```
+```text
                     Host rebooted / network partition
                               │
                               ▼

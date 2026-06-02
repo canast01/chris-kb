@@ -53,7 +53,7 @@ curl -s -H "Authorization: Bearer $CF_TOKEN" \
   "https://confluence.example.com/rest/api/plugins/1.0/" \
   | jq '.plugins[] | {key: .key, version: .version, enabled: .enabled}'
 ```
-```
+```text
 ┌────────────────────────────────── Confluence — Install and Upgrade ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

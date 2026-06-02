@@ -5,7 +5,7 @@
 Access Control reference covering Preventing Accidental Failover, Audit Logging.
 </div>
 
-```
+```text
 ┌─────────────────────────────────────── SRDF/S — Access Control ───────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -33,7 +33,7 @@ graph TD
     LC -->|git push| FORK
     FORK -->|Pull Request / MR| REMOTE
 ```
-```
+```text
 ┌───────────────────────────────────────── Git — How It Works ──────────────────────────────────────────┐
 │                                                                                                       │
 │  Git commit lifecycle: working tree → index → local repo → remote repo.                               │

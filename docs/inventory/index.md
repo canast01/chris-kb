@@ -5,7 +5,7 @@
 Asset and configuration management references.
 </div>
 
-```
+```text
 ┌────────────────── Inventory — Asset Tracking, CMDB, Lifecycle & License Management ───────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

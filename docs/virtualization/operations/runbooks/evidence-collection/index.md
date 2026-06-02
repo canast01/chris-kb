@@ -5,7 +5,7 @@
 Virtualization Evidence Collection reference covering Overview, Pre-Checks, Steps, Validation, Rollback and 1 more sections.
 </div>
 
-```
+```text
 ┌───────────────────────────── Virtualization Evidence Collection Runbook ──────────────────────────────┐
 │                                                                                                       │
 │    Collect evidence before vendor escalation, RCA work, or major incident review                      │

@@ -27,7 +27,7 @@ graph TB
   class VROPS,VRLI,VRA,VRNI ctrl
   class ADMIN host
 ```
-```
+```text
 ┌────────────────────────────────────── How Aria Suite LCM Works ───────────────────────────────────────┐
 │                                                                                                       │
 │  Depot sync, environment creation, product deployment, and cert management in LCM.                    │

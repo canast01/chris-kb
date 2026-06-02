@@ -26,7 +26,7 @@ aws ssm send-command \
 aws ssm describe-instance-patches --instance-id <i-xxxx> \
     --filters "Key=State,Values=Missing"
 ```
-```
+```text
 ┌───────────────────────────────── AWS Operations — Install & Upgrade ──────────────────────────────────┐
 │                                                                                                       │
 │  Patching, agent upgrades, AMI refresh, and service version management procedures.                    │

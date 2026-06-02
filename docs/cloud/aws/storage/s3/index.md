@@ -5,7 +5,7 @@
 AWS S3 reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
 
-```
+```text
 ┌───────────────────────────────────────── S3 — Object Storage ─────────────────────────────────────────┐
 │                                                                                                       │
 │  S3 stores objects in buckets; 11 nines durability; access controlled by policies and ACLs.           │
@@ -111,7 +111,7 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## S3 Storage Classes
 
-```
+```text
 ┌─────────────────────── S3 Storage Classes — Availability, Retrieval, and Cost ────────────────────────┐
 │                                                                                                       │
 │    Seven storage classes balance retrieval latency, availability, and storage cost.                   │
@@ -161,7 +161,7 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## AWS Storage Services Comparison
 
-```
+```text
 ┌────────────────── AWS Storage Services — S3 vs EBS vs EFS vs FSx vs Instance Store ───────────────────┐
 │                                                                                                       │
 │    Five main storage types; choose by access pattern, sharing, and persistence needs.                 │

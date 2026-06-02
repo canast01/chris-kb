@@ -83,7 +83,7 @@ graph TD
     logFile --> siem
     syslogHandler --> siem
 ```
-```
+```text
 ┌───────────────────────────────────────── Python — Procedures ─────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │  Common Python operational procedures: new project setup, dependency audit, release packaging │   │

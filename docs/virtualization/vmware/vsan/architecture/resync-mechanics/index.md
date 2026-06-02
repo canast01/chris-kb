@@ -4,7 +4,7 @@
 Why vSAN resyncs happen, how CLOM decides when and where to rebuild, what drives resync throughput and duration, and the capacity headroom requirement that makes rebuilds possible.
 </div>
 
-```
+```text
 ┌─────────────────────────────────────── vSAN — Resync Mechanics ───────────────────────────────────────┐
 │                                                                                                       │
 │  Resync is vSAN rebuilding or rebalancing component data. Every disk replacement, host failure,       │

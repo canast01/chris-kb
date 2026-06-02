@@ -36,7 +36,7 @@ symrdf -sg PROD_SG query -detail
 # Query by RDF group number
 symrdf list -rdfg <rdf_group_number> -detail
 ```
-```
+```text
 ┌────────────────────────────────────── SRDF/S — Backup & Restore ──────────────────────────────────────┐
 │                                                                                                       │
 │    Backup flow: quiesce source → snapshot/copy → transfer → write to target → catalog                 │

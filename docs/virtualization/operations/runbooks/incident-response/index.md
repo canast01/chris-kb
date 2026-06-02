@@ -5,7 +5,7 @@
 Incident Response Runbook reference covering Steps, Evidence to Capture.
 </div>
 
-```
+```text
 ┌────────────────────────────────────── Incident Response Runbook ──────────────────────────────────────┐
 │                                                                                                       │
 │    Use for any active VMware platform issue; follow phases in order                                   │

@@ -5,7 +5,7 @@
 AWS Reserved Instances reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
 
-```
+```text
 ┌──────────────────────────────────── AWS Cost — Reserved Instances ────────────────────────────────────┐
 │                                                                                                       │
 │  Reserved Instances provide up to 72% EC2 discount for 1- or 3-year commitments.                      │

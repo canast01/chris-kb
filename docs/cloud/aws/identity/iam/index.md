@@ -9,7 +9,7 @@ title: AWS Identity — IAM
 IAM reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
 
-```
+```text
 ┌───────────────────────────────────────── AWS Identity — IAM ──────────────────────────────────────────┐
 │                                                                                                       │
 │  IAM: users, roles, groups, and policies controlling all AWS API access.                              │
@@ -115,7 +115,7 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## IAM Identity Model
 
-```
+```text
 ┌────────────── IAM Identity Model — Users, Groups, Roles, Policies, and Identity Center ───────────────┐
 │                                                                                                       │
 │    IAM controls all API access; prefer roles over users; use Identity Center for humans.              │
@@ -167,7 +167,7 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## IAM Policy Evaluation Order
 
-```
+```text
 ┌──────────────────────────────── IAM Policy Evaluation — Decision Flow ────────────────────────────────┐
 │                                                                                                       │
 │    Every AWS API call follows this exact evaluation order; explicit deny always wins.                 │

@@ -28,7 +28,7 @@ CLI Reference reference covering Services, Certificates, Proxy & Network, NTP & 
 │  └─────────────────────────┘    └────────────────────────────┘                                        │
 └─────────────────────────────────────────────────────────────────┘
 ```
-```
+```text
 ┌──────────────────────────────────── Aria Suite LCM CLI Reference ─────────────────────────────────────┐
 │                                                                                                       │
 │  VAMI management, REST API endpoints, vlcm log files, and SSH commands for LCM.                       │
@@ -73,7 +73,7 @@ CLI Reference reference covering Services, Certificates, Proxy & Network, NTP & 
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```
+```text
 ┌──────────────────────────────────── Aria Suite LCM CLI Reference ─────────────────────────────────────┐
 │                                                                                                       │
 │  VAMI management, REST API endpoints, vlcm log files, and SSH commands for LCM.                       │

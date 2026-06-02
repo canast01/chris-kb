@@ -4,7 +4,7 @@
 CloudIQ — Operations reference: CLI Reference, Health Checks, Procedures, Install & Upgrade, and 2 more.
 </div>
 
-```
+```text
 ┌────────────────────────────────────── Dell CloudIQ — Operations ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

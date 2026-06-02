@@ -31,7 +31,7 @@ Contact:        <implementer name and channel>
 
 If you have questions or concerns please reply by <date 2 days before window>.
 ```
-```
+```text
 ┌──────────────────────────────────────── Change Communication ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

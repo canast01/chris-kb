@@ -5,7 +5,7 @@
 Procedures reference covering Overview, 1. Registering a New Site (Fabric), 2. Discovering a New SAN Fabric (NDFC), 3. VSAN Management (NDFC), 4. Zoning — Add a Host Zone (NDFC) and 5 more sections.
 </div>
 
-```
+```text
 ┌─────────────────────────── Cisco Nexus Dashboard — Operational Procedures ────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

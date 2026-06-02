@@ -5,7 +5,7 @@
 AWS VPC Endpoints reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
 
-```
+```text
 ┌───────────────────────────── VPC Endpoints — Private AWS Service Access ──────────────────────────────┐
 │                                                                                                       │
 │  VPC Endpoints connect your VPC to AWS services privately without NAT, IGW, or internet.              │

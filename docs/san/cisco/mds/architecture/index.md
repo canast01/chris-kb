@@ -4,7 +4,7 @@
 Cisco MDS 9000 series FC switches running NX-OS. Core isolation mechanism is the VSAN — multiple logical fabrics share physical hardware with separate name servers, zone databases, and domain IDs per VSAN. Directors support ISSU for zero-downtime maintenance.
 </div>
 
-```
+```text
 ┌──────────────────────────────────── Cisco MDS 9000 — Architecture ────────────────────────────────────┐
 │                                                                                                       │
 │  MDS architecture: VSAN segmentation, ISL PortChannels, FSPF routing, zone enforcement.               │

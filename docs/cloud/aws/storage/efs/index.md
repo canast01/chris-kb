@@ -5,7 +5,7 @@
 AWS EFS reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
 
-```
+```text
 ┌────────────────────────────────────── EFS — Elastic File System ──────────────────────────────────────┐
 │                                                                                                       │
 │  EFS provides shared NFS file storage for EC2 and Lambda; scales automatically to petabytes.          │

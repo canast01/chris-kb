@@ -20,7 +20,7 @@ Aria Operations — Upgrade Paths
 │    (primary always last)                                                                              │
 └──────────────────────────┬──────────────────────────┘
 ```
-```
+```text
 ┌────────────────────────────────── Aria Operations Install & Upgrade ──────────────────────────────────┐
 │                                                                                                       │
 │  OVA/PAK deployment, node cluster setup, and upgrade for Aria Operations (vROps).                     │
@@ -69,7 +69,7 @@ Aria Operations — Upgrade Paths
                            ▼
 ```text
 ```
-```
+```text
 ┌─────────────────────────────────────────────────────┐
 │  Pre-Upgrade Gate (must pass before proceeding)                                                       │
 │  ✔ All nodes Online (Admin → Cluster Management)                                                      │

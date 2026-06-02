@@ -6,7 +6,7 @@
 GitHub Actions — Troubleshooting reference.
 </div>
 
-```
+```text
 ┌────────────────────────────────── GitHub Actions — Troubleshooting ───────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │  Common GitHub Actions issues: runner offline, job queued but not starting, secret not found  │   │

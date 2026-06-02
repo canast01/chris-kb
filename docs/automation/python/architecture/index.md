@@ -4,7 +4,7 @@
 Cross-platform automation language with virtual environment isolation, poetry/venv dependency management, asyncio for concurrent API calls, and Docker container execution; targets cloud APIs, infrastructure APIs, SSH, and databases.
 </div>
 
-```
+```text
 ┌──────────────────────────────────────── Python — Architecture ────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │      Python architecture: interpreter + stdlib + virtual environment + installed packages     │   │

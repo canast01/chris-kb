@@ -14,7 +14,7 @@ Daily Check Sequence
 └──────────────────────────┬──────────────────────────────────┘
                            │
 ```
-```
+```text
 ┌──────────────────────────▼──────────────────────────────────┐
 │  2. vCenter                                                                                           │
 │     all hosts Connected · no critical alarms                                                          │
@@ -22,7 +22,7 @@ Daily Check Sequence
 └──────────────────────────┬──────────────────────────────────┘
                            │
 ```
-```
+```text
 ┌──────────────────────────▼──────────────────────────────────┐
 │  3. ESXi Hosts                                                                                        │
 │     services healthy · NTP synchronized · no warnings                                                 │
@@ -30,7 +30,7 @@ Daily Check Sequence
 ```text
                            │
 ```
-```
+```text
 ┌──────────────────────────▼──────────────────────────────────┐
 │  4. vSAN                                                                                              │
 │     Skyline Health green · no degraded objects                                                        │
@@ -38,7 +38,7 @@ Daily Check Sequence
 └──────────────────────────┬──────────────────────────────────┘
 ```
                            │
-```
+```text
 ┌──────────────────────────▼──────────────────────────────────┐
 │  5. iDRAC (each node)                                                                                 │
 │     no hardware alerts · fans/PSU/disk/NIC all healthy                                                │

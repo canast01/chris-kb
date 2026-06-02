@@ -34,7 +34,7 @@ Get-WinEvent -FilterHashtable @{LogName='Application'; ProviderName='DellRASR'} 
     Select-Object TimeCreated, Id, LevelDisplayName, Message |
     Export-Csv "C:\Temp\RASR-AppEvents.csv" -NoTypeInformation
 ```
-```
+```text
 ┌───────────────────────────────────────── RASR — Diagnostics ──────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

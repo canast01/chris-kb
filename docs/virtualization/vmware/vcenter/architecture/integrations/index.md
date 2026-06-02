@@ -39,7 +39,7 @@ vCenter Integration Map
   │    └── Lookup Service             ← registry     │
   └──────────────────────────────────────────────────┘
 ```
-```
+```text
 ┌──────────────────────────────────── vCenter Server — Integrations ────────────────────────────────────┐
 │                                                                                                       │
 │  vCenter integrates with identity, storage, network, backup, and monitoring                           │

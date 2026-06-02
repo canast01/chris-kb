@@ -6,7 +6,7 @@
 Python Automation — Troubleshooting reference.
 </div>
 
-```
+```text
 ┌────────────────────────────────────── Python — Troubleshooting ───────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │  Python troubleshooting: import errors, type errors, dependency conflicts, API auth failures  │   │

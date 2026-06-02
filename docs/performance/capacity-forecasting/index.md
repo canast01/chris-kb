@@ -10,7 +10,7 @@ Capacity forecasting predicts when a resource will be exhausted based on histori
 ```text
 Days to exhaustion = (Current capacity - Current usage) / Growth rate per day
 ```
-```
+```text
 ┌───────────────────────────────── Performance — Capacity Forecasting ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

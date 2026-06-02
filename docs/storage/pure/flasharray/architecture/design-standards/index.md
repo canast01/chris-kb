@@ -8,7 +8,7 @@ FlashArray — Design Standards reference.
 FlashArray Design Checklist — Key Areas
 ```text
 ```
-```
+```text
 ┌────────────────────────────────── Pure FlashArray Design Standards ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

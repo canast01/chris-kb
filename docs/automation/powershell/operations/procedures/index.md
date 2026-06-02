@@ -90,7 +90,7 @@ flowchart TD
     success --> finallyBlock
     finallyBlock --> exitCode
 ```
-```
+```text
 ┌─────────────────────────────────────── PowerShell — Procedures ───────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   Common PowerShell operational procedures: bulk host operations, AD queries, module updates  │   │

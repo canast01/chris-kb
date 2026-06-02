@@ -5,7 +5,7 @@
 AWS Route Tables reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
 
-```
+```text
 ┌───────────────────────────────── Route Tables — VPC Traffic Routing ──────────────────────────────────┐
 │                                                                                                       │
 │  Route tables control how traffic is directed within a VPC; each subnet has one route table.          │

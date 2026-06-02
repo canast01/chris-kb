@@ -38,7 +38,6 @@ Add Node Flow
               │  node Connected · vSAN rebalance │
               │  health green · capacity updated │
               └─────────────────────────────────┘
-```
 
 ## Overview
 

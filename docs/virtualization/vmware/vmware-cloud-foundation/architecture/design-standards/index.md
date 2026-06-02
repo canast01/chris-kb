@@ -18,7 +18,7 @@ VCF Physical and Logical Design Requirements
 │                   VLAN  VLAN  VLAN  VLAN                                                              │
 └─────────────────────────────────────────────────────┘
 ```
-```
+```text
 ┌───────────────────────────── VMware Cloud Foundation — Design Standards ──────────────────────────────┐
 │                                                                                                       │
 │  VCF design standards define domain layout, host sizing, VLAN scheme, NSX topology,                   │
@@ -69,7 +69,7 @@ VCF Physical and Logical Design Requirements
                          ▼
 ```text
 ```
-```
+```text
 ┌─────────────────────────────────────────────────────┐
 │  Management Domain Minimum Build                                                                      │
 │                                                                                                       │

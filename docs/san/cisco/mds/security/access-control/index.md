@@ -42,7 +42,7 @@ graph TD
   class FCID allow
   class DENY block
 ```
-```
+```text
 ┌───────────────────────────────── Cisco MDS — Security Access Control ─────────────────────────────────┐
 │                                                                                                       │
 │  Role-based access control for MDS fabric using local and AAA-backed user accounts.                   │

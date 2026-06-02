@@ -15,7 +15,7 @@ VCF Daily Health Check — Coverage Map
 │  └─ Admin → Backup: last backup timestamp OK?                                                         │
 └──────────────────────┬──────────────────────────────┘
 ```
-```
+```text
 ┌─────────────────────────────── VMware Cloud Foundation — Health Checks ───────────────────────────────┐
 │                                                                                                       │
 │  VCF health checks span SDDC Manager, all vCenters, NSX managers, vSAN clusters,                      │

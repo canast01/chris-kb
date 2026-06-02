@@ -5,7 +5,7 @@
 Common Issues reference covering Site Pairing Fails / Shows Disconnected, SRA Not Found / Discovery Fails, Recovery Plan Stuck in "Running", Protection Group Shows Error, Test Failover: VMs Fail to Power On and 1 more sections.
 </div>
 
-```
+```text
 ┌───────────────────────────────────── VMware SRM — Common Issues ──────────────────────────────────────┐
 │                                                                                                       │
 │  Common SRM issues: site pair disconnected, replication lag exceeded RPO, plan test                   │

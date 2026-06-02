@@ -30,7 +30,7 @@ graph TD
     script --> tlsVerify
     tlsVerify --> apiCall
 ```
-```
+```text
 ┌───────────────────────────────────────── Python — Encryption ─────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   Python encryption: cryptography library for AES/RSA; TLS via ssl/requests; key management   │   │

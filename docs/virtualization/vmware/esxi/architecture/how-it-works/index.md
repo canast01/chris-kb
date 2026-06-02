@@ -27,7 +27,7 @@ VMkernel Internals — Resource Stack
 │                                   └── pNICs (vmnic0..n)                                               │
 └────────────────────────────────────────────────────────────┘
 ```
-```
+```text
 ┌───────────────────────────────────────── ESXi — How It Works ─────────────────────────────────────────┐
 │                                                                                                       │
 │  Type-1 hypervisor running directly on hardware; vmkernel mediates all I/O.                           │
@@ -228,7 +228,7 @@ Get-VMHost | ForEach-Object {
 
 ## Storage Protocol Stack — Comparison
 
-```
+```text
 ┌───────────────────────────────── ESXi — Storage Protocol Comparison ──────────────────────────────────┐
 │                                                                                                       │
 │    Protocol     Initiator         Transport         Array presents     ESXi sees                      │
@@ -264,7 +264,7 @@ Get-VMHost | ForEach-Object {
 
 ## vSphere HA — Admission Control
 
-```
+```text
 ┌──────────────────────────────── vSphere HA — Admission Control Modes ─────────────────────────────────┐
 │                                                                                                       │
 │  Admission Control ensures the cluster retains enough spare capacity to restart all                   │
@@ -305,7 +305,7 @@ Get-VMHost | ForEach-Object {
 
 ## Proactive HA — Hardware Degradation Flow
 
-```
+```text
 ┌──────────────────────────── Proactive HA — Hardware Degradation Response ─────────────────────────────┐
 │                                                                                                       │
 │  Proactive HA works alongside DRS to evacuate VMs from hosts showing hardware degradation             │
@@ -343,7 +343,7 @@ Get-VMHost | ForEach-Object {
 
 ## NIOC — Network I/O Control
 
-```
+```text
 ┌───────────────────────────── NIOC — Network I/O Control Traffic Classes ──────────────────────────────┐
 │                                                                                                       │
 │  NIOC divides physical uplink bandwidth among competing traffic types using shares,                   │
@@ -379,7 +379,7 @@ Get-VMHost | ForEach-Object {
 
 ## vSphere Lifecycle Manager — Image Workflow
 
-```
+```text
 ┌─────────────────────────── vSphere Lifecycle Manager — Image-Based Upgrade ───────────────────────────┐
 │                                                                                                       │
 │  vLCM manages ESXi hosts using a cluster image (base ESXi + add-on VIBs + firmware).                  │
@@ -419,7 +419,7 @@ Get-VMHost | ForEach-Object {
 
 ## DPU / SmartNIC — Architecture
 
-```
+```text
 ┌───────────────────────── vSphere 8 — DPU (Data Processing Unit) Architecture ─────────────────────────┐
 │                                                                                                       │
 │  A DPU (SmartNIC) offloads networking and security from the host CPU to a dedicated                   │
@@ -458,7 +458,7 @@ Get-VMHost | ForEach-Object {
 
 ## vTPM & Secure Boot Chain
 
-```
+```text
 ┌─────────────────────────────── VM Security — vTPM & Secure Boot Chain ────────────────────────────────┐
 │                                                                                                       │
 │  vTPM provides a virtualised Trusted Platform Module 2.0 to guest VMs. Secure Boot                    │

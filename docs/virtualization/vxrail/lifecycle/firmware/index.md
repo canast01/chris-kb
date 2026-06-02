@@ -23,7 +23,7 @@ VxRail Firmware Stack (bottom to top)
 │  (certified combination of all firmware + vSphere versions)                                           │
 └──────────────────────────────────┬───────────────────────────┘
 ```
-```
+```text
                                    │  applied via
 ┌──────────────────────────────────▼───────────────────────────┐
 │  VxRail Manager LCM                                                                                   │

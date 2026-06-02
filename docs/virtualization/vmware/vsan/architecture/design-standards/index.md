@@ -5,7 +5,7 @@
 Design Standards reference covering Cluster Configuration, Stretched Cluster Architecture, Storage Policy Baseline, Naming Conventions, Capacity Management.
 </div>
 
-```
+```text
 ┌─────────────────────────────────────── vSAN — Design Standards ───────────────────────────────────────┐
 │                                                                                                       │
 │  vSAN design standards cover host sizing, disk group ratios, network requirements,                    │
@@ -201,7 +201,7 @@ Before sizing, collect the following from the workload team:
 
 vSAN has minimal CPU overhead on each host (typically < 5%). CPU sizing is driven by VM workload, not vSAN itself.
 
-```
+```text
 Total vCPUs needed = VM count × average vCPUs per VM
 Target vCPU:pCPU ratio = 4:1 to 8:1 (compute-light) or 2:1 to 4:1 (compute-heavy)
 Physical cores per host = Total vCPUs / ratio / number of hosts
@@ -213,7 +213,7 @@ Physical cores per host = Total vCPUs / ratio / number of hosts
 
 vSAN reserves memory for its own processes (~5–8 GB per host for OSA; ~8–12 GB for ESA). Account for this in host RAM sizing.
 
-```
+```text
 Total VM RAM = VM count × average RAM per VM
 vSAN overhead per host = 8 GB (add to host RAM requirement)
 Target RAM per host = (Total VM RAM / hosts) + 8 GB vSAN overhead
@@ -225,7 +225,7 @@ Target RAM per host = (Total VM RAM / hosts) + 8 GB vSAN overhead
 
 vSAN capacity is calculated after accounting for FTT overhead and the required 30% slack:
 
-```
+```text
 Raw storage per VM = usable storage × FTT overhead multiplier
 FTT overhead:
   RAID-1 (FTT=1): 2× (each object stored twice)
@@ -252,7 +252,7 @@ Capacity per host = total_with_slack / host count
 | SATA/SAS SSD (OSA capacity) | 50,000–100,000 | Lower throughput than NVMe |
 | NVMe SSD (OSA cache) | 300,000+ | Cache layer absorbs writes; capacity IOPS matter for reads |
 
-```
+```text
 Total IOPS needed = VM count × peak IOPS per VM × write amplification
 Write amplification (RAID-1 FTT=1) = 2× (write goes to 2 hosts)
 Write amplification (RAID-5 FTT=1) = ~1.33× (parity compute overhead)

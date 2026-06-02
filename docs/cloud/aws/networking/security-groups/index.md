@@ -5,7 +5,7 @@
 AWS Security Groups reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
 
-```
+```text
 ┌──────────────────────────── Security Groups — Stateful Instance Firewall ─────────────────────────────┐
 │                                                                                                       │
 │  Security groups act as virtual firewalls for ENIs; stateful — return traffic is automatic.           │

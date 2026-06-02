@@ -24,7 +24,7 @@ graph TB
   class IDX store
   class SRC1,SRC2,SRC3,ADMIN host
 ```
-```
+```text
 ┌─────────────────────────────── Aria Operations for Logs — How It Works ───────────────────────────────┐
 │                                                                                                       │
 │  Centralised log aggregation, indexing, and alerting for VMware and multi-cloud environments.         │

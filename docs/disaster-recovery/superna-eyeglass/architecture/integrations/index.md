@@ -30,7 +30,7 @@ flowchart TB
     eyeglass -->|"DNS cutover\nzone delegation"| dns
     eyeglass -->|"SNMP traps\nsyslog events"| siem
 ```
-```
+```text
 ┌──────────────────────────── Superna Eyeglass — Architecture Integrations ─────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

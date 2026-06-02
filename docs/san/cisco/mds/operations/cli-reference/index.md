@@ -22,7 +22,7 @@ show system uptime
 show license usage
 show feature           # enabled features (zone, dpvm, fcsp, etc.)
 ```
-```
+```text
 ┌─────────────────────────────────── Cisco MDS 9000 — CLI Reference ────────────────────────────────────┐
 │                                                                                                       │
 │  MDS NX-OS CLI: fabric commands, zone commands, port commands, diagnostics.                           │

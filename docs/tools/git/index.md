@@ -4,7 +4,7 @@
 Git knowledge base covering the distributed object model, GitHub Enterprise and GitLab self-managed architecture, branching workflows, authentication, and troubleshooting.
 </div>
 
-```
+```text
 ┌─────────────────────────────────────────── Git — Overview ────────────────────────────────────────────┐
 │                                                                                                       │
 │  Distributed version control system. Every clone is a full repository; commits are immutable.         │

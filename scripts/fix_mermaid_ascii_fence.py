@@ -46,7 +46,7 @@ def fix_file(path):
                 depth = 0
         elif depth == 0 and block_closed and s.startswith('┌'):
             # Unguarded ASCII diagram — insert opening fence before this line
-            inserts.append((i, '```\n'))
+            inserts.append((i, '```text\n'))
             block_closed = False
 
             # Locate the diagram's closing └

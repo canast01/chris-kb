@@ -5,7 +5,7 @@
 Access Control reference covering Overview, Built-In Roles, Fabric-Level Scoping, LDAP Group to Role Mapping, Service Account Configuration and 2 more sections.
 </div>
 
-```
+```text
 ┌───────────────────────────────────── Cisco DCNM — Access Control ─────────────────────────────────────┐
 │                                                                                                       │
 │  DCNM access control: RBAC roles, ISE TACACS+, LDAP group mapping, API token scoping.                 │

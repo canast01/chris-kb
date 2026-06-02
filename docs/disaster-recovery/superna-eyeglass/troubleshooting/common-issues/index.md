@@ -5,7 +5,7 @@
 Superna Eyeglass — Common Issues reference.
 </div>
 
-```
+```text
 ┌────────────────────────────────── Superna Eyeglass — Common Issues ───────────────────────────────────┐
 │                                                                                                       │
 │   │     Symptom      │   Likely Cause   │    First Check    │       Fix        │      Verify      │   │

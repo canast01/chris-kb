@@ -16,7 +16,7 @@ Encrypted Property Groups store sensitive key-value pairs at the Aria Automation
 ```text
 Infrastructure → Configure → Property Groups → New Property Group → Encrypted
 ```
-```
+```text
 ┌──────────────────────────────────── Aria Automation — Encryption ─────────────────────────────────────┐
 │                                                                                                       │
 │  vRA encrypts data in transit (TLS 1.2+) and at rest (vRA secrets store + vCenter D@RE).              │

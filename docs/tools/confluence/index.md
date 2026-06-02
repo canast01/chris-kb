@@ -4,7 +4,7 @@
 Confluence knowledge base covering Data Center cluster architecture, space and page management, authentication, and troubleshooting.
 </div>
 
-```
+```text
 ┌───────────────────────────────── Confluence — Wiki Platform Overview ─────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

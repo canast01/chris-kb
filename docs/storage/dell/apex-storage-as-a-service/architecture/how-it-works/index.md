@@ -5,7 +5,7 @@
 How It Works reference covering Overview, Use Cases, How It Works, Underlying Platforms, Best Practices.
 </div>
 
-```
+```text
 ┌─────────────────────────────────── Dell Apex STaaS — How It Works ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

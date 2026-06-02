@@ -20,7 +20,7 @@ Hierarchy:
       └── Space Permissions (who can access and edit within a space)
               └── Page Restrictions (who can view/edit a specific page)
 ```
-```
+```text
 ┌───────────────────────────────────── Confluence — Access Control ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -69,7 +69,7 @@ Example: IT Infrastructure space (space key: INFRA)
 - View: AD group "confluence-infra-viewers"    → All IT staff
 - Edit: AD group "confluence-infra-editors"    → Infrastructure engineers
 - Admin: AD group "confluence-infra-admins"    → Team lead + wiki admin
-```
+```text
 
 ### Removing Default "All Logged-In Users" Access
 

@@ -32,7 +32,7 @@ purecli drive list | grep -v healthy
 show interface fc brief           # Cisco MDS
 switchshow                        # Brocade
 ```
-```
+```text
 ┌──────────────────────────────────────── DR Failback Procedure ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

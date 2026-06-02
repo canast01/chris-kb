@@ -5,7 +5,7 @@
 AWS Tagging Standards reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 </div>
 
-```
+```text
 ┌───────────────────────────────── AWS Governance — Tagging Standards ──────────────────────────────────┐
 │                                                                                                       │
 │  Mandatory tag schema for cost allocation, compliance, ownership, and automation.                     │

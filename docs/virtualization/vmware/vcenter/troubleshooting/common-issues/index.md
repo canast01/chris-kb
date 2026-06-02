@@ -44,7 +44,7 @@ Symptom Triage Map
   │ for root error   │    services unrecoverable
   └──────────────────┘
 ```
-```
+```text
 ┌─────────────────────────────────── vCenter Server — Common Issues ────────────────────────────────────┐
 │                                                                                                       │
 │  Common vCenter issues: hosts disconnecting, certificate errors, SSO login failure,                   │

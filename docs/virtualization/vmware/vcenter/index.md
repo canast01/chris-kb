@@ -4,7 +4,7 @@
 Technical and operational reference for VMware vCenter Server (VCSA). Covers architecture, cluster management, lifecycle, security, and troubleshooting for the vSphere management plane.
 </div>
 
-```
+```text
 ┌─────────────────────────────────── vCenter Server Management Plane ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -61,7 +61,7 @@ Technical and operational reference for VMware vCenter Server (VCSA). Covers arc
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-```
+```text
 ┌─────────────────────────────── vCenter Server — Installation Sequence ────────────────────────────────┐
 │                                                                                                       │
 │  Step 1 · Pre-Deploy Checks                                                                           │

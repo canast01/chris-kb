@@ -33,7 +33,7 @@ flowchart TD
     class q1,snapQ decision
     class fail terminal
 ```
-```
+```text
 ┌──────────────────────────────────────── Veeam — Common Issues ────────────────────────────────────────┐
 │                                                                                                       │
 │   │     Symptom      │   Likely Cause   │    First Check    │       Fix        │      Verify      │   │

@@ -4,7 +4,7 @@
 Tanzu knowledge base — architecture, operations, CLI references, security, and troubleshooting. Content being built out.
 </div>
 
-```
+```text
 ┌──────────────────────────────────── VMware Tanzu Kubernetes Stack ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -61,7 +61,7 @@ Tanzu knowledge base — architecture, operations, CLI references, security, and
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-```
+```text
 ┌─────────────────────────── VMware Tanzu Kubernetes — Installation Sequence ───────────────────────────┐
 │                                                                                                       │
 │  Step 1 · Pre-Requisites                                                                              │

@@ -20,7 +20,7 @@ ESXi Automation Scripts — Tool Selection
 │  SSH-based ad-hoc checks      Plink / CMD batch (.bat)                                                │
 └───────────────────────────────────────────────────────┘
 ```
-```
+```text
 ┌─────────────────────────────────────────── ESXi — Scripts ────────────────────────────────────────────┐
 │                                                                                                       │
 │  PowerCLI, shell, and Python scripts automating ESXi host operations at scale.                        │
@@ -67,7 +67,7 @@ ESXi Automation Scripts — Tool Selection
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```
+```text
 ┌─────────────────────────────────────────── ESXi — Scripts ────────────────────────────────────────────┐
 │                                                                                                       │
 │  PowerCLI, shell, and Python scripts automating ESXi host operations at scale.                        │
@@ -114,7 +114,7 @@ ESXi Automation Scripts — Tool Selection
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```
+```text
 ┌─────────────────────────────────────────── ESXi — Scripts ────────────────────────────────────────────┐
 │                                                                                                       │
 │  PowerCLI, shell, and Python scripts automating ESXi host operations at scale.                        │

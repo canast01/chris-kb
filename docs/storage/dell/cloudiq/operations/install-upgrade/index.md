@@ -5,7 +5,7 @@
 Install & Upgrade reference covering Platform Updates, API Token Management, Secure Connect Gateway Compatibility, Supported Systems, Renewal and Subscription.
 </div>
 
-```
+```text
 ┌──────────────────────────────── Dell CloudIQ — Install and Onboarding ────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

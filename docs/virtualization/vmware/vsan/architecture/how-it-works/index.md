@@ -21,7 +21,7 @@ ESXi Host (OSA)
 └── Disk Group 2 (optional, up to 5 per host)
     └── ...
 ```
-```
+```text
 ┌───────────────────────────────────────── vSAN — How It Works ─────────────────────────────────────────┐
 │                                                                                                       │
 │  vSAN pools local disks from ESXi hosts into a shared datastore; data is                              │
@@ -223,15 +223,7 @@ graph TD
 
 ## SIOC — Storage I/O Control
 
-```
-```
-```
-```
-```
-```
-```
-```
-```
+```text
 ┌───────────────────────────────────────── vSAN — How It Works ─────────────────────────────────────────┐
 │                                                                                                       │
 │  vSAN pools local disks from ESXi hosts into a shared datastore; data is                              │
@@ -433,13 +425,7 @@ graph TD
 
 ## SIOC — Storage I/O Control
 
-```
-```
-```
-```
-```
-```
-```
+```text
 ┌───────────────────────────────────────── vSAN — How It Works ─────────────────────────────────────────┐
 │                                                                                                       │
 │  vSAN pools local disks from ESXi hosts into a shared datastore; data is                              │
@@ -641,13 +627,7 @@ graph TD
 
 ## SIOC — Storage I/O Control
 
-```
-```
-```
-```
-```
-```
-```
+```text
 ┌───────────────────────────────────────── vSAN — How It Works ─────────────────────────────────────────┐
 │                                                                                                       │
 │  vSAN pools local disks from ESXi hosts into a shared datastore; data is                              │
@@ -849,11 +829,7 @@ graph TD
 
 ## SIOC — Storage I/O Control
 
-```
-```
-```
-```
-```
+```text
 ┌───────────────────────────────────────── vSAN — How It Works ─────────────────────────────────────────┐
 │                                                                                                       │
 │  vSAN pools local disks from ESXi hosts into a shared datastore; data is                              │
@@ -1055,11 +1031,7 @@ graph TD
 
 ## SIOC — Storage I/O Control
 
-```
-```
-```
-```
-```
+```text
 ┌───────────────────────────────────────── vSAN — How It Works ─────────────────────────────────────────┐
 │                                                                                                       │
 │  vSAN pools local disks from ESXi hosts into a shared datastore; data is                              │
@@ -1261,9 +1233,7 @@ graph TD
 
 ## SIOC — Storage I/O Control
 
-```
-```
-```
+```text
 ┌───────────────────────────────────────── vSAN — How It Works ─────────────────────────────────────────┐
 │                                                                                                       │
 │  vSAN pools local disks from ESXi hosts into a shared datastore; data is                              │
@@ -1465,9 +1435,7 @@ graph TD
 
 ## SIOC — Storage I/O Control
 
-```
-```
-```
+```text
 ┌───────────────────────────────────────── vSAN — How It Works ─────────────────────────────────────────┐
 │                                                                                                       │
 │  vSAN pools local disks from ESXi hosts into a shared datastore; data is                              │
@@ -1669,7 +1637,7 @@ graph TD
 
 ## SIOC — Storage I/O Control
 
-```
+```text
 ┌────────────────────────── SIOC — Storage I/O Control Congestion Management ───────────────────────────┐
 │                                                                                                       │
 │  SIOC monitors a shared datastore for latency congestion. When latency exceeds the                    │

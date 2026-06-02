@@ -32,7 +32,7 @@ flowchart TD
     L -- Yes --> M[Review scheduled jobs\nfor failures]
     M --> N([Health Check Complete\nLog result])
 ```
-```
+```text
 ┌───────────────────────────────────── Confluence — Health Checks ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │

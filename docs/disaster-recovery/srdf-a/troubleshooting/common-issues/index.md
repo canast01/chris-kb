@@ -61,7 +61,7 @@ flowchart TD
     style throttleIO fill:#b45309,color:#fff
     style checkNetOps fill:#b45309,color:#fff
 ```
-```
+```text
 ┌─────────────────────────────────────── SRDF/A — Common Issues ────────────────────────────────────────┐
 │                                                                                                       │
 │   │     Symptom      │   Likely Cause   │    First Check    │       Fix        │      Verify      │   │

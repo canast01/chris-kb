@@ -60,7 +60,7 @@ def process_widgets(
 
     return len(results)
 ```
-```
+```text
 ┌────────────────────────────────────── Python — Design Standards ──────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │ Python design standards: PEP 8 style, type hints, docstrings, testing, and dependency pinning │   │

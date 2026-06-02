@@ -26,7 +26,7 @@ Scripts reference covering Get Session Count by Pool, Force Logoff Disconnected 
 │  └──────────────────┘                                                                                 │
 └──────────────────────────────────────────────────────────┘
 ```
-```
+```text
 ┌──────────────────────────────── VMware Horizon — Operational Scripts ─────────────────────────────────┐
 │                                                                                                       │
 │  PowerCLI Horizon View module and REST API scripts automate pool reporting,                           │
@@ -73,7 +73,7 @@ Scripts reference covering Get Session Count by Pool, Force Logoff Disconnected 
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```
+```text
 ┌──────────────────────────────── VMware Horizon — Operational Scripts ─────────────────────────────────┐
 │                                                                                                       │
 │  PowerCLI Horizon View module and REST API scripts automate pool reporting,                           │

@@ -25,7 +25,7 @@ Hardening reference covering Windows Hardening of Connection Server, UAG Hardeni
 │  └──────────────────────┘   └──────────────────────────┘                                              │
 └──────────────────────────────────────────────────────────────┘
 ```
-```
+```text
 ┌───────────────────────────────────── VMware Horizon — Hardening ──────────────────────────────────────┐
 │                                                                                                       │
 │  Horizon hardening follows the VMware Horizon Security Hardening Guide: TLS enforcement,              │
@@ -72,7 +72,7 @@ Hardening reference covering Windows Hardening of Connection Server, UAG Hardeni
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```
+```text
 ┌───────────────────────────────────── VMware Horizon — Hardening ──────────────────────────────────────┐
 │                                                                                                       │
 │  Horizon hardening follows the VMware Horizon Security Hardening Guide: TLS enforcement,              │

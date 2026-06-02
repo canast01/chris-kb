@@ -18,7 +18,7 @@ Role
                     ├── Record-level (specific conditions)
                     └── Field-level (specific fields)
 ```
-```
+```text
 ┌────────────────────────────────────── ServiceNow Access Control ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -77,7 +77,7 @@ if (groupRecord.next()) {
         gs.info(memberRec.user.name + ' (' + memberRec.user.user_name + ')');
     }
 }
-```
+```text
 
 ---
 

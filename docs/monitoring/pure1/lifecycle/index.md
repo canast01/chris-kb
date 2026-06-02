@@ -30,7 +30,7 @@ purearray list --connection
 purearray set --proxy https://<proxy>:<port>   # if behind a proxy
 # Or check firewall rules for outbound HTTPS to pure1.purestorage.com
 ```
-```
+```text
 ┌──────────────────────────────────── Pure1 — Lifecycle Management ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │

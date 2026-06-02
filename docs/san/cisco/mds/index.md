@@ -4,7 +4,7 @@
 Cisco MDS 9000 series switches knowledge base covering fabric architecture, zoning, VSANs, ISLs, CLI references, health checks, scripts, and troubleshooting guides for Fibre Channel SAN environments.
 </div>
 
-```
+```text
 ┌────────────────────────────────────── Cisco MDS 9000 — Overview ──────────────────────────────────────┐
 │                                                                                                       │
 │  MDS 9000: Cisco enterprise FC/FCoE switch family. Modular directors and fixed switches.              │

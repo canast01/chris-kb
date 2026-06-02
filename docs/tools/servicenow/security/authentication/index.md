@@ -48,7 +48,7 @@ var ldap = new GlideLDAP();
 var result = ldap.getGroups('username@corp.example.com');
 gs.info('LDAP test result: ' + JSON.stringify(result));
 ```
-```
+```text
 ┌────────────────────────────────────── ServiceNow Authentication ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐                                                    │

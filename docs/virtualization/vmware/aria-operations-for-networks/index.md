@@ -4,7 +4,7 @@
 Aria Operations for Networks knowledge base — architecture, operations, CLI references, security, and troubleshooting. Content being built out.
 </div>
 
-```
+```text
 ┌───────────────────────────────── Aria Operations for Networks Stack ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -61,7 +61,7 @@ Aria Operations for Networks knowledge base — architecture, operations, CLI re
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-```
+```text
 ┌──────────────────────── Aria Operations for Networks — Installation Sequence ─────────────────────────┐
 │                                                                                                       │
 │  Step 1 · Pre-Deploy Checks                                                                           │

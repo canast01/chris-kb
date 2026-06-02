@@ -32,7 +32,7 @@ ESXi Encryption Stack
 │  └── TPM 2.0 — host attestation (vSphere 7.0+)                                                        │
 └─────────────────────────────────────────────────────────┘
 ```
-```
+```text
 ┌────────────────────────────────────────── ESXi — Encryption ──────────────────────────────────────────┐
 │                                                                                                       │
 │  VM encryption, vMotion encryption, and KMS key management for ESXi workloads.                        │

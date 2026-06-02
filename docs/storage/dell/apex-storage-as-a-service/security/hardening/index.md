@@ -5,7 +5,7 @@
 Hardening reference covering Hardening Checklist, Network Requirements Summary.
 </div>
 
-```
+```text
 ┌──────────────────────────────── Dell Apex STaaS — Security Hardening ─────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

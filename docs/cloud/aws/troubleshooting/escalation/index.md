@@ -5,7 +5,7 @@
 AWS — Escalation reference.
 </div>
 
-```
+```text
 ┌───────────────────────────── AWS Escalation — Support & Trusted Advisor ──────────────────────────────┐
 │                                                                                                       │
 │  AWS support tiers, escalation paths, and Trusted Advisor checks for proactive guidance.              │

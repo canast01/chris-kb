@@ -48,7 +48,7 @@ server {
     }
 }
 ```
-```
+```text
 ┌─────────────────────────────────────── Confluence — Encryption ───────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -105,7 +105,7 @@ server {
            ciphers="TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
            keystoreFile="/opt/atlassian/confluence/conf/keystore.jks"
            keystorePass="changeit" />
-```
+```text
 
 ## Database Encryption
 

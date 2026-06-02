@@ -59,7 +59,7 @@ curl -sk -u 'admin:<password>' \
   "https://vrli-prod-01.example.local/api/v2/cluster/nodes" | \
   jq '.nodes[] | {host: .hostname, state: .state, role: .role}'
 ```
-```
+```text
 ┌─────────────────────────── Aria Operations for Logs — Install and Upgrade ────────────────────────────┐
 │                                                                                                       │
 │  vRLI is installed via OVA in vCenter; upgrades use PAK file uploaded to VAMI or LCM.                 │

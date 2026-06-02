@@ -29,7 +29,7 @@ Recovery Media (USB / iDRAC virtual ISO)
 └── WinPE boot environment
       └── RASR Recovery Engine + Dell hardware drivers
 ```
-```
+```text
 ┌───────────────────────────────────────── RASR — How It Works ─────────────────────────────────────────┐
 │                                                                                                       │
 │    RASR data flow — from source to target through the protection pipeline:                            │

@@ -5,7 +5,7 @@
 Authentication reference covering API Authentication, Related Reference.
 </div>
 
-```
+```text
 ┌──────────────────────────────────── Dell CloudIQ — Authentication ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

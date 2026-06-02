@@ -14,7 +14,7 @@ lost connectivity to the server
 not responding
 connection refused
 ```
-```
+```text
 ┌──────────────────────────────── Aria Operations for Logs — Procedures ────────────────────────────────┐
 │                                                                                                       │
 │  Common operational procedures: add sources, rotate certs, manage disk, adjust alerts.                │

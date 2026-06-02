@@ -5,7 +5,7 @@
 Reliability Engineering reference covering Core Principles, Redundancy Patterns, Reliability Metrics, Incident Review (Postmortem) Process, Toil Reduction and 1 more sections.
 </div>
 
-```
+```text
 ┌──────────────────────────────── Performance — Reliability Engineering ────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -8,7 +8,7 @@ Encryption reference covering Data at Rest, Data in Flight — NFS, Data in Flig
 FlashBlade Encryption Architecture
 ```text
 ```
-```
+```text
 ┌────────────────────────────────────────────────────────────┐
 │  Data at Rest (always-on)                                                                             │
 │  Write ──► blade NVMe drive ──► XTS-AES-256 (hardware)                                                │

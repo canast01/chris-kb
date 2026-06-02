@@ -5,7 +5,7 @@
 Health Checks reference covering PowerShell Environment Health Check Flow.
 </div>
 
-```
+```text
 ┌───────────────────────────────────── PowerShell — Health Checks ──────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │  PowerShell health checks: verify PS version, remoting, module currency, and script execution │   │

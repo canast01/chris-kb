@@ -70,7 +70,7 @@ graph LR
     class witness witness
     class clients client
 ```
-```
+```text
 ┌──────────────────────────────────── vCenter Server — How It Works ────────────────────────────────────┐
 │                                                                                                       │
 │  vCenter Server is the centralised management platform for vSphere; all                               │
@@ -313,7 +313,7 @@ Swagger UI: `https://<vcenter>/apiexplorer`
 
 ## Content Library — Publish & Subscribe
 
-```
+```text
 ┌─────────────────────────── Content Library — Publish & Subscribe Topology ────────────────────────────┐
 │                                                                                                       │
 │  A published library exposes its catalogue over HTTPS. Subscribed libraries on any                    │
@@ -350,7 +350,7 @@ Swagger UI: `https://<vcenter>/apiexplorer`
 
 ## Resource Pools — Shares, Limits & Reservations
 
-```
+```text
 ┌─────────────────────────── Resource Pools — Shares, Limits & Reservations ────────────────────────────┐
 │                                                                                                       │
 │  Resource pools create a hierarchy of guaranteed and throttled resource entitlements.                 │
@@ -384,7 +384,7 @@ Swagger UI: `https://<vcenter>/apiexplorer`
 
 ## vMotion Types — Comparison
 
-```
+```text
 ┌─────────────────────────────── VM Migration — vMotion Type Comparison ────────────────────────────────┐
 │                                                                                                       │
 │    Type                  VM State     What Moves           Storage         vCenter                    │
@@ -420,7 +420,7 @@ Swagger UI: `https://<vcenter>/apiexplorer`
 
 ## DRS — Placement & Balancing Logic
 
-```
+```text
 ┌────────────────────────────────── DRS — Placement & Balancing Logic ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │

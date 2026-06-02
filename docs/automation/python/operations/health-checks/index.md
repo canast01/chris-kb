@@ -5,7 +5,7 @@
 Health Checks reference covering Python Automation Health Check Flow, Incident Triage.
 </div>
 
-```
+```text
 ┌─────────────────────────────────────── Python — Health Checks ────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │  Python health checks: verify interpreter version, venv, dependency currency, test pass rate  │   │

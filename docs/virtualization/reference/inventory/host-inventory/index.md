@@ -5,7 +5,7 @@
 Host Inventory reference covering Overview, Host Inventory Table, Fields Reference, Host Lifecycle Events, Adding a Host.
 </div>
 
-```
+```text
 ┌────────────────────────────────────── vSphere — Host Inventory ───────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

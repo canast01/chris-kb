@@ -24,7 +24,7 @@ flowchart TD
     orgSecret --> secretCtx
     secretCtx --> step
 ```
-```
+```text
 ┌─────────────────────────────────── GitHub Actions — Access Control ───────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │     GitHub Actions access: who can trigger workflows, approve deployments, manage secrets     │   │
@@ -63,7 +63,7 @@ steps:
       client-id: ${{ secrets.AZURE_CLIENT_ID }}
       tenant-id: ${{ secrets.AZURE_TENANT_ID }}
       subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-```
+```text
 
 ## Workflow Permissions
 

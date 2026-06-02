@@ -5,7 +5,7 @@
 VMware Certificate Renewal Runbook reference covering Identify the Expiring Certificate, Confirm Affected Products, Capture Current Certificate Details, Confirm Backup Exists, Schedule Maintenance Window and 4 more sections.
 </div>
 
-```
+```text
 ┌───────────────────────────────── VMware Certificate Renewal Runbook ──────────────────────────────────┐
 │                                                                                                       │
 │    Plan certificate renewals early; capture pre/post evidence; test all integrations                  │

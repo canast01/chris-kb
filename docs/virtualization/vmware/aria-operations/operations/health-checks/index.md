@@ -15,7 +15,7 @@ Aria Operations — Health Check Coverage Map
 │  Watch: OFFLINE · DEGRADED · SYNCING                                                                  │
 └──────────────────────┬──────────────────────────────┘
 ```
-```
+```text
 ┌──────────────────────────────────── Aria Operations Health Checks ────────────────────────────────────┐
 │                                                                                                       │
 │  Node status, adapter health, and collection status checks for Aria Operations (vROps).               │
@@ -64,7 +64,7 @@ Aria Operations — Health Check Coverage Map
           ▼
 ```text
 ```
-```
+```text
 ┌─────────────────────────────────────────────────────┐
 │  NTP Health (all nodes must be < 1 second drift)                                                      │
 │  chronyc tracking (per node)                                                                          │
