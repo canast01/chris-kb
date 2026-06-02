@@ -231,6 +231,7 @@ graph TD
 ```
 ```
 ```
+```
 ┌───────────────────────────────────────── vSAN — How It Works ─────────────────────────────────────────┐
 │                                                                                                       │
 │  vSAN pools local disks from ESXi hosts into a shared datastore; data is                              │

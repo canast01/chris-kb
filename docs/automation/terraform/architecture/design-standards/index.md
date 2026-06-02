@@ -49,6 +49,7 @@ infra/
 ```
 ```
 ```
+```
 ┌──────────────────────────────────── Terraform — Design Standards ─────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   TF standards: consistent module structure, remote state, provider pinning, CI enforcement   │   │

@@ -41,6 +41,7 @@
 ```
 ```
 ```
+```
 ┌────────────────────────────────── GitHub Actions — Design Standards ──────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │      Standards for consistent, secure, maintainable GitHub Actions workflows across repos     │   │

@@ -110,8 +110,22 @@ def process_file(path, dry_run=False):
     with open(path) as f:
         lines = f.readlines()
 
-    tops = [i for i, l in enumerate(lines) if l.startswith('┌')]
-    bots = [i for i, l in enumerate(lines) if l.startswith('└')]
+    # Only count box chars that are outside code fences (depth == 0)
+    depth = 0
+    tops, bots = [], []
+    for i, l in enumerate(lines):
+        s = l.strip()
+        if s.startswith('```'):
+            after = s[3:].strip()
+            if depth == 0:
+                depth = 1
+            elif after == '':
+                depth = 0
+        elif depth == 0:
+            if l.startswith('┌'):
+                tops.append(i)
+            elif l.startswith('└'):
+                bots.append(i)
 
     if len(tops) < 2:
         return 'skip'
