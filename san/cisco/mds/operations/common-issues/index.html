@@ -3475,133 +3475,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#host-cannot-see-storage" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Host Cannot See Storage
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#zoning-issues" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Zoning Issues
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Zoning Issues">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#zone-activation-fails" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Zone Activation Fails
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#zone-members-show-wrong-wwpns" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Zone Members Show Wrong WWPNs
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#stale-zone-entries" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Stale Zone Entries
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#isl-down-or-isolated" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ISL Down or Isolated
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#flogi-storms-rapid-re-login" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        FLOGI Storms / Rapid Re-login
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#high-cpu-on-supervisor" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        High CPU on Supervisor
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#domain-id-conflict" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Domain ID Conflict
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#nx-os-upgrade-fails" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        NX-OS Upgrade Fails
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#configuration-not-persisting-after-reload" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Configuration Not Persisting After Reload
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -3859,104 +3732,77 @@
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># Check recent log events for this interface</span>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>show<span class="w"> </span>logging<span class="w"> </span>last<span class="w"> </span><span class="m">100</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>fc1/3
 </code></pre></div>
-┌───────────────────────────── Cisco MDS 9000 — Common Operational Issues ──────────────────────────────┐
-│                                                                                                       │
-│  Common MDS issues: HBA not logging in, ISL bounce, zone conflict, CRC errors, credits.               │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              HBA &amp; Login Issues              │  │             ISL &amp; Fabric Issues             │   │
-│   │          No FLOGI: check port state          │  │           ISL bounce: SFP or cable          │   │
-│   │           Zone not allowing PLOGI            │  │           ISL down: speed mismatch          │   │
-│   │           Wrong VSAN: check trunk            │  │           VSAN isolated: check ISL          │   │
-│   │           Alias not in zone member           │  │          Domain conflict: renumber          │   │
-│   │          Port disabled: no shut fc           │  │          CFS merge fail: zone conf          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Zone and VSAN are first checks for HBA login issues; ISL = SFP and cable check.                      │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Performance Issues              │  │           Firmware &amp; Config Issues          │   │
-│   │           CRC errors: replace SFP            │  │           NX-OS mismatch on fabric          │   │
-│   │         BB credit starvation: check          │  │          Config not saved: copy run         │   │
-│   │           ISL util &gt; 70%: add ISLs           │  │          License missing: show lic          │   │
-│   │         Latency spike: SAN analytics         │  │           ISSU fail: check compat           │   │
-│   │          Queue depth: host HBA tune          │  │          Rollback: prior bootflash          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  MDS switch chassis · SFP transceivers · FC cables · host HBAs · storage arrays                       │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  FLOGI           = Fabric Login; HBA must FLOGI before data I/O is possible                           │
-│  PLOGI           = Port Login; blocked by zone policy if HBA not in same zone                         │
-│  VSAN trunk      = ISL must allow VSAN for HBA to appear in correct segment                           │
-│  CFS merge fail  = zone database conflict between two switches; must resolve                          │
-│  Domain conflict = two switches with same FC domain ID; isolate and renumber                          │
-│  CRC errors      = Cyclic Redundancy Check; indicates bad SFP or dirty fiber                          │
-│  BB credits      = Buffer-to-Buffer; zero credits = port paused; check starvation                     │
-│  SAN analytics   = MDS 9700 per-ITL latency histogram; identify slow target                           │
-│  show lic        = show license; verify ENTERPRISE_PKG or SAN_ANALYTICS_PKG                           │
-│  ISSU compat     = ISSU requires NX-OS version compatibility check                                    │
-│  bootflash       = switch flash; previous NX-OS image kept for rollback                               │
-│  copy run start  = saves running config; loss of unsaved changes on reload                            │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>```bash
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a># Find the reason for errDisabled
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>show interface fc1/4 | include err
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a># Check recent log for the error event
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>show logging last 100 | grep fc1/4
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌───────────────────────────── Cisco MDS 9000 — Common Operational Issues ──────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  Common MDS issues: HBA not logging in, ISL bounce, zone conflict, CRC errors, credits.               │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│                                                                                                       │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │              HBA &amp; Login Issues              │  │             ISL &amp; Fabric Issues             │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │          No FLOGI: check port state          │  │           ISL bounce: SFP or cable          │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │           Zone not allowing PLOGI            │  │           ISL down: speed mismatch          │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │           Wrong VSAN: check trunk            │  │           VSAN isolated: check ISL          │   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │           Alias not in zone member           │  │          Domain conflict: renumber          │   │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │          Port disabled: no shut fc           │  │          CFS merge fail: zone conf          │   │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                                                                       │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│  Zone and VSAN are first checks for HBA login issues; ISL = SFP and cable check.                      │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                                                                                                       │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│                                                                                                       │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │              Performance Issues              │  │           Firmware &amp; Config Issues          │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │           CRC errors: replace SFP            │  │           NX-OS mismatch on fabric          │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │         BB credit starvation: check          │  │          Config not saved: copy run         │   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │           ISL util &gt; 70%: add ISLs           │  │          License missing: show lic          │   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   │         Latency spike: SAN analytics         │  │           ISSU fail: check compat           │   │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│   │          Queue depth: host HBA tune          │  │          Rollback: prior bootflash          │   │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│                                                                                                       │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  MDS switch chassis · SFP transceivers · FC cables · host HBAs · storage arrays                       │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│                                                                                                       │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  FLOGI           = Fabric Login; HBA must FLOGI before data I/O is possible                           │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  PLOGI           = Port Login; blocked by zone policy if HBA not in same zone                         │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  VSAN trunk      = ISL must allow VSAN for HBA to appear in correct segment                           │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  CFS merge fail  = zone database conflict between two switches; must resolve                          │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  Domain conflict = two switches with same FC domain ID; isolate and renumber                          │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  CRC errors      = Cyclic Redundancy Check; indicates bad SFP or dirty fiber                          │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  BB credits      = Buffer-to-Buffer; zero credits = port paused; check starvation                     │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  SAN analytics   = MDS 9700 per-ITL latency histogram; identify slow target                           │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  show lic        = show license; verify ENTERPRISE_PKG or SAN_ANALYTICS_PKG                           │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  ISSU compat     = ISSU requires NX-OS version compatibility check                                    │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│  bootflash       = switch flash; previous NX-OS image kept for rollback                               │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  copy run start  = saves running config; loss of unsaved changes on reload                            │
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│                                                                                                       │
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
-<p><strong>Common errDisabled reasons:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Reason</th>
-<th>Cause</th>
-<th>Action</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>fcot-not-present</code></td>
-<td>SFP removed or not detected</td>
-<td>Reseat or replace SFP</td>
-</tr>
-<tr>
-<td><code>cfg-invalid</code></td>
-<td>Configuration error (e.g., VSAN mismatch)</td>
-<td>Fix config; re-enable port</td>
-</tr>
-<tr>
-<td><code>link-failure-count-exceeded</code></td>
-<td>Too many consecutive link flaps</td>
-<td>Investigate cable/SFP instability</td>
-</tr>
-<tr>
-<td><code>isolation</code></td>
-<td>VSAN merge conflict on ISL</td>
-<td>Resolve VSAN database conflict; re-enable</td>
-</tr>
-<tr>
-<td><code>rcf-failure</code></td>
-<td>RCF (Reconfigure Fabric) rejected by peer</td>
-<td>Investigate domain ID conflict</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Recovery:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># After resolving the root cause:</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>interface<span class="w"> </span>fc1/4
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>shutdown
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>no<span class="w"> </span>shutdown
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Confirm port comes up</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>show<span class="w"> </span>interface<span class="w"> </span>fc1/4
-</code></pre></div>
+<h1 id="find-the-reason-for-errdisabled">Find the reason for errDisabled<a class="headerlink" href="#find-the-reason-for-errdisabled" title="Permanent link">&para;</a></h1>
+<p>show interface fc1/4 | include err</p>
+<h1 id="check-recent-log-for-the-error-event">Check recent log for the error event<a class="headerlink" href="#check-recent-log-for-the-error-event" title="Permanent link">&para;</a></h1>
+<p>show logging last 100 | grep fc1/4
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>**Common errDisabled reasons:**
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>| Reason | Cause | Action |
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>|---|---|---|
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>| `fcot-not-present` | SFP removed or not detected | Reseat or replace SFP |
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>| `cfg-invalid` | Configuration error (e.g., VSAN mismatch) | Fix config; re-enable port |
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>| `link-failure-count-exceeded` | Too many consecutive link flaps | Investigate cable/SFP instability |
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>| `isolation` | VSAN merge conflict on ISL | Resolve VSAN database conflict; re-enable |
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>| `rcf-failure` | RCF (Reconfigure Fabric) rejected by peer | Investigate domain ID conflict |
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>**Recovery:**
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>```bash
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a># After resolving the root cause:
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>interface fc1/4
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>  shutdown
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>  no shutdown
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a># Confirm port comes up
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>show interface fc1/4
+</code></pre></div></p>
 <p>Never re-enable an errDisabled port without first resolving the root cause — it will errDisable again immediately.</p>
 <hr />
 <h2 id="host-cannot-see-storage">Host Cannot See Storage<a class="headerlink" href="#host-cannot-see-storage" title="Permanent link">&para;</a></h2>

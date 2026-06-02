@@ -3752,6 +3752,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#service-level-listing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Service Level Listing
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -4002,126 +4013,125 @@ Authentication: OAuth2 Bearer token obtained from the NetApp identity service.</
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Token acquired&quot;</span>
 </code></pre></div>
-┌─────────────────────────────────── NetApp Keystone — CLI Reference ───────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │        CLI interfaces: ONTAP CLI (SSH), Keystone Collector CLI (Linux), Active IQ REST        │   │
-│   │        ONTAP CLI: volume show, vserver show, storage aggregate show, net interface show       │   │
-│   │         Collector CLI: keystone-collector status, collect, upload, logs, config-check         │   │
-│   │          Active IQ REST: GET /v1/keystone/capacity, GET /v1/keystone/billing/invoices         │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    SSH to cluster mgmt LIF -&gt; ONTAP CLI; SSH to Collector VM -&gt; collector-manager CLI                 │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │          ONTAP CLI          │  │        Collector CLI        │  │        Active IQ API        │   │
-│   │         volume show         │  │          ks status          │  │        GET /capacity        │   │
-│   │         vserver show        │  │          ks collect         │  │        GET /invoices        │   │
-│   │          aggr show          │  │          ks upload          │  │         GET /billing        │   │
-│   │         net int show        │  │           ks logs           │  │         Auth: Bearer        │   │
-│   │      storage disk show      │  │       ks config-check       │  │         TLS required        │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    ONTAP CLI privilege levels: admin (default), advanced (diag-level commands)                        │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │     Command      │   Description    │     Interface     │      Level       │      Notes       │   │
-│   │   volume show    │   List volumes   │     ONTAP CLI     │      admin       │     Per SVM      │   │
-│   │    aggr show     │    List aggrs    │     ONTAP CLI     │      admin       │    Disk usage    │   │
-│   │    ks status     │   Coll. health   │     Collector     │    Linux root    │    Svc status    │   │
-│   │    ks upload     │   Force upload   │     Collector     │    Linux root    │    Debug use     │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: SSH from jump host to cluster mgmt LIF (22/TCP); HTTPS to Active IQ (443)                │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    ONTAP CLI          = SSH-based command shell on cluster mgmt LIF; fsm-driven                       │
-│    Privilege level    = admin (normal) vs advanced (set -priv advanced); diag for support             │
-│    vserver show       = Lists all SVMs; use -vserver <name> to filter                                 │
-│    volume show -space = Adds used/available columns; key for Keystone sizing                          │
-│    aggr show -space   = Aggregate capacity; Keystone committed is at aggr level                       │
-│    ks status          = Keystone Collector service status; checks upload backlog                      │
-│    ks collect         = Manually trigger ONTAP REST poll; useful after fix                            │
-│    ks upload          = Force metric upload to Active IQ; bypasses schedule                           │
-│    ks config-check    = Validates Collector config (API creds, endpoints, proxy)                      │
-│    Bearer token       = Active IQ REST auth; retrieved via NetApp SSO login                           │
-│    net int show       = Lists all LIFs; confirms data/mgmt LIF status and IP                          │
-│    storage disk show  = Physical disk info; checks spares, broken, and RAID groups                    │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>### Service Level Listing
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>```bash
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a># List service levels (tiers) available under a subscription
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>curl -s &quot;https://api.activeiq.netapp.com/v1/keystone/subscriptions/${SUBSCRIPTION_ID}/service-levels&quot; \
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  -H &quot;Authorization: Bearer $TOKEN&quot; | python3 -m json.tool
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌─────────────────────────────────── NetApp Keystone — CLI Reference ───────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │        CLI interfaces: ONTAP CLI (SSH), Keystone Collector CLI (Linux), Active IQ REST        │   │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │        ONTAP CLI: volume show, vserver show, storage aggregate show, net interface show       │   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │         Collector CLI: keystone-collector status, collect, upload, logs, config-check         │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │          Active IQ REST: GET /v1/keystone/capacity, GET /v1/keystone/billing/invoices         │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│                                                                                                       │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│    SSH to cluster mgmt LIF -&gt; ONTAP CLI; SSH to Collector VM -&gt; collector-manager CLI                 │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│                                                                                                       │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                                                                       │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│   │          ONTAP CLI          │  │        Collector CLI        │  │        Active IQ API        │   │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│   │         volume show         │  │          ks status          │  │        GET /capacity        │   │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   │         vserver show        │  │          ks collect         │  │        GET /invoices        │   │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │          aggr show          │  │          ks upload          │  │         GET /billing        │   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │         net int show        │  │           ks logs           │  │         Auth: Bearer        │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │      storage disk show      │  │       ks config-check       │  │         TLS required        │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│                                                                                                       │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│    ONTAP CLI privilege levels: admin (default), advanced (diag-level commands)                        │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│                                                                                                       │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│                                                                                                       │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│   │     Command      │   Description    │     Interface     │      Level       │      Notes       │   │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│   │   volume show    │   List volumes   │     ONTAP CLI     │      admin       │     Per SVM      │   │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│   │    aggr show     │    List aggrs    │     ONTAP CLI     │      admin       │    Disk usage    │   │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│   │    ks status     │   Coll. health   │     Collector     │    Linux root    │    Svc status    │   │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│   │    ks upload     │   Force upload   │     Collector     │    Linux root    │    Debug use     │   │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│                                                                                                       │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│    Physical: SSH from jump host to cluster mgmt LIF (22/TCP); HTTPS to Active IQ (443)                │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│                                                                                                       │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│    Key terms:                                                                                         │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│                                                                                                       │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│    ONTAP CLI          = SSH-based command shell on cluster mgmt LIF; fsm-driven                       │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│    Privilege level    = admin (normal) vs advanced (set -priv advanced); diag for support             │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│    vserver show       = Lists all SVMs; use -vserver &lt;name&gt; to filter                                 │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│    volume show -space = Adds used/available columns; key for Keystone sizing                          │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│    aggr show -space   = Aggregate capacity; Keystone committed is at aggr level                       │
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│    ks status          = Keystone Collector service status; checks upload backlog                      │
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>│    ks collect         = Manually trigger ONTAP REST poll; useful after fix                            │
+<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>│    ks upload          = Force metric upload to Active IQ; bypasses schedule                           │
+<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>│    ks config-check    = Validates Collector config (API creds, endpoints, proxy)                      │
+<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>│    Bearer token       = Active IQ REST auth; retrieved via NetApp SSO login                           │
+<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>│    net int show       = Lists all LIFs; confirms data/mgmt LIF status and IP                          │
+<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>│    storage disk show  = Physical disk info; checks spares, broken, and RAID groups                    │
+<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>│                                                                                                       │
+<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
+<h3 id="service-level-listing">Service Level Listing<a class="headerlink" href="#service-level-listing" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List service levels (tiers) available under a subscription</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;https://api.activeiq.netapp.com/v1/keystone/subscriptions/</span><span class="si">${</span><span class="nv">SUBSCRIPTION_ID</span><span class="si">}</span><span class="s2">/service-levels&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+</code></pre></div>
 <hr />
 <h2 id="burst-usage-alerting">Burst Usage Alerting<a class="headerlink" href="#burst-usage-alerting" title="Permanent link">&para;</a></h2>
 <p>Keystone subscriptions have a committed tier and a burst tier. Consuming above the committed level incurs burst charges.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check if any tier is in burst (consumed &gt; committed)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;https://api.activeiq.netapp.com/v1/keystone/subscriptions/</span><span class="si">${</span><span class="nv">SUBSCRIPTION_ID</span><span class="si">}</span><span class="s2">/usage&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="s2">import sys, json</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="s2">data = json.load(sys.stdin)</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="s2">alert = False</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="s2">for tier in data.get(&#39;usageDetails&#39;, []):</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="s2">    committed = float(tier.get(&#39;committedCapacity&#39;, 0))</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="s2">    consumed  = float(tier.get(&#39;consumedCapacity&#39;,  0))</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="s2">    pct = (consumed / committed * 100) if committed &gt; 0 else 0</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="s2">    status = &#39;BURST&#39; if consumed &gt; committed else (&#39;WARN&#39; if pct &gt;= 90 else &#39;OK&#39;)</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="s2">    print(f\&quot;{status}  {tier[&#39;serviceLevel&#39;]:20s}  {pct:5.1f}%  ({consumed:.1f} / {committed:.1f} TiB)\&quot;)</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="s2">    if status != &#39;OK&#39;:</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="s2">        alert = True</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="s2">sys.exit(1 if alert else 0)</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="s2">&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check if any tier is in burst (consumed &gt; committed)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;https://api.activeiq.netapp.com/v1/keystone/subscriptions/</span><span class="si">${</span><span class="nv">SUBSCRIPTION_ID</span><span class="si">}</span><span class="s2">/usage&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="s2">import sys, json</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="s2">data = json.load(sys.stdin)</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="s2">alert = False</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="s2">for tier in data.get(&#39;usageDetails&#39;, []):</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="s2">    committed = float(tier.get(&#39;committedCapacity&#39;, 0))</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="s2">    consumed  = float(tier.get(&#39;consumedCapacity&#39;,  0))</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="s2">    pct = (consumed / committed * 100) if committed &gt; 0 else 0</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="s2">    status = &#39;BURST&#39; if consumed &gt; committed else (&#39;WARN&#39; if pct &gt;= 90 else &#39;OK&#39;)</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="s2">    print(f\&quot;{status}  {tier[&#39;serviceLevel&#39;]:20s}  {pct:5.1f}%  ({consumed:.1f} / {committed:.1f} TiB)\&quot;)</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="s2">    if status != &#39;OK&#39;:</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="s2">        alert = True</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="s2">sys.exit(1 if alert else 0)</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="s2">&quot;</span>
 </code></pre></div>
 <hr />
 <h2 id="ontap-cli-capacity-tracking">ONTAP CLI — Capacity Tracking<a class="headerlink" href="#ontap-cli-capacity-tracking" title="Permanent link">&para;</a></h2>
 <p>Use these commands on the underlying ONTAP cluster to cross-check capacity data reported to Keystone.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># All volumes: size, used, available</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>size,used,available,percent-used
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Sort by percent-used (highest first)</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>size,used,percent-used<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k4<span class="w"> </span>-rn
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Aggregate-level capacity</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>size,used,available,percent-used
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># SVM-level logical space view</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>vserver<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>name<span class="w"> </span>-type<span class="w"> </span>data
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-fields<span class="w"> </span>size,used,logical-used,available
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="c1"># QoS workload to correlate per-volume performance with Keystone tier</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>qos<span class="w"> </span>workload<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>workload-name,volume,policy-group
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="c1"># Check volume space guarantee (impacts Keystone committed capacity)</span>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>space-guarantee,size,used
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># All volumes: size, used, available</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>size,used,available,percent-used
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Sort by percent-used (highest first)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>size,used,percent-used<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-k4<span class="w"> </span>-rn
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Aggregate-level capacity</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>storage<span class="w"> </span>aggregate<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>size,used,available,percent-used
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># SVM-level logical space view</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>vserver<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>name<span class="w"> </span>-type<span class="w"> </span>data
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>volume<span class="w"> </span>show<span class="w"> </span>-vserver<span class="w"> </span>&lt;svm_name&gt;<span class="w"> </span>-fields<span class="w"> </span>size,used,logical-used,available
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="c1"># QoS workload to correlate per-volume performance with Keystone tier</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>qos<span class="w"> </span>workload<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>workload-name,volume,policy-group
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="c1"># Check volume space guarantee (impacts Keystone committed capacity)</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>volume<span class="w"> </span>show<span class="w"> </span>-fields<span class="w"> </span>space-guarantee,size,used
 </code></pre></div>
 <h3 id="thin-vs-thick-provisioning-check">Thin vs Thick Provisioning Check<a class="headerlink" href="#thin-vs-thick-provisioning-check" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Volumes with thick guarantee (count against committed immediately)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>volume<span class="w"> </span>show<span class="w"> </span>-space-guarantee<span class="w"> </span>volume<span class="w"> </span>-fields<span class="w"> </span>size,used,space-guarantee
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Volumes with thin/none guarantee (count against committed as written)</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>volume<span class="w"> </span>show<span class="w"> </span>-space-guarantee<span class="w"> </span>none<span class="w"> </span>-fields<span class="w"> </span>size,used,space-guarantee
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Volumes with thick guarantee (count against committed immediately)</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>volume<span class="w"> </span>show<span class="w"> </span>-space-guarantee<span class="w"> </span>volume<span class="w"> </span>-fields<span class="w"> </span>size,used,space-guarantee
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Volumes with thin/none guarantee (count against committed as written)</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>volume<span class="w"> </span>show<span class="w"> </span>-space-guarantee<span class="w"> </span>none<span class="w"> </span>-fields<span class="w"> </span>size,used,space-guarantee
 </code></pre></div>
 <hr />
 <h2 id="bluexp-digital-wallet-ui-equivalent-api">BlueXP Digital Wallet (UI-equivalent API)<a class="headerlink" href="#bluexp-digital-wallet-ui-equivalent-api" title="Permanent link">&para;</a></h2>
 <p>Keystone subscription wallet data is also exposed through BlueXP Digital Wallet:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nv">BLUEXP_TOKEN</span><span class="o">=</span><span class="s2">&quot;&lt;bluexp_bearer_token&gt;&quot;</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># List Digital Wallet assets</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;https://api.bluexp.netapp.com/marketplace/api/v1/subscriptions&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$BLUEXP_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Check capacity pool status</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;https://api.bluexp.netapp.com/marketplace/api/v1/capacity-pools&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$BLUEXP_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nv">BLUEXP_TOKEN</span><span class="o">=</span><span class="s2">&quot;&lt;bluexp_bearer_token&gt;&quot;</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># List Digital Wallet assets</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;https://api.bluexp.netapp.com/marketplace/api/v1/subscriptions&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$BLUEXP_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Check capacity pool status</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>curl<span class="w"> </span>-s<span class="w"> </span><span class="s2">&quot;https://api.bluexp.netapp.com/marketplace/api/v1/capacity-pools&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$BLUEXP_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div>
 
 

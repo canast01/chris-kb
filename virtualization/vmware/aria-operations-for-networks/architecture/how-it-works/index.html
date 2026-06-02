@@ -4565,50 +4565,49 @@ How It Works reference covering Deployment Model, Application Discovery Mechanis
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>[Physical switches]  ──NetFlow UDP 2055──► [Collector VM]
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>[Palo Alto firewall] ──Syslog/API──────►  [Collector VM]
 </code></pre></div>
-┌─────────────────────────────────────────── How vRNI Works ────────────────────────────────────────────┐
-│                                                                                                       │
-│  Flow collection from NSX/switches/cloud, analytics processing, and flow map rendering.               │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │            Flow Collection Layer             │  │             Inventory Collection            │   │
-│   │           NSX-T IPFIX to collector           │  │           vCenter API: VMs + hosts          │   │
-│   │           Physical switch NetFlow            │  │          NSX API: segments + rules          │   │
-│   │             Cloud VPC flow logs              │  │             DNS: name resolution            │   │
-│   │        Collector forwards to platform        │  │           CMDB enrichment optional          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Collected flows and inventory feed the analytics engine for correlation and search.                  │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Analytics Engine               │  │                Flow Map &amp; UI                │   │
-│   │          Correlates IPs to VM names          │  │        Flow Map: entity traffic view        │   │
-│   │         Detects micro-seg violations         │  │        Search: natural language query       │   │
-│   │          Anomaly detection on flows          │  │         Dashboards: predefined views        │   │
-│   │           Path tracing end-to-end            │  │           Export: CSV / API query           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  vRNI platform VM + collector VMs on vSphere; NSX-T and physical switches as sources                  │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Flow Record         = 5-tuple (src IP, dst IP, src port, dst port, proto) + byte/packet count        │
-│  IPFIX               = Standard flow export protocol; used by NSX-T and modern switches               │
-│  Collector           = Lightweight VM that receives IPFIX/NetFlow from data sources                   │
-│  Analytics Engine    = Platform component correlating flows with inventory for search                 │
-│  Flow Map            = Visual graph of traffic between application tiers and VMs                      │
-│  Path Tracing        = vRNI feature showing physical + logical path for a given flow                  │
-│  Micro-seg Violation = Flow allowed/denied differently than NSX DFW rule intent                       │
-│  Natural Language Search= vRNI query interface using plain English flow queries                       │
-│  Anomaly Detection   = Automatic flagging of unusual flow volume or new connections                   │
-│  Entity              = Any named object: VM, host, IP, application, security group                    │
-│  Inventory Sync      = Periodic API poll of vCenter/NSX to refresh entity metadata                    │
-│  VPC Flow Logs       = Cloud flow records from AWS/Azure ingested as a data source                    │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌─────────────────────────────────────────── How vRNI Works ────────────────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  Flow collection from NSX/switches/cloud, analytics processing, and flow map rendering.               │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│                                                                                                       │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │            Flow Collection Layer             │  │             Inventory Collection            │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │           NSX-T IPFIX to collector           │  │           vCenter API: VMs + hosts          │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │           Physical switch NetFlow            │  │          NSX API: segments + rules          │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │             Cloud VPC flow logs              │  │             DNS: name resolution            │   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │        Collector forwards to platform        │  │           CMDB enrichment optional          │   │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│                                                                                                       │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│  Collected flows and inventory feed the analytics engine for correlation and search.                  │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│                                                                                                       │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                                                                                                       │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │               Analytics Engine               │  │                Flow Map &amp; UI                │   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │          Correlates IPs to VM names          │  │        Flow Map: entity traffic view        │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │         Detects micro-seg violations         │  │        Search: natural language query       │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │          Anomaly detection on flows          │  │         Dashboards: predefined views        │   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │           Path tracing end-to-end            │  │           Export: CSV / API query           │   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│                                                                                                       │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  vRNI platform VM + collector VMs on vSphere; NSX-T and physical switches as sources                  │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│                                                                                                       │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Flow Record         = 5-tuple (src IP, dst IP, src port, dst port, proto) + byte/packet count        │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│  IPFIX               = Standard flow export protocol; used by NSX-T and modern switches               │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  Collector           = Lightweight VM that receives IPFIX/NetFlow from data sources                   │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  Analytics Engine    = Platform component correlating flows with inventory for search                 │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  Flow Map            = Visual graph of traffic between application tiers and VMs                      │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  Path Tracing        = vRNI feature showing physical + logical path for a given flow                  │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  Micro-seg Violation = Flow allowed/denied differently than NSX DFW rule intent                       │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  Natural Language Search= vRNI query interface using plain English flow queries                       │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  Anomaly Detection   = Automatic flagging of unusual flow volume or new connections                   │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  Entity              = Any named object: VM, host, IP, application, security group                    │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  Inventory Sync      = Periodic API poll of vCenter/NSX to refresh entity metadata                    │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  VPC Flow Logs       = Cloud flow records from AWS/Azure ingested as a data source                    │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│                                                                                                       │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
 <h3 id="stage-4-push-to-nsx">Stage 4: Push to NSX<a class="headerlink" href="#stage-4-push-to-nsx" title="Permanent link">&para;</a></h3>
 <p>Recommendations can be exported or pushed directly:

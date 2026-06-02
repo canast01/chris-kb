@@ -2840,6 +2840,28 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#decommission-procedure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decommission Procedure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-destruction-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Destruction Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#hardware-lifecycle-checklist" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3097,64 +3119,87 @@ Track physical infrastructure from procurement through secure disposal to optimi
 <a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>fwupdmgr<span class="w"> </span>get-devices
 <a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>fwupdmgr<span class="w"> </span>refresh<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>fwupdmgr<span class="w"> </span>update<span class="w">  </span><span class="c1"># update via LVFS</span>
 </code></pre></div>
-┌─────────────────────────────────── Inventory — Hardware Lifecycle ────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │        Track hardware from purchase through active use to end-of-life and decommission        │   │
-│   │       EOL: no more patches; EOSL: no more support calls — both require replacement plan       │   │
-│   │        Refresh: budget cycle (18-24 months lead); decommission: secure wipe + disposal        │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Lifecycle Phases               │  │             EOL/Refresh Actions             │   │
-│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
-│   │             Plan: spec + budget              │  │            Query vendor EOL dates           │   │
-│   │            Procure: PO + delivery            │  │            Flag 18-month warning            │   │
-│   │            Deploy: rack + config             │  │            Raise refresh project            │   │
-│   │          Operate: maintain + patch           │  │           Migrate workloads first           │   │
-│   │         Decommission: wipe + retire          │  │           Secure wipe certificate           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    EOL      = End of Life; vendor stops selling and developing the product                            │
-│    EOSL     = End of Service Life; vendor stops providing support and security patches                │
-│    Refresh  = Replace ageing hardware with current generation before EOSL                             │
-│    Secure wipe= Cryptographic erasure or DoD overwrite before disposal to prevent data recovery       │
-│    ITAD     = IT Asset Disposition; certified disposal with chain-of-custody and destruction cert     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## Decommission Procedure
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>1. **Workload migration** — migrate or decommission all VMs/services on the host
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>2. **Remove from monitoring** — delete host from Prometheus, Zabbix, SCOM
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>3. **Remove from management** — remove from Ansible inventory, SSM, vCenter
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>4. **Remove from network** — remove switch port config; revoke firewall rules; remove DNS entries
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>5. **Update CMDB** — mark CI as &quot;Decommissioned&quot;; record date and reason
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>6. **Data destruction** — wipe all drives per policy (see below)
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>7. **Physical removal** — unrack and label for disposal/return
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>8. **Disposal documentation** — obtain WEEE certificate or vendor return confirmation
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>## Data Destruction Standards
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>| Standard | Method | When to Use |
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>|---|---|---|
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>| DoD 5220.22-M | Multi-pass overwrite | HDD; non-encrypted |
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>| Cryptographic erase | Destroy encryption key | SED / FIPS 140 drives |
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>| Secure erase (ATA) | `hdparm --security-erase` | SSD internal wipe |
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>| Physical destruction | Degauss + shred | Classified / Restricted data |
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>```bash
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a># Secure erase a drive (ATA)
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>hdparm -I /dev/sda | grep -i &quot;security&quot;  # check if security-erase supported
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>hdparm --security-set-pass Erase /dev/sda
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>hdparm --security-erase Erase /dev/sda
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a># shred overwrite (for drives without ATA secure erase)
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>shred -vzn 3 /dev/sda  # 3-pass overwrite + verify
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌─────────────────────────────────── Inventory — Hardware Lifecycle ────────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │        Track hardware from purchase through active use to end-of-life and decommission        │   │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │       EOL: no more patches; EOSL: no more support calls — both require replacement plan       │   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │        Refresh: budget cycle (18-24 months lead); decommission: secure wipe + disposal        │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│                                                                                                       │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│                                                                                                       │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   │               Lifecycle Phases               │  │             EOL/Refresh Actions             │   │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│   │             Plan: spec + budget              │  │            Query vendor EOL dates           │   │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│   │            Procure: PO + delivery            │  │            Flag 18-month warning            │   │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│   │            Deploy: rack + config             │  │            Raise refresh project            │   │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   │          Operate: maintain + patch           │  │           Migrate workloads first           │   │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │         Decommission: wipe + retire          │  │           Secure wipe certificate           │   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│                                                                                                       │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│    Key terms:                                                                                         │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│                                                                                                       │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│    EOL      = End of Life; vendor stops selling and developing the product                            │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│    EOSL     = End of Service Life; vendor stops providing support and security patches                │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│    Refresh  = Replace ageing hardware with current generation before EOSL                             │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│    Secure wipe= Cryptographic erasure or DoD overwrite before disposal to prevent data recovery       │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│    ITAD     = IT Asset Disposition; certified disposal with chain-of-custody and destruction cert     │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│                                                                                                       │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
+<h2 id="decommission-procedure">Decommission Procedure<a class="headerlink" href="#decommission-procedure" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Workload migration</strong> — migrate or decommission all VMs/services on the host</li>
+<li><strong>Remove from monitoring</strong> — delete host from Prometheus, Zabbix, SCOM</li>
+<li><strong>Remove from management</strong> — remove from Ansible inventory, SSM, vCenter</li>
+<li><strong>Remove from network</strong> — remove switch port config; revoke firewall rules; remove DNS entries</li>
+<li><strong>Update CMDB</strong> — mark CI as "Decommissioned"; record date and reason</li>
+<li><strong>Data destruction</strong> — wipe all drives per policy (see below)</li>
+<li><strong>Physical removal</strong> — unrack and label for disposal/return</li>
+<li><strong>Disposal documentation</strong> — obtain WEEE certificate or vendor return confirmation</li>
+</ol>
+<h2 id="data-destruction-standards">Data Destruction Standards<a class="headerlink" href="#data-destruction-standards" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Standard</th>
+<th>Method</th>
+<th>When to Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DoD 5220.22-M</td>
+<td>Multi-pass overwrite</td>
+<td>HDD; non-encrypted</td>
+</tr>
+<tr>
+<td>Cryptographic erase</td>
+<td>Destroy encryption key</td>
+<td>SED / FIPS 140 drives</td>
+</tr>
+<tr>
+<td>Secure erase (ATA)</td>
+<td><code>hdparm --security-erase</code></td>
+<td>SSD internal wipe</td>
+</tr>
+<tr>
+<td>Physical destruction</td>
+<td>Degauss + shred</td>
+<td>Classified / Restricted data</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Secure erase a drive (ATA)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>hdparm<span class="w"> </span>-I<span class="w"> </span>/dev/sda<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;security&quot;</span><span class="w">  </span><span class="c1"># check if security-erase supported</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>hdparm<span class="w"> </span>--security-set-pass<span class="w"> </span>Erase<span class="w"> </span>/dev/sda
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>hdparm<span class="w"> </span>--security-erase<span class="w"> </span>Erase<span class="w"> </span>/dev/sda
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># shred overwrite (for drives without ATA secure erase)</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>shred<span class="w"> </span>-vzn<span class="w"> </span><span class="m">3</span><span class="w"> </span>/dev/sda<span class="w">  </span><span class="c1"># 3-pass overwrite + verify</span>
+</code></pre></div>
 <h2 id="hardware-lifecycle-checklist">Hardware Lifecycle Checklist<a class="headerlink" href="#hardware-lifecycle-checklist" title="Permanent link">&para;</a></h2>
 <ul>
 <li>[ ] Hardware older than 5 years reviewed for refresh planning</li>

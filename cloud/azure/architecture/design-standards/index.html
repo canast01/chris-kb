@@ -3767,6 +3767,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#resource-lock-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resource Lock Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#approved-regions" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4095,62 +4106,60 @@ Azure Standards reference covering Naming Convention, Tagging Policy, Security S
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span>--filter<span class="w"> </span><span class="s2">&quot;policyDefinitionId eq &#39;/providers/Microsoft.Authorization/policyDefinitions/&lt;required-tags-id&gt;&#39;&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span>--query<span class="w"> </span><span class="s2">&quot;[?complianceState==&#39;NonCompliant&#39;]&quot;</span>
 </code></pre></div>
-┌──────────────────────────────── Azure Architecture — Design Standards ────────────────────────────────┐
-│                                                                                                       │
-│  Naming, tagging, region, and landing zone standards for consistent Azure governance.                 │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Naming Conventions              │  │              Tagging Standards              │   │
-│   │     Format: {type}-{app}-{env}-{region}      │  │          env: prod/dev/staging/test         │   │
-│   │     Max length: varies by resource type      │  │          owner: team or individual          │   │
-│   │       Lowercase alphanumeric + hyphens       │  │          cost-center: finance code          │   │
-│   │         Storage: no hyphens in names         │  │         project: workload identifier        │   │
-│   │      Global unique: storage + ACR names      │  │       Inherit from RG: tag auto-apply       │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Landing zones provide pre-configured subscription patterns enforcing design standards.               │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │            Region &amp; Availability             │  │             Landing Zone Design             │   │
-│   │       Primary + secondary region pair        │  │         Platform subscriptions: mgmt        │   │
-│   │     Paired regions: Azure-defined pairs      │  │     Application landing zones: workload     │   │
-│   │         AZs: 3 per supported region          │  │          Connectivity sub: hub VNet         │   │
-│   │     Availability Set: update + fault dom     │  │          Identity sub: Entra + DCs          │   │
-│   │      SLA: varies per service + zone use      │  │         Policy: enforce at MG level         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Azure physical regions · Availability Zone data centres · Region-pair replication links              │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Landing zone    = Pre-configured subscription with policies, networking, and RBAC baseline           │
-│  CAF             = Cloud Adoption Framework; Microsoft guidance for Azure governance                  │
-│  Region pair     = Two Azure regions paired for sequential updates and data residency                 │
-│  Availability Zone= Physically separate DC within a region; 99.99% SLA when used                      │
-│  Update domain   = Availability Set grouping protecting VMs from simultaneous updates                 │
-│  Fault domain    = Availability Set grouping on separate hardware/power/network racks                 │
-│  Hub VNet        = Central network for shared services: firewall, DNS, VPN gateway                    │
-│  Spoke VNet      = Workload VNet peered to hub; isolated per application or team                      │
-│  MG policy scope = Policies assigned at MG apply to all child subscriptions and RGs                   │
-│  Tag inheritance = Configuring RG tag inheritance propagates tags to child resources                  │
-│  Global unique   = Some Azure resource names (storage, ACR) must be globally unique                   │
-│  Platform sub    = Dedicated subscriptions for management, connectivity, and identity                 │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## Resource Lock Standards
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Apply locks to prevent accidental deletion of production infrastructure:
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>```bash
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a># Add delete lock to production resource group
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>az lock create --name &quot;prod-rg-lock&quot; --resource-group &lt;rg&gt; --lock-type CanNotDelete
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a># List locks
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>az lock list --resource-group &lt;rg&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌──────────────────────────────── Azure Architecture — Design Standards ────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  Naming, tagging, region, and landing zone standards for consistent Azure governance.                 │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│                                                                                                       │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │              Naming Conventions              │  │              Tagging Standards              │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │     Format: {type}-{app}-{env}-{region}      │  │          env: prod/dev/staging/test         │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │     Max length: varies by resource type      │  │          owner: team or individual          │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │       Lowercase alphanumeric + hyphens       │  │          cost-center: finance code          │   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │         Storage: no hyphens in names         │  │         project: workload identifier        │   │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │      Global unique: storage + ACR names      │  │       Inherit from RG: tag auto-apply       │   │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                                                                       │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│  Landing zones provide pre-configured subscription patterns enforcing design standards.               │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                                                                                                       │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│                                                                                                       │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │            Region &amp; Availability             │  │             Landing Zone Design             │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │       Primary + secondary region pair        │  │         Platform subscriptions: mgmt        │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │     Paired regions: Azure-defined pairs      │  │     Application landing zones: workload     │   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │         AZs: 3 per supported region          │  │          Connectivity sub: hub VNet         │   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   │     Availability Set: update + fault dom     │  │          Identity sub: Entra + DCs          │   │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│   │      SLA: varies per service + zone use      │  │         Policy: enforce at MG level         │   │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│                                                                                                       │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  Azure physical regions · Availability Zone data centres · Region-pair replication links              │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│                                                                                                       │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  Landing zone    = Pre-configured subscription with policies, networking, and RBAC baseline           │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  CAF             = Cloud Adoption Framework; Microsoft guidance for Azure governance                  │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  Region pair     = Two Azure regions paired for sequential updates and data residency                 │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  Availability Zone= Physically separate DC within a region; 99.99% SLA when used                      │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  Update domain   = Availability Set grouping protecting VMs from simultaneous updates                 │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  Fault domain    = Availability Set grouping on separate hardware/power/network racks                 │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  Hub VNet        = Central network for shared services: firewall, DNS, VPN gateway                    │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  Spoke VNet      = Workload VNet peered to hub; isolated per application or team                      │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  MG policy scope = Policies assigned at MG apply to all child subscriptions and RGs                   │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  Tag inheritance = Configuring RG tag inheritance propagates tags to child resources                  │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│  Global unique   = Some Azure resource names (storage, ACR) must be globally unique                   │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  Platform sub    = Dedicated subscriptions for management, connectivity, and identity                 │
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│                                                                                                       │
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
+<h2 id="resource-lock-standards">Resource Lock Standards<a class="headerlink" href="#resource-lock-standards" title="Permanent link">&para;</a></h2>
+<p>Apply locks to prevent accidental deletion of production infrastructure:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Add delete lock to production resource group</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>az<span class="w"> </span>lock<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span><span class="s2">&quot;prod-rg-lock&quot;</span><span class="w"> </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>--lock-type<span class="w"> </span>CanNotDelete
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># List locks</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>az<span class="w"> </span>lock<span class="w"> </span>list<span class="w"> </span>--resource-group<span class="w"> </span>&lt;rg&gt;
+</code></pre></div>
 <h2 id="approved-regions">Approved Regions<a class="headerlink" href="#approved-regions" title="Permanent link">&para;</a></h2>
 <p>Azure resources may only be deployed in:
 - <code>westeurope</code> — primary
@@ -4231,18 +4240,18 @@ Azure Standards reference covering Naming Convention, Tagging Policy, Security S
 <p>Tags are enforced via Azure Policy <code>Require tag on resources</code>. Any resource missing mandatory tags is flagged in the compliance dashboard within 24 hours.</p>
 <h2 id="subscription-structure">Subscription Structure<a class="headerlink" href="#subscription-structure" title="Permanent link">&para;</a></h2>
 <p>Subscriptions are organised by workload and environment, not by team. Each production workload gets a dedicated subscription to enforce blast radius isolation.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Management Group: Corp
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>├── Platform
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>│   ├── sub-connectivity-prod       # Hub networking, ExpressRoute, DNS
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>│   ├── sub-identity-prod           # Domain controllers, ADCS
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>│   └── sub-management-prod         # Log Analytics, Backup, Automation
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>├── Landing Zones
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>│   ├── sub-app01-prod
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>│   ├── sub-app01-dev
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>│   ├── sub-app02-prod
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>│   └── sub-app02-dev
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>└── Sandbox
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>    └── sub-sandbox
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Management Group: Corp
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>├── Platform
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>│   ├── sub-connectivity-prod       # Hub networking, ExpressRoute, DNS
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>│   ├── sub-identity-prod           # Domain controllers, ADCS
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>│   └── sub-management-prod         # Log Analytics, Backup, Automation
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>├── Landing Zones
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>│   ├── sub-app01-prod
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>│   ├── sub-app01-dev
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>│   ├── sub-app02-prod
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>│   └── sub-app02-dev
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>└── Sandbox
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>    └── sub-sandbox
 </code></pre></div>
 <p>Each landing zone subscription inherits policy from its management group. Do not place prod and non-prod workloads in the same subscription.</p>
 <h2 id="baseline-configuration-requirements">Baseline Configuration Requirements<a class="headerlink" href="#baseline-configuration-requirements" title="Permanent link">&para;</a></h2>

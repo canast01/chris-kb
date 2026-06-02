@@ -3402,8 +3402,30 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Git Repository Backup (Primary)">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#awx-aap-export" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AWX / AAP Export
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="AWX / AAP Export">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#awx-manage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        awx-manage
+      
+    </span>
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#awx-cli" class="md-nav__link">
@@ -3753,121 +3775,119 @@
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>git<span class="w"> </span>remote<span class="w"> </span>add<span class="w"> </span>backup<span class="w"> </span>git@backup-gitlab.example.com:ansible/infrastructure.git
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>git<span class="w"> </span>push<span class="w"> </span>backup<span class="w"> </span>--mirror
 </code></pre></div>
-┌───────────────────────────────────── Ansible — Backup &amp; Restore ──────────────────────────────────────┐
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │ Ansible backup: the source of truth is the git repository — playbooks, roles, inventory, vars │   │
-│   │   AWX state: export via awx CLI or AWX API; includes job templates, credentials, inventories  │   │
-│   │  Restore: re-deploy AWX (Kubernetes operator or RPM), re-import exported objects, reconfigure │   │
-│   │    Critical: Vault password must be stored out-of-band (password manager, HSM) — not in git   │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               What to Back Up                │  │                Restore Steps                │   │
-│   │        Git repo (all automation code)        │  │           1. Redeploy AWX instance          │   │
-│   │         AWX export: awx export --all         │  │      2. Import AWX objects from export      │   │
-│   │        Vault password (offline safe)         │  │          3. Restore Vault password          │   │
-│   │          AWX PostgreSQL DB snapshot          │  │        4. Verify job template runs OK       │   │
-│   │       Execution environment OCI images       │  │       5. Test connectivity to targets       │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   awx CLI     = command-line client for AWX API; awx export --all dumps all objects to JSON   │   │
-│   │     AWX DB      = PostgreSQL database; stores job history, credentials (encrypted), config    │   │
-│   │     Vault PW    = Ansible Vault password; if lost, all vault-encrypted vars are unreadable    │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## AWX / AAP Export
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>### awx-manage
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>```bash
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a># On the AWX/AAP server
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>awx-manage dumpdata --natural-foreign --natural-primary \
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>  -e sessions -e admin \
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>  &gt; /tmp/awx-dump-$(date +%F).json
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>scp /tmp/awx-dump-$(date +%F).json backup-server:/backups/awx/
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌───────────────────────────────────── Ansible — Backup &amp; Restore ──────────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   │ Ansible backup: the source of truth is the git repository — playbooks, roles, inventory, vars │   │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │   AWX state: export via awx CLI or AWX API; includes job templates, credentials, inventories  │   │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │  Restore: re-deploy AWX (Kubernetes operator or RPM), re-import exported objects, reconfigure │   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │    Critical: Vault password must be stored out-of-band (password manager, HSM) — not in git   │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│                                                                                                       │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │               What to Back Up                │  │                Restore Steps                │   │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │        Git repo (all automation code)        │  │           1. Redeploy AWX instance          │   │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   │         AWX export: awx export --all         │  │      2. Import AWX objects from export      │   │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│   │        Vault password (offline safe)         │  │          3. Restore Vault password          │   │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│   │          AWX PostgreSQL DB snapshot          │  │        4. Verify job template runs OK       │   │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│   │       Execution environment OCI images       │  │       5. Test connectivity to targets       │   │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│                                                                                                       │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │   awx CLI     = command-line client for AWX API; awx export --all dumps all objects to JSON   │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │     AWX DB      = PostgreSQL database; stores job history, credentials (encrypted), config    │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │     Vault PW    = Ansible Vault password; if lost, all vault-encrypted vars are unreadable    │   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
+<h2 id="awx-aap-export">AWX / AAP Export<a class="headerlink" href="#awx-aap-export" title="Permanent link">&para;</a></h2>
+<h3 id="awx-manage">awx-manage<a class="headerlink" href="#awx-manage" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># On the AWX/AAP server</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>awx-manage<span class="w"> </span>dumpdata<span class="w"> </span>--natural-foreign<span class="w"> </span>--natural-primary<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-e<span class="w"> </span>sessions<span class="w"> </span>-e<span class="w"> </span>admin<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>&gt;<span class="w"> </span>/tmp/awx-dump-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.json
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>scp<span class="w"> </span>/tmp/awx-dump-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.json<span class="w"> </span>backup-server:/backups/awx/
+</code></pre></div>
 <h3 id="awx-cli">AWX CLI<a class="headerlink" href="#awx-cli" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>pip<span class="w"> </span>install<span class="w"> </span>awxkit
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Export all objects</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>awx<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all<span class="w"> </span>--output<span class="w"> </span>awx-backup-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.json<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>--conf.host<span class="w"> </span>https://awx.example.com<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>--conf.token<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$AWX_TOKEN</span><span class="s2">&quot;</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Export specific types</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>awx<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--job_templates<span class="w"> </span>--output<span class="w"> </span>job_templates.json
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>awx<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--credentials<span class="w"> </span>--output<span class="w"> </span>credentials.json<span class="w">  </span><span class="c1"># values are $encrypted$</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>awx<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--inventory<span class="w"> </span>--output<span class="w"> </span>inventories.json
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>pip<span class="w"> </span>install<span class="w"> </span>awxkit
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Export all objects</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>awx<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--all<span class="w"> </span>--output<span class="w"> </span>awx-backup-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.json<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>--conf.host<span class="w"> </span>https://awx.example.com<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>--conf.token<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$AWX_TOKEN</span><span class="s2">&quot;</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Export specific types</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>awx<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--job_templates<span class="w"> </span>--output<span class="w"> </span>job_templates.json
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>awx<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--credentials<span class="w"> </span>--output<span class="w"> </span>credentials.json<span class="w">  </span><span class="c1"># values are $encrypted$</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>awx<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--inventory<span class="w"> </span>--output<span class="w"> </span>inventories.json
 </code></pre></div>
 <h3 id="via-playbook">Via Playbook<a class="headerlink" href="#via-playbook" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Export AWX job templates</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">localhost</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="nt">gather_facts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="nt">collections</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">ansible.controller</span><span class="p p-Indicator">]</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span><span class="nt">tasks</span><span class="p">:</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Export all job templates</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">      </span><span class="nt">ansible.controller.export</span><span class="p">:</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">        </span><span class="nt">job_templates</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;all&quot;</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">      </span><span class="nt">register</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">export_data</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Write export file</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">      </span><span class="nt">ansible.builtin.copy</span><span class="p">:</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">        </span><span class="nt">content</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">export_data</span><span class="nv"> </span><span class="s">|</span><span class="nv"> </span><span class="s">to_nice_json</span><span class="nv"> </span><span class="s">}}&quot;</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">        </span><span class="nt">dest</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/backups/awx/job-templates-{{</span><span class="nv"> </span><span class="s">ansible_date_time.date</span><span class="nv"> </span><span class="s">}}.json&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Export AWX job templates</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">localhost</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="nt">gather_facts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="nt">collections</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">ansible.controller</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span><span class="nt">tasks</span><span class="p">:</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Export all job templates</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">      </span><span class="nt">ansible.controller.export</span><span class="p">:</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">        </span><span class="nt">job_templates</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;all&quot;</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">      </span><span class="nt">register</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">export_data</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Write export file</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">      </span><span class="nt">ansible.builtin.copy</span><span class="p">:</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">        </span><span class="nt">content</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">export_data</span><span class="nv"> </span><span class="s">|</span><span class="nv"> </span><span class="s">to_nice_json</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">        </span><span class="nt">dest</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/backups/awx/job-templates-{{</span><span class="nv"> </span><span class="s">ansible_date_time.date</span><span class="nv"> </span><span class="s">}}.json&quot;</span>
 </code></pre></div>
 <h2 id="vault-secrets-backup">Vault Secrets Backup<a class="headerlink" href="#vault-secrets-backup" title="Permanent link">&para;</a></h2>
 <p>Ansible Vault files are encrypted — safe in Git. For disaster recovery, also store decrypted values in HashiCorp Vault:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Push secrets to HashiCorp Vault</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ansible-vault<span class="w"> </span>view<span class="w"> </span>group_vars/prod/vault.yml<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="k">while</span><span class="w"> </span><span class="nv">IFS</span><span class="o">=</span><span class="s1">&#39;: &#39;</span><span class="w"> </span><span class="nb">read</span><span class="w"> </span>-r<span class="w"> </span>key<span class="w"> </span>value<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span>vault<span class="w"> </span>kv<span class="w"> </span>put<span class="w"> </span>secret/ansible/prod/<span class="nv">$key</span><span class="w"> </span><span class="nv">value</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$value</span><span class="s2">&quot;</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span><span class="k">done</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Push secrets to HashiCorp Vault</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ansible-vault<span class="w"> </span>view<span class="w"> </span>group_vars/prod/vault.yml<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="k">while</span><span class="w"> </span><span class="nv">IFS</span><span class="o">=</span><span class="s1">&#39;: &#39;</span><span class="w"> </span><span class="nb">read</span><span class="w"> </span>-r<span class="w"> </span>key<span class="w"> </span>value<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">    </span>vault<span class="w"> </span>kv<span class="w"> </span>put<span class="w"> </span>secret/ansible/prod/<span class="nv">$key</span><span class="w"> </span><span class="nv">value</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$value</span><span class="s2">&quot;</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span><span class="k">done</span>
 </code></pre></div>
 <h3 id="rotate-vault-password">Rotate Vault Password<a class="headerlink" href="#rotate-vault-password" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Generate new password file</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>openssl<span class="w"> </span>rand<span class="w"> </span>-base64<span class="w"> </span><span class="m">32</span><span class="w"> </span>&gt;<span class="w"> </span>~/.ansible_vault_pass_new
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Rekey all vault files</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>find<span class="w"> </span>.<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;vault.yml&quot;</span><span class="w"> </span>-exec<span class="w"> </span>ansible-vault<span class="w"> </span>rekey<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span>--new-vault-password-file<span class="w"> </span>~/.ansible_vault_pass_new<span class="w"> </span><span class="o">{}</span><span class="w"> </span><span class="se">\;</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>mv<span class="w"> </span>~/.ansible_vault_pass_new<span class="w"> </span>~/.ansible_vault_pass
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Generate new password file</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>openssl<span class="w"> </span>rand<span class="w"> </span>-base64<span class="w"> </span><span class="m">32</span><span class="w"> </span>&gt;<span class="w"> </span>~/.ansible_vault_pass_new
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Rekey all vault files</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>find<span class="w"> </span>.<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;vault.yml&quot;</span><span class="w"> </span>-exec<span class="w"> </span>ansible-vault<span class="w"> </span>rekey<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span>--new-vault-password-file<span class="w"> </span>~/.ansible_vault_pass_new<span class="w"> </span><span class="o">{}</span><span class="w"> </span><span class="se">\;</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>mv<span class="w"> </span>~/.ansible_vault_pass_new<span class="w"> </span>~/.ansible_vault_pass
 </code></pre></div>
 <h2 id="restore-procedures">Restore Procedures<a class="headerlink" href="#restore-procedures" title="Permanent link">&para;</a></h2>
 <h3 id="restore-control-node-from-scratch">Restore Control Node from Scratch<a class="headerlink" href="#restore-control-node-from-scratch" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># 1. Install ansible-core</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>dnf<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>epel-release<span class="w"> </span>ansible-core
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># 2. Restore SSH keys</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>/home/ansible/.ssh<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>chmod<span class="w"> </span><span class="m">700</span><span class="w"> </span>/home/ansible/.ssh
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>scp<span class="w"> </span>backup-server:/backups/ansible/ssh/latest/*<span class="w"> </span>/home/ansible/.ssh/
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>chown<span class="w"> </span>-R<span class="w"> </span>ansible:<span class="w"> </span>/home/ansible/.ssh<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>/home/ansible/.ssh/*
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># 3. Clone project</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:example/ansible-infrastructure.git<span class="w"> </span>/opt/ansible-project
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># 4. Install dependencies</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="nb">cd</span><span class="w"> </span>/opt/ansible-project
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>ansible-galaxy<span class="w"> </span>collection<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.yml<span class="w"> </span>-p<span class="w"> </span>./collections/
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>ansible-galaxy<span class="w"> </span>role<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.yml
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="c1"># 5. Verify</span>
-<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>ansible<span class="w"> </span>all<span class="w"> </span>-i<span class="w"> </span>inventory/production/<span class="w"> </span>-m<span class="w"> </span>ansible.builtin.ping
-<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>ansible-vault<span class="w"> </span>view<span class="w"> </span>group_vars/prod/vault.yml
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># 1. Install ansible-core</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>dnf<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>epel-release<span class="w"> </span>ansible-core
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># 2. Restore SSH keys</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>/home/ansible/.ssh<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>chmod<span class="w"> </span><span class="m">700</span><span class="w"> </span>/home/ansible/.ssh
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>scp<span class="w"> </span>backup-server:/backups/ansible/ssh/latest/*<span class="w"> </span>/home/ansible/.ssh/
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>chown<span class="w"> </span>-R<span class="w"> </span>ansible:<span class="w"> </span>/home/ansible/.ssh<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>/home/ansible/.ssh/*
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># 3. Clone project</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:example/ansible-infrastructure.git<span class="w"> </span>/opt/ansible-project
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="c1"># 4. Install dependencies</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="nb">cd</span><span class="w"> </span>/opt/ansible-project
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>ansible-galaxy<span class="w"> </span>collection<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.yml<span class="w"> </span>-p<span class="w"> </span>./collections/
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>ansible-galaxy<span class="w"> </span>role<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.yml
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="c1"># 5. Verify</span>
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>ansible<span class="w"> </span>all<span class="w"> </span>-i<span class="w"> </span>inventory/production/<span class="w"> </span>-m<span class="w"> </span>ansible.builtin.ping
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>ansible-vault<span class="w"> </span>view<span class="w"> </span>group_vars/prod/vault.yml
 </code></pre></div>
 <h3 id="restore-awx-from-database-backup">Restore AWX from Database Backup<a class="headerlink" href="#restore-awx-from-database-backup" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Kubernetes AWX operator</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>kubectl<span class="w"> </span>scale<span class="w"> </span>deployment<span class="w"> </span>awx-prod<span class="w"> </span>-n<span class="w"> </span>awx<span class="w"> </span>--replicas<span class="o">=</span><span class="m">0</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>awx<span class="w"> </span>awx-prod-postgres-0<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>psql<span class="w"> </span>-U<span class="w"> </span>awx<span class="w"> </span>-d<span class="w"> </span>awx<span class="w"> </span>-f<span class="w"> </span>/tmp/awx-dump.sql
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>kubectl<span class="w"> </span>scale<span class="w"> </span>deployment<span class="w"> </span>awx-prod<span class="w"> </span>-n<span class="w"> </span>awx<span class="w"> </span>--replicas<span class="o">=</span><span class="m">1</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Re-import job templates if needed</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>awx<span class="w"> </span>import<span class="w"> </span>&lt;<span class="w"> </span>awx-backup.json<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">  </span>--conf.host<span class="w"> </span>https://awx.example.com<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">  </span>--conf.token<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$AWX_TOKEN</span><span class="s2">&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Kubernetes AWX operator</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>kubectl<span class="w"> </span>scale<span class="w"> </span>deployment<span class="w"> </span>awx-prod<span class="w"> </span>-n<span class="w"> </span>awx<span class="w"> </span>--replicas<span class="o">=</span><span class="m">0</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-n<span class="w"> </span>awx<span class="w"> </span>awx-prod-postgres-0<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span>psql<span class="w"> </span>-U<span class="w"> </span>awx<span class="w"> </span>-d<span class="w"> </span>awx<span class="w"> </span>-f<span class="w"> </span>/tmp/awx-dump.sql
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>kubectl<span class="w"> </span>scale<span class="w"> </span>deployment<span class="w"> </span>awx-prod<span class="w"> </span>-n<span class="w"> </span>awx<span class="w"> </span>--replicas<span class="o">=</span><span class="m">1</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Re-import job templates if needed</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>awx<span class="w"> </span>import<span class="w"> </span>&lt;<span class="w"> </span>awx-backup.json<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">  </span>--conf.host<span class="w"> </span>https://awx.example.com<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">  </span>--conf.token<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$AWX_TOKEN</span><span class="s2">&quot;</span>
 </code></pre></div>
 <h2 id="rto-rpo">RTO / RPO<a class="headerlink" href="#rto-rpo" title="Permanent link">&para;</a></h2>
 <table>
@@ -3913,14 +3933,14 @@
 </tbody>
 </table>
 <h2 id="backup-validation">Backup Validation<a class="headerlink" href="#backup-validation" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="ch">#!/bin/bash</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1"># Run monthly to verify backup integrity</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="nb">cd</span><span class="w"> </span>/opt/ansible-project
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>git<span class="w"> </span>ls-remote<span class="w"> </span>backup<span class="w"> </span>HEAD<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;PASS: Git backup remote reachable&quot;</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="nb">test</span><span class="w"> </span>-f<span class="w"> </span>/backups/ansible/ssh/latest/ansible_ed25519<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;PASS: SSH key backup present&quot;</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>ansible-vault<span class="w"> </span>view<span class="w"> </span>group_vars/prod/vault.yml<span class="w"> </span>&gt;<span class="w"> </span>/dev/null<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;PASS: Vault decryption OK&quot;</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="nb">test</span><span class="w"> </span>-f<span class="w"> </span>/backups/awx/awx-backup-<span class="k">$(</span>date<span class="w"> </span>-d<span class="w"> </span>yesterday<span class="w"> </span>+%F<span class="k">)</span>.json<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;PASS: AWX backup found&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="ch">#!/bin/bash</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1"># Run monthly to verify backup integrity</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="nb">cd</span><span class="w"> </span>/opt/ansible-project
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>git<span class="w"> </span>ls-remote<span class="w"> </span>backup<span class="w"> </span>HEAD<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;PASS: Git backup remote reachable&quot;</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="nb">test</span><span class="w"> </span>-f<span class="w"> </span>/backups/ansible/ssh/latest/ansible_ed25519<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;PASS: SSH key backup present&quot;</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>ansible-vault<span class="w"> </span>view<span class="w"> </span>group_vars/prod/vault.yml<span class="w"> </span>&gt;<span class="w"> </span>/dev/null<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;PASS: Vault decryption OK&quot;</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="nb">test</span><span class="w"> </span>-f<span class="w"> </span>/backups/awx/awx-backup-<span class="k">$(</span>date<span class="w"> </span>-d<span class="w"> </span>yesterday<span class="w"> </span>+%F<span class="k">)</span>.json<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;PASS: AWX backup found&quot;</span>
 </code></pre></div>
 
 

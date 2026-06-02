@@ -3543,6 +3543,39 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#upgrade-applications-ndfc-ndi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Upgrade Applications (NDFC, NDI)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rollback" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rollback
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adding-a-node-to-an-existing-cluster" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adding a Node to an Existing Cluster
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#decommission" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3836,100 +3869,90 @@
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>acs<span class="w"> </span>health
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Wait until all nodes show Healthy</span>
 </code></pre></div>
-┌──────────────────────── Cisco Nexus Dashboard — Operations Install &amp; Upgrade ─────────────────────────┐
-│                                                                                                       │
-│  ND cluster initial build and rolling upgrade process with pre/post validation steps.                 │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Initial Install                │  │                Prerequisites                │   │
-│   │          Deploy OVA/ISO: 3 node min          │  │          Hardware: 16 vCPU/64GB RAM         │   │
-│   │         Bootstrap: node 1 as primary         │  │         Storage: 500GB min per node         │   │
-│   │          Join: nodes 2+3 to cluster          │  │          Network: OOB + data VLANs          │   │
-│   │           Configure: IP, NTP, DNS            │  │          NTP: synced before install         │   │
-│   │          Install apps: NDFC/NDI/NDO          │  │          Cisco CCO: download images         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Bootstrap node 1 first; other nodes join via cluster join token; apps installed last                 │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Upgrade Process                │  │           Post-Upgrade Validation           │   │
-│   │            Backup: before upgrade            │  │         acs health: all nodes green         │   │
-│   │           Upload image: UI or CLI            │  │             Apps: verify running            │   │
-│   │         Rolling: one node at a time          │  │             Sites: all connected            │   │
-│   │            Duration: ~45 min/node            │  │          Telemetry: flowing to NDI          │   │
-│   │        Apps auto-upgrade post-cluster        │  │           Rollback: restore backup          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  ND nodes (UCS/VM) · management switch · NTP/DNS server · CCO download server                         │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  OVA            = Open Virtualization Appliance; VMware VM image format for ND                        │
-│  ISO            = Disk image for bare-metal ND node installation                                      │
-│  Bootstrap      = First-node initialization creating the cluster with initial config                  │
-│  Cluster join token= One-time secret additional nodes use to securely join cluster                    │
-│  Rolling upgrade= ND upgrades one node at a time; cluster stays available throughout                  │
-│  CCO            = Cisco Connection Online; software download portal                                   │
-│  App auto-upgrade= After cluster upgrade, apps detect new platform and self-upgrade                   │
-│  OOB VLAN       = Management VLAN on dedicated out-of-band network                                    │
-│  Data VLAN      = In-band network VLAN used for site-to-ND app communication                          │
-│  NTP pre-sync   = NTP must be configured and synced before cluster forms                              │
-│  acs health     = Validates all nodes report green status after upgrade completes                     │
-│  Rollback       = Only via backup restore; no in-place cluster downgrade supported                    │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>After a 48-hour validation window with no issues: delete the VM snapshots taken before the upgrade.
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>---
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>## Upgrade Applications (NDFC, NDI)
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>After the ND platform upgrade is confirmed healthy, upgrade installed applications:
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>1. Navigate to **Admin Console &gt; Apps**.
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>2. Select the application (NDFC or NDI).
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>3. Click **Upgrade**.
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>4. Upload the new application image.
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>5. Click **Start Upgrade**. The application is briefly unavailable during the upgrade.
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>6. After upgrade: confirm app version and validate core functionality.
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>Upgrade NDFC before NDI. Validate NDFC functionality (fabric discovery, zone operations) before proceeding to NDI upgrade.
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>---
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>## Rollback
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>If a ND platform upgrade causes a cluster-breaking issue:
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>1. Power off all three ND VMs in vCenter.
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>2. Revert all three VMs to the pre-upgrade snapshot simultaneously.
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>3. Power on all three VMs.
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>4. Verify cluster reforms: `acs health` (takes 5-10 minutes).
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>5. Confirm NDFC and NDI are running.
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>**Note:** Snapshot revert restores the full VM state including the database. Any zone changes made after the snapshot (before rollback) will be lost. Ensure pre-upgrade zone exports are available to re-apply if needed.
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>---
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>## Adding a Node to an Existing Cluster
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>To scale a 3-node cluster to 5 nodes:
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>```bash
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a># Deploy two additional OVA nodes as per Step 1 above
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a># Configure their IPs but do not initialize them
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a># From the primary node, add the new nodes
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>acs cluster add-node --node-ip 10.10.5.24 --app-ip 192.168.100.4
-<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>acs cluster add-node --node-ip 10.10.5.25 --app-ip 192.168.100.5
-<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>
-<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a># Monitor cluster expansion (takes 20-40 minutes)
-<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>acs health
-<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>acs nodes list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌──────────────────────── Cisco Nexus Dashboard — Operations Install &amp; Upgrade ─────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  ND cluster initial build and rolling upgrade process with pre/post validation steps.                 │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│                                                                                                       │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │               Initial Install                │  │                Prerequisites                │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │          Deploy OVA/ISO: 3 node min          │  │          Hardware: 16 vCPU/64GB RAM         │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │         Bootstrap: node 1 as primary         │  │         Storage: 500GB min per node         │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │          Join: nodes 2+3 to cluster          │  │          Network: OOB + data VLANs          │   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │           Configure: IP, NTP, DNS            │  │          NTP: synced before install         │   │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │          Install apps: NDFC/NDI/NDO          │  │          Cisco CCO: download images         │   │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                                                                       │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│  Bootstrap node 1 first; other nodes join via cluster join token; apps installed last                 │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                                                                                                       │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│                                                                                                       │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │               Upgrade Process                │  │           Post-Upgrade Validation           │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │            Backup: before upgrade            │  │         acs health: all nodes green         │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │           Upload image: UI or CLI            │  │             Apps: verify running            │   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │         Rolling: one node at a time          │  │             Sites: all connected            │   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   │            Duration: ~45 min/node            │  │          Telemetry: flowing to NDI          │   │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│   │        Apps auto-upgrade post-cluster        │  │           Rollback: restore backup          │   │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│                                                                                                       │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  ND nodes (UCS/VM) · management switch · NTP/DNS server · CCO download server                         │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│                                                                                                       │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  OVA            = Open Virtualization Appliance; VMware VM image format for ND                        │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  ISO            = Disk image for bare-metal ND node installation                                      │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  Bootstrap      = First-node initialization creating the cluster with initial config                  │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  Cluster join token= One-time secret additional nodes use to securely join cluster                    │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  Rolling upgrade= ND upgrades one node at a time; cluster stays available throughout                  │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  CCO            = Cisco Connection Online; software download portal                                   │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  App auto-upgrade= After cluster upgrade, apps detect new platform and self-upgrade                   │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  OOB VLAN       = Management VLAN on dedicated out-of-band network                                    │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  Data VLAN      = In-band network VLAN used for site-to-ND app communication                          │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  NTP pre-sync   = NTP must be configured and synced before cluster forms                              │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│  acs health     = Validates all nodes report green status after upgrade completes                     │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  Rollback       = Only via backup restore; no in-place cluster downgrade supported                    │
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│                                                                                                       │
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
+<p>After a 48-hour validation window with no issues: delete the VM snapshots taken before the upgrade.</p>
+<hr />
+<h2 id="upgrade-applications-ndfc-ndi">Upgrade Applications (NDFC, NDI)<a class="headerlink" href="#upgrade-applications-ndfc-ndi" title="Permanent link">&para;</a></h2>
+<p>After the ND platform upgrade is confirmed healthy, upgrade installed applications:</p>
+<ol>
+<li>Navigate to <strong>Admin Console &gt; Apps</strong>.</li>
+<li>Select the application (NDFC or NDI).</li>
+<li>Click <strong>Upgrade</strong>.</li>
+<li>Upload the new application image.</li>
+<li>Click <strong>Start Upgrade</strong>. The application is briefly unavailable during the upgrade.</li>
+<li>After upgrade: confirm app version and validate core functionality.</li>
+</ol>
+<p>Upgrade NDFC before NDI. Validate NDFC functionality (fabric discovery, zone operations) before proceeding to NDI upgrade.</p>
+<hr />
+<h2 id="rollback">Rollback<a class="headerlink" href="#rollback" title="Permanent link">&para;</a></h2>
+<p>If a ND platform upgrade causes a cluster-breaking issue:</p>
+<ol>
+<li>Power off all three ND VMs in vCenter.</li>
+<li>Revert all three VMs to the pre-upgrade snapshot simultaneously.</li>
+<li>Power on all three VMs.</li>
+<li>Verify cluster reforms: <code>acs health</code> (takes 5-10 minutes).</li>
+<li>Confirm NDFC and NDI are running.</li>
+</ol>
+<p><strong>Note:</strong> Snapshot revert restores the full VM state including the database. Any zone changes made after the snapshot (before rollback) will be lost. Ensure pre-upgrade zone exports are available to re-apply if needed.</p>
+<hr />
+<h2 id="adding-a-node-to-an-existing-cluster">Adding a Node to an Existing Cluster<a class="headerlink" href="#adding-a-node-to-an-existing-cluster" title="Permanent link">&para;</a></h2>
+<p>To scale a 3-node cluster to 5 nodes:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Deploy two additional OVA nodes as per Step 1 above</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Configure their IPs but do not initialize them</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># From the primary node, add the new nodes</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>acs<span class="w"> </span>cluster<span class="w"> </span>add-node<span class="w"> </span>--node-ip<span class="w"> </span><span class="m">10</span>.10.5.24<span class="w"> </span>--app-ip<span class="w"> </span><span class="m">192</span>.168.100.4
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>acs<span class="w"> </span>cluster<span class="w"> </span>add-node<span class="w"> </span>--node-ip<span class="w"> </span><span class="m">10</span>.10.5.25<span class="w"> </span>--app-ip<span class="w"> </span><span class="m">192</span>.168.100.5
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Monitor cluster expansion (takes 20-40 minutes)</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>acs<span class="w"> </span>health
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>acs<span class="w"> </span>nodes<span class="w"> </span>list
+</code></pre></div>
 <hr />
 <h2 id="decommission">Decommission<a class="headerlink" href="#decommission" title="Permanent link">&para;</a></h2>
 <p>To decommission a Nexus Dashboard cluster:</p>

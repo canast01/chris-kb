@@ -2829,6 +2829,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#monitoring-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitoring Verification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#validation-checklist" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3048,52 +3059,51 @@ Post-implementation checks to confirm a change achieved its intent, introduced n
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># HTTP endpoint health</span>
 <a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>curl<span class="w"> </span>-sf<span class="w"> </span>http://localhost:&lt;port&gt;/health<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;OK&quot;</span>
 </code></pre></div>
-┌────────────────────────────────────────── Change Validation ──────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Validation: pre-change baseline + post-change verification against success criteria      │   │
-│   │         Document before/after state; define clear pass/fail criteria before execution         │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │          Pre-Change         │  │        During Change        │  │         Post-Change         │   │
-│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
-│   │     Screenshot baseline     │  │       Step checkpoints      │  │       Success criteria      │   │
-│   │        Config backup        │  │      Rollback triggers      │  │       Service healthy       │   │
-│   │        Service state        │  │        Time tracking        │  │       Monitoring clean      │   │
-│   │      Capacity baseline      │  │        Comms updates        │  │         Test results        │   │
-│   │     Performance metrics     │  │        Decision gate        │  │         Close ticket        │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│   │    Check type    │       What       │       Method      │  Pass criteria   │     If fails     │   │
-│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
-│   │     Service      │   App response   │  Health endpoint  │   200 OK &lt; 1s    │     Rollback     │   │
-│   │    Monitoring    │  No new alerts   │   Alert console   │    All clear     │   Investigate    │   │
-│   │   Performance    │  Latency normal  │     Dashboard     │ Within baseline  │     Rollback     │   │
-│   │   Replication    │     In sync      │    Rep console    │ Lag &lt; threshold  │   Investigate    │   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Success criteria= Defined measurable outcomes that prove the change worked as intended             │
-│    Rollback trigger= Specific condition (timeout, error, threshold breach) that activates backout     │
-│    Decision gate   = Checkpoint mid-change where team decides: continue, pause, or rollback           │
-│    Baseline        = Pre-change metric snapshot; used as comparison target for post-change check      │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## Monitoring Verification
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>```bash
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a># Check no active alerts after change
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a># In Prometheus / Alertmanager:
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>curl -s http://alertmanager:9093/api/v2/alerts | jq &#39;[.[] | select(.status.state==&quot;firing&quot;)]&#39;
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a># Check dashboard shows no anomalies — look for:
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a># - Error rate spike
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a># - Latency increase &gt; 20% above baseline
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a># - Resource utilisation jump (CPU, memory, disk I/O)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌────────────────────────────────────────── Change Validation ──────────────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │      Validation: pre-change baseline + post-change verification against success criteria      │   │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │         Document before/after state; define clear pass/fail criteria before execution         │   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│                                                                                                       │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│                                                                                                       │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │          Pre-Change         │  │        During Change        │  │         Post-Change         │   │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│   │     Screenshot baseline     │  │       Step checkpoints      │  │       Success criteria      │   │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│   │        Config backup        │  │      Rollback triggers      │  │       Service healthy       │   │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│   │        Service state        │  │        Time tracking        │  │       Monitoring clean      │   │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│   │      Capacity baseline      │  │        Comms updates        │  │         Test results        │   │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   │     Performance metrics     │  │        Decision gate        │  │         Close ticket        │   │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│                                                                                                       │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │    Check type    │       What       │       Method      │  Pass criteria   │     If fails     │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │     Service      │   App response   │  Health endpoint  │   200 OK &lt; 1s    │     Rollback     │   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   │    Monitoring    │  No new alerts   │   Alert console   │    All clear     │   Investigate    │   │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│   │   Performance    │  Latency normal  │     Dashboard     │ Within baseline  │     Rollback     │   │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│   │   Replication    │     In sync      │    Rep console    │ Lag &lt; threshold  │   Investigate    │   │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│                                                                                                       │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│    Key terms:                                                                                         │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│                                                                                                       │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│    Success criteria= Defined measurable outcomes that prove the change worked as intended             │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│    Rollback trigger= Specific condition (timeout, error, threshold breach) that activates backout     │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│    Decision gate   = Checkpoint mid-change where team decides: continue, pause, or rollback           │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│    Baseline        = Pre-change metric snapshot; used as comparison target for post-change check      │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│                                                                                                       │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
+<h2 id="monitoring-verification">Monitoring Verification<a class="headerlink" href="#monitoring-verification" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check no active alerts after change</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># In Prometheus / Alertmanager:</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>curl<span class="w"> </span>-s<span class="w"> </span>http://alertmanager:9093/api/v2/alerts<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;[.[] | select(.status.state==&quot;firing&quot;)]&#39;</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Check dashboard shows no anomalies — look for:</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># - Error rate spike</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># - Latency increase &gt; 20% above baseline</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># - Resource utilisation jump (CPU, memory, disk I/O)</span>
+</code></pre></div>
 <h2 id="validation-checklist">Validation Checklist<a class="headerlink" href="#validation-checklist" title="Permanent link">&para;</a></h2>
 <ul>
 <li>[ ] Target service/application is responding correctly</li>

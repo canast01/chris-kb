@@ -3163,6 +3163,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#webhook-from-github-to-confluence-custom-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Webhook from GitHub to Confluence (Custom Integration)
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3545,67 +3556,63 @@ Confluence integrates with a wide range of external systems. This page covers th
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Confluence Admin URL:
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  https://confluence.example.com/admin/applinks/listApplicationLinks.action
 </code></pre></div>
-┌─────────────────────────────── Confluence — Architecture Integrations ────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                Confluence Integration Landscape                               │   │
-│   │        Atlassian application links: Confluence ↔ Jira for cross-product macro rendering       │   │
-│   │                 Directory: LDAP/AD user sync; SAML SSO via Okta/AD FS/Ping IdP                │   │
-│   │              REST API: v2 endpoints for spaces, pages, content; PAT or Basic auth             │   │
-│   │          Webhooks: HTTP POST events on page create/update/delete to external systems          │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Integrations connect Confluence outward to auth, issue tracking, and automation systems            │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │       Directory &amp; Auth      │  │     Atlassian Ecosystem     │  │       External Systems      │   │
-│   │    LDAP: user/group sync    │  │     Jira: app link OAuth    │  │     REST API: automation    │   │
-│   │     SAML SSO: Okta/ADFS     │  │    Jira macro: issue list   │  │    Webhooks: CI/CD events   │   │
-│   │      Crowd: SSO for DC      │  │    Bamboo: build results    │  │     Slack: notifications    │   │
-│   │      MFA: TOTP via Okta     │  │    Bitbucket: code macro    │  │      Email: SMTP alerts     │   │
-│   │   Local accounts: fallback  │  │   Atlassian Access: audit   │  │   PDF export: server-side   │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  LDAP/AD DC servers · IdP (Okta/AD FS) · SMTP relay · network connectivity to Jira/Bitbucket          │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  App link     = Atlassian trusted relationship between two products enabling OAuth and macros         │
-│  Crowd        = Atlassian SSO server; centralises auth for Confluence, Jira, Bitbucket                │
-│  SAML SSO     = Confluence acts as Service Provider; IdP handles credential validation                │
-│  LDAP sync    = Confluence polls LDAP on a schedule to import users and group memberships             │
-│  Webhook      = outbound HTTP POST triggered by Confluence page events                                │
-│  Jira macro   = {jira} macro embeds live issue data from linked Jira instance                         │
-│  PAT          = Personal Access Token; recommended over Basic auth for REST API access                │
-│  Atlassian Access = cloud governance layer for audit log, mobile policies, user provisioning          │
-│  PDF export   = Confluence server-side render; requires matching CSS for accurate output              │
-│  SMTP relay   = outbound mail for page notifications, comment alerts, admin emails                    │
-│  OAuth        = app link uses OAuth 1.0a or OAuth 2.0 for cross-product API trust                     │
-│  MFA          = multi-factor auth enforced at IdP level (Okta/ADFS); Confluence trusts IdP            │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>For live repository content, install the **Bitbucket for Confluence** app (Marketplace) which renders repository files inline with diffs and blame views.
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>### Webhook from GitHub to Confluence (Custom Integration)
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>If using the REST API to auto-update pages on push:
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>```mermaid
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>sequenceDiagram
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    participant GH as GitHub
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    participant MW as Middleware (Lambda / webhook handler)
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    participant CF as Confluence REST API
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    GH-&gt;&gt;MW: POST /webhook (push event)
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>    MW-&gt;&gt;CF: GET /rest/api/content/{id} (fetch current version)
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>    CF--&gt;&gt;MW: 200 { version.number, body }
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>    MW-&gt;&gt;CF: PUT /rest/api/content/{id} (update page body)
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>    CF--&gt;&gt;MW: 200 OK
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>    MW--&gt;&gt;GH: 200 Accepted
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌─────────────────────────────── Confluence — Architecture Integrations ────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │                                Confluence Integration Landscape                               │   │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │        Atlassian application links: Confluence ↔ Jira for cross-product macro rendering       │   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │                 Directory: LDAP/AD user sync; SAML SSO via Okta/AD FS/Ping IdP                │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │              REST API: v2 endpoints for spaces, pages, content; PAT or Basic auth             │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │          Webhooks: HTTP POST events on page create/update/delete to external systems          │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│                                                                                                       │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│    Integrations connect Confluence outward to auth, issue tracking, and automation systems            │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│                                                                                                       │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│                                                                                                       │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│   │       Directory &amp; Auth      │  │     Atlassian Ecosystem     │  │       External Systems      │   │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   │    LDAP: user/group sync    │  │     Jira: app link OAuth    │  │     REST API: automation    │   │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │     SAML SSO: Okta/ADFS     │  │    Jira macro: issue list   │  │    Webhooks: CI/CD events   │   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │      Crowd: SSO for DC      │  │    Bamboo: build results    │  │     Slack: notifications    │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │      MFA: TOTP via Okta     │  │    Bitbucket: code macro    │  │      Email: SMTP alerts     │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │   Local accounts: fallback  │  │   Atlassian Access: audit   │  │   PDF export: server-side   │   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│                                                                                                       │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│  LDAP/AD DC servers · IdP (Okta/AD FS) · SMTP relay · network connectivity to Jira/Bitbucket          │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│                                                                                                       │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│                                                                                                       │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│  App link     = Atlassian trusted relationship between two products enabling OAuth and macros         │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Crowd        = Atlassian SSO server; centralises auth for Confluence, Jira, Bitbucket                │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│  SAML SSO     = Confluence acts as Service Provider; IdP handles credential validation                │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  LDAP sync    = Confluence polls LDAP on a schedule to import users and group memberships             │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  Webhook      = outbound HTTP POST triggered by Confluence page events                                │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  Jira macro   = {jira} macro embeds live issue data from linked Jira instance                         │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  PAT          = Personal Access Token; recommended over Basic auth for REST API access                │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  Atlassian Access = cloud governance layer for audit log, mobile policies, user provisioning          │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  PDF export   = Confluence server-side render; requires matching CSS for accurate output              │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  SMTP relay   = outbound mail for page notifications, comment alerts, admin emails                    │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  OAuth        = app link uses OAuth 1.0a or OAuth 2.0 for cross-product API trust                     │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  MFA          = multi-factor auth enforced at IdP level (Okta/ADFS); Confluence trusts IdP            │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│                                                                                                       │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
+<p>For live repository content, install the <strong>Bitbucket for Confluence</strong> app (Marketplace) which renders repository files inline with diffs and blame views.</p>
+<h3 id="webhook-from-github-to-confluence-custom-integration">Webhook from GitHub to Confluence (Custom Integration)<a class="headerlink" href="#webhook-from-github-to-confluence-custom-integration" title="Permanent link">&para;</a></h3>
+<p>If using the REST API to auto-update pages on push:</p>
+<pre class="mermaid"><code>sequenceDiagram
+    participant GH as GitHub
+    participant MW as Middleware (Lambda / webhook handler)
+    participant CF as Confluence REST API
+
+    GH-&gt;&gt;MW: POST /webhook (push event)
+    MW-&gt;&gt;CF: GET /rest/api/content/{id} (fetch current version)
+    CF--&gt;&gt;MW: 200 { version.number, body }
+    MW-&gt;&gt;CF: PUT /rest/api/content/{id} (update page body)
+    CF--&gt;&gt;MW: 200 OK
+    MW--&gt;&gt;GH: 200 Accepted</code></pre>
 <hr />
 <h2 id="ldap-active-directory-authentication">LDAP / Active Directory Authentication<a class="headerlink" href="#ldap-active-directory-authentication" title="Permanent link">&para;</a></h2>
 <p>Confluence supports external user directories via <strong>LDAP</strong> or <strong>Microsoft Active Directory</strong>. Configuration is per-directory and supports multiple directories with priority ordering.</p>

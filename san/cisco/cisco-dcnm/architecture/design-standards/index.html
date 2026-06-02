@@ -3688,52 +3688,51 @@
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>show<span class="w"> </span>zone<span class="w"> </span>status<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Mode: Basic, Default-zone: deny</span>
 </code></pre></div>
-┌──────────────────────────────────── Cisco DCNM — Design Standards ────────────────────────────────────┐
-│                                                                                                       │
-│  DCNM design: HA deployment, management VLAN, RBAC, TLS, backup, and scale limits.                    │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Deployment Standards             │  │              Security Standards             │   │
-│   │          HA pair: primary + standby          │  │            TLS 1.2+ for all HTTPS           │   │
-│   │          Dedicated management VLAN           │  │          TACACS+ via ISE mandatory          │   │
-│   │          8 vCPU / 32 GB RAM (large)          │  │          RBAC: operator = read-only         │   │
-│   │            NTP for all timestamps            │  │         SNMPv3 only; disable v1/v2c         │   │
-│   │          Dedicated DNS entries mgmt          │  │           IP whitelist API access           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  HA and dedicated management VLAN are baseline; ISE + TLS are security minimums.                      │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │            Operational Standards             │  │            Scalability Guidelines           │   │
-│   │         Backup: nightly NFS; 30-day          │  │          Max 2,000 switches / node          │   │
-│   │        Alert review: daily SNMP check        │  │           Max 200,000 ports / node          │   │
-│   │         Zone changes: change ticket          │  │          Separate SAN vs LAN domain         │   │
-│   │            Firmware via DCNM only            │  │           Scale-out: multi-cluster          │   │
-│   │            Quarterly DCNM upgrade            │  │          2 TB storage perf history          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  vSphere host · 2 TB datastore · management Ethernet · NFS backup share                               │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  HA pair         = DCNM primary + standby VMs; database replication between them                      │
-│  Management VLAN = isolated VLAN for OOB switch management and DCNM traffic                           │
-│  ISE             = Cisco Identity Services Engine; provides TACACS+ for DCNM                          │
-│  TLS 1.2+        = minimum TLS version for DCNM HTTPS GUI and REST API                                │
-│  RBAC            = Role-Based Access Control; network-admin/operator/read-only                        │
-│  SNMPv3          = SNMP version 3; auth + privacy mode; disable v1/v2c in DCNM                        │
-│  IP whitelist    = restrict REST API source IPs to automation host subnet                             │
-│  NFS backup      = nightly DCNM config and database export to NFS mount                               │
-│  2,000 switches  = Cisco-recommended maximum MDS/Nexus per DCNM instance                              │
-│  SAN vs LAN      = DCNM manages both; separate logical domains per best practice                      │
-│  Multi-cluster   = multiple DCNM instances federated; each manages a subset                           │
-│  Change ticket   = ITSM requirement; all zone and config changes pre-approved                         │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌──────────────────────────────────── Cisco DCNM — Design Standards ────────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  DCNM design: HA deployment, management VLAN, RBAC, TLS, backup, and scale limits.                    │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│                                                                                                       │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │             Deployment Standards             │  │              Security Standards             │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │          HA pair: primary + standby          │  │            TLS 1.2+ for all HTTPS           │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │          Dedicated management VLAN           │  │          TACACS+ via ISE mandatory          │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │          8 vCPU / 32 GB RAM (large)          │  │          RBAC: operator = read-only         │   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │            NTP for all timestamps            │  │         SNMPv3 only; disable v1/v2c         │   │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │          Dedicated DNS entries mgmt          │  │           IP whitelist API access           │   │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                                                                       │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│  HA and dedicated management VLAN are baseline; ISE + TLS are security minimums.                      │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                                                                                                       │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│                                                                                                       │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │            Operational Standards             │  │            Scalability Guidelines           │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │         Backup: nightly NFS; 30-day          │  │          Max 2,000 switches / node          │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │        Alert review: daily SNMP check        │  │           Max 200,000 ports / node          │   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │         Zone changes: change ticket          │  │          Separate SAN vs LAN domain         │   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   │            Firmware via DCNM only            │  │           Scale-out: multi-cluster          │   │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│   │            Quarterly DCNM upgrade            │  │          2 TB storage perf history          │   │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│                                                                                                       │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  vSphere host · 2 TB datastore · management Ethernet · NFS backup share                               │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│                                                                                                       │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  HA pair         = DCNM primary + standby VMs; database replication between them                      │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  Management VLAN = isolated VLAN for OOB switch management and DCNM traffic                           │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  ISE             = Cisco Identity Services Engine; provides TACACS+ for DCNM                          │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  TLS 1.2+        = minimum TLS version for DCNM HTTPS GUI and REST API                                │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  RBAC            = Role-Based Access Control; network-admin/operator/read-only                        │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  SNMPv3          = SNMP version 3; auth + privacy mode; disable v1/v2c in DCNM                        │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  IP whitelist    = restrict REST API source IPs to automation host subnet                             │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  NFS backup      = nightly DCNM config and database export to NFS mount                               │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  2,000 switches  = Cisco-recommended maximum MDS/Nexus per DCNM instance                              │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  SAN vs LAN      = DCNM manages both; separate logical domains per best practice                      │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│  Multi-cluster   = multiple DCNM instances federated; each manages a subset                           │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  Change ticket   = ITSM requirement; all zone and config changes pre-approved                         │
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│                                                                                                       │
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
 <hr />
 <h2 id="performance-monitoring-standards">Performance Monitoring Standards<a class="headerlink" href="#performance-monitoring-standards" title="Permanent link">&para;</a></h2>

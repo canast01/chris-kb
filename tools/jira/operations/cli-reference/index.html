@@ -3337,6 +3337,34 @@
   
 </li>
         
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rest-api-curl-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        REST API — curl Examples
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="REST API — curl Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#get-issue" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Get Issue
+      
+    </span>
+  </a>
+  
+</li>
+        
           <li class="md-nav__item">
   <a href="#create-issue" class="md-nav__link">
     <span class="md-ellipsis">
@@ -3798,259 +3826,256 @@ CLI Reference reference covering Authentication Setup, REST API — curl Example
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Shorthand for Basic Auth header (base64 encoded)</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nb">export</span><span class="w"> </span><span class="nv">JIRA_AUTH</span><span class="o">=</span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="k">)</span>
 </code></pre></div>
-┌──────────────────────────────────────── Jira — CLI Reference ─────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                         Jira Admin CLI — run on server as jira OS user                        │   │
-│   │             ./start-jira.sh / ./stop-jira.sh — start/stop Jira application server             │   │
-│   │               curl http://localhost:8080/status — returns JSON with state field               │   │
-│   │             psql -U jira jira -c "SELECT count(*) FROM jiraissue;" — count issues             │   │
-│   │                 pg_dump -Fc -U jira jira -f /backup/jira_$(date +%Y%m%d).dump                 │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  SSH to Jira server · run as jira OS user · DB on PostgreSQL VM                                       │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  start-jira.sh  = JIRA_INSTALL/bin/start-jira.sh; starts Tomcat JVM process                           │
-│  stop-jira.sh   = graceful shutdown; waits for active requests to complete                            │
-│  GET /status    = REST endpoint; returns state: RUNNING, STARTING, STOPPING, ERROR                    │
-│  jiraissue table = PostgreSQL table containing all Jira issues                                        │
-│  pg_dump -Fc    = custom format dump; required for parallel pg_restore -j                             │
-│  kill -3 PID    = SIGQUIT to JVM; thread dump printed to catalina.out                                 │
-│  JIRA_INSTALL   = installation directory; contains bin/, conf/, atlassian-jira/                       │
-│  JIRA_HOME      = data directory; attachments/, indexes/, plugins/, log/                              │
-│  catalina.out   = Tomcat stdout; JIRA_INSTALL/logs/catalina.out                                       │
-│  atlassian-jira.log = Jira application log; JIRA_HOME/log/atlassian-jira.log                          │
-│  jira-application.properties = JIRA_HOME config; sets jira.home and cluster config                    │
-│  dbconfig.xml   = JIRA_HOME; JDBC connection settings; edit to change DB params                       │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>---
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## REST API — curl Examples
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>### Get Issue
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>```bash
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>curl -s -u &quot;${JIRA_USER}:${JIRA_TOKEN}&quot; \
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>  &quot;${JIRA_URL}/rest/api/2/issue/PROJ-123&quot; | python3 -m json.tool
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌──────────────────────────────────────── Jira — CLI Reference ─────────────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │                         Jira Admin CLI — run on server as jira OS user                        │   │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │             ./start-jira.sh / ./stop-jira.sh — start/stop Jira application server             │   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │               curl http://localhost:8080/status — returns JSON with state field               │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │             psql -U jira jira -c &quot;SELECT count(*) FROM jiraissue;&quot; — count issues             │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │                 pg_dump -Fc -U jira jira -f /backup/jira_$(date +%Y%m%d).dump                 │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│                                                                                                       │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│  SSH to Jira server · run as jira OS user · DB on PostgreSQL VM                                       │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                                                                       │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                                                                                                       │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│  start-jira.sh  = JIRA_INSTALL/bin/start-jira.sh; starts Tomcat JVM process                           │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│  stop-jira.sh   = graceful shutdown; waits for active requests to complete                            │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│  GET /status    = REST endpoint; returns state: RUNNING, STARTING, STOPPING, ERROR                    │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│  jiraissue table = PostgreSQL table containing all Jira issues                                        │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│  pg_dump -Fc    = custom format dump; required for parallel pg_restore -j                             │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│  kill -3 PID    = SIGQUIT to JVM; thread dump printed to catalina.out                                 │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│  JIRA_INSTALL   = installation directory; contains bin/, conf/, atlassian-jira/                       │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│  JIRA_HOME      = data directory; attachments/, indexes/, plugins/, log/                              │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│  catalina.out   = Tomcat stdout; JIRA_INSTALL/logs/catalina.out                                       │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│  atlassian-jira.log = Jira application log; JIRA_HOME/log/atlassian-jira.log                          │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  jira-application.properties = JIRA_HOME config; sets jira.home and cluster config                    │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  dbconfig.xml   = JIRA_HOME; JDBC connection settings; edit to change DB params                       │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│                                                                                                       │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
-<p>Specific fields only:</p>
+<hr />
+<h2 id="rest-api-curl-examples">REST API — curl Examples<a class="headerlink" href="#rest-api-curl-examples" title="Permanent link">&para;</a></h2>
+<h3 id="get-issue">Get Issue<a class="headerlink" href="#get-issue" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/issue/PROJ-123?fields=summary,status,assignee,priority&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/issue/PROJ-123&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+</code></pre></div>
+<p>Specific fields only:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/issue/PROJ-123?fields=summary,status,assignee,priority&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div>
 <h3 id="create-issue">Create Issue<a class="headerlink" href="#create-issue" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/issue&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="s1">    &quot;fields&quot;: {</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="s1">      &quot;project&quot;:     { &quot;key&quot;: &quot;PROJ&quot; },</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="s1">      &quot;issuetype&quot;:   { &quot;name&quot;: &quot;Bug&quot; },</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="s1">      &quot;summary&quot;:     &quot;Login fails on Safari 17&quot;,</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="s1">      &quot;description&quot;: &quot;Steps to reproduce:\n1. Open Safari 17\n2. Navigate to /login\n3. Submit credentials\n\nExpected: Successful login\nActual: HTTP 500&quot;,</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="s1">      &quot;priority&quot;:    { &quot;name&quot;: &quot;High&quot; },</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="s1">      &quot;assignee&quot;:    { &quot;name&quot;: &quot;jdoe&quot; },</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="s1">      &quot;labels&quot;:      [&quot;frontend&quot;, &quot;safari&quot;],</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="s1">      &quot;components&quot;:  [{ &quot;name&quot;: &quot;Authentication&quot; }]</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="s1">    }</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-</code></pre></div>
-<h3 id="update-issue-fields">Update Issue Fields<a class="headerlink" href="#update-issue-fields" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span>-X<span class="w"> </span>PUT<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/issue/PROJ-123&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/issue&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
 <a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="s1">    &quot;fields&quot;: {</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="s1">      &quot;summary&quot;:  &quot;Login fails on Safari 17 — REGRESSION&quot;,</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="s1">      &quot;priority&quot;: { &quot;name&quot;: &quot;Critical&quot; },</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="s1">      &quot;assignee&quot;: { &quot;name&quot;: &quot;jsmith&quot; }</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="s1">    }</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="s1">  }&#39;</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="s1">      &quot;project&quot;:     { &quot;key&quot;: &quot;PROJ&quot; },</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="s1">      &quot;issuetype&quot;:   { &quot;name&quot;: &quot;Bug&quot; },</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="s1">      &quot;summary&quot;:     &quot;Login fails on Safari 17&quot;,</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="s1">      &quot;description&quot;: &quot;Steps to reproduce:\n1. Open Safari 17\n2. Navigate to /login\n3. Submit credentials\n\nExpected: Successful login\nActual: HTTP 500&quot;,</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="s1">      &quot;priority&quot;:    { &quot;name&quot;: &quot;High&quot; },</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="s1">      &quot;assignee&quot;:    { &quot;name&quot;: &quot;jdoe&quot; },</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="s1">      &quot;labels&quot;:      [&quot;frontend&quot;, &quot;safari&quot;],</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="s1">      &quot;components&quot;:  [{ &quot;name&quot;: &quot;Authentication&quot; }]</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="s1">    }</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+</code></pre></div>
+<h3 id="update-issue-fields">Update Issue Fields<a class="headerlink" href="#update-issue-fields" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span>-X<span class="w"> </span>PUT<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/issue/PROJ-123&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="s1">    &quot;fields&quot;: {</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="s1">      &quot;summary&quot;:  &quot;Login fails on Safari 17 — REGRESSION&quot;,</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="s1">      &quot;priority&quot;: { &quot;name&quot;: &quot;Critical&quot; },</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="s1">      &quot;assignee&quot;: { &quot;name&quot;: &quot;jsmith&quot; }</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="s1">    }</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="s1">  }&#39;</span>
 </code></pre></div>
 <h3 id="transition-issue-update-status">Transition Issue (Update Status)<a class="headerlink" href="#transition-issue-update-status" title="Permanent link">&para;</a></h3>
 <p>First, get available transitions:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/issue/PROJ-123/transitions&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/issue/PROJ-123/transitions&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div>
 <p>Then execute the transition by ID:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/issue/PROJ-123/transitions&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="s1">    &quot;transition&quot;: { &quot;id&quot;: &quot;31&quot; },</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="s1">    &quot;fields&quot;: {</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="s1">      &quot;resolution&quot;: { &quot;name&quot;: &quot;Fixed&quot; }</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="s1">    },</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="s1">    &quot;update&quot;: {</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="s1">      &quot;comment&quot;: [{</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="s1">        &quot;add&quot;: { &quot;body&quot;: &quot;Transitioning to Done — fix deployed to prod.&quot; }</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="s1">      }]</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="s1">    }</span>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="s1">  }&#39;</span>
-</code></pre></div>
-<h3 id="add-comment">Add Comment<a class="headerlink" href="#add-comment" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/issue/PROJ-123/comment&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/issue/PROJ-123/transitions&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="s1">    &quot;body&quot;: &quot;Reproduced in UAT. Escalating to senior dev.&quot;</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="s1">  }&#39;</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="s1">    &quot;transition&quot;: { &quot;id&quot;: &quot;31&quot; },</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="s1">    &quot;fields&quot;: {</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="s1">      &quot;resolution&quot;: { &quot;name&quot;: &quot;Fixed&quot; }</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="s1">    },</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="s1">    &quot;update&quot;: {</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="s1">      &quot;comment&quot;: [{</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="s1">        &quot;add&quot;: { &quot;body&quot;: &quot;Transitioning to Done — fix deployed to prod.&quot; }</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="s1">      }]</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="s1">    }</span>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="s1">  }&#39;</span>
 </code></pre></div>
-<h3 id="add-worklog">Add Worklog<a class="headerlink" href="#add-worklog" title="Permanent link">&para;</a></h3>
+<h3 id="add-comment">Add Comment<a class="headerlink" href="#add-comment" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/issue/PROJ-123/worklog&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/issue/PROJ-123/comment&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="s1">    &quot;timeSpent&quot;: &quot;3h 30m&quot;,</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="s1">    &quot;comment&quot;: &quot;Investigated root cause and implemented fix&quot;,</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="s1">    &quot;started&quot;: &quot;2026-05-08T09:00:00.000+0000&quot;</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="s1">  }&#39;</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="s1">    &quot;body&quot;: &quot;Reproduced in UAT. Escalating to senior dev.&quot;</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="s1">  }&#39;</span>
 </code></pre></div>
-<h3 id="attach-file">Attach File<a class="headerlink" href="#attach-file" title="Permanent link">&para;</a></h3>
+<h3 id="add-worklog">Add Worklog<a class="headerlink" href="#add-worklog" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;X-Atlassian-Token: no-check&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span>-F<span class="w"> </span><span class="s2">&quot;file=@/path/to/screenshot.png&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/issue/PROJ-123/attachments&quot;</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/issue/PROJ-123/worklog&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="s1">    &quot;timeSpent&quot;: &quot;3h 30m&quot;,</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="s1">    &quot;comment&quot;: &quot;Investigated root cause and implemented fix&quot;,</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="s1">    &quot;started&quot;: &quot;2026-05-08T09:00:00.000+0000&quot;</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="s1">  }&#39;</span>
+</code></pre></div>
+<h3 id="attach-file">Attach File<a class="headerlink" href="#attach-file" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;X-Atlassian-Token: no-check&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span>-F<span class="w"> </span><span class="s2">&quot;file=@/path/to/screenshot.png&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/issue/PROJ-123/attachments&quot;</span>
 </code></pre></div>
 <h3 id="search-with-jql">Search with JQL<a class="headerlink" href="#search-with-jql" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span>-G<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/search&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s2">&quot;jql=project = PROJ AND status = &#39;In Progress&#39; AND assignee = jdoe&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s2">&quot;fields=key,summary,status,assignee,priority&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s2">&quot;maxResults=50&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span>-G<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/search&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s2">&quot;jql=project = PROJ AND status = &#39;In Progress&#39; AND assignee = jdoe&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s2">&quot;fields=key,summary,status,assignee,priority&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s2">&quot;maxResults=50&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div>
 <h3 id="bulk-operations">Bulk Operations<a class="headerlink" href="#bulk-operations" title="Permanent link">&para;</a></h3>
 <p>Bulk transition all issues matching a JQL filter:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="ch">#!/bin/bash</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="c1"># bulk-transition.sh — Transition all matching issues to a target status</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="nv">JQL</span><span class="o">=</span><span class="s2">&quot;project = PROJ AND status = &#39;To Do&#39; AND sprint in openSprints()&quot;</span>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="nv">TARGET_TRANSITION_ID</span><span class="o">=</span><span class="s2">&quot;21&quot;</span><span class="w">  </span><span class="c1"># &quot;In Progress&quot;</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="c1"># Fetch all issue keys</span>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="nv">KEYS</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="w">  </span>-G<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/search&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s2">&quot;jql=</span><span class="si">${</span><span class="nv">JQL</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s2">&quot;fields=key&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s2">&quot;maxResults=200&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="s2">import sys, json</span>
-<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="s2">data = json.load(sys.stdin)</span>
-<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="s2">for issue in data[&#39;issues&#39;]:</span>
-<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a><span class="s2">    print(issue[&#39;key&#39;])</span>
-<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a><span class="s2">&quot;</span><span class="k">)</span>
-<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>
-<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a><span class="k">for</span><span class="w"> </span>KEY<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="si">${</span><span class="nv">KEYS</span><span class="si">}</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Transitioning </span><span class="si">${</span><span class="nv">KEY</span><span class="si">}</span><span class="s2">...&quot;</span>
-<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a><span class="w">  </span>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a><span class="w">    </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a><span class="w">    </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a><span class="w">    </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/issue/</span><span class="si">${</span><span class="nv">KEY</span><span class="si">}</span><span class="s2">/transitions&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a><span class="w">    </span>-d<span class="w"> </span><span class="s2">&quot;{\&quot;transition\&quot;: {\&quot;id\&quot;: \&quot;</span><span class="si">${</span><span class="nv">TARGET_TRANSITION_ID</span><span class="si">}</span><span class="s2">\&quot;}}&quot;</span>
-<a id="__codelineno-11-26" name="__codelineno-11-26" href="#__codelineno-11-26"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
-<a id="__codelineno-11-27" name="__codelineno-11-27" href="#__codelineno-11-27"></a><span class="k">done</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="ch">#!/bin/bash</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="c1"># bulk-transition.sh — Transition all matching issues to a target status</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="nv">JQL</span><span class="o">=</span><span class="s2">&quot;project = PROJ AND status = &#39;To Do&#39; AND sprint in openSprints()&quot;</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="nv">TARGET_TRANSITION_ID</span><span class="o">=</span><span class="s2">&quot;21&quot;</span><span class="w">  </span><span class="c1"># &quot;In Progress&quot;</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="c1"># Fetch all issue keys</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="nv">KEYS</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="w">  </span>-G<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/search&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s2">&quot;jql=</span><span class="si">${</span><span class="nv">JQL</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s2">&quot;fields=key&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="w">  </span>--data-urlencode<span class="w"> </span><span class="s2">&quot;maxResults=200&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="s2">import sys, json</span>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="s2">data = json.load(sys.stdin)</span>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="s2">for issue in data[&#39;issues&#39;]:</span>
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="s2">    print(issue[&#39;key&#39;])</span>
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a><span class="s2">&quot;</span><span class="k">)</span>
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>
+<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a><span class="k">for</span><span class="w"> </span>KEY<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="si">${</span><span class="nv">KEYS</span><span class="si">}</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Transitioning </span><span class="si">${</span><span class="nv">KEY</span><span class="si">}</span><span class="s2">...&quot;</span>
+<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a><span class="w">  </span>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a><span class="w">    </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a><span class="w">    </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a><span class="w">    </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/issue/</span><span class="si">${</span><span class="nv">KEY</span><span class="si">}</span><span class="s2">/transitions&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-25" name="__codelineno-12-25" href="#__codelineno-12-25"></a><span class="w">    </span>-d<span class="w"> </span><span class="s2">&quot;{\&quot;transition\&quot;: {\&quot;id\&quot;: \&quot;</span><span class="si">${</span><span class="nv">TARGET_TRANSITION_ID</span><span class="si">}</span><span class="s2">\&quot;}}&quot;</span>
+<a id="__codelineno-12-26" name="__codelineno-12-26" href="#__codelineno-12-26"></a><span class="w">  </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<a id="__codelineno-12-27" name="__codelineno-12-27" href="#__codelineno-12-27"></a><span class="k">done</span>
 </code></pre></div>
 <hr />
 <h2 id="atlassian-cli-atlas">Atlassian CLI (atlas)<a class="headerlink" href="#atlassian-cli-atlas" title="Permanent link">&para;</a></h2>
 <p>The <code>atlas</code> CLI is Atlassian's official tool for Jira Cloud administration tasks.</p>
 <h3 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># macOS</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>brew<span class="w"> </span>install<span class="w"> </span>atlassian/taps/atlas
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Linux</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>curl<span class="w"> </span>-sL<span class="w"> </span>https://deb.cli.atlassian.com/install.sh<span class="w"> </span><span class="p">|</span><span class="w"> </span>bash
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># Verify</span>
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>atlas<span class="w"> </span>version
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># macOS</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>brew<span class="w"> </span>install<span class="w"> </span>atlassian/taps/atlas
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Linux</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>curl<span class="w"> </span>-sL<span class="w"> </span>https://deb.cli.atlassian.com/install.sh<span class="w"> </span><span class="p">|</span><span class="w"> </span>bash
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c1"># Verify</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>atlas<span class="w"> </span>version
 </code></pre></div>
 <h3 id="login">Login<a class="headerlink" href="#login" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>atlas<span class="w"> </span>login
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="c1"># Opens browser for OAuth authentication</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>atlas<span class="w"> </span>login
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="c1"># Opens browser for OAuth authentication</span>
 </code></pre></div>
 <h3 id="common-atlas-commands">Common atlas Commands<a class="headerlink" href="#common-atlas-commands" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># List all sites</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>atlas<span class="w"> </span>admin<span class="w"> </span>sites<span class="w"> </span>list
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Create a Jira issue</span>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>atlas<span class="w"> </span>jira<span class="w"> </span>issue<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="w">  </span>--project<span class="w"> </span>PROJ<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="w">  </span>--type<span class="w"> </span>Story<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="w">  </span>--summary<span class="w"> </span><span class="s2">&quot;Implement rate limiting on API gateway&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="w">  </span>--description<span class="w"> </span><span class="s2">&quot;Add rate limiting to prevent abuse&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="w">  </span>--assignee<span class="w"> </span>jdoe@example.com
-<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>
-<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a><span class="c1"># View an issue</span>
-<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>atlas<span class="w"> </span>jira<span class="w"> </span>issue<span class="w"> </span>view<span class="w"> </span>PROJ-123
-<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>
-<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a><span class="c1"># Move issue to a status</span>
-<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a>atlas<span class="w"> </span>jira<span class="w"> </span>issue<span class="w"> </span>transition<span class="w"> </span>PROJ-123<span class="w"> </span><span class="s2">&quot;In Progress&quot;</span>
-<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a>
-<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a><span class="c1"># List sprints</span>
-<a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a>atlas<span class="w"> </span>jira<span class="w"> </span>board<span class="w"> </span>sprint<span class="w"> </span>list<span class="w"> </span>--board-id<span class="w"> </span><span class="m">42</span>
-<a id="__codelineno-14-20" name="__codelineno-14-20" href="#__codelineno-14-20"></a>
-<a id="__codelineno-14-21" name="__codelineno-14-21" href="#__codelineno-14-21"></a><span class="c1"># Run JQL search</span>
-<a id="__codelineno-14-22" name="__codelineno-14-22" href="#__codelineno-14-22"></a>atlas<span class="w"> </span>jira<span class="w"> </span>issue<span class="w"> </span>list<span class="w"> </span>--jql<span class="w"> </span><span class="s2">&quot;project = PROJ AND priority = Critical&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># List all sites</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>atlas<span class="w"> </span>admin<span class="w"> </span>sites<span class="w"> </span>list
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># Create a Jira issue</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>atlas<span class="w"> </span>jira<span class="w"> </span>issue<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="w">  </span>--project<span class="w"> </span>PROJ<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="w">  </span>--type<span class="w"> </span>Story<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="w">  </span>--summary<span class="w"> </span><span class="s2">&quot;Implement rate limiting on API gateway&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="w">  </span>--description<span class="w"> </span><span class="s2">&quot;Add rate limiting to prevent abuse&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="w">  </span>--assignee<span class="w"> </span>jdoe@example.com
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a><span class="c1"># View an issue</span>
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>atlas<span class="w"> </span>jira<span class="w"> </span>issue<span class="w"> </span>view<span class="w"> </span>PROJ-123
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a><span class="c1"># Move issue to a status</span>
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>atlas<span class="w"> </span>jira<span class="w"> </span>issue<span class="w"> </span>transition<span class="w"> </span>PROJ-123<span class="w"> </span><span class="s2">&quot;In Progress&quot;</span>
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a><span class="c1"># List sprints</span>
+<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>atlas<span class="w"> </span>jira<span class="w"> </span>board<span class="w"> </span>sprint<span class="w"> </span>list<span class="w"> </span>--board-id<span class="w"> </span><span class="m">42</span>
+<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>
+<a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a><span class="c1"># Run JQL search</span>
+<a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a>atlas<span class="w"> </span>jira<span class="w"> </span>issue<span class="w"> </span>list<span class="w"> </span>--jql<span class="w"> </span><span class="s2">&quot;project = PROJ AND priority = Critical&quot;</span>
 </code></pre></div>
 <hr />
 <h2 id="admin-console-commands">Admin Console Commands<a class="headerlink" href="#admin-console-commands" title="Permanent link">&para;</a></h2>
 <h3 id="jira-service-control-linux-systemd">Jira Service Control (Linux systemd)<a class="headerlink" href="#jira-service-control-linux-systemd" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Start / Stop / Restart</span>
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>systemctl<span class="w"> </span>start<span class="w"> </span>jira
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>systemctl<span class="w"> </span>stop<span class="w"> </span>jira
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>jira
-<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>systemctl<span class="w"> </span>status<span class="w"> </span>jira
-<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>
-<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="c1"># View live logs</span>
-<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>jira<span class="w"> </span>-f
-<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>
-<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="c1"># Jira bundled start/stop scripts</span>
-<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>/opt/atlassian/jira/bin/start-jira.sh
-<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>/opt/atlassian/jira/bin/stop-jira.sh
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Start / Stop / Restart</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>systemctl<span class="w"> </span>start<span class="w"> </span>jira
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>systemctl<span class="w"> </span>stop<span class="w"> </span>jira
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>jira
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>systemctl<span class="w"> </span>status<span class="w"> </span>jira
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="c1"># View live logs</span>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>jira<span class="w"> </span>-f
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="c1"># Jira bundled start/stop scripts</span>
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>/opt/atlassian/jira/bin/start-jira.sh
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>/opt/atlassian/jira/bin/stop-jira.sh
 </code></pre></div>
 <h3 id="reindex-via-rest">Reindex via REST<a class="headerlink" href="#reindex-via-rest" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Start full reindex (background)</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>curl<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/reindex?type=BACKGROUND_PREFERRED&quot;</span>
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="c1"># Check reindex progress</span>
-<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>curl<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/reindex&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Start full reindex (background)</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>curl<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/reindex?type=BACKGROUND_PREFERRED&quot;</span>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="c1"># Check reindex progress</span>
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>curl<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/reindex&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div>
 <h3 id="clear-caches-via-rest">Clear Caches via REST<a class="headerlink" href="#clear-caches-via-rest" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>curl<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/jql/autocomplete/request/data/refresh&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>curl<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/jql/autocomplete/request/data/refresh&quot;</span>
 </code></pre></div>
 <p>Via UI: <code>Admin → System → Caches &amp; Services → Flush all caches</code></p>
 <h3 id="user-management-via-rest">User Management via REST<a class="headerlink" href="#user-management-via-rest" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Get user details</span>
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>curl<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/user?username=jdoe&quot;</span>
-<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>
-<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="c1"># Deactivate user</span>
-<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>curl<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>-X<span class="w"> </span>PUT<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/user?username=jdoe&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;active&quot;: false}&#39;</span>
-<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>
-<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a><span class="c1"># List all users in a group</span>
-<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>curl<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/group/member?groupname=jira-developers&amp;maxResults=100&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Get user details</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>curl<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/user?username=jdoe&quot;</span>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="c1"># Deactivate user</span>
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>curl<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>-X<span class="w"> </span>PUT<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/user?username=jdoe&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;active&quot;: false}&#39;</span>
+<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>
+<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a><span class="c1"># List all users in a group</span>
+<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>curl<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/group/member?groupname=jira-developers&amp;maxResults=100&quot;</span>
 </code></pre></div>
 <hr />
 <h2 id="jql-query-reference">JQL Query Reference<a class="headerlink" href="#jql-query-reference" title="Permanent link">&para;</a></h2>
 <h3 id="syntax">Syntax<a class="headerlink" href="#syntax" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>&lt;field&gt; &lt;operator&gt; &lt;value&gt; [AND|OR &lt;field&gt; &lt;operator&gt; &lt;value&gt;] [ORDER BY &lt;field&gt; ASC|DESC]
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>&lt;field&gt; &lt;operator&gt; &lt;value&gt; [AND|OR &lt;field&gt; &lt;operator&gt; &lt;value&gt;] [ORDER BY &lt;field&gt; ASC|DESC]
 </code></pre></div>
 <h3 id="field-reference">Field Reference<a class="headerlink" href="#field-reference" title="Permanent link">&para;</a></h3>
 <table>
@@ -4314,35 +4339,35 @@ CLI Reference reference covering Authentication Setup, REST API — curl Example
 </tbody>
 </table>
 <h3 id="common-jql-queries">Common JQL Queries<a class="headerlink" href="#common-jql-queries" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>-- My open items
-<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>assignee = currentUser() AND status != Done ORDER BY priority DESC
-<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
-<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>-- Critical unresolved bugs
-<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>issuetype = Bug AND priority = Critical AND status != Done ORDER BY created ASC
-<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>
-<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>-- Sprint overview
-<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>project = PROJ AND sprint in openSprints() ORDER BY status ASC, priority DESC
-<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>
-<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a>-- Overdue issues
-<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>duedate &lt; now() AND status != Done AND status != Closed ORDER BY duedate ASC
-<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a>
-<a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a>-- Unassigned high-priority
-<a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a>priority in (High, Critical) AND assignee is EMPTY AND status != Done
-<a id="__codelineno-20-15" name="__codelineno-20-15" href="#__codelineno-20-15"></a>
-<a id="__codelineno-20-16" name="__codelineno-20-16" href="#__codelineno-20-16"></a>-- Recently closed (last 7 days)
-<a id="__codelineno-20-17" name="__codelineno-20-17" href="#__codelineno-20-17"></a>status changed to Done after -7d ORDER BY resolved DESC
-<a id="__codelineno-20-18" name="__codelineno-20-18" href="#__codelineno-20-18"></a>
-<a id="__codelineno-20-19" name="__codelineno-20-19" href="#__codelineno-20-19"></a>-- Stuck in progress (over 5 days)
-<a id="__codelineno-20-20" name="__codelineno-20-20" href="#__codelineno-20-20"></a>status = &quot;In Progress&quot; AND status changed to &quot;In Progress&quot; before -5d
-<a id="__codelineno-20-21" name="__codelineno-20-21" href="#__codelineno-20-21"></a>
-<a id="__codelineno-20-22" name="__codelineno-20-22" href="#__codelineno-20-22"></a>-- Issues blocking others
-<a id="__codelineno-20-23" name="__codelineno-20-23" href="#__codelineno-20-23"></a>issueFunction in issuesWithLinks(&quot;blocks&quot;) AND status != Done
-<a id="__codelineno-20-24" name="__codelineno-20-24" href="#__codelineno-20-24"></a>
-<a id="__codelineno-20-25" name="__codelineno-20-25" href="#__codelineno-20-25"></a>-- Regression bugs in current release
-<a id="__codelineno-20-26" name="__codelineno-20-26" href="#__codelineno-20-26"></a>issuetype = Bug AND labels = regression AND fixVersion in unreleasedVersions()
-<a id="__codelineno-20-27" name="__codelineno-20-27" href="#__codelineno-20-27"></a>
-<a id="__codelineno-20-28" name="__codelineno-20-28" href="#__codelineno-20-28"></a>-- Full-text search across project
-<a id="__codelineno-20-29" name="__codelineno-20-29" href="#__codelineno-20-29"></a>project = PROJ AND text ~ &quot;authentication timeout&quot; ORDER BY updated DESC
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>-- My open items
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>assignee = currentUser() AND status != Done ORDER BY priority DESC
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>-- Critical unresolved bugs
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>issuetype = Bug AND priority = Critical AND status != Done ORDER BY created ASC
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>-- Sprint overview
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>project = PROJ AND sprint in openSprints() ORDER BY status ASC, priority DESC
+<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>
+<a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a>-- Overdue issues
+<a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a>duedate &lt; now() AND status != Done AND status != Closed ORDER BY duedate ASC
+<a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a>
+<a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a>-- Unassigned high-priority
+<a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a>priority in (High, Critical) AND assignee is EMPTY AND status != Done
+<a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a>
+<a id="__codelineno-21-16" name="__codelineno-21-16" href="#__codelineno-21-16"></a>-- Recently closed (last 7 days)
+<a id="__codelineno-21-17" name="__codelineno-21-17" href="#__codelineno-21-17"></a>status changed to Done after -7d ORDER BY resolved DESC
+<a id="__codelineno-21-18" name="__codelineno-21-18" href="#__codelineno-21-18"></a>
+<a id="__codelineno-21-19" name="__codelineno-21-19" href="#__codelineno-21-19"></a>-- Stuck in progress (over 5 days)
+<a id="__codelineno-21-20" name="__codelineno-21-20" href="#__codelineno-21-20"></a>status = &quot;In Progress&quot; AND status changed to &quot;In Progress&quot; before -5d
+<a id="__codelineno-21-21" name="__codelineno-21-21" href="#__codelineno-21-21"></a>
+<a id="__codelineno-21-22" name="__codelineno-21-22" href="#__codelineno-21-22"></a>-- Issues blocking others
+<a id="__codelineno-21-23" name="__codelineno-21-23" href="#__codelineno-21-23"></a>issueFunction in issuesWithLinks(&quot;blocks&quot;) AND status != Done
+<a id="__codelineno-21-24" name="__codelineno-21-24" href="#__codelineno-21-24"></a>
+<a id="__codelineno-21-25" name="__codelineno-21-25" href="#__codelineno-21-25"></a>-- Regression bugs in current release
+<a id="__codelineno-21-26" name="__codelineno-21-26" href="#__codelineno-21-26"></a>issuetype = Bug AND labels = regression AND fixVersion in unreleasedVersions()
+<a id="__codelineno-21-27" name="__codelineno-21-27" href="#__codelineno-21-27"></a>
+<a id="__codelineno-21-28" name="__codelineno-21-28" href="#__codelineno-21-28"></a>-- Full-text search across project
+<a id="__codelineno-21-29" name="__codelineno-21-29" href="#__codelineno-21-29"></a>project = PROJ AND text ~ &quot;authentication timeout&quot; ORDER BY updated DESC
 </code></pre></div>
 
 

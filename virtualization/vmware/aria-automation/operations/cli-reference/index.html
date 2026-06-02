@@ -4479,6 +4479,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#deployments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deployments
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#cloud-templates-blueprints" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4756,86 +4767,85 @@ CLI Reference reference covering vracli (Appliance CLI), Kubernetes (On-Premises
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># List services</span>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>-n<span class="w"> </span>prelude
 </code></pre></div>
-┌─────────────────────────────────── Aria Automation — CLI Reference ───────────────────────────────────┐
-│                                                                                                       │
-│  vRA is operated via REST API, vracli, and VAMI; no traditional SSH-heavy CLI.                        │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │            vracli (appliance CLI)            │  │         REST API (primary interface)        │   │
-│   │        vracli status: service health         │  │        POST /csp/gateway/am/api/login       │   │
-│   │        vracli certificate: cert mgmt         │  │       GET /deployment/api/deployments       │   │
-│   │           vracli vidm: vIDM config           │  │        POST /blueprint/api/blueprints       │   │
-│   │         vracli proxy: proxy settings         │  │            GET /catalog/api/items           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Service and log commands run on the vRA appliance via SSH as root.                                   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Service Management              │  │                Log Locations                │   │
-│   │         systemctl status vra-cluster         │  │             /var/log/vmware/vra/            │   │
-│   │         kubectl get pods -n prelude          │  │          journalctl -u vra-cluster          │   │
-│   │        kubectl logs <pod> -n prelude         │  │         /var/log/vmware/vlcm/ (LCM)         │   │
-│   │       vracli status --all (full check)       │  │        kubectl logs <pod> -n prelude        │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  vRA Linux appliance VMs · internal Kubernetes (k3s/Rancher) · Postgres · vIDM VM                     │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  vracli            = Appliance CLI shipped with vRA; manages certs, vIDM config, proxy, NTP           │
-│  prelude namespace  = Kubernetes namespace where vRA microservices run inside the appliance           │
-│  kubectl           = Kubernetes CLI; used on vRA appliance to inspect pods and logs                   │
-│  REST API          = Primary programmatic interface; all UI actions use the same API underneath       │
-│  Bearer token      = JWT returned by /csp/gateway/am/api/login; passed as Authorization header        │
-│  Swagger UI        = /vco/api/docs (Orchestrator) and /automation-ui/api/docs (vRA) for REST docs     │
-│  vracli status     = Reports health of each microservice; green/red output per service                │
-│  systemctl         = Linux service manager; vra-cluster is main managed service                       │
-│  journalctl        = Linux log viewer; use -u vra-cluster for appliance startup logs                  │
-│  VAMI              = Web-based appliance management at :5480; configure network/NTP/proxy             │
-│  ABX CLI           = No dedicated CLI; ABX actions tested via vRA UI Run or REST trigger              │
-│  Orchestrator CLI  = vco-controlcenter at :8283 for Orchestrator admin and log download               │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>### Deployments
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>```bash
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a># List all deployments
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>curl -s -H &quot;Authorization: Bearer $TOKEN&quot; \
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  &quot;https://&lt;aria-auto&gt;/deployment/api/deployments&quot; | jq &#39;.content[]|.name,.id,.status&#39;
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a># Get a specific deployment
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>curl -s -H &quot;Authorization: Bearer $TOKEN&quot; \
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>  &quot;https://&lt;aria-auto&gt;/deployment/api/deployments/&lt;deployment-id&gt;&quot;
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a># Delete a deployment
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>curl -s -X DELETE -H &quot;Authorization: Bearer $TOKEN&quot; \
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>  &quot;https://&lt;aria-auto&gt;/deployment/api/deployments/&lt;deployment-id&gt;&quot;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌─────────────────────────────────── Aria Automation — CLI Reference ───────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  vRA is operated via REST API, vracli, and VAMI; no traditional SSH-heavy CLI.                        │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│                                                                                                       │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │            vracli (appliance CLI)            │  │         REST API (primary interface)        │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │        vracli status: service health         │  │        POST /csp/gateway/am/api/login       │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │        vracli certificate: cert mgmt         │  │       GET /deployment/api/deployments       │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │           vracli vidm: vIDM config           │  │        POST /blueprint/api/blueprints       │   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │         vracli proxy: proxy settings         │  │            GET /catalog/api/items           │   │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│                                                                                                       │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│  Service and log commands run on the vRA appliance via SSH as root.                                   │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│                                                                                                       │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                                                                                                       │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │              Service Management              │  │                Log Locations                │   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │         systemctl status vra-cluster         │  │             /var/log/vmware/vra/            │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │         kubectl get pods -n prelude          │  │          journalctl -u vra-cluster          │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │        kubectl logs &lt;pod&gt; -n prelude         │  │         /var/log/vmware/vlcm/ (LCM)         │   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │       vracli status --all (full check)       │  │        kubectl logs &lt;pod&gt; -n prelude        │   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│                                                                                                       │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  vRA Linux appliance VMs · internal Kubernetes (k3s/Rancher) · Postgres · vIDM VM                     │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│                                                                                                       │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  vracli            = Appliance CLI shipped with vRA; manages certs, vIDM config, proxy, NTP           │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│  prelude namespace  = Kubernetes namespace where vRA microservices run inside the appliance           │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  kubectl           = Kubernetes CLI; used on vRA appliance to inspect pods and logs                   │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  REST API          = Primary programmatic interface; all UI actions use the same API underneath       │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  Bearer token      = JWT returned by /csp/gateway/am/api/login; passed as Authorization header        │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  Swagger UI        = /vco/api/docs (Orchestrator) and /automation-ui/api/docs (vRA) for REST docs     │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  vracli status     = Reports health of each microservice; green/red output per service                │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  systemctl         = Linux service manager; vra-cluster is main managed service                       │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  journalctl        = Linux log viewer; use -u vra-cluster for appliance startup logs                  │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  VAMI              = Web-based appliance management at :5480; configure network/NTP/proxy             │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  ABX CLI           = No dedicated CLI; ABX actions tested via vRA UI Run or REST trigger              │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  Orchestrator CLI  = vco-controlcenter at :8283 for Orchestrator admin and log download               │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│                                                                                                       │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
-<h3 id="cloud-templates-blueprints">Cloud Templates (Blueprints)<a class="headerlink" href="#cloud-templates-blueprints" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List all blueprints</span>
+<h3 id="deployments">Deployments<a class="headerlink" href="#deployments" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List all deployments</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;aria-auto&gt;/blueprint/api/blueprints&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.content[]|.name,.id&#39;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;aria-auto&gt;/deployment/api/deployments&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.content[]|.name,.id,.status&#39;</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Get a specific deployment</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span><span class="s2">&quot;https://&lt;aria-auto&gt;/deployment/api/deployments/&lt;deployment-id&gt;&quot;</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Delete a deployment</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>DELETE<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span><span class="s2">&quot;https://&lt;aria-auto&gt;/deployment/api/deployments/&lt;deployment-id&gt;&quot;</span>
+</code></pre></div>
+<h3 id="cloud-templates-blueprints">Cloud Templates (Blueprints)<a class="headerlink" href="#cloud-templates-blueprints" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># List all blueprints</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;aria-auto&gt;/blueprint/api/blueprints&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.content[]|.name,.id&#39;</span>
 </code></pre></div>
 <hr />
 <h2 id="powershell-powervra-module">PowerShell (PowervRA Module)<a class="headerlink" href="#powershell-powervra-module" title="Permanent link">&para;</a></h2>
 <p>Install the module: <code>Install-Module -Name PowervRA</code></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Connect to Aria Automation</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Connect-VRAServer</span> <span class="n">-Server</span> <span class="n">aria-auto</span><span class="p">.</span><span class="n">domain</span><span class="p">.</span><span class="n">com</span> <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c"># List all deployments</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nb">Get-VRADeployment</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c"># Get a specific deployment</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="nb">Get-VRADeployment</span> <span class="n">-Name</span> <span class="s2">&quot;my-deployment&quot;</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c"># Create a new deployment from a catalog item</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="nb">New-VRADeployment</span> <span class="n">-CatalogItemName</span> <span class="s2">&quot;My Catalog Item&quot;</span> <span class="n">-DeploymentName</span> <span class="s2">&quot;test-01&quot;</span> <span class="n">-ProjectName</span> <span class="s2">&quot;My Project&quot;</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c"># Remove a deployment</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="nb">Remove-VRADeployment</span> <span class="n">-Id</span> <span class="s2">&quot;&lt;deployment-id&gt;&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Connect to Aria Automation</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Connect-VRAServer</span> <span class="n">-Server</span> <span class="n">aria-auto</span><span class="p">.</span><span class="n">domain</span><span class="p">.</span><span class="n">com</span> <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span><span class="p">)</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c"># List all deployments</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nb">Get-VRADeployment</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c"># Get a specific deployment</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="nb">Get-VRADeployment</span> <span class="n">-Name</span> <span class="s2">&quot;my-deployment&quot;</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c"># Create a new deployment from a catalog item</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="nb">New-VRADeployment</span> <span class="n">-CatalogItemName</span> <span class="s2">&quot;My Catalog Item&quot;</span> <span class="n">-DeploymentName</span> <span class="s2">&quot;test-01&quot;</span> <span class="n">-ProjectName</span> <span class="s2">&quot;My Project&quot;</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c"># Remove a deployment</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="nb">Remove-VRADeployment</span> <span class="n">-Id</span> <span class="s2">&quot;&lt;deployment-id&gt;&quot;</span>
 </code></pre></div>
 <hr />
 <h2 id="useful-log-paths">Useful Log Paths<a class="headerlink" href="#useful-log-paths" title="Permanent link">&para;</a></h2>

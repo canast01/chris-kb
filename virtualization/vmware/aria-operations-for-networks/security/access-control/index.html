@@ -4659,67 +4659,67 @@ Access Control reference covering Built-in Roles, LDAP / Active Directory Integr
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>  Group Attribute: memberOf
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>  Test Connection → &quot;Connection successful&quot;
 </code></pre></div>
-┌───────────────────────────────────────── vRNI Access Control ─────────────────────────────────────────┐
-│                                                                                                       │
-│  Admin and Member roles, LDAP group mapping, and access control for vRNI.                             │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                Built-in Roles                │  │               Role Permissions              │   │
-│   │          Administrator: full access          │  │         Admin: add/edit data sources        │   │
-│   │           Member: read-only viewer           │  │            Admin: user management           │   │
-│   │           No custom roles in vRNI            │  │           Member: view flows/maps           │   │
-│   │         Least privilege: use Member          │  │             Member: run searches            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Two roles only; LDAP groups map to Admin or Member; vIDM SSO extends this.                           │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              LDAP Group Mapping              │  │              API Access Control             │   │
-│   │          Settings &gt; Authentication           │  │         API tokens tied to user role        │   │
-│   │          Map AD group to Admin role          │  │          Token inherits user perms          │   │
-│   │         Map AD group to Member role          │  │          No separate API-only role          │   │
-│   │            Test LDAP bind on save            │  │          Rotate tokens periodically         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  vRNI platform VM; AD/LDAP directory; vIDM optional SSO; network access to LDAP port                  │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Administrator Role   = Full vRNI access: data sources, users, settings, all queries                  │
-│  Member Role          = Read-only: view flows, maps, dashboards; no config changes                    │
-│  LDAP Group Mapping   = AD security group assigned to Admin or Member role in vRNI                    │
-│  vIDM SSO             = VMware Identity Manager federated login; maps vIDM groups                     │
-│  API Token            = Bearer token for REST API; inherits the generating user role                  │
-│  Least Privilege      = Grant Member role by default; Admin only for operators                        │
-│  LDAP Bind Account    = Service account vRNI uses to query the directory for groups                   │
-│  Local Account        = Admin account created during OVA deploy; backup if LDAP fails                 │
-│  Group DN             = Distinguished Name of the AD group used in LDAP mapping                       │
-│  Token Rotation       = Periodically invalidate and reissue API tokens for security                   │
-│  Authentication Test  = vRNI built-in LDAP test button; validates bind and group DN                   │
-│  Audit Log            = Records user login, config changes, and data source edits                     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Disable unused local accounts:
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>```text
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Settings → Users → [user] → Deactivate
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌───────────────────────────────────────── vRNI Access Control ─────────────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  Admin and Member roles, LDAP group mapping, and access control for vRNI.                             │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│                                                                                                       │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │                Built-in Roles                │  │               Role Permissions              │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │          Administrator: full access          │  │         Admin: add/edit data sources        │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │           Member: read-only viewer           │  │            Admin: user management           │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │           No custom roles in vRNI            │  │           Member: view flows/maps           │   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │         Least privilege: use Member          │  │             Member: run searches            │   │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│                                                                                                       │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│  Two roles only; LDAP groups map to Admin or Member; vIDM SSO extends this.                           │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│                                                                                                       │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                                                                                                       │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │              LDAP Group Mapping              │  │              API Access Control             │   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │          Settings &gt; Authentication           │  │         API tokens tied to user role        │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │          Map AD group to Admin role          │  │          Token inherits user perms          │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │         Map AD group to Member role          │  │          No separate API-only role          │   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │            Test LDAP bind on save            │  │          Rotate tokens periodically         │   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│                                                                                                       │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  vRNI platform VM; AD/LDAP directory; vIDM optional SSO; network access to LDAP port                  │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│                                                                                                       │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Administrator Role   = Full vRNI access: data sources, users, settings, all queries                  │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│  Member Role          = Read-only: view flows, maps, dashboards; no config changes                    │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  LDAP Group Mapping   = AD security group assigned to Admin or Member role in vRNI                    │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  vIDM SSO             = VMware Identity Manager federated login; maps vIDM groups                     │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  API Token            = Bearer token for REST API; inherits the generating user role                  │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  Least Privilege      = Grant Member role by default; Admin only for operators                        │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  LDAP Bind Account    = Service account vRNI uses to query the directory for groups                   │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  Local Account        = Admin account created during OVA deploy; backup if LDAP fails                 │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  Group DN             = Distinguished Name of the AD group used in LDAP mapping                       │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  Token Rotation       = Periodically invalidate and reissue API tokens for security                   │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  Authentication Test  = vRNI built-in LDAP test button; validates bind and group DN                   │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  Audit Log            = Records user login, config changes, and data source edits                     │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│                                                                                                       │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div></p>
+<p>Disable unused local accounts:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Settings → Users → [user] → Deactivate
 </code></pre></div></p>
 <hr />
 <h2 id="api-token-management">API Token Management<a class="headerlink" href="#api-token-management" title="Permanent link">&para;</a></h2>
 <p>Tokens authenticate REST API clients without using user credentials:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="l l-Scalar l-Scalar-Plain">Settings → API Tokens → Generate Token</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Name</span><span class="p p-Indicator">:</span><span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">&lt;descriptive name&gt;</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Role</span><span class="p p-Indicator">:</span><span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">&lt;minimum required role&gt;</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Expiry</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;explicit date — set a reminder to rotate&gt;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="l l-Scalar l-Scalar-Plain">Settings → API Tokens → Generate Token</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Name</span><span class="p p-Indicator">:</span><span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">&lt;descriptive name&gt;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Role</span><span class="p p-Indicator">:</span><span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">&lt;minimum required role&gt;</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">Expiry</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;explicit date — set a reminder to rotate&gt;</span>
 </code></pre></div>
 <p>Revoke tokens when no longer needed:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Settings → API Tokens → [token] → Revoke
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Settings → API Tokens → [token] → Revoke
 </code></pre></div></p>
 <p>API usage:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: NetworkInsight &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="s2">&quot;https://vrni.example.local/api/ni/data-sources/vcenters&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: NetworkInsight &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="s2">&quot;https://vrni.example.local/api/ni/data-sources/vcenters&quot;</span>
 </code></pre></div></p>
 <hr />
 <h2 id="network-level-access-control">Network-Level Access Control<a class="headerlink" href="#network-level-access-control" title="Permanent link">&para;</a></h2>
@@ -4789,22 +4789,22 @@ Access Control reference covering Built-in Roles, LDAP / Active Directory Integr
 <p>Restrict Platform VM port 443 to management VLAN only — deny direct access from production VLANs.</p>
 <hr />
 <h2 id="vcenter-service-account-minimum-privilege">vCenter Service Account (Minimum Privilege)<a class="headerlink" href="#vcenter-service-account-minimum-privilege" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>vCenter → Administration → Global Permissions → Add Permission
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  User: svc-vrni-vc@corp.local
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  Role: Read Only
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  Propagate to children: Yes
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>vCenter → Administration → Global Permissions → Add Permission
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  User: svc-vrni-vc@corp.local
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  Role: Read Only
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>  Propagate to children: Yes
 </code></pre></div>
 <hr />
 <h2 id="nsx-t-service-account-minimum-privilege">NSX-T Service Account (Minimum Privilege)<a class="headerlink" href="#nsx-t-service-account-minimum-privilege" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>NSX-T Manager → System → User Management → Add User
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  Username: svc-vrni-nsx
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  Role: Auditor (read-only)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>NSX-T Manager → System → User Management → Add User
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  Username: svc-vrni-nsx
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  Role: Auditor (read-only)
 </code></pre></div>
 <p>Never use NSX admin credentials — vRNI only reads topology. A separate account with NSX security group write access is needed only if you push microsegmentation recommendations back to NSX.</p>
 <hr />
 <h2 id="audit-logging">Audit Logging<a class="headerlink" href="#audit-logging" title="Permanent link">&para;</a></h2>
 <p>All admin actions are logged. Access via:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Settings → Audit Logs
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Settings → Audit Logs
 </code></pre></div></p>
 <p>Forward to SIEM via syslog (Settings → Notifications → Syslog). Alert on:
 - Failed login attempts

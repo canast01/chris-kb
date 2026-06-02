@@ -3920,45 +3920,44 @@
 <h3 id="consistency-groups">Consistency Groups<a class="headerlink" href="#consistency-groups" title="Permanent link">&para;</a></h3>
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>CG-&lt;app&gt;-&lt;env&gt;
 </code></pre></div>
-┌─────────────────────────────────── RecoverPoint — Design Standards ───────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Design principles: right-size RPAs, journal volumes, and WAN bandwidth before deployment   │   │
-│   │  RPA count: 2 minimum per site; add one RPA per 50 protected VMs or 500 MB/s write throughput │   │
-│   │       Journal size: (peak write MB/s) × (CDP window hours) × 3600 × 1.3 overhead factor       │   │
-│   │   WAN bandwidth: match replication throughput; deduplicated traffic typically 30–50% of raw   │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │          RPA Sizing         │  │        Journal Sizing       │  │        Network Design       │   │
-│   │        2 RPA minimum        │  │      2–24 hr CDP window     │  │     Dedicated repl VLAN     │   │
-│   │        1 RPA / 50 VMs       │  │     ×1.3 overhead factor    │  │        MTU 9000 jumbo       │   │
-│   │      4 vCPU / 8 GB RAM      │  │      Separate datastore     │  │      QoS priority class     │   │
-│   │     Anti-affinity rules     │  │     VMDK thin provision     │  │      WAN dedup enabled      │   │
-│   │       Mgmt IP per RPA       │  │      Alarm on &gt;80% full     │  │       Latency &lt;100 ms       │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: RPA VMs pinned to dedicated ESXi hosts; journal on separate LUNs from prod               │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    RPA sizing          = Calculate RPA count from VM count and write throughput; minimum 2 per site   │
-│    Journal sizing      = Peak writes × CDP window × overhead; use RP Sizer tool for accuracy          │
-│    CDP window          = How far back in time the journal allows recovery; typically 2–24 hours       │
-│    Overhead factor     = 1.3× buffer for journal metadata, sequencing, and burst write absorption     │
-│    Anti-affinity       = DRS rule keeping RPA VMs on separate ESXi hosts for HA                       │
-│    Dedicated VLAN      = Isolate RPA replication traffic from production VM and management traffic    │
-│    Jumbo frames        = MTU 9000 on replication VLAN; reduces fragmentation; improves throughput     │
-│    QoS                 = DSCP marking on replication traffic; prioritised over bulk data transfers    │
-│    CG design           = Group VMs by application tier; same CG = same RPO and same failover unit     │
-│    RP Sizer            = Dell sizing tool; inputs write rate, change rate, and WAN link speed         │
-│    Thin provision      = Journal VMDKs thin-provisioned; grow on demand up to alarm threshold         │
-│    WAN dedup           = RPA deduplicates replication stream; reduces bandwidth by ~30–50%            │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌─────────────────────────────────── RecoverPoint — Design Standards ───────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │    Design principles: right-size RPAs, journal volumes, and WAN bandwidth before deployment   │   │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │  RPA count: 2 minimum per site; add one RPA per 50 protected VMs or 500 MB/s write throughput │   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │       Journal size: (peak write MB/s) × (CDP window hours) × 3600 × 1.3 overhead factor       │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │   WAN bandwidth: match replication throughput; deduplicated traffic typically 30–50% of raw   │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│                                                                                                       │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│                                                                                                       │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│   │          RPA Sizing         │  │        Journal Sizing       │  │        Network Design       │   │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│   │        2 RPA minimum        │  │      2–24 hr CDP window     │  │     Dedicated repl VLAN     │   │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│   │        1 RPA / 50 VMs       │  │     ×1.3 overhead factor    │  │        MTU 9000 jumbo       │   │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│   │      4 vCPU / 8 GB RAM      │  │      Separate datastore     │  │      QoS priority class     │   │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   │     Anti-affinity rules     │  │     VMDK thin provision     │  │      WAN dedup enabled      │   │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │       Mgmt IP per RPA       │  │      Alarm on &gt;80% full     │  │       Latency &lt;100 ms       │   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│                                                                                                       │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│    Physical: RPA VMs pinned to dedicated ESXi hosts; journal on separate LUNs from prod               │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│                                                                                                       │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│    Key terms:                                                                                         │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│                                                                                                       │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│    RPA sizing          = Calculate RPA count from VM count and write throughput; minimum 2 per site   │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│    Journal sizing      = Peak writes × CDP window × overhead; use RP Sizer tool for accuracy          │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│    CDP window          = How far back in time the journal allows recovery; typically 2–24 hours       │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│    Overhead factor     = 1.3× buffer for journal metadata, sequencing, and burst write absorption     │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│    Anti-affinity       = DRS rule keeping RPA VMs on separate ESXi hosts for HA                       │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│    Dedicated VLAN      = Isolate RPA replication traffic from production VM and management traffic    │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│    Jumbo frames        = MTU 9000 on replication VLAN; reduces fragmentation; improves throughput     │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│    QoS                 = DSCP marking on replication traffic; prioritised over bulk data transfers    │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│    CG design           = Group VMs by application tier; same CG = same RPO and same failover unit     │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│    RP Sizer            = Dell sizing tool; inputs write rate, change rate, and WAN link speed         │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│    Thin provision      = Journal VMDKs thin-provisioned; grow on demand up to alarm threshold         │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│    WAN dedup           = RPA deduplicates replication stream; reduces bandwidth by ~30–50%            │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│                                                                                                       │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
 
 

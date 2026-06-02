@@ -4572,51 +4572,6 @@ Encryption reference covering Encryption at Recovery Site, Certificate Managemen
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  └──────────────────────────────────────────────────────┘                                             │
 <a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>└───────────────────────────────────────────────────────────────┘
 </code></pre></div>
-┌─────────────────────────────────────── VMware SRM — Encryption ───────────────────────────────────────┐
-│                                                                                                       │
-│  SRM encrypts management traffic via TLS; replication traffic encryption depends on                   │
-│  the replication method (vSphere Replication uses TLS; array replication varies).                     │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          SRM Management Encryption           │  │            Replication Encryption           │   │
-│   │              All APIs: TLS 1.2+              │  │          vSphere Rep: TLS in-flight         │   │
-│   │            Site pair: mutual TLS             │  │             ABR: array-specific             │   │
-│   │            UI access: HTTPS only             │  │             Dell SRDF: encrypted            │   │
-│   │         SQL: TLS to local/remote DB          │  │            NetApp SnapMirror: TLS           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  SRM management uses TLS; verify replication traffic encryption with storage team.                    │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                 Data at Rest                 │  │            Certificate Standards            │   │
-│   │              VM disks: vSAN enc              │  │           SRM cert: enterprise PKI          │   │
-│   │             SQL DB: TDE optional             │  │               TLS 1.2 minimum               │   │
-│   │         Replica VMs: same as source          │  │             Cert expiry: monitor            │   │
-│   │         Windows: BitLocker on CS VM          │  │            Replace: re-pair sites           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Replication traffic traverses WAN; verify WAN encryption (IPSEC/MPLS) for ABR;                       │
-│  vSphere Replication encrypts its own traffic with TLS.                                               │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  TLS 1.2+      = minimum for SRM management and site pair traffic                                     │
-│  Mutual TLS    = both SRM Servers present certs to each other                                         │
-│  vSphere Rep TLS= vSphere Replication encrypts replication traffic                                    │
-│  ABR           = Array-Based Replication; encryption varies by array                                  │
-│  SRDF          = Dell EMC replication; supports encryption                                            │
-│  SnapMirror    = NetApp replication; TLS between arrays                                               │
-│  TDE           = Transparent Data Encryption; SQL Server feature                                      │
-│  BitLocker     = Windows disk encryption; for SRM Server VM disks                                     │
-│  vSAN enc      = replica VMs retain vSAN encryption on recovery site                                  │
-│  WAN enc       = IPSEC or encrypted MPLS for array replication over WAN                               │
-│  PKI cert      = replace self-signed with enterprise cert for compliance                              │
-│  Re-pair       = after cert replacement; required for site pair trust                                 │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌─────────────────────────────────────── VMware SRM — Encryption ───────────────────────────────────────┐
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  SRM encrypts management traffic via TLS; replication traffic encryption depends on                   │
@@ -4662,9 +4617,55 @@ Encryption reference covering Encryption at Recovery Site, Certificate Managemen
 <a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  Re-pair       = after cert replacement; required for site pair trust                                 │
 <a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│                                                                                                       │
 <a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>┌─────────────────────────────────────── VMware SRM — Encryption ───────────────────────────────────────┐
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>│                                                                                                       │
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>│  SRM encrypts management traffic via TLS; replication traffic encryption depends on                   │
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>│  the replication method (vSphere Replication uses TLS; array replication varies).                     │
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>│                                                                                                       │
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>│   │          SRM Management Encryption           │  │            Replication Encryption           │   │
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>│   │              All APIs: TLS 1.2+              │  │          vSphere Rep: TLS in-flight         │   │
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>│   │            Site pair: mutual TLS             │  │             ABR: array-specific             │   │
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>│   │            UI access: HTTPS only             │  │             Dell SRDF: encrypted            │   │
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>│   │         SQL: TLS to local/remote DB          │  │            NetApp SnapMirror: TLS           │   │
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>│                                                                                                       │
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>│  SRM management uses TLS; verify replication traffic encryption with storage team.                    │
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>│                                                                                                       │
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>│                                                                                                       │
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>│   │                 Data at Rest                 │  │            Certificate Standards            │   │
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>│   │              VM disks: vSAN enc              │  │           SRM cert: enterprise PKI          │   │
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>│   │             SQL DB: TDE optional             │  │               TLS 1.2 minimum               │   │
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>│   │         Replica VMs: same as source          │  │             Cert expiry: monitor            │   │
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>│   │         Windows: BitLocker on CS VM          │  │            Replace: re-pair sites           │   │
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>│                                                                                                       │
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>│  Replication traffic traverses WAN; verify WAN encryption (IPSEC/MPLS) for ABR;                       │
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>│  vSphere Replication encrypts its own traffic with TLS.                                               │
+<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>│                                                                                                       │
+<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>│                                                                                                       │
+<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>│  TLS 1.2+      = minimum for SRM management and site pair traffic                                     │
+<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a>│  Mutual TLS    = both SRM Servers present certs to each other                                         │
+<a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a>│  vSphere Rep TLS= vSphere Replication encrypts replication traffic                                    │
+<a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a>│  ABR           = Array-Based Replication; encryption varies by array                                  │
+<a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a>│  SRDF          = Dell EMC replication; supports encryption                                            │
+<a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a>│  SnapMirror    = NetApp replication; TLS between arrays                                               │
+<a id="__codelineno-2-38" name="__codelineno-2-38" href="#__codelineno-2-38"></a>│  TDE           = Transparent Data Encryption; SQL Server feature                                      │
+<a id="__codelineno-2-39" name="__codelineno-2-39" href="#__codelineno-2-39"></a>│  BitLocker     = Windows disk encryption; for SRM Server VM disks                                     │
+<a id="__codelineno-2-40" name="__codelineno-2-40" href="#__codelineno-2-40"></a>│  vSAN enc      = replica VMs retain vSAN encryption on recovery site                                  │
+<a id="__codelineno-2-41" name="__codelineno-2-41" href="#__codelineno-2-41"></a>│  WAN enc       = IPSEC or encrypted MPLS for array replication over WAN                               │
+<a id="__codelineno-2-42" name="__codelineno-2-42" href="#__codelineno-2-42"></a>│  PKI cert      = replace self-signed with enterprise cert for compliance                              │
+<a id="__codelineno-2-43" name="__codelineno-2-43" href="#__codelineno-2-43"></a>│  Re-pair       = after cert replacement; required for site pair trust                                 │
+<a id="__codelineno-2-44" name="__codelineno-2-44" href="#__codelineno-2-44"></a>│                                                                                                       │
+<a id="__codelineno-2-45" name="__codelineno-2-45" href="#__codelineno-2-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
 <p>After replacing the SRM Server cert, update the thumbprint at the remote site:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Recovery Site → Site Recovery → Site Pair → Edit → Accept new thumbprint
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Recovery Site → Site Recovery → Site Pair → Edit → Accept new thumbprint
 </code></pre></div></p>
 <hr />
 <h2 id="sra-credential-storage-encryption">SRA Credential Storage Encryption<a class="headerlink" href="#sra-credential-storage-encryption" title="Permanent link">&para;</a></h2>

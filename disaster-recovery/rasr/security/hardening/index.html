@@ -3804,6 +3804,34 @@
   
 </li>
         
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#idrac-hardening" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        iDRAC Hardening
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="iDRAC Hardening">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#baseline-idrac-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Baseline iDRAC Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
           <li class="md-nav__item">
   <a href="#idrac-alert-configuration" class="md-nav__link">
     <span class="md-ellipsis">
@@ -4171,209 +4199,207 @@ Hardening the RASR recovery environment: storage array management plane, iDRAC, 
 <a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>uemcli<span class="w"> </span>/sys/security<span class="w"> </span>show
 <a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>uemcli<span class="w"> </span>/sys/setting<span class="w"> </span>show
 </code></pre></div>
-┌────────────────────────────────────────── RASR — Hardening ───────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                   RASR — Hardening Checklist                                  │   │
-│   │               [ ] Disable default/admin accounts; create named admin accounts only            │   │
-│   │                   [ ] Enable MFA for all interactive logins via IdP / SAML SSO                │   │
-│   │        [ ] Restrict management port (443 (PPDM REST API)) to jump host / management VLAN      │   │
-│   │               [ ] Enable audit logging and forward to SIEM (syslog, TLS port 6514)            │   │
-│   │                 [ ] Apply all security patches within 30 days of vendor release               │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                       Network Hardening                                       │   │
-│   │               [ ] Separate backup VLAN — no direct production host access to repo             │   │
-│   │       [ ] Firewall: allow only 443 (PPDM REST API) · 2049 (NFS vault) · 9080 (CyberSense)     │   │
-│   │                  [ ] Disable unused ports and protocols on management interface               │   │
-│   │              [ ] Immutable repository: enable WORM or object lock on backup target            │   │
-│   │                 [ ] Encryption in transit: disable TLS 1.0/1.1; enforce TLS 1.2+              │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Isolated network segment (airgap switch) · Vault PowerStore/DD appliance · Clean-room ESXi hosts     │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  RASR          = Ransomware Air-gap Secure Recovery; full workflow from detection to clean rest       │
-│  Vault         = isolated, air-gapped storage appliance receiving periodic replication copies         │
-│  Vault Lock    = WORM lock applied after sync; prevents modification or deletion of vault copies      │
-│  CyberSense    = ML analytics engine scanning vault data for corruption, encryption signatures        │
-│  PPDM          = PowerProtect Data Manager; orchestrates protection policies, jobs, and recovery      │
-│  Air Gap       = physical or logical network isolation preventing attacker lateral movement to        │
-│  Delta Set     = incremental changed blocks replicated from production to vault each cycle            │
-│  Clean Room    = isolated recovery environment: separate vCenter, network, and workstations           │
-│  Recovery Point= specific vault snapshot timestamp from which clean recovery is performed             │
-│  Integrity Lock= two-person authorization required to open vault; prevents insider unlock attac       │
-│  Journal       = write-order-consistent journal on vault enabling point-in-time recovery              │
-│  Scan Report   = CyberSense output: clean/suspect classification per file and block                   │
-│  Retention     = vault copy lifespan; typically 30–90 days of daily snapshots kept                    │
-│  RTO           = Recovery Time Objective; time from failover decision to restored service             │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## iDRAC Hardening
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>### Baseline iDRAC Configuration
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>```bash
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a># Disable unused management protocols
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>racadm set iDRAC.IPMILan.Enable 0          # Disable IPMI over LAN (use iDRAC interface instead)
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>racadm set iDRAC.Telnet.Enable 0           # Disable Telnet
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>racadm set iDRAC.Serial.Enable 0           # Disable serial console if not needed
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a># Force HTTPS only (redirect HTTP to HTTPS)
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>racadm set iDRAC.WebServer.HttpsRedirect 1
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a># Set minimum TLS version
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>racadm set iDRAC.WebServer.TLSProtocol TLS1_2
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a># Set session timeout (seconds)
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>racadm set iDRAC.WebServer.Timeout 900
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a># Disable unused USB ports (prevent booting from rogue media)
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>racadm set iDRAC.Usb.ManagementPortMode Disabled
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a># Enable iDRAC lockdown mode (restricts configuration changes without iDRAC admin auth)
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>racadm set iDRAC.Lockdown.SystemLockdown Enabled
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a># Set login banner
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>racadm set iDRAC.WebServer.LoginBanner &quot;Authorised personnel only. All sessions logged.&quot;
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a># Verify settings
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>racadm get iDRAC.WebServer
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>racadm get iDRAC.IPMILan
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌────────────────────────────────────────── RASR — Hardening ───────────────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │                                   RASR — Hardening Checklist                                  │   │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │               [ ] Disable default/admin accounts; create named admin accounts only            │   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │                   [ ] Enable MFA for all interactive logins via IdP / SAML SSO                │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │        [ ] Restrict management port (443 (PPDM REST API)) to jump host / management VLAN      │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │               [ ] Enable audit logging and forward to SIEM (syslog, TLS port 6514)            │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │                 [ ] Apply all security patches within 30 days of vendor release               │   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│                                                                                                       │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│   │                                       Network Hardening                                       │   │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│   │               [ ] Separate backup VLAN — no direct production host access to repo             │   │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│   │       [ ] Firewall: allow only 443 (PPDM REST API) · 2049 (NFS vault) · 9080 (CyberSense)     │   │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│   │                  [ ] Disable unused ports and protocols on management interface               │   │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   │              [ ] Immutable repository: enable WORM or object lock on backup target            │   │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │                 [ ] Encryption in transit: disable TLS 1.0/1.1; enforce TLS 1.2+              │   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│                                                                                                       │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│  Physical Infrastructure:                                                                             │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│  Isolated network segment (airgap switch) · Vault PowerStore/DD appliance · Clean-room ESXi hosts     │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│                                                                                                       │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│  RASR          = Ransomware Air-gap Secure Recovery; full workflow from detection to clean rest       │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  Vault         = isolated, air-gapped storage appliance receiving periodic replication copies         │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  Vault Lock    = WORM lock applied after sync; prevents modification or deletion of vault copies      │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  CyberSense    = ML analytics engine scanning vault data for corruption, encryption signatures        │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│  PPDM          = PowerProtect Data Manager; orchestrates protection policies, jobs, and recovery      │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Air Gap       = physical or logical network isolation preventing attacker lateral movement to        │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│  Delta Set     = incremental changed blocks replicated from production to vault each cycle            │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  Clean Room    = isolated recovery environment: separate vCenter, network, and workstations           │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  Recovery Point= specific vault snapshot timestamp from which clean recovery is performed             │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  Integrity Lock= two-person authorization required to open vault; prevents insider unlock attac       │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  Journal       = write-order-consistent journal on vault enabling point-in-time recovery              │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  Scan Report   = CyberSense output: clean/suspect classification per file and block                   │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  Retention     = vault copy lifespan; typically 30–90 days of daily snapshots kept                    │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  RTO           = Recovery Time Objective; time from failover decision to restored service             │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│                                                                                                       │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
+<h2 id="idrac-hardening">iDRAC Hardening<a class="headerlink" href="#idrac-hardening" title="Permanent link">&para;</a></h2>
+<h3 id="baseline-idrac-configuration">Baseline iDRAC Configuration<a class="headerlink" href="#baseline-idrac-configuration" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Disable unused management protocols</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.IPMILan.Enable<span class="w"> </span><span class="m">0</span><span class="w">          </span><span class="c1"># Disable IPMI over LAN (use iDRAC interface instead)</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.Telnet.Enable<span class="w"> </span><span class="m">0</span><span class="w">           </span><span class="c1"># Disable Telnet</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.Serial.Enable<span class="w"> </span><span class="m">0</span><span class="w">           </span><span class="c1"># Disable serial console if not needed</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Force HTTPS only (redirect HTTP to HTTPS)</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.WebServer.HttpsRedirect<span class="w"> </span><span class="m">1</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Set minimum TLS version</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.WebServer.TLSProtocol<span class="w"> </span>TLS1_2
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Set session timeout (seconds)</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.WebServer.Timeout<span class="w"> </span><span class="m">900</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># Disable unused USB ports (prevent booting from rogue media)</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.Usb.ManagementPortMode<span class="w"> </span>Disabled
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="c1"># Enable iDRAC lockdown mode (restricts configuration changes without iDRAC admin auth)</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.Lockdown.SystemLockdown<span class="w"> </span>Enabled
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="c1"># Set login banner</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.WebServer.LoginBanner<span class="w"> </span><span class="s2">&quot;Authorised personnel only. All sessions logged.&quot;</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="c1"># Verify settings</span>
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>racadm<span class="w"> </span>get<span class="w"> </span>iDRAC.WebServer
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>racadm<span class="w"> </span>get<span class="w"> </span>iDRAC.IPMILan
+</code></pre></div>
 <h3 id="idrac-alert-configuration">iDRAC Alert Configuration<a class="headerlink" href="#idrac-alert-configuration" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Configure SNMP trap destination for iDRAC alerts</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.SNMPTrapIPv4.Address<span class="w"> </span><span class="m">10</span>.10.20.5<span class="w">   </span><span class="c1"># SNMP trap receiver</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.SNMP.AgentEnable<span class="w"> </span><span class="m">1</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Configure email alerts for critical events</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.EmailAlert.1.Enable<span class="w"> </span><span class="m">1</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.EmailAlert.1.Address<span class="w"> </span><span class="s2">&quot;dr-alerts@corp.local&quot;</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.RemoteHosts.SMTPServerIPAddress<span class="w"> </span>smtp.example.local
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Enable alerts for hardware failures and power events</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>racadm<span class="w"> </span>alertcfg<span class="w"> </span>-g<span class="w"> </span>system<span class="w"> </span>-s<span class="w"> </span>enabled
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Configure SNMP trap destination for iDRAC alerts</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.SNMPTrapIPv4.Address<span class="w"> </span><span class="m">10</span>.10.20.5<span class="w">   </span><span class="c1"># SNMP trap receiver</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.SNMP.AgentEnable<span class="w"> </span><span class="m">1</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Configure email alerts for critical events</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.EmailAlert.1.Enable<span class="w"> </span><span class="m">1</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.EmailAlert.1.Address<span class="w"> </span><span class="s2">&quot;dr-alerts@corp.local&quot;</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.RemoteHosts.SMTPServerIPAddress<span class="w"> </span>smtp.example.local
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Enable alerts for hardware failures and power events</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>racadm<span class="w"> </span>alertcfg<span class="w"> </span>-g<span class="w"> </span>system<span class="w"> </span>-s<span class="w"> </span>enabled
 </code></pre></div>
 <h3 id="idrac-firmware">iDRAC Firmware<a class="headerlink" href="#idrac-firmware" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check iDRAC firmware version</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>racadm<span class="w"> </span>getversion
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Verify against Dell security advisories</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Download firmware from Dell support; verify checksum before applying</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>racadm<span class="w"> </span>update<span class="w"> </span>-f<span class="w"> </span>/tmp/iDRAC-firmware.EXE<span class="w"> </span>-u<span class="w"> </span><span class="m">1</span><span class="w">   </span><span class="c1"># -u 1 = update after upload</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check iDRAC firmware version</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>racadm<span class="w"> </span>getversion
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Verify against Dell security advisories</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Download firmware from Dell support; verify checksum before applying</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>racadm<span class="w"> </span>update<span class="w"> </span>-f<span class="w"> </span>/tmp/iDRAC-firmware.EXE<span class="w"> </span>-u<span class="w"> </span><span class="m">1</span><span class="w">   </span><span class="c1"># -u 1 = update after upload</span>
 </code></pre></div>
 <h2 id="recovery-management-host-hardening">Recovery Management Host Hardening<a class="headerlink" href="#recovery-management-host-hardening" title="Permanent link">&para;</a></h2>
 <p>The Linux or Windows hosts used to run RASR CLI tools and scripts are privileged systems and must be hardened equivalently to Tier-0 infrastructure.</p>
 <h3 id="linux-management-host">Linux Management Host<a class="headerlink" href="#linux-management-host" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Apply standard Linux hardening (see Linux Hardening page)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Additional RASR-specific controls:</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Restrict SSH access to DR management host — key-based only, from jump host</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># /etc/ssh/sshd_config:</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>PermitRootLogin<span class="w"> </span>no
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>PasswordAuthentication<span class="w"> </span>no
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>AllowGroups<span class="w"> </span>dr-operators
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>ListenAddress<span class="w"> </span><span class="m">10</span>.10.20.10<span class="w">   </span><span class="c1"># Management interface only</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Restrict who can run RASR CLI tools using sudo</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># /etc/sudoers.d/rasr-operators</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>%dr-operators<span class="w">  </span><span class="nv">ALL</span><span class="o">=(</span>root<span class="o">)</span><span class="w"> </span>/usr/local/bin/uemcli,<span class="w"> </span>/usr/bin/racadm,<span class="w"> </span>/opt/rasr/bin/rasr-cli
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="c1"># Audit all RASR tool invocations</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="c1"># /etc/audit/rules.d/rasr.rules</span>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>-w<span class="w"> </span>/usr/local/bin/uemcli<span class="w"> </span>-p<span class="w"> </span>x<span class="w"> </span>-k<span class="w"> </span>rasr_mgmt
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>-w<span class="w"> </span>/usr/bin/racadm<span class="w"> </span>-p<span class="w"> </span>x<span class="w"> </span>-k<span class="w"> </span>rasr_mgmt
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>-w<span class="w"> </span>/opt/rasr/bin/<span class="w"> </span>-p<span class="w"> </span>x<span class="w"> </span>-k<span class="w"> </span>rasr_mgmt
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>
-<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>augenrules<span class="w"> </span>--load
-<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>
-<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="c1"># Restrict access to RASR credential files</span>
-<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>/etc/rasr/credentials.conf
-<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>chown<span class="w"> </span>root:dr-operators<span class="w"> </span>/etc/rasr/credentials.conf
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Apply standard Linux hardening (see Linux Hardening page)</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># Additional RASR-specific controls:</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Restrict SSH access to DR management host — key-based only, from jump host</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># /etc/ssh/sshd_config:</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>PermitRootLogin<span class="w"> </span>no
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>PasswordAuthentication<span class="w"> </span>no
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>AllowGroups<span class="w"> </span>dr-operators
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>ListenAddress<span class="w"> </span><span class="m">10</span>.10.20.10<span class="w">   </span><span class="c1"># Management interface only</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># Restrict who can run RASR CLI tools using sudo</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1"># /etc/sudoers.d/rasr-operators</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>%dr-operators<span class="w">  </span><span class="nv">ALL</span><span class="o">=(</span>root<span class="o">)</span><span class="w"> </span>/usr/local/bin/uemcli,<span class="w"> </span>/usr/bin/racadm,<span class="w"> </span>/opt/rasr/bin/rasr-cli
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="c1"># Audit all RASR tool invocations</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="c1"># /etc/audit/rules.d/rasr.rules</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>-w<span class="w"> </span>/usr/local/bin/uemcli<span class="w"> </span>-p<span class="w"> </span>x<span class="w"> </span>-k<span class="w"> </span>rasr_mgmt
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>-w<span class="w"> </span>/usr/bin/racadm<span class="w"> </span>-p<span class="w"> </span>x<span class="w"> </span>-k<span class="w"> </span>rasr_mgmt
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>-w<span class="w"> </span>/opt/rasr/bin/<span class="w"> </span>-p<span class="w"> </span>x<span class="w"> </span>-k<span class="w"> </span>rasr_mgmt
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>augenrules<span class="w"> </span>--load
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="c1"># Restrict access to RASR credential files</span>
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>/etc/rasr/credentials.conf
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>chown<span class="w"> </span>root:dr-operators<span class="w"> </span>/etc/rasr/credentials.conf
 </code></pre></div>
 <h3 id="windows-management-host">Windows Management Host<a class="headerlink" href="#windows-management-host" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Enable PowerShell script block logging for RASR management host</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nv">$path</span> <span class="p">=</span> <span class="s2">&quot;HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging&quot;</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nb">New-Item</span> <span class="n">-Path</span> <span class="nv">$path</span> <span class="n">-Force</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="nv">$path</span> <span class="n">-Name</span> <span class="s2">&quot;EnableScriptBlockLogging&quot;</span> <span class="n">-Value</span> <span class="n">1</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c"># Enable PowerShell transcription to a central log share</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="nv">$tPath</span> <span class="p">=</span> <span class="s2">&quot;HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\Transcription&quot;</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="nb">New-Item</span> <span class="n">-Path</span> <span class="nv">$tPath</span> <span class="n">-Force</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="nv">$tPath</span> <span class="n">-Name</span> <span class="s2">&quot;EnableTranscripting&quot;</span> <span class="n">-Value</span> <span class="n">1</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="nv">$tPath</span> <span class="n">-Name</span> <span class="s2">&quot;OutputDirectory&quot;</span> <span class="n">-Value</span> <span class="s2">&quot;\\logserver\rasr-transcripts&quot;</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c"># AppLocker — restrict which tools can run on the management host</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c"># Allow only approved RASR management executables</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="nb">Get-AppLockerPolicy</span> <span class="n">-Local</span> <span class="p">|</span> <span class="nb">Format-List</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="c"># Constrained Language Mode for non-admin PowerShell sessions</span>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="c"># Enforce via AppLocker or WDAC policy</span>
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="c"># Restrict RDP to the management host — DR operators only, from jump host</span>
-<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="nb">New-NetFirewallRule</span> <span class="n">-DisplayName</span> <span class="s2">&quot;RDP - Jump Host Only&quot;</span> <span class="p">`</span>
-<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>  <span class="n">-Direction</span> <span class="n">Inbound</span> <span class="n">-Protocol</span> <span class="n">TCP</span> <span class="n">-LocalPort</span> <span class="n">3389</span> <span class="p">`</span>
-<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>  <span class="n">-RemoteAddress</span> <span class="n">10</span><span class="p">.</span><span class="n">10</span><span class="p">.</span><span class="n">20</span><span class="p">.</span><span class="n">1</span> <span class="n">-Action</span> <span class="n">Allow</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Enable PowerShell script block logging for RASR management host</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nv">$path</span> <span class="p">=</span> <span class="s2">&quot;HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging&quot;</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nb">New-Item</span> <span class="n">-Path</span> <span class="nv">$path</span> <span class="n">-Force</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="nv">$path</span> <span class="n">-Name</span> <span class="s2">&quot;EnableScriptBlockLogging&quot;</span> <span class="n">-Value</span> <span class="n">1</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c"># Enable PowerShell transcription to a central log share</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="nv">$tPath</span> <span class="p">=</span> <span class="s2">&quot;HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\Transcription&quot;</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="nb">New-Item</span> <span class="n">-Path</span> <span class="nv">$tPath</span> <span class="n">-Force</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="nv">$tPath</span> <span class="n">-Name</span> <span class="s2">&quot;EnableTranscripting&quot;</span> <span class="n">-Value</span> <span class="n">1</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="nb">Set-ItemProperty</span> <span class="n">-Path</span> <span class="nv">$tPath</span> <span class="n">-Name</span> <span class="s2">&quot;OutputDirectory&quot;</span> <span class="n">-Value</span> <span class="s2">&quot;\\logserver\rasr-transcripts&quot;</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c"># AppLocker — restrict which tools can run on the management host</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c"># Allow only approved RASR management executables</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="nb">Get-AppLockerPolicy</span> <span class="n">-Local</span> <span class="p">|</span> <span class="nb">Format-List</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="c"># Constrained Language Mode for non-admin PowerShell sessions</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="c"># Enforce via AppLocker or WDAC policy</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="c"># Restrict RDP to the management host — DR operators only, from jump host</span>
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="nb">New-NetFirewallRule</span> <span class="n">-DisplayName</span> <span class="s2">&quot;RDP - Jump Host Only&quot;</span> <span class="p">`</span>
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>  <span class="n">-Direction</span> <span class="n">Inbound</span> <span class="n">-Protocol</span> <span class="n">TCP</span> <span class="n">-LocalPort</span> <span class="n">3389</span> <span class="p">`</span>
+<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>  <span class="n">-RemoteAddress</span> <span class="n">10</span><span class="p">.</span><span class="n">10</span><span class="p">.</span><span class="n">20</span><span class="p">.</span><span class="n">1</span> <span class="n">-Action</span> <span class="n">Allow</span>
 </code></pre></div>
 <h2 id="recovery-media-hardening">Recovery Media Hardening<a class="headerlink" href="#recovery-media-hardening" title="Permanent link">&para;</a></h2>
 <h3 id="usb-media-hardening">USB Media Hardening<a class="headerlink" href="#usb-media-hardening" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Verify recovery USB is created from a trusted source (SHA-256 check)</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>sha256sum<span class="w"> </span>rasr-recovery-image.iso
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Compare against vendor-published hash</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Scan recovery USB for malware before use</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>clamscan<span class="w"> </span>--recursive<span class="w"> </span>/mnt/rasr-usb/
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># After use, securely wipe the staging area</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>shred<span class="w"> </span>-vzn<span class="w"> </span><span class="m">3</span><span class="w"> </span>/mnt/rasr-stage/*
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Verify recovery USB is created from a trusted source (SHA-256 check)</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>sha256sum<span class="w"> </span>rasr-recovery-image.iso
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1"># Compare against vendor-published hash</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Scan recovery USB for malware before use</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>clamscan<span class="w"> </span>--recursive<span class="w"> </span>/mnt/rasr-usb/
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># After use, securely wipe the staging area</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>shred<span class="w"> </span>-vzn<span class="w"> </span><span class="m">3</span><span class="w"> </span>/mnt/rasr-stage/*
 </code></pre></div>
 <h3 id="pxe-boot-environment-hardening">PXE Boot Environment Hardening<a class="headerlink" href="#pxe-boot-environment-hardening" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nt">PXE-based RASR recovery hardening</span><span class="p">:</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DHCP option 67 (bootfile) served only to authorised MAC addresses</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TFTP server access restricted by IP source (management VLAN only)</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PXE image signed and verified via Secure Boot</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PXE recovery environment has no writable network shares outside of the recovery target</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PXE boot triggers an alert to the DR team (iDRAC alert on next boot device = PXE)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nt">PXE-based RASR recovery hardening</span><span class="p">:</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DHCP option 67 (bootfile) served only to authorised MAC addresses</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TFTP server access restricted by IP source (management VLAN only)</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PXE image signed and verified via Secure Boot</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PXE recovery environment has no writable network shares outside of the recovery target</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PXE boot triggers an alert to the DR team (iDRAC alert on next boot device = PXE)</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Restrict TFTP to management VLAN (dnsmasq example)</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1"># /etc/dnsmasq.conf</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>bind-interfaces
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="nv">interface</span><span class="o">=</span>eth1<span class="w">   </span><span class="c1"># Management interface only</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>dhcp-range<span class="o">=</span><span class="m">10</span>.10.20.100,10.10.20.200,12h
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># /etc/hosts.allow — restrict TFTP access</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="k">in</span>.tftpd:<span class="w"> </span><span class="m">10</span>.10.20.
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># /etc/hosts.deny</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="k">in</span>.tftpd:<span class="w"> </span>ALL
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Restrict TFTP to management VLAN (dnsmasq example)</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1"># /etc/dnsmasq.conf</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>bind-interfaces
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="nv">interface</span><span class="o">=</span>eth1<span class="w">   </span><span class="c1"># Management interface only</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>dhcp-range<span class="o">=</span><span class="m">10</span>.10.20.100,10.10.20.200,12h
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># /etc/hosts.allow — restrict TFTP access</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="k">in</span>.tftpd:<span class="w"> </span><span class="m">10</span>.10.20.
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c1"># /etc/hosts.deny</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="k">in</span>.tftpd:<span class="w"> </span>ALL
 </code></pre></div>
 <h2 id="logging-and-monitoring">Logging and Monitoring<a class="headerlink" href="#logging-and-monitoring" title="Permanent link">&para;</a></h2>
 <p>All RASR-related operations must generate immutable audit logs.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Forward array management logs to centralised SIEM</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1"># Unity — configure syslog forwarding</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>uemcli<span class="w"> </span>/sys/log/syslog<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span>-address<span class="w"> </span>siem.example.local<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">  </span>-port<span class="w"> </span><span class="m">514</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">  </span>-protocol<span class="w"> </span>UDP<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">  </span>-facility<span class="w"> </span>local0
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="c1"># iDRAC — configure syslog</span>
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.SysLog.SysLogEnable<span class="w"> </span><span class="m">1</span>
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.SysLog.Server1<span class="w"> </span>siem.example.local
-<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.SysLog.Port1<span class="w"> </span><span class="m">514</span>
-<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>
-<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="c1"># Linux management host — forward auditd logs</span>
-<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="c1"># /etc/rsyslog.d/90-rasr-audit.conf</span>
-<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a><span class="k">if</span><span class="w"> </span><span class="nv">$programname</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;audit&quot;</span><span class="w"> </span><span class="k">then</span><span class="w"> </span>@@siem.example.local:514
-<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a><span class="p">&amp;</span><span class="w"> </span>~
-<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>
-<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>rsyslog
-<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>
-<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a><span class="c1"># Verify syslog forwarding is working</span>
-<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>logger<span class="w"> </span>-t<span class="w"> </span>rasr<span class="w"> </span><span class="s2">&quot;Test log entry from management host&quot;</span>
-<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a><span class="c1"># Check SIEM for receipt</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Forward array management logs to centralised SIEM</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1"># Unity — configure syslog forwarding</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>uemcli<span class="w"> </span>/sys/log/syslog<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span>-address<span class="w"> </span>siem.example.local<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">  </span>-port<span class="w"> </span><span class="m">514</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">  </span>-protocol<span class="w"> </span>UDP<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">  </span>-facility<span class="w"> </span>local0
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="c1"># iDRAC — configure syslog</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.SysLog.SysLogEnable<span class="w"> </span><span class="m">1</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.SysLog.Server1<span class="w"> </span>siem.example.local
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>racadm<span class="w"> </span><span class="nb">set</span><span class="w"> </span>iDRAC.SysLog.Port1<span class="w"> </span><span class="m">514</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="c1"># Linux management host — forward auditd logs</span>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="c1"># /etc/rsyslog.d/90-rasr-audit.conf</span>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="k">if</span><span class="w"> </span><span class="nv">$programname</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">&quot;audit&quot;</span><span class="w"> </span><span class="k">then</span><span class="w"> </span>@@siem.example.local:514
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="p">&amp;</span><span class="w"> </span>~
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>rsyslog
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>
+<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a><span class="c1"># Verify syslog forwarding is working</span>
+<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a>logger<span class="w"> </span>-t<span class="w"> </span>rasr<span class="w"> </span><span class="s2">&quot;Test log entry from management host&quot;</span>
+<a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a><span class="c1"># Check SIEM for receipt</span>
 </code></pre></div>
 <h3 id="monitoring-alerts">Monitoring Alerts<a class="headerlink" href="#monitoring-alerts" title="Permanent link">&para;</a></h3>
 <table>
@@ -4423,27 +4449,27 @@ Hardening the RASR recovery environment: storage array management plane, iDRAC, 
 </tbody>
 </table>
 <h2 id="hardening-verification-checklist">Hardening Verification Checklist<a class="headerlink" href="#hardening-verification-checklist" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Array management</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>uemcli<span class="w"> </span>/sys/security<span class="w"> </span>show<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;telnet|http|session&quot;</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>uemcli<span class="w"> </span>/sys/setting<span class="w"> </span>show<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;timeout|banner&quot;</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># iDRAC</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>racadm<span class="w"> </span>get<span class="w"> </span>iDRAC.WebServer<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;TLS|Timeout|HttpsRedirect&quot;</span>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>racadm<span class="w"> </span>get<span class="w"> </span>iDRAC.IPMILan<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>Enable
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="c1"># Management host (Linux)</span>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>sshd<span class="w"> </span>-T<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;permitroot|passwordauth|allowgroups&quot;</span>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>auditctl<span class="w"> </span>-l<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>rasr
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>systemctl<span class="w"> </span>is-active<span class="w"> </span>rsyslog
-<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>
-<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="c1"># Verify logs flowing to SIEM (send test and confirm receipt)</span>
-<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>logger<span class="w"> </span>-t<span class="w"> </span>rasr<span class="w"> </span><span class="s2">&quot;Hardening verification test&quot;</span>
-<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>
-<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="c1"># Check no default/weak accounts on array</span>
-<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>uemcli<span class="w"> </span>/user<span class="w"> </span>show<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;admin|root|default&quot;</span>
-<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>
-<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a><span class="c1"># Verify encryption on array</span>
-<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a>uemcli<span class="w"> </span>/sys/security/encryption<span class="w"> </span>show<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Encryption status&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Array management</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>uemcli<span class="w"> </span>/sys/security<span class="w"> </span>show<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;telnet|http|session&quot;</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>uemcli<span class="w"> </span>/sys/setting<span class="w"> </span>show<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;timeout|banner&quot;</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="c1"># iDRAC</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>racadm<span class="w"> </span>get<span class="w"> </span>iDRAC.WebServer<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;TLS|Timeout|HttpsRedirect&quot;</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>racadm<span class="w"> </span>get<span class="w"> </span>iDRAC.IPMILan<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>Enable
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="c1"># Management host (Linux)</span>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>sshd<span class="w"> </span>-T<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;permitroot|passwordauth|allowgroups&quot;</span>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>auditctl<span class="w"> </span>-l<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>rasr
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>systemctl<span class="w"> </span>is-active<span class="w"> </span>rsyslog
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="c1"># Verify logs flowing to SIEM (send test and confirm receipt)</span>
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>logger<span class="w"> </span>-t<span class="w"> </span>rasr<span class="w"> </span><span class="s2">&quot;Hardening verification test&quot;</span>
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a><span class="c1"># Check no default/weak accounts on array</span>
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>uemcli<span class="w"> </span>/user<span class="w"> </span>show<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;admin|root|default&quot;</span>
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a><span class="c1"># Verify encryption on array</span>
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>uemcli<span class="w"> </span>/sys/security/encryption<span class="w"> </span>show<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Encryption status&quot;</span>
 </code></pre></div>
 <h2 id="quick-reference">Quick Reference<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
 <table>

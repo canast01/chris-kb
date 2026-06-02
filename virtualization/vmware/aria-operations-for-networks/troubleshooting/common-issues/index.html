@@ -4502,50 +4502,49 @@ Common Issues reference covering Collector Shows Disconnected, vCenter Sync Fail
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>df<span class="w"> </span>-h
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>sudo<span class="w"> </span>journalctl<span class="w"> </span>--vacuum-size<span class="o">=</span>1G<span class="w">   </span><span class="c1"># free journal space</span>
 </code></pre></div>
-┌───────────────────────────────────────── vRNI Common Issues ──────────────────────────────────────────┐
-│                                                                                                       │
-│  Common issues: data source red, no flows, LDAP login failure, and collector offline.                 │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Data Source Red                │  │                No Flows in UI               │   │
-│   │            Check API reachability            │  │            Verify IPFIX target IP           │   │
-│   │         Validate credentials in vRNI         │  │            Check collector online           │   │
-│   │         Cert error: re-accept or fix         │  │           Check UDP 2055 firewall           │   │
-│   │           Service account locked?            │  │           proxy.log: flow receipt?          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Source and flow issues are most common; LDAP and collector are next in frequency.                    │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              LDAP Login Failure              │  │              Collector Offline              │   │
-│   │           Test LDAP in Settings UI           │  │           Check collector VM power          │   │
-│   │         Validate bind DN + password          │  │          service collector restart          │   │
-│   │          Check LDAPS cert validity           │  │           Verify platform TCP 443           │   │
-│   │            Try LDAP browser tool             │  │         Re-register collector in UI         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  vRNI platform + collector VMs; AD/LDAP server; NSX-T and physical switches as sources                │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Data Source Red     = vRNI cannot reach or authenticate to the configured source                     │
-│  No Flows            = Flow Map empty; IPFIX not reaching collector or platform                       │
-│  IPFIX Target        = Device setting pointing flow export to the collector IP                        │
-│  proxy.log           = Collector log; confirms flow packets received and forwarded                    │
-│  LDAP Bind Failure   = vRNI cannot authenticate to directory with stored credentials                  │
-│  Collector Offline   = Collector VM unreachable or service stopped; check VM health                   │
-│  Service Account Lock= AD account lockout caused by repeated vRNI auth attempts                       │
-│  Cert Error          = TLS cert mismatch; re-accept thumbprint or upload correct CA                   │
-│  Re-register         = Remove and re-add collector in vRNI UI to reset association                    │
-│  UDP 2055 Firewall   = NetFlow/IPFIX port; blocked firewall = no flows received                       │
-│  LDAP Browser        = Tool like ldp.exe to manually test LDAP bind and search                        │
-│  Test Connection     = vRNI built-in source test; confirms API reachability and auth                  │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌───────────────────────────────────────── vRNI Common Issues ──────────────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  Common issues: data source red, no flows, LDAP login failure, and collector offline.                 │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│                                                                                                       │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │               Data Source Red                │  │                No Flows in UI               │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │            Check API reachability            │  │            Verify IPFIX target IP           │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │         Validate credentials in vRNI         │  │            Check collector online           │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │         Cert error: re-accept or fix         │  │           Check UDP 2055 firewall           │   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │           Service account locked?            │  │           proxy.log: flow receipt?          │   │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│                                                                                                       │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│  Source and flow issues are most common; LDAP and collector are next in frequency.                    │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│                                                                                                       │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                                                                                                       │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │              LDAP Login Failure              │  │              Collector Offline              │   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │           Test LDAP in Settings UI           │  │           Check collector VM power          │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │         Validate bind DN + password          │  │          service collector restart          │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │          Check LDAPS cert validity           │  │           Verify platform TCP 443           │   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │            Try LDAP browser tool             │  │         Re-register collector in UI         │   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│                                                                                                       │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  vRNI platform + collector VMs; AD/LDAP server; NSX-T and physical switches as sources                │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│                                                                                                       │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Data Source Red     = vRNI cannot reach or authenticate to the configured source                     │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│  No Flows            = Flow Map empty; IPFIX not reaching collector or platform                       │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  IPFIX Target        = Device setting pointing flow export to the collector IP                        │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  proxy.log           = Collector log; confirms flow packets received and forwarded                    │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  LDAP Bind Failure   = vRNI cannot authenticate to directory with stored credentials                  │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  Collector Offline   = Collector VM unreachable or service stopped; check VM health                   │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  Service Account Lock= AD account lockout caused by repeated vRNI auth attempts                       │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  Cert Error          = TLS cert mismatch; re-accept thumbprint or upload correct CA                   │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  Re-register         = Remove and re-add collector in vRNI UI to reset association                    │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  UDP 2055 Firewall   = NetFlow/IPFIX port; blocked firewall = no flows received                       │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  LDAP Browser        = Tool like ldp.exe to manually test LDAP bind and search                        │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  Test Connection     = vRNI built-in source test; confirms API reachability and auth                  │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│                                                                                                       │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
 <p>After entering new key, verify data source collection resumes (check last-sync timestamps in Settings → Data Sources).</p>
 

@@ -3932,6 +3932,28 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#file-level-recovery-guest-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File-Level Recovery (Guest Files)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#in-place-restore" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In-Place Restore
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#out-of-place-restore" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4222,80 +4244,77 @@ Backup & Restore reference covering Backup Types, Backup Job Execution, Restore 
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;admin&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.token&#39;</span>
 </code></pre></div>
-┌────────────────────────────── Commvault Backup and Restore — Procedures ──────────────────────────────┐
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Backup Job Types               │  │                Restore Types                │   │
-│   │      Full: all data in subclient scope       │  │      In-place: restore to original path     │   │
-│   │       Incremental: changed since last        │  │     Out-of-place: alternate path/client     │   │
-│   │       Differential: changed since Full       │  │     Cross-client: different target host     │   │
-│   │     Synthetic Full: built on MA from inc     │  │    Granular: item-level from VM/Exchange    │   │
-│   │     Snap backup: array snapshot + backup     │  │     Live Browse: mount backup for reads     │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Full backup cycle: Full (weekly) → Incrementals (daily) → Synthetic Full (next week)               │
-│                                                                                                       │
-│                                                   ▼                                                   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                               On-Demand Backup (Command Center)                               │   │
-│   │              1. Navigate: Protect → Virtualization (or File Servers / Databases)              │   │
-│   │            2. Select subclient → right-click → Backup Now → choose Full/Incremental           │   │
-│   │             3. Monitor job in Job Activity pane; check logs if status ≠ Completed             │   │
-│   │                4. Verify protected size and dedup savings in job summary report               │   │
-│   │            5. CLI: qoperation execschedule -clientName HOST -subclientName default            │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Restore: right-click subclient → Browse and Restore → select files → Restore                       │
-│                                                                                                       │
-│                                                   ▼                                                   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                      Restore Verification                                     │   │
-│   │         After restore: verify file checksums, check application startup, validate data        │   │
-│   │            VM restore: power on, run OS checks, verify application services running           │   │
-│   │            DB restore: validate row counts, run DBCC CHECKDB (SQL) or RMAN validate           │   │
-│   │           Scheduled restore tests: monthly verified restore to isolated environment           │   │
-│   │           SLA reporting: track %backup success; target ≥ 99% weekly completion rate           │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Restore target must have iDA agent; network path from MA to target must be open                      │
-│  VM restores: target datastore must have sufficient free space (source VM size + 20%)                 │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Synthetic Full = Full backup constructed on MA from existing incrementals; no client I/O             │
-│  Snap Backup    = IntelliSnap array-level snapshot followed by backup-from-snap to library            │
-│  Live Browse    = Mount backup copy as NFS/CIFS share for direct file browsing                        │
-│  Granular Recov = Item-level restore (e.g., single email, SQL row, VM disk file)                      │
-│  DBCC CHECKDB   = SQL Server command to verify database consistency after restore                     │
-│  Browse Window  = Time range visible in CommCell browse based on retention settings                   │
-│  Cross-client   = Restore to a different machine than the original backup source                      │
-│  Job Activity   = Real-time view of all running, queued, and recently completed jobs                  │
-│  Protected Size = Total data covered by backup policy on a given client/subclient                     │
-│  qoperation     = CLI to trigger on-demand backup: execschedule or backup subcommand                  │
-│  SLA Report     = Commvault report showing backup success rate vs configured targets                  │
-│  Retention Copy = Backup copy kept for extended period (monthly/yearly) on tape/cloud                 │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>### File-Level Recovery (Guest Files)
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Mounts the backup as a virtual volume and presents individual files.
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>1. Right-click the VM → **Browse and Restore** → **Guest Files and Folders**.
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>2. Browse to the path, select files → **Restore**.
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>3. Choose destination: original location or alternate path/client.
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>### In-Place Restore
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>Overwrites the existing data at the original location. Requires the production VM/volume to be offline or protected by an exclusion list.
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>```text
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>Subclient → Restore → In-Place → Overwrite existing data: Yes
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌────────────────────────────── Commvault Backup and Restore — Procedures ──────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │               Backup Job Types               │  │                Restore Types                │   │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │      Full: all data in subclient scope       │  │      In-place: restore to original path     │   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │       Incremental: changed since last        │  │     Out-of-place: alternate path/client     │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │       Differential: changed since Full       │  │     Cross-client: different target host     │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │     Synthetic Full: built on MA from inc     │  │    Granular: item-level from VM/Exchange    │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │     Snap backup: array snapshot + backup     │  │     Live Browse: mount backup for reads     │   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│                                                                                                       │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│    Full backup cycle: Full (weekly) → Incrementals (daily) → Synthetic Full (next week)               │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                                                                       │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│                                                   ▼                                                   │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                                                                                                       │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   │                               On-Demand Backup (Command Center)                               │   │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │              1. Navigate: Protect → Virtualization (or File Servers / Databases)              │   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │            2. Select subclient → right-click → Backup Now → choose Full/Incremental           │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │             3. Monitor job in Job Activity pane; check logs if status ≠ Completed             │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │                4. Verify protected size and dedup savings in job summary report               │   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │            5. CLI: qoperation execschedule -clientName HOST -subclientName default            │   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│                                                                                                       │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│    Restore: right-click subclient → Browse and Restore → select files → Restore                       │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│                                                                                                       │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│                                                   ▼                                                   │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│                                                                                                       │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│   │                                      Restore Verification                                     │   │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│   │         After restore: verify file checksums, check application startup, validate data        │   │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│   │            VM restore: power on, run OS checks, verify application services running           │   │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│   │            DB restore: validate row counts, run DBCC CHECKDB (SQL) or RMAN validate           │   │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│   │           Scheduled restore tests: monthly verified restore to isolated environment           │   │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│   │           SLA reporting: track %backup success; target ≥ 99% weekly completion rate           │   │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│                                                                                                       │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  Physical Infrastructure:                                                                             │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  Restore target must have iDA agent; network path from MA to target must be open                      │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  VM restores: target datastore must have sufficient free space (source VM size + 20%)                 │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│                                                                                                       │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│                                                                                                       │
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│  Synthetic Full = Full backup constructed on MA from existing incrementals; no client I/O             │
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>│  Snap Backup    = IntelliSnap array-level snapshot followed by backup-from-snap to library            │
+<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>│  Live Browse    = Mount backup copy as NFS/CIFS share for direct file browsing                        │
+<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>│  Granular Recov = Item-level restore (e.g., single email, SQL row, VM disk file)                      │
+<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>│  DBCC CHECKDB   = SQL Server command to verify database consistency after restore                     │
+<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>│  Browse Window  = Time range visible in CommCell browse based on retention settings                   │
+<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>│  Cross-client   = Restore to a different machine than the original backup source                      │
+<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>│  Job Activity   = Real-time view of all running, queued, and recently completed jobs                  │
+<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>│  Protected Size = Total data covered by backup policy on a given client/subclient                     │
+<a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a>│  qoperation     = CLI to trigger on-demand backup: execschedule or backup subcommand                  │
+<a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a>│  SLA Report     = Commvault report showing backup success rate vs configured targets                  │
+<a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a>│  Retention Copy = Backup copy kept for extended period (monthly/yearly) on tape/cloud                 │
+<a id="__codelineno-1-56" name="__codelineno-1-56" href="#__codelineno-1-56"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
+<h3 id="file-level-recovery-guest-files">File-Level Recovery (Guest Files)<a class="headerlink" href="#file-level-recovery-guest-files" title="Permanent link">&para;</a></h3>
+<p>Mounts the backup as a virtual volume and presents individual files.</p>
+<ol>
+<li>Right-click the VM → <strong>Browse and Restore</strong> → <strong>Guest Files and Folders</strong>.</li>
+<li>Browse to the path, select files → <strong>Restore</strong>.</li>
+<li>Choose destination: original location or alternate path/client.</li>
+</ol>
+<h3 id="in-place-restore">In-Place Restore<a class="headerlink" href="#in-place-restore" title="Permanent link">&para;</a></h3>
+<p>Overwrites the existing data at the original location. Requires the production VM/volume to be offline or protected by an exclusion list.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Subclient → Restore → In-Place → Overwrite existing data: Yes
+</code></pre></div>
 <h3 id="out-of-place-restore">Out-of-Place Restore<a class="headerlink" href="#out-of-place-restore" title="Permanent link">&para;</a></h3>
 <p>Restores to an alternate destination — different VM, datastore, or file path.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Subclient → Restore → Out-of-Place → Specify destination client and path
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Subclient → Restore → Out-of-Place → Specify destination client and path
 </code></pre></div>
 <hr />
 <h2 id="dr-copy-verification">DR Copy Verification<a class="headerlink" href="#dr-copy-verification" title="Permanent link">&para;</a></h2>
@@ -4308,7 +4327,7 @@ Backup & Restore reference covering Backup Types, Backup Job Execution, Restore 
 <li>Review the validation report for missing, corrupt, or aged jobs.</li>
 </ol>
 <p><strong>Command line (via <code>qoperation</code>):</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>qoperation<span class="w"> </span>execscript<span class="w"> </span>-sn<span class="w"> </span>QS_ValidateCopy<span class="w"> </span>-si<span class="w"> </span><span class="s2">&quot;StoragePolicyName&quot;</span><span class="w"> </span>-si<span class="w"> </span><span class="s2">&quot;CopyName&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>qoperation<span class="w"> </span>execscript<span class="w"> </span>-sn<span class="w"> </span>QS_ValidateCopy<span class="w"> </span>-si<span class="w"> </span><span class="s2">&quot;StoragePolicyName&quot;</span><span class="w"> </span>-si<span class="w"> </span><span class="s2">&quot;CopyName&quot;</span>
 </code></pre></div>
 <hr />
 <h2 id="restore-decision-flowchart">Restore Decision Flowchart<a class="headerlink" href="#restore-decision-flowchart" title="Permanent link">&para;</a></h2>

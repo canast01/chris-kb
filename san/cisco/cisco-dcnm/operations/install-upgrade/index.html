@@ -3564,6 +3564,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#decommission" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decommission
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -3875,68 +3886,67 @@
 <a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>/usr/local/cisco/dcm/dcnm/bin/dcnm-ha-status.sh
 <a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="c1"># Expected: ACTIVE/STANDBY pair, VIP reachable</span>
 </code></pre></div>
-┌────────────────────────────────── Cisco DCNM — Install and Upgrade ───────────────────────────────────┐
-│                                                                                                       │
-│  DCNM deployment: OVA/ISO to vSphere, initial config, switch discovery, upgrade path.                 │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Fresh Install Steps              │  │            Initial Configuration            │   │
-│   │        1. Download DCNM OVA from CCO         │  │          1. Set hostname + IP + DNS         │   │
-│   │           2. Deploy OVA in vSphere           │  │           2. Configure NTP servers          │   │
-│   │       3. Boot + initial config wizard        │  │           3. Set admin credentials          │   │
-│   │        4. 8 vCPU / 32 GB RAM (large)         │  │           4. Configure ISE TACACS+          │   │
-│   │          5. 2 TB datastore for perf          │  │           5. Discover MDS switches          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  OVA deployment is automated; ISE and NTP must be configured before adding switches.                  │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Upgrade Procedure               │  │           Post-Upgrade Validation           │   │
-│   │           1. Backup DCNM DB to NFS           │  │         1. Verify all switches shown        │   │
-│   │           2. Download new DCNM OVA           │  │         2. Check SNMP alert forward         │   │
-│   │        3. Deploy standby; restore DB         │  │         3. Re-test ISE TACACS+ auth         │   │
-│   │         4. Validate standby function         │  │        4. Verify NFS backup schedule        │   │
-│   │          5. Swing DNS; decom old VM          │  │          5. Confirm zone push works         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  vSphere host · 2 TB datastore · management network · NFS backup share                                │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  CCO             = Cisco Connection Online; software download portal (software.cisco.com)             │
-│  OVA             = Open Virtual Appliance; DCNM packaged as vSphere-ready VM template                 │
-│  Config wizard   = DCNM first-boot setup; sets IP, NTP, credentials interactively                     │
-│  ISE             = Cisco Identity Services Engine; provides TACACS+ for DCNM auth                     │
-│  NFS backup      = nightly DCNM DB backup; required before any upgrade                                │
-│  Swing DNS       = update DNS A record to new DCNM VM IP after validation                             │
-│  Standby upgrade = deploy new DCNM version as standby first; validate then swing                      │
-│  SNMP forwarding = DCNM forwards switch alerts to NMS; test after every upgrade                       │
-│  Zone push test  = verify DCNM can activate zone set on MDS switch after upgrade                      │
-│  vCPU / RAM      = DCNM large mode: 8 vCPU / 32 GB; medium: 4 vCPU / 16 GB                            │
-│  2 TB datastore  = DCNM storage for 90-day performance data; Elasticsearch store                      │
-│  NTP             = Network Time Protocol; timestamps required for event correlation                   │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>---
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## Decommission
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>1. Export all zone sets and device alias databases.
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>2. Remove DCNM as SNMP trap receiver on all managed switches:
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>```bash
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a># On each MDS switch
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>no snmp-server host &lt;dcnm-ip&gt; traps version 3 priv dcnm_poll
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a># Remove syslog forwarding to DCNM
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>no logging server &lt;dcnm-ip&gt;
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a># Remove DCNM service account
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>no username dcnm_mgmt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌────────────────────────────────── Cisco DCNM — Install and Upgrade ───────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  DCNM deployment: OVA/ISO to vSphere, initial config, switch discovery, upgrade path.                 │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│                                                                                                       │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │             Fresh Install Steps              │  │            Initial Configuration            │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │        1. Download DCNM OVA from CCO         │  │          1. Set hostname + IP + DNS         │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │           2. Deploy OVA in vSphere           │  │           2. Configure NTP servers          │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │       3. Boot + initial config wizard        │  │           3. Set admin credentials          │   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │        4. 8 vCPU / 32 GB RAM (large)         │  │           4. Configure ISE TACACS+          │   │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │          5. 2 TB datastore for perf          │  │           5. Discover MDS switches          │   │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                                                                       │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│  OVA deployment is automated; ISE and NTP must be configured before adding switches.                  │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                                                                                                       │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│                                                                                                       │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │              Upgrade Procedure               │  │           Post-Upgrade Validation           │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │           1. Backup DCNM DB to NFS           │  │         1. Verify all switches shown        │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │           2. Download new DCNM OVA           │  │         2. Check SNMP alert forward         │   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │        3. Deploy standby; restore DB         │  │         3. Re-test ISE TACACS+ auth         │   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   │         4. Validate standby function         │  │        4. Verify NFS backup schedule        │   │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│   │          5. Swing DNS; decom old VM          │  │          5. Confirm zone push works         │   │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│                                                                                                       │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  vSphere host · 2 TB datastore · management network · NFS backup share                                │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│                                                                                                       │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  CCO             = Cisco Connection Online; software download portal (software.cisco.com)             │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  OVA             = Open Virtual Appliance; DCNM packaged as vSphere-ready VM template                 │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  Config wizard   = DCNM first-boot setup; sets IP, NTP, credentials interactively                     │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  ISE             = Cisco Identity Services Engine; provides TACACS+ for DCNM auth                     │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  NFS backup      = nightly DCNM DB backup; required before any upgrade                                │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  Swing DNS       = update DNS A record to new DCNM VM IP after validation                             │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  Standby upgrade = deploy new DCNM version as standby first; validate then swing                      │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  SNMP forwarding = DCNM forwards switch alerts to NMS; test after every upgrade                       │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  Zone push test  = verify DCNM can activate zone set on MDS switch after upgrade                      │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  vCPU / RAM      = DCNM large mode: 8 vCPU / 32 GB; medium: 4 vCPU / 16 GB                            │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│  2 TB datastore  = DCNM storage for 90-day performance data; Elasticsearch store                      │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  NTP             = Network Time Protocol; timestamps required for event correlation                   │
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│                                                                                                       │
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
+<hr />
+<h2 id="decommission">Decommission<a class="headerlink" href="#decommission" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Export all zone sets and device alias databases.</li>
+<li>Remove DCNM as SNMP trap receiver on all managed switches:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># On each MDS switch</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>no<span class="w"> </span>snmp-server<span class="w"> </span>host<span class="w"> </span>&lt;dcnm-ip&gt;<span class="w"> </span>traps<span class="w"> </span>version<span class="w"> </span><span class="m">3</span><span class="w"> </span>priv<span class="w"> </span>dcnm_poll
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Remove syslog forwarding to DCNM</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>no<span class="w"> </span>logging<span class="w"> </span>server<span class="w"> </span>&lt;dcnm-ip&gt;
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Remove DCNM service account</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>no<span class="w"> </span>username<span class="w"> </span>dcnm_mgmt
+</code></pre></div>
 <ol>
 <li>Power off and delete the DCNM VM from vCenter.</li>
 <li>Update DNS to remove DCNM records.</li>

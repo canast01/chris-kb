@@ -4787,52 +4787,51 @@ Install & Upgrade reference covering vCenter Upgrade Procedure (VCSA), vSphere L
 <a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>  Rollback: full restore from pre-upgrade backup only
 <a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>            (no in-place rollback; keep old VCSA off for 24h window)
 </code></pre></div>
-┌───────────────────────────────── vCenter Server — Install &amp; Upgrade ──────────────────────────────────┐
-│                                                                                                       │
-│  vCenter is deployed as an OVA; upgrades use the built-in VCSA installer ISO                          │
-│  which migrates config from the old appliance in two stages.                                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │            Pre-Install Checklist             │  │               Deployment Steps              │   │
-│   │          DNS A + PTR records ready           │  │            Mount ISO on jump host           │   │
-│   │           NTP configured on hosts            │  │            Run vcsa-ui-installer            │   │
-│   │            Port 443/80/9443 open             │  │             Stage 1: OVA deploy             │   │
-│   │         SSO password complexity met          │  │            Stage 2: configure SSO           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Pre-install DNS and NTP are critical; failures here block SSO certificate issuance.                  │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Upgrade Pre-Checks              │  │              Upgrade Procedure              │   │
-│   │              Snapshot old VCSA               │  │           ISO: vcsa-deploy upgrade          │   │
-│   │           Run Pre-Upgrade Checker            │  │           Stage 1: new VCSA boots           │   │
-│   │           Check cert expiry first            │  │           Stage 2: config migrated          │   │
-│   │          Drain old VC of snapshots           │  │           Old VC powered off after          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Target ESXi host needs sufficient RAM/CPU/storage for VCSA size tier;                                │
-│  upgrade deploys a second appliance temporarily (needs 2x storage).                                   │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  VCSA installer = GUI/CLI ISO tool; runs on Windows/Linux/Mac jump host                               │
-│  vcsa-deploy    = CLI installer included in the VCSA ISO                                              │
-│  Stage 1        = OVA deployment; network and storage config                                          │
-│  Stage 2        = SSO setup; inventory and config import                                              │
-│  Pre-check      = built-in checker; validates certs, DNS, ports, DB                                   │
-│  Snapshot (pre) = rollback point before upgrade; remove after success                                 │
-│  Jump host      = Windows/Linux machine that mounts and runs ISO installer                            │
-│  DNS PTR        = reverse lookup; required for VCSA identity establishment                            │
-│  SSO complexity = min 8 chars, upper, lower, digit, special                                           │
-│  Drain snapshots= remove all VM snapshots before upgrading to avoid bloat                             │
-│  Port 9443      = VCSA appliance management HTTPS (VAMI)                                              │
-│  2x storage     = upgrade deploys new VCSA alongside old; same datastore OK                           │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌───────────────────────────────── vCenter Server — Install &amp; Upgrade ──────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  vCenter is deployed as an OVA; upgrades use the built-in VCSA installer ISO                          │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│  which migrates config from the old appliance in two stages.                                          │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│                                                                                                       │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │            Pre-Install Checklist             │  │               Deployment Steps              │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │          DNS A + PTR records ready           │  │            Mount ISO on jump host           │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │           NTP configured on hosts            │  │            Run vcsa-ui-installer            │   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │            Port 443/80/9443 open             │  │             Stage 1: OVA deploy             │   │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │         SSO password complexity met          │  │            Stage 2: configure SSO           │   │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                                                                       │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│  Pre-install DNS and NTP are critical; failures here block SSO certificate issuance.                  │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                                                                                                       │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│                                                                                                       │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │              Upgrade Pre-Checks              │  │              Upgrade Procedure              │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │              Snapshot old VCSA               │  │           ISO: vcsa-deploy upgrade          │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │           Run Pre-Upgrade Checker            │  │           Stage 1: new VCSA boots           │   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │           Check cert expiry first            │  │           Stage 2: config migrated          │   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   │          Drain old VC of snapshots           │  │           Old VC powered off after          │   │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│                                                                                                       │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  Target ESXi host needs sufficient RAM/CPU/storage for VCSA size tier;                                │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  upgrade deploys a second appliance temporarily (needs 2x storage).                                   │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│                                                                                                       │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  VCSA installer = GUI/CLI ISO tool; runs on Windows/Linux/Mac jump host                               │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  vcsa-deploy    = CLI installer included in the VCSA ISO                                              │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  Stage 1        = OVA deployment; network and storage config                                          │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  Stage 2        = SSO setup; inventory and config import                                              │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  Pre-check      = built-in checker; validates certs, DNS, ports, DB                                   │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  Snapshot (pre) = rollback point before upgrade; remove after success                                 │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  Jump host      = Windows/Linux machine that mounts and runs ISO installer                            │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  DNS PTR        = reverse lookup; required for VCSA identity establishment                            │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  SSO complexity = min 8 chars, upper, lower, digit, special                                           │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  Drain snapshots= remove all VM snapshots before upgrading to avoid bloat                             │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│  Port 9443      = VCSA appliance management HTTPS (VAMI)                                              │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  2x storage     = upgrade deploys new VCSA alongside old; same datastore OK                           │
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│                                                                                                       │
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
 <h2 id="vcenter-upgrade-procedure-vcsa">vCenter Upgrade Procedure (VCSA)<a class="headerlink" href="#vcenter-upgrade-procedure-vcsa" title="Permanent link">&para;</a></h2>
 <ol>

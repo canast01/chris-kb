@@ -4374,52 +4374,51 @@ CloudFormation reference.
 <a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>          ▼
 <a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>  delete-stack ──► DELETE_COMPLETE
 </code></pre></div>
-┌────────────────────────────────────── AWS CLI — CloudFormation ───────────────────────────────────────┐
-│                                                                                                       │
-│  Key CloudFormation CLI commands for stack management, drift detection, and StackSets.                │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Stack Operations               │  │               Stack Inspection              │   │
-│   │        create-stack: deploy template         │  │           describe-stacks: status           │   │
-│   │         update-stack: apply changes          │  │           list-stacks: all stacks           │   │
-│   │            delete-stack: teardown            │  │          describe-stack-events: log         │   │
-│   │          create-change-set: preview          │  │           describe-stack-resources          │   │
-│   │          execute-change-set: apply           │  │           get-template: fetch yaml          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Always preview via change-set before executing; describe-stack-events for failures                   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Drift and Validation             │  │                  StackSets                  │   │
-│   │          detect-stack-drift: check           │  │           create-stack-set: define          │   │
-│   │         describe-stack-drift-result          │  │        create-stack-instances: deploy       │   │
-│   │           validate-template: lint            │  │            update-stack-instances           │   │
-│   │          cfn-lint: local pre-check           │  │             list-stack-instances            │   │
-│   │         package: upload S3 artifacts         │  │            delete-stack-instances           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  AWS CloudFormation service · S3 (template storage) · IAM · target AWS resources                      │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Stack           = CloudFormation deployment unit; collection of AWS resources                        │
-│  Change set      = Preview of changes before applying; shows add/modify/remove                        │
-│  Stack drift     = Resource has been modified outside of CloudFormation                               │
-│  StackSet        = Multi-account/region CloudFormation deployment                                     │
-│  Stack instance  = Single stack deployment within a StackSet target                                   │
-│  validate-template= Checks CloudFormation YAML/JSON syntax before deployment                          │
-│  cfn-lint        = Open-source linter; checks CloudFormation best practices                           │
-│  package         = Uploads local artifacts to S3 and rewrites template references                     │
-│  describe-stack-events= Chronological log of resource operations during deploy                        │
-│  get-template    = Retrieves the template used to create or update the stack                          │
-│  DELETE_FAILED   = Stack deletion failed; manual resource cleanup then retry                          │
-│  ROLLBACK        = Failed update reverts to last known good configuration                             │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌────────────────────────────────────── AWS CLI — CloudFormation ───────────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  Key CloudFormation CLI commands for stack management, drift detection, and StackSets.                │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│                                                                                                       │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │               Stack Operations               │  │               Stack Inspection              │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │        create-stack: deploy template         │  │           describe-stacks: status           │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │         update-stack: apply changes          │  │           list-stacks: all stacks           │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │            delete-stack: teardown            │  │          describe-stack-events: log         │   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │          create-change-set: preview          │  │           describe-stack-resources          │   │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │          execute-change-set: apply           │  │           get-template: fetch yaml          │   │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                                                                       │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│  Always preview via change-set before executing; describe-stack-events for failures                   │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                                                                                                       │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│                                                                                                       │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │             Drift and Validation             │  │                  StackSets                  │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │          detect-stack-drift: check           │  │           create-stack-set: define          │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │         describe-stack-drift-result          │  │        create-stack-instances: deploy       │   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │           validate-template: lint            │  │            update-stack-instances           │   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   │          cfn-lint: local pre-check           │  │             list-stack-instances            │   │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│   │         package: upload S3 artifacts         │  │            delete-stack-instances           │   │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│                                                                                                       │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  AWS CloudFormation service · S3 (template storage) · IAM · target AWS resources                      │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│                                                                                                       │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  Stack           = CloudFormation deployment unit; collection of AWS resources                        │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  Change set      = Preview of changes before applying; shows add/modify/remove                        │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  Stack drift     = Resource has been modified outside of CloudFormation                               │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  StackSet        = Multi-account/region CloudFormation deployment                                     │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  Stack instance  = Single stack deployment within a StackSet target                                   │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  validate-template= Checks CloudFormation YAML/JSON syntax before deployment                          │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  cfn-lint        = Open-source linter; checks CloudFormation best practices                           │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  package         = Uploads local artifacts to S3 and rewrites template references                     │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  describe-stack-events= Chronological log of resource operations during deploy                        │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  get-template    = Retrieves the template used to create or update the stack                          │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│  DELETE_FAILED   = Stack deletion failed; manual resource cleanup then retry                          │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  ROLLBACK        = Failed update reverts to last known good configuration                             │
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│                                                                                                       │
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
 
 

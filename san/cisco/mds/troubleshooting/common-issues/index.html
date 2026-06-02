@@ -3232,94 +3232,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#host-cannot-see-storage" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Host Cannot See Storage
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#zoning-zone-set-not-activating" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Zoning: Zone Set Not Activating
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#isl-down-or-isolated" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ISL Down or Isolated
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#domain-id-conflict" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Domain ID Conflict
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#flogi-instability-port-flapping" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        FLOGI Instability / Port Flapping
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#high-cpu-slow-cli" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        High CPU / Slow CLI
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#configuration-lost-after-reload" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Configuration Lost After Reload
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#known-issues-reference" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Known Issues Reference
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -3539,104 +3451,77 @@
 <a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="c1"># 7. Check domain IDs for conflict</span>
 <a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>show<span class="w"> </span>fcdomain<span class="w"> </span>domain-list<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
 </code></pre></div>
-┌────────────────────────────── Cisco MDS — Troubleshooting Common Issues ──────────────────────────────┐
-│                                                                                                       │
-│  Most frequent MDS fabric issues: FLOGI failures, E_Port isolation, zoning errors.                    │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                Login Failures                │  │             ISL / E_Port Issues             │   │
-│   │      FLOGI rejected: port VSAN mismatch      │  │       E_Port isolated: domain ID clash      │   │
-│   │      PLOGI fail: zoning not configured       │  │        ISL down: SFP incompatibility        │   │
-│   │         HBA offline: SFP link fault          │  │        Trunk mismatch: VSAN list diff       │   │
-│   │          FDISC: NPV mode login fail          │  │         Segmented fabric: FSPF cost         │   │
-│   │        Show flogi database to verify         │  │           Show interface fc state           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Login errors require FLOGI/PLOGI trace; ISL errors need domain/VSAN alignment check                  │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                Zoning Issues                 │  │              Performance Issues             │   │
-│   │       Zone not active: pending commit        │  │           High BB_Credit pressure           │   │
-│   │        WWN not in zone: PLOGI denied         │  │         CRC errors: cable or SFP bad        │   │
-│   │        Zone merge conflict: mismatch         │  │        Congestion: slow-drain device        │   │
-│   │         Default zone deny: block all         │  │          IOCTL timeout: queue depth         │   │
-│   │          Show zone active to verify          │  │           Show interface counters           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  MDS line cards · SFP transceivers · ISL fiber · HBA in server · storage array ports                  │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  FLOGI          = Fabric Login; N_Port to switch handshake to join the fabric                         │
-│  PLOGI          = Port Login; N_Port to N_Port session establishment through fabric                   │
-│  FDISC          = Fabric Discover; VN_Port login in NPIV/NPV environments                             │
-│  E_Port         = Expansion Port; ISL port mode between two switches                                  │
-│  E_Port isolated= Admin-isolated due to domain ID or parameter conflict                               │
-│  Domain ID      = Unique 1-239 identifier for each switch in a fabric                                 │
-│  BB_Credit      = Buffer-to-Buffer Credit; flow control units for FC link                             │
-│  Slow-drain     = Device accepting frames slowly; causes backpressure upstream                        │
-│  Zone merge     = Process of combining zone databases when two fabrics connect                        │
-│  Default zone   = Policy for devices not in any explicit zone: deny or permit                         │
-│  FSPF           = Fabric Shortest Path First; routing protocol determining ISL paths                  │
-│  CRC error      = Frame checksum failure; indicates physical layer problem                            │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>```bash
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a># Check reason
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>show interface fc1/4
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a># Look for: &quot;Port is in error-disabled state&quot;
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a># Check log for the triggering event
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>show logging last 200 | grep -i &quot;err\|disabled\|fc1/4&quot;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌────────────────────────────── Cisco MDS — Troubleshooting Common Issues ──────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  Most frequent MDS fabric issues: FLOGI failures, E_Port isolation, zoning errors.                    │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│                                                                                                       │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │                Login Failures                │  │             ISL / E_Port Issues             │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │      FLOGI rejected: port VSAN mismatch      │  │       E_Port isolated: domain ID clash      │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │      PLOGI fail: zoning not configured       │  │        ISL down: SFP incompatibility        │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │         HBA offline: SFP link fault          │  │        Trunk mismatch: VSAN list diff       │   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │          FDISC: NPV mode login fail          │  │         Segmented fabric: FSPF cost         │   │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │        Show flogi database to verify         │  │           Show interface fc state           │   │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                                                                       │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│  Login errors require FLOGI/PLOGI trace; ISL errors need domain/VSAN alignment check                  │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                                                                                                       │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│                                                                                                       │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │                Zoning Issues                 │  │              Performance Issues             │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │       Zone not active: pending commit        │  │           High BB_Credit pressure           │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │        WWN not in zone: PLOGI denied         │  │         CRC errors: cable or SFP bad        │   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │        Zone merge conflict: mismatch         │  │        Congestion: slow-drain device        │   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   │         Default zone deny: block all         │  │          IOCTL timeout: queue depth         │   │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│   │          Show zone active to verify          │  │           Show interface counters           │   │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│                                                                                                       │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  MDS line cards · SFP transceivers · ISL fiber · HBA in server · storage array ports                  │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│                                                                                                       │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  FLOGI          = Fabric Login; N_Port to switch handshake to join the fabric                         │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  PLOGI          = Port Login; N_Port to N_Port session establishment through fabric                   │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  FDISC          = Fabric Discover; VN_Port login in NPIV/NPV environments                             │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  E_Port         = Expansion Port; ISL port mode between two switches                                  │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  E_Port isolated= Admin-isolated due to domain ID or parameter conflict                               │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  Domain ID      = Unique 1-239 identifier for each switch in a fabric                                 │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  BB_Credit      = Buffer-to-Buffer Credit; flow control units for FC link                             │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  Slow-drain     = Device accepting frames slowly; causes backpressure upstream                        │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  Zone merge     = Process of combining zone databases when two fabrics connect                        │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  Default zone   = Policy for devices not in any explicit zone: deny or permit                         │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│  FSPF           = Fabric Shortest Path First; routing protocol determining ISL paths                  │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  CRC error      = Frame checksum failure; indicates physical layer problem                            │
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│                                                                                                       │
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
-<p><strong>Never re-enable an errDisabled port without first resolving the root cause.</strong> The port will immediately errDisable again.</p>
-<table>
-<thead>
-<tr>
-<th>errDisabled Reason</th>
-<th>Cause</th>
-<th>Action</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>fcot-not-present</code></td>
-<td>SFP missing or not seated</td>
-<td>Reseat or replace SFP</td>
-</tr>
-<tr>
-<td><code>link-failure-count-exceeded</code></td>
-<td>Repeated link flaps</td>
-<td>Replace cable/SFP; investigate flapping cause</td>
-</tr>
-<tr>
-<td><code>isolation</code></td>
-<td>VSAN merge conflict</td>
-<td>Resolve VSAN conflict; check trunk allowed VSANs</td>
-</tr>
-<tr>
-<td><code>rcf-failure</code></td>
-<td>Domain ID conflict in fabric</td>
-<td>Resolve domain ID conflict (see below)</td>
-</tr>
-<tr>
-<td><code>cfg-invalid</code></td>
-<td>Configuration error</td>
-<td>Fix VSAN assignment or port mode config</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Recovery after resolving root cause:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>interface<span class="w"> </span>fc1/4
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span>shutdown
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>no<span class="w"> </span>shutdown
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>show<span class="w"> </span>interface<span class="w"> </span>fc1/4
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Confirm state returns to &#39;up&#39;</span>
-</code></pre></div>
+<h1 id="check-reason">Check reason<a class="headerlink" href="#check-reason" title="Permanent link">&para;</a></h1>
+<p>show interface fc1/4</p>
+<h1 id="look-for-port-is-in-error-disabled-state">Look for: "Port is in error-disabled state"<a class="headerlink" href="#look-for-port-is-in-error-disabled-state" title="Permanent link">&para;</a></h1>
+<h1 id="check-log-for-the-triggering-event">Check log for the triggering event<a class="headerlink" href="#check-log-for-the-triggering-event" title="Permanent link">&para;</a></h1>
+<p>show logging last 200 | grep -i "err|disabled|fc1/4"
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>**Never re-enable an errDisabled port without first resolving the root cause.** The port will immediately errDisable again.
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>| errDisabled Reason | Cause | Action |
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>|---|---|---|
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>| `fcot-not-present` | SFP missing or not seated | Reseat or replace SFP |
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>| `link-failure-count-exceeded` | Repeated link flaps | Replace cable/SFP; investigate flapping cause |
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>| `isolation` | VSAN merge conflict | Resolve VSAN conflict; check trunk allowed VSANs |
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>| `rcf-failure` | Domain ID conflict in fabric | Resolve domain ID conflict (see below) |
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>| `cfg-invalid` | Configuration error | Fix VSAN assignment or port mode config |
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>**Recovery after resolving root cause:**
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>```bash
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>interface fc1/4
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>  shutdown
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>  no shutdown
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>show interface fc1/4
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a># Confirm state returns to &#39;up&#39;
+</code></pre></div></p>
 <hr />
 <h2 id="host-cannot-see-storage">Host Cannot See Storage<a class="headerlink" href="#host-cannot-see-storage" title="Permanent link">&para;</a></h2>
 <p><strong>Symptom:</strong> A host reports no FC storage paths. A newly connected server cannot discover any LUNs. Multipath shows one fewer path than expected.</p>

@@ -2826,6 +2826,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Physical Asset Inventory">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#azure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Azure
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -3075,60 +3092,59 @@ Track hardware and cloud resources from procurement through decommission to main
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>ip<span class="w"> </span>link<span class="w"> </span>show<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;/^[0-9]/{print $2}&#39;</span>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>ethtool<span class="w"> </span>&lt;interface&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Speed|Duplex&quot;</span>
 </code></pre></div>
-┌───────────────────────────────────── Inventory — Asset Tracking ──────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    Hardware asset register: serial number, rack location, owner, function, lifecycle state    │   │
-│   │        Update register at: receipt, rack/decommission, ownership change, support change       │   │
-│   │     Audit: reconcile physical assets against register quarterly; investigate discrepancies    │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Register Attributes              │  │               Lifecycle States              │   │
-│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
-│   │            Hostname + IP address             │  │              Ordered: PO raised             │   │
-│   │            Serial number + model             │  │          In use: active production          │   │
-│   │            Rack / rack unit / DC             │  │            Maintenance: in repair           │   │
-│   │             Owner + cost centre              │  │            EOL: past support end            │   │
-│   │             Support contract ref             │  │           Decommissioned: retired           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   │      Field       │     Example      │  Source of truth  │   Updated when   │      Owner       │   │
-│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
-│   │      Serial      │    SVC-12345X    │    Vendor label   │    On receipt    │    Asset team    │   │
-│   │     Rack loc     │   DC1-A01-U14    │     DCIM tool     │    On install    │      DC ops      │   │
-│   │    Lifecycle     │    Active/EOL    │  CMDB + register  │    On change     │    Asset team    │   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    DCIM         = Data Centre Infrastructure Management tool; tracks rack/power/cooling               │
-│    Rack unit    = 1U = 44.45 mm height; standard measure for data centre rack space                   │
-│    Cost centre  = Finance code; determines which team is billed for the asset                         │
-│    Asset audit  = Physical reconciliation of assets against register; finds ghost/missing assets      │
-│    Ghost asset  = Asset in register that no longer physically exists; arises from poor process        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>### Azure
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>```bash
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a># All VMs across subscription
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>az vm list --query &#39;[*].{Name:name,RG:resourceGroup,Size:hardwareProfile.vmSize,Location:location,OS:storageProfile.osDisk.osType}&#39; -o table
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a># Untagged resources
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>az resource list --query &#39;[?tags==null || !tags.Owner] | [*].{Name:name,Type:type,RG:resourceGroup}&#39; -o table
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a># Deallocated VMs (not deleted, still costing storage)
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>az vm list --query &#39;[?powerState==`VM deallocated`] | [*].{Name:name,RG:resourceGroup}&#39; -o table
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a># Unattached disks
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>az disk list --query &#39;[?diskState==`Unattached`] | [*].{Name:name,Size:diskSizeGb,RG:resourceGroup}&#39; -o table
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌───────────────────────────────────── Inventory — Asset Tracking ──────────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │    Hardware asset register: serial number, rack location, owner, function, lifecycle state    │   │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │        Update register at: receipt, rack/decommission, ownership change, support change       │   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │     Audit: reconcile physical assets against register quarterly; investigate discrepancies    │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│                                                                                                       │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│                                                                                                       │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   │             Register Attributes              │  │               Lifecycle States              │   │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│   │            Hostname + IP address             │  │              Ordered: PO raised             │   │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│   │            Serial number + model             │  │          In use: active production          │   │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│   │            Rack / rack unit / DC             │  │            Maintenance: in repair           │   │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   │             Owner + cost centre              │  │            EOL: past support end            │   │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │             Support contract ref             │  │           Decommissioned: retired           │   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│                                                                                                       │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │      Field       │     Example      │  Source of truth  │   Updated when   │      Owner       │   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   │      Serial      │    SVC-12345X    │    Vendor label   │    On receipt    │    Asset team    │   │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│   │     Rack loc     │   DC1-A01-U14    │     DCIM tool     │    On install    │      DC ops      │   │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│   │    Lifecycle     │    Active/EOL    │  CMDB + register  │    On change     │    Asset team    │   │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│                                                                                                       │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│    Key terms:                                                                                         │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│                                                                                                       │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│    DCIM         = Data Centre Infrastructure Management tool; tracks rack/power/cooling               │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│    Rack unit    = 1U = 44.45 mm height; standard measure for data centre rack space                   │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│    Cost centre  = Finance code; determines which team is billed for the asset                         │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│    Asset audit  = Physical reconciliation of assets against register; finds ghost/missing assets      │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│    Ghost asset  = Asset in register that no longer physically exists; arises from poor process        │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│                                                                                                       │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
+<h3 id="azure">Azure<a class="headerlink" href="#azure" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># All VMs across subscription</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>az<span class="w"> </span>vm<span class="w"> </span>list<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;[*].{Name:name,RG:resourceGroup,Size:hardwareProfile.vmSize,Location:location,OS:storageProfile.osDisk.osType}&#39;</span><span class="w"> </span>-o<span class="w"> </span>table
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Untagged resources</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>az<span class="w"> </span>resource<span class="w"> </span>list<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;[?tags==null || !tags.Owner] | [*].{Name:name,Type:type,RG:resourceGroup}&#39;</span><span class="w"> </span>-o<span class="w"> </span>table
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Deallocated VMs (not deleted, still costing storage)</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>az<span class="w"> </span>vm<span class="w"> </span>list<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;[?powerState==`VM deallocated`] | [*].{Name:name,RG:resourceGroup}&#39;</span><span class="w"> </span>-o<span class="w"> </span>table
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Unattached disks</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>az<span class="w"> </span>disk<span class="w"> </span>list<span class="w"> </span>--query<span class="w"> </span><span class="s1">&#39;[?diskState==`Unattached`] | [*].{Name:name,Size:diskSizeGb,RG:resourceGroup}&#39;</span><span class="w"> </span>-o<span class="w"> </span>table
+</code></pre></div>
 <h2 id="asset-lifecycle-states">Asset Lifecycle States<a class="headerlink" href="#asset-lifecycle-states" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Ordered → Received → Configured → In Service → Decommission Pending → Wiped → Disposed / Returned
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>                                                                     ↓
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>                                                            Spares Pool (if reusable)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Ordered → Received → Configured → In Service → Decommission Pending → Wiped → Disposed / Returned
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>                                                                     ↓
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>                                                            Spares Pool (if reusable)
 </code></pre></div>
 <h2 id="tagging-standards">Tagging Standards<a class="headerlink" href="#tagging-standards" title="Permanent link">&para;</a></h2>
 <p>All cloud resources must have:</p>
@@ -3168,13 +3184,13 @@ Track hardware and cloud resources from procurement through decommission to main
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Apply tags to all EC2 instances in a group (AWS)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-tags<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--resources<span class="w"> </span>&lt;instance-id-1&gt;<span class="w"> </span>&lt;instance-id-2&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--tags<span class="w"> </span><span class="nv">Key</span><span class="o">=</span>Environment,Value<span class="o">=</span>Production<span class="w"> </span><span class="nv">Key</span><span class="o">=</span>Owner,Value<span class="o">=</span>platform-team@example.com
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Azure — tag a resource group (applies to contained resources)</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>az<span class="w"> </span>group<span class="w"> </span>update<span class="w"> </span>-n<span class="w"> </span>&lt;rg-name&gt;<span class="w"> </span>--tags<span class="w"> </span><span class="nv">Environment</span><span class="o">=</span>Production<span class="w"> </span><span class="nv">Owner</span><span class="o">=</span><span class="s2">&quot;platform-team@example.com&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Apply tags to all EC2 instances in a group (AWS)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-tags<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--resources<span class="w"> </span>&lt;instance-id-1&gt;<span class="w"> </span>&lt;instance-id-2&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>--tags<span class="w"> </span><span class="nv">Key</span><span class="o">=</span>Environment,Value<span class="o">=</span>Production<span class="w"> </span><span class="nv">Key</span><span class="o">=</span>Owner,Value<span class="o">=</span>platform-team@example.com
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Azure — tag a resource group (applies to contained resources)</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>az<span class="w"> </span>group<span class="w"> </span>update<span class="w"> </span>-n<span class="w"> </span>&lt;rg-name&gt;<span class="w"> </span>--tags<span class="w"> </span><span class="nv">Environment</span><span class="o">=</span>Production<span class="w"> </span><span class="nv">Owner</span><span class="o">=</span><span class="s2">&quot;platform-team@example.com&quot;</span>
 </code></pre></div>
 <h2 id="asset-tracking-checklist">Asset Tracking Checklist<a class="headerlink" href="#asset-tracking-checklist" title="Permanent link">&para;</a></h2>
 <ul>

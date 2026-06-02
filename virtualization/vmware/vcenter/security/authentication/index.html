@@ -4340,6 +4340,40 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#tls-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TLS Configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="TLS Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#certificate-modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate Modes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#certificate-replacement-machine-ssl-vcsa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate Replacement — Machine SSL (VCSA)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#certificate-monitoring" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4347,6 +4381,11 @@
       
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -4719,87 +4758,107 @@ Authentication reference covering SSO Security, TLS Configuration, Certificates 
 <a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>               └──▶ ESXi host certs (auto-signed by VMCA)
 <a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>  STS Signing Cert ──▶ signs all SAML tokens (10yr default)
 </code></pre></div>
-┌─────────────────────────────────── vCenter Server — Authentication ───────────────────────────────────┐
-│                                                                                                       │
-│  vCenter authentication is handled by the embedded SSO service; it validates                          │
-│  credentials against identity sources and issues SAML tokens for session access.                      │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Authentication Flow              │  │                 MFA Options                 │   │
-│   │         User → vSphere Client login          │  │               Smart card / CAC              │   │
-│   │          SSO validates credentials           │  │              RSA SecurID token              │   │
-│   │          SAML token issued (8h TTL)          │  │              RADIUS integration             │   │
-│   │           Token used for API calls           │  │             Duo via RADIUS proxy            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  SSO token TTL is 8h; re-login required; API calls use bearer token from POST /api/session.           │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Session Management              │  │               Lockout Policies              │   │
-│   │           Max concurrent sessions            │  │              5 failed → lockout             │   │
-│   │          Idle timeout: configurable          │  │           Lockout duration: 5 min           │   │
-│   │        Force re-auth on privilege op         │  │              Unlock: SSO admin              │   │
-│   │        API session token: short-lived        │  │            Alert on failed logins           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  SSO service runs on VCSA; AD/LDAP identity source must be reachable from                             │
-│  management network on port 389 (LDAP) or 636 (LDAPS).                                                │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  SSO          = Single Sign-On; built into VCSA; core auth service                                    │
-│  SAML token   = XML security assertion; vCenter uses this internally                                  │
-│  SAML TTL     = 8 hours default; configurable in SSO configuration                                    │
-│  Smart card   = PIV/CAC certificate-based login; requires vCenter config                              │
-│  RSA SecurID  = one-time password hardware token; RADIUS integration                                  │
-│  RADIUS       = Remote Authentication Dial-In User Service; MFA backend                               │
-│  Duo          = MFA provider; integrates via RADIUS proxy to vCenter                                  │
-│  Lockout      = SSO account temporarily blocked after failed attempts                                 │
-│  Idle timeout = browser session closes after inactivity period                                        │
-│  POST /api/session= REST API login; returns bearer token in response                                  │
-│  LDAPS        = LDAP over TLS/SSL; port 636; required for AD in vcenter 8+                            │
-│  AD identity  = Active Directory added as SSO identity source                                         │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## TLS Configuration
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>vCenter enforces TLS 1.2 minimum by default (vSphere 7.0+). TLS 1.0 and 1.1 are disabled.
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>### Certificate Modes
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| Mode | Description | When to Use |
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>|---|---|---|
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>| VMCA (default) | vCenter acts as CA; signs all vCenter/host certs | Lab, small deployments |
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>| Custom CA | Enterprise CA signs all certs; VMCA subordinate to enterprise CA | Enterprise/compliance |
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>| Hybrid | VMCA for machine SSL; custom CA for solution user certs | Transitional |
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>| External CA — all custom | All certs replaced with enterprise CA-signed certs | Strict compliance |
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>### Certificate Replacement — Machine SSL (VCSA)
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>```bash
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a># On VCSA shell
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>/usr/lib/vmware-vmca/bin/certificate-manager
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a># Option 1: Generate CSR signed by external CA
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a># Option 5: Replace machine SSL certificate
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌─────────────────────────────────── vCenter Server — Authentication ───────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  vCenter authentication is handled by the embedded SSO service; it validates                          │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│  credentials against identity sources and issues SAML tokens for session access.                      │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│                                                                                                       │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │             Authentication Flow              │  │                 MFA Options                 │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │         User → vSphere Client login          │  │               Smart card / CAC              │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │          SSO validates credentials           │  │              RSA SecurID token              │   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │          SAML token issued (8h TTL)          │  │              RADIUS integration             │   │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │           Token used for API calls           │  │             Duo via RADIUS proxy            │   │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                                                                       │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│  SSO token TTL is 8h; re-login required; API calls use bearer token from POST /api/session.           │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                                                                                                       │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│                                                                                                       │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │              Session Management              │  │               Lockout Policies              │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │           Max concurrent sessions            │  │              5 failed → lockout             │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │          Idle timeout: configurable          │  │           Lockout duration: 5 min           │   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │        Force re-auth on privilege op         │  │              Unlock: SSO admin              │   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   │        API session token: short-lived        │  │            Alert on failed logins           │   │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│                                                                                                       │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  SSO service runs on VCSA; AD/LDAP identity source must be reachable from                             │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  management network on port 389 (LDAP) or 636 (LDAPS).                                                │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│                                                                                                       │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  SSO          = Single Sign-On; built into VCSA; core auth service                                    │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  SAML token   = XML security assertion; vCenter uses this internally                                  │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  SAML TTL     = 8 hours default; configurable in SSO configuration                                    │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  Smart card   = PIV/CAC certificate-based login; requires vCenter config                              │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  RSA SecurID  = one-time password hardware token; RADIUS integration                                  │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  RADIUS       = Remote Authentication Dial-In User Service; MFA backend                               │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  Duo          = MFA provider; integrates via RADIUS proxy to vCenter                                  │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  Lockout      = SSO account temporarily blocked after failed attempts                                 │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  Idle timeout = browser session closes after inactivity period                                        │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  POST /api/session= REST API login; returns bearer token in response                                  │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│  LDAPS        = LDAP over TLS/SSL; port 636; required for AD in vcenter 8+                            │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  AD identity  = Active Directory added as SSO identity source                                         │
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│                                                                                                       │
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
+<h2 id="tls-configuration">TLS Configuration<a class="headerlink" href="#tls-configuration" title="Permanent link">&para;</a></h2>
+<p>vCenter enforces TLS 1.2 minimum by default (vSphere 7.0+). TLS 1.0 and 1.1 are disabled.</p>
+<h3 id="certificate-modes">Certificate Modes<a class="headerlink" href="#certificate-modes" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>Description</th>
+<th>When to Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VMCA (default)</td>
+<td>vCenter acts as CA; signs all vCenter/host certs</td>
+<td>Lab, small deployments</td>
+</tr>
+<tr>
+<td>Custom CA</td>
+<td>Enterprise CA signs all certs; VMCA subordinate to enterprise CA</td>
+<td>Enterprise/compliance</td>
+</tr>
+<tr>
+<td>Hybrid</td>
+<td>VMCA for machine SSL; custom CA for solution user certs</td>
+<td>Transitional</td>
+</tr>
+<tr>
+<td>External CA — all custom</td>
+<td>All certs replaced with enterprise CA-signed certs</td>
+<td>Strict compliance</td>
+</tr>
+</tbody>
+</table>
+<h3 id="certificate-replacement-machine-ssl-vcsa">Certificate Replacement — Machine SSL (VCSA)<a class="headerlink" href="#certificate-replacement-machine-ssl-vcsa" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># On VCSA shell</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>/usr/lib/vmware-vmca/bin/certificate-manager
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Option 1: Generate CSR signed by external CA</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Option 5: Replace machine SSL certificate</span>
+</code></pre></div>
 <p>Replacement requires vCenter services restart. Plan a maintenance window.</p>
 <h3 id="certificate-monitoring">Certificate Monitoring<a class="headerlink" href="#certificate-monitoring" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># PowerCLI — check vCenter endpoint certificate expiry</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">$req</span> <span class="p">=</span> <span class="no">[Net.HttpWebRequest]</span><span class="p">::</span><span class="n">Create</span><span class="p">(</span><span class="s2">&quot;https://&lt;vcenter&gt;&quot;</span><span class="p">)</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nv">$req</span><span class="p">.</span><span class="n">GetResponse</span><span class="p">()</span> <span class="p">|</span> <span class="nb">Out-Null</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nv">$cert</span> <span class="p">=</span> <span class="nv">$req</span><span class="p">.</span><span class="n">ServicePoint</span><span class="p">.</span><span class="n">Certificate</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="no">[DateTime]</span><span class="p">::</span><span class="n">Parse</span><span class="p">(</span><span class="nv">$cert</span><span class="p">.</span><span class="n">GetExpirationDateString</span><span class="p">())</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># PowerCLI — check vCenter endpoint certificate expiry</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">$req</span> <span class="p">=</span> <span class="no">[Net.HttpWebRequest]</span><span class="p">::</span><span class="n">Create</span><span class="p">(</span><span class="s2">&quot;https://&lt;vcenter&gt;&quot;</span><span class="p">)</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nv">$req</span><span class="p">.</span><span class="n">GetResponse</span><span class="p">()</span> <span class="p">|</span> <span class="nb">Out-Null</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="nv">$cert</span> <span class="p">=</span> <span class="nv">$req</span><span class="p">.</span><span class="n">ServicePoint</span><span class="p">.</span><span class="n">Certificate</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="no">[DateTime]</span><span class="p">::</span><span class="n">Parse</span><span class="p">(</span><span class="nv">$cert</span><span class="p">.</span><span class="n">GetExpirationDateString</span><span class="p">())</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check certificate expiry from outside VCSA</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;vcenter-fqdn&gt;:443<span class="w"> </span>-servername<span class="w"> </span>&lt;vcenter-fqdn&gt;<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># List certificates in VECS store on VCSA (SSH)</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>/usr/lib/vmware-vmafd/bin/vecs-cli<span class="w"> </span>entry<span class="w"> </span>list<span class="w"> </span>--store<span class="w"> </span>MACHINE_SSL_CERT<span class="w"> </span>--text<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Alias|Not After&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check certificate expiry from outside VCSA</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>&lt;vcenter-fqdn&gt;:443<span class="w"> </span>-servername<span class="w"> </span>&lt;vcenter-fqdn&gt;<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># List certificates in VECS store on VCSA (SSH)</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>/usr/lib/vmware-vmafd/bin/vecs-cli<span class="w"> </span>entry<span class="w"> </span>list<span class="w"> </span>--store<span class="w"> </span>MACHINE_SSL_CERT<span class="w"> </span>--text<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Alias|Not After&quot;</span>
 </code></pre></div>
 <h2 id="certificates-to-track">Certificates to Track<a class="headerlink" href="#certificates-to-track" title="Permanent link">&para;</a></h2>
 <table>
@@ -4911,36 +4970,36 @@ Authentication reference covering SSO Security, TLS Configuration, Certificates 
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Connect to multiple vCenters simultaneously</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Connect-VIServer</span> <span class="n">-Server</span> <span class="n">vcenter-lon</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">local</span><span class="p">,</span> <span class="n">vcenter-ams</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">local</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c"># List all VMs across both vCenters</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;vCenter&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">Uid</span><span class="p">.</span><span class="n">Split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span><span class="n">0</span><span class="p">]}},</span> <span class="n">PowerState</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c"># Disconnect all</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="nb">Disconnect-VIServer</span> <span class="p">*</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Connect to multiple vCenters simultaneously</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Connect-VIServer</span> <span class="n">-Server</span> <span class="n">vcenter-lon</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">local</span><span class="p">,</span> <span class="n">vcenter-ams</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">local</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c"># List all VMs across both vCenters</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;vCenter&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">Uid</span><span class="p">.</span><span class="n">Split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span><span class="n">0</span><span class="p">]}},</span> <span class="n">PowerState</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c"># Disconnect all</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="nb">Disconnect-VIServer</span> <span class="p">*</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
 </code></pre></div>
 <hr />
 <h2 id="unlocking-accounts">Unlocking Accounts<a class="headerlink" href="#unlocking-accounts" title="Permanent link">&para;</a></h2>
 <h3 id="unlock-administratorvspherelocal">Unlock administrator@vsphere.local<a class="headerlink" href="#unlock-administratorvspherelocal" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># SSH to VCSA</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>/usr/lib/vmware-vmafd/bin/dir-cli<span class="w"> </span>user<span class="w"> </span>unlock<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">    </span>--account<span class="w"> </span>administrator<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">    </span>--domain<span class="w"> </span>vsphere.local<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">    </span>--password<span class="w"> </span>&lt;current-password&gt;
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># If the password is also lost, reset via VCSA console (single-user mode)</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># See VMware KB 2069041 for the reset procedure</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># SSH to VCSA</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>/usr/lib/vmware-vmafd/bin/dir-cli<span class="w"> </span>user<span class="w"> </span>unlock<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span>--account<span class="w"> </span>administrator<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span>--domain<span class="w"> </span>vsphere.local<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">    </span>--password<span class="w"> </span>&lt;current-password&gt;
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># If the password is also lost, reset via VCSA console (single-user mode)</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># See VMware KB 2069041 for the reset procedure</span>
 </code></pre></div>
 <h3 id="unlock-an-ad-account-from-vcenter">Unlock an AD Account (from vCenter)<a class="headerlink" href="#unlock-an-ad-account-from-vcenter" title="Permanent link">&para;</a></h3>
 <p>AD account lockouts caused by vCenter (e.g. cached wrong password in identity source):
 1. Check if the bind account password has changed — update in <strong>SSO → Identity Sources → Edit</strong>
 2. Unlock the AD account from Active Directory Users and Computers or PowerShell:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># On a domain controller</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Unlock-ADAccount</span> <span class="n">-Identity</span> <span class="n">jsmith</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># On a domain controller</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">Unlock-ADAccount</span> <span class="n">-Identity</span> <span class="n">jsmith</span>
 </code></pre></div>
 3. Restart <code>vmware-sts-idmd</code> service to clear any cached authentication state:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>service-control<span class="w"> </span>--restart<span class="w"> </span>vmware-sts-idmd
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>service-control<span class="w"> </span>--restart<span class="w"> </span>vmware-sts-idmd
 </code></pre></div></p>
 <hr />
 <h2 id="related-reference">Related Reference<a class="headerlink" href="#related-reference" title="Permanent link">&para;</a></h2>

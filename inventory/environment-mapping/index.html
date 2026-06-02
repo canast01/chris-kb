@@ -2828,6 +2828,39 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#change-impact-assessment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Change Impact Assessment
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mapping-maintenance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mapping Maintenance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#discovery-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Discovery Tools
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -3044,69 +3077,67 @@ Document relationships between systems, applications, and services so that chang
 <a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="k">-</span><span class="w"> </span>TLS cert: *.payments.example.com — expires 2027-03-01
 <a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a><span class="k">-</span><span class="w"> </span>Secrets: vault path <span class="sb">`secret/payments/db_password`</span>, <span class="sb">`secret/payments/fraud_api_key`</span>
 </code></pre></div>
-┌─────────────────────────────────── Inventory — Environment Mapping ───────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Environment map: production, staging, dev, DR — document dependencies and data flows     │   │
-│   │      Identify: shared services (AD, DNS, NTP) vs environment-specific (app, DB, storage)      │   │
-│   │       DR site must mirror prod sizing; test failover path; document RTO/RPO per service       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │          Production         │  │        Non-Production       │  │        DR / Recovery        │   │
-│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
-│   │        Live workloads       │  │     Staging mirrors prod    │  │      Replication target     │   │
-│   │        Change managed       │  │        Dev = isolated       │  │       Tested annually       │   │
-│   │        Monitored 24/7       │  │     No prod data in dev     │  │       RTO/RPO defined       │   │
-│   │         SLA enforced        │  │      Refresh from prod      │  │      Activation runbook     │   │
-│   │      Access controlled      │  │     Config parity check     │  │        Config in sync       │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Config parity = Staging config matches prod (versions, settings) for realistic testing             │
-│    Data masking  = Replace prod PII with synthetic data before copying to non-prod environments       │
-│    Shared service= Component used across environments (AD, DNS, NTP); single point of attention       │
-│    Blast radius  = Scope of impact if an environment fails; keep prod isolated from dev               │
-│    DR activation = Switch workloads to DR site; requires tested runbook and communications plan       │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## Change Impact Assessment
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Before any change, use the dependency map to answer:
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>1. Which services call the component being changed?
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>2. What does the component depend on that might be affected?
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>3. If this change fails, what is the blast radius?
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>4. Which monitoring alerts should be watched during the window?
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>5. Who are the downstream service owners to notify?
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>## Mapping Maintenance
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>- Update dependency maps when: new service deployed, existing service retired, integration added or removed
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>- Review environment maps quarterly or after major incidents
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>- Keep maps in version-controlled docs alongside infrastructure code
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>## Discovery Tools
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>```bash
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a># netstat — find connections on a host
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>ss -tnp    # established TCP connections and owning process
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>ss -tlnp   # listening ports
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a># Find which process owns a port
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>lsof -i :&lt;port&gt;
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a># Trace network path to a service
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>traceroute &lt;target-host&gt;
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>mtr --report &lt;target-host&gt;
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a># DNS record discovery
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>dig &lt;hostname&gt; ANY
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>dig -t SRV _service._proto.&lt;domain&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌─────────────────────────────────── Inventory — Environment Mapping ───────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │      Environment map: production, staging, dev, DR — document dependencies and data flows     │   │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │      Identify: shared services (AD, DNS, NTP) vs environment-specific (app, DB, storage)      │   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │       DR site must mirror prod sizing; test failover path; document RTO/RPO per service       │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│                                                                                                       │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│                                                                                                       │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   │          Production         │  │        Non-Production       │  │        DR / Recovery        │   │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│   │        Live workloads       │  │     Staging mirrors prod    │  │      Replication target     │   │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│   │        Change managed       │  │        Dev = isolated       │  │       Tested annually       │   │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│   │        Monitored 24/7       │  │     No prod data in dev     │  │       RTO/RPO defined       │   │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   │         SLA enforced        │  │      Refresh from prod      │  │      Activation runbook     │   │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │      Access controlled      │  │     Config parity check     │  │        Config in sync       │   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│                                                                                                       │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│    Key terms:                                                                                         │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│                                                                                                       │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│    Config parity = Staging config matches prod (versions, settings) for realistic testing             │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│    Data masking  = Replace prod PII with synthetic data before copying to non-prod environments       │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│    Shared service= Component used across environments (AD, DNS, NTP); single point of attention       │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│    Blast radius  = Scope of impact if an environment fails; keep prod isolated from dev               │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│    DR activation = Switch workloads to DR site; requires tested runbook and communications plan       │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│                                                                                                       │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
+<h2 id="change-impact-assessment">Change Impact Assessment<a class="headerlink" href="#change-impact-assessment" title="Permanent link">&para;</a></h2>
+<p>Before any change, use the dependency map to answer:</p>
+<ol>
+<li>Which services call the component being changed?</li>
+<li>What does the component depend on that might be affected?</li>
+<li>If this change fails, what is the blast radius?</li>
+<li>Which monitoring alerts should be watched during the window?</li>
+<li>Who are the downstream service owners to notify?</li>
+</ol>
+<h2 id="mapping-maintenance">Mapping Maintenance<a class="headerlink" href="#mapping-maintenance" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Update dependency maps when: new service deployed, existing service retired, integration added or removed</li>
+<li>Review environment maps quarterly or after major incidents</li>
+<li>Keep maps in version-controlled docs alongside infrastructure code</li>
+</ul>
+<h2 id="discovery-tools">Discovery Tools<a class="headerlink" href="#discovery-tools" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># netstat — find connections on a host</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ss<span class="w"> </span>-tnp<span class="w">    </span><span class="c1"># established TCP connections and owning process</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>ss<span class="w"> </span>-tlnp<span class="w">   </span><span class="c1"># listening ports</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Find which process owns a port</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>lsof<span class="w"> </span>-i<span class="w"> </span>:&lt;port&gt;
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Trace network path to a service</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>traceroute<span class="w"> </span>&lt;target-host&gt;
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>mtr<span class="w"> </span>--report<span class="w"> </span>&lt;target-host&gt;
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># DNS record discovery</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>dig<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>ANY
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>dig<span class="w"> </span>-t<span class="w"> </span>SRV<span class="w"> </span>_service._proto.&lt;domain&gt;
+</code></pre></div>
 
 
 

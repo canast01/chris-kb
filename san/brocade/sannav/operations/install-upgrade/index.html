@@ -3448,6 +3448,28 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#rollback" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rollback
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#decommission" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decommission
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -3725,82 +3747,76 @@
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Change default admin password</span>
 <a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>passwd<span class="w"> </span>admin
 </code></pre></div>
-┌──────────────────────────────── Brocade SANnav — Install and Upgrade ─────────────────────────────────┐
-│                                                                                                       │
-│  SANnav deployment: OVA to vSphere, initial config, discover switches, upgrade path.                  │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Fresh Install Steps              │  │            Initial Configuration            │   │
-│   │       1. Download SANnav OVA from BCM        │  │         1. Set hostname + IP address        │   │
-│   │           2. Deploy OVA in vSphere           │  │           2. Configure NTP servers          │   │
-│   │          3. Power on + accept EULA           │  │            3. Set admin password            │   │
-│   │        4. Assign: 4 vCPU / 16 GB RAM         │  │          4. Configure TACACS+/LDAP          │   │
-│   │       5. 2 TB datastore for perf data        │  │         5. Discover fabric switches         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  OVA deployment is quick; NTP and TACACS+ must be configured before adding switches.                  │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Upgrade Procedure               │  │           Post-Upgrade Validation           │   │
-│   │          1. Backup SANnav DB to NFS          │  │        1. Verify all switches present       │   │
-│   │          2. Download new SANnav OVA          │  │       2. Check MAPS alerts forwarding       │   │
-│   │        3. Deploy standby; restore DB         │  │           3. Re-test TACACS+ auth           │   │
-│   │        4. Validate standby operation         │  │        4. Verify NFS backup schedule        │   │
-│   │           5. Swing DNS; decom old            │  │        5. Confirm zone management ok        │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  vSphere host · shared 2 TB datastore · management network · NFS backup share                         │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  OVA             = Open Virtual Appliance; SANnav package for vSphere deployment                      │
-│  BCM             = Broadcom; download SANnav OVA from support.broadcom.com                            │
-│  EULA            = End User License Agreement; accepted on first SANnav boot                          │
-│  vCPU            = virtual CPU; SANnav minimum is 4 vCPU for production use                           │
-│  Datastore       = vSphere storage; SANnav needs ~2 TB for 90-day perf history                        │
-│  NFS backup      = SANnav DB backup destination; required before any upgrade                          │
-│  Swing DNS       = update DNS A record to point to new SANnav VM after validation                     │
-│  TACACS+         = centralised auth; must be re-tested after every SANnav upgrade                     │
-│  MAPS forwarding = MAPS alerts from switches must flow to new SANnav after upgrade                    │
-│  NTP servers     = time sync; must be configured before adding switches to SANnav                     │
-│  Zone management = ability to push zone changes from SANnav GUI after upgrade                         │
-│  Standby upgrade = deploy new SANnav version as standby; validate before DNS swing                    │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Post-upgrade, delete the VM snapshot taken before the upgrade. Snapshots held for more than 48 hours degrade VM performance.
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>---
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>## Rollback
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>If the upgrade fails or a critical issue is found post-upgrade:
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>1. Power off the SANnav VM.
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>2. Revert to the pre-upgrade snapshot in vCenter.
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>3. Power on the VM and verify services start.
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>4. Contact Broadcom Support with the upgrade log: `/opt/sannav/logs/upgrade.log`.
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>There is no in-place rollback mechanism within SANnav itself — the VM snapshot is the only rollback path.
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>---
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>## Decommission
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>To decommission a SANnav instance:
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>1. Export all zone configurations: **Inventory &gt; Fabrics &gt; Export**.
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>2. Export the full backup: **Administration &gt; Backup &gt; Backup Now**.
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>3. Remove the SANnav instance from Global View (if registered): Global View **Administration &gt; Portals &gt; Remove**.
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>4. On each managed switch, remove the SANnav SNMP trap destination and HTTPS service account:
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>```bash
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a># On each switch (FOS CLI)
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>snmpconfig --set trapdest -index &lt;n&gt; -trapdest 0.0.0.0   # clear trap destination
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>userconfig --delete sannav_svc
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌──────────────────────────────── Brocade SANnav — Install and Upgrade ─────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  SANnav deployment: OVA to vSphere, initial config, discover switches, upgrade path.                  │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│                                                                                                       │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │             Fresh Install Steps              │  │            Initial Configuration            │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │       1. Download SANnav OVA from BCM        │  │         1. Set hostname + IP address        │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │           2. Deploy OVA in vSphere           │  │           2. Configure NTP servers          │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │          3. Power on + accept EULA           │  │            3. Set admin password            │   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │        4. Assign: 4 vCPU / 16 GB RAM         │  │          4. Configure TACACS+/LDAP          │   │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │       5. 2 TB datastore for perf data        │  │         5. Discover fabric switches         │   │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                                                                       │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│  OVA deployment is quick; NTP and TACACS+ must be configured before adding switches.                  │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                                                                                                       │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│                                                                                                       │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │              Upgrade Procedure               │  │           Post-Upgrade Validation           │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │          1. Backup SANnav DB to NFS          │  │        1. Verify all switches present       │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │          2. Download new SANnav OVA          │  │       2. Check MAPS alerts forwarding       │   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │        3. Deploy standby; restore DB         │  │           3. Re-test TACACS+ auth           │   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   │        4. Validate standby operation         │  │        4. Verify NFS backup schedule        │   │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│   │           5. Swing DNS; decom old            │  │        5. Confirm zone management ok        │   │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│                                                                                                       │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  vSphere host · shared 2 TB datastore · management network · NFS backup share                         │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│                                                                                                       │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  OVA             = Open Virtual Appliance; SANnav package for vSphere deployment                      │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  BCM             = Broadcom; download SANnav OVA from support.broadcom.com                            │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  EULA            = End User License Agreement; accepted on first SANnav boot                          │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  vCPU            = virtual CPU; SANnav minimum is 4 vCPU for production use                           │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  Datastore       = vSphere storage; SANnav needs ~2 TB for 90-day perf history                        │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  NFS backup      = SANnav DB backup destination; required before any upgrade                          │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  Swing DNS       = update DNS A record to point to new SANnav VM after validation                     │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  TACACS+         = centralised auth; must be re-tested after every SANnav upgrade                     │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  MAPS forwarding = MAPS alerts from switches must flow to new SANnav after upgrade                    │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  NTP servers     = time sync; must be configured before adding switches to SANnav                     │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│  Zone management = ability to push zone changes from SANnav GUI after upgrade                         │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  Standby upgrade = deploy new SANnav version as standby; validate before DNS swing                    │
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│                                                                                                       │
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
+<p>Post-upgrade, delete the VM snapshot taken before the upgrade. Snapshots held for more than 48 hours degrade VM performance.</p>
+<hr />
+<h2 id="rollback">Rollback<a class="headerlink" href="#rollback" title="Permanent link">&para;</a></h2>
+<p>If the upgrade fails or a critical issue is found post-upgrade:</p>
+<ol>
+<li>Power off the SANnav VM.</li>
+<li>Revert to the pre-upgrade snapshot in vCenter.</li>
+<li>Power on the VM and verify services start.</li>
+<li>Contact Broadcom Support with the upgrade log: <code>/opt/sannav/logs/upgrade.log</code>.</li>
+</ol>
+<p>There is no in-place rollback mechanism within SANnav itself — the VM snapshot is the only rollback path.</p>
+<hr />
+<h2 id="decommission">Decommission<a class="headerlink" href="#decommission" title="Permanent link">&para;</a></h2>
+<p>To decommission a SANnav instance:</p>
+<ol>
+<li>Export all zone configurations: <strong>Inventory &gt; Fabrics &gt; Export</strong>.</li>
+<li>Export the full backup: <strong>Administration &gt; Backup &gt; Backup Now</strong>.</li>
+<li>Remove the SANnav instance from Global View (if registered): Global View <strong>Administration &gt; Portals &gt; Remove</strong>.</li>
+<li>On each managed switch, remove the SANnav SNMP trap destination and HTTPS service account:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># On each switch (FOS CLI)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>snmpconfig<span class="w"> </span>--set<span class="w"> </span>trapdest<span class="w"> </span>-index<span class="w"> </span>&lt;n&gt;<span class="w"> </span>-trapdest<span class="w"> </span><span class="m">0</span>.0.0.0<span class="w">   </span><span class="c1"># clear trap destination</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>userconfig<span class="w"> </span>--delete<span class="w"> </span>sannav_svc
+</code></pre></div>
 <ol>
 <li>Power off and delete the SANnav VM.</li>
 </ol>

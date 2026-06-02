@@ -4713,72 +4713,72 @@ Access Control reference covering Built-in Roles, Custom Roles, SSO Domain and I
 <a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>  │  svc-aria-ops          +  Read-Only    +  Root     │
 <a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>  └───────────────────────────────────────────────────┘
 </code></pre></div>
-┌─────────────────────────────────── vCenter Server — Access Control ───────────────────────────────────┐
-│                                                                                                       │
-│  vCenter access control uses SSO for authentication and a role-based permission                       │
-│  system applied at inventory object level for authorisation.                                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Role-Based Access               │  │            Permission Inheritance           │   │
-│   │           Roles: built-in + custom           │  │            Propagate to children            │   │
-│   │         Admin / ReadOnly / NoAccess          │  │           Override at child object          │   │
-│   │           Privilege sets per role            │  │             Global perm: all DCs            │   │
-│   │           Apply role to user/group           │  │         No propagate: exact obj only        │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Assign minimum roles at highest useful object; propagate down the hierarchy.                         │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Identity Sources               │  │           Admin Lockout Prevention          │   │
-│   │               SSO local domain               │  │      Always keep administrator@vsphere      │   │
-│   │           Active Directory joined            │  │         Break-glass: local SSO user         │   │
-│   │            LDAP: OpenLDAP support            │  │        Audit: review perms quarterly        │   │
-│   │          AD groups mapped to roles           │  │         Log: all permission changes         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  SSO identity store traffic goes over LDAP/LDAPS to AD DCs on management network.                     │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  SSO           = Single Sign-On; vCenter identity service; issues SAML tokens                         │
-│  Role          = named collection of privileges; applied to user+object pair                          │
-│  Privilege     = atomic permission; e.g., VirtualMachine.Power.On                                     │
-│  Propagate     = permission flows to all child objects in hierarchy                                   │
-│  Global perm   = permission applied at root level across all datacentres                              │
-│  administrator@vsphere.local= built-in SSO admin; never remove                                        │
-│  Break-glass   = local SSO account for use when AD/LDAP is down                                       │
-│  Identity source= AD, LDAP, or local domain; multiple sources allowed                                 │
-│  AD group      = Active Directory security group mapped to vCenter role                               │
-│  NoAccess role = explicitly blocks access at that object level                                        │
-│  Audit         = review all admin-role assignments at least quarterly                                 │
-│  Hierarchy     = DC → cluster → host → VM; permissions flow downward                                  │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>**VM Operator** — day-to-day VM management without storage or host access:
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>```text
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>VirtualMachine.Interact.PowerOn
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>VirtualMachine.Interact.PowerOff
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>VirtualMachine.Interact.Reset
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>VirtualMachine.Interact.ConsoleInteract
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>VirtualMachine.GuestOperations.*
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>VirtualMachine.State.CreateSnapshot
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>VirtualMachine.State.RemoveSnapshot
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌─────────────────────────────────── vCenter Server — Access Control ───────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  vCenter access control uses SSO for authentication and a role-based permission                       │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│  system applied at inventory object level for authorisation.                                          │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│                                                                                                       │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │              Role-Based Access               │  │            Permission Inheritance           │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │           Roles: built-in + custom           │  │            Propagate to children            │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │         Admin / ReadOnly / NoAccess          │  │           Override at child object          │   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │           Privilege sets per role            │  │             Global perm: all DCs            │   │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │           Apply role to user/group           │  │         No propagate: exact obj only        │   │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                                                                       │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│  Assign minimum roles at highest useful object; propagate down the hierarchy.                         │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                                                                                                       │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│                                                                                                       │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │               Identity Sources               │  │           Admin Lockout Prevention          │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │               SSO local domain               │  │      Always keep administrator@vsphere      │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │           Active Directory joined            │  │         Break-glass: local SSO user         │   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │            LDAP: OpenLDAP support            │  │        Audit: review perms quarterly        │   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   │          AD groups mapped to roles           │  │         Log: all permission changes         │   │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│                                                                                                       │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  SSO identity store traffic goes over LDAP/LDAPS to AD DCs on management network.                     │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│                                                                                                       │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│                                                                                                       │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│  SSO           = Single Sign-On; vCenter identity service; issues SAML tokens                         │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  Role          = named collection of privileges; applied to user+object pair                          │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  Privilege     = atomic permission; e.g., VirtualMachine.Power.On                                     │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  Propagate     = permission flows to all child objects in hierarchy                                   │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  Global perm   = permission applied at root level across all datacentres                              │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  administrator@vsphere.local= built-in SSO admin; never remove                                        │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  Break-glass   = local SSO account for use when AD/LDAP is down                                       │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  Identity source= AD, LDAP, or local domain; multiple sources allowed                                 │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  AD group      = Active Directory security group mapped to vCenter role                               │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  NoAccess role = explicitly blocks access at that object level                                        │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  Audit         = review all admin-role assignments at least quarterly                                 │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│  Hierarchy     = DC → cluster → host → VM; permissions flow downward                                  │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│                                                                                                       │
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div></p>
+<p><strong>VM Operator</strong> — day-to-day VM management without storage or host access:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>VirtualMachine.Interact.PowerOn
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>VirtualMachine.Interact.PowerOff
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>VirtualMachine.Interact.Reset
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>VirtualMachine.Interact.ConsoleInteract
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>VirtualMachine.GuestOperations.*
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>VirtualMachine.State.CreateSnapshot
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>VirtualMachine.State.RemoveSnapshot
 </code></pre></div></p>
 <p><strong>Read-Only + Performance</strong> — monitoring access including performance counters:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>System.Read
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>System.Anonymous
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>System.View
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>Performance.ModifyIntervals (optional, for custom stat intervals)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>System.Read
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>System.Anonymous
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>System.View
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Performance.ModifyIntervals (optional, for custom stat intervals)
 </code></pre></div></p>
 <p><strong>NSX Integration Service Account</strong>:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Host.Config.Network
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Host.Config.Patch
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Host.Inventory.EditCluster
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Network.*
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>VirtualMachine.Config.Network
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Host.Config.Network
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>Host.Config.Patch
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>Host.Inventory.EditCluster
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>Network.*
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>VirtualMachine.Config.Network
 </code></pre></div></p>
 <hr />
 <h2 id="sso-domain-and-identity-sources">SSO Domain and Identity Sources<a class="headerlink" href="#sso-domain-and-identity-sources" title="Permanent link">&para;</a></h2>
@@ -4830,15 +4830,15 @@ Access Control reference covering Built-in Roles, Custom Roles, SSO Domain and I
 <p>Always use LDAPS (port 636) rather than LDAP (port 389) to encrypt credentials and directory queries in transit.</p>
 <h3 id="service-account-best-practices">Service Account Best Practices<a class="headerlink" href="#service-account-best-practices" title="Permanent link">&para;</a></h3>
 <p>The LDAP bind account needs only read-only access to AD:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Create a restricted service account in AD (PowerShell on DC)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">New-ADUser</span> <span class="n">-Name</span> <span class="s2">&quot;svc-vcenter-ldap&quot;</span> <span class="n">-SamAccountName</span> <span class="s2">&quot;svc-vcenter-ldap&quot;</span> <span class="p">`</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="n">-UserPrincipalName</span> <span class="s2">&quot;svc-vcenter-ldap@corp.example.com&quot;</span> <span class="p">`</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="n">-Path</span> <span class="s2">&quot;OU=Service Accounts,DC=corp,DC=example,DC=com&quot;</span> <span class="p">`</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="n">-AccountPassword</span> <span class="p">(</span><span class="nb">ConvertTo-SecureString</span> <span class="s2">&quot;P@ssw0rd123!&quot;</span> <span class="n">-AsPlainText</span> <span class="n">-Force</span><span class="p">)</span> <span class="p">`</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    <span class="n">-Enabled</span> <span class="nv">$true</span> <span class="n">-PasswordNeverExpires</span> <span class="nv">$true</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c"># Deny all group memberships except Domain Users</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c"># Delegate only Read to the Users OU</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Create a restricted service account in AD (PowerShell on DC)</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">New-ADUser</span> <span class="n">-Name</span> <span class="s2">&quot;svc-vcenter-ldap&quot;</span> <span class="n">-SamAccountName</span> <span class="s2">&quot;svc-vcenter-ldap&quot;</span> <span class="p">`</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="n">-UserPrincipalName</span> <span class="s2">&quot;svc-vcenter-ldap@corp.example.com&quot;</span> <span class="p">`</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="n">-Path</span> <span class="s2">&quot;OU=Service Accounts,DC=corp,DC=example,DC=com&quot;</span> <span class="p">`</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    <span class="n">-AccountPassword</span> <span class="p">(</span><span class="nb">ConvertTo-SecureString</span> <span class="s2">&quot;P@ssw0rd123!&quot;</span> <span class="n">-AsPlainText</span> <span class="n">-Force</span><span class="p">)</span> <span class="p">`</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    <span class="n">-Enabled</span> <span class="nv">$true</span> <span class="n">-PasswordNeverExpires</span> <span class="nv">$true</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c"># Deny all group memberships except Domain Users</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c"># Delegate only Read to the Users OU</span>
 </code></pre></div></p>
 <h3 id="administratorvspherelocal">Administrator@vsphere.local<a class="headerlink" href="#administratorvspherelocal" title="Permanent link">&para;</a></h3>
 <ul>
@@ -4856,9 +4856,9 @@ Access Control reference covering Built-in Roles, Custom Roles, SSO Domain and I
 - Maximum task age: 90 days</p>
 <h3 id="syslog-forwarding-to-siem">Syslog Forwarding to SIEM<a class="headerlink" href="#syslog-forwarding-to-siem" title="Permanent link">&para;</a></h3>
 <p>Forward vCenter audit events to SIEM/syslog aggregator:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>VAMI (https://&lt;vcenter&gt;:5480) → Syslog → Add Syslog Server
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Protocol: TLS (preferred) / UDP / TCP
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Port: 514 (UDP), 6514 (TLS)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>VAMI (https://&lt;vcenter&gt;:5480) → Syslog → Add Syslog Server
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>Protocol: TLS (preferred) / UDP / TCP
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>Port: 514 (UDP), 6514 (TLS)
 </code></pre></div>
 <p>Events forwarded include: login/logout, permission changes, VM creation/deletion, host add/remove, task success/failure.</p>
 <p>Key event types for SIEM alerting:</p>
@@ -4912,50 +4912,50 @@ Access Control reference covering Built-in Roles, Custom Roles, SSO Domain and I
 - SSH enabled on ESXi host</p>
 <hr />
 <h2 id="powercli-permission-management">PowerCLI — Permission Management<a class="headerlink" href="#powercli-permission-management" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># List all permissions in the environment</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Get-VIPermission</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c"># Permissions for a specific user or group</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nb">Get-VIPermission</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Principal</span> <span class="o">-eq</span> <span class="s2">&quot;CORP\jsmith&quot;</span> <span class="p">}</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="nb">Get-VIPermission</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Principal</span> <span class="o">-match</span> <span class="s2">&quot;vsphere.local&quot;</span> <span class="p">}</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c"># Assign a role to a user at the datacenter level (propagates to all children)</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="nb">New-VIPermission</span> <span class="p">`</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>    <span class="n">-Entity</span> <span class="p">(</span><span class="nb">Get-Datacenter</span> <span class="s2">&quot;DC-LON&quot;</span><span class="p">)</span> <span class="p">`</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>    <span class="n">-Principal</span> <span class="s2">&quot;CORP\grp-vcenter-ops&quot;</span> <span class="p">`</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>    <span class="n">-Role</span> <span class="p">(</span><span class="nb">Get-VIRole</span> <span class="s2">&quot;VM Operator&quot;</span><span class="p">)</span> <span class="p">`</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>    <span class="n">-Propagate</span><span class="p">:</span><span class="nv">$true</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c"># Assign a role to a group at cluster scope only</span>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="nb">New-VIPermission</span> <span class="p">`</span>
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>    <span class="n">-Entity</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">&quot;CL-LON-PROD&quot;</span><span class="p">)</span> <span class="p">`</span>
-<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>    <span class="n">-Principal</span> <span class="s2">&quot;CORP\grp-app-team&quot;</span> <span class="p">`</span>
-<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>    <span class="n">-Role</span> <span class="p">(</span><span class="nb">Get-VIRole</span> <span class="s2">&quot;Virtual Machine User&quot;</span><span class="p">)</span> <span class="p">`</span>
-<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>    <span class="n">-Propagate</span><span class="p">:</span><span class="nv">$true</span>
-<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>
-<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a><span class="c"># Remove a permission</span>
-<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a><span class="nb">Get-VIPermission</span> <span class="n">-Entity</span> <span class="p">(</span><span class="nb">Get-Datacenter</span> <span class="s2">&quot;DC-LON&quot;</span><span class="p">)</span> <span class="p">|</span>
-<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a>    <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Principal</span> <span class="o">-eq</span> <span class="s2">&quot;CORP\jsmith&quot;</span> <span class="p">}</span> <span class="p">|</span>
-<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a>    <span class="nb">Remove-VIPermission</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
-<a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a>
-<a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a><span class="c"># Create a custom role with specific privileges</span>
-<a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a><span class="nv">$privs</span> <span class="p">=</span> <span class="nb">Get-VIPrivilege</span> <span class="n">-Id</span> <span class="s2">&quot;VirtualMachine.Interact.PowerOn&quot;</span><span class="p">,</span>
-<a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a>    <span class="s2">&quot;VirtualMachine.Interact.PowerOff&quot;</span><span class="p">,</span>
-<a id="__codelineno-6-30" name="__codelineno-6-30" href="#__codelineno-6-30"></a>    <span class="s2">&quot;VirtualMachine.State.CreateSnapshot&quot;</span><span class="p">,</span>
-<a id="__codelineno-6-31" name="__codelineno-6-31" href="#__codelineno-6-31"></a>    <span class="s2">&quot;VirtualMachine.State.RemoveSnapshot&quot;</span>
-<a id="__codelineno-6-32" name="__codelineno-6-32" href="#__codelineno-6-32"></a><span class="nb">New-VIRole</span> <span class="n">-Name</span> <span class="s2">&quot;VM-Operator-Custom&quot;</span> <span class="n">-Privilege</span> <span class="nv">$privs</span>
-<a id="__codelineno-6-33" name="__codelineno-6-33" href="#__codelineno-6-33"></a>
-<a id="__codelineno-6-34" name="__codelineno-6-34" href="#__codelineno-6-34"></a><span class="c"># Audit: export all permissions to CSV</span>
-<a id="__codelineno-6-35" name="__codelineno-6-35" href="#__codelineno-6-35"></a><span class="nb">Get-VIPermission</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Entity</span><span class="p">,</span> <span class="n">Principal</span><span class="p">,</span> <span class="n">Role</span><span class="p">,</span> <span class="n">IsGroup</span><span class="p">,</span> <span class="n">Propagate</span> <span class="p">|</span>
-<a id="__codelineno-6-36" name="__codelineno-6-36" href="#__codelineno-6-36"></a>    <span class="nb">Export-Csv</span> <span class="n">-Path</span> <span class="n">vcenter_permissions_</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="n">yyyyMMdd</span><span class="p">).</span><span class="n">csv</span> <span class="n">-NoTypeInformation</span>
-<a id="__codelineno-6-37" name="__codelineno-6-37" href="#__codelineno-6-37"></a>
-<a id="__codelineno-6-38" name="__codelineno-6-38" href="#__codelineno-6-38"></a><span class="c"># Identify all principals with Administrator role</span>
-<a id="__codelineno-6-39" name="__codelineno-6-39" href="#__codelineno-6-39"></a><span class="nb">Get-VIPermission</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Role</span> <span class="o">-eq</span> <span class="s2">&quot;Admin&quot;</span> <span class="p">}</span> <span class="p">|</span>
-<a id="__codelineno-6-40" name="__codelineno-6-40" href="#__codelineno-6-40"></a>    <span class="nb">Select-Object</span> <span class="n">Entity</span><span class="p">,</span> <span class="n">Principal</span><span class="p">,</span> <span class="n">IsGroup</span><span class="p">,</span> <span class="n">Propagate</span> <span class="p">|</span>
-<a id="__codelineno-6-41" name="__codelineno-6-41" href="#__codelineno-6-41"></a>    <span class="nb">Format-Table</span> <span class="n">-AutoSize</span>
-<a id="__codelineno-6-42" name="__codelineno-6-42" href="#__codelineno-6-42"></a>
-<a id="__codelineno-6-43" name="__codelineno-6-43" href="#__codelineno-6-43"></a><span class="c"># Identify users with global permissions</span>
-<a id="__codelineno-6-44" name="__codelineno-6-44" href="#__codelineno-6-44"></a><span class="nb">Get-VIPermission</span> <span class="n">-Global</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Principal</span><span class="p">,</span> <span class="n">Role</span><span class="p">,</span> <span class="n">IsGroup</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># List all permissions in the environment</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">Get-VIPermission</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c"># Permissions for a specific user or group</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="nb">Get-VIPermission</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Principal</span> <span class="o">-eq</span> <span class="s2">&quot;CORP\jsmith&quot;</span> <span class="p">}</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="nb">Get-VIPermission</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Principal</span> <span class="o">-match</span> <span class="s2">&quot;vsphere.local&quot;</span> <span class="p">}</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c"># Assign a role to a user at the datacenter level (propagates to all children)</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="nb">New-VIPermission</span> <span class="p">`</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>    <span class="n">-Entity</span> <span class="p">(</span><span class="nb">Get-Datacenter</span> <span class="s2">&quot;DC-LON&quot;</span><span class="p">)</span> <span class="p">`</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>    <span class="n">-Principal</span> <span class="s2">&quot;CORP\grp-vcenter-ops&quot;</span> <span class="p">`</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>    <span class="n">-Role</span> <span class="p">(</span><span class="nb">Get-VIRole</span> <span class="s2">&quot;VM Operator&quot;</span><span class="p">)</span> <span class="p">`</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>    <span class="n">-Propagate</span><span class="p">:</span><span class="nv">$true</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="c"># Assign a role to a group at cluster scope only</span>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="nb">New-VIPermission</span> <span class="p">`</span>
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>    <span class="n">-Entity</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">&quot;CL-LON-PROD&quot;</span><span class="p">)</span> <span class="p">`</span>
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>    <span class="n">-Principal</span> <span class="s2">&quot;CORP\grp-app-team&quot;</span> <span class="p">`</span>
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>    <span class="n">-Role</span> <span class="p">(</span><span class="nb">Get-VIRole</span> <span class="s2">&quot;Virtual Machine User&quot;</span><span class="p">)</span> <span class="p">`</span>
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>    <span class="n">-Propagate</span><span class="p">:</span><span class="nv">$true</span>
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a><span class="c"># Remove a permission</span>
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a><span class="nb">Get-VIPermission</span> <span class="n">-Entity</span> <span class="p">(</span><span class="nb">Get-Datacenter</span> <span class="s2">&quot;DC-LON&quot;</span><span class="p">)</span> <span class="p">|</span>
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>    <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Principal</span> <span class="o">-eq</span> <span class="s2">&quot;CORP\jsmith&quot;</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>    <span class="nb">Remove-VIPermission</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>
+<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a><span class="c"># Create a custom role with specific privileges</span>
+<a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a><span class="nv">$privs</span> <span class="p">=</span> <span class="nb">Get-VIPrivilege</span> <span class="n">-Id</span> <span class="s2">&quot;VirtualMachine.Interact.PowerOn&quot;</span><span class="p">,</span>
+<a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a>    <span class="s2">&quot;VirtualMachine.Interact.PowerOff&quot;</span><span class="p">,</span>
+<a id="__codelineno-7-30" name="__codelineno-7-30" href="#__codelineno-7-30"></a>    <span class="s2">&quot;VirtualMachine.State.CreateSnapshot&quot;</span><span class="p">,</span>
+<a id="__codelineno-7-31" name="__codelineno-7-31" href="#__codelineno-7-31"></a>    <span class="s2">&quot;VirtualMachine.State.RemoveSnapshot&quot;</span>
+<a id="__codelineno-7-32" name="__codelineno-7-32" href="#__codelineno-7-32"></a><span class="nb">New-VIRole</span> <span class="n">-Name</span> <span class="s2">&quot;VM-Operator-Custom&quot;</span> <span class="n">-Privilege</span> <span class="nv">$privs</span>
+<a id="__codelineno-7-33" name="__codelineno-7-33" href="#__codelineno-7-33"></a>
+<a id="__codelineno-7-34" name="__codelineno-7-34" href="#__codelineno-7-34"></a><span class="c"># Audit: export all permissions to CSV</span>
+<a id="__codelineno-7-35" name="__codelineno-7-35" href="#__codelineno-7-35"></a><span class="nb">Get-VIPermission</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Entity</span><span class="p">,</span> <span class="n">Principal</span><span class="p">,</span> <span class="n">Role</span><span class="p">,</span> <span class="n">IsGroup</span><span class="p">,</span> <span class="n">Propagate</span> <span class="p">|</span>
+<a id="__codelineno-7-36" name="__codelineno-7-36" href="#__codelineno-7-36"></a>    <span class="nb">Export-Csv</span> <span class="n">-Path</span> <span class="n">vcenter_permissions_</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="n">yyyyMMdd</span><span class="p">).</span><span class="n">csv</span> <span class="n">-NoTypeInformation</span>
+<a id="__codelineno-7-37" name="__codelineno-7-37" href="#__codelineno-7-37"></a>
+<a id="__codelineno-7-38" name="__codelineno-7-38" href="#__codelineno-7-38"></a><span class="c"># Identify all principals with Administrator role</span>
+<a id="__codelineno-7-39" name="__codelineno-7-39" href="#__codelineno-7-39"></a><span class="nb">Get-VIPermission</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Role</span> <span class="o">-eq</span> <span class="s2">&quot;Admin&quot;</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-7-40" name="__codelineno-7-40" href="#__codelineno-7-40"></a>    <span class="nb">Select-Object</span> <span class="n">Entity</span><span class="p">,</span> <span class="n">Principal</span><span class="p">,</span> <span class="n">IsGroup</span><span class="p">,</span> <span class="n">Propagate</span> <span class="p">|</span>
+<a id="__codelineno-7-41" name="__codelineno-7-41" href="#__codelineno-7-41"></a>    <span class="nb">Format-Table</span> <span class="n">-AutoSize</span>
+<a id="__codelineno-7-42" name="__codelineno-7-42" href="#__codelineno-7-42"></a>
+<a id="__codelineno-7-43" name="__codelineno-7-43" href="#__codelineno-7-43"></a><span class="c"># Identify users with global permissions</span>
+<a id="__codelineno-7-44" name="__codelineno-7-44" href="#__codelineno-7-44"></a><span class="nb">Get-VIPermission</span> <span class="n">-Global</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Principal</span><span class="p">,</span> <span class="n">Role</span><span class="p">,</span> <span class="n">IsGroup</span>
 </code></pre></div>
 <hr />
 <h2 id="service-account-inventory">Service Account Inventory<a class="headerlink" href="#service-account-inventory" title="Permanent link">&para;</a></h2>
@@ -5018,21 +5018,21 @@ Access Control reference covering Built-in Roles, Custom Roles, SSO Domain and I
 <hr />
 <h2 id="access-review-procedure">Access Review Procedure<a class="headerlink" href="#access-review-procedure" title="Permanent link">&para;</a></h2>
 <p>Run quarterly or after any team change, project completion, or security incident.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># Export current permission state</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">Get-VIPermission</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Entity</span><span class="p">,</span> <span class="n">Principal</span><span class="p">,</span> <span class="n">Role</span><span class="p">,</span> <span class="n">IsGroup</span><span class="p">,</span> <span class="n">Propagate</span> <span class="p">|</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    <span class="nb">Export-Csv</span> <span class="n">-Path</span> <span class="n">vcenter_permissions_review_</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="n">yyyyMMdd</span><span class="p">).</span><span class="n">csv</span> <span class="n">-NoTypeInformation</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c"># Find any non-group (individual user) permissions — should be rare in production</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="nb">Get-VIPermission</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="o">-not</span> <span class="nv">$_</span><span class="p">.</span><span class="n">IsGroup</span> <span class="p">}</span> <span class="p">|</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>    <span class="nb">Select-Object</span> <span class="n">Entity</span><span class="p">,</span> <span class="n">Principal</span><span class="p">,</span> <span class="n">Role</span><span class="p">,</span> <span class="n">Propagate</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c"># Find permissions at VM level (overly specific, usually a mistake)</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>    <span class="nb">Get-VIPermission</span> <span class="n">-Entity</span> <span class="nv">$_</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Principal</span> <span class="o">-notmatch</span> <span class="s2">&quot;SYSTEM&quot;</span> <span class="p">}</span>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="p">}</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Entity</span><span class="p">,</span> <span class="n">Principal</span><span class="p">,</span> <span class="n">Role</span>
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="c"># Check for stale permissions from deprovisioned accounts</span>
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="c"># Compare against current AD group members</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c"># Export current permission state</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">Get-VIPermission</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Entity</span><span class="p">,</span> <span class="n">Principal</span><span class="p">,</span> <span class="n">Role</span><span class="p">,</span> <span class="n">IsGroup</span><span class="p">,</span> <span class="n">Propagate</span> <span class="p">|</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>    <span class="nb">Export-Csv</span> <span class="n">-Path</span> <span class="n">vcenter_permissions_review_</span><span class="p">$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="n">yyyyMMdd</span><span class="p">).</span><span class="n">csv</span> <span class="n">-NoTypeInformation</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c"># Find any non-group (individual user) permissions — should be rare in production</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="nb">Get-VIPermission</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="o">-not</span> <span class="nv">$_</span><span class="p">.</span><span class="n">IsGroup</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>    <span class="nb">Select-Object</span> <span class="n">Entity</span><span class="p">,</span> <span class="n">Principal</span><span class="p">,</span> <span class="n">Role</span><span class="p">,</span> <span class="n">Propagate</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c"># Find permissions at VM level (overly specific, usually a mistake)</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>    <span class="nb">Get-VIPermission</span> <span class="n">-Entity</span> <span class="nv">$_</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Principal</span> <span class="o">-notmatch</span> <span class="s2">&quot;SYSTEM&quot;</span> <span class="p">}</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="p">}</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Entity</span><span class="p">,</span> <span class="n">Principal</span><span class="p">,</span> <span class="n">Role</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="c"># Check for stale permissions from deprovisioned accounts</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="c"># Compare against current AD group members</span>
 </code></pre></div>
 <p>Access review checklist:</p>
 <table>
@@ -5072,11 +5072,11 @@ Access Control reference covering Built-in Roles, Custom Roles, SSO Domain and I
 <hr />
 <h2 id="lockout-and-break-glass">Lockout and Break-Glass<a class="headerlink" href="#lockout-and-break-glass" title="Permanent link">&para;</a></h2>
 <p>If <code>administrator@vsphere.local</code> is locked out:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># SSH to VCSA as root</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>/usr/lib/vmware-vmafd/bin/dir-cli<span class="w"> </span>user<span class="w"> </span>unlock<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">    </span>--account<span class="w"> </span>administrator<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">    </span>--domain<span class="w"> </span>vsphere.local<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">    </span>--password<span class="w"> </span>&lt;vmdir-admin-password&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># SSH to VCSA as root</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>/usr/lib/vmware-vmafd/bin/dir-cli<span class="w"> </span>user<span class="w"> </span>unlock<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">    </span>--account<span class="w"> </span>administrator<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">    </span>--domain<span class="w"> </span>vsphere.local<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">    </span>--password<span class="w"> </span>&lt;vmdir-admin-password&gt;
 </code></pre></div>
 <p>If the root password is unknown, use the VCSA VM console (via ESXi DCUI) to boot into single-user mode and reset it — documented in VMware KB 2069041.</p>
 <p>Store the break-glass password for <code>administrator@vsphere.local</code> in an offline vault (e.g., printed and sealed, or HSM-backed secrets manager) separate from the primary password manager. The break-glass procedure must be documented and tested annually.</p>

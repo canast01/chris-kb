@@ -4500,6 +4500,56 @@
   
 </li>
         
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#restore-nsx-manager-from-backup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Restore NSX Manager from Backup
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Restore NSX Manager from Backup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#when-to-restore" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Restore
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#restore-prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Restore Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#restore-procedure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Restore Procedure
+      
+    </span>
+  </a>
+  
+</li>
+        
           <li class="md-nav__item">
   <a href="#post-restore-validation" class="md-nav__link">
     <span class="md-ellipsis">
@@ -4896,96 +4946,103 @@ Backup & Restore reference covering What NSX Backup Covers, Configure Backup, Ve
 <a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/cluster/backups/config&quot;</span>
 </code></pre></div>
-┌────────────────────────────────────── NSX — Backup and Restore ───────────────────────────────────────┐
-│                                                                                                       │
-│  NSX Manager cluster backup via SFTP, scheduling, and full restore procedure.                         │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              NSX Manager Backup              │  │             Backup Configuration            │   │
-│   │          Full cluster state backup           │  │             SFTP server required            │   │
-│   │          API: POST /api/v1/cluster/          │  │          Passphrase for encryption          │   │
-│   │             UI: System &gt; Backup              │  │           Schedule: daily minimum           │   │
-│   │         Includes all config + certs          │  │            Retention: 30+ backups           │   │
-│   │          Inventory + policy backup           │  │            Test restore quarterly           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Schedule backup → verify SFTP receipt → test restore in non-prod quarterly.                          │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Restore Procedure               │  │              Verification Steps             │   │
-│   │           Deploy fresh NSX Manager           │  │             All nodes show green            │   │
-│   │             Point to SFTP backup             │  │            Segments/T0/T1 intact            │   │
-│   │              Provide passphrase              │  │              DFW rules restored             │   │
-│   │          Restore initiates cluster           │  │            Transport nodes synced           │   │
-│   │          Reconnect compute manager           │  │            vCenter integration OK           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  NSX Manager VMs on ESXi, vCenter, SFTP backup server, management network                             │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  NSX Manager = 3-node cluster VM; central control/mgmt plane for NSX                                  │
-│  SFTP        = SSH File Transfer Protocol; NSX backup destination                                     │
-│  Passphrase  = encryption key for NSX backup file; store securely                                     │
-│  Compute Mgr = vCenter registered in NSX; must reconnect after restore                                │
-│  Transport node = ESXi/Edge with NSX dataplane (N-VDS) installed                                      │
-│  DFW         = Distributed Firewall; policy object restored from backup                               │
-│  T0 gateway  = Tier-0; north-south routing; restored from backup state                                │
-│  T1 gateway  = Tier-1; service gateway; connected to T0 and segments                                  │
-│  Cluster restore = NSX API call re-deploying config from SFTP backup                                  │
-│  N-VDS       = NSX virtual distributed switch on transport nodes                                      │
-│  Inventory   = groups, tags, VMs known to NSX; backed up with config                                  │
-│  Policy API  = NSX policy REST API; primary management interface                                      │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Periodic restore tests are essential. A backup that cannot be restored has no value. Schedule a restore drill quarterly in a non-production environment.
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>---
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>## Restore NSX Manager from Backup
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>### When to Restore
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>- Complete NSX Manager cluster failure (all 3 nodes lost)
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>- Accidental deletion of critical configuration (restore to a point before the deletion)
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>- Post-upgrade rollback (restore from pre-upgrade backup)
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>- Cluster corruption (Corfu DB failure with majority node loss)
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>### Restore Prerequisites
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>- The backup file is present on the SFTP server and intact
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>- The backup passphrase is available
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>- Three new NSX Manager VMs are deployed (same size as original) with networking configured
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>- DNS records point to the new nodes (or the original nodes have been wiped and redeployed)
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>- vCenter is accessible
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>### Restore Procedure
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>1. Deploy a fresh single NSX Manager node (the primary restore target)
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>2. On first boot, before joining any cluster: access the restore UI at **https://&lt;new-node&gt;/login.jsp**
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>3. Navigate to **System → Backup &amp; Restore → Restore**
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>4. Configure the SFTP connection (same settings as backup):
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>   - Host, port, directory, username, password
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>   - Enter the backup passphrase
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>5. Select the backup timestamp to restore from (most recent, or the pre-change backup if rolling back a config change)
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>6. Click **Restore** — the process takes 15–30 minutes depending on configuration size
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>7. The system reboots after restore. Log in and verify:
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>```bash
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>nsxcli
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>get cluster status
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>get managers
-<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>get services
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌────────────────────────────────────── NSX — Backup and Restore ───────────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  NSX Manager cluster backup via SFTP, scheduling, and full restore procedure.                         │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│                                                                                                       │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │              NSX Manager Backup              │  │             Backup Configuration            │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │          Full cluster state backup           │  │             SFTP server required            │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │          API: POST /api/v1/cluster/          │  │          Passphrase for encryption          │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │             UI: System &gt; Backup              │  │           Schedule: daily minimum           │   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │         Includes all config + certs          │  │            Retention: 30+ backups           │   │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │          Inventory + policy backup           │  │            Test restore quarterly           │   │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                                                                       │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│  Schedule backup → verify SFTP receipt → test restore in non-prod quarterly.                          │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                                                                                                       │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│                                                                                                       │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │              Restore Procedure               │  │              Verification Steps             │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │           Deploy fresh NSX Manager           │  │             All nodes show green            │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │             Point to SFTP backup             │  │            Segments/T0/T1 intact            │   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │              Provide passphrase              │  │              DFW rules restored             │   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   │          Restore initiates cluster           │  │            Transport nodes synced           │   │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│   │          Reconnect compute manager           │  │            vCenter integration OK           │   │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│                                                                                                       │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  NSX Manager VMs on ESXi, vCenter, SFTP backup server, management network                             │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│                                                                                                       │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  NSX Manager = 3-node cluster VM; central control/mgmt plane for NSX                                  │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  SFTP        = SSH File Transfer Protocol; NSX backup destination                                     │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  Passphrase  = encryption key for NSX backup file; store securely                                     │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  Compute Mgr = vCenter registered in NSX; must reconnect after restore                                │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  Transport node = ESXi/Edge with NSX dataplane (N-VDS) installed                                      │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  DFW         = Distributed Firewall; policy object restored from backup                               │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  T0 gateway  = Tier-0; north-south routing; restored from backup state                                │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  T1 gateway  = Tier-1; service gateway; connected to T0 and segments                                  │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  Cluster restore = NSX API call re-deploying config from SFTP backup                                  │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  N-VDS       = NSX virtual distributed switch on transport nodes                                      │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│  Inventory   = groups, tags, VMs known to NSX; backed up with config                                  │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  Policy API  = NSX policy REST API; primary management interface                                      │
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│                                                                                                       │
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
+<p>Periodic restore tests are essential. A backup that cannot be restored has no value. Schedule a restore drill quarterly in a non-production environment.</p>
+<hr />
+<h2 id="restore-nsx-manager-from-backup">Restore NSX Manager from Backup<a class="headerlink" href="#restore-nsx-manager-from-backup" title="Permanent link">&para;</a></h2>
+<h3 id="when-to-restore">When to Restore<a class="headerlink" href="#when-to-restore" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Complete NSX Manager cluster failure (all 3 nodes lost)</li>
+<li>Accidental deletion of critical configuration (restore to a point before the deletion)</li>
+<li>Post-upgrade rollback (restore from pre-upgrade backup)</li>
+<li>Cluster corruption (Corfu DB failure with majority node loss)</li>
+</ul>
+<h3 id="restore-prerequisites">Restore Prerequisites<a class="headerlink" href="#restore-prerequisites" title="Permanent link">&para;</a></h3>
+<ul>
+<li>The backup file is present on the SFTP server and intact</li>
+<li>The backup passphrase is available</li>
+<li>Three new NSX Manager VMs are deployed (same size as original) with networking configured</li>
+<li>DNS records point to the new nodes (or the original nodes have been wiped and redeployed)</li>
+<li>vCenter is accessible</li>
+</ul>
+<h3 id="restore-procedure">Restore Procedure<a class="headerlink" href="#restore-procedure" title="Permanent link">&para;</a></h3>
+<ol>
+<li>
+<p>Deploy a fresh single NSX Manager node (the primary restore target)</p>
+</li>
+<li>
+<p>On first boot, before joining any cluster: access the restore UI at <strong>https://<new-node>/login.jsp</strong></p>
+</li>
+<li>
+<p>Navigate to <strong>System → Backup &amp; Restore → Restore</strong></p>
+</li>
+<li>
+<p>Configure the SFTP connection (same settings as backup):</p>
+</li>
+<li>Host, port, directory, username, password</li>
+<li>
+<p>Enter the backup passphrase</p>
+</li>
+<li>
+<p>Select the backup timestamp to restore from (most recent, or the pre-change backup if rolling back a config change)</p>
+</li>
+<li>
+<p>Click <strong>Restore</strong> — the process takes 15–30 minutes depending on configuration size</p>
+</li>
+<li>
+<p>The system reboots after restore. Log in and verify:</p>
+</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>nsxcli
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>get<span class="w"> </span>cluster<span class="w"> </span>status
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>get<span class="w"> </span>managers
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>get<span class="w"> </span>services
+</code></pre></div>
 <ol>
 <li>If restoring to a new cluster (original nodes lost):</li>
 <li>The restored node is a single-node cluster</li>
@@ -4993,39 +5050,39 @@ Backup & Restore reference covering What NSX Backup Covers, Configure Backup, Ve
 <li>Verify three-node cluster health after joining</li>
 </ol>
 <h3 id="post-restore-validation">Post-Restore Validation<a class="headerlink" href="#post-restore-validation" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Cluster health</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>get<span class="w"> </span>cluster<span class="w"> </span>status
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Transport node connectivity (may take 5–10 min to reconnect)</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>get<span class="w"> </span>transport-node-status
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Verify segments are present</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>nsxcli
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>get<span class="w"> </span>logical-switches
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Verify gateways</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>get<span class="w"> </span>logical-routers
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># Check DFW policies restored</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/policy/api/v1/infra/domains/default/security-policies&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="c1"># Check Edge nodes reconnected</span>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/edge-clusters&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Cluster health</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>get<span class="w"> </span>cluster<span class="w"> </span>status
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Transport node connectivity (may take 5–10 min to reconnect)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>get<span class="w"> </span>transport-node-status
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Verify segments are present</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>nsxcli
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>get<span class="w"> </span>logical-switches
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># Verify gateways</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>get<span class="w"> </span>logical-routers
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="c1"># Check DFW policies restored</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/policy/api/v1/infra/domains/default/security-policies&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="c1"># Check Edge nodes reconnected</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/edge-clusters&quot;</span>
 </code></pre></div>
 <hr />
 <h2 id="partial-configuration-recovery-no-full-restore">Partial Configuration Recovery (No Full Restore)<a class="headerlink" href="#partial-configuration-recovery-no-full-restore" title="Permanent link">&para;</a></h2>
 <p>If only a specific DFW policy or gateway configuration was accidentally deleted, use the Policy API to recreate it from documentation or export before opening a full restore:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Export full policy config as JSON (use before changes for comparison)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/policy/api/v1/infra?filter=Type-SecurityPolicy&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>&gt;<span class="w"> </span>nsx-dfw-export-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.json
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Export all infra objects</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/policy/api/v1/infra&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span>&gt;<span class="w"> </span>nsx-full-infra-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.json
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Export full policy config as JSON (use before changes for comparison)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/policy/api/v1/infra?filter=Type-SecurityPolicy&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>&gt;<span class="w"> </span>nsx-dfw-export-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.json
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Export all infra objects</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/policy/api/v1/infra&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span>&gt;<span class="w"> </span>nsx-full-infra-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.json
 </code></pre></div>
 <p>Store these exports in version control or a secure document store alongside each configuration change.</p>
 <hr />
@@ -5064,21 +5121,21 @@ Backup & Restore reference covering What NSX Backup Covers, Configure Backup, Ve
 <p>Store backup files in a location separate from the NSX Manager VMs. If the storage hosting NSX Manager is lost, backups on the same storage are also lost.</p>
 <h3 id="backup-monitoring">Backup Monitoring<a class="headerlink" href="#backup-monitoring" title="Permanent link">&para;</a></h3>
 <p>Add a monitoring check for backup age:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Query the last successful backup timestamp</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/cluster/backups/history&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="s2">import sys, json</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="s2">data = json.load(sys.stdin)</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="s2">backups = data.get(&#39;results&#39;, [])</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="s2">if backups:</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="s2">    latest = sorted(backups, key=lambda x: x.get(&#39;end_time&#39;, 0), reverse=True)[0]</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="s2">    import datetime</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="s2">    ts = datetime.datetime.fromtimestamp(latest[&#39;end_time&#39;]/1000)</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="s2">    print(f&#39;Last backup: {ts}  Status: {latest.get(\&quot;status\&quot;,\&quot;?\&quot;)}&#39;  )</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="s2">else:</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="s2">    print(&#39;No backups found&#39;)</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="s2">&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Query the last successful backup timestamp</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/cluster/backups/history&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="s2">import sys, json</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="s2">data = json.load(sys.stdin)</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="s2">backups = data.get(&#39;results&#39;, [])</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="s2">if backups:</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="s2">    latest = sorted(backups, key=lambda x: x.get(&#39;end_time&#39;, 0), reverse=True)[0]</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="s2">    import datetime</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="s2">    ts = datetime.datetime.fromtimestamp(latest[&#39;end_time&#39;]/1000)</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="s2">    print(f&#39;Last backup: {ts}  Status: {latest.get(\&quot;status\&quot;,\&quot;?\&quot;)}&#39;  )</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="s2">else:</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="s2">    print(&#39;No backups found&#39;)</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="s2">&quot;</span>
 </code></pre></div>
 <p>Alert if no backup exists within the last 25 hours (accounts for schedule drift).</p>
 

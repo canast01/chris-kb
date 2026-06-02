@@ -3476,6 +3476,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#nd-backup-failing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ND Backup Failing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#ldap-users-cannot-log-in" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3701,73 +3712,68 @@
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Check failing pods on the affected node</span>
 <a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>--all-namespaces<span class="w"> </span>--field-selector<span class="w"> </span>spec.nodeName<span class="o">=</span>&lt;node-hostname&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>Running
 </code></pre></div>
-┌────────────────────────── Cisco Nexus Dashboard — Operations Common Issues ───────────────────────────┐
-│                                                                                                       │
-│  Frequent ND operational issues: cluster quorum loss, app failures, site disconnects.                 │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                Cluster Issues                │  │                 App Failures                │   │
-│   │          Quorum lost: 2 nodes down           │  │            NDFC pod crash-looping           │   │
-│   │       etcd split-brain: net partition        │  │         NDI no telemetry: gRPC down         │   │
-│   │        Node offline: NIC/cable fault         │  │         NDO deploy stuck: APIC busy         │   │
-│   │        Disk full: log or data volume         │  │           OOM: pod evicted by K8s           │   │
-│   │       NTP drift: cert validation fail        │  │          App upgrade failed: retry          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Cluster health checked first; then app-level pod logs for targeted troubleshooting                   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │           Site Connectivity Issues           │  │               Resolution Steps              │   │
-│   │        Site unreachable: REST timeout        │  │          acs health: cluster state          │   │
-│   │         Cred expired: 401 from APIC          │  │         acs logs: pod error messages        │   │
-│   │         SSL cert expired: handshake          │  │         kubectl describe pod detail         │   │
-│   │          Firewall: port 443 blocked          │  │          Renew cert or rotate creds         │   │
-│   │        Version mismatch: app incompat        │  │         TAC: if quorum unrecoverable        │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  ND cluster nodes · management switches · APIC cluster · NTP server · firewall                        │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Quorum         = Minimum node count for cluster consensus; loss stops all writes                     │
-│  etcd           = K8s state store; split-brain means two halves disagree on state                     │
-│  Split-brain    = Network partition causing cluster halves to diverge independently                   │
-│  Crash-loop     = Pod repeatedly starting and failing; check logs for root cause                      │
-│  OOM            = Out Of Memory; Kubernetes evicts pod when node memory exhausted                     │
-│  gRPC           = Streaming protocol; NDI telemetry stops if gRPC session drops                       │
-│  NDO deploy     = Pushing policy templates to remote APIC; can time out if APIC busy                  │
-│  NTP drift      = Time skew between nodes breaks TLS cert validation                                  │
-│  401 error      = HTTP Unauthorized; credentials rejected by APIC REST API                            │
-│  Version mismatch= ND app version incompatible with connected fabric controller                       │
-│  kubectl describe= Kubernetes command showing pod events and failure reason                           │
-│  TAC            = Cisco Technical Assistance Center; escalate unrecoverable faults                    │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Maintain copies of the ND certificate key and signed certificate on a secure file share or vault. They are needed after every major ND upgrade if the cert is not preserved.
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>---
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>## ND Backup Failing
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>**Symptom:** Scheduled backup does not complete; backup history shows errors.
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>**Resolution:**
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>```bash
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>ssh ndadmin@nd-dc1-1.corp.example.com
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a># Test remote backup connectivity
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>acs backup remote test
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a># Check backup status and last error
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>acs backup status
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a># Check backup logs
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>acs system logs --component backup --tail 50
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌────────────────────────── Cisco Nexus Dashboard — Operations Common Issues ───────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  Frequent ND operational issues: cluster quorum loss, app failures, site disconnects.                 │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│                                                                                                       │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │                Cluster Issues                │  │                 App Failures                │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │          Quorum lost: 2 nodes down           │  │            NDFC pod crash-looping           │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │       etcd split-brain: net partition        │  │         NDI no telemetry: gRPC down         │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │        Node offline: NIC/cable fault         │  │         NDO deploy stuck: APIC busy         │   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │        Disk full: log or data volume         │  │           OOM: pod evicted by K8s           │   │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │       NTP drift: cert validation fail        │  │          App upgrade failed: retry          │   │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                                                                       │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│  Cluster health checked first; then app-level pod logs for targeted troubleshooting                   │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                                                                                                       │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│                                                                                                       │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │           Site Connectivity Issues           │  │               Resolution Steps              │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │        Site unreachable: REST timeout        │  │          acs health: cluster state          │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │         Cred expired: 401 from APIC          │  │         acs logs: pod error messages        │   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │         SSL cert expired: handshake          │  │         kubectl describe pod detail         │   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   │          Firewall: port 443 blocked          │  │          Renew cert or rotate creds         │   │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│   │        Version mismatch: app incompat        │  │         TAC: if quorum unrecoverable        │   │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│                                                                                                       │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  ND cluster nodes · management switches · APIC cluster · NTP server · firewall                        │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│                                                                                                       │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  Quorum         = Minimum node count for cluster consensus; loss stops all writes                     │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  etcd           = K8s state store; split-brain means two halves disagree on state                     │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  Split-brain    = Network partition causing cluster halves to diverge independently                   │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  Crash-loop     = Pod repeatedly starting and failing; check logs for root cause                      │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  OOM            = Out Of Memory; Kubernetes evicts pod when node memory exhausted                     │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  gRPC           = Streaming protocol; NDI telemetry stops if gRPC session drops                       │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  NDO deploy     = Pushing policy templates to remote APIC; can time out if APIC busy                  │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  NTP drift      = Time skew between nodes breaks TLS cert validation                                  │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  401 error      = HTTP Unauthorized; credentials rejected by APIC REST API                            │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  Version mismatch= ND app version incompatible with connected fabric controller                       │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│  kubectl describe= Kubernetes command showing pod events and failure reason                           │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  TAC            = Cisco Technical Assistance Center; escalate unrecoverable faults                    │
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│                                                                                                       │
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
+<p>Maintain copies of the ND certificate key and signed certificate on a secure file share or vault. They are needed after every major ND upgrade if the cert is not preserved.</p>
+<hr />
+<h2 id="nd-backup-failing">ND Backup Failing<a class="headerlink" href="#nd-backup-failing" title="Permanent link">&para;</a></h2>
+<p><strong>Symptom:</strong> Scheduled backup does not complete; backup history shows errors.</p>
+<p><strong>Resolution:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ssh<span class="w"> </span>ndadmin@nd-dc1-1.corp.example.com
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Test remote backup connectivity</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>acs<span class="w"> </span>backup<span class="w"> </span>remote<span class="w"> </span><span class="nb">test</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Check backup status and last error</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>acs<span class="w"> </span>backup<span class="w"> </span>status
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Check backup logs</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>acs<span class="w"> </span>system<span class="w"> </span>logs<span class="w"> </span>--component<span class="w"> </span>backup<span class="w"> </span>--tail<span class="w"> </span><span class="m">50</span>
+</code></pre></div>
 <p>Common causes:</p>
 <table>
 <thead>

@@ -3210,6 +3210,34 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#security-configuration-hardening" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Configuration Hardening
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Security Configuration Hardening">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#disable-user-registration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disable User Registration
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#plugin-marketplace-control" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3549,115 +3577,148 @@ Admin account hardening, plugin/marketplace control, audit log configuration, an
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Admin accounts reviewed and recertified quarterly</span>
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Admin sessions expire after 60–120 minutes (configure via session timeout)</span>
 </code></pre></div>
-┌─────────────────────────────────────── Confluence — Hardening ────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                   Confluence Hardening Guide                                  │   │
-│   │                 Disable anonymous access and guest users in global permissions                │   │
-│   │             Restrict /admin path to corp IP ranges via reverse proxy or WAF rules             │   │
-│   │                Apply all Atlassian security advisories; keep within n-1 version               │   │
-│   │               Remove default admin account; use named accounts with MFA via IdP               │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Hardening reduces the attack surface across network, application, and OS layers                    │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │            Application Hardening             │  │             OS/Network Hardening            │   │
-│   │             Disable anon access              │  │           Firewall: allow 443 only          │   │
-│   │             Remove default admin             │  │              SSH key auth only              │   │
-│   │           Enforce strong passwords           │  │             SELinux/AppArmor on             │   │
-│   │              Audit log enabled               │  │             Minimal OS packages             │   │
-│   │              Plugin allow-list               │  │             Regular OS patching             │   │
-│   │          Headers: CSP/HSTS/X-Frame           │  │             WAF rules for /admin            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Reverse proxy (WAF) · Confluence VMs with SELinux · DB VM · firewall segmentation                    │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Anonymous access = global toggle; disable to require login for all page views                        │
-│  CSP              = Content Security Policy header; prevents XSS by restricting script sources        │
-│  X-Frame-Options  = HTTP header preventing clickjacking via iframe embedding                          │
-│  WAF              = Web Application Firewall; inspects HTTP and blocks malicious requests             │
-│  Plugin allow-list = restrict UPM to approved Marketplace apps; block unsigned plugins                │
-│  Audit log        = Confluence Admin &gt; Audit Log; records admin actions and permission changes        │
-│  SELinux          = mandatory access control on RHEL/CentOS; enforcing mode recommended               │
-│  AppArmor         = MAC on Debian/Ubuntu; profile-based confinement for Tomcat process                │
-│  n-1 version      = stay within one major version behind latest; apply critical patches same-day      │
-│  Default admin    = built-in admin account in fresh installs; rename and rotate password              │
-│  SSH key auth     = disable password SSH; require public key for all admin access                     │
-│  MFA              = enforced at IdP; admins must pass MFA before receiving SAML assertion             │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## Security Configuration Hardening
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Navigate to **General Configuration** &gt; **Security Configuration**.
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>| Setting | Recommended Value | Reason |
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>|---|---|---|
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| Allow people to sign up to create their own account | Disabled | Prevent unauthorised self-registration |
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>| Show system information in 500-error pages | Disabled | Prevent info disclosure |
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>| Show full name of user in page content | As required | Limit PII exposure |
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>| Secure cookies | Enabled | Prevent cookie theft over HTTP |
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>| Maximum Authentication Attempts | 5 | Lockout after brute force attempts |
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>| Enable XSRF protection | Enabled | Protect against cross-site request forgery |
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>| Enable HTTPS required for system administrator | Enabled | Force admin actions over HTTPS |
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>### Disable User Registration
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>```bash
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a># Verify user registration is disabled via REST
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>curl -u admin:password \
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>  &quot;https://confluence.example.local/rest/api/settings/lookandfeel&quot; \
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>  | python3 -m json.tool | grep &quot;registrationEnabled&quot;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌─────────────────────────────────────── Confluence — Hardening ────────────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │                                   Confluence Hardening Guide                                  │   │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │                 Disable anonymous access and guest users in global permissions                │   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │             Restrict /admin path to corp IP ranges via reverse proxy or WAF rules             │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │                Apply all Atlassian security advisories; keep within n-1 version               │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │               Remove default admin account; use named accounts with MFA via IdP               │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│                                                                                                       │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│    Hardening reduces the attack surface across network, application, and OS layers                    │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│                                                                                                       │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│                                                                                                       │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│   │            Application Hardening             │  │             OS/Network Hardening            │   │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   │             Disable anon access              │  │           Firewall: allow 443 only          │   │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │             Remove default admin             │  │              SSH key auth only              │   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │           Enforce strong passwords           │  │             SELinux/AppArmor on             │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │              Audit log enabled               │  │             Minimal OS packages             │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │              Plugin allow-list               │  │             Regular OS patching             │   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │          Headers: CSP/HSTS/X-Frame           │  │             WAF rules for /admin            │   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│                                                                                                       │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  Reverse proxy (WAF) · Confluence VMs with SELinux · DB VM · firewall segmentation                    │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│                                                                                                       │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Anonymous access = global toggle; disable to require login for all page views                        │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│  CSP              = Content Security Policy header; prevents XSS by restricting script sources        │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  X-Frame-Options  = HTTP header preventing clickjacking via iframe embedding                          │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  WAF              = Web Application Firewall; inspects HTTP and blocks malicious requests             │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  Plugin allow-list = restrict UPM to approved Marketplace apps; block unsigned plugins                │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  Audit log        = Confluence Admin &gt; Audit Log; records admin actions and permission changes        │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  SELinux          = mandatory access control on RHEL/CentOS; enforcing mode recommended               │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  AppArmor         = MAC on Debian/Ubuntu; profile-based confinement for Tomcat process                │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  n-1 version      = stay within one major version behind latest; apply critical patches same-day      │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  Default admin    = built-in admin account in fresh installs; rename and rotate password              │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  SSH key auth     = disable password SSH; require public key for all admin access                     │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  MFA              = enforced at IdP; admins must pass MFA before receiving SAML assertion             │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│                                                                                                       │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
+<h2 id="security-configuration-hardening">Security Configuration Hardening<a class="headerlink" href="#security-configuration-hardening" title="Permanent link">&para;</a></h2>
+<p>Navigate to <strong>General Configuration</strong> &gt; <strong>Security Configuration</strong>.</p>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Recommended Value</th>
+<th>Reason</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Allow people to sign up to create their own account</td>
+<td>Disabled</td>
+<td>Prevent unauthorised self-registration</td>
+</tr>
+<tr>
+<td>Show system information in 500-error pages</td>
+<td>Disabled</td>
+<td>Prevent info disclosure</td>
+</tr>
+<tr>
+<td>Show full name of user in page content</td>
+<td>As required</td>
+<td>Limit PII exposure</td>
+</tr>
+<tr>
+<td>Secure cookies</td>
+<td>Enabled</td>
+<td>Prevent cookie theft over HTTP</td>
+</tr>
+<tr>
+<td>Maximum Authentication Attempts</td>
+<td>5</td>
+<td>Lockout after brute force attempts</td>
+</tr>
+<tr>
+<td>Enable XSRF protection</td>
+<td>Enabled</td>
+<td>Protect against cross-site request forgery</td>
+</tr>
+<tr>
+<td>Enable HTTPS required for system administrator</td>
+<td>Enabled</td>
+<td>Force admin actions over HTTPS</td>
+</tr>
+</tbody>
+</table>
+<h3 id="disable-user-registration">Disable User Registration<a class="headerlink" href="#disable-user-registration" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Verify user registration is disabled via REST</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>admin:password<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="s2">&quot;https://confluence.example.local/rest/api/settings/lookandfeel&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;registrationEnabled&quot;</span>
+</code></pre></div>
 <h2 id="plugin-marketplace-control">Plugin / Marketplace Control<a class="headerlink" href="#plugin-marketplace-control" title="Permanent link">&para;</a></h2>
 <p>Plugins (apps) extend Confluence functionality but can introduce security risks. All plugins run in the same JVM as Confluence with access to the same data.</p>
 <h3 id="plugin-management-policy">Plugin Management Policy<a class="headerlink" href="#plugin-management-policy" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">Plugin policy</span><span class="p">:</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Only install plugins from the Atlassian Marketplace (verified by Atlassian)</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">All new plugins require a security review before installation in production</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Review publisher trust level, data handling claims, and permissions required</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Disable or remove unused plugins — fewer plugins = smaller attack surface</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Keep all installed plugins updated (security patches)</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Plugins that require Confluence REST API tokens should use service accounts, not admin accounts</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nt">Plugin policy</span><span class="p">:</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Only install plugins from the Atlassian Marketplace (verified by Atlassian)</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">All new plugins require a security review before installation in production</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Review publisher trust level, data handling claims, and permissions required</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Disable or remove unused plugins — fewer plugins = smaller attack surface</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Keep all installed plugins updated (security patches)</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Plugins that require Confluence REST API tokens should use service accounts, not admin accounts</span>
 </code></pre></div>
 <h3 id="disable-unused-built-in-plugins">Disable Unused Built-In Plugins<a class="headerlink" href="#disable-unused-built-in-plugins" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Some built-in plugins can be disabled if not needed:</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Administration &gt; Manage Apps &gt; filter by &quot;System&quot;</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Plugins that can be disabled if not used:</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># - Confluence Mobile Plugin (if mobile access not required)</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># - Office Connector (if Office doc editing not used)</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># - Team Calendars (if not licensed)</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Check installed and enabled plugins via REST</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>curl<span class="w"> </span>-u<span class="w"> </span>admin:password<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span><span class="s2">&quot;https://confluence.example.local/rest/plugins/1.0/?os_authType=basic&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;\&quot;key\&quot;|\&quot;enabled\&quot;|\&quot;version\&quot;&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Some built-in plugins can be disabled if not needed:</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Administration &gt; Manage Apps &gt; filter by &quot;System&quot;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Plugins that can be disabled if not used:</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># - Confluence Mobile Plugin (if mobile access not required)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># - Office Connector (if Office doc editing not used)</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># - Team Calendars (if not licensed)</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Check installed and enabled plugins via REST</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>curl<span class="w"> </span>-u<span class="w"> </span>admin:password<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span><span class="s2">&quot;https://confluence.example.local/rest/plugins/1.0/?os_authType=basic&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;\&quot;key\&quot;|\&quot;enabled\&quot;|\&quot;version\&quot;&quot;</span>
 </code></pre></div>
 <h3 id="upm-universal-plugin-manager-security">UPM (Universal Plugin Manager) Security<a class="headerlink" href="#upm-universal-plugin-manager-security" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Disable automatic plugin updates in production (require manual review)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Administration &gt; Manage Apps &gt; Settings &gt; Disable automatic updates</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Restrict UPM to administrators only (default — verify not changed)</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Administration &gt; Manage Apps &gt; no &quot;Allow any logged-in user to install plugins&quot; option</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Scan for outdated plugins</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>curl<span class="w"> </span>-u<span class="w"> </span>admin:password<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span><span class="s2">&quot;https://confluence.example.local/rest/plugins/1.0/?os_authType=basic&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;\&quot;key\&quot;|\&quot;latestVersion\&quot;|\&quot;version\&quot;&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Disable automatic plugin updates in production (require manual review)</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># Administration &gt; Manage Apps &gt; Settings &gt; Disable automatic updates</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Restrict UPM to administrators only (default — verify not changed)</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Administration &gt; Manage Apps &gt; no &quot;Allow any logged-in user to install plugins&quot; option</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Scan for outdated plugins</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>curl<span class="w"> </span>-u<span class="w"> </span>admin:password<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span><span class="s2">&quot;https://confluence.example.local/rest/plugins/1.0/?os_authType=basic&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;\&quot;key\&quot;|\&quot;latestVersion\&quot;|\&quot;version\&quot;&quot;</span>
 </code></pre></div>
 <h2 id="audit-log-configuration">Audit Log Configuration<a class="headerlink" href="#audit-log-configuration" title="Permanent link">&para;</a></h2>
 <p>Confluence's audit log records significant administrative and content events.</p>
 <h3 id="enable-and-configure-audit-logging">Enable and Configure Audit Logging<a class="headerlink" href="#enable-and-configure-audit-logging" title="Permanent link">&para;</a></h3>
 <p>Navigate to <strong>Administration</strong> &gt; <strong>Audit Log</strong> &gt; <strong>Configure</strong>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nt">Audit log settings</span><span class="p">:</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Coverage level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Advanced (captures more detail than Base)</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Retention</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">12 months minimum</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Export</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Regularly export to SIEM for long-term retention (audit logs in Confluence are not immutable)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nt">Audit log settings</span><span class="p">:</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Coverage level</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Advanced (captures more detail than Base)</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Retention</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">12 months minimum</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">Export</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Regularly export to SIEM for long-term retention (audit logs in Confluence are not immutable)</span>
 </code></pre></div>
 <h3 id="key-events-captured-by-audit-log">Key Events Captured by Audit Log<a class="headerlink" href="#key-events-captured-by-audit-log" title="Permanent link">&para;</a></h3>
 <table>
@@ -3699,80 +3760,80 @@ Admin account hardening, plugin/marketplace control, audit log configuration, an
 </tbody>
 </table>
 <h3 id="export-audit-logs-to-siem">Export Audit Logs to SIEM<a class="headerlink" href="#export-audit-logs-to-siem" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Export audit log via REST API (paginated)</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>admin:password<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="s2">&quot;https://confluence.example.local/rest/api/audit?limit=1000&amp;startDate=</span><span class="k">$(</span>date<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;-1 day&#39;</span><span class="w"> </span>+%Y-%m-%dT00:00:00.000+0000<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span>&gt;&gt;<span class="w"> </span>/var/log/confluence-audit-export.json
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Forward to SIEM via rsyslog</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># /etc/rsyslog.d/confluence-audit.conf</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>module<span class="o">(</span><span class="nv">load</span><span class="o">=</span><span class="s2">&quot;imfile&quot;</span><span class="o">)</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>input<span class="o">(</span><span class="nv">type</span><span class="o">=</span><span class="s2">&quot;imfile&quot;</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">  </span><span class="nv">File</span><span class="o">=</span><span class="s2">&quot;/var/log/confluence-audit-export.json&quot;</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">  </span><span class="nv">Tag</span><span class="o">=</span><span class="s2">&quot;confluence-audit&quot;</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">  </span><span class="nv">Severity</span><span class="o">=</span><span class="s2">&quot;info&quot;</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="w">  </span><span class="nv">Facility</span><span class="o">=</span><span class="s2">&quot;local6&quot;</span><span class="o">)</span>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>local6.*<span class="w">  </span>@@siem.example.local:514
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Export audit log via REST API (paginated)</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>curl<span class="w"> </span>-u<span class="w"> </span>admin:password<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="s2">&quot;https://confluence.example.local/rest/api/audit?limit=1000&amp;startDate=</span><span class="k">$(</span>date<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;-1 day&#39;</span><span class="w"> </span>+%Y-%m-%dT00:00:00.000+0000<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span>&gt;&gt;<span class="w"> </span>/var/log/confluence-audit-export.json
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Forward to SIEM via rsyslog</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># /etc/rsyslog.d/confluence-audit.conf</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>module<span class="o">(</span><span class="nv">load</span><span class="o">=</span><span class="s2">&quot;imfile&quot;</span><span class="o">)</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>input<span class="o">(</span><span class="nv">type</span><span class="o">=</span><span class="s2">&quot;imfile&quot;</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">  </span><span class="nv">File</span><span class="o">=</span><span class="s2">&quot;/var/log/confluence-audit-export.json&quot;</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="w">  </span><span class="nv">Tag</span><span class="o">=</span><span class="s2">&quot;confluence-audit&quot;</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="w">  </span><span class="nv">Severity</span><span class="o">=</span><span class="s2">&quot;info&quot;</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="w">  </span><span class="nv">Facility</span><span class="o">=</span><span class="s2">&quot;local6&quot;</span><span class="o">)</span>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>local6.*<span class="w">  </span>@@siem.example.local:514
 </code></pre></div>
 <h2 id="webwork-request-filtering">Webwork / Request Filtering<a class="headerlink" href="#webwork-request-filtering" title="Permanent link">&para;</a></h2>
 <p>Protect against common web attacks via the whitelist and request filtering.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># /opt/atlassian/confluence/confluence/WEB-INF/urlrewrite.xml</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># Restrict access to admin URLs from management IPs only</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1"># (Implement at reverse proxy level for better control)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># /opt/atlassian/confluence/confluence/WEB-INF/urlrewrite.xml</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1"># Restrict access to admin URLs from management IPs only</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># (Implement at reverse proxy level for better control)</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Nginx — restrict Confluence admin paths to management IPs</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="k">location</span><span class="w"> </span><span class="s">/admin</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">    </span><span class="kn">allow</span><span class="w"> </span><span class="mi">10</span><span class="s">.10.10.0/24</span><span class="p">;</span><span class="w">   </span><span class="c1"># Management VLAN</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">    </span><span class="kn">allow</span><span class="w"> </span><span class="mi">10</span><span class="s">.10.20.5</span><span class="p">;</span><span class="w">      </span><span class="c1"># Jump host</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">    </span><span class="kn">deny</span><span class="w"> </span><span class="s">all</span><span class="p">;</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">    </span><span class="kn">proxy_pass</span><span class="w"> </span><span class="s">http://127.0.0.1:8090</span><span class="p">;</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">    </span><span class="c1"># ... proxy headers ...</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="p">}</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="k">location</span><span class="w"> </span><span class="s">/rest/admin</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">    </span><span class="kn">allow</span><span class="w"> </span><span class="mi">10</span><span class="s">.10.10.0/24</span><span class="p">;</span>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">    </span><span class="kn">deny</span><span class="w"> </span><span class="s">all</span><span class="p">;</span>
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="w">    </span><span class="kn">proxy_pass</span><span class="w"> </span><span class="s">http://127.0.0.1:8090</span><span class="p">;</span>
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Nginx — restrict Confluence admin paths to management IPs</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="k">location</span><span class="w"> </span><span class="s">/admin</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">    </span><span class="kn">allow</span><span class="w"> </span><span class="mi">10</span><span class="s">.10.10.0/24</span><span class="p">;</span><span class="w">   </span><span class="c1"># Management VLAN</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">    </span><span class="kn">allow</span><span class="w"> </span><span class="mi">10</span><span class="s">.10.20.5</span><span class="p">;</span><span class="w">      </span><span class="c1"># Jump host</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">    </span><span class="kn">deny</span><span class="w"> </span><span class="s">all</span><span class="p">;</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">    </span><span class="kn">proxy_pass</span><span class="w"> </span><span class="s">http://127.0.0.1:8090</span><span class="p">;</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">    </span><span class="c1"># ... proxy headers ...</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="p">}</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="k">location</span><span class="w"> </span><span class="s">/rest/admin</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="w">    </span><span class="kn">allow</span><span class="w"> </span><span class="mi">10</span><span class="s">.10.10.0/24</span><span class="p">;</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="w">    </span><span class="kn">deny</span><span class="w"> </span><span class="s">all</span><span class="p">;</span>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="w">    </span><span class="kn">proxy_pass</span><span class="w"> </span><span class="s">http://127.0.0.1:8090</span><span class="p">;</span>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="p">}</span>
 </code></pre></div>
 <h2 id="jvm-and-tomcat-hardening">JVM and Tomcat Hardening<a class="headerlink" href="#jvm-and-tomcat-hardening" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># /opt/atlassian/confluence/bin/setenv.sh — JVM hardening options</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="nv">JVM_SUPPORT_RECOMMENDED_ARGS</span><span class="o">=</span><span class="s2">&quot;</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="s2">  -Dfile.encoding=UTF-8</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="s2">  -Djava.security.egd=file:/dev/./urandom</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="s2">  -XX:+DisableExplicitGC</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="s2">  -Djdk.tls.rejectClientInitiatedRenegotiation=true</span>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="s2">&quot;</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="c1"># /opt/atlassian/confluence/conf/server.xml — disable Tomcat server info header</span>
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c1"># Add to &lt;Connector&gt; element:</span>
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="c1"># server=&quot;Apache&quot;   (obfuscate Tomcat version)</span>
-<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>
-<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="c1"># Disable Tomcat default pages (host-manager, manager)</span>
-<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="c1"># Remove or restrict in /opt/atlassian/confluence/conf/server.xml:</span>
-<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="c1"># &lt;Host name=&quot;localhost&quot; ... &gt;</span>
-<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a><span class="c1">#   Remove manager and host-manager Context entries</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># /opt/atlassian/confluence/bin/setenv.sh — JVM hardening options</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nv">JVM_SUPPORT_RECOMMENDED_ARGS</span><span class="o">=</span><span class="s2">&quot;</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="s2">  -Dfile.encoding=UTF-8</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="s2">  -Djava.security.egd=file:/dev/./urandom</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="s2">  -XX:+DisableExplicitGC</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="s2">  -Djdk.tls.rejectClientInitiatedRenegotiation=true</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="s2">&quot;</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="c1"># /opt/atlassian/confluence/conf/server.xml — disable Tomcat server info header</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># Add to &lt;Connector&gt; element:</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="c1"># server=&quot;Apache&quot;   (obfuscate Tomcat version)</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="c1"># Disable Tomcat default pages (host-manager, manager)</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="c1"># Remove or restrict in /opt/atlassian/confluence/conf/server.xml:</span>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="c1"># &lt;Host name=&quot;localhost&quot; ... &gt;</span>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="c1">#   Remove manager and host-manager Context entries</span>
 </code></pre></div>
 <h2 id="operating-system-hardening-for-confluence-host">Operating System Hardening for Confluence Host<a class="headerlink" href="#operating-system-hardening-for-confluence-host" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Run Confluence as a dedicated non-root service account</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1"># Create service account</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>useradd<span class="w"> </span>-r<span class="w"> </span>-s<span class="w"> </span>/sbin/nologin<span class="w"> </span>-m<span class="w"> </span>-d<span class="w"> </span>/opt/atlassian<span class="w"> </span>confluence
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># Restrict Confluence home directory</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>chmod<span class="w"> </span><span class="m">750</span><span class="w"> </span>/var/atlassian/application-data/confluence
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>chown<span class="w"> </span>-R<span class="w"> </span>confluence:confluence<span class="w"> </span>/var/atlassian/application-data/confluence
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>chown<span class="w"> </span>-R<span class="w"> </span>confluence:confluence<span class="w"> </span>/opt/atlassian/confluence
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># Restrict log directory</span>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>chmod<span class="w"> </span><span class="m">700</span><span class="w"> </span>/var/atlassian/application-data/confluence/logs
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>chown<span class="w"> </span>confluence:root<span class="w"> </span>/var/atlassian/application-data/confluence/logs
-<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>
-<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="c1"># Firewall — Confluence should not be directly internet-facing; reverse proxy handles 443</span>
-<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="c1"># Allow only the reverse proxy to reach Tomcat port 8090</span>
-<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>iptables<span class="w"> </span>-A<span class="w"> </span>INPUT<span class="w"> </span>-p<span class="w"> </span>tcp<span class="w"> </span>--dport<span class="w"> </span><span class="m">8090</span><span class="w"> </span>-s<span class="w"> </span><span class="m">127</span>.0.0.1<span class="w"> </span>-j<span class="w"> </span>ACCEPT
-<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>iptables<span class="w"> </span>-A<span class="w"> </span>INPUT<span class="w"> </span>-p<span class="w"> </span>tcp<span class="w"> </span>--dport<span class="w"> </span><span class="m">8090</span><span class="w"> </span>-j<span class="w"> </span>DROP
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Run Confluence as a dedicated non-root service account</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="c1"># Create service account</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>useradd<span class="w"> </span>-r<span class="w"> </span>-s<span class="w"> </span>/sbin/nologin<span class="w"> </span>-m<span class="w"> </span>-d<span class="w"> </span>/opt/atlassian<span class="w"> </span>confluence
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="c1"># Restrict Confluence home directory</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>chmod<span class="w"> </span><span class="m">750</span><span class="w"> </span>/var/atlassian/application-data/confluence
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>chown<span class="w"> </span>-R<span class="w"> </span>confluence:confluence<span class="w"> </span>/var/atlassian/application-data/confluence
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>chown<span class="w"> </span>-R<span class="w"> </span>confluence:confluence<span class="w"> </span>/opt/atlassian/confluence
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="c1"># Restrict log directory</span>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>chmod<span class="w"> </span><span class="m">700</span><span class="w"> </span>/var/atlassian/application-data/confluence/logs
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>chown<span class="w"> </span>confluence:root<span class="w"> </span>/var/atlassian/application-data/confluence/logs
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="c1"># Firewall — Confluence should not be directly internet-facing; reverse proxy handles 443</span>
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="c1"># Allow only the reverse proxy to reach Tomcat port 8090</span>
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>iptables<span class="w"> </span>-A<span class="w"> </span>INPUT<span class="w"> </span>-p<span class="w"> </span>tcp<span class="w"> </span>--dport<span class="w"> </span><span class="m">8090</span><span class="w"> </span>-s<span class="w"> </span><span class="m">127</span>.0.0.1<span class="w"> </span>-j<span class="w"> </span>ACCEPT
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>iptables<span class="w"> </span>-A<span class="w"> </span>INPUT<span class="w"> </span>-p<span class="w"> </span>tcp<span class="w"> </span>--dport<span class="w"> </span><span class="m">8090</span><span class="w"> </span>-j<span class="w"> </span>DROP
 </code></pre></div>
 <h2 id="hardening-checklist">Hardening Checklist<a class="headerlink" href="#hardening-checklist" title="Permanent link">&para;</a></h2>
 <table>

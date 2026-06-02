@@ -4714,49 +4714,6 @@ CLI Reference reference covering Services, Certificates, Proxy & Network, NTP & 
 <a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│  └─────────────────────────┘    └────────────────────────────┘                                        │
 <a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>└─────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-┌──────────────────────────────────── Aria Suite LCM CLI Reference ─────────────────────────────────────┐
-│                                                                                                       │
-│  VAMI management, REST API endpoints, vlcm log files, and SSH commands for LCM.                       │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │            Key REST API Endpoints            │  │               VAMI Operations               │   │
-│   │         GET /lcm/api/v1/environments         │  │              https://<lcm>:5480             │   │
-│   │           GET /lcm/api/v1/products           │  │             Backup + restore UI             │   │
-│   │         POST /lcm/api/v1/request/...         │  │            Network + NTP settings           │   │
-│   │            GET /lcm/api/v1/health            │  │           Depot configuration page          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  REST API for automation; VAMI for appliance config; SSH for log and service access.                  │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                 SSH Commands                 │  │                Log Locations                │   │
-│   │             service vlcm status              │  │                /var/log/vlcm/               │   │
-│   │             service vlcm restart             │  │            vlcm.log: main LCM log           │   │
-│   │          lcm-support.sh: bundle gen          │  │        installer.log: product deploy        │   │
-│   │          ntpq -p: time sync verify           │  │         logscraper: all product logs        │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  LCM VM on vSphere; SSH via jump host; VAMI on port 5480; log files on LCM disk                       │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  VAMI                = Virtual Appliance Management Interface; port 5480                              │
-│  GET /environments   = REST endpoint listing all LCM environments and status                          │
-│  GET /products       = REST endpoint listing products and their versions                              │
-│  POST /request       = REST endpoint to trigger install, upgrade, or cert action                      │
-│  GET /health         = REST endpoint returning LCM and product health summary                         │
-│  vlcm service        = Main LCM application service; restart to recover hung UI                       │
-│  vlcm.log            = Primary LCM log; first stop for any LCM issue                                  │
-│  installer.log       = Records product deployment steps and errors                                    │
-│  logscraper          = LCM tool collecting logs from all managed products                             │
-│  lcm-support.sh      = Script generating LCM support bundle for GSS                                   │
-│  ntpq -p             = NTP peer verification; LCM must be in sync                                     │
-│  Depot Config Page   = VAMI page to add/edit online or local content depot                            │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌──────────────────────────────────── Aria Suite LCM CLI Reference ─────────────────────────────────────┐
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  VAMI management, REST API endpoints, vlcm log files, and SSH commands for LCM.                       │
@@ -4800,69 +4757,113 @@ CLI Reference reference covering Services, Certificates, Proxy & Network, NTP & 
 <a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  Depot Config Page   = VAMI page to add/edit online or local content depot                            │
 <a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│                                                                                                       │
 <a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>┌──────────────────────────────────── Aria Suite LCM CLI Reference ─────────────────────────────────────┐
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>│                                                                                                       │
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>│  VAMI management, REST API endpoints, vlcm log files, and SSH commands for LCM.                       │
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>│                                                                                                       │
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>│   │            Key REST API Endpoints            │  │               VAMI Operations               │   │
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>│   │         GET /lcm/api/v1/environments         │  │              https://&lt;lcm&gt;:5480             │   │
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>│   │           GET /lcm/api/v1/products           │  │             Backup + restore UI             │   │
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>│   │         POST /lcm/api/v1/request/...         │  │            Network + NTP settings           │   │
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>│   │            GET /lcm/api/v1/health            │  │           Depot configuration page          │   │
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>│                                                                                                       │
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>│  REST API for automation; VAMI for appliance config; SSH for log and service access.                  │
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>│                                                                                                       │
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>│                                                                                                       │
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>│   │                 SSH Commands                 │  │                Log Locations                │   │
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>│   │             service vlcm status              │  │                /var/log/vlcm/               │   │
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>│   │             service vlcm restart             │  │            vlcm.log: main LCM log           │   │
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>│   │          lcm-support.sh: bundle gen          │  │        installer.log: product deploy        │   │
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>│   │          ntpq -p: time sync verify           │  │         logscraper: all product logs        │   │
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>│                                                                                                       │
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>│  LCM VM on vSphere; SSH via jump host; VAMI on port 5480; log files on LCM disk                       │
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>│                                                                                                       │
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>│                                                                                                       │
+<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a>│  VAMI                = Virtual Appliance Management Interface; port 5480                              │
+<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>│  GET /environments   = REST endpoint listing all LCM environments and status                          │
+<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>│  GET /products       = REST endpoint listing products and their versions                              │
+<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a>│  POST /request       = REST endpoint to trigger install, upgrade, or cert action                      │
+<a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a>│  GET /health         = REST endpoint returning LCM and product health summary                         │
+<a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a>│  vlcm service        = Main LCM application service; restart to recover hung UI                       │
+<a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a>│  vlcm.log            = Primary LCM log; first stop for any LCM issue                                  │
+<a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a>│  installer.log       = Records product deployment steps and errors                                    │
+<a id="__codelineno-2-38" name="__codelineno-2-38" href="#__codelineno-2-38"></a>│  logscraper          = LCM tool collecting logs from all managed products                             │
+<a id="__codelineno-2-39" name="__codelineno-2-39" href="#__codelineno-2-39"></a>│  lcm-support.sh      = Script generating LCM support bundle for GSS                                   │
+<a id="__codelineno-2-40" name="__codelineno-2-40" href="#__codelineno-2-40"></a>│  ntpq -p             = NTP peer verification; LCM must be in sync                                     │
+<a id="__codelineno-2-41" name="__codelineno-2-41" href="#__codelineno-2-41"></a>│  Depot Config Page   = VAMI page to add/edit online or local content depot                            │
+<a id="__codelineno-2-42" name="__codelineno-2-42" href="#__codelineno-2-42"></a>│                                                                                                       │
+<a id="__codelineno-2-43" name="__codelineno-2-43" href="#__codelineno-2-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
 <hr />
 <h2 id="certificates">Certificates<a class="headerlink" href="#certificates" title="Permanent link">&para;</a></h2>
 <p>The Locker stores certificates used by Aria products. Manage them here before triggering certificate replacement operations in LCM.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List all certificates in the Locker</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>vracli<span class="w"> </span>certificate<span class="w"> </span>list
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Show detail for a certificate</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>vracli<span class="w"> </span>certificate<span class="w"> </span>show<span class="w"> </span>--alias<span class="w"> </span>&lt;alias&gt;
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Import a certificate and key pair</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>vracli<span class="w"> </span>certificate<span class="w"> </span>import<span class="w"> </span>--cert<span class="w"> </span>&lt;cert.pem&gt;<span class="w"> </span>--key<span class="w"> </span>&lt;key.pem&gt;<span class="w"> </span>--alias<span class="w"> </span>&lt;alias&gt;
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Delete a certificate from the Locker</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>vracli<span class="w"> </span>certificate<span class="w"> </span>delete<span class="w"> </span>--alias<span class="w"> </span>&lt;alias&gt;
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Check certificate expiry</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>vracli<span class="w"> </span>certificate<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;alias|expiry&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># List all certificates in the Locker</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>vracli<span class="w"> </span>certificate<span class="w"> </span>list
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Show detail for a certificate</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>vracli<span class="w"> </span>certificate<span class="w"> </span>show<span class="w"> </span>--alias<span class="w"> </span>&lt;alias&gt;
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Import a certificate and key pair</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>vracli<span class="w"> </span>certificate<span class="w"> </span>import<span class="w"> </span>--cert<span class="w"> </span>&lt;cert.pem&gt;<span class="w"> </span>--key<span class="w"> </span>&lt;key.pem&gt;<span class="w"> </span>--alias<span class="w"> </span>&lt;alias&gt;
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Delete a certificate from the Locker</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>vracli<span class="w"> </span>certificate<span class="w"> </span>delete<span class="w"> </span>--alias<span class="w"> </span>&lt;alias&gt;
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># Check certificate expiry</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>vracli<span class="w"> </span>certificate<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;alias|expiry&quot;</span>
 </code></pre></div>
 <hr />
 <h2 id="proxy-network">Proxy &amp; Network<a class="headerlink" href="#proxy-network" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Show current proxy configuration</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>vracli<span class="w"> </span>proxy<span class="w"> </span>show
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Set outbound proxy for bundle downloads</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>vracli<span class="w"> </span>proxy<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--host<span class="w"> </span>&lt;proxy_host&gt;<span class="w"> </span>--port<span class="w"> </span>&lt;proxy_port&gt;
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Clear proxy</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>vracli<span class="w"> </span>proxy<span class="w"> </span>clear
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Show network configuration</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>vracli<span class="w"> </span>network<span class="w"> </span>show
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># Update DNS servers</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>vracli<span class="w"> </span>network<span class="w"> </span>dns<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--servers<span class="w"> </span>&lt;dns1&gt;,&lt;dns2&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Show current proxy configuration</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>vracli<span class="w"> </span>proxy<span class="w"> </span>show
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Set outbound proxy for bundle downloads</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>vracli<span class="w"> </span>proxy<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--host<span class="w"> </span>&lt;proxy_host&gt;<span class="w"> </span>--port<span class="w"> </span>&lt;proxy_port&gt;
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Clear proxy</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>vracli<span class="w"> </span>proxy<span class="w"> </span>clear
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Show network configuration</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>vracli<span class="w"> </span>network<span class="w"> </span>show
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Update DNS servers</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>vracli<span class="w"> </span>network<span class="w"> </span>dns<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--servers<span class="w"> </span>&lt;dns1&gt;,&lt;dns2&gt;
 </code></pre></div>
 <hr />
 <h2 id="ntp-time">NTP &amp; Time<a class="headerlink" href="#ntp-time" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Show current NTP configuration</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>vracli<span class="w"> </span>ntp<span class="w"> </span>show
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Set NTP servers</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>vracli<span class="w"> </span>ntp<span class="w"> </span><span class="nb">set</span><span class="w"> </span>&lt;ntp_server1&gt;<span class="w"> </span>&lt;ntp_server2&gt;
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Verify time sync</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>timedatectl<span class="w"> </span>status
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Force NTP sync</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>chronyc<span class="w"> </span>makestep
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Show current NTP configuration</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>vracli<span class="w"> </span>ntp<span class="w"> </span>show
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Set NTP servers</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>vracli<span class="w"> </span>ntp<span class="w"> </span><span class="nb">set</span><span class="w"> </span>&lt;ntp_server1&gt;<span class="w"> </span>&lt;ntp_server2&gt;
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Verify time sync</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>timedatectl<span class="w"> </span>status
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Force NTP sync</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>chronyc<span class="w"> </span>makestep
 </code></pre></div>
 <hr />
 <h2 id="logs">Logs<a class="headerlink" href="#logs" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Follow the main LCM application log</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/lcm/lcm-app.log
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Follow the LCM debug log</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/lcm/lcm-debug.log
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Collect a support bundle</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>vracli<span class="w"> </span>support-bundle
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># View recent system journal</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>journalctl<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;2 hours ago&quot;</span><span class="w"> </span>-u<span class="w"> </span>lcm
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Follow the main LCM application log</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/lcm/lcm-app.log
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Follow the LCM debug log</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/lcm/lcm-debug.log
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Collect a support bundle</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>vracli<span class="w"> </span>support-bundle
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># View recent system journal</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>journalctl<span class="w"> </span>--since<span class="w"> </span><span class="s2">&quot;2 hours ago&quot;</span><span class="w"> </span>-u<span class="w"> </span>lcm
 </code></pre></div>
 
 

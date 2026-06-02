@@ -3233,6 +3233,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#uploading-public-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Uploading Public Keys
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#deploy-keys" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3620,65 +3631,63 @@ Authentication in Git controls how users and automation prove identity when acce
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Verify key fingerprint before uploading</span>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>ssh-keygen<span class="w"> </span>-lf<span class="w"> </span>~/.ssh/id_ed25519_git.pub
 </code></pre></div>
-┌──────────────────────────────────────── Git — Authentication ─────────────────────────────────────────┐
-│                                                                                                       │
-│  Git authentication: SSH keys, PATs, OIDC for CI, and MFA enforcement.                                │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              SSH Authentication              │  │          HTTPS / PAT Authentication         │   │
-│   │       Generate: ssh-keygen -t ed25519        │  │          PAT as password over HTTPS         │   │
-│   │         Add pub key to GitHub/GitLab         │  │        Scope: repo + workflow minimum       │   │
-│   │         Test: ssh -T git@github.com          │  │            Expiry: 90-day maximum           │   │
-│   │        ssh-agent: keyring management         │  │      Credential helper: keychain store      │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    SSH preferred for humans; PAT for HTTPS scripts; OIDC for CI pipelines                             │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                OIDC for CI/CD                │  │               MFA Enforcement               │   │
-│   │         No long-lived secrets in CI          │  │           Org setting: require MFA          │   │
-│   │       GitHub Actions: id-token: write        │  │           TOTP app or hardware key          │   │
-│   │      Cloud provider: OIDC trust policy       │  │        Recovery codes: store offline        │   │
-│   │       Short-lived token: &lt; 1 hour TTL        │  │        Enforce SAML SSO in enterprise       │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  GitHub/GitLab · CI runner · cloud OIDC provider · MFA authenticator app                              │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  ed25519      = modern elliptic-curve SSH key; shorter and more secure than RSA                       │
-│  ssh-agent    = daemon holding decrypted private keys in memory during session                        │
-│  PAT scope    = granular permissions (repo, read:org, workflow) on access token                       │
-│  Credential helper= caches HTTPS credentials in OS keychain (keychain/libsecret)                      │
-│  OIDC         = CI workload requests short-lived token from IdP; no stored secret                     │
-│  id-token perm= GitHub Actions permission granting OIDC JWT to the workflow                           │
-│  Trust policy = cloud IAM policy allowing GitHub OIDC issuer to assume role                           │
-│  TOTP         = time-based one-time password; 6-digit code from authenticator app                     │
-│  Recovery codes= backup codes for MFA bypass; store in password manager offline                       │
-│  SAML SSO     = enforce org login through enterprise IdP; unlinked users lose access                  │
-│  SSH config   = ~/.ssh/config; maps Host to IdentityFile, User, Port                                  │
-│  Keychain     = macOS keychain / Windows Credential Manager stores SSH passphrase                     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>`IdentitiesOnly yes` prevents SSH from trying all keys in the agent — critical when managing multiple identities.
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>### Uploading Public Keys
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>```bash
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a># Display public key for upload to GitHub/GitLab/Bitbucket
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>cat ~/.ssh/id_ed25519_git.pub
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a># Test connection
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>ssh -T git@github.com
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>ssh -T git@gitlab.corp.example.com
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌──────────────────────────────────────── Git — Authentication ─────────────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  Git authentication: SSH keys, PATs, OIDC for CI, and MFA enforcement.                                │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│                                                                                                       │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │              SSH Authentication              │  │          HTTPS / PAT Authentication         │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │       Generate: ssh-keygen -t ed25519        │  │          PAT as password over HTTPS         │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │         Add pub key to GitHub/GitLab         │  │        Scope: repo + workflow minimum       │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │         Test: ssh -T git@github.com          │  │            Expiry: 90-day maximum           │   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │        ssh-agent: keyring management         │  │      Credential helper: keychain store      │   │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│                                                                                                       │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│    SSH preferred for humans; PAT for HTTPS scripts; OIDC for CI pipelines                             │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│                                                                                                       │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                                                                                                       │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │                OIDC for CI/CD                │  │               MFA Enforcement               │   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │         No long-lived secrets in CI          │  │           Org setting: require MFA          │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │       GitHub Actions: id-token: write        │  │           TOTP app or hardware key          │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │      Cloud provider: OIDC trust policy       │  │        Recovery codes: store offline        │   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │       Short-lived token: &lt; 1 hour TTL        │  │        Enforce SAML SSO in enterprise       │   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│                                                                                                       │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  GitHub/GitLab · CI runner · cloud OIDC provider · MFA authenticator app                              │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│                                                                                                       │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  ed25519      = modern elliptic-curve SSH key; shorter and more secure than RSA                       │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│  ssh-agent    = daemon holding decrypted private keys in memory during session                        │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  PAT scope    = granular permissions (repo, read:org, workflow) on access token                       │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  Credential helper= caches HTTPS credentials in OS keychain (keychain/libsecret)                      │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  OIDC         = CI workload requests short-lived token from IdP; no stored secret                     │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  id-token perm= GitHub Actions permission granting OIDC JWT to the workflow                           │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  Trust policy = cloud IAM policy allowing GitHub OIDC issuer to assume role                           │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  TOTP         = time-based one-time password; 6-digit code from authenticator app                     │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  Recovery codes= backup codes for MFA bypass; store in password manager offline                       │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  SAML SSO     = enforce org login through enterprise IdP; unlinked users lose access                  │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  SSH config   = ~/.ssh/config; maps Host to IdentityFile, User, Port                                  │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  Keychain     = macOS keychain / Windows Credential Manager stores SSH passphrase                     │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│                                                                                                       │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
+<p><code>IdentitiesOnly yes</code> prevents SSH from trying all keys in the agent — critical when managing multiple identities.</p>
+<h3 id="uploading-public-keys">Uploading Public Keys<a class="headerlink" href="#uploading-public-keys" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Display public key for upload to GitHub/GitLab/Bitbucket</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>cat<span class="w"> </span>~/.ssh/id_ed25519_git.pub
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Test connection</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>ssh<span class="w"> </span>-T<span class="w"> </span>git@github.com
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>ssh<span class="w"> </span>-T<span class="w"> </span>git@gitlab.corp.example.com
+</code></pre></div>
 <h3 id="deploy-keys">Deploy Keys<a class="headerlink" href="#deploy-keys" title="Permanent link">&para;</a></h3>
 <p>Deploy keys are repository-specific SSH keys used by CI/CD and automation.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Generate a deploy key (no passphrase — stored securely in CI)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ssh-keygen<span class="w"> </span>-t<span class="w"> </span>ed25519<span class="w"> </span>-C<span class="w"> </span><span class="s2">&quot;deploy-key-repo-name&quot;</span><span class="w"> </span>-f<span class="w"> </span>~/.ssh/deploy_key_reponame<span class="w"> </span>-N<span class="w"> </span><span class="s2">&quot;&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Generate a deploy key (no passphrase — stored securely in CI)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ssh-keygen<span class="w"> </span>-t<span class="w"> </span>ed25519<span class="w"> </span>-C<span class="w"> </span><span class="s2">&quot;deploy-key-repo-name&quot;</span><span class="w"> </span>-f<span class="w"> </span>~/.ssh/deploy_key_reponame<span class="w"> </span>-N<span class="w"> </span><span class="s2">&quot;&quot;</span>
 </code></pre></div>
 <ul>
 <li>Upload the <strong>public key</strong> to the repository's Deploy Keys settings.</li>
@@ -3716,16 +3725,16 @@ Authentication in Git controls how users and automation prove identity when acce
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Store a PAT securely using Git credential helper</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>credential.helper<span class="w"> </span>osxkeychain<span class="w">          </span><span class="c1"># macOS</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>credential.helper<span class="w"> </span>manager<span class="w">              </span><span class="c1"># Windows (Git Credential Manager)</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>credential.helper<span class="w"> </span>libsecret<span class="w">            </span><span class="c1"># Linux GNOME keyring</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Verify stored credential</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>git<span class="w"> </span>credential<span class="w"> </span>fill<span class="w"> </span><span class="s">&lt;&lt;&#39;EOF&#39;</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="s">protocol=https</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="s">host=github.com</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="s">EOF</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Store a PAT securely using Git credential helper</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>credential.helper<span class="w"> </span>osxkeychain<span class="w">          </span><span class="c1"># macOS</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>credential.helper<span class="w"> </span>manager<span class="w">              </span><span class="c1"># Windows (Git Credential Manager)</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>credential.helper<span class="w"> </span>libsecret<span class="w">            </span><span class="c1"># Linux GNOME keyring</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Verify stored credential</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>git<span class="w"> </span>credential<span class="w"> </span>fill<span class="w"> </span><span class="s">&lt;&lt;&#39;EOF&#39;</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="s">protocol=https</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="s">host=github.com</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="s">EOF</span>
 </code></pre></div>
 <p><strong>Never store PATs in:</strong>
 - <code>.git/config</code> in plaintext
@@ -3733,9 +3742,9 @@ Authentication in Git controls how users and automation prove identity when acce
 - Source code or environment files committed to repos</p>
 <h3 id="fine-grained-pats-github">Fine-Grained PATs (GitHub)<a class="headerlink" href="#fine-grained-pats-github" title="Permanent link">&para;</a></h3>
 <p>GitHub fine-grained PATs (2023+) restrict tokens to specific repositories and resource types. Prefer them over classic PATs.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Token expiry: 90 days maximum (enforce via org policy)
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>Repository access: Selected repositories only
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>Permissions: Contents: Read and write, Metadata: Read
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Token expiry: 90 days maximum (enforce via org policy)
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Repository access: Selected repositories only
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Permissions: Contents: Read and write, Metadata: Read
 </code></pre></div>
 <h3 id="github-apps-vs-pats-for-automation">GitHub Apps vs PATs for Automation<a class="headerlink" href="#github-apps-vs-pats-for-automation" title="Permanent link">&para;</a></h3>
 <table>
@@ -3777,30 +3786,30 @@ Authentication in Git controls how users and automation prove identity when acce
 <hr />
 <h2 id="gpg-commit-signing">GPG Commit Signing<a class="headerlink" href="#gpg-commit-signing" title="Permanent link">&para;</a></h2>
 <p>GPG signing authenticates commit authorship (not transport). It does not replace SSH or token auth but proves who created a commit.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Generate a GPG key (RSA 4096 or Ed25519)</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>gpg<span class="w"> </span>--full-generate-key
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Choose: (1) RSA and RSA, 4096 bits, 2y expiry</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># List keys and get key ID</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>gpg<span class="w"> </span>--list-secret-keys<span class="w"> </span>--keyid-format<span class="o">=</span>long
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Configure Git to use the key</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>user.signingkey<span class="w"> </span>&lt;KEY_ID&gt;
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>commit.gpgsign<span class="w"> </span><span class="nb">true</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>tag.gpgsign<span class="w"> </span><span class="nb">true</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># Export public key for upload to GitHub/GitLab</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>gpg<span class="w"> </span>--armor<span class="w"> </span>--export<span class="w"> </span>&lt;KEY_ID&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Generate a GPG key (RSA 4096 or Ed25519)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>gpg<span class="w"> </span>--full-generate-key
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Choose: (1) RSA and RSA, 4096 bits, 2y expiry</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># List keys and get key ID</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>gpg<span class="w"> </span>--list-secret-keys<span class="w"> </span>--keyid-format<span class="o">=</span>long
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Configure Git to use the key</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>user.signingkey<span class="w"> </span>&lt;KEY_ID&gt;
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>commit.gpgsign<span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>git<span class="w"> </span>config<span class="w"> </span>--global<span class="w"> </span>tag.gpgsign<span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># Export public key for upload to GitHub/GitLab</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>gpg<span class="w"> </span>--armor<span class="w"> </span>--export<span class="w"> </span>&lt;KEY_ID&gt;
 </code></pre></div>
 <h3 id="verifying-signed-commits">Verifying Signed Commits<a class="headerlink" href="#verifying-signed-commits" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Verify a specific commit</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>git<span class="w"> </span>verify-commit<span class="w"> </span>HEAD
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Show signature status in log</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>git<span class="w"> </span>log<span class="w"> </span>--show-signature<span class="w"> </span>-5
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Verify a signed tag</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>git<span class="w"> </span>verify-tag<span class="w"> </span>v1.2.3
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Verify a specific commit</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>git<span class="w"> </span>verify-commit<span class="w"> </span>HEAD
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Show signature status in log</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>git<span class="w"> </span>log<span class="w"> </span>--show-signature<span class="w"> </span>-5
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Verify a signed tag</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>git<span class="w"> </span>verify-tag<span class="w"> </span>v1.2.3
 </code></pre></div>
 <hr />
 <h2 id="two-factor-authentication-2fa">Two-Factor Authentication (2FA)<a class="headerlink" href="#two-factor-authentication-2fa" title="Permanent link">&para;</a></h2>
@@ -3845,34 +3854,34 @@ Authentication in Git controls how users and automation prove identity when acce
 <hr />
 <h2 id="ssh-certificate-authorities-enterprise">SSH Certificate Authorities (Enterprise)<a class="headerlink" href="#ssh-certificate-authorities-enterprise" title="Permanent link">&para;</a></h2>
 <p>Large organisations can issue short-lived SSH certificates instead of distributing individual public keys.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Sign a user key with an SSH CA (on the CA host)</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ssh-keygen<span class="w"> </span>-s<span class="w"> </span>/etc/ssh/ca_key<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>-I<span class="w"> </span><span class="s2">&quot;user@corp.example.com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>-n<span class="w"> </span>git<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span>-V<span class="w"> </span>+8h<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">  </span>~/.ssh/id_ed25519_git.pub
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># The resulting certificate is id_ed25519_git-cert.pub</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># Configure SSH to present it automatically</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># ~/.ssh/config</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>Host<span class="w"> </span>gitlab.corp.example.com
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="w">    </span>CertificateFile<span class="w"> </span>~/.ssh/id_ed25519_git-cert.pub
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="w">    </span>IdentityFile<span class="w"> </span>~/.ssh/id_ed25519_git
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Sign a user key with an SSH CA (on the CA host)</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ssh-keygen<span class="w"> </span>-s<span class="w"> </span>/etc/ssh/ca_key<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>-I<span class="w"> </span><span class="s2">&quot;user@corp.example.com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span>-n<span class="w"> </span>git<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span>-V<span class="w"> </span>+8h<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">  </span>~/.ssh/id_ed25519_git.pub
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># The resulting certificate is id_ed25519_git-cert.pub</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c1"># Configure SSH to present it automatically</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># ~/.ssh/config</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>Host<span class="w"> </span>gitlab.corp.example.com
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">    </span>CertificateFile<span class="w"> </span>~/.ssh/id_ed25519_git-cert.pub
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="w">    </span>IdentityFile<span class="w"> </span>~/.ssh/id_ed25519_git
 </code></pre></div>
 <p>Certificates expire automatically — no manual key rotation required.</p>
 <hr />
 <h2 id="credential-rotation-and-audit">Credential Rotation and Audit<a class="headerlink" href="#credential-rotation-and-audit" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># List all SSH keys registered on GitHub via API</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>gh<span class="w"> </span>api<span class="w"> </span>/user/keys<span class="w"> </span>--jq<span class="w"> </span><span class="s1">&#39;.[].title&#39;</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># List all PATs (GitHub)</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>gh<span class="w"> </span>api<span class="w"> </span>/user/tokens<span class="w"> </span>--paginate
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Revoke a PAT by ID</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>gh<span class="w"> </span>api<span class="w"> </span>--method<span class="w"> </span>DELETE<span class="w"> </span>/user/tokens/&lt;token_id&gt;
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Find hardcoded credentials in repo history (use truffleHog)</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>trufflehog<span class="w"> </span>git<span class="w"> </span>https://github.com/org/repo.git<span class="w"> </span>--only-verified
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># List all SSH keys registered on GitHub via API</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>gh<span class="w"> </span>api<span class="w"> </span>/user/keys<span class="w"> </span>--jq<span class="w"> </span><span class="s1">&#39;.[].title&#39;</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># List all PATs (GitHub)</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>gh<span class="w"> </span>api<span class="w"> </span>/user/tokens<span class="w"> </span>--paginate
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Revoke a PAT by ID</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>gh<span class="w"> </span>api<span class="w"> </span>--method<span class="w"> </span>DELETE<span class="w"> </span>/user/tokens/&lt;token_id&gt;
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c1"># Find hardcoded credentials in repo history (use truffleHog)</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>trufflehog<span class="w"> </span>git<span class="w"> </span>https://github.com/org/repo.git<span class="w"> </span>--only-verified
 </code></pre></div>
 <p><strong>Rotation schedule:</strong></p>
 <table>

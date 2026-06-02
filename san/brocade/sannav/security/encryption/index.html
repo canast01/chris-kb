@@ -3505,52 +3505,51 @@
 <a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>sannav-dc1.corp.example.com:443<span class="w"> </span>-servername<span class="w"> </span>sannav-dc1.corp.example.com<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="w">  </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-subject<span class="w"> </span>-issuer<span class="w"> </span>-dates
 </code></pre></div>
-┌───────────────────────────────────── Brocade SANnav — Encryption ─────────────────────────────────────┐
-│                                                                                                       │
-│  SANnav encryption: TLS 1.2/1.3 for all management traffic; DB and log encryption at rest.            │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │        Management Traffic Encryption         │  │           Data at Rest Encryption           │   │
-│   │          HTTPS: TLS 1.2/1.3 for GUI          │  │        PostgreSQL: encrypted volumes        │   │
-│   │           REST API: HTTPS port 443           │  │           OS-level: dm-crypt/LUKS           │   │
-│   │         SNMPv3: AES-128 privacy mode         │  │          Log files: filesystem enc          │   │
-│   │        syslog: TLS-encrypted forward         │  │         Backup: encrypted NFS files         │   │
-│   │       Disable HTTP: redirect to HTTPS        │  │           Audit trail: append-only          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  TLS secures all management channels; disk encryption protects data if VM is extracted.               │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │            Certificate Management            │  │              Protocol Hardening             │   │
-│   │       Replace default self-signed cert       │  │          Disable TLS 1.0/1.1 + SSL          │   │
-│   │         CA-signed cert for prod GUI          │  │          Cipher: AES-GCM preferred          │   │
-│   │         Certificate renewal reminder         │  │          HSTS header: enforce HTTPS         │   │
-│   │         PKCS#12 import via admin CLI         │  │          Disable weak SNMP strings          │   │
-│   │        Annual rotation before expiry         │  │          SSH: key-based admin only          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  SANnav Linux VM · vSphere encrypted datastore · PKI CA for cert issuance                             │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  TLS 1.3         = Transport Layer Security 1.3; forward secrecy; preferred version                   │
-│  REST API HTTPS   = all SANnav API calls over port 443; token in Authorization header                 │
-│  SNMPv3 privacy   = AES-128 encryption of SNMP PDU payload; auth + privacy mode                       │
-│  dm-crypt/LUKS   = Linux kernel disk encryption; used for SANnav VM data volumes                      │
-│  PostgreSQL enc   = database files on encrypted volume; prevents offline data access                  │
-│  Audit trail      = append-only event log; tampering detectable via log integrity check               │
-│  PKCS#12         = certificate format; bundles cert + private key for import                          │
-│  HSTS            = HTTP Strict Transport Security; forces HTTPS for all future requests               │
-│  AES-GCM         = AES Galois/Counter Mode; authenticated encryption cipher suite                     │
-│  Self-signed cert = default SANnav cert; replace with CA-signed cert in production                    │
-│  CA-signed cert   = TLS certificate issued by internal or public CA; trusted by browsers              │
-│  syslog TLS       = encrypted syslog; audit and event logs forwarded securely to SIEM                 │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌───────────────────────────────────── Brocade SANnav — Encryption ─────────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  SANnav encryption: TLS 1.2/1.3 for all management traffic; DB and log encryption at rest.            │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│                                                                                                       │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │        Management Traffic Encryption         │  │           Data at Rest Encryption           │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │          HTTPS: TLS 1.2/1.3 for GUI          │  │        PostgreSQL: encrypted volumes        │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │           REST API: HTTPS port 443           │  │           OS-level: dm-crypt/LUKS           │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │         SNMPv3: AES-128 privacy mode         │  │          Log files: filesystem enc          │   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │        syslog: TLS-encrypted forward         │  │         Backup: encrypted NFS files         │   │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │       Disable HTTP: redirect to HTTPS        │  │           Audit trail: append-only          │   │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                                                                       │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│  TLS secures all management channels; disk encryption protects data if VM is extracted.               │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                                                                                                       │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│                                                                                                       │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │            Certificate Management            │  │              Protocol Hardening             │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │       Replace default self-signed cert       │  │          Disable TLS 1.0/1.1 + SSL          │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │         CA-signed cert for prod GUI          │  │          Cipher: AES-GCM preferred          │   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │         Certificate renewal reminder         │  │          HSTS header: enforce HTTPS         │   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   │         PKCS#12 import via admin CLI         │  │          Disable weak SNMP strings          │   │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│   │        Annual rotation before expiry         │  │          SSH: key-based admin only          │   │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│                                                                                                       │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  SANnav Linux VM · vSphere encrypted datastore · PKI CA for cert issuance                             │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│                                                                                                       │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  TLS 1.3         = Transport Layer Security 1.3; forward secrecy; preferred version                   │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  REST API HTTPS   = all SANnav API calls over port 443; token in Authorization header                 │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  SNMPv3 privacy   = AES-128 encryption of SNMP PDU payload; auth + privacy mode                       │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  dm-crypt/LUKS   = Linux kernel disk encryption; used for SANnav VM data volumes                      │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  PostgreSQL enc   = database files on encrypted volume; prevents offline data access                  │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  Audit trail      = append-only event log; tampering detectable via log integrity check               │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  PKCS#12         = certificate format; bundles cert + private key for import                          │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  HSTS            = HTTP Strict Transport Security; forces HTTPS for all future requests               │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  AES-GCM         = AES Galois/Counter Mode; authenticated encryption cipher suite                     │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  Self-signed cert = default SANnav cert; replace with CA-signed cert in production                    │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│  CA-signed cert   = TLS certificate issued by internal or public CA; trusted by browsers              │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  syslog TLS       = encrypted syslog; audit and event logs forwarded securely to SIEM                 │
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│                                                                                                       │
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
 <p>Renew the SANnav certificate at least 30 days before expiry. A Nagios/Icinga check on port 443 with <code>--certificate</code> flag provides automated alerting.</p>
 <hr />

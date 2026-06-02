@@ -4166,6 +4166,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#restore-keystone-collector-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Restore Keystone Collector Configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#pre-upgrade-checklist" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4386,71 +4397,70 @@ Backup & Restore reference covering Keystone Architecture Context, Keystone Coll
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c1"># Verify configuration is parseable</span>
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>tar<span class="w"> </span>-tzf<span class="w"> </span>ks-config-&lt;date&gt;.tar.gz
 </code></pre></div>
-┌─────────────────────────── NetApp Keystone — Operations: Backup &amp; Restore ────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │           Backup: ONTAP Snapshots, SnapVault disk-to-disk, SnapCenter app-consistent          │   │
-│   │           Snapshot: instantaneous, space-efficient; RPO minutes; stored in same SVM           │   │
-│   │          SnapVault: replicates snapshots to secondary ONTAP; RPO hours; diff cluster          │   │
-│   │          Restore: snap restore (volume), snap restore -item (file), SnapCenter clone          │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Schedule snapshots -&gt; SnapVault to secondary -&gt; SnapCenter for DB -&gt; restore on demand             │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │           Snapshot          │  │          SnapVault          │  │          SnapCenter         │   │
-│   │       Instant capture       │  │         Vault policy        │  │          App plugin         │   │
-│   │       Space-efficient       │  │        Secondary vol        │  │        SQL/Oracle/SAP       │   │
-│   │          Per-volume         │  │          RPO hours          │  │        App-consistent       │   │
-│   │          RPO &lt;5 min         │  │        Long retention       │  │        Clone workflow       │   │
-│   │         Max 255/vol         │  │        Throttle xfer        │  │         Report audit        │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    Test restores quarterly; document RTO targets; validate clone integrity before prod                │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Method      │       RPO        │        RTO        │    Retention     │      Notes       │   │
-│   │     Snapshot     │      &lt;5 min      │       &lt;1 min      │    30-90 days    │    Local only    │   │
-│   │    SnapVault     │      Hours       │     15-30 min     │    1-7 years     │    Secondary     │   │
-│   │    SnapCenter    │      &lt;1 min      │       &lt;5 min      │   Policy-based   │   App consist.   │   │
-│   │      Object      │      Hours       │     30-60 min     │      Years       │     S3/Grid      │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: primary AFF cluster + secondary FAS/AFF cluster different rack or site                   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    ONTAP Snapshot  = Read-only point-in-time copy; shares blocks with active volume                   │
-│    SnapVault       = Disk-to-disk backup replication; vault policy retains snapshots                  │
-│    SnapCenter      = NetApp backup server; quiesces apps before snapshot                              │
-│    Vault policy    = SnapVault label schedule: hourly/daily/weekly/monthly retention                  │
-│    snap restore    = ONTAP CLI: volume snapshot restore; overwrites active volume                     │
-│    snap restore -item = Single-file restore from snapshot without rollback                            │
-│    Clone           = Writable FlexClone of snapshot; instant; space-efficient                         │
-│    RPO             = Recovery Point Objective; max acceptable data loss in time                       │
-│    RTO             = Recovery Time Objective; max acceptable downtime for restore                     │
-│    App-consistent  = Backup taken with app quiesced (SQL VSS/Oracle RMAN)                             │
-│    StorageGRID     = NetApp on-prem S3 object store; long-term vault target                           │
-│    FlexClone       = Instant writable clone of volume/snapshot; shares blocks                         │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## Restore Keystone Collector Configuration
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>```bash
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a># On new or rebuilt Collector VM:
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>scp ks-config-&lt;date&gt;.tar.gz admin@&lt;new-collector-ip&gt;:/tmp/
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>ssh admin@&lt;new-collector-ip&gt;
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>keystone-config import --input /tmp/ks-config-&lt;date&gt;.tar.gz
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a># Verify after import
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>keystone-config validate
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>keystone-collector status
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌─────────────────────────── NetApp Keystone — Operations: Backup &amp; Restore ────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │           Backup: ONTAP Snapshots, SnapVault disk-to-disk, SnapCenter app-consistent          │   │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │           Snapshot: instantaneous, space-efficient; RPO minutes; stored in same SVM           │   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │          SnapVault: replicates snapshots to secondary ONTAP; RPO hours; diff cluster          │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │          Restore: snap restore (volume), snap restore -item (file), SnapCenter clone          │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│                                                                                                       │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│    Schedule snapshots -&gt; SnapVault to secondary -&gt; SnapCenter for DB -&gt; restore on demand             │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│                                                                                                       │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                                                                       │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│   │           Snapshot          │  │          SnapVault          │  │          SnapCenter         │   │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│   │       Instant capture       │  │         Vault policy        │  │          App plugin         │   │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   │       Space-efficient       │  │        Secondary vol        │  │        SQL/Oracle/SAP       │   │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │          Per-volume         │  │          RPO hours          │  │        App-consistent       │   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │          RPO &lt;5 min         │  │        Long retention       │  │        Clone workflow       │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │         Max 255/vol         │  │        Throttle xfer        │  │         Report audit        │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│                                                                                                       │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│    Test restores quarterly; document RTO targets; validate clone integrity before prod                │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│                                                                                                       │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│                                                                                                       │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│   │      Method      │       RPO        │        RTO        │    Retention     │      Notes       │   │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│   │     Snapshot     │      &lt;5 min      │       &lt;1 min      │    30-90 days    │    Local only    │   │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│   │    SnapVault     │      Hours       │     15-30 min     │    1-7 years     │    Secondary     │   │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│   │    SnapCenter    │      &lt;1 min      │       &lt;5 min      │   Policy-based   │   App consist.   │   │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│   │      Object      │      Hours       │     30-60 min     │      Years       │     S3/Grid      │   │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│                                                                                                       │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│    Physical: primary AFF cluster + secondary FAS/AFF cluster different rack or site                   │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│                                                                                                       │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│    Key terms:                                                                                         │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│                                                                                                       │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│    ONTAP Snapshot  = Read-only point-in-time copy; shares blocks with active volume                   │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│    SnapVault       = Disk-to-disk backup replication; vault policy retains snapshots                  │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│    SnapCenter      = NetApp backup server; quiesces apps before snapshot                              │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│    Vault policy    = SnapVault label schedule: hourly/daily/weekly/monthly retention                  │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│    snap restore    = ONTAP CLI: volume snapshot restore; overwrites active volume                     │
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│    snap restore -item = Single-file restore from snapshot without rollback                            │
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>│    Clone           = Writable FlexClone of snapshot; instant; space-efficient                         │
+<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>│    RPO             = Recovery Point Objective; max acceptable data loss in time                       │
+<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>│    RTO             = Recovery Time Objective; max acceptable downtime for restore                     │
+<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>│    App-consistent  = Backup taken with app quiesced (SQL VSS/Oracle RMAN)                             │
+<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>│    StorageGRID     = NetApp on-prem S3 object store; long-term vault target                           │
+<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>│    FlexClone       = Instant writable clone of volume/snapshot; shares blocks                         │
+<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>│                                                                                                       │
+<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
+<h2 id="restore-keystone-collector-configuration">Restore Keystone Collector Configuration<a class="headerlink" href="#restore-keystone-collector-configuration" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># On new or rebuilt Collector VM:</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>scp<span class="w"> </span>ks-config-&lt;date&gt;.tar.gz<span class="w"> </span>admin@&lt;new-collector-ip&gt;:/tmp/
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>ssh<span class="w"> </span>admin@&lt;new-collector-ip&gt;
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>keystone-config<span class="w"> </span>import<span class="w"> </span>--input<span class="w"> </span>/tmp/ks-config-&lt;date&gt;.tar.gz
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Verify after import</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>keystone-config<span class="w"> </span>validate
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>keystone-collector<span class="w"> </span>status
+</code></pre></div>
 <h2 id="pre-upgrade-checklist">Pre-Upgrade Checklist<a class="headerlink" href="#pre-upgrade-checklist" title="Permanent link">&para;</a></h2>
 <ul>
 <li>[ ] Export Keystone Collector config to secure location</li>

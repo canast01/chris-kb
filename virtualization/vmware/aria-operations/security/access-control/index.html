@@ -4362,6 +4362,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#creating-a-service-account-for-api-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Creating a Service Account for API Access
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#reviewing-current-role-assignments" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4615,88 +4626,114 @@ Access Control reference covering RBAC Roles, Object-Level Access Permissions, C
 <p>Create an object permission policy:</p>
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Administration → Access Control → Object Permissions → Add Permission
 </code></pre></div>
-┌─────────────────────────────────── Aria Operations Access Control ────────────────────────────────────┐
-│                                                                                                       │
-│  Admin, Content Admin, General User, and Read-only roles with group mapping.                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                Built-in Roles                │  │               Role Permissions              │   │
-│   │          Administrator: full access          │  │         Admin: all settings + users         │   │
-│   │          Content Admin: dashboards           │  │         ContentAdmin: dash + alerts         │   │
-│   │         General User: view+interact          │  │          GeneralUser: view/interact         │   │
-│   │             Read-Only: view only             │  │         ReadOnly: no config changes         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Roles control UI access; group mapping assigns roles via AD; custom roles optional.                  │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          Group Mapping (LDAP/vIDM)           │  │                 Custom Roles                │   │
-│   │            Admin &gt; Access Control            │  │             Clone existing role             │   │
-│   │           Import AD group to vROps           │  │          Assign specific privileges         │   │
-│   │           Assign role to AD group            │  │          Limit to specific objects          │   │
-│   │               Review quarterly               │  │           Named for team function           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  vROps cluster; AD/LDAP directory; vIDM optional SSO; network to LDAP server                          │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Administrator Role   = Full vROps access: data sources, users, settings, all ops                     │
-│  Content Admin        = Manage dashboards, alerts, and reports; no user mgmt                          │
-│  General User         = View and interact with dashboards; cannot change settings                     │
-│  Read-Only Role       = View-only; no interaction with alerts or config                               │
-│  Custom Role          = User-defined role cloned from built-in with scoped perms                      │
-│  AD Group Mapping     = AD security group assigned vROps role in Access Control                       │
-│  vIDM Group Mapping   = vIDM group assigned role; used when SSO is configured                         │
-│  Object Scope         = Restrict role to specific objects (e.g. one cluster)                          │
-│  Privilege            = Granular permission: view, interact, modify, manage users                     │
-│  Least Privilege      = Grant minimum role for each team; review regularly                            │
-│  Quarterly Review     = Periodic access audit: remove leavers, check role drift                       │
-│  Local Account        = vROps-internal account; use for break-glass only                              │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>| AD Group | Aria Operations Role | Object Scope |
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>|---|---|---|
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>| `GG-VROPS-Admins` | Administrator | All objects |
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>| `GG-VROPS-ContentAdmins` | Content Admin | All objects |
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>| `GG-VROPS-Operators-LON` | Operator | DC-LON only |
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>| `GG-VROPS-Operators-NYC` | Operator | DC-NYC only |
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| `GG-VROPS-ReadOnly` | Read Only | All objects |
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>---
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>## Creating a Service Account for API Access
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>```text
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>Administration → Access Control → User Accounts → Add → Local User
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌─────────────────────────────────── Aria Operations Access Control ────────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  Admin, Content Admin, General User, and Read-only roles with group mapping.                          │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│                                                                                                       │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │                Built-in Roles                │  │               Role Permissions              │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │          Administrator: full access          │  │         Admin: all settings + users         │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │          Content Admin: dashboards           │  │         ContentAdmin: dash + alerts         │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │         General User: view+interact          │  │          GeneralUser: view/interact         │   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │             Read-Only: view only             │  │         ReadOnly: no config changes         │   │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│                                                                                                       │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│  Roles control UI access; group mapping assigns roles via AD; custom roles optional.                  │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│                                                                                                       │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                                                                                                       │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │          Group Mapping (LDAP/vIDM)           │  │                 Custom Roles                │   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │            Admin &gt; Access Control            │  │             Clone existing role             │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │           Import AD group to vROps           │  │          Assign specific privileges         │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │           Assign role to AD group            │  │          Limit to specific objects          │   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │               Review quarterly               │  │           Named for team function           │   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│                                                                                                       │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  vROps cluster; AD/LDAP directory; vIDM optional SSO; network to LDAP server                          │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│                                                                                                       │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Administrator Role   = Full vROps access: data sources, users, settings, all ops                     │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│  Content Admin        = Manage dashboards, alerts, and reports; no user mgmt                          │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  General User         = View and interact with dashboards; cannot change settings                     │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  Read-Only Role       = View-only; no interaction with alerts or config                               │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  Custom Role          = User-defined role cloned from built-in with scoped perms                      │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  AD Group Mapping     = AD security group assigned vROps role in Access Control                       │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  vIDM Group Mapping   = vIDM group assigned role; used when SSO is configured                         │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  Object Scope         = Restrict role to specific objects (e.g. one cluster)                          │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  Privilege            = Granular permission: view, interact, modify, manage users                     │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  Least Privilege      = Grant minimum role for each team; review regularly                            │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  Quarterly Review     = Periodic access audit: remove leavers, check role drift                       │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  Local Account        = vROps-internal account; use for break-glass only                              │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│                                                                                                       │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
+<table>
+<thead>
+<tr>
+<th>AD Group</th>
+<th>Aria Operations Role</th>
+<th>Object Scope</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GG-VROPS-Admins</code></td>
+<td>Administrator</td>
+<td>All objects</td>
+</tr>
+<tr>
+<td><code>GG-VROPS-ContentAdmins</code></td>
+<td>Content Admin</td>
+<td>All objects</td>
+</tr>
+<tr>
+<td><code>GG-VROPS-Operators-LON</code></td>
+<td>Operator</td>
+<td>DC-LON only</td>
+</tr>
+<tr>
+<td><code>GG-VROPS-Operators-NYC</code></td>
+<td>Operator</td>
+<td>DC-NYC only</td>
+</tr>
+<tr>
+<td><code>GG-VROPS-ReadOnly</code></td>
+<td>Read Only</td>
+<td>All objects</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="creating-a-service-account-for-api-access">Creating a Service Account for API Access<a class="headerlink" href="#creating-a-service-account-for-api-access" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Administration → Access Control → User Accounts → Add → Local User
+</code></pre></div>
 <ul>
 <li>Username: <code>svc-vrops-api</code></li>
 <li>Role: assign minimum required role (Read Only for monitoring scripts; Content Admin for scripts that create alert definitions)</li>
 <li>Password: minimum 16 characters; store in vault</li>
 </ul>
 <p>For API calls, authenticate as the service account:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="s2">&quot;https://vrops-prod-01.example.local/suite-api/api/auth/token/acquire&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;svc-vrops-api&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;,&quot;authSource&quot;:&quot;Local&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.token&#39;</span><span class="k">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="s2">&quot;https://vrops-prod-01.example.local/suite-api/api/auth/token/acquire&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;username&quot;:&quot;svc-vrops-api&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;,&quot;authSource&quot;:&quot;Local&quot;}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.token&#39;</span><span class="k">)</span>
 </code></pre></div>
 <hr />
 <h2 id="reviewing-current-role-assignments">Reviewing Current Role Assignments<a class="headerlink" href="#reviewing-current-role-assignments" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># List all user accounts and their roles via API</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">TOKEN</span><span class="o">=</span>&lt;your-token&gt;
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span><span class="s2">&quot;https://vrops-prod-01.example.local/suite-api/api/auth/userquery&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.users[] | {username: .username, role: .role[].name, source: .authSourceName}&#39;</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># List all imported user groups</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span><span class="s2">&quot;https://vrops-prod-01.example.local/suite-api/api/auth/usergroups&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.[] | {group: .name, role: .role[].name, source: .authSourceName}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List all user accounts and their roles via API</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">TOKEN</span><span class="o">=</span>&lt;your-token&gt;
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="s2">&quot;https://vrops-prod-01.example.local/suite-api/api/auth/userquery&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.users[] | {username: .username, role: .role[].name, source: .authSourceName}&#39;</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># List all imported user groups</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: vRealizeOpsToken </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span><span class="s2">&quot;https://vrops-prod-01.example.local/suite-api/api/auth/usergroups&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span>jq<span class="w"> </span><span class="s1">&#39;.[] | {group: .name, role: .role[].name, source: .authSourceName}&#39;</span>
 </code></pre></div>
 <hr />
 <h2 id="local-admin-account-hardening">Local Admin Account Hardening<a class="headerlink" href="#local-admin-account-hardening" title="Permanent link">&para;</a></h2>

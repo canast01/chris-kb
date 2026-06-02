@@ -3252,7 +3252,18 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Generating a Support Bundle">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#database-diagnostics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Database Diagnostics
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Database Diagnostics">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -3575,168 +3586,166 @@
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1"># Transfer to workstation for TAC case upload</span>
 <a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>scp<span class="w"> </span>root@dcnm-dc1.corp.example.com:/tmp/dcnm-support-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.tar.gz<span class="w"> </span>./
 </code></pre></div>
-┌────────────────────────────────────── Cisco DCNM — Diagnostics ───────────────────────────────────────┐
-│                                                                                                       │
-│  DCNM diagnostics: service logs, DB health, REST health endpoint, NX-OS show commands.                │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │          DCNM Platform Diagnostics           │  │             Database Diagnostics            │   │
-│   │         appmgr status: all services          │  │           appmgr db-status: check           │   │
-│   │         GET /rest/health: API check          │  │            PostgreSQL: pg_isready           │   │
-│   │           journalctl -u dcnm: log            │  │         Elasticsearch cluster health        │   │
-│   │          netstat -tlnp 443: listen           │  │           df -h: disk usage check           │   │
-│   │           top: CPU/RAM on DCNM VM            │  │         du -sh: data directory sizes        │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  appmgr status and journalctl are first-line; DB and disk status if data issues.                      │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │           Switch-Level Diagnostics           │  │             TAC Escalation Data             │   │
-│   │          show interface fc: errors           │  │            Export DCNM logs: GUI            │   │
-│   │             show flogi database              │  │            show tech-support: MDS           │   │
-│   │             show zoneset active              │  │            Audit log export: CSV            │   │
-│   │              show system health              │  │           API debug: verbose mode           │   │
-│   │          show environment: sensors           │  │            Screenshots: UI issue            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  DCNM VM · vSphere monitoring · Cisco MDS switch management ports · syslog server                     │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  appmgr status   = DCNM VM CLI; shows all service health in one view                                  │
-│  GET /rest/health = DCNM REST health endpoint; returns service status JSON                            │
-│  journalctl      = systemd log viewer; shows DCNM service errors and restarts                         │
-│  pg_isready      = PostgreSQL CLI; checks if DB accepts connections                                   │
-│  Elasticsearch   = DCNM analytics DB; cluster health API shows shard status                           │
-│  df -h           = disk free check; Elasticsearch fills disk causing failures                         │
-│  show tech-support= NX-OS MDS full diagnostic bundle; required for Cisco TAC                          │
-│  show flogi database= FC login database on MDS; verifies HBA access                                   │
-│  show zoneset active= NX-OS active zone set verification                                              │
-│  show system health= MDS overall health; checks modules and fabric state                              │
-│  show environment= MDS sensor data: temperature, fan, PSU readings                                    │
-│  Audit log CSV   = DCNM user action export; shared during security investigations                     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>---
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## Database Diagnostics
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>```bash
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a># Connect to DCNM database
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>psql -U postgres sane
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>-- Table sizes — find unexpected large tables
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>SELECT relname, pg_size_pretty(pg_relation_size(relid)) AS size
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>FROM pg_catalog.pg_statio_user_tables
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>ORDER BY pg_relation_size(relid) DESC
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>LIMIT 20;
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>-- Slow queries
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>SELECT pid, now() - query_start AS duration, state, query
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>FROM pg_stat_activity
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>WHERE state != &#39;idle&#39;
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>ORDER BY duration DESC
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>LIMIT 10;
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>-- Check for bloated tables (high dead tuple count)
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>SELECT relname, n_dead_tup, n_live_tup,
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>  round(n_dead_tup::numeric/greatest(n_live_tup,1)*100, 1) AS dead_pct
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>FROM pg_stat_user_tables
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>WHERE n_dead_tup &gt; 10000
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>ORDER BY n_dead_tup DESC;
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>-- If bloat is high, run VACUUM
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>\q
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>sudo -u postgres vacuumdb --all --analyze
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌────────────────────────────────────── Cisco DCNM — Diagnostics ───────────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  DCNM diagnostics: service logs, DB health, REST health endpoint, NX-OS show commands.                │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│                                                                                                       │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │          DCNM Platform Diagnostics           │  │             Database Diagnostics            │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │         appmgr status: all services          │  │           appmgr db-status: check           │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │         GET /rest/health: API check          │  │            PostgreSQL: pg_isready           │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │           journalctl -u dcnm: log            │  │         Elasticsearch cluster health        │   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │          netstat -tlnp 443: listen           │  │           df -h: disk usage check           │   │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │           top: CPU/RAM on DCNM VM            │  │         du -sh: data directory sizes        │   │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                                                                       │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│  appmgr status and journalctl are first-line; DB and disk status if data issues.                      │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                                                                                                       │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│                                                                                                       │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │           Switch-Level Diagnostics           │  │             TAC Escalation Data             │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │          show interface fc: errors           │  │            Export DCNM logs: GUI            │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │             show flogi database              │  │            show tech-support: MDS           │   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │             show zoneset active              │  │            Audit log export: CSV            │   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   │              show system health              │  │           API debug: verbose mode           │   │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│   │          show environment: sensors           │  │            Screenshots: UI issue            │   │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│                                                                                                       │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  DCNM VM · vSphere monitoring · Cisco MDS switch management ports · syslog server                     │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│                                                                                                       │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  appmgr status   = DCNM VM CLI; shows all service health in one view                                  │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  GET /rest/health = DCNM REST health endpoint; returns service status JSON                            │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  journalctl      = systemd log viewer; shows DCNM service errors and restarts                         │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  pg_isready      = PostgreSQL CLI; checks if DB accepts connections                                   │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  Elasticsearch   = DCNM analytics DB; cluster health API shows shard status                           │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  df -h           = disk free check; Elasticsearch fills disk causing failures                         │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  show tech-support= NX-OS MDS full diagnostic bundle; required for Cisco TAC                          │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  show flogi database= FC login database on MDS; verifies HBA access                                   │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  show zoneset active= NX-OS active zone set verification                                              │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  show system health= MDS overall health; checks modules and fabric state                              │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│  show environment= MDS sensor data: temperature, fan, PSU readings                                    │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  Audit log CSV   = DCNM user action export; shared during security investigations                     │
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│                                                                                                       │
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
-<h3 id="performance-db-pmdb">Performance DB (pmdb)<a class="headerlink" href="#performance-db-pmdb" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>pmdb
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>--<span class="w"> </span>Check<span class="w"> </span>size<span class="w"> </span>of<span class="w"> </span>performance<span class="w"> </span>data
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>SELECT<span class="w"> </span>count<span class="o">(</span>*<span class="o">)</span><span class="w"> </span>FROM<span class="w"> </span>pmdata<span class="p">;</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>SELECT<span class="w"> </span>pg_size_pretty<span class="o">(</span>pg_database_size<span class="o">(</span><span class="s1">&#39;pmdb&#39;</span><span class="o">))</span><span class="p">;</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>--<span class="w"> </span>Find<span class="w"> </span>oldest<span class="w"> </span>and<span class="w"> </span>newest<span class="w"> </span>performance<span class="w"> </span>records
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>SELECT<span class="w"> </span>min<span class="o">(</span>collecttime<span class="o">)</span>,<span class="w"> </span>max<span class="o">(</span>collecttime<span class="o">)</span><span class="w"> </span>FROM<span class="w"> </span>pmdata<span class="p">;</span>
+<hr />
+<h2 id="database-diagnostics">Database Diagnostics<a class="headerlink" href="#database-diagnostics" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Connect to DCNM database</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>sane
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>--<span class="w"> </span>Table<span class="w"> </span>sizes<span class="w"> </span>—<span class="w"> </span>find<span class="w"> </span>unexpected<span class="w"> </span>large<span class="w"> </span>tables
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>SELECT<span class="w"> </span>relname,<span class="w"> </span>pg_size_pretty<span class="o">(</span>pg_relation_size<span class="o">(</span>relid<span class="o">))</span><span class="w"> </span>AS<span class="w"> </span>size
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>FROM<span class="w"> </span>pg_catalog.pg_statio_user_tables
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>ORDER<span class="w"> </span>BY<span class="w"> </span>pg_relation_size<span class="o">(</span>relid<span class="o">)</span><span class="w"> </span>DESC
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>LIMIT<span class="w"> </span><span class="m">20</span><span class="p">;</span>
 <a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="se">\q</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># If pmdb is consuming excessive disk, reduce retention:</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># DCNM GUI: Administration &gt; Settings &gt; Data Retention</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># Set Performance Data retention to 14 days (from 30)</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>--<span class="w"> </span>Slow<span class="w"> </span>queries
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>SELECT<span class="w"> </span>pid,<span class="w"> </span>now<span class="o">()</span><span class="w"> </span>-<span class="w"> </span>query_start<span class="w"> </span>AS<span class="w"> </span>duration,<span class="w"> </span>state,<span class="w"> </span>query
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>FROM<span class="w"> </span>pg_stat_activity
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>WHERE<span class="w"> </span>state<span class="w"> </span>!<span class="o">=</span><span class="w"> </span><span class="s1">&#39;idle&#39;</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>ORDER<span class="w"> </span>BY<span class="w"> </span>duration<span class="w"> </span>DESC
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>LIMIT<span class="w"> </span><span class="m">10</span><span class="p">;</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>--<span class="w"> </span>Check<span class="w"> </span><span class="k">for</span><span class="w"> </span>bloated<span class="w"> </span>tables<span class="w"> </span><span class="o">(</span>high<span class="w"> </span>dead<span class="w"> </span>tuple<span class="w"> </span>count<span class="o">)</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>SELECT<span class="w"> </span>relname,<span class="w"> </span>n_dead_tup,<span class="w"> </span>n_live_tup,
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">  </span>round<span class="o">(</span>n_dead_tup::numeric/greatest<span class="o">(</span>n_live_tup,1<span class="o">)</span>*100,<span class="w"> </span><span class="m">1</span><span class="o">)</span><span class="w"> </span>AS<span class="w"> </span>dead_pct
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>FROM<span class="w"> </span>pg_stat_user_tables
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>WHERE<span class="w"> </span>n_dead_tup<span class="w"> </span>&gt;<span class="w"> </span><span class="m">10000</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>ORDER<span class="w"> </span>BY<span class="w"> </span>n_dead_tup<span class="w"> </span>DESC<span class="p">;</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>--<span class="w"> </span>If<span class="w"> </span>bloat<span class="w"> </span>is<span class="w"> </span>high,<span class="w"> </span>run<span class="w"> </span>VACUUM
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="se">\q</span>
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>sudo<span class="w"> </span>-u<span class="w"> </span>postgres<span class="w"> </span>vacuumdb<span class="w"> </span>--all<span class="w"> </span>--analyze
+</code></pre></div>
+<h3 id="performance-db-pmdb">Performance DB (pmdb)<a class="headerlink" href="#performance-db-pmdb" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>pmdb
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>--<span class="w"> </span>Check<span class="w"> </span>size<span class="w"> </span>of<span class="w"> </span>performance<span class="w"> </span>data
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>SELECT<span class="w"> </span>count<span class="o">(</span>*<span class="o">)</span><span class="w"> </span>FROM<span class="w"> </span>pmdata<span class="p">;</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>SELECT<span class="w"> </span>pg_size_pretty<span class="o">(</span>pg_database_size<span class="o">(</span><span class="s1">&#39;pmdb&#39;</span><span class="o">))</span><span class="p">;</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>--<span class="w"> </span>Find<span class="w"> </span>oldest<span class="w"> </span>and<span class="w"> </span>newest<span class="w"> </span>performance<span class="w"> </span>records
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>SELECT<span class="w"> </span>min<span class="o">(</span>collecttime<span class="o">)</span>,<span class="w"> </span>max<span class="o">(</span>collecttime<span class="o">)</span><span class="w"> </span>FROM<span class="w"> </span>pmdata<span class="p">;</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="se">\q</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># If pmdb is consuming excessive disk, reduce retention:</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># DCNM GUI: Administration &gt; Settings &gt; Data Retention</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="c1"># Set Performance Data retention to 14 days (from 30)</span>
 </code></pre></div>
 <hr />
 <h2 id="network-diagnostics">Network Diagnostics<a class="headerlink" href="#network-diagnostics" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Test SSH to a managed switch</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ssh<span class="w"> </span>-v<span class="w"> </span>-o<span class="w"> </span><span class="nv">ConnectTimeout</span><span class="o">=</span><span class="m">10</span><span class="w"> </span>-o<span class="w"> </span><span class="nv">StrictHostKeyChecking</span><span class="o">=</span>no<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>dcnm_mgmt@&lt;switch-ip&gt;<span class="w"> </span><span class="s1">&#39;show version brief&#39;</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Test SNMP v3 GET</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>snmpget<span class="w"> </span>-v3<span class="w"> </span>-u<span class="w"> </span>dcnm_poll<span class="w"> </span>-l<span class="w"> </span>authPriv<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>-a<span class="w"> </span>SHA<span class="w"> </span>-A<span class="w"> </span>&lt;auth-pass&gt;<span class="w"> </span>-x<span class="w"> </span>AES<span class="w"> </span>-X<span class="w"> </span>&lt;priv-pass&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span>&lt;switch-ip&gt;<span class="w"> </span>sysDescr.0
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Capture SNMP trap traffic (confirm switches sending traps)</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>tcpdump<span class="w"> </span>-i<span class="w"> </span>eth0<span class="w"> </span>-n<span class="w"> </span>udp<span class="w"> </span>port<span class="w"> </span><span class="m">162</span><span class="w"> </span>-c<span class="w"> </span><span class="m">50</span><span class="w"> </span>-w<span class="w"> </span>/tmp/dcnm-trap-capture.pcap
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># Analyse capture (requires tcpdump or Wireshark on workstation)</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>tcpdump<span class="w"> </span>-r<span class="w"> </span>/tmp/dcnm-trap-capture.pcap<span class="w"> </span>-v
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Test SSH to a managed switch</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ssh<span class="w"> </span>-v<span class="w"> </span>-o<span class="w"> </span><span class="nv">ConnectTimeout</span><span class="o">=</span><span class="m">10</span><span class="w"> </span>-o<span class="w"> </span><span class="nv">StrictHostKeyChecking</span><span class="o">=</span>no<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>dcnm_mgmt@&lt;switch-ip&gt;<span class="w"> </span><span class="s1">&#39;show version brief&#39;</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Test SNMP v3 GET</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>snmpget<span class="w"> </span>-v3<span class="w"> </span>-u<span class="w"> </span>dcnm_poll<span class="w"> </span>-l<span class="w"> </span>authPriv<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span>-a<span class="w"> </span>SHA<span class="w"> </span>-A<span class="w"> </span>&lt;auth-pass&gt;<span class="w"> </span>-x<span class="w"> </span>AES<span class="w"> </span>-X<span class="w"> </span>&lt;priv-pass&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span>&lt;switch-ip&gt;<span class="w"> </span>sysDescr.0
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Capture SNMP trap traffic (confirm switches sending traps)</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>tcpdump<span class="w"> </span>-i<span class="w"> </span>eth0<span class="w"> </span>-n<span class="w"> </span>udp<span class="w"> </span>port<span class="w"> </span><span class="m">162</span><span class="w"> </span>-c<span class="w"> </span><span class="m">50</span><span class="w"> </span>-w<span class="w"> </span>/tmp/dcnm-trap-capture.pcap
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Analyse capture (requires tcpdump or Wireshark on workstation)</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>tcpdump<span class="w"> </span>-r<span class="w"> </span>/tmp/dcnm-trap-capture.pcap<span class="w"> </span>-v
 </code></pre></div>
 <hr />
 <h2 id="discovery-diagnostics">Discovery Diagnostics<a class="headerlink" href="#discovery-diagnostics" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Enable discovery debug for a specific switch</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>grep<span class="w"> </span><span class="s2">&quot;10.20.1.5&quot;</span><span class="w"> </span>/var/log/dcnm/discovery.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Manually trigger rediscovery via REST API</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-b<span class="w"> </span>dcnm-cookie.txt<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">DCNM_HOST</span><span class="si">}</span><span class="s2">/rest/san/fabric/rediscover&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;fabricName&quot;: &quot;DC1-FABRIC-A&quot;, &quot;rediscoverAll&quot;: false,</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="s1">       &quot;switchSerialNumbers&quot;: [&quot;&lt;serialNumber&gt;&quot;]}&#39;</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Check after 2 minutes:</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-b<span class="w"> </span>dcnm-cookie.txt<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">DCNM_HOST</span><span class="si">}</span><span class="s2">/rest/inventory/switches/&lt;serialNumber&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;managementState&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Enable discovery debug for a specific switch</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>grep<span class="w"> </span><span class="s2">&quot;10.20.1.5&quot;</span><span class="w"> </span>/var/log/dcnm/discovery.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Manually trigger rediscovery via REST API</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-b<span class="w"> </span>dcnm-cookie.txt<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">DCNM_HOST</span><span class="si">}</span><span class="s2">/rest/san/fabric/rediscover&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;fabricName&quot;: &quot;DC1-FABRIC-A&quot;, &quot;rediscoverAll&quot;: false,</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="s1">       &quot;switchSerialNumbers&quot;: [&quot;&lt;serialNumber&gt;&quot;]}&#39;</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># Check after 2 minutes:</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-b<span class="w"> </span>dcnm-cookie.txt<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">DCNM_HOST</span><span class="si">}</span><span class="s2">/rest/inventory/switches/&lt;serialNumber&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;managementState&quot;</span>
 </code></pre></div>
 <hr />
 <h2 id="ha-diagnostics">HA Diagnostics<a class="headerlink" href="#ha-diagnostics" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># On either DCNM HA node</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>/usr/local/cisco/dcm/dcnm/bin/dcnm-ha-status.sh
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Expected output:</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Active Node: 10.10.5.10 (THIS NODE)</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Standby Node: 10.10.5.11 (synchronized)</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># VIP: 10.10.5.15 (active)</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># DB Replication Lag: 0 ms</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Check replication lag</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="s2">SELECT now() - pg_last_xact_replay_timestamp() AS replication_lag;&quot;</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># On standby — if lag &gt; 1 minute: investigate HA link or replication error</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="c1"># Check HA log for errors</span>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/dcnm/ha.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|fail\|disconnect&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># On either DCNM HA node</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>/usr/local/cisco/dcm/dcnm/bin/dcnm-ha-status.sh
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Expected output:</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Active Node: 10.10.5.10 (THIS NODE)</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Standby Node: 10.10.5.11 (synchronized)</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># VIP: 10.10.5.15 (active)</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># DB Replication Lag: 0 ms</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Check replication lag</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="s2">SELECT now() - pg_last_xact_replay_timestamp() AS replication_lag;&quot;</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># On standby — if lag &gt; 1 minute: investigate HA link or replication error</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c1"># Check HA log for errors</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/dcnm/ha.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|fail\|disconnect&quot;</span>
 </code></pre></div>
 <hr />
 <h2 id="performance-diagnostics">Performance Diagnostics<a class="headerlink" href="#performance-diagnostics" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># System resource snapshot</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== </span><span class="k">$(</span>date<span class="k">)</span><span class="s2"> ===&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/dcnm-perf.txt
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>free<span class="w"> </span>-h<span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/dcnm-perf.txt
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>df<span class="w"> </span>-h<span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/dcnm-perf.txt
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>uptime<span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/dcnm-perf.txt
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>iostat<span class="w"> </span>-x<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">3</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/dcnm-perf.txt
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>ps<span class="w"> </span>aux<span class="w"> </span>--sort<span class="o">=</span>-%cpu<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10<span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/dcnm-perf.txt
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Measure REST API response time</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="nb">time</span><span class="w"> </span>curl<span class="w"> </span>-sk<span class="w"> </span>-b<span class="w"> </span>dcnm-cookie.txt<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">DCNM_HOST</span><span class="si">}</span><span class="s2">/rest/inventory/switches&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/dev/null
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># Expected: &lt; 3 seconds for &lt; 200 switches</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># If &gt; 10 seconds: DB query performance issue</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># System resource snapshot</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== </span><span class="k">$(</span>date<span class="k">)</span><span class="s2"> ===&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/dcnm-perf.txt
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>free<span class="w"> </span>-h<span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/dcnm-perf.txt
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>df<span class="w"> </span>-h<span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/dcnm-perf.txt
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>uptime<span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/dcnm-perf.txt
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>iostat<span class="w"> </span>-x<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">3</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/dcnm-perf.txt
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>ps<span class="w"> </span>aux<span class="w"> </span>--sort<span class="o">=</span>-%cpu<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10<span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/dcnm-perf.txt
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># Measure REST API response time</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="nb">time</span><span class="w"> </span>curl<span class="w"> </span>-sk<span class="w"> </span>-b<span class="w"> </span>dcnm-cookie.txt<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">DCNM_HOST</span><span class="si">}</span><span class="s2">/rest/inventory/switches&quot;</span><span class="w"> </span>&gt;<span class="w"> </span>/dev/null
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="c1"># Expected: &lt; 3 seconds for &lt; 200 switches</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="c1"># If &gt; 10 seconds: DB query performance issue</span>
 </code></pre></div>
 
 

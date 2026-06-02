@@ -2829,6 +2829,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#active-directory-ldap-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Active Directory / LDAP Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#database-connection-pooling" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3068,74 +3079,71 @@ Health checks and troubleshooting for common infrastructure integration points: 
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Grafana datasource health</span>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span>admin:pass<span class="w"> </span>http://grafana:3000/api/datasources<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.[] | {name:.name, type:.type, url:.url}&#39;</span>
 </code></pre></div>
-┌───────────────────────────────── Integration — Service Integrations ──────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │     Patterns for integrating infrastructure components with ITSM, monitoring, backup, SIEM    │   │
-│   │       Typically via: REST API (webhook/poll), SNMP traps, syslog, agent, or file export       │   │
-│   │         Use dedicated service accounts; minimal scope; rotate credentials on schedule         │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │      ITSM (ServiceNow)      │  │          Monitoring         │  │       Security (SIEM)       │   │
-│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
-│   │         CMDB CI sync        │  │      SNMP trap receiver     │  │      Syslog forwarding      │   │
-│   │     Incident auto-create    │  │      Agent (Zabbix/NR)      │  │      CEF / JSON events      │   │
-│   │     Change feed webhook     │  │       REST API polling      │  │      API key for ingest     │   │
-│   │    MID Server for on-prem   │  │     Alert routing rules     │  │    TLS syslog (port 6514)   │   │
-│   │    Test: CI creation flow   │  │     Test: send test trap    │  │     Test: logger command    │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    MID Server    = ServiceNow component that runs on-prem; proxies API calls to instance              │
-│    SNMP trap     = Unsolicited alert from device to monitoring; receiver must be configured           │
-│    CEF           = Common Event Format; Syslog header + key=value pairs; standard SIEM intake         │
-│    Syslog/514    = UDP syslog; no guarantee of delivery; TLS syslog (6514) preferred                  │
-│    Webhook       = HTTP callback; source POSTs event payload to receiver URL on trigger               │
-│    API key scope = Limit API key to minimum permissions; rotate annually or on staff change           │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>```python
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## Active Directory / LDAP Integration
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>```bash
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a># SSSD on Linux
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>systemctl status sssd
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>sssctl domain-status &lt;domain&gt;
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>id &lt;ad-user&gt;               # should return AD UID + groups
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a># Winbind
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>wbinfo -t                  # test trust to domain
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>wbinfo -u | head -5        # list domain users
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>net ads info               # show DC and site info
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a># LDAP reachability
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>ldapsearch -x -H ldap://&lt;dc-hostname&gt; -b &quot;dc=corp,dc=example,dc=com&quot; &quot;(sAMAccountName=testuser)&quot; cn mail
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌───────────────────────────────── Integration — Service Integrations ──────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │     Patterns for integrating infrastructure components with ITSM, monitoring, backup, SIEM    │   │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │       Typically via: REST API (webhook/poll), SNMP traps, syslog, agent, or file export       │   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │         Use dedicated service accounts; minimal scope; rotate credentials on schedule         │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│                                                                                                       │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│                                                                                                       │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   │      ITSM (ServiceNow)      │  │          Monitoring         │  │       Security (SIEM)       │   │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│   │         CMDB CI sync        │  │      SNMP trap receiver     │  │      Syslog forwarding      │   │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│   │     Incident auto-create    │  │      Agent (Zabbix/NR)      │  │      CEF / JSON events      │   │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│   │     Change feed webhook     │  │       REST API polling      │  │      API key for ingest     │   │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   │    MID Server for on-prem   │  │     Alert routing rules     │  │    TLS syslog (port 6514)   │   │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │    Test: CI creation flow   │  │     Test: send test trap    │  │     Test: logger command    │   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│                                                                                                       │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│    Key terms:                                                                                         │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│                                                                                                       │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│    MID Server    = ServiceNow component that runs on-prem; proxies API calls to instance              │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│    SNMP trap     = Unsolicited alert from device to monitoring; receiver must be configured           │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│    CEF           = Common Event Format; Syslog header + key=value pairs; standard SIEM intake         │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│    Syslog/514    = UDP syslog; no guarantee of delivery; TLS syslog (6514) preferred                  │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│    Webhook       = HTTP callback; source POSTs event payload to receiver URL on trigger               │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│    API key scope = Limit API key to minimum permissions; rotate annually or on staff change           │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
+<h2 id="active-directory-ldap-integration">Active Directory / LDAP Integration<a class="headerlink" href="#active-directory-ldap-integration" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># SSSD on Linux</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>sssd
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>sssctl<span class="w"> </span>domain-status<span class="w"> </span>&lt;domain&gt;
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>id<span class="w"> </span>&lt;ad-user&gt;<span class="w">               </span><span class="c1"># should return AD UID + groups</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Winbind</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>wbinfo<span class="w"> </span>-t<span class="w">                  </span><span class="c1"># test trust to domain</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>wbinfo<span class="w"> </span>-u<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-5<span class="w">        </span><span class="c1"># list domain users</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>net<span class="w"> </span>ads<span class="w"> </span>info<span class="w">               </span><span class="c1"># show DC and site info</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># LDAP reachability</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>ldapsearch<span class="w"> </span>-x<span class="w"> </span>-H<span class="w"> </span>ldap://&lt;dc-hostname&gt;<span class="w"> </span>-b<span class="w"> </span><span class="s2">&quot;dc=corp,dc=example,dc=com&quot;</span><span class="w"> </span><span class="s2">&quot;(sAMAccountName=testuser)&quot;</span><span class="w"> </span>cn<span class="w"> </span>mail
+</code></pre></div>
 <h2 id="database-connection-pooling">Database Connection Pooling<a class="headerlink" href="#database-connection-pooling" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># PgBouncer status</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>psql<span class="w"> </span>-h<span class="w"> </span>/tmp<span class="w"> </span>-p<span class="w"> </span><span class="m">6432</span><span class="w"> </span>pgbouncer<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SHOW POOLS;&quot;</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>psql<span class="w"> </span>-h<span class="w"> </span>/tmp<span class="w"> </span>-p<span class="w"> </span><span class="m">6432</span><span class="w"> </span>pgbouncer<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SHOW STATS;&quot;</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># ProxySQL (MySQL)</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>mysql<span class="w"> </span>-h<span class="w"> </span><span class="m">127</span>.0.0.1<span class="w"> </span>-P<span class="w"> </span><span class="m">6032</span><span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>-padmin<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;SELECT hostgroup_id, hostname, status FROM mysql_servers;&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># PgBouncer status</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>psql<span class="w"> </span>-h<span class="w"> </span>/tmp<span class="w"> </span>-p<span class="w"> </span><span class="m">6432</span><span class="w"> </span>pgbouncer<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SHOW POOLS;&quot;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>psql<span class="w"> </span>-h<span class="w"> </span>/tmp<span class="w"> </span>-p<span class="w"> </span><span class="m">6432</span><span class="w"> </span>pgbouncer<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SHOW STATS;&quot;</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># ProxySQL (MySQL)</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>mysql<span class="w"> </span>-h<span class="w"> </span><span class="m">127</span>.0.0.1<span class="w"> </span>-P<span class="w"> </span><span class="m">6032</span><span class="w"> </span>-u<span class="w"> </span>admin<span class="w"> </span>-padmin<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;SELECT hostgroup_id, hostname, status FROM mysql_servers;&quot;</span>
 </code></pre></div>
 <h2 id="integration-restart-procedures">Integration Restart Procedures<a class="headerlink" href="#integration-restart-procedures" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># SSSD (re-read AD group membership)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>sssctl<span class="w"> </span>cache-remove<span class="w"> </span>-y<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>sssd
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># rsyslog</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>rsyslog<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>rsyslog
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># PgBouncer</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>pgbouncer<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>psql<span class="w"> </span>-h<span class="w"> </span>/tmp<span class="w"> </span>-p<span class="w"> </span><span class="m">6432</span><span class="w"> </span>pgbouncer<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SHOW POOLS;&quot;</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Veeam agent</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>veeam
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># SSSD (re-read AD group membership)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>sssctl<span class="w"> </span>cache-remove<span class="w"> </span>-y<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>sssd
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># rsyslog</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>rsyslog<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>rsyslog
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># PgBouncer</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>pgbouncer<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>psql<span class="w"> </span>-h<span class="w"> </span>/tmp<span class="w"> </span>-p<span class="w"> </span><span class="m">6432</span><span class="w"> </span>pgbouncer<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SHOW POOLS;&quot;</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Veeam agent</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>veeam
 </code></pre></div>
 <h2 id="credential-rotation-checklist">Credential Rotation Checklist<a class="headerlink" href="#credential-rotation-checklist" title="Permanent link">&para;</a></h2>
 <p>When a shared service account password is rotated, update in this order:</p>

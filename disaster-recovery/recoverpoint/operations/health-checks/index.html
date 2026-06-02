@@ -3920,6 +3920,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#journal-utilization-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Journal Utilization Check
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#weekly-and-monthly-checks" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4220,64 +4231,81 @@
 <a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="c1"># Cluster quorum state</span>
 <a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>cluster<span class="w"> </span>quorum<span class="w"> </span>check
 </code></pre></div>
-┌──────────────────────────────────── RecoverPoint — Health Checks ─────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      Health check cadence: daily CG lag/journal, weekly test copy, monthly failover drill     │   │
-│   │       Critical alerts: CG in error state, journal &gt;90% full, RPA node failure, link down      │   │
-│   │         Check sources: Unisphere for RP, vCenter plugin, SNMP traps, REST API polling         │   │
-│   │            Baseline: all CGs Active; lag &lt;30 s; journal &lt;70%; all RPA nodes Online            │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │          RPA Health         │  │          CG Health          │  │         Link Health         │   │
-│   │      Node state: Online     │  │        State: Active        │  │        Link state: Up       │   │
-│   │          CPU &lt; 80%          │  │         Lag &lt; 30 sec        │  │       Latency &lt; 100 ms      │   │
-│   │         Memory &lt; 85%        │  │        Journal &lt; 70%        │  │        Packet loss 0%       │   │
-│   │          Fan/PSU OK         │  │       Splitter loaded       │  │        BW util &lt; 80%        │   │
-│   │          NTP synced         │  │        No errors 24 h       │  │        Compression OK       │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: RPA hardware health viewable in Unisphere; splitter state visible per ESXi host          │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    CG state Active  = Replication is running; writes being journaled; lag within RPO target           │
-│    Lag (RPO lag)    = Seconds between last source write and journal apply on target; primary KPI      │
-│    Journal fill %   = Consumed / allocated journal VMDK; &gt;90% causes CG to pause replication          │
-│    Splitter loaded  = ESXi kernel module active; check per host in Unisphere splitter view            │
-│    SNMP traps       = RPA sends traps to NMS on CG error, journal fill, and RPA node failure          │
-│    Link utilisation = WAN replication bandwidth; sustained &gt;80% may cause lag increase                │
-│    NTP sync         = Critical for journal timestamps and cross-site consistency; must be in sync     │
-│    Packet loss      = Any loss on replication link degrades throughput; investigate immediately       │
-│    RPA node failure = Surviving RPA takes over all CGs; CGs continue with reduced throughput          │
-│    Unisphere alert  = Red badge in Unisphere dashboard; drill down to CG, link, or hardware           │
-│    REST poll        = GET /system/clusters; /groups; /links; use for monitoring integration           │
-│    Monthly drill    = Full failover test with VM power-on at DR site; documents RTO achieved          │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>| RPO Tier | Target | Alert Threshold |
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>|---|---|---|
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>| Tier 1 (Critical) | &lt; 15 seconds | &gt; 60 seconds |
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>| Tier 2 (Business) | &lt; 5 minutes | &gt; 15 minutes |
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>| Tier 3 (Standard) | &lt; 30 minutes | &gt; 60 minutes |
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>---
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>## Journal Utilization Check
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>Journal overflow causes CG replication to halt. Alert thresholds:
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>```bash
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a># List journal volumes with utilization
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>journals list
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a># Expected output columns:
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>#   Journal Name   CG Name         Used%   Free%   Status
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>#   JRN-CG-ORA-DR  CG-ORACLE-PROD  34%     66%     OK
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌──────────────────────────────────── RecoverPoint — Health Checks ─────────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │      Health check cadence: daily CG lag/journal, weekly test copy, monthly failover drill     │   │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │       Critical alerts: CG in error state, journal &gt;90% full, RPA node failure, link down      │   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │         Check sources: Unisphere for RP, vCenter plugin, SNMP traps, REST API polling         │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │            Baseline: all CGs Active; lag &lt;30 s; journal &lt;70%; all RPA nodes Online            │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│                                                                                                       │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│                                                                                                       │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│   │          RPA Health         │  │          CG Health          │  │         Link Health         │   │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│   │      Node state: Online     │  │        State: Active        │  │        Link state: Up       │   │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│   │          CPU &lt; 80%          │  │         Lag &lt; 30 sec        │  │       Latency &lt; 100 ms      │   │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│   │         Memory &lt; 85%        │  │        Journal &lt; 70%        │  │        Packet loss 0%       │   │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   │          Fan/PSU OK         │  │       Splitter loaded       │  │        BW util &lt; 80%        │   │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │          NTP synced         │  │        No errors 24 h       │  │        Compression OK       │   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│                                                                                                       │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│    Physical: RPA hardware health viewable in Unisphere; splitter state visible per ESXi host          │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│                                                                                                       │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│    Key terms:                                                                                         │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│                                                                                                       │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│    CG state Active  = Replication is running; writes being journaled; lag within RPO target           │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│    Lag (RPO lag)    = Seconds between last source write and journal apply on target; primary KPI      │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│    Journal fill %   = Consumed / allocated journal VMDK; &gt;90% causes CG to pause replication          │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│    Splitter loaded  = ESXi kernel module active; check per host in Unisphere splitter view            │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│    SNMP traps       = RPA sends traps to NMS on CG error, journal fill, and RPA node failure          │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│    Link utilisation = WAN replication bandwidth; sustained &gt;80% may cause lag increase                │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│    NTP sync         = Critical for journal timestamps and cross-site consistency; must be in sync     │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│    Packet loss      = Any loss on replication link degrades throughput; investigate immediately       │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│    RPA node failure = Surviving RPA takes over all CGs; CGs continue with reduced throughput          │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│    Unisphere alert  = Red badge in Unisphere dashboard; drill down to CG, link, or hardware           │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│    REST poll        = GET /system/clusters; /groups; /links; use for monitoring integration           │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│    Monthly drill    = Full failover test with VM power-on at DR site; documents RTO achieved          │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│                                                                                                       │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
+<table>
+<thead>
+<tr>
+<th>RPO Tier</th>
+<th>Target</th>
+<th>Alert Threshold</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tier 1 (Critical)</td>
+<td>&lt; 15 seconds</td>
+<td>&gt; 60 seconds</td>
+</tr>
+<tr>
+<td>Tier 2 (Business)</td>
+<td>&lt; 5 minutes</td>
+<td>&gt; 15 minutes</td>
+</tr>
+<tr>
+<td>Tier 3 (Standard)</td>
+<td>&lt; 30 minutes</td>
+<td>&gt; 60 minutes</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="journal-utilization-check">Journal Utilization Check<a class="headerlink" href="#journal-utilization-check" title="Permanent link">&para;</a></h2>
+<p>Journal overflow causes CG replication to halt. Alert thresholds:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List journal volumes with utilization</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>journals<span class="w"> </span>list
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Expected output columns:</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1">#   Journal Name   CG Name         Used%   Free%   Status</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1">#   JRN-CG-ORA-DR  CG-ORACLE-PROD  34%     66%     OK</span>
+</code></pre></div>
 <table>
 <thead>
 <tr>
@@ -4311,18 +4339,18 @@
 </table>
 <hr />
 <h2 id="weekly-and-monthly-checks">Weekly and Monthly Checks<a class="headerlink" href="#weekly-and-monthly-checks" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Confirm splitter health (for RP4VM software splitters on ESXi)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>rp
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Confirm RPA software versions are consistent across cluster</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>boxmgmt<span class="w"> </span>verify_rpa_version
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Review audit log for unexpected operations (logins, image access events)</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>get_audit_log<span class="w"> </span>-last<span class="w"> </span><span class="m">500</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Confirm DR site RPA cluster is also healthy</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>ssh<span class="w"> </span>admin@&lt;dr-rpa-cluster-ip&gt;<span class="w"> </span><span class="s2">&quot;system status&quot;</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>ssh<span class="w"> </span>admin@&lt;dr-rpa-cluster-ip&gt;<span class="w"> </span><span class="s2">&quot;groups status&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Confirm splitter health (for RP4VM software splitters on ESXi)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>rp
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Confirm RPA software versions are consistent across cluster</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>boxmgmt<span class="w"> </span>verify_rpa_version
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Review audit log for unexpected operations (logins, image access events)</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>get_audit_log<span class="w"> </span>-last<span class="w"> </span><span class="m">500</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Confirm DR site RPA cluster is also healthy</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>ssh<span class="w"> </span>admin@&lt;dr-rpa-cluster-ip&gt;<span class="w"> </span><span class="s2">&quot;system status&quot;</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>ssh<span class="w"> </span>admin@&lt;dr-rpa-cluster-ip&gt;<span class="w"> </span><span class="s2">&quot;groups status&quot;</span>
 </code></pre></div>
 
 

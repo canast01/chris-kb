@@ -3210,6 +3210,34 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#project-roles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Project Roles
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Project Roles">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#standard-role-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Standard Role Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#issue-security-schemes" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3509,88 +3537,116 @@ Jira's access control model is layered: global permissions govern what users can
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>        └── Issue Security Scheme (per project)
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>              └── Issue Security Level (per issue)
 </code></pre></div>
-┌──────────────────────────────────────── Jira — Access Control ────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                 Jira Access Control Hierarchy                                 │   │
-│   │         Global perms → Permission scheme → Issue security scheme (most specific wins)         │   │
-│   │        Groups from LDAP/AD; assign groups to project roles; roles to permission schemes       │   │
-│   │       Issue security: hides individual issues from users without assigned security level      │   │
-│   │         Jira Admins group: limit to 2-3 named accounts; never use for day-to-day work         │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Layers: global → project scheme → issue security; LDAP groups feed project roles                   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │         Global Perms        │  │        Project Perms        │  │        Issue Security       │   │
-│   │       Administer Jira       │  │        Browse project       │  │       Security levels       │   │
-│   │       Create projects       │  │        Create issues        │  │       Assign to issue       │   │
-│   │         Browse users        │  │         Edit issues         │  │        Default level        │   │
-│   │        Manage groups        │  │        Admin project        │  │       Restricted level      │   │
-│   │       LDAP group sync       │  │         Role members        │  │       Inherited child       │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  LDAP/AD for group source · Jira DB stores permission ACLs · IdP for auth                             │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Global permission = instance-wide; Administer Jira, Create Projects, Browse Users                    │
-│  Permission scheme = project permission template; assign to one or many projects                      │
-│  Issue security    = fine-grained visibility; can hide issues even within same project                │
-│  Project role      = named membership group per project (e.g. Developers, Reporters)                  │
-│  Role member       = user or group assigned to a role in a specific project                           │
-│  LDAP group sync   = groups imported from AD; assign to project roles                                 │
-│  Security level    = named tier within issue security scheme; assigned per issue                      │
-│  Browse project    = minimum permission to see a project and its issues                               │
-│  Admin project     = can manage project settings, components, versions                                │
-│  Administer Jira   = full admin rights; can create schemes, users, and projects                       │
-│  Issue inherit     = issue security can be inherited from parent issue                                │
-│  Audit log         = Admin &gt; Audit Log; records permission and scheme changes                         │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>---
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## Project Roles
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Project Roles define positions within a project (Developer, QA, PM). Users and groups are assigned to roles per-project.
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>### Standard Role Structure
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>| Role | Typical Members | Permissions |
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>|---|---|---|
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>| Administrators | Project lead, IT admin | Full project admin |
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>| PM / Project Manager | Product owner | Manage sprints, schedule, delete |
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>| Developer | Dev team members | Create, edit, transition, view dev tools |
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>| QA | QA team members | Create, edit, transition, test execution |
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>| Viewer | Stakeholders, read-only users | Browse only |
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>| Service Desk Team | SD agents | Service Management specific |
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>```bash
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a># List all project roles in an instance
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>curl -u &quot;admin:TOKEN&quot; \
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>  &quot;https://jira.corp.example.com/rest/api/2/role&quot; | jq &#39;.[].name&#39;
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a># Get role members for a specific project
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>curl -u &quot;admin:TOKEN&quot; \
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>  &quot;https://jira.corp.example.com/rest/api/2/project/{projectKey}/role/{roleId}&quot;
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a># Add a user to a project role
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>curl -u &quot;admin:TOKEN&quot; \
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>  -H &quot;Content-Type: application/json&quot; \
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>  -X POST \
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>  &quot;https://jira.corp.example.com/rest/api/2/project/{projectKey}/role/{roleId}&quot; \
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>  -d &#39;{&quot;user&quot;: [&quot;jsmith&quot;]}&#39;
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a># Add a group to a project role
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>curl -u &quot;admin:TOKEN&quot; \
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>  -H &quot;Content-Type: application/json&quot; \
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>  -X POST \
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>  &quot;https://jira.corp.example.com/rest/api/2/project/{projectKey}/role/{roleId}&quot; \
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>  -d &#39;{&quot;group&quot;: [&quot;jira-developers&quot;]}&#39;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌──────────────────────────────────────── Jira — Access Control ────────────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │                                 Jira Access Control Hierarchy                                 │   │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │         Global perms → Permission scheme → Issue security scheme (most specific wins)         │   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │        Groups from LDAP/AD; assign groups to project roles; roles to permission schemes       │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │       Issue security: hides individual issues from users without assigned security level      │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │         Jira Admins group: limit to 2-3 named accounts; never use for day-to-day work         │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│                                                                                                       │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│    Layers: global → project scheme → issue security; LDAP groups feed project roles                   │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│                                                                                                       │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│                                                                                                       │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│   │         Global Perms        │  │        Project Perms        │  │        Issue Security       │   │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   │       Administer Jira       │  │        Browse project       │  │       Security levels       │   │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │       Create projects       │  │        Create issues        │  │       Assign to issue       │   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │         Browse users        │  │         Edit issues         │  │        Default level        │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │        Manage groups        │  │        Admin project        │  │       Restricted level      │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │       LDAP group sync       │  │         Role members        │  │       Inherited child       │   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│                                                                                                       │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│  LDAP/AD for group source · Jira DB stores permission ACLs · IdP for auth                             │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│                                                                                                       │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│                                                                                                       │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│  Global permission = instance-wide; Administer Jira, Create Projects, Browse Users                    │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Permission scheme = project permission template; assign to one or many projects                      │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│  Issue security    = fine-grained visibility; can hide issues even within same project                │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  Project role      = named membership group per project (e.g. Developers, Reporters)                  │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  Role member       = user or group assigned to a role in a specific project                           │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  LDAP group sync   = groups imported from AD; assign to project roles                                 │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  Security level    = named tier within issue security scheme; assigned per issue                      │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  Browse project    = minimum permission to see a project and its issues                               │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  Admin project     = can manage project settings, components, versions                                │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  Administer Jira   = full admin rights; can create schemes, users, and projects                       │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  Issue inherit     = issue security can be inherited from parent issue                                │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  Audit log         = Admin &gt; Audit Log; records permission and scheme changes                         │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│                                                                                                       │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
+<hr />
+<h2 id="project-roles">Project Roles<a class="headerlink" href="#project-roles" title="Permanent link">&para;</a></h2>
+<p>Project Roles define positions within a project (Developer, QA, PM). Users and groups are assigned to roles per-project.</p>
+<h3 id="standard-role-structure">Standard Role Structure<a class="headerlink" href="#standard-role-structure" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Typical Members</th>
+<th>Permissions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Administrators</td>
+<td>Project lead, IT admin</td>
+<td>Full project admin</td>
+</tr>
+<tr>
+<td>PM / Project Manager</td>
+<td>Product owner</td>
+<td>Manage sprints, schedule, delete</td>
+</tr>
+<tr>
+<td>Developer</td>
+<td>Dev team members</td>
+<td>Create, edit, transition, view dev tools</td>
+</tr>
+<tr>
+<td>QA</td>
+<td>QA team members</td>
+<td>Create, edit, transition, test execution</td>
+</tr>
+<tr>
+<td>Viewer</td>
+<td>Stakeholders, read-only users</td>
+<td>Browse only</td>
+</tr>
+<tr>
+<td>Service Desk Team</td>
+<td>SD agents</td>
+<td>Service Management specific</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List all project roles in an instance</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:TOKEN&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="s2">&quot;https://jira.corp.example.com/rest/api/2/role&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.[].name&#39;</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Get role members for a specific project</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>curl<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:TOKEN&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span><span class="s2">&quot;https://jira.corp.example.com/rest/api/2/project/{projectKey}/role/{roleId}&quot;</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Add a user to a project role</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>curl<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:TOKEN&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">  </span><span class="s2">&quot;https://jira.corp.example.com/rest/api/2/project/{projectKey}/role/{roleId}&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;user&quot;: [&quot;jsmith&quot;]}&#39;</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># Add a group to a project role</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>curl<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:TOKEN&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">  </span><span class="s2">&quot;https://jira.corp.example.com/rest/api/2/project/{projectKey}/role/{roleId}&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;group&quot;: [&quot;jira-developers&quot;]}&#39;</span>
+</code></pre></div>
 <hr />
 <h2 id="issue-security-schemes">Issue Security Schemes<a class="headerlink" href="#issue-security-schemes" title="Permanent link">&para;</a></h2>
 <p>Issue security schemes restrict which users can view specific issues — used for sensitive tickets (security bugs, HR incidents, executive escalations).</p>
@@ -3631,76 +3687,76 @@ Jira's access control model is layered: global permissions govern what users can
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Create an issue security scheme</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:TOKEN&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="s2">&quot;https://jira.corp.example.com/rest/api/2/issuesecurityschemes&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="s1">    &quot;name&quot;: &quot;Sensitive Issues Security&quot;,</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="s1">    &quot;description&quot;: &quot;Restricts visibility of sensitive issues&quot;,</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="s1">    &quot;defaultSecurityLevelId&quot;: 10100,</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="s1">    &quot;levels&quot;: [</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="s1">      {</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="s1">        &quot;name&quot;: &quot;Public&quot;,</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="s1">        &quot;description&quot;: &quot;Visible to all project members&quot;</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="s1">      },</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="s1">      {</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="s1">        &quot;name&quot;: &quot;Security Team Only&quot;,</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="s1">        &quot;description&quot;: &quot;Visible only to security team and PM&quot;</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="s1">      }</span>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="s1">    ]</span>
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="s1">  }&#39;</span>
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="c1"># List existing security schemes</span>
-<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>curl<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:TOKEN&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="w">  </span><span class="s2">&quot;https://jira.corp.example.com/rest/api/2/issuesecurityschemes&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Create an issue security scheme</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:TOKEN&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span><span class="s2">&quot;https://jira.corp.example.com/rest/api/2/issuesecurityschemes&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="s1">    &quot;name&quot;: &quot;Sensitive Issues Security&quot;,</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="s1">    &quot;description&quot;: &quot;Restricts visibility of sensitive issues&quot;,</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="s1">    &quot;defaultSecurityLevelId&quot;: 10100,</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="s1">    &quot;levels&quot;: [</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="s1">      {</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="s1">        &quot;name&quot;: &quot;Public&quot;,</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="s1">        &quot;description&quot;: &quot;Visible to all project members&quot;</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="s1">      },</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="s1">      {</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="s1">        &quot;name&quot;: &quot;Security Team Only&quot;,</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="s1">        &quot;description&quot;: &quot;Visible only to security team and PM&quot;</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="s1">      }</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="s1">    ]</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="s1">  }&#39;</span>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="c1"># List existing security schemes</span>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>curl<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:TOKEN&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="w">  </span><span class="s2">&quot;https://jira.corp.example.com/rest/api/2/issuesecurityschemes&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.&#39;</span>
 </code></pre></div>
 <hr />
 <h2 id="group-management">Group Management<a class="headerlink" href="#group-management" title="Permanent link">&para;</a></h2>
 <p>Maintain AD/LDAP group synchronisation as the source of truth. Avoid manually adding users to Jira-internal groups.</p>
 <h3 id="recommended-group-structure">Recommended Group Structure<a class="headerlink" href="#recommended-group-structure" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>AD Group                        → Jira Mapping
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>──────────────────────────────────────────────
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>GRP-Jira-Admins                → jira-administrators
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>GRP-Jira-Users                 → jira-software-users
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>GRP-Jira-ServiceDesk-Agents    → jira-servicedesk-users
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>GRP-&lt;ProjectCode&gt;-Developers   → Project role: Developer
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>GRP-&lt;ProjectCode&gt;-QA           → Project role: QA
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>GRP-&lt;ProjectCode&gt;-PM           → Project role: PM
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>AD Group                        → Jira Mapping
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>──────────────────────────────────────────────
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>GRP-Jira-Admins                → jira-administrators
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>GRP-Jira-Users                 → jira-software-users
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>GRP-Jira-ServiceDesk-Agents    → jira-servicedesk-users
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>GRP-&lt;ProjectCode&gt;-Developers   → Project role: Developer
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>GRP-&lt;ProjectCode&gt;-QA           → Project role: QA
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>GRP-&lt;ProjectCode&gt;-PM           → Project role: PM
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List group members</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:TOKEN&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="s2">&quot;https://jira.corp.example.com/rest/api/2/group/member?groupname=jira-administrators&quot;</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Add a user to a group</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>curl<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:TOKEN&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span><span class="s2">&quot;https://jira.corp.example.com/rest/api/2/group/user?groupname=jira-software-users&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;name&quot;: &quot;jsmith&quot;}&#39;</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># Remove a user from a group</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>curl<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:TOKEN&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">  </span>-X<span class="w"> </span>DELETE<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">  </span><span class="s2">&quot;https://jira.corp.example.com/rest/api/2/group/user?groupname=jira-administrators&amp;username=jsmith&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># List group members</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>curl<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:TOKEN&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="s2">&quot;https://jira.corp.example.com/rest/api/2/group/member?groupname=jira-administrators&quot;</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Add a user to a group</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>curl<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:TOKEN&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span><span class="s2">&quot;https://jira.corp.example.com/rest/api/2/group/user?groupname=jira-software-users&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;name&quot;: &quot;jsmith&quot;}&#39;</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1"># Remove a user from a group</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>curl<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:TOKEN&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">  </span>-X<span class="w"> </span>DELETE<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">  </span><span class="s2">&quot;https://jira.corp.example.com/rest/api/2/group/user?groupname=jira-administrators&amp;username=jsmith&quot;</span>
 </code></pre></div>
 <hr />
 <h2 id="access-audit-and-review">Access Audit and Review<a class="headerlink" href="#access-audit-and-review" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="ch">#!/bin/bash</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># Audit Jira administrators</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nv">JIRA_URL</span><span class="o">=</span><span class="s2">&quot;https://jira.corp.example.com&quot;</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="s2">&quot;admin:API_TOKEN&quot;</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Jira Administrators ===&quot;</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$JIRA_URL</span><span class="s2">/rest/api/2/group/member?groupname=jira-administrators&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.values[].displayName&#39;</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Users with ADMINISTER permission ===&quot;</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$JIRA_URL</span><span class="s2">/rest/api/2/user/permission/search?permissions=ADMINISTER&amp;maxResults=100&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.[] | &quot;\(.displayName) - \(.emailAddress)&quot;&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="ch">#!/bin/bash</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># Audit Jira administrators</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nv">JIRA_URL</span><span class="o">=</span><span class="s2">&quot;https://jira.corp.example.com&quot;</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="s2">&quot;admin:API_TOKEN&quot;</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Jira Administrators ===&quot;</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$JIRA_URL</span><span class="s2">/rest/api/2/group/member?groupname=jira-administrators&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.values[].displayName&#39;</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;=== Users with ADMINISTER permission ===&quot;</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$JIRA_URL</span><span class="s2">/rest/api/2/user/permission/search?permissions=ADMINISTER&amp;maxResults=100&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.[] | &quot;\(.displayName) - \(.emailAddress)&quot;&#39;</span>
 </code></pre></div>
 <p><strong>Quarterly review checklist:</strong></p>
 <ul>
@@ -3716,7 +3772,7 @@ Jira's access control model is layered: global permissions govern what users can
 <h2 id="automation-and-integration-access">Automation and Integration Access<a class="headerlink" href="#automation-and-integration-access" title="Permanent link">&para;</a></h2>
 <h3 id="jira-automation-cloud">Jira Automation (Cloud)<a class="headerlink" href="#jira-automation-cloud" title="Permanent link">&para;</a></h3>
 <p>Jira automation rules run as a service account or as the rule owner. Always use a dedicated service account.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Jira Automation settings → Audit log → View all rule executions
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Jira Automation settings → Audit log → View all rule executions
 </code></pre></div>
 <p><strong>Service account for automation:</strong>
 - Minimum permissions: Create Issues, Edit Issues, Transition Issues
@@ -3724,9 +3780,9 @@ Jira's access control model is layered: global permissions govern what users can
 - Named clearly: <code>svc-jira-automation@corp.example.com</code></p>
 <h3 id="application-links-data-center">Application Links (Data Center)<a class="headerlink" href="#application-links-data-center" title="Permanent link">&para;</a></h3>
 <p>Administration → Application Links — controls OAuth between Jira and Confluence, Bitbucket, Bamboo.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># List application links</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>curl<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:TOKEN&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="s2">&quot;https://jira.corp.example.com/rest/applinks/1.0/applicationlink&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># List application links</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>curl<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;admin:TOKEN&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="s2">&quot;https://jira.corp.example.com/rest/applinks/1.0/applicationlink&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.&#39;</span>
 </code></pre></div>
 <ul>
 <li>Remove application links to decommissioned systems immediately.</li>

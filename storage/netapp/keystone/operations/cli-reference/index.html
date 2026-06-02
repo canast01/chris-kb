@@ -4155,6 +4155,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#keystone-portal-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Keystone Portal API
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#quick-reference" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4380,76 +4391,72 @@ CLI Reference reference covering Keystone Collector CLI, NetApp ONTAP REST API (
 <a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>keystone-collector<span class="w"> </span>upgrade<span class="w"> </span>--check<span class="w">     </span><span class="c1"># dry-run</span>
 <a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>keystone-collector<span class="w"> </span>upgrade<span class="w"> </span>--apply
 </code></pre></div>
-┌───────────────────────────── NetApp Keystone — Operations: CLI Reference ─────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │           CLI reference: ONTAP admin commands for daily Keystone storage operations           │   │
-│   │           Health: storage failover show, system health alert show, disk show -broken          │   │
-│   │             Capacity: volume show -space, aggr show -space, df -h (NFS from host)             │   │
-│   │           Performance: statistics show, qos statistics show, network interface show           │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    SSH cluster LIF -&gt; ONTAP CLI; set -priv advanced for extended commands                             │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │       Health Commands       │  │      Capacity Commands      │  │        Perf Commands        │   │
-│   │      storage fail show      │  │       volume show -sp       │  │       statistics show       │   │
-│   │      system health show     │  │       aggr show -space      │  │        qos stat show        │   │
-│   │      disk show -broken      │  │          snap list          │  │          nfsstat -l         │   │
-│   │        event log show       │  │        vol efficiency       │  │        net stat show        │   │
-│   │       system node show      │  │         quota report        │  │        lun stats show       │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    Collector CLI Linux: sudo keystone-collector status | logs | collect | upload                      │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │     Command      │      Output      │      Use When     │      Level       │      Notes       │   │
-│   │storage fail show │     HA state     │       Daily       │      admin       │  Both Connected  │   │
-│   │ aggr show -space │  Aggr capacity   │       Weekly      │      admin       │    &lt;85% used     │   │
-│   │  qos stat show   │  IOPS throttle   │      On alert     │      admin       │    Throttled?    │   │
-│   │  event log show  │    EMS events    │      On alert     │      admin       │    Last 24 h     │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: SSH from jump host port 22 to cluster management LIF IP                                  │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    storage failover show    = Lists HA pair state; both nodes must be Connected                       │
-│    system health alert show = Active system health alarms; review daily                               │
-│    disk show -broken        = Lists failed/predictive-fail disks; action: replace                     │
-│    event log show -sev err  = EMS errors; filter last 24 h                                            │
-│    volume show -space       = Per-volume used/avail; check thin overcommit                            │
-│    aggr show -space         = Aggregate physical capacity; key Keystone metric                        │
-│    statistics show          = Live performance counters: latency, IOPS, throughput                    │
-│    qos statistics show      = QoS policy hit rate; check if volumes are throttled                     │
-│    volume efficiency show   = Dedup/compress savings; verify efficiency enabled                       │
-│    quota report             = Displays qtree and user quotas; check for overages                      │
-│    ks status                = Collector service; last upload time; upload backlog                     │
-│    set -priv advanced       = Enable advanced CLI; required for diag-level cmds                       │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>```python
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## Keystone Portal API
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>NetApp exposes Keystone subscription data via API for reporting and integration.
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>```python
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>import requests
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>PORTAL = &quot;https://keystone.netapp.com/api/v1&quot;
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>TOKEN  = &quot;&lt;keystone-api-token&gt;&quot;
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>HDR    = {&quot;Authorization&quot;: f&quot;Bearer {TOKEN}&quot;, &quot;Content-Type&quot;: &quot;application/json&quot;}
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a># Get subscription details
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>resp = requests.get(f&quot;{PORTAL}/subscriptions&quot;, headers=HDR)
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>for sub in resp.json().get(&quot;subscriptions&quot;, []):
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>    print(f&quot;{sub[&#39;subscriptionNumber&#39;]}  committed={sub[&#39;committedCapacity&#39;]} consumed={sub[&#39;consumedCapacity&#39;]}&quot;)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌───────────────────────────── NetApp Keystone — Operations: CLI Reference ─────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │           CLI reference: ONTAP admin commands for daily Keystone storage operations           │   │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │           Health: storage failover show, system health alert show, disk show -broken          │   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │             Capacity: volume show -space, aggr show -space, df -h (NFS from host)             │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │           Performance: statistics show, qos statistics show, network interface show           │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│                                                                                                       │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│    SSH cluster LIF -&gt; ONTAP CLI; set -priv advanced for extended commands                             │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│                                                                                                       │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                                                                       │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│   │       Health Commands       │  │      Capacity Commands      │  │        Perf Commands        │   │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│   │      storage fail show      │  │       volume show -sp       │  │       statistics show       │   │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   │      system health show     │  │       aggr show -space      │  │        qos stat show        │   │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │      disk show -broken      │  │          snap list          │  │          nfsstat -l         │   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │        event log show       │  │        vol efficiency       │  │        net stat show        │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │       system node show      │  │         quota report        │  │        lun stats show       │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│                                                                                                       │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│    Collector CLI Linux: sudo keystone-collector status | logs | collect | upload                      │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│                                                                                                       │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│                                                                                                       │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│   │     Command      │      Output      │      Use When     │      Level       │      Notes       │   │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│   │storage fail show │     HA state     │       Daily       │      admin       │  Both Connected  │   │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│   │ aggr show -space │  Aggr capacity   │       Weekly      │      admin       │    &lt;85% used     │   │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│   │  qos stat show   │  IOPS throttle   │      On alert     │      admin       │    Throttled?    │   │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│   │  event log show  │    EMS events    │      On alert     │      admin       │    Last 24 h     │   │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│                                                                                                       │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│    Physical: SSH from jump host port 22 to cluster management LIF IP                                  │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│                                                                                                       │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│    Key terms:                                                                                         │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│                                                                                                       │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│    storage failover show    = Lists HA pair state; both nodes must be Connected                       │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│    system health alert show = Active system health alarms; review daily                               │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│    disk show -broken        = Lists failed/predictive-fail disks; action: replace                     │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│    event log show -sev err  = EMS errors; filter last 24 h                                            │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│    volume show -space       = Per-volume used/avail; check thin overcommit                            │
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│    aggr show -space         = Aggregate physical capacity; key Keystone metric                        │
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>│    statistics show          = Live performance counters: latency, IOPS, throughput                    │
+<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>│    qos statistics show      = QoS policy hit rate; check if volumes are throttled                     │
+<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>│    volume efficiency show   = Dedup/compress savings; verify efficiency enabled                       │
+<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>│    quota report             = Displays qtree and user quotas; check for overages                      │
+<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>│    ks status                = Collector service; last upload time; upload backlog                     │
+<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>│    set -priv advanced       = Enable advanced CLI; required for diag-level cmds                       │
+<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>│                                                                                                       │
+<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
+<h2 id="keystone-portal-api">Keystone Portal API<a class="headerlink" href="#keystone-portal-api" title="Permanent link">&para;</a></h2>
+<p>NetApp exposes Keystone subscription data via API for reporting and integration.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">PORTAL</span> <span class="o">=</span> <span class="s2">&quot;https://keystone.netapp.com/api/v1&quot;</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="n">TOKEN</span>  <span class="o">=</span> <span class="s2">&quot;&lt;keystone-api-token&gt;&quot;</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="n">HDR</span>    <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Authorization&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Bearer </span><span class="si">{</span><span class="n">TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;Content-Type&quot;</span><span class="p">:</span> <span class="s2">&quot;application/json&quot;</span><span class="p">}</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Get subscription details</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="n">resp</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">PORTAL</span><span class="si">}</span><span class="s2">/subscriptions&quot;</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">HDR</span><span class="p">)</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="k">for</span> <span class="n">sub</span> <span class="ow">in</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;subscriptions&quot;</span><span class="p">,</span> <span class="p">[]):</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">sub</span><span class="p">[</span><span class="s1">&#39;subscriptionNumber&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">  committed=</span><span class="si">{</span><span class="n">sub</span><span class="p">[</span><span class="s1">&#39;committedCapacity&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> consumed=</span><span class="si">{</span><span class="n">sub</span><span class="p">[</span><span class="s1">&#39;consumedCapacity&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
 <h2 id="quick-reference">Quick Reference<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

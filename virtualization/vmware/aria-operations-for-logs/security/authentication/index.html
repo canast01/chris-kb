@@ -4362,6 +4362,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#verify-ldap-authentication-from-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify LDAP Authentication from CLI
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#session-policies" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4631,74 +4642,70 @@ Authentication reference covering Authentication Methods, Active Directory / LDA
 <p><strong>Import the domain CA certificate first:</strong></p>
 <p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Administration → SSL → Import Certificate → paste root CA PEM
 </code></pre></div>
-┌────────────────────────────── Aria Operations for Logs — Authentication ──────────────────────────────┐
-│                                                                                                       │
-│  vRLI supports local auth, LDAP/AD integration, and vIDM SSO for enterprise environments.             │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │            Authentication Methods            │  │            LDAP/AD Configuration            │   │
-│   │        Local: built-in admin account         │  │     Admin → Authentication → Active Dir     │   │
-│   │       LDAP: AD groups mapped to roles        │  │     Bind DN: service account credentials    │   │
-│   │         vIDM SSO: SAML if in LCM env         │  │        Search base: DC=corp,DC=local        │   │
-│   │      API: session token from login POST      │  │       Group filter: memberOf attribute      │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  vIDM SSO is preferred in Aria Suite deployments for centralised identity management.                 │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                vIDM SSO Flow                 │  │              Session Management             │   │
-│   │        Browser → vRLI → redirect vIDM        │  │         Session TTL: 30 min default         │   │
-│   │          vIDM validates user + MFA           │  │        Idle timeout: re-auth required       │   │
-│   │      SAML assertion → vRLI grants role       │  │          Multiple sessions: allowed         │   │
-│   │     Role derived from AD group via vIDM      │  │         Lockout: handled by vIDM/AD         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  vRLI appliance · AD/LDAP server · vIDM (optional SSO) · NTP (SAML timestamp)                         │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Local admin       = Default vRLI built-in account; change password immediately after install         │
-│  LDAP bind DN      = Service account used by vRLI to search AD; read-only permissions                 │
-│  Search base       = AD OU or domain root where vRLI searches for users and groups                    │
-│  memberOf filter   = LDAP attribute used to check which group a user belongs to                       │
-│  vIDM SSO          = SAML-based SSO; configured when vRLI is part of Aria Suite LCM env               │
-│  SAML assertion    = XML token from vIDM confirming user identity and group membership                │
-│  Session token     = Short-lived bearer token for REST API; from POST /api/v1/sessions                │
-│  Session TTL       = 30-minute inactivity timeout; re-auth required after expiry                      │
-│  MFA via vIDM      = Multi-Factor Authentication enforced at vIDM level for all Aria products         │
-│  Role from group   = vRLI maps AD group to Super Admin or User; no fine-grained RBAC                  │
-│  Lockout policy    = AD account lockout applies; managed in AD not in vRLI                            │
-│  API session       = POST /api/v1/sessions {username, password}; returns sessionId                    │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>```python
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>- VMware Identity Manager FQDN: `vidm.example.local`
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>- Enable redirect to VIDM login page
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>After configuration, the Aria Ops for Logs login page shows a &quot;VMware Identity Manager&quot; button. Users authenticate via VIDM and are assigned roles based on their AD group membership (mapped in the AD group configuration).
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>---
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>## Verify LDAP Authentication from CLI
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>```bash
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a># Test LDAP bind from the Aria Ops for Logs appliance
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>ldapsearch -H ldaps://dc01.example.local:636 \
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>  -D &quot;CN=svc-vrli-ldap,OU=Service Accounts,DC=corp,DC=local&quot; \
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>  -w &#39;&lt;password&gt;&#39; \
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>  -b &quot;DC=corp,DC=local&quot; \
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>  &quot;(sAMAccountName=testuser)&quot; \
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>  sAMAccountName mail memberOf
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a># Test SSL connection to domain controller
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>openssl s_client -connect dc01.example.local:636 -CAfile /tmp/corp-ca.pem 2&gt;&amp;1 | \
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>  grep -E &quot;Verify return code|subject=&quot;
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a># Expected: Verify return code: 0 (ok)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌────────────────────────────── Aria Operations for Logs — Authentication ──────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  vRLI supports local auth, LDAP/AD integration, and vIDM SSO for enterprise environments.             │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│                                                                                                       │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │            Authentication Methods            │  │            LDAP/AD Configuration            │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │        Local: built-in admin account         │  │     Admin → Authentication → Active Dir     │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │       LDAP: AD groups mapped to roles        │  │     Bind DN: service account credentials    │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │         vIDM SSO: SAML if in LCM env         │  │        Search base: DC=corp,DC=local        │   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │      API: session token from login POST      │  │       Group filter: memberOf attribute      │   │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│                                                                                                       │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│  vIDM SSO is preferred in Aria Suite deployments for centralised identity management.                 │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│                                                                                                       │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                                                                                                       │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │                vIDM SSO Flow                 │  │              Session Management             │   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │        Browser → vRLI → redirect vIDM        │  │         Session TTL: 30 min default         │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │          vIDM validates user + MFA           │  │        Idle timeout: re-auth required       │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │      SAML assertion → vRLI grants role       │  │          Multiple sessions: allowed         │   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │     Role derived from AD group via vIDM      │  │         Lockout: handled by vIDM/AD         │   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│                                                                                                       │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  vRLI appliance · AD/LDAP server · vIDM (optional SSO) · NTP (SAML timestamp)                         │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│                                                                                                       │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Local admin       = Default vRLI built-in account; change password immediately after install         │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│  LDAP bind DN      = Service account used by vRLI to search AD; read-only permissions                 │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  Search base       = AD OU or domain root where vRLI searches for users and groups                    │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  memberOf filter   = LDAP attribute used to check which group a user belongs to                       │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  vIDM SSO          = SAML-based SSO; configured when vRLI is part of Aria Suite LCM env               │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  SAML assertion    = XML token from vIDM confirming user identity and group membership                │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  Session token     = Short-lived bearer token for REST API; from POST /api/v1/sessions                │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  Session TTL       = 30-minute inactivity timeout; re-auth required after expiry                      │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  MFA via vIDM      = Multi-Factor Authentication enforced at vIDM level for all Aria products         │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  Role from group   = vRLI maps AD group to Super Admin or User; no fine-grained RBAC                  │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  Lockout policy    = AD account lockout applies; managed in AD not in vRLI                            │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  API session       = POST /api/v1/sessions {username, password}; returns sessionId                    │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│                                                                                                       │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
+<ul>
+<li>VMware Identity Manager FQDN: <code>vidm.example.local</code></li>
+<li>Enable redirect to VIDM login page</li>
+</ul>
+<p>After configuration, the Aria Ops for Logs login page shows a "VMware Identity Manager" button. Users authenticate via VIDM and are assigned roles based on their AD group membership (mapped in the AD group configuration).</p>
+<hr />
+<h2 id="verify-ldap-authentication-from-cli">Verify LDAP Authentication from CLI<a class="headerlink" href="#verify-ldap-authentication-from-cli" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Test LDAP bind from the Aria Ops for Logs appliance</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldaps://dc01.example.local:636<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-D<span class="w"> </span><span class="s2">&quot;CN=svc-vrli-ldap,OU=Service Accounts,DC=corp,DC=local&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>-w<span class="w"> </span><span class="s1">&#39;&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>-b<span class="w"> </span><span class="s2">&quot;DC=corp,DC=local&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span><span class="s2">&quot;(sAMAccountName=testuser)&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>sAMAccountName<span class="w"> </span>mail<span class="w"> </span>memberOf
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Test SSL connection to domain controller</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>dc01.example.local:636<span class="w"> </span>-CAfile<span class="w"> </span>/tmp/corp-ca.pem<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Verify return code|subject=&quot;</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Expected: Verify return code: 0 (ok)</span>
+</code></pre></div>
 <hr />
 <h2 id="session-policies">Session Policies<a class="headerlink" href="#session-policies" title="Permanent link">&para;</a></h2>
 <table>
@@ -4735,8 +4742,8 @@ Authentication reference covering Authentication Methods, Active Directory / LDA
 <hr />
 <h2 id="forcing-https">Forcing HTTPS<a class="headerlink" href="#forcing-https" title="Permanent link">&para;</a></h2>
 <p>Aria Ops for Logs listens on port 80 (HTTP) and 443 (HTTPS). HTTP automatically redirects to HTTPS — this is the default behaviour and should not be changed. Verify:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>curl<span class="w"> </span>-sI<span class="w"> </span>http://vrli-prod-01.example.local/<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Location:&quot;</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Expected: Location: https://vrli-prod-01.example.local/</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>curl<span class="w"> </span>-sI<span class="w"> </span>http://vrli-prod-01.example.local/<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Location:&quot;</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Expected: Location: https://vrli-prod-01.example.local/</span>
 </code></pre></div>
 <h2 id="ensure-the-firewall-permits-inbound-tcp-443-and-tcp-80-from-admin-workstations-block-all-other-inbound-ports-except-those-required-for-log-ingestion-514-1514-9543">Ensure the firewall permits inbound TCP 443 and TCP 80 from admin workstations. Block all other inbound ports except those required for log ingestion (514, 1514, 9543).<a class="headerlink" href="#ensure-the-firewall-permits-inbound-tcp-443-and-tcp-80-from-admin-workstations-block-all-other-inbound-ports-except-those-required-for-log-ingestion-514-1514-9543" title="Permanent link">&para;</a></h2>
 <h2 id="related-reference">Related Reference<a class="headerlink" href="#related-reference" title="Permanent link">&para;</a></h2>
