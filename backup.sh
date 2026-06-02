@@ -28,3 +28,6 @@ Excluded: backup, .venv, site, __pycache__, *.pyc, .DS_Store
 INFO
 
 echo "Backup created: $DEST"
+
+# Remove backups older than 10 days
+find "$BACKUP_ROOT" -maxdepth 1 -type d -name "????-??-??_*" -mtime +10 -exec rm -rf {} +
