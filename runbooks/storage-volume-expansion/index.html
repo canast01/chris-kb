@@ -3123,105 +3123,71 @@
 │    lvextend -r    = LVM: extends logical volume and resizes filesystem in one step                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌───────────────────────────────── Runbook — Storage Volume Expansion ──────────────────────────────────┐
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │          Expand storage: grow array LUN → OS rescans → extend filesystem — all online         │   │
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │           Pre-check: snapshot before expansion; confirm free pool capacity on array           │   │
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│                                                                                                       │
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│                  ▼                                ▼                                ▼                  │
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│                                                                                                       │
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │           1. Array          │  │         2. OS rescan        │  │         3. FS extend        │   │
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│   │        Expand LUN/vol       │  │      Linux: rescan-scsi     │  │       Linux: resize2fs      │   │
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│   │       Verify pool free      │  │      Windows: DiskMgmt      │  │       Windows: Extend       │   │
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│   │       Confirm new size      │  │       lsblk / diskpart      │  │     pvresize + lvextend     │   │
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│   │        Array CLI/GUI        │  │      ESXi: rescan HBAs      │  │         df -h verify        │   │
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   │        Snapshot first       │  │       Multipath update      │  │      xfs_growfs for XFS     │   │
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│                                                                                                       │
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │     FS type      │   Grow command   │  Partition needed │     Online?      │      Verify      │   │
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │       ext4       │ resize2fs /dev/X │   growpart first  │       Yes        │      df -h       │   │
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   │       XFS        │ xfs_growfs /mnt  │   growpart first  │       Yes        │      df -h       │   │
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│   │       LVM        │lvextend + resize │  PV extend first  │       Yes        │    lvdisplay     │   │
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│   │       NTFS       │  Extend Volume   │      DiskMgmt     │       Yes        │     Explorer     │   │
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│                                                                                                       │
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│    Key terms:                                                                                         │
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│                                                                                                       │
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│    rescan-scsi-bus= Script to trigger OS rescan after LUN resize; alternative: echo 1 &gt; /sys/...      │
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│    growpart       = Extends a partition within a disk; required before online FS extend               │
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│    pvresize       = LVM: expands physical volume to use new LUN capacity                              │
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│    lvextend -r    = LVM: extends logical volume and resizes filesystem in one step                    │
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│                                                                                                       │
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div></p>
-<p><strong>Dell PowerMax (Solutions Enabler):</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>symconfigure<span class="w"> </span>-sid<span class="w"> </span>&lt;SID&gt;<span class="w"> </span>-cmd<span class="w"> </span><span class="s2">&quot;modify dev &lt;DEV_ID&gt;, size=&lt;cylinders&gt;;&quot;</span><span class="w"> </span>commit<span class="w"> </span>-noprompt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>**Dell PowerMax (Solutions Enabler):**
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>```bash
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>symconfigure -sid &lt;SID&gt; -cmd &quot;modify dev &lt;DEV_ID&gt;, size=&lt;cylinders&gt;;&quot; commit -noprompt
 </code></pre></div></p>
 <p><strong>Dell Unity:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>/stor/config/lun<span class="w"> </span>-id<span class="w"> </span>&lt;lun_id&gt;<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-size<span class="w"> </span>&lt;new_size_bytes&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>uemcli<span class="w"> </span>-d<span class="w"> </span>&lt;ip&gt;<span class="w"> </span>/stor/config/lun<span class="w"> </span>-id<span class="w"> </span>&lt;lun_id&gt;<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-size<span class="w"> </span>&lt;new_size_bytes&gt;
 </code></pre></div></p>
 <h2 id="step-2-rescan-storage-on-the-host">Step 2 — Rescan Storage on the Host<a class="headerlink" href="#step-2-rescan-storage-on-the-host" title="Permanent link">&para;</a></h2>
 <p><strong>Linux:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Rescan all SCSI hosts</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="k">for</span><span class="w"> </span>host<span class="w"> </span><span class="k">in</span><span class="w"> </span>/sys/class/scsi_host/host*/<span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;- - -&quot;</span><span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">host</span><span class="si">}</span><span class="s2">scan&quot;</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="k">done</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Or target specific HBA</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="nb">echo</span><span class="w"> </span><span class="m">1</span><span class="w"> </span>&gt;<span class="w"> </span>/sys/class/scsi_device/&lt;H:B:T:L&gt;/device/rescan
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Refresh multipath and confirm new size</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>multipathd<span class="w"> </span>reconfigure
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>multipath<span class="w"> </span>-ll
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Rescan all SCSI hosts</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">for</span><span class="w"> </span>host<span class="w"> </span><span class="k">in</span><span class="w"> </span>/sys/class/scsi_host/host*/<span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;- - -&quot;</span><span class="w"> </span>&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">host</span><span class="si">}</span><span class="s2">scan&quot;</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="k">done</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Or target specific HBA</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="nb">echo</span><span class="w"> </span><span class="m">1</span><span class="w"> </span>&gt;<span class="w"> </span>/sys/class/scsi_device/&lt;H:B:T:L&gt;/device/rescan
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Refresh multipath and confirm new size</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>multipathd<span class="w"> </span>reconfigure
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>multipath<span class="w"> </span>-ll
 </code></pre></div></p>
 <p><strong>Windows:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">Update-HostStorageCache</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Get-Disk</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">OperationalStatus</span> <span class="o">-eq</span> <span class="s1">&#39;Online&#39;</span> <span class="p">}</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Number</span><span class="p">,</span> <span class="n">Size</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">Update-HostStorageCache</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-Disk</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">OperationalStatus</span> <span class="o">-eq</span> <span class="s1">&#39;Online&#39;</span> <span class="p">}</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Number</span><span class="p">,</span> <span class="n">Size</span>
 </code></pre></div></p>
 <h2 id="step-3a-resize-partition">Step 3a — Resize Partition<a class="headerlink" href="#step-3a-resize-partition" title="Permanent link">&para;</a></h2>
 <p><strong>Linux (if using a raw partition, not LVM):</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Identify device</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>lsblk
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Resize partition (parted)</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>parted<span class="w"> </span>/dev/&lt;device&gt;<span class="w"> </span>resizepart<span class="w"> </span>&lt;part_number&gt;<span class="w"> </span><span class="m">100</span>%
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Inform kernel of change</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>partprobe<span class="w"> </span>/dev/&lt;device&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Identify device</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>lsblk
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Resize partition (parted)</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>parted<span class="w"> </span>/dev/&lt;device&gt;<span class="w"> </span>resizepart<span class="w"> </span>&lt;part_number&gt;<span class="w"> </span><span class="m">100</span>%
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Inform kernel of change</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>partprobe<span class="w"> </span>/dev/&lt;device&gt;
 </code></pre></div></p>
 <p><strong>Windows:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nv">$disk</span> <span class="p">=</span> <span class="nb">Get-Disk</span> <span class="n">-Number</span> <span class="p">&lt;</span><span class="n">n</span><span class="p">&gt;</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nv">$part</span> <span class="p">=</span> <span class="nb">Get-Partition</span> <span class="n">-DiskNumber</span> <span class="nv">$disk</span><span class="p">.</span><span class="n">Number</span> <span class="n">-PartitionNumber</span> <span class="p">&lt;</span><span class="n">pn</span><span class="p">&gt;</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="nv">$maxSize</span> <span class="p">=</span> <span class="p">(</span><span class="nv">$part</span> <span class="p">|</span> <span class="nb">Get-PartitionSupportedSize</span><span class="p">).</span><span class="n">SizeMax</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="nb">Resize-Partition</span> <span class="n">-DiskNumber</span> <span class="nv">$disk</span><span class="p">.</span><span class="n">Number</span> <span class="n">-PartitionNumber</span> <span class="nv">$part</span><span class="p">.</span><span class="n">PartitionNumber</span> <span class="n">-Size</span> <span class="nv">$maxSize</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nv">$disk</span> <span class="p">=</span> <span class="nb">Get-Disk</span> <span class="n">-Number</span> <span class="p">&lt;</span><span class="n">n</span><span class="p">&gt;</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nv">$part</span> <span class="p">=</span> <span class="nb">Get-Partition</span> <span class="n">-DiskNumber</span> <span class="nv">$disk</span><span class="p">.</span><span class="n">Number</span> <span class="n">-PartitionNumber</span> <span class="p">&lt;</span><span class="n">pn</span><span class="p">&gt;</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nv">$maxSize</span> <span class="p">=</span> <span class="p">(</span><span class="nv">$part</span> <span class="p">|</span> <span class="nb">Get-PartitionSupportedSize</span><span class="p">).</span><span class="n">SizeMax</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="nb">Resize-Partition</span> <span class="n">-DiskNumber</span> <span class="nv">$disk</span><span class="p">.</span><span class="n">Number</span> <span class="n">-PartitionNumber</span> <span class="nv">$part</span><span class="p">.</span><span class="n">PartitionNumber</span> <span class="n">-Size</span> <span class="nv">$maxSize</span>
 </code></pre></div></p>
 <h2 id="step-3b-resize-filesystem-lv">Step 3b — Resize Filesystem / LV<a class="headerlink" href="#step-3b-resize-filesystem-lv" title="Permanent link">&para;</a></h2>
 <p><strong>Linux — LVM (most common):</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Resize physical volume</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>pvresize<span class="w"> </span>/dev/mapper/&lt;mpathX&gt;
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Extend logical volume to use all free space</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>lvextend<span class="w"> </span>-l<span class="w"> </span>+100%FREE<span class="w"> </span>/dev/&lt;vg&gt;/&lt;lv&gt;
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Resize filesystem (online, no unmount needed)</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>resize2fs<span class="w"> </span>/dev/&lt;vg&gt;/&lt;lv&gt;<span class="w">       </span><span class="c1"># ext4</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>xfs_growfs<span class="w"> </span>/mount/point<span class="w">         </span><span class="c1"># xfs (use mountpoint, not device)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Resize physical volume</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>pvresize<span class="w"> </span>/dev/mapper/&lt;mpathX&gt;
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Extend logical volume to use all free space</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>lvextend<span class="w"> </span>-l<span class="w"> </span>+100%FREE<span class="w"> </span>/dev/&lt;vg&gt;/&lt;lv&gt;
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Resize filesystem (online, no unmount needed)</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>resize2fs<span class="w"> </span>/dev/&lt;vg&gt;/&lt;lv&gt;<span class="w">       </span><span class="c1"># ext4</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>xfs_growfs<span class="w"> </span>/mount/point<span class="w">         </span><span class="c1"># xfs (use mountpoint, not device)</span>
 </code></pre></div></p>
 <p><strong>Linux — no LVM:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>resize2fs<span class="w"> </span>/dev/&lt;device&gt;&lt;part&gt;<span class="w">   </span><span class="c1"># ext4</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>xfs_growfs<span class="w"> </span>/mount/point<span class="w">          </span><span class="c1"># xfs</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>resize2fs<span class="w"> </span>/dev/&lt;device&gt;&lt;part&gt;<span class="w">   </span><span class="c1"># ext4</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>xfs_growfs<span class="w"> </span>/mount/point<span class="w">          </span><span class="c1"># xfs</span>
 </code></pre></div></p>
 <h2 id="step-4-validate">Step 4 — Validate<a class="headerlink" href="#step-4-validate" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>df<span class="w"> </span>-h<span class="w">                    </span><span class="c1"># confirm new filesystem size</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>lsblk<span class="w">                    </span><span class="c1"># confirm partition layout</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>multipath<span class="w"> </span>-ll<span class="w">            </span><span class="c1"># confirm all paths still healthy</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>df<span class="w"> </span>-h<span class="w">                    </span><span class="c1"># confirm new filesystem size</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>lsblk<span class="w">                    </span><span class="c1"># confirm partition layout</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>multipath<span class="w"> </span>-ll<span class="w">            </span><span class="c1"># confirm all paths still healthy</span>
 </code></pre></div>
 <p>Write a test file to confirm the new space is accessible:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>dd<span class="w"> </span><span class="k">if</span><span class="o">=</span>/dev/zero<span class="w"> </span><span class="nv">of</span><span class="o">=</span>/mount/point/test.tmp<span class="w"> </span><span class="nv">bs</span><span class="o">=</span>1M<span class="w"> </span><span class="nv">count</span><span class="o">=</span><span class="m">1024</span><span class="w"> </span><span class="nv">oflag</span><span class="o">=</span>direct<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>rm<span class="w"> </span>/mount/point/test.tmp
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>dd<span class="w"> </span><span class="k">if</span><span class="o">=</span>/dev/zero<span class="w"> </span><span class="nv">of</span><span class="o">=</span>/mount/point/test.tmp<span class="w"> </span><span class="nv">bs</span><span class="o">=</span>1M<span class="w"> </span><span class="nv">count</span><span class="o">=</span><span class="m">1024</span><span class="w"> </span><span class="nv">oflag</span><span class="o">=</span>direct<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>rm<span class="w"> </span>/mount/point/test.tmp
 </code></pre></div></p>
 <h2 id="rollback">Rollback<a class="headerlink" href="#rollback" title="Permanent link">&para;</a></h2>
 <p>Online expansion of a LUN/partition/filesystem is <strong>not reversible</strong> without a rebuild. If something goes wrong:</p>

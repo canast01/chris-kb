@@ -6777,13 +6777,6 @@ Cluster → Monitor → vSAN → Performance → Virtual Machine view → select
 <h2 id="2-node-robo-cluster">2-Node ROBO Cluster<a class="headerlink" href="#2-node-robo-cluster" title="Permanent link">&para;</a></h2>
 <p>A 2-node vSAN cluster uses a witness appliance at a third site to form quorum. This design is for remote/branch offices (ROBO) with limited hardware budget.</p>
 <h3 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-112-1" name="__codelineno-112-1" href="#__codelineno-112-1"></a>Site A                    Site B                    Witness Site
-<a id="__codelineno-112-2" name="__codelineno-112-2" href="#__codelineno-112-2"></a>┌──────────┐             ┌──────────┐              ┌──────────────┐
-<a id="__codelineno-112-3" name="__codelineno-112-3" href="#__codelineno-112-3"></a>│ ESXi-01  │◄──vSAN──►  │ ESXi-02  │  ◄──mgmt──► │ Witness VM   │
-<a id="__codelineno-112-4" name="__codelineno-112-4" href="#__codelineno-112-4"></a>│ (data)   │             │ (data)   │              │ (metadata    │
-<a id="__codelineno-112-5" name="__codelineno-112-5" href="#__codelineno-112-5"></a>└──────────┘             └──────────┘              │  only)       │
-<a id="__codelineno-112-6" name="__codelineno-112-6" href="#__codelineno-112-6"></a>                                                    └──────────────┘
-</code></pre></div>
 <ul>
 <li>Each data node holds a full copy of all objects (effective RAID-1 across 2 nodes).</li>
 <li>The witness holds metadata only — no VM data. It provides quorum when one data node fails.</li>
@@ -6810,34 +6803,34 @@ Cluster → Configure → vSAN → Fault Domains → assign witness</p>
 <p><strong>From vCenter UI:</strong>
 Cluster → Configure → vSAN → Disk Management → select each data host → Claim Disks</p>
 <p><strong>Step 5 — Verify the cluster configuration</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-113-1" name="__codelineno-113-1" href="#__codelineno-113-1"></a><span class="nb">Get-VsanClusterConfiguration</span> <span class="n">-Cluster</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">&quot;VSAN-ROBO-01&quot;</span><span class="p">)</span> <span class="p">|</span>
-<a id="__codelineno-113-2" name="__codelineno-113-2" href="#__codelineno-113-2"></a>    <span class="nb">Select </span><span class="n">StretchedClusterEnabled</span><span class="p">,</span> <span class="n">WitnessHost</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-112-1" name="__codelineno-112-1" href="#__codelineno-112-1"></a><span class="nb">Get-VsanClusterConfiguration</span> <span class="n">-Cluster</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">&quot;VSAN-ROBO-01&quot;</span><span class="p">)</span> <span class="p">|</span>
+<a id="__codelineno-112-2" name="__codelineno-112-2" href="#__codelineno-112-2"></a>    <span class="nb">Select </span><span class="n">StretchedClusterEnabled</span><span class="p">,</span> <span class="n">WitnessHost</span>
 </code></pre></div>
 <h3 id="storage-policy-for-2-node">Storage Policy for 2-Node<a class="headerlink" href="#storage-policy-for-2-node" title="Permanent link">&para;</a></h3>
 <p>Do not use RAID-5 or RAID-6 — they require a minimum of 4 and 6 nodes respectively.</p>
 <p><strong>Step 1 — Create the 2-node storage policy</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-114-1" name="__codelineno-114-1" href="#__codelineno-114-1"></a><span class="nb">New-SpbmStoragePolicy</span> <span class="n">-Name</span> <span class="s2">&quot;VSAN-ROBO-FTT1&quot;</span> <span class="p">`</span>
-<a id="__codelineno-114-2" name="__codelineno-114-2" href="#__codelineno-114-2"></a>    <span class="n">-Description</span> <span class="s2">&quot;2-node ROBO: RAID-1 across both data nodes&quot;</span> <span class="p">`</span>
-<a id="__codelineno-114-3" name="__codelineno-114-3" href="#__codelineno-114-3"></a>    <span class="n">-AnyOfRuleSets</span> <span class="p">@(</span>
-<a id="__codelineno-114-4" name="__codelineno-114-4" href="#__codelineno-114-4"></a>        <span class="nb">New-SpbmRuleSet</span> <span class="n">-AllOfRules</span> <span class="p">@(</span>
-<a id="__codelineno-114-5" name="__codelineno-114-5" href="#__codelineno-114-5"></a>            <span class="nb">New-SpbmRule</span> <span class="n">-AnyOfCapabilities</span> <span class="p">@(</span>
-<a id="__codelineno-114-6" name="__codelineno-114-6" href="#__codelineno-114-6"></a>                <span class="nb">New-SpbmCapability</span> <span class="n">-Name</span> <span class="s2">&quot;VSAN.hostFailuresToTolerate&quot;</span> <span class="n">-Value</span> <span class="n">1</span>
-<a id="__codelineno-114-7" name="__codelineno-114-7" href="#__codelineno-114-7"></a>            <span class="p">)</span>
-<a id="__codelineno-114-8" name="__codelineno-114-8" href="#__codelineno-114-8"></a>        <span class="p">)</span>
-<a id="__codelineno-114-9" name="__codelineno-114-9" href="#__codelineno-114-9"></a>    <span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-113-1" name="__codelineno-113-1" href="#__codelineno-113-1"></a><span class="nb">New-SpbmStoragePolicy</span> <span class="n">-Name</span> <span class="s2">&quot;VSAN-ROBO-FTT1&quot;</span> <span class="p">`</span>
+<a id="__codelineno-113-2" name="__codelineno-113-2" href="#__codelineno-113-2"></a>    <span class="n">-Description</span> <span class="s2">&quot;2-node ROBO: RAID-1 across both data nodes&quot;</span> <span class="p">`</span>
+<a id="__codelineno-113-3" name="__codelineno-113-3" href="#__codelineno-113-3"></a>    <span class="n">-AnyOfRuleSets</span> <span class="p">@(</span>
+<a id="__codelineno-113-4" name="__codelineno-113-4" href="#__codelineno-113-4"></a>        <span class="nb">New-SpbmRuleSet</span> <span class="n">-AllOfRules</span> <span class="p">@(</span>
+<a id="__codelineno-113-5" name="__codelineno-113-5" href="#__codelineno-113-5"></a>            <span class="nb">New-SpbmRule</span> <span class="n">-AnyOfCapabilities</span> <span class="p">@(</span>
+<a id="__codelineno-113-6" name="__codelineno-113-6" href="#__codelineno-113-6"></a>                <span class="nb">New-SpbmCapability</span> <span class="n">-Name</span> <span class="s2">&quot;VSAN.hostFailuresToTolerate&quot;</span> <span class="n">-Value</span> <span class="n">1</span>
+<a id="__codelineno-113-7" name="__codelineno-113-7" href="#__codelineno-113-7"></a>            <span class="p">)</span>
+<a id="__codelineno-113-8" name="__codelineno-113-8" href="#__codelineno-113-8"></a>        <span class="p">)</span>
+<a id="__codelineno-113-9" name="__codelineno-113-9" href="#__codelineno-113-9"></a>    <span class="p">)</span>
 </code></pre></div>
 <p><strong>Step 2 — Apply the policy to all VMs</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-115-1" name="__codelineno-115-1" href="#__codelineno-115-1"></a><span class="nv">$policy</span> <span class="p">=</span> <span class="nb">Get-SpbmStoragePolicy</span> <span class="s2">&quot;VSAN-ROBO-FTT1&quot;</span>
-<a id="__codelineno-115-2" name="__codelineno-115-2" href="#__codelineno-115-2"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
-<a id="__codelineno-115-3" name="__codelineno-115-3" href="#__codelineno-115-3"></a>    <span class="nb">Get-HardDisk</span> <span class="n">-VM</span> <span class="nv">$_</span> <span class="p">|</span> <span class="nb">Set-SpbmEntityConfiguration</span> <span class="n">-StoragePolicy</span> <span class="nv">$policy</span>
-<a id="__codelineno-115-4" name="__codelineno-115-4" href="#__codelineno-115-4"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-114-1" name="__codelineno-114-1" href="#__codelineno-114-1"></a><span class="nv">$policy</span> <span class="p">=</span> <span class="nb">Get-SpbmStoragePolicy</span> <span class="s2">&quot;VSAN-ROBO-FTT1&quot;</span>
+<a id="__codelineno-114-2" name="__codelineno-114-2" href="#__codelineno-114-2"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-114-3" name="__codelineno-114-3" href="#__codelineno-114-3"></a>    <span class="nb">Get-HardDisk</span> <span class="n">-VM</span> <span class="nv">$_</span> <span class="p">|</span> <span class="nb">Set-SpbmEntityConfiguration</span> <span class="n">-StoragePolicy</span> <span class="nv">$policy</span>
+<a id="__codelineno-114-4" name="__codelineno-114-4" href="#__codelineno-114-4"></a><span class="p">}</span>
 </code></pre></div>
 <h3 id="validate-the-2-node-setup">Validate the 2-Node Setup<a class="headerlink" href="#validate-the-2-node-setup" title="Permanent link">&para;</a></h3>
 <p><strong>Step 1 — Confirm witness is a cluster member</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-116-1" name="__codelineno-116-1" href="#__codelineno-116-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span>get
+<div class="highlight"><pre><span></span><code><a id="__codelineno-115-1" name="__codelineno-115-1" href="#__codelineno-115-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>cluster<span class="w"> </span>get
 </code></pre></div>
 <p><strong>Step 2 — Test witness connectivity from both data nodes</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-117-1" name="__codelineno-117-1" href="#__codelineno-117-1"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk2<span class="w"> </span>&lt;witness_vsan_vmk_ip&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-116-1" name="__codelineno-116-1" href="#__codelineno-116-1"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk2<span class="w"> </span>&lt;witness_vsan_vmk_ip&gt;
 </code></pre></div>
 <p><strong>Step 3 — Check 2-node-specific health checks</strong></p>
 <p><strong>From vCenter UI:</strong>
@@ -6851,12 +6844,12 @@ Right-click data node → Maintenance Mode → Enter Maintenance Mode → Ensure
 <p><strong>From vCenter UI:</strong>
 Monitor → vSAN → Virtual Machines — all VMs should remain running</p>
 <p><strong>Step 3 — Confirm witness is reachable</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-118-1" name="__codelineno-118-1" href="#__codelineno-118-1"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk2<span class="w"> </span>&lt;witness_vsan_vmk_ip&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-117-1" name="__codelineno-117-1" href="#__codelineno-117-1"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk2<span class="w"> </span>&lt;witness_vsan_vmk_ip&gt;
 </code></pre></div>
 <p><strong>Step 4 — Exit maintenance mode and verify resync</strong></p>
 <p><strong>From vCenter UI:</strong>
 Right-click the maintenance node → Maintenance Mode → Exit Maintenance Mode</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-119-1" name="__codelineno-119-1" href="#__codelineno-119-1"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">60</span><span class="w"> </span><span class="s2">&quot;esxcli vsan debug resync summary get&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-118-1" name="__codelineno-118-1" href="#__codelineno-118-1"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">60</span><span class="w"> </span><span class="s2">&quot;esxcli vsan debug resync summary get&quot;</span>
 </code></pre></div>
 
 

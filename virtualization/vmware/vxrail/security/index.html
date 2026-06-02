@@ -4063,6 +4063,56 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#access-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Access Control
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Access Control">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#vxrail-manager-roles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VxRail Manager Roles
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vsphere-rbac-for-vxrail-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vSphere RBAC for VxRail Operations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#host-lockdown-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Host Lockdown Mode
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#encryption" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4359,7 +4409,7 @@
 Security reference for VxRail in the VMware product context. Covers iDRAC LDAP authentication, ESXi lockdown mode, vSAN encryption, Secure Boot, and audit logging.
 </div>
 
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="err">┌──────────────────────────────────────────</span> <span class="n">VxRail</span> <span class="err">—</span> <span class="n">Security</span> <span class="err">──────────────────────────────────────────┐</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="err">┌──────────────────────────────────────────</span> <span class="n">VxRail</span> <span class="err">—</span> <span class="n">Security</span> <span class="err">──────────────────────────────────────────┐</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="err">│</span>                                                                                                       <span class="err">│</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="err">│</span>   <span class="err">┌───────────────────────────────────────────────────────────────────────────────────────────────┐</span>   <span class="err">│</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="err">│</span>   <span class="err">│</span>         <span class="n">iDRAC</span> <span class="n">LDAP</span><span class="p">/</span><span class="n">AD</span> <span class="n">authentication</span> <span class="n">with</span> <span class="n">OOB-only</span> <span class="n">VLAN</span> <span class="n">access</span> <span class="k">for</span> <span class="n">hardware</span> <span class="n">management</span>        <span class="err">│</span>   <span class="err">│</span>
@@ -4415,98 +4465,70 @@ Security reference for VxRail in the VMware product context. Covers iDRAC LDAP a
 <a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a><span class="err">│</span>                                                                                                       <span class="err">│</span>
 <a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a><span class="err">└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</span>
 </code></pre></div>
-┌────────────────────────────────────────── VxRail — Security ──────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │         iDRAC LDAP/AD authentication with OOB-only VLAN access for hardware management        │   │
-│   │      ESXi lockdown mode (normal) with host profiles enforcement across all cluster nodes      │   │
-│   │     vCenter SSO for all management plane access; VxRail Manager TLS certificates enforced     │   │
-│   │      vSAN data-at-rest encryption with KMIP-compatible KMS integration for key management     │   │
-│   │      Secure Boot on all nodes; STIG alignment via host profiles; syslog forwarded to SIEM     │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Authentication gates hardware access · access control limits management scope                      │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │        Authentication       │  │        Access Control       │  │          Encryption         │   │
-│   │        iDRAC LDAP/AD        │  │       RBAC via vCenter      │  │      vSAN data-at-rest      │   │
-│   │      ESXi lockdown mode     │  │       iDRAC user roles      │  │       iDRAC HTTPS only      │   │
-│   │         vCenter SSO         │  │       VxRail Mgr roles      │  │       Secure Boot ESXi      │   │
-│   │       VxRail Mgr local      │  │         LCM op roles        │  │        VxRail Mgr TLS       │   │
-│   │          iDRAC 2FA          │  │       Least privilege       │  │        iDRAC SSL cert       │   │
-│   │       Svc acct policy       │  │         Audit events        │  │          Syslog TLS         │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    Auth controls who accesses hardware · RBAC scopes management                                       │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │       Auth       │   Access Ctrl    │     Encryption    │    Hardening     │      Audit       │   │
-│   │    iDRAC LDAP    │   vCenter RBAC   │    vSAN encrypt   │   Secure Boot    │  vCenter events  │   │
-│   │  ESXi lockdown   │   iDRAC roles    │    iDRAC HTTPS    │   SSH disabled   │   iDRAC audit    │   │
-│   │   vCenter SSO    │   VxRail roles   │     VxRail TLS    │  Host profiles   │  Syslog to SIEM  │   │
-│   │    iDRAC 2FA     │ Least privilege  │   Cert rotation   │    STIG align    │  LCM log audit   │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Dell PowerEdge servers · TPM 2.0 · NVMe/SSD/HDD · iDRAC OOB network · CA infrastructure              │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  iDRAC             = Integrated Dell Remote Access Controller; LDAP/AD auth; OOB-only VLAN access     │
-│  Lockdown mode     = ESXi host setting preventing direct SSH/DCUI; all management via vCenter only    │
-│  vSAN encryption   = Data-at-rest encryption on vSAN datastore; keys managed by external KMIP KMS     │
-│  KMS/KMIP          = Key Management Server / protocol; external key store for vSAN and VM encryption  │
-│  Secure Boot       = UEFI feature verifying ESXi VIB signatures on all VxRail nodes at boot time      │
-│  Host Profile      = vCenter config template enforcing lockdown, NTP, syslog, and security settings   │
-│  VxRail Manager TLS = TLS certificate on VxRail Manager VM; used for API and plugin communications    │
-│  STIG alignment    = Defense Information Systems Agency hardening guide applied via host profiles     │
-│  OOB VLAN          = Out-of-band management VLAN restricted to iDRAC access only; no VM traffic       │
-│  LDAP/AD integration = iDRAC and vCenter authenticate against Active Directory for role mapping       │
-│  RBAC              = Role-Based Access Control; vCenter roles applied to VxRail management operations │
-│  2FA on iDRAC      = Two-factor authentication on iDRAC console; reduces OOB access risk              │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>iDRAC access should be restricted to a dedicated OOB management network — not reachable from VM subnets.
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>---
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>## Access Control
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>### VxRail Manager Roles
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>| Role | Permissions |
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>|---|---|
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>| Admin (mystic) | Full VxRail Manager access including LCM |
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>| Read-only (if LDAP configured) | View cluster health, no changes |
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>LDAP group-based role assignment allows mapping AD groups to VxRail Manager access levels.
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>### vSphere RBAC for VxRail Operations
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>Define vCenter roles for VxRail-specific operational tasks:
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>| Team | vCenter Role | Scope |
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>|---|---|---|
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>| VxRail Administrators | Administrator | VxRail Cluster object |
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>| Storage Operations | Custom (vSAN ops) | Cluster level |
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>| Application / VM Owners | VM Operator (custom) | VM Folder / Resource Pool |
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>| Read-only / Monitoring | Read-only | Datacenter |
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>### Host Lockdown Mode
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>Apply Normal Lockdown mode to all VxRail ESXi hosts. VxRail Manager requires connectivity to the hosts for LCM operations — this is handled via the vCenter API path, which is permitted under Normal Lockdown.
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>```powershell
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a># Enable Normal Lockdown on all VxRail hosts
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>Get-Cluster &quot;VxRail-Cluster&quot; | Get-VMHost | ForEach-Object {
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>    $_.ExtensionData.EnterLockdownMode()
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>    Write-Host &quot;Lockdown enabled: $($_.Name)&quot;
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>}
-</code></pre></div></p>
+<p>iDRAC access should be restricted to a dedicated OOB management network — not reachable from VM subnets.</p>
+<hr />
+<h2 id="access-control">Access Control<a class="headerlink" href="#access-control" title="Permanent link">&para;</a></h2>
+<h3 id="vxrail-manager-roles">VxRail Manager Roles<a class="headerlink" href="#vxrail-manager-roles" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Permissions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Admin (mystic)</td>
+<td>Full VxRail Manager access including LCM</td>
+</tr>
+<tr>
+<td>Read-only (if LDAP configured)</td>
+<td>View cluster health, no changes</td>
+</tr>
+</tbody>
+</table>
+<p>LDAP group-based role assignment allows mapping AD groups to VxRail Manager access levels.</p>
+<h3 id="vsphere-rbac-for-vxrail-operations">vSphere RBAC for VxRail Operations<a class="headerlink" href="#vsphere-rbac-for-vxrail-operations" title="Permanent link">&para;</a></h3>
+<p>Define vCenter roles for VxRail-specific operational tasks:</p>
+<table>
+<thead>
+<tr>
+<th>Team</th>
+<th>vCenter Role</th>
+<th>Scope</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VxRail Administrators</td>
+<td>Administrator</td>
+<td>VxRail Cluster object</td>
+</tr>
+<tr>
+<td>Storage Operations</td>
+<td>Custom (vSAN ops)</td>
+<td>Cluster level</td>
+</tr>
+<tr>
+<td>Application / VM Owners</td>
+<td>VM Operator (custom)</td>
+<td>VM Folder / Resource Pool</td>
+</tr>
+<tr>
+<td>Read-only / Monitoring</td>
+<td>Read-only</td>
+<td>Datacenter</td>
+</tr>
+</tbody>
+</table>
+<h3 id="host-lockdown-mode">Host Lockdown Mode<a class="headerlink" href="#host-lockdown-mode" title="Permanent link">&para;</a></h3>
+<p>Apply Normal Lockdown mode to all VxRail ESXi hosts. VxRail Manager requires connectivity to the hosts for LCM operations — this is handled via the vCenter API path, which is permitted under Normal Lockdown.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Enable Normal Lockdown on all VxRail hosts</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-Cluster</span> <span class="s2">&quot;VxRail-Cluster&quot;</span> <span class="p">|</span> <span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">EnterLockdownMode</span><span class="p">()</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;Lockdown enabled: </span><span class="p">$(</span><span class="nv">$_</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="p">}</span>
+</code></pre></div>
 <p><strong>Exception users</strong>: Add the VxRail Manager service account to the ESXi exception list if VxRail Manager needs direct host access (required for certain LCM operations). Review VxRail documentation for the specific version.</p>
 <hr />
 <h2 id="encryption">Encryption<a class="headerlink" href="#encryption" title="Permanent link">&para;</a></h2>

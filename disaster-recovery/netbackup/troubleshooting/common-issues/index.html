@@ -3752,34 +3752,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#catalog-issues" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Catalog Issues
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Catalog Issues">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#catalog-backup-not-completing" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Catalog backup not completing
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#storage-unit-issues" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4136,84 +4108,51 @@
 │  NDMP          = Network Data Management Protocol; direct NAS-to-storage backup path                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌────────────────────────────────────── NetBackup — Common Issues ──────────────────────────────────────┐
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   │     Symptom      │   Likely Cause   │    First Check    │       Fix        │      Verify      │   │
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │    Status 96     │client not respon │ ping + bpps on cl │ restart nbclient │     bpps -x      │   │
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │   Status 2106    │  MSDP pool full  │ bpexpdate / nbstl │ expand or expire │  nbstlutil list  │   │
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │    Status 58     │media write error │ check disk/tape h │ new storage unit │   tpconfig -d    │   │
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │    Status 84     │media manager dow │ check ltid proces │   restart ltid   │     vmquery      │   │
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│                                                                                                       │
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │                                     General Triage Pattern                                    │   │
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   │          Is the issue new or recurring? New = recent change; Recurring = config problem       │   │
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│   │             Is it isolated to one source or all? Isolated = agent; All = server/repo          │   │
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│   │                                Check logs first: nbpemreq / bpps                              │   │
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│   │                    If unresolved in 2h: open vendor case with full log bundle                 │   │
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│                                                                                                       │
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│  Physical Infrastructure:                                                                             │
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│  Linux/Windows rack servers · SAN HBAs for tape · 10 GbE NIC · SCSI tape robot connection             │
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│                                                                                                       │
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│  Master Server = central controller: scheduler, catalog, job manager, policy engine                   │
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│  Media Server  = data mover between client and storage; can be co-located with master                 │
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│  MSDP          = Media Server Deduplication Pool; inline variable-length block dedup                  │
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│  Storage Unit  = logical target: AdvancedDisk, MSDP pool, cloud LSU, or tape robot                    │
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  Policy        = defines what, when, and where to back up; contains schedules and clients             │
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  Schedule      = full / differential-incremental / cumulative-incremental timing within policy        │
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  Retention     = how long an image is kept; set per schedule, enforced by catalog expiry              │
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│  Catalog       = internal PostgreSQL DB tracking all image metadata, host IDs, and config             │
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  NBU CA        = auto-issued certificate authority; signs host IDs for secure comms                   │
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│  vnetd         = NetBackup network daemon; multiplexes all client-master-media on port 1556           │
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  bpdbjobs      = CLI to query job history: status, duration, exit code, errors                        │
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  bplist        = CLI to list available backup images for a client, policy, or date range              │
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  KMS           = Key Management Service for encryption keys used in backup data encryption            │
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  NDMP          = Network Data Management Protocol; direct NAS-to-storage backup path                  │
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│                                                                                                       │
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>---
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## Catalog Issues
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>### Catalog backup not completing
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>NetBackup catalog backup is the most critical job. If it has not run in the last 6 hours, investigate immediately.
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>```bash
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a># Check catalog backup job history
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>bplist -S &lt;master-server&gt; -policy NBU_Catalog -Listdead -d 01/01/1970 00:00:00
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a># Force an immediate catalog backup
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>bpbackup -p NBU_Catalog_Backup
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a># Check catalog database consistency
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>bpdbm -consistency -verbose
 </code></pre></div></p>
-<hr />
-<h2 id="catalog-issues">Catalog Issues<a class="headerlink" href="#catalog-issues" title="Permanent link">&para;</a></h2>
-<h3 id="catalog-backup-not-completing">Catalog backup not completing<a class="headerlink" href="#catalog-backup-not-completing" title="Permanent link">&para;</a></h3>
-<p>NetBackup catalog backup is the most critical job. If it has not run in the last 6 hours, investigate immediately.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check catalog backup job history</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>bplist<span class="w"> </span>-S<span class="w"> </span>&lt;master-server&gt;<span class="w"> </span>-policy<span class="w"> </span>NBU_Catalog<span class="w"> </span>-Listdead<span class="w"> </span>-d<span class="w"> </span><span class="m">01</span>/01/1970<span class="w"> </span><span class="m">00</span>:00:00
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Force an immediate catalog backup</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>bpbackup<span class="w"> </span>-p<span class="w"> </span>NBU_Catalog_Backup
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Check catalog database consistency</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>bpdbm<span class="w"> </span>-consistency<span class="w"> </span>-verbose
-</code></pre></div>
 <p>Catalog backup failures often indicate disk space issues under <code>/usr/openv/netbackup/db</code>. Check with <code>df -h</code> and clear old image files with <code>bpexpdate</code> if appropriate.</p>
 <hr />
 <h2 id="storage-unit-issues">Storage Unit Issues<a class="headerlink" href="#storage-unit-issues" title="Permanent link">&para;</a></h2>
 <h3 id="disk-stu-full-new-jobs-queued-but-not-running">Disk STU full — new jobs queued but not running<a class="headerlink" href="#disk-stu-full-new-jobs-queued-but-not-running" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check all STU free space</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>bpstulist<span class="w"> </span>-U
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Check disk pool usage (MSDP / AdvancedDisk)</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>nbdevquery<span class="w"> </span>-listdp<span class="w"> </span>-stype<span class="w"> </span>PureDisk<span class="w"> </span>-U
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Expire old images to reclaim space</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>bpexpdate<span class="w"> </span>-policy<span class="w"> </span>&lt;policyname&gt;<span class="w"> </span>-d<span class="w"> </span><span class="m">0</span><span class="w"> </span>-backupid<span class="w"> </span>&lt;backup-id&gt;
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Run image cleanup to actually reclaim the space</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>bpimage<span class="w"> </span>-cleanup
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check all STU free space</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>bpstulist<span class="w"> </span>-U
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check disk pool usage (MSDP / AdvancedDisk)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>nbdevquery<span class="w"> </span>-listdp<span class="w"> </span>-stype<span class="w"> </span>PureDisk<span class="w"> </span>-U
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Expire old images to reclaim space</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>bpexpdate<span class="w"> </span>-policy<span class="w"> </span>&lt;policyname&gt;<span class="w"> </span>-d<span class="w"> </span><span class="m">0</span><span class="w"> </span>-backupid<span class="w"> </span>&lt;backup-id&gt;
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Run image cleanup to actually reclaim the space</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>bpimage<span class="w"> </span>-cleanup
 </code></pre></div>
 <hr />
 <h2 id="deduplication-msdp-issues">Deduplication (MSDP) Issues<a class="headerlink" href="#deduplication-msdp-issues" title="Permanent link">&para;</a></h2>
 <h3 id="deduplication-ratio-drops">Deduplication ratio drops<a class="headerlink" href="#deduplication-ratio-drops" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check MSDP pool status</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>cacontrol<span class="w"> </span>--dsstat<span class="w"> </span>-d<span class="w"> </span>&lt;msdp-path&gt;
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Check fingerprint database health</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>cacontrol<span class="w"> </span>--dbstat
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Review dedupe log for anomalies</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>tail<span class="w"> </span>-500<span class="w"> </span>/usr/openv/netbackup/logs/spoold/log.&lt;yyyymmdd&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check MSDP pool status</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>cacontrol<span class="w"> </span>--dsstat<span class="w"> </span>-d<span class="w"> </span>&lt;msdp-path&gt;
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Check fingerprint database health</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>cacontrol<span class="w"> </span>--dbstat
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Review dedupe log for anomalies</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>tail<span class="w"> </span>-500<span class="w"> </span>/usr/openv/netbackup/logs/spoold/log.&lt;yyyymmdd&gt;
 </code></pre></div>
 <p>If <code>cacontrol --dbstat</code> reports database errors, do not run further jobs until the MSDP pool is recovered. Engage Veritas support with the <code>nbsupport</code> bundle.</p>
 

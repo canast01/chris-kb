@@ -4479,17 +4479,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#vmotion-failures" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        vMotion Failures
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#ha-events" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4879,87 +4868,45 @@ Procedures reference covering Search Examples, Alerts Overview, Alert Types and 
 │  Alert test        = Manual trigger in alert editor; confirms notification delivery                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌──────────────────────────────── Aria Operations for Logs — Procedures ────────────────────────────────┐
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  Common operational procedures: add sources, rotate certs, manage disk, adjust alerts.                │
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│                                                                                                       │
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │                Add Log Source                │  │             Certificate Rotation            │   │
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │     1. Install content pack if available     │  │    1. Generate new cert with correct SAN    │   │
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │      2. Configure device syslog to vRLI      │  │        2. Import cert via VAMI → SSL        │   │
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │     3. Verify events arriving in Explore     │  │        3. Restart loginsight service        │   │
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │      4. Tag source: env/product fields       │  │     4. Verify sources still sending logs    │   │
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│                                                                                                       │
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│  Disk and retention management prevent appliance from filling up during high-volume events.           │
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│                                                                                                       │
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                          ▼                                                 ▼                          │
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                                                                                                       │
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │               Disk Management                │  │               Alert Management              │   │
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │       Monitor: Admin → System Monitor        │  │         Add: Queries → create alert         │   │
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │        Archive: trigger manual export        │  │      Test: fire test from alert editor      │   │
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │        Purge: reduce retention period        │  │       Route: map to webhook/email/SNow      │   │
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │      Expand: add worker for more space       │  │     Suppress: noise via suppression rule    │   │
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│                                                                                                       │
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  vRLI appliance · /storage disk · NFS archive target · vCenter · syslog sources                       │
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│                                                                                                       │
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Content pack      = Install before onboarding; provides parsers and dashboards for source            │
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│  Explore           = vRLI real-time log viewer; used to confirm new sources are sending               │
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  Source tag        = Custom field on ingested events identifying environment or product               │
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  SAN cert          = Subject Alternative Name; FQDN of vRLI must be in cert SAN list                  │
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  loginsight service= Linux service restarted after cert change to apply new TLS cert                  │
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  System Monitor    = vRLI Admin section showing disk, CPU, RAM, and ingestion metrics                 │
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  Manual archive    = Trigger export of log data to NFS/S3 before disk fills                           │
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  Retention period  = Days of hot log data kept on disk; reduce to free space                          │
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  Worker node       = Add for more disk and processing; joins cluster automatically                    │
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  Alert suppression = Rule preventing noisy known-good events from firing notifications                │
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  Webhook route     = Notification channel sending HTTP POST to external system on alert               │
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  Alert test        = Manual trigger in alert editor; confirms notification delivery                   │
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│                                                                                                       │
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>### vMotion Failures
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>```text
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>vmotion
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>migration failed
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>VMotionFailed
 </code></pre></div></p>
-<h3 id="vmotion-failures">vMotion Failures<a class="headerlink" href="#vmotion-failures" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>vmotion
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>migration failed
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>VMotionFailed
-</code></pre></div>
 <h3 id="ha-events">HA Events<a class="headerlink" href="#ha-events" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>HA failover
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ha.vm.restart
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>failover started
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>admission control
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>HA failover
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ha.vm.restart
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>failover started
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>admission control
 </code></pre></div>
 <h3 id="drs-events">DRS Events<a class="headerlink" href="#drs-events" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>DRS
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>migration recommended
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>load balance
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>DRS
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>migration recommended
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>load balance
 </code></pre></div>
 <h3 id="datastore-errors">Datastore Errors<a class="headerlink" href="#datastore-errors" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>datastore
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>SCSI error
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>APD
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>PDL
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>NFS
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>VMFS
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>datastore
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>SCSI error
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>APD
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>PDL
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>NFS
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>VMFS
 </code></pre></div>
 <h3 id="vsan-errors">vSAN Errors<a class="headerlink" href="#vsan-errors" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>vsan
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>disk group
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>resync
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>object health
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>storage compliance
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>vsan
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>disk group
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>resync
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>object health
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>storage compliance
 </code></pre></div>
 <h3 id="nsx-errors">NSX Errors<a class="headerlink" href="#nsx-errors" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>nsx
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>transport node
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>edge
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>TEP
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>segment
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>nsx
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>transport node
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>edge
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>TEP
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>segment
 </code></pre></div>
 <h3 id="time-based-search-tips">Time-Based Search Tips<a class="headerlink" href="#time-based-search-tips" title="Permanent link">&para;</a></h3>
 <ul>
@@ -4973,39 +4920,39 @@ Procedures reference covering Search Examples, Alerts Overview, Alert Types and 
 <p>Log-based alerts in Aria Operations for Logs (vRealize Log Insight) trigger notifications when query results meet defined thresholds. Alerts can fire via email, webhook, or integration with Aria Operations.</p>
 <h2 id="alert-types-and-configuration">Alert Types and Configuration<a class="headerlink" href="#alert-types-and-configuration" title="Permanent link">&para;</a></h2>
 <p>Alerts are created from saved queries. Navigate to <strong>Interactive Analytics</strong>, build your query, then click <strong>Create Alert</strong>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># List all configured alerts via API</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>https://&lt;vrli-fqdn&gt;/api/v1/alerts<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1"># Get details of a specific alert</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vrli-fqdn&gt;/api/v1/alerts/&lt;alert-id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c1"># Disable an alert</span>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>PUT<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vrli-fqdn&gt;/api/v1/alerts/&lt;alert-id&gt;/state/DISABLED&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span>
-<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>
-<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="c1"># Enable an alert</span>
-<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>PUT<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vrli-fqdn&gt;/api/v1/alerts/&lt;alert-id&gt;/state/ENABLED&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># List all configured alerts via API</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>https://&lt;vrli-fqdn&gt;/api/v1/alerts<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1"># Get details of a specific alert</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vrli-fqdn&gt;/api/v1/alerts/&lt;alert-id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="c1"># Disable an alert</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>PUT<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vrli-fqdn&gt;/api/v1/alerts/&lt;alert-id&gt;/state/DISABLED&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="c1"># Enable an alert</span>
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>PUT<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vrli-fqdn&gt;/api/v1/alerts/&lt;alert-id&gt;/state/ENABLED&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span>
 </code></pre></div>
 <h2 id="alert-query-syntax">Alert Query Syntax<a class="headerlink" href="#alert-query-syntax" title="Permanent link">&para;</a></h2>
 <p>Alerts are built on the same query language used in Interactive Analytics:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Alert on SSH failed logins (count &gt; 10 in 5 min)</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>text<span class="w"> </span>contains<span class="w"> </span><span class="s2">&quot;Failed password&quot;</span><span class="w"> </span>AND<span class="w"> </span>hostname<span class="w"> </span>contains<span class="w"> </span><span class="s2">&quot;prod-&quot;</span><span class="w"> </span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Alert on vCenter alarm events</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="nv">appname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;vpxd&quot;</span><span class="w"> </span>AND<span class="w"> </span>text<span class="w"> </span>contains<span class="w"> </span><span class="s2">&quot;alarm&quot;</span><span class="w"> </span>AND<span class="w"> </span>text<span class="w"> </span>contains<span class="w"> </span><span class="s2">&quot;triggered&quot;</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Alert on disk full events across all Linux hosts</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>text<span class="w"> </span>matches<span class="w"> </span><span class="s2">&quot;No space left on device&quot;</span><span class="w"> </span>AND<span class="w"> </span><span class="nb">source</span><span class="w"> </span>!<span class="o">=</span><span class="w"> </span><span class="s2">&quot;dev&quot;</span>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c1"># Alert on firewall denies from specific subnet</span>
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>text<span class="w"> </span>contains<span class="w"> </span><span class="s2">&quot;DENY&quot;</span><span class="w"> </span>AND<span class="w"> </span>text<span class="w"> </span>contains<span class="w"> </span><span class="s2">&quot;10.0.1.&quot;</span><span class="w"> </span>AND<span class="w"> </span><span class="nv">appname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;pfsense&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Alert on SSH failed logins (count &gt; 10 in 5 min)</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>text<span class="w"> </span>contains<span class="w"> </span><span class="s2">&quot;Failed password&quot;</span><span class="w"> </span>AND<span class="w"> </span>hostname<span class="w"> </span>contains<span class="w"> </span><span class="s2">&quot;prod-&quot;</span><span class="w"> </span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Alert on vCenter alarm events</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="nv">appname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;vpxd&quot;</span><span class="w"> </span>AND<span class="w"> </span>text<span class="w"> </span>contains<span class="w"> </span><span class="s2">&quot;alarm&quot;</span><span class="w"> </span>AND<span class="w"> </span>text<span class="w"> </span>contains<span class="w"> </span><span class="s2">&quot;triggered&quot;</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Alert on disk full events across all Linux hosts</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>text<span class="w"> </span>matches<span class="w"> </span><span class="s2">&quot;No space left on device&quot;</span><span class="w"> </span>AND<span class="w"> </span><span class="nb">source</span><span class="w"> </span>!<span class="o">=</span><span class="w"> </span><span class="s2">&quot;dev&quot;</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Alert on firewall denies from specific subnet</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>text<span class="w"> </span>contains<span class="w"> </span><span class="s2">&quot;DENY&quot;</span><span class="w"> </span>AND<span class="w"> </span>text<span class="w"> </span>contains<span class="w"> </span><span class="s2">&quot;10.0.1.&quot;</span><span class="w"> </span>AND<span class="w"> </span><span class="nv">appname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;pfsense&quot;</span>
 </code></pre></div>
 <h2 id="alert-threshold-settings">Alert Threshold Settings<a class="headerlink" href="#alert-threshold-settings" title="Permanent link">&para;</a></h2>
 <table>
@@ -5036,26 +4983,26 @@ Procedures reference covering Search Examples, Alerts Overview, Alert Types and 
 </table>
 <h2 id="notification-webhooks">Notification Webhooks<a class="headerlink" href="#notification-webhooks" title="Permanent link">&para;</a></h2>
 <p>Webhooks send alert payloads to external systems such as Teams, Slack, or custom endpoints.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># List configured notification destinations</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span>https://&lt;vrli-fqdn&gt;/api/v1/notification/channels<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="c1"># Create a webhook notification channel</span>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">  </span>https://&lt;vrli-fqdn&gt;/api/v1/notification/channels<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="s1">    &quot;type&quot;: &quot;WEBHOOK&quot;,</span>
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="s1">    &quot;name&quot;: &quot;teams-alerts&quot;,</span>
-<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="s1">    &quot;webhookUrl&quot;: &quot;https://example.webhook.office.com/webhookb2/...&quot;,</span>
-<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="s1">    &quot;contentType&quot;: &quot;application/json&quot;,</span>
-<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="s1">    &quot;body&quot;: &quot;{\&quot;text\&quot;: \&quot;Alert: ${alertName} - ${hitCount} events\&quot;}&quot;</span>
-<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="s1">  }&#39;</span>
-<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>
-<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a><span class="c1"># Test a notification channel</span>
-<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vrli-fqdn&gt;/api/v1/notification/channels/&lt;channel-id&gt;/test&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># List configured notification destinations</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span>https://&lt;vrli-fqdn&gt;/api/v1/notification/channels<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="c1"># Create a webhook notification channel</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="w">  </span>https://&lt;vrli-fqdn&gt;/api/v1/notification/channels<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="s1">    &quot;type&quot;: &quot;WEBHOOK&quot;,</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="s1">    &quot;name&quot;: &quot;teams-alerts&quot;,</span>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="s1">    &quot;webhookUrl&quot;: &quot;https://example.webhook.office.com/webhookb2/...&quot;,</span>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="s1">    &quot;contentType&quot;: &quot;application/json&quot;,</span>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="s1">    &quot;body&quot;: &quot;{\&quot;text\&quot;: \&quot;Alert: ${alertName} - ${hitCount} events\&quot;}&quot;</span>
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a><span class="s1">  }&#39;</span>
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a><span class="c1"># Test a notification channel</span>
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vrli-fqdn&gt;/api/v1/notification/channels/&lt;channel-id&gt;/test&quot;</span>
 </code></pre></div>
 <p>Webhook payload variables:</p>
 <table>
@@ -5089,35 +5036,35 @@ Procedures reference covering Search Examples, Alerts Overview, Alert Types and 
 </tbody>
 </table>
 <h2 id="alert-queries-via-api">Alert Queries via API<a class="headerlink" href="#alert-queries-via-api" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Run an ad-hoc alert query to test before creating an alert</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span>https://&lt;vrli-fqdn&gt;/api/v1/events/query<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="s1">    &quot;query&quot;: &quot;text contains \&quot;Failed password\&quot;&quot;,</span>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="s1">    &quot;startTimeMillis&quot;: 1714950000000,</span>
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="s1">    &quot;endTimeMillis&quot;: 1714953600000,</span>
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="s1">    &quot;numResults&quot;: 100</span>
-<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>
-<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="c1"># List active (recently triggered) alerts</span>
-<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vrli-fqdn&gt;/api/v1/alerts?status=ACTIVE&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Run an ad-hoc alert query to test before creating an alert</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span>https://&lt;vrli-fqdn&gt;/api/v1/events/query<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="s1">    &quot;query&quot;: &quot;text contains \&quot;Failed password\&quot;&quot;,</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="s1">    &quot;startTimeMillis&quot;: 1714950000000,</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="s1">    &quot;endTimeMillis&quot;: 1714953600000,</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="s1">    &quot;numResults&quot;: 100</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="c1"># List active (recently triggered) alerts</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vrli-fqdn&gt;/api/v1/alerts?status=ACTIVE&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div>
 <h2 id="integration-with-aria-operations">Integration with Aria Operations<a class="headerlink" href="#integration-with-aria-operations" title="Permanent link">&para;</a></h2>
 <p>When integrated with Aria Operations (vROps), alerts in vRLI can create alerts/symptoms in the vROps console:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Configure vROps integration from vRLI</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span>https://&lt;vrli-fqdn&gt;/api/v1/operations-server-config<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="s1">    &quot;serverHost&quot;: &quot;&lt;vrops-fqdn&gt;&quot;,</span>
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="s1">    &quot;serverPort&quot;: 443,</span>
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="s1">    &quot;username&quot;: &quot;admin&quot;,</span>
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="s1">    &quot;password&quot;: &quot;&lt;password&gt;&quot;,</span>
-<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="s1">    &quot;enabled&quot;: true</span>
-<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="s1">  }&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Configure vROps integration from vRLI</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span>https://&lt;vrli-fqdn&gt;/api/v1/operations-server-config<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="s1">    &quot;serverHost&quot;: &quot;&lt;vrops-fqdn&gt;&quot;,</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="s1">    &quot;serverPort&quot;: 443,</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="s1">    &quot;username&quot;: &quot;admin&quot;,</span>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="s1">    &quot;password&quot;: &quot;&lt;password&gt;&quot;,</span>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="s1">    &quot;enabled&quot;: true</span>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="s1">  }&#39;</span>
 </code></pre></div>
 
 

@@ -4340,17 +4340,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#tls-configuration" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        TLS Configuration
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#sso-password-and-lockout-policy" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4803,67 +4792,25 @@ Hardening reference covering TLS Configuration, SSO Password and Lockout Policy,
 │  Admin count  = fewer admin accounts = smaller blast radius on compromise                             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌───────────────────────────────────── vCenter Server — Hardening ──────────────────────────────────────┐
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  vCenter hardening follows the VMware Security Hardening Guide and CIS benchmark;                     │
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│  key controls: network isolation, MFA, minimal admin, FIPS mode, audit logging.                       │
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│                                                                                                       │
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │              Network Hardening               │  │               Access Hardening              │   │
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │         Mgmt network: dedicated VLAN         │  │            MFA: smart card/RADIUS           │   │
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │         Firewall: only needed ports          │  │           SSO lockout: 5 attempts           │   │
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │         Disable SSH when not needed          │  │         Admin group: 2 accounts max         │   │
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │           TLS 1.2 minimum enforced           │  │            Log: all admin actions           │   │
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                                                                       │
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│  Network isolation and MFA are the highest-value controls for vCenter hardening.                      │
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                                                                                                       │
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                          ▼                                                 ▼                          │
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│                                                                                                       │
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │           Patch &amp; Config Hardening           │  │              Audit &amp; Compliance             │   │
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │         Apply patches within 30 days         │  │           vCenter Chargeback audit          │   │
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │          FIPS mode: enable in VAMI           │  │           Syslog: forward to SIEM           │   │
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │          Disable banner-less login           │  │             CIS benchmark scans             │   │
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   │          Shell access: time-limited          │  │            Review perms quarterly           │   │
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│                                                                                                       │
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  VCSA runs on ESXi host; ESXi itself must be hardened; management VLAN must                           │
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  be unreachable from guest VM networks.                                                               │
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│                                                                                                       │
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  VMware Hardening Guide= published per vSphere version; CIS baseline                                  │
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  CIS benchmark= Center for Internet Security; independent hardening standard                          │
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  FIPS 140-2   = US federal cryptography standard; enable in VAMI &gt; Security                           │
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  MFA          = Multi-Factor Authentication; prevents credential-only login                           │
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  SIEM         = Security Info and Event Mgmt; receives syslog from vCenter                            │
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  Shell timeout= SSH session auto-closes after idle period (set to 900s)                               │
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  Lockout      = SSO disables account after N failed login attempts                                    │
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  Banner       = login warning message; required by some compliance frameworks                         │
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  Dedicated VLAN= separate network segment for vCenter management traffic                              │
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  Patch SLA    = agree cadence: critical &lt;7d, high &lt;30d, medium &lt;90d                                   │
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│  Quarterly review= revoke stale/unnecessary role assignments                                          │
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  Admin count  = fewer admin accounts = smaller blast radius on compromise                             │
-<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│                                                                                                       │
-<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>---
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## TLS Configuration
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>vCenter 7.0+ enforces TLS 1.2 minimum. Verify after upgrading from older vSphere versions:
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>```bash
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a># Check current TLS configuration
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>/usr/lib/vmware-vmafd/bin/vmafd-cli get-tls-endpoint --server-name localhost
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a># Use tls-reconfigurator if older TLS versions are detected
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>/usr/lib/vmware-tls-reconfigurator/VcTlsReconfigurator/reconfigureVc scan
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>/usr/lib/vmware-tls-reconfigurator/VcTlsReconfigurator/reconfigureVc update --tlsVersion TLSv1.2
 </code></pre></div></p>
-<hr />
-<h2 id="tls-configuration">TLS Configuration<a class="headerlink" href="#tls-configuration" title="Permanent link">&para;</a></h2>
-<p>vCenter 7.0+ enforces TLS 1.2 minimum. Verify after upgrading from older vSphere versions:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check current TLS configuration</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>/usr/lib/vmware-vmafd/bin/vmafd-cli<span class="w"> </span>get-tls-endpoint<span class="w"> </span>--server-name<span class="w"> </span>localhost
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Use tls-reconfigurator if older TLS versions are detected</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>/usr/lib/vmware-tls-reconfigurator/VcTlsReconfigurator/reconfigureVc<span class="w"> </span>scan
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>/usr/lib/vmware-tls-reconfigurator/VcTlsReconfigurator/reconfigureVc<span class="w"> </span>update<span class="w"> </span>--tlsVersion<span class="w"> </span>TLSv1.2
-</code></pre></div>
 <p>Test TLS from outside the appliance:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Verify only TLS 1.2+ is accepted</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>vcenter.example.local:443<span class="w"> </span>-tls1<span class="w">   </span><span class="c1"># should fail</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>vcenter.example.local:443<span class="w"> </span>-tls1_1<span class="w"> </span><span class="c1"># should fail</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>vcenter.example.local:443<span class="w"> </span>-tls1_2<span class="w"> </span><span class="c1"># should succeed</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Verify only TLS 1.2+ is accepted</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>vcenter.example.local:443<span class="w"> </span>-tls1<span class="w">   </span><span class="c1"># should fail</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>vcenter.example.local:443<span class="w"> </span>-tls1_1<span class="w"> </span><span class="c1"># should fail</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>vcenter.example.local:443<span class="w"> </span>-tls1_2<span class="w"> </span><span class="c1"># should succeed</span>
 </code></pre></div></p>
 <hr />
 <h2 id="sso-password-and-lockout-policy">SSO Password and Lockout Policy<a class="headerlink" href="#sso-password-and-lockout-policy" title="Permanent link">&para;</a></h2>
@@ -4967,15 +4914,15 @@ Hardening reference covering TLS Configuration, SSO Password and Lockout Policy,
 </tbody>
 </table>
 <p>Exception list: users in the <strong>Exception Users</strong> list can still access the host directly even in Normal lockdown. Keep this list minimal — typically just a break-glass local account.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Enable Normal lockdown on all hosts in a cluster</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-Cluster</span> <span class="s2">&quot;CL-LON-PROD&quot;</span> <span class="p">|</span> <span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">EnterLockdownMode</span><span class="p">()</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;Lockdown enabled: </span><span class="p">$(</span><span class="nv">$_</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2">&quot;</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="p">}</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c"># Check lockdown status</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;Lockdown&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Config</span><span class="p">.</span><span class="n">LockdownMode</span><span class="p">}}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Enable Normal lockdown on all hosts in a cluster</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-Cluster</span> <span class="s2">&quot;CL-LON-PROD&quot;</span> <span class="p">|</span> <span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">EnterLockdownMode</span><span class="p">()</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;Lockdown enabled: </span><span class="p">$(</span><span class="nv">$_</span><span class="p">.</span><span class="n">Name</span><span class="p">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="p">}</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c"># Check lockdown status</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;Lockdown&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Config</span><span class="p">.</span><span class="n">LockdownMode</span><span class="p">}}</span>
 </code></pre></div>
 <hr />
 <h2 id="firewall-hardening">Firewall Hardening<a class="headerlink" href="#firewall-hardening" title="Permanent link">&para;</a></h2>
@@ -5012,13 +4959,13 @@ Hardening reference covering TLS Configuration, SSO Password and Lockout Policy,
 </tbody>
 </table>
 <p>Configure host-based firewall rules on ESXi hosts to restrict management traffic:
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># On ESXi host — view firewall rules</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>get
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span>list
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Restrict management traffic to specific subnets</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--ruleset-id<span class="w"> </span>sshClient<span class="w"> </span>--allowed-all<span class="w"> </span><span class="nb">false</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span>allowedip<span class="w"> </span>add<span class="w"> </span>--ruleset-id<span class="w"> </span>sshClient<span class="w"> </span>--ip-address<span class="w"> </span><span class="m">10</span>.0.1.0/24
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># On ESXi host — view firewall rules</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>get
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span>list
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Restrict management traffic to specific subnets</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--ruleset-id<span class="w"> </span>sshClient<span class="w"> </span>--allowed-all<span class="w"> </span><span class="nb">false</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span>allowedip<span class="w"> </span>add<span class="w"> </span>--ruleset-id<span class="w"> </span>sshClient<span class="w"> </span>--ip-address<span class="w"> </span><span class="m">10</span>.0.1.0/24
 </code></pre></div></p>
 <hr />
 <h2 id="audit-logging-configuration">Audit Logging Configuration<a class="headerlink" href="#audit-logging-configuration" title="Permanent link">&para;</a></h2>
@@ -5028,9 +4975,9 @@ Hardening reference covering TLS Configuration, SSO Password and Lockout Policy,
 - Set maximum event age to 90 days minimum
 - Set maximum task age to 90 days minimum</p>
 <h3 id="syslog-forwarding-to-siem">Syslog Forwarding to SIEM<a class="headerlink" href="#syslog-forwarding-to-siem" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>VAMI (https://&lt;vcenter&gt;:5480) → Syslog → Add Syslog Server
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>Protocol: TLS (preferred)
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>Port: 6514 (TLS) or 514 (UDP)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>VAMI (https://&lt;vcenter&gt;:5480) → Syslog → Add Syslog Server
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Protocol: TLS (preferred)
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Port: 6514 (TLS) or 514 (UDP)
 </code></pre></div>
 <p>Key events to alert on in SIEM:</p>
 <table>
@@ -5068,16 +5015,16 @@ Hardening reference covering TLS Configuration, SSO Password and Lockout Policy,
 </tbody>
 </table>
 <h3 id="vcenter-alarm-for-security-events">vCenter Alarm for Security Events<a class="headerlink" href="#vcenter-alarm-for-security-events" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># Create alarm for failed logins (PowerCLI)</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nv">$am</span> <span class="p">=</span> <span class="nb">Get-View</span> <span class="n">AlarmManager</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="nv">$as</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">VMware</span><span class="p">.</span><span class="n">Vim</span><span class="p">.</span><span class="n">AlarmSpec</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="nv">$as</span><span class="p">.</span><span class="n">Name</span> <span class="p">=</span> <span class="s2">&quot;SSO Login Failure Alert&quot;</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="nv">$as</span><span class="p">.</span><span class="n">Description</span> <span class="p">=</span> <span class="s2">&quot;Alert on repeated failed SSO logins&quot;</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="nv">$as</span><span class="p">.</span><span class="n">Enabled</span> <span class="p">=</span> <span class="nv">$true</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="nv">$as</span><span class="p">.</span><span class="n">Expression</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">VMware</span><span class="p">.</span><span class="n">Vim</span><span class="p">.</span><span class="n">EventAlarmExpression</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="nv">$as</span><span class="p">.</span><span class="n">Expression</span><span class="p">.</span><span class="n">EventType</span> <span class="p">=</span> <span class="s2">&quot;com.vmware.sso.LoginFailure&quot;</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="nv">$as</span><span class="p">.</span><span class="n">Expression</span><span class="p">.</span><span class="n">Status</span> <span class="p">=</span> <span class="s2">&quot;red&quot;</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c"># Note: Full alarm creation via PowerCLI requires detailed AlarmTriggeringAction — use vSphere Client UI for production</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Create alarm for failed logins (PowerCLI)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nv">$am</span> <span class="p">=</span> <span class="nb">Get-View</span> <span class="n">AlarmManager</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nv">$as</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">VMware</span><span class="p">.</span><span class="n">Vim</span><span class="p">.</span><span class="n">AlarmSpec</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="nv">$as</span><span class="p">.</span><span class="n">Name</span> <span class="p">=</span> <span class="s2">&quot;SSO Login Failure Alert&quot;</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nv">$as</span><span class="p">.</span><span class="n">Description</span> <span class="p">=</span> <span class="s2">&quot;Alert on repeated failed SSO logins&quot;</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="nv">$as</span><span class="p">.</span><span class="n">Enabled</span> <span class="p">=</span> <span class="nv">$true</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="nv">$as</span><span class="p">.</span><span class="n">Expression</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">VMware</span><span class="p">.</span><span class="n">Vim</span><span class="p">.</span><span class="n">EventAlarmExpression</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="nv">$as</span><span class="p">.</span><span class="n">Expression</span><span class="p">.</span><span class="n">EventType</span> <span class="p">=</span> <span class="s2">&quot;com.vmware.sso.LoginFailure&quot;</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="nv">$as</span><span class="p">.</span><span class="n">Expression</span><span class="p">.</span><span class="n">Status</span> <span class="p">=</span> <span class="s2">&quot;red&quot;</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c"># Note: Full alarm creation via PowerCLI requires detailed AlarmTriggeringAction — use vSphere Client UI for production</span>
 </code></pre></div>
 <p>Simpler approach: <strong>vCenter → Monitor → Alarms → Alarm Definitions → Add</strong> and select event-based trigger.</p>
 <hr />
@@ -5130,13 +5077,13 @@ Hardening reference covering TLS Configuration, SSO Password and Lockout Policy,
 <p>Host Profiles capture the entire ESXi host configuration (including security settings) and enforce it across all hosts in a cluster. Deviations are flagged as non-compliant.</p>
 <p>Create a Host Profile: <strong>vCenter → Policies and Profiles → Host Profiles → Extract Profile from Host</strong></p>
 <p>Select a known-good, fully hardened host as the reference. Apply to all cluster hosts via <strong>Policies and Profiles → Attach/Detach Hosts and Clusters</strong>, then use <strong>Check Compliance</strong> to identify drifted hosts.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c"># Check compliance of all hosts against their profile</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>    <span class="nv">$profile</span> <span class="p">=</span> <span class="nb">Get-VMHostProfile</span> <span class="n">-Entity</span> <span class="nv">$_</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>    <span class="k">if</span> <span class="p">(</span><span class="nv">$profile</span><span class="p">)</span> <span class="p">{</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>        <span class="nb">Test-VMHostProfileCompliance</span> <span class="n">-VMHost</span> <span class="nv">$_</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">VMHost</span><span class="p">,</span> <span class="n">ComplianceStatus</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>    <span class="p">}</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># Check compliance of all hosts against their profile</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    <span class="nv">$profile</span> <span class="p">=</span> <span class="nb">Get-VMHostProfile</span> <span class="n">-Entity</span> <span class="nv">$_</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    <span class="k">if</span> <span class="p">(</span><span class="nv">$profile</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>        <span class="nb">Test-VMHostProfileCompliance</span> <span class="n">-VMHost</span> <span class="nv">$_</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">VMHost</span><span class="p">,</span> <span class="n">ComplianceStatus</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>    <span class="p">}</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="p">}</span>
 </code></pre></div>
 <hr />
 <h2 id="reference-vmware-security-advisories-vmsa">Reference: VMware Security Advisories (VMSA)<a class="headerlink" href="#reference-vmware-security-advisories-vmsa" title="Permanent link">&para;</a></h2>

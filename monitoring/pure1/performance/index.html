@@ -4222,6 +4222,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#latency-investigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Latency Investigation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#performance-benchmarking-fio" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4400,7 +4411,7 @@
 Performance reference covering Performance via Pure1 API, Latency Investigation, Performance Benchmarking (fio), Common Performance Issues.
 </div>
 
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────────── Pure1 — Performance Analysis ─────────────────────────────────────┐
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────────── Pure1 — Performance Analysis ─────────────────────────────────────┐
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │             Performance Metrics              │  │            Workload Intelligence            │   │
@@ -4431,58 +4442,25 @@ Performance reference covering Performance via Pure1 API, Latency Investigation,
 <a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│                                                                                                       │
 <a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-┌──────────────────────────────────── Pure1 — Performance Analysis ─────────────────────────────────────┐
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Performance Metrics              │  │            Workload Intelligence            │   │
-│   │               IOPS read/write                │  │               Workload ID (AI)              │   │
-│   │               Latency p50/p99                │  │               IO size profile               │   │
-│   │                Bandwidth MB/s                │  │               Read/write ratio              │   │
-│   │                 Queue depth                  │  │               Fleet benchmark               │   │
-│   │               Per-volume stats               │  │              Custom time range              │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Metrics from Purity OS via phonehome · Pure1 aggregates and visualises                               │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  IOPS = Input/Output Operations per Second; primary performance metric                                │
-│  p50 latency = Median latency; 50% of operations faster than this value                               │
-│  p99 latency = 99th percentile; 1% of operations slower; shows tail latency                           │
-│  Bandwidth = Throughput in MB/s; saturates at network limit before IOPS typically                     │
-│  Queue depth = Outstanding IO requests; high queue depth may indicate saturation                      │
-│  Per-volume = Pure1 showing IOPS/latency per volume for workload isolation                            │
-│  Workload ID = Pure1 AI classifying application type from IO signature                                │
-│  IO size = Average IO request size in KB; small random vs large sequential                            │
-│  Read/write ratio = Proportion of reads vs writes; impacts cache effectiveness                        │
-│  Fleet benchmark = Pure1 comparing array performance to anonymised peer group                         │
-│  Custom range = Pure1 UI allows selecting arbitrary time window for analysis                          │
-│  Anomaly = Pure1 ML detecting performance deviation from established baseline                         │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## Latency Investigation
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>High latency on a Pure FlashArray usually originates from the host side, not the array. Investigate in this order:
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>```text
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>1. Check array latency: purearray list --performance
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>   → If array latency OK (&lt; 1ms) → problem is host-side or network
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>2. Check volume-level latency: purevol list --performance
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>   → Identify which volumes are slow
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>3. Check host queue depth: purehost list --performance
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>   → High queue depth on a specific host → host HBA or multipath issue
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>4. Check network path (iSCSI/FC port errors):
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>   pureport list --performance
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>   purehw list | grep -i &quot;FC\|eth&quot;
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>5. Check for snapshot overhead:
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>   puresnapshot list --space | sort -k5 -rh | head -5
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>   → Large snapshot trees add read amplification
-</code></pre></div></p>
+<h2 id="latency-investigation">Latency Investigation<a class="headerlink" href="#latency-investigation" title="Permanent link">&para;</a></h2>
+<p>High latency on a Pure FlashArray usually originates from the host side, not the array. Investigate in this order:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>1. Check array latency: purearray list --performance
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>   → If array latency OK (&lt; 1ms) → problem is host-side or network
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>2. Check volume-level latency: purevol list --performance
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>   → Identify which volumes are slow
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>3. Check host queue depth: purehost list --performance
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>   → High queue depth on a specific host → host HBA or multipath issue
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>4. Check network path (iSCSI/FC port errors):
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>   pureport list --performance
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>   purehw list | grep -i &quot;FC\|eth&quot;
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>5. Check for snapshot overhead:
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>   puresnapshot list --space | sort -k5 -rh | head -5
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>   → Large snapshot trees add read amplification
+</code></pre></div>
 <h2 id="performance-benchmarking-fio">Performance Benchmarking (fio)<a class="headerlink" href="#performance-benchmarking-fio" title="Permanent link">&para;</a></h2>
 <p>Run from the host after verifying the issue is host-observable:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Sequential read (throughput baseline)</span>

@@ -3222,23 +3222,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Management Plane Encryption Stack">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#test-snmp-v3-from-monitoring-server" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Test SNMP v3 from Monitoring Server
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
         <li class="md-nav__item">
@@ -3658,156 +3641,112 @@
 │  Dual control    = key operations require two independent admin approvals                             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────────────── Brocade Fabric OS — Encryption ────────────────────────────────────┐
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Fabric OS encryption: FC-SP for fabric security, management TLS, optional data-at-rest.              │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│                                                                                                       │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │         Management Plane Encryption          │  │           Fabric Security (FC-SP)           │   │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │         SSH: encrypted CLI sessions          │  │         FC-SP: ISL encryption option        │   │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │          HTTPS: TLS 1.2/1.3 for GUI          │  │         DH-CHAP: auth + key exchange        │   │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   │           SNMPv3: AES-128 privacy            │  │       Shared secret rotated per fabric      │   │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   │       syslog: TLS encrypted forwarding       │  │        FCAP: cert-based key exchange        │   │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   │           Disable Telnet/FTP/HTTP            │  │          Per-port auth enforcement          │   │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                                                                                                       │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  Management traffic encrypted via SSH/HTTPS; fabric traffic secured via FC-SP DH-CHAP.                │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│                                                                                                       │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│                          ▼                                                 ▼                          │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│                                                                                                       │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │         Data-at-Rest (Hardware Enc)          │  │                Key Management               │   │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │        Brocade Encryption Switch (ES)        │  │           KMIP: NetApp/Thales KMAX          │   │
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   │        FS8-18 blade encryption engine        │  │          Master key in hardware HSM         │   │
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   │            LUN-level AES-256-XTS             │  │           Key zeroisation on decom          │   │
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│   │        Transparent to host and array         │  │       Dual control: 2 admins required       │   │
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│   │         Re-keying without data loss          │  │        Audit: key usage events logged       │   │
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│                                                                                                       │
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  Brocade FC switch / FS8-18 blade · HSM appliance · FC cables · storage array                         │
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│                                                                                                       │
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│                                                                                                       │
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  FC-SP           = Fibre Channel Security Protocol; optional ISL authentication/encryption            │
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│  DH-CHAP         = Diffie-Hellman CHAP; generates shared session key for FC-SP                        │
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│  FS8-18          = Brocade encryption blade for DCX directors; LUN-level AES-256                      │
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│  KMIP            = Key Management Interoperability Protocol; connects to external KMS                 │
-<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│  AES-256-XTS     = AES in XEX-based Tweaked-codebook mode XTS; disk encryption standard               │
-<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│  SNMPv3 privacy  = AES-128 encryption for SNMP PDU payload; auth + privacy mode                       │
-<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│  HSM             = Hardware Security Module; tamper-proof storage for encryption keys                 │
-<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│  Key zeroisation = secure key erasure on decommission; NIST SP800-88 procedure                        │
-<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│  Re-keying       = rotating encryption keys for stored data without decrypting first                  │
-<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│  SSH             = Secure Shell; replaces Telnet for encrypted CLI management access                  │
-<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│  TLS 1.2/1.3     = Transport Layer Security; HTTPS management GUI encryption                          │
-<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>│  Dual control    = key operations require two independent admin approvals                             │
-<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>│                                                                                                       │
-<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>### Test SNMP v3 from Monitoring Server
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>```bash
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a># From the monitoring server — verify SNMP v3 connectivity
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>snmpwalk -v3 -u &lt;snmp-username&gt; \
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>  -l authPriv \
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  -a SHA -A &lt;auth-password&gt; \
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>  -x AES -X &lt;priv-password&gt; \
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>  &lt;switch-ip&gt; 1.3.6.1.2.1.1.1.0
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a># Expected: sysDescr value showing FabricOS and switch platform
 </code></pre></div></p>
-<h3 id="test-snmp-v3-from-monitoring-server">Test SNMP v3 from Monitoring Server<a class="headerlink" href="#test-snmp-v3-from-monitoring-server" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># From the monitoring server — verify SNMP v3 connectivity</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>snmpwalk<span class="w"> </span>-v3<span class="w"> </span>-u<span class="w"> </span>&lt;snmp-username&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>-l<span class="w"> </span>authPriv<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>-a<span class="w"> </span>SHA<span class="w"> </span>-A<span class="w"> </span>&lt;auth-password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>-x<span class="w"> </span>AES<span class="w"> </span>-X<span class="w"> </span>&lt;priv-password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>&lt;switch-ip&gt;<span class="w"> </span><span class="m">1</span>.3.6.1.2.1.1.1.0
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Expected: sysDescr value showing FabricOS and switch platform</span>
-</code></pre></div>
 <hr />
 <h2 id="ssh-configuration">SSH Configuration<a class="headerlink" href="#ssh-configuration" title="Permanent link">&para;</a></h2>
 <p>SSH is the only permitted management protocol for CLI access. Telnet must be disabled on all production switches.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check SSH status and configuration</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>sshutil<span class="w"> </span>--show
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Generate or regenerate SSH host keys (RSA 2048-bit minimum)</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>sshutil<span class="w"> </span>--genkey<span class="w"> </span>-t<span class="w"> </span>rsa
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Generate an ECDSA host key (preferred for newer FOS versions)</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>sshutil<span class="w"> </span>--genkey<span class="w"> </span>-t<span class="w"> </span>ecdsa
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Verify Telnet is disabled (check sshutil output for telnetd state)</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>sshutil<span class="w"> </span>--show<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>telnet
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check SSH status and configuration</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>sshutil<span class="w"> </span>--show
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Generate or regenerate SSH host keys (RSA 2048-bit minimum)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>sshutil<span class="w"> </span>--genkey<span class="w"> </span>-t<span class="w"> </span>rsa
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Generate an ECDSA host key (preferred for newer FOS versions)</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>sshutil<span class="w"> </span>--genkey<span class="w"> </span>-t<span class="w"> </span>ecdsa
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Verify Telnet is disabled (check sshutil output for telnetd state)</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>sshutil<span class="w"> </span>--show<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>telnet
 </code></pre></div>
 <h3 id="disable-telnet">Disable Telnet<a class="headerlink" href="#disable-telnet" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Disable Telnet via configure (requires admin role)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>configure
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># At &quot;Fabric parameters&quot; prompt: press Enter (no change)</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># At &quot;System services&quot; prompt: enter Y</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># At &quot;Telnet service&quot; prompt: enter 0 (disable)</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Complete configure wizard</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Disable Telnet via configure (requires admin role)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>configure
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># At &quot;Fabric parameters&quot; prompt: press Enter (no change)</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># At &quot;System services&quot; prompt: enter Y</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># At &quot;Telnet service&quot; prompt: enter 0 (disable)</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># Complete configure wizard</span>
 </code></pre></div>
 <p>Verify Telnet is disabled by attempting a Telnet connection from a management workstation — the connection should be refused.</p>
 <h3 id="ssh-host-key-rotation">SSH Host Key Rotation<a class="headerlink" href="#ssh-host-key-rotation" title="Permanent link">&para;</a></h3>
 <p>Rotate SSH host keys annually or after any suspected key compromise:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Generate new RSA host key</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>sshutil<span class="w"> </span>--genkey<span class="w"> </span>-t<span class="w"> </span>rsa
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># After key rotation, update known_hosts on all management workstations</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># and jump hosts that connect to this switch</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Generate new RSA host key</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>sshutil<span class="w"> </span>--genkey<span class="w"> </span>-t<span class="w"> </span>rsa
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># After key rotation, update known_hosts on all management workstations</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># and jump hosts that connect to this switch</span>
 </code></pre></div>
 <hr />
 <h2 id="https-tls-configuration">HTTPS / TLS Configuration<a class="headerlink" href="#https-tls-configuration" title="Permanent link">&para;</a></h2>
 <p>Web Tools and the FabricOS REST API use HTTPS. HTTP must be disabled so that management traffic cannot be intercepted.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Disable HTTP and enable HTTPS</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>httpcfg<span class="w"> </span>--set<span class="w"> </span>-https<span class="w"> </span><span class="m">1</span><span class="w">    </span><span class="c1"># Enable HTTPS</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>httpcfg<span class="w"> </span>--set<span class="w"> </span>-http<span class="w"> </span><span class="m">0</span><span class="w">     </span><span class="c1"># Disable HTTP</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Verify HTTP/HTTPS state</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>httpcfg<span class="w"> </span>--show
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Check the current TLS certificate in use</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>seccertmgmt<span class="w"> </span>--show
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># Show certificate details (subject, expiry)</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>seccertmgmt<span class="w"> </span>--show<span class="w"> </span>-type<span class="w"> </span>https
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Disable HTTP and enable HTTPS</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>httpcfg<span class="w"> </span>--set<span class="w"> </span>-https<span class="w"> </span><span class="m">1</span><span class="w">    </span><span class="c1"># Enable HTTPS</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>httpcfg<span class="w"> </span>--set<span class="w"> </span>-http<span class="w"> </span><span class="m">0</span><span class="w">     </span><span class="c1"># Disable HTTP</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Verify HTTP/HTTPS state</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>httpcfg<span class="w"> </span>--show
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Check the current TLS certificate in use</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>seccertmgmt<span class="w"> </span>--show
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Show certificate details (subject, expiry)</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>seccertmgmt<span class="w"> </span>--show<span class="w"> </span>-type<span class="w"> </span>https
 </code></pre></div>
 <h3 id="tls-certificate-management">TLS Certificate Management<a class="headerlink" href="#tls-certificate-management" title="Permanent link">&para;</a></h3>
 <p>Brocade FOS supports self-signed certificates (default) and CA-signed certificates. Use CA-signed certificates in environments with automated certificate validation.</p>
 <h4 id="generate-a-certificate-signing-request-csr">Generate a Certificate Signing Request (CSR)<a class="headerlink" href="#generate-a-certificate-signing-request-csr" title="Permanent link">&para;</a></h4>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Generate a CSR for the HTTPS certificate</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>seccertmgmt<span class="w"> </span>--action<span class="w"> </span>gencsr<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>-type<span class="w"> </span>https<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>-country<span class="w"> </span>GB<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span>-state<span class="w"> </span><span class="s2">&quot;England&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span>-locality<span class="w"> </span><span class="s2">&quot;London&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span>-org<span class="w"> </span><span class="s2">&quot;Company Name&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span>-orgunit<span class="w"> </span><span class="s2">&quot;Infrastructure&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">  </span>-cn<span class="w"> </span>&lt;switch-fqdn&gt;
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># The CSR is saved to flash — export it</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>seccertmgmt<span class="w"> </span>--export<span class="w"> </span>-type<span class="w"> </span>csr<span class="w"> </span>-scp<span class="w"> </span>&lt;username&gt;@&lt;server&gt;:&lt;path&gt;/switch.csr
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Generate a CSR for the HTTPS certificate</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>seccertmgmt<span class="w"> </span>--action<span class="w"> </span>gencsr<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>-type<span class="w"> </span>https<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>-country<span class="w"> </span>GB<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>-state<span class="w"> </span><span class="s2">&quot;England&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span>-locality<span class="w"> </span><span class="s2">&quot;London&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span>-org<span class="w"> </span><span class="s2">&quot;Company Name&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span>-orgunit<span class="w"> </span><span class="s2">&quot;Infrastructure&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span>-cn<span class="w"> </span>&lt;switch-fqdn&gt;
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># The CSR is saved to flash — export it</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>seccertmgmt<span class="w"> </span>--export<span class="w"> </span>-type<span class="w"> </span>csr<span class="w"> </span>-scp<span class="w"> </span>&lt;username&gt;@&lt;server&gt;:&lt;path&gt;/switch.csr
 </code></pre></div>
 <h4 id="import-a-signed-certificate">Import a Signed Certificate<a class="headerlink" href="#import-a-signed-certificate" title="Permanent link">&para;</a></h4>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Import the CA-signed certificate</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>seccertmgmt<span class="w"> </span>--import<span class="w"> </span>-type<span class="w"> </span>https<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>-scp<span class="w"> </span>&lt;username&gt;@&lt;server&gt;:&lt;path&gt;/switch.crt
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Import the CA certificate chain (if required by the CA)</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>seccertmgmt<span class="w"> </span>--import<span class="w"> </span>-type<span class="w"> </span>ca<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">  </span>-scp<span class="w"> </span>&lt;username&gt;@&lt;server&gt;:&lt;path&gt;/ca-chain.crt
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># Activate the new certificate (requires web service restart)</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>seccertmgmt<span class="w"> </span>--activate<span class="w"> </span>-type<span class="w"> </span>https
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="c1"># Verify the certificate is active</span>
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>seccertmgmt<span class="w"> </span>--show<span class="w"> </span>-type<span class="w"> </span>https
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Import the CA-signed certificate</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>seccertmgmt<span class="w"> </span>--import<span class="w"> </span>-type<span class="w"> </span>https<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>-scp<span class="w"> </span>&lt;username&gt;@&lt;server&gt;:&lt;path&gt;/switch.crt
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Import the CA certificate chain (if required by the CA)</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>seccertmgmt<span class="w"> </span>--import<span class="w"> </span>-type<span class="w"> </span>ca<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span>-scp<span class="w"> </span>&lt;username&gt;@&lt;server&gt;:&lt;path&gt;/ca-chain.crt
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Activate the new certificate (requires web service restart)</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>seccertmgmt<span class="w"> </span>--activate<span class="w"> </span>-type<span class="w"> </span>https
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># Verify the certificate is active</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>seccertmgmt<span class="w"> </span>--show<span class="w"> </span>-type<span class="w"> </span>https
 </code></pre></div>
 <h4 id="certificate-expiry-monitoring">Certificate Expiry Monitoring<a class="headerlink" href="#certificate-expiry-monitoring" title="Permanent link">&para;</a></h4>
 <p>Track certificate expiry dates in CMDB. MAPS does not natively alert on certificate expiry — monitor via SANnav or an external certificate monitoring tool.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># View current certificate expiry</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>seccertmgmt<span class="w"> </span>--show<span class="w"> </span>-type<span class="w"> </span>https<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>expir
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># View current certificate expiry</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>seccertmgmt<span class="w"> </span>--show<span class="w"> </span>-type<span class="w"> </span>https<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>expir
 </code></pre></div>
 <hr />
 <h2 id="disable-unused-protocols">Disable Unused Protocols<a class="headerlink" href="#disable-unused-protocols" title="Permanent link">&para;</a></h2>
 <p>Reduce the management attack surface by disabling all unnecessary services.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Verify all management protocol states</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>sshutil<span class="w"> </span>--show<span class="w">      </span><span class="c1"># SSH: should be enabled; Telnet: should be disabled</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>httpcfg<span class="w"> </span>--show<span class="w">      </span><span class="c1"># HTTP: disabled; HTTPS: enabled</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>snmpconfig<span class="w"> </span>--show<span class="w">   </span><span class="c1"># SNMP v3 configured; v1/v2c community strings removed</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="c1"># Disable RSH (remote shell — insecure legacy protocol)</span>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>configure
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="c1"># At &quot;RSH service&quot; prompt: enter 0 (disable)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Verify all management protocol states</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>sshutil<span class="w"> </span>--show<span class="w">      </span><span class="c1"># SSH: should be enabled; Telnet: should be disabled</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>httpcfg<span class="w"> </span>--show<span class="w">      </span><span class="c1"># HTTP: disabled; HTTPS: enabled</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>snmpconfig<span class="w"> </span>--show<span class="w">   </span><span class="c1"># SNMP v3 configured; v1/v2c community strings removed</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1"># Disable RSH (remote shell — insecure legacy protocol)</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>configure
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># At &quot;RSH service&quot; prompt: enter 0 (disable)</span>
 </code></pre></div>
 <h3 id="protocol-compliance-table">Protocol Compliance Table<a class="headerlink" href="#protocol-compliance-table" title="Permanent link">&para;</a></h3>
 <table>

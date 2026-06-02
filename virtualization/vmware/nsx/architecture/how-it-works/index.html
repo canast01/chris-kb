@@ -4282,6 +4282,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#edge-node-transport-nodes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Edge Node Transport Nodes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#geneve-encapsulation" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4651,7 +4662,7 @@
 How It Works reference covering API Surfaces, Transport Nodes, Geneve Encapsulation, Transport Zones, Gateway Architecture — T0 and T1 and 7 more sections.
 </div>
 
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────────────── NSX Architecture — How It Works ───────────────────────────────────┐
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────────────── NSX Architecture — How It Works ───────────────────────────────────┐
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │       NSX separates control, management, and data planes; overlay runs on each ESXi host      │   │
@@ -4704,75 +4715,44 @@ How It Works reference covering API Surfaces, Transport Nodes, Geneve Encapsulat
 <a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>│                                                                                                       │
 <a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-┌─────────────────────────────────── NSX Architecture — How It Works ───────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │       NSX separates control, management, and data planes; overlay runs on each ESXi host      │   │
-│   │      Control plane: NSX Manager (3-node cluster) pushes config to Transport Nodes via RPC     │   │
-│   │        Data plane: DLR runs on each host; Geneve encapsulates E-W traffic between TEPs        │   │
-│   │          North-South: SR on Edge Node routes to physical; BGP peers with ToR switches         │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    NSX Manager config → Transport Node kernel modules → Geneve overlay → Edge SR → physical           │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │        Control Plane        │  │       Data Plane (E-W)      │  │          Edge (N-S)         │   │
-│   │       NSX Manager × 3       │  │       DLR on each host      │  │        Service Router       │   │
-│   │       Config RPC push       │  │        Geneve VNI tag       │  │          BGP to ToR         │   │
-│   │       TEP pool assign       │  │         TEP src/dst         │  │         SNAT / DNAT         │   │
-│   │        DFW rule push        │  │         DFW at vNIC         │  │          LB service         │   │
-│   │        Segment create       │  │       BUM replication       │  │        GRE/IPsec VPN        │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    VM-to-VM same host: no Geneve; DFW filters and DLR forwards in-kernel directly                     │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Traffic type   │   Entry point    │        Path       │    Exit point    │     Protocol     │   │
-│   │  E-W same host   │     VM vNIC      │     DFW → DLR     │    Target VM     │  None/in-kernel  │   │
-│   │  E-W diff host   │     VM vNIC      │      DFW→TEP      │    TEP→DFW→VM    │ Geneve/UDP 6081  │   │
-│   │   N-S outbound   │    VM → T1 DR    │   T1 SR → T0 SR   │   ToR→upstream   │     BGP ECMP     │   │
-│   │   N-S inbound    │   ToR → T0 SR    │     T0 → T1 SR    │    DNAT → VM     │    BGP + SNAT    │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: ESXi hosts · N-VDS/VDS with TEP vmknic · Edge VMs on bare-metal or VM form               │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    DLR           = Distributed Logical Router; runs as kernel module on every ESXi host               │
-│    SR            = Service Router; runs on Edge Node; handles stateful N-S services                   │
-│    TEP           = Tunnel End Point; vmknic IP used as Geneve encap src/dst per host                  │
-│    Geneve        = Generic Network Virtualization Encapsulation; NSX overlay protocol                 │
-│    VNI           = Virtual Network Identifier; 24-bit segment ID in Geneve header                     │
-│    DFW           = Distributed Firewall; stateful L4-L7 kernel-level filter at each vNIC              │
-│    BUM           = Broadcast/Unknown-unicast/Multicast; replicated via head-end or multicast          │
-│    T0 gateway    = Tier-0 Logical Router; provider-level; BGP peers with physical fabric              │
-│    T1 gateway    = Tier-1 Logical Router; tenant-level; connects segments to T0                       │
-│    BGP ECMP      = T0 uses ECMP over multiple Edge uplinks for active-active North-South              │
-│    N-VDS         = NSX-managed vSwitch; hosts TEP vmknic and overlay traffic                          │
-│    ToR           = Top-of-Rack physical switch; BGP peer for T0 gateway uplinks                       │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>### Edge Node Transport Nodes
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Edge nodes are NSX-deployed VMs or bare-metal appliances hosting north-south gateway functions.
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>| Interface | Name | Purpose |
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>|---|---|---|
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| Management | eth0 | SSH, NSX Manager communication |
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>| Uplink 0 | fp-eth0 | Physical router-facing (BGP peer) |
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>| Uplink 1 | fp-eth1 | Second physical path (HA or ECMP) |
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>| Overlay | nsx-geneve | Geneve encap for overlay within Edge |
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>```bash
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a># SSH to Edge node
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>get interfaces
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>get service dataplane   # Confirm dataplane is running
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>get service router      # Confirm routing engine is running
-</code></pre></div></p>
+<h3 id="edge-node-transport-nodes">Edge Node Transport Nodes<a class="headerlink" href="#edge-node-transport-nodes" title="Permanent link">&para;</a></h3>
+<p>Edge nodes are NSX-deployed VMs or bare-metal appliances hosting north-south gateway functions.</p>
+<table>
+<thead>
+<tr>
+<th>Interface</th>
+<th>Name</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Management</td>
+<td>eth0</td>
+<td>SSH, NSX Manager communication</td>
+</tr>
+<tr>
+<td>Uplink 0</td>
+<td>fp-eth0</td>
+<td>Physical router-facing (BGP peer)</td>
+</tr>
+<tr>
+<td>Uplink 1</td>
+<td>fp-eth1</td>
+<td>Second physical path (HA or ECMP)</td>
+</tr>
+<tr>
+<td>Overlay</td>
+<td>nsx-geneve</td>
+<td>Geneve encap for overlay within Edge</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># SSH to Edge node</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>get<span class="w"> </span>interfaces
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>get<span class="w"> </span>service<span class="w"> </span>dataplane<span class="w">   </span><span class="c1"># Confirm dataplane is running</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>get<span class="w"> </span>service<span class="w"> </span>router<span class="w">      </span><span class="c1"># Confirm routing engine is running</span>
+</code></pre></div>
 <hr />
 <h2 id="geneve-encapsulation">Geneve Encapsulation<a class="headerlink" href="#geneve-encapsulation" title="Permanent link">&para;</a></h2>
 <p>NSX uses Geneve (port 6081) — not VXLAN. The VNI identifies which logical segment a packet belongs to.</p>

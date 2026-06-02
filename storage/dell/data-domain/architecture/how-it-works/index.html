@@ -3993,50 +3993,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#components" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Components
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#ha-options" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        HA Options
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#protocol-access" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Protocol Access
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#key-cli-commands" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Key CLI Commands
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -4286,161 +4242,50 @@ How It Works reference covering Overview, Architecture, Data Path, Components, H
 │    Reference     = Duplicate segment stored as pointer to existing segment; saves disk space          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────────────── Dell Data Domain — How It Works ───────────────────────────────────┐
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │        Data Domain performs inline dedup: segments incoming data, hashes, checks index        │   │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │            Unique segments written to DDOS; duplicates recorded as references only            │   │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │           NVRAM buffers writes; segment index (fingerprint DB) held in RAM for speed          │   │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│                                                                                                       │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│    Write path: data → segment → hash → index lookup → unique: write / dup: reference only             │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│                                                                                                       │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│                          ▼                                                 ▼                          │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                                                                                                       │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   │                  Write Path                  │  │                  Read Path                  │   │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │       1. Data enters via NFS/Boost/VTL       │  │          1. Restore request arrives         │   │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │      2. Chunked into variable segments       │  │        2. DDOS resolves segment refs        │   │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │       3. SHA-1 fingerprint per segment       │  │          3. Segments read from disk         │   │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │         4. Index lookup in RAM/NVRAM         │  │           4. Reassembled in order           │   │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │       5. Unique: write to disk + index       │  │         5. Decompressed + delivered         │   │
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   │       6. Duplicate: metadata ref only        │  │          6. Data returned to client         │   │
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│                                                                                                       │
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│   │     DD Boost: client-side library segments data before sending; reduces network by 50–90%     │   │
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│   │       Cleaning: DDOS garbage collects orphaned segments during off-hours (cron default)       │   │
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│   │           Replication: only sends unique new segments to DR DD; bandwidth-efficient           │   │
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│                                                                                                       │
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│    Key terms:                                                                                         │
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│                                                                                                       │
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│    Segment       = Variable-length data chunk (avg 8 KB); unit of deduplication                       │
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│    Fingerprint   = SHA-1 hash of segment content; used as dedup index key                             │
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│    Segment index = In-RAM hash table mapping fingerprints to disk locations                           │
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│    NVRAM cache   = Incoming writes staged in NVRAM; protects against power loss mid-stream            │
-<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│    Cleaning      = Scheduled DDOS process removing segments no longer referenced                      │
-<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│    DD Boost lib  = Plugin installed in backup app (NBU, Networker, Veeam); enables client dedup       │
-<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│    Reference     = Duplicate segment stored as pointer to existing segment; saves disk space          │
-<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│                                                                                                       │
-<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>DDBoost reduces network traffic by ~50% via source-side deduplication — only unique segments are sent to the DD appliance.
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>## Components
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>| Component | Description |
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>|---|---|
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>| DDBoost | Protocol allowing backup software to perform source-side dedup filtering; integrates with NetBackup, Commvault, Veeam |
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>| SISL Engine | Stream-Informed Segment Layout; fingerprints segments and matches against global index; new unique segments go to NVRAM |
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>| NVRAM | Power-safe write buffer; writes acknowledged to backup software after NVRAM landing |
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>| MTree | Logical namespace partition (`/data/col1/&lt;name&gt;`); quotas, retention locks, and replication policies set per MTree |
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>| DD Replicator | Asynchronous delta replication between DD systems; replicates only new unique segments (TCP 2051) |
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>| Cloud Tier | Lifecycle policy to offload aged segments to S3-compatible or Azure Blob object storage |
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>| VTL | Virtual Tape Library interface via FC for tape-based backup software integration |
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>## HA Options
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>| Model | HA Type | Description |
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>|---|---|---|
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>| DD2200–DD9400 | Single node | No controller failover; HA via MTree replication to remote DD |
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>| DD9900 | Active-Standby pair | Two DD heads sharing SAS disk shelves; standby monitors active; automatic failover |
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>## Protocol Access
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>| Protocol | Port | Use Case |
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>|---|---|---|
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>| DDBoost over IP | TCP 2052 (HTTP) / 2053 (HTTPS) | Primary — backup software integration |
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>| NFS v3 | TCP/UDP 2049 | Unix/Linux backup clients |
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>| CIFS/SMB | TCP 445 | Windows backup clients |
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>| VTL | FC | Tape-emulation for legacy backup software |
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>| DD Replicator | TCP 2051 | DD-to-DD replication |
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>| Management (CLI/UI) | TCP 22 (SSH) / 443 (HTTPS) | Administration |
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>## Key CLI Commands
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>```bash
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>filesys status                    # filesystem enabled/disabled state
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>filesys show space                # pre/post-compression capacity
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>filesys show compression          # global dedup ratio (healthy = 20:1+)
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>replication show                  # replication context states
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>ddboost show clients              # connected backup servers
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>alerts show current               # active hardware/software alerts
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>system show                       # hardware health (fans, PSUs, disks)
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>mtree list                        # all MTrees and their quota status
 </code></pre></div></p>
-<p>DDBoost reduces network traffic by ~50% via source-side deduplication — only unique segments are sent to the DD appliance.</p>
-<h2 id="components">Components<a class="headerlink" href="#components" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Component</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>DDBoost</td>
-<td>Protocol allowing backup software to perform source-side dedup filtering; integrates with NetBackup, Commvault, Veeam</td>
-</tr>
-<tr>
-<td>SISL Engine</td>
-<td>Stream-Informed Segment Layout; fingerprints segments and matches against global index; new unique segments go to NVRAM</td>
-</tr>
-<tr>
-<td>NVRAM</td>
-<td>Power-safe write buffer; writes acknowledged to backup software after NVRAM landing</td>
-</tr>
-<tr>
-<td>MTree</td>
-<td>Logical namespace partition (<code>/data/col1/&lt;name&gt;</code>); quotas, retention locks, and replication policies set per MTree</td>
-</tr>
-<tr>
-<td>DD Replicator</td>
-<td>Asynchronous delta replication between DD systems; replicates only new unique segments (TCP 2051)</td>
-</tr>
-<tr>
-<td>Cloud Tier</td>
-<td>Lifecycle policy to offload aged segments to S3-compatible or Azure Blob object storage</td>
-</tr>
-<tr>
-<td>VTL</td>
-<td>Virtual Tape Library interface via FC for tape-based backup software integration</td>
-</tr>
-</tbody>
-</table>
-<h2 id="ha-options">HA Options<a class="headerlink" href="#ha-options" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Model</th>
-<th>HA Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>DD2200–DD9400</td>
-<td>Single node</td>
-<td>No controller failover; HA via MTree replication to remote DD</td>
-</tr>
-<tr>
-<td>DD9900</td>
-<td>Active-Standby pair</td>
-<td>Two DD heads sharing SAS disk shelves; standby monitors active; automatic failover</td>
-</tr>
-</tbody>
-</table>
-<h2 id="protocol-access">Protocol Access<a class="headerlink" href="#protocol-access" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Protocol</th>
-<th>Port</th>
-<th>Use Case</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>DDBoost over IP</td>
-<td>TCP 2052 (HTTP) / 2053 (HTTPS)</td>
-<td>Primary — backup software integration</td>
-</tr>
-<tr>
-<td>NFS v3</td>
-<td>TCP/UDP 2049</td>
-<td>Unix/Linux backup clients</td>
-</tr>
-<tr>
-<td>CIFS/SMB</td>
-<td>TCP 445</td>
-<td>Windows backup clients</td>
-</tr>
-<tr>
-<td>VTL</td>
-<td>FC</td>
-<td>Tape-emulation for legacy backup software</td>
-</tr>
-<tr>
-<td>DD Replicator</td>
-<td>TCP 2051</td>
-<td>DD-to-DD replication</td>
-</tr>
-<tr>
-<td>Management (CLI/UI)</td>
-<td>TCP 22 (SSH) / 443 (HTTPS)</td>
-<td>Administration</td>
-</tr>
-</tbody>
-</table>
-<h2 id="key-cli-commands">Key CLI Commands<a class="headerlink" href="#key-cli-commands" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>filesys<span class="w"> </span>status<span class="w">                    </span><span class="c1"># filesystem enabled/disabled state</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>filesys<span class="w"> </span>show<span class="w"> </span>space<span class="w">                </span><span class="c1"># pre/post-compression capacity</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>filesys<span class="w"> </span>show<span class="w"> </span>compression<span class="w">          </span><span class="c1"># global dedup ratio (healthy = 20:1+)</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>replication<span class="w"> </span>show<span class="w">                  </span><span class="c1"># replication context states</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>ddboost<span class="w"> </span>show<span class="w"> </span>clients<span class="w">              </span><span class="c1"># connected backup servers</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>alerts<span class="w"> </span>show<span class="w"> </span>current<span class="w">               </span><span class="c1"># active hardware/software alerts</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>system<span class="w"> </span>show<span class="w">                       </span><span class="c1"># hardware health (fans, PSUs, disks)</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>mtree<span class="w"> </span>list<span class="w">                        </span><span class="c1"># all MTrees and their quota status</span>
-</code></pre></div>
 
 
 

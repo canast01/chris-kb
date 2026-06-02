@@ -2835,17 +2835,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#backup-file-integrity-check" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Backup File Integrity Check
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#test-restore-procedure" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3114,78 +3103,43 @@ Confirm database backups are completing successfully, files are intact, and rest
 │    Binary log   = MySQL changelog of every committed transaction; needed for PITR                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌──────────────────────────────────── Database — Backup Validation ─────────────────────────────────────┐
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │      Confirm database backups are completing successfully and restores work before needed     │   │
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │          PostgreSQL: pgBackRest info + WAL archiving; MySQL: mysqldump + binary logs          │   │
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │         SQL Server: RESTORE VERIFYONLY; Oracle: RMAN validate; check agent job history        │   │
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│                                                                                                       │
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│                          ▼                                                 ▼                          │
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│                                                                                                       │
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   │             Backup Status Checks             │  │             Restore Verification            │   │
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│   │           pgBackRest: stanza info            │  │           Restore to test instance          │   │
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│   │         Check last backup timestamp          │  │         Run row count + key queries         │   │
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│   │         Verify WAL archiving current         │  │          RESTORE VERIFYONLY (MSSQL)         │   │
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   │            SQL Agent job history             │  │           RMAN validate backupset           │   │
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │             Alert on missed jobs             │  │             Document test result            │   │
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│                                                                                                       │
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │     Platform     │  Check command   │   Restore verify  │    Frequency     │     Alert on     │   │
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   │    PostgreSQL    │ pgbackrest info  │  pg_restore test  │      Daily       │     WAL gap      │   │
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│   │    SQL Server    │Agent job history │    VERIFY ONLY    │      Daily       │   Job failure    │   │
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│   │      MySQL       │    mysqlcheck    │  Restore + query  │      Daily       │    Binlog gap    │   │
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│   │      Oracle      │    RMAN list     │   RMAN validate   │      Daily       │   RMAN failure   │   │
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│                                                                                                       │
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│    Key terms:                                                                                         │
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│    pgBackRest   = PostgreSQL backup tool; stanza = named backup config for a cluster                  │
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│    WAL archiving= PostgreSQL ships WAL segments to archive; gap = missing logs; PITR broken           │
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│    VERIFY ONLY  = SQL Server command; reads backup and validates checksums without restoring          │
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│    RMAN validate= Oracle checks backup set integrity; reports any corrupt blocks found                │
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│    Binary log   = MySQL changelog of every committed transaction; needed for PITR                     │
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│                                                                                                       │
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## Backup File Integrity Check
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>```bash
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a># PostgreSQL — verify backup with pgBackRest
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>pgbackrest --stanza=&lt;stanza-name&gt; check
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a># MySQL — verify xtrabackup integrity
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>xtrabackup --prepare --target-dir=/backup/mysql/latest/
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a># SQL Server — verify backup file checksum
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>RESTORE VERIFYONLY FROM DISK = &#39;/backup/mssql/mydb_full.bak&#39; WITH CHECKSUM;
 </code></pre></div></p>
-<h2 id="backup-file-integrity-check">Backup File Integrity Check<a class="headerlink" href="#backup-file-integrity-check" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># PostgreSQL — verify backup with pgBackRest</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>pgbackrest<span class="w"> </span>--stanza<span class="o">=</span>&lt;stanza-name&gt;<span class="w"> </span>check
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># MySQL — verify xtrabackup integrity</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>xtrabackup<span class="w"> </span>--prepare<span class="w"> </span>--target-dir<span class="o">=</span>/backup/mysql/latest/
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># SQL Server — verify backup file checksum</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>RESTORE<span class="w"> </span>VERIFYONLY<span class="w"> </span>FROM<span class="w"> </span><span class="nv">DISK</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;/backup/mssql/mydb_full.bak&#39;</span><span class="w"> </span>WITH<span class="w"> </span>CHECKSUM<span class="p">;</span>
-</code></pre></div>
 <h2 id="test-restore-procedure">Test Restore Procedure<a class="headerlink" href="#test-restore-procedure" title="Permanent link">&para;</a></h2>
 <p>Perform test restores to a non-production target on a defined schedule (weekly for critical DBs).</p>
 <h3 id="postgresql-test-restore">PostgreSQL Test Restore<a class="headerlink" href="#postgresql-test-restore" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Restore to test instance</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>pgbackrest<span class="w"> </span>--stanza<span class="o">=</span>&lt;stanza-name&gt;<span class="w"> </span>--pg1-path<span class="o">=</span>/var/lib/pgsql/test-restore<span class="w"> </span>restore
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Start test instance and verify</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>pg_ctl<span class="w"> </span>-D<span class="w"> </span>/var/lib/pgsql/test-restore<span class="w"> </span>start
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>psql<span class="w"> </span>-p<span class="w"> </span><span class="m">5433</span><span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT count(*) FROM pg_stat_user_tables;&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Restore to test instance</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>pgbackrest<span class="w"> </span>--stanza<span class="o">=</span>&lt;stanza-name&gt;<span class="w"> </span>--pg1-path<span class="o">=</span>/var/lib/pgsql/test-restore<span class="w"> </span>restore
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Start test instance and verify</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>pg_ctl<span class="w"> </span>-D<span class="w"> </span>/var/lib/pgsql/test-restore<span class="w"> </span>start
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>psql<span class="w"> </span>-p<span class="w"> </span><span class="m">5433</span><span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT count(*) FROM pg_stat_user_tables;&quot;</span>
 </code></pre></div>
 <h3 id="mysql-test-restore">MySQL Test Restore<a class="headerlink" href="#mysql-test-restore" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Copy backup to test directory</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>xtrabackup<span class="w"> </span>--prepare<span class="w"> </span>--target-dir<span class="o">=</span>/restore/mysql-test/
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>rsync<span class="w"> </span>-a<span class="w"> </span>/restore/mysql-test/<span class="w"> </span>/var/lib/mysql-test/
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>chown<span class="w"> </span>-R<span class="w"> </span>mysql:<span class="w"> </span>/var/lib/mysql-test/
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>mysqld_safe<span class="w"> </span>--datadir<span class="o">=</span>/var/lib/mysql-test<span class="w"> </span>--socket<span class="o">=</span>/tmp/mysql-test.sock<span class="w"> </span><span class="p">&amp;</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>mysql<span class="w"> </span>-S<span class="w"> </span>/tmp/mysql-test.sock<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;SHOW DATABASES;&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Copy backup to test directory</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>xtrabackup<span class="w"> </span>--prepare<span class="w"> </span>--target-dir<span class="o">=</span>/restore/mysql-test/
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>rsync<span class="w"> </span>-a<span class="w"> </span>/restore/mysql-test/<span class="w"> </span>/var/lib/mysql-test/
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>chown<span class="w"> </span>-R<span class="w"> </span>mysql:<span class="w"> </span>/var/lib/mysql-test/
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>mysqld_safe<span class="w"> </span>--datadir<span class="o">=</span>/var/lib/mysql-test<span class="w"> </span>--socket<span class="o">=</span>/tmp/mysql-test.sock<span class="w"> </span><span class="p">&amp;</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>mysql<span class="w"> </span>-S<span class="w"> </span>/tmp/mysql-test.sock<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;SHOW DATABASES;&quot;</span>
 </code></pre></div>
 <h3 id="sql-server-test-restore">SQL Server Test Restore<a class="headerlink" href="#sql-server-test-restore" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">RESTORE</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="p">[</span><span class="n">TestRestore</span><span class="p">]</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">DISK</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;/backup/mssql/prod_full.bak&#39;</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="k">WITH</span><span class="w"> </span><span class="k">MOVE</span><span class="w"> </span><span class="s1">&#39;proddb&#39;</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="s1">&#39;/var/opt/mssql/data/TestRestore.mdf&#39;</span><span class="p">,</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">     </span><span class="k">MOVE</span><span class="w"> </span><span class="s1">&#39;proddb_log&#39;</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="s1">&#39;/var/opt/mssql/data/TestRestore_log.ldf&#39;</span><span class="p">,</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">     </span><span class="k">REPLACE</span><span class="p">,</span><span class="w"> </span><span class="n">STATS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="p">;</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1">-- Verify table counts match expected</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="n">USE</span><span class="w"> </span><span class="n">TestRestore</span><span class="p">;</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">important_table</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">RESTORE</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="p">[</span><span class="n">TestRestore</span><span class="p">]</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">DISK</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;/backup/mssql/prod_full.bak&#39;</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="k">WITH</span><span class="w"> </span><span class="k">MOVE</span><span class="w"> </span><span class="s1">&#39;proddb&#39;</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="s1">&#39;/var/opt/mssql/data/TestRestore.mdf&#39;</span><span class="p">,</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">     </span><span class="k">MOVE</span><span class="w"> </span><span class="s1">&#39;proddb_log&#39;</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="s1">&#39;/var/opt/mssql/data/TestRestore_log.ldf&#39;</span><span class="p">,</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">     </span><span class="k">REPLACE</span><span class="p">,</span><span class="w"> </span><span class="n">STATS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="p">;</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1">-- Verify table counts match expected</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="n">USE</span><span class="w"> </span><span class="n">TestRestore</span><span class="p">;</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">important_table</span><span class="p">;</span>
 </code></pre></div>
 <h2 id="validation-checklist">Validation Checklist<a class="headerlink" href="#validation-checklist" title="Permanent link">&para;</a></h2>
 <ul>

@@ -3931,30 +3931,8 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#creating-a-test-copy-via-rpma" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Creating a Test Copy via RPMA
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#image-access-sequence-diagram" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Image Access Sequence Diagram
-      
-    </span>
-  </a>
   
 </li>
       
@@ -4249,74 +4227,37 @@
 │    Recovery point   = Specific second-level timestamp in journal window chosen for recovery           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌─────────────────────────────────── RecoverPoint — Backup &amp; Restore ───────────────────────────────────┐
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │RecoverPoint provides CDP-based recovery; no traditional backup agent needed for replicated VMs│   │
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │Recovery options: image access (non-disruptive), test copy, failover, and restore to production│   │
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │  RPA config backup: export system settings from Unisphere; store off-site after every change  │   │
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │              Recovery granularity: any point in journal window, or named bookmark             │   │
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│                                                                                                       │
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│    Recovery flow: select CG ──► choose point-in-time ──► image access or failover ──► validate        │
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│                                                                                                       │
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│                          ▼                                                 ▼                          │
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                                                                       │
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│   │               Recovery Methods               │  │                Config Backup                │   │
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│   │           Image access (read-only)           │  │           Export system config XML          │   │
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   │          Image access (r/w enabled)          │  │           Store after every change          │   │
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │           Test copy (bubble VLAN)            │  │            RPA appliance snapshot           │   │
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │           Failover (prod cutover)            │  │             Re-import on rebuild            │   │
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │         Failback (resync + cutback)          │  │              Test import on lab             │   │
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│                                                                                                       │
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│    Physical: failover powers on replica VMs at DR site; requires pre-configured networks              │
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│                                                                                                       │
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│    Key terms:                                                                                         │
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│                                                                                                       │
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│    Image access     = Non-disruptive mount of journal image; source VMs continue running unchanged    │
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│    Read/write image = Enable writes to image copy; journal paused; useful for data mining recovery    │
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│    Test copy        = Full VM boot of replica in isolated bubble network; validates recoverability    │
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│    Failover         = Commit image to replica; power on VMs at DR site; redirect production traffic   │
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│    Failback         = After failover; reverse replicate from DR to prod; restore original direction   │
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│    Bookmark         = Named time marker; set before patching, app changes, or maintenance windows     │
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│    Config export    = Unisphere → System → Export Config; saves all CG definitions and RPA settings   │
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│    Journal rollback = Roll journal pointer back to earlier timestamp; expose older write sequence     │
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│    Bubble VLAN      = Isolated portgroup; test copy VMs powered on here; no prod network access       │
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│    RPO validation   = Confirm lag at time of failover; determines actual data loss window             │
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│    Resync           = After failback; re-establish replication from production to DR direction        │
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│    Recovery point   = Specific second-level timestamp in journal window chosen for recovery           │
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│                                                                                                       │
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>### Creating a Test Copy via RPMA
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>1. **Consistency Groups** → select CG → **Test Copy**.
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>2. Choose the journal point (bookmark or date/time).
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>3. Select the target host where the test volume should be presented.
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>4. Click **Create Test Copy**.
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>5. The test volume appears on the test host. Boot test VMs, run application checks.
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>6. Click **Delete Test Copy** when done — writes are discarded.
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>---
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>## Image Access Sequence Diagram
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>```mermaid
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>sequenceDiagram
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>    participant Admin
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>    participant RP as RecoverPoint
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>    participant Journal as Journal Store
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>    participant AccessHost as Access Host
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>    Admin-&gt;&gt;RP: Enable Image Access (Logged Access, read-only)
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>    RP-&gt;&gt;Journal: Identify requested journal point
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>    Journal-&gt;&gt;RP: Acknowledge — image ready
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>    RP-&gt;&gt;AccessHost: Present volume at selected point in time
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>    AccessHost-&gt;&gt;AccessHost: Volume visible as disk
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>    Admin-&gt;&gt;AccessHost: Mount volume / browse data / validate
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>    Admin-&gt;&gt;RP: Disable Image Access
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>    RP-&gt;&gt;AccessHost: Remove volume
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>    RP-&gt;&gt;Journal: Resume normal journal write processing
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>    Note over RP: Replication was not interrupted
 </code></pre></div></p>
-<h3 id="creating-a-test-copy-via-rpma">Creating a Test Copy via RPMA<a class="headerlink" href="#creating-a-test-copy-via-rpma" title="Permanent link">&para;</a></h3>
-<ol>
-<li><strong>Consistency Groups</strong> → select CG → <strong>Test Copy</strong>.</li>
-<li>Choose the journal point (bookmark or date/time).</li>
-<li>Select the target host where the test volume should be presented.</li>
-<li>Click <strong>Create Test Copy</strong>.</li>
-<li>The test volume appears on the test host. Boot test VMs, run application checks.</li>
-<li>Click <strong>Delete Test Copy</strong> when done — writes are discarded.</li>
-</ol>
-<hr />
-<h2 id="image-access-sequence-diagram">Image Access Sequence Diagram<a class="headerlink" href="#image-access-sequence-diagram" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>sequenceDiagram
-    participant Admin
-    participant RP as RecoverPoint
-    participant Journal as Journal Store
-    participant AccessHost as Access Host
-
-    Admin-&gt;&gt;RP: Enable Image Access (Logged Access, read-only)
-    RP-&gt;&gt;Journal: Identify requested journal point
-    Journal-&gt;&gt;RP: Acknowledge — image ready
-    RP-&gt;&gt;AccessHost: Present volume at selected point in time
-    AccessHost-&gt;&gt;AccessHost: Volume visible as disk
-    Admin-&gt;&gt;AccessHost: Mount volume / browse data / validate
-    Admin-&gt;&gt;RP: Disable Image Access
-    RP-&gt;&gt;AccessHost: Remove volume
-    RP-&gt;&gt;Journal: Resume normal journal write processing
-    Note over RP: Replication was not interrupted</code></pre>
 <hr />
 <h2 id="post-recovery-validation-steps">Post-Recovery Validation Steps<a class="headerlink" href="#post-recovery-validation-steps" title="Permanent link">&para;</a></h2>
 <table>

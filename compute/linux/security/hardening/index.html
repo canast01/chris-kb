@@ -3080,17 +3080,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#kernel-hardening-sysctl" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Kernel Hardening — sysctl
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#auditd-system-call-and-file-auditing" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3499,323 +3488,284 @@ CIS benchmark controls, kernel hardening via sysctl, auditd configuration, login
 │  SYN cookie  = Defense against SYN flood DoS by encoding state in SYN-ACK                             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌────────────────────────────────────── Linux — System Hardening ───────────────────────────────────────┐
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  CIS benchmark-aligned Linux hardening: kernel, network, packages, and auditing.                      │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│                                                                                                       │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │               Kernel Hardening               │  │              Network Hardening              │   │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │           sysctl: disable IPv6 fwd           │  │             firewalld / nftables            │   │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │           kernel.dmesg_restrict=1            │  │           deny all inbound default          │   │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   │              fs.suid_dumpable=0              │  │              TCP SYN cookies on             │   │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   │             kernel.yama.ptrace=1             │  │              RP filter enabled              │   │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   │             randomize_va_space=2             │  │           No ICMP redirect accept           │   │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                                                                                                       │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   │              Package &amp; Service               │  │              Audit &amp; Monitoring             │   │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │            Remove unused packages            │  │            auditd: syscall rules            │   │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │           Disable unused services            │  │            AIDE: integrity checks           │   │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │          Auto-patch: dnf-automatic           │  │             logwatch / journald             │   │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │            RPM GPG verify always             │  │               oscap: CIS scan               │   │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │           noexec on /tmp /var/tmp            │  │            fail2ban: brute force            │   │
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│                                                                                                       │
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│  x86-64 servers · hardware firewall · TPM 2.0 · NIC with port security · physical locks               │
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│                                                                                                       │
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│                                                                                                       │
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  CIS Benchmark= Consensus security configuration standard for OS and apps                             │
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│  ASLR        = Address Space Layout Randomization; randomize_va_space=2                               │
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  sysctl      = Kernel runtime parameters in /proc/sys; persisted via sysctl.conf                      │
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│  AIDE        = Advanced Intrusion Detection Environment; compares file hashes                         │
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  auditd      = Records security-relevant syscalls; stores in /var/log/audit/                          │
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│  oscap       = OpenSCAP tool; applies and reports on SCAP/CIS benchmarks                              │
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│  noexec      = Mount option preventing execution of binaries from that filesystem                     │
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│  nftables    = Modern Linux firewall framework replacing iptables                                     │
-<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│  fail2ban    = Bans IPs after repeated failed auth attempts via iptables/nftables                     │
-<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│  ptrace      = Kernel syscall for process tracing; restrict to prevent privilege esc                  │
-<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│  RP filter   = Reverse path filter; drops packets with spoofed source addresses                       │
-<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│  SYN cookie  = Defense against SYN flood DoS by encoding state in SYN-ACK                             │
-<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│                                                                                                       │
-<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>## Kernel Hardening — sysctl
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Apply via `/etc/sysctl.d/99-hardening.conf`. Load with `sysctl --system`.
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>```text
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a># /etc/sysctl.d/99-hardening.conf
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a># ── Network hardening ────────────────────────────────────────────────────────
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a># Disable IP forwarding (unless this is a router)
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>net.ipv4.ip_forward = 0
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>net.ipv6.conf.all.forwarding = 0
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a># Disable IPv6 if not used
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>net.ipv6.conf.all.disable_ipv6 = 1
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>net.ipv6.conf.default.disable_ipv6 = 1
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a># Prevent source routing
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>net.ipv4.conf.all.accept_source_route = 0
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>net.ipv4.conf.default.accept_source_route = 0
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>net.ipv6.conf.all.accept_source_route = 0
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a># Prevent ICMP redirects (MITM vector)
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>net.ipv4.conf.all.accept_redirects = 0
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>net.ipv4.conf.default.accept_redirects = 0
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>net.ipv4.conf.all.send_redirects = 0
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>net.ipv6.conf.all.accept_redirects = 0
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a># Enable reverse path filtering (anti-spoofing)
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>net.ipv4.conf.all.rp_filter = 1
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>net.ipv4.conf.default.rp_filter = 1
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a># Log suspicious packets
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>net.ipv4.conf.all.log_martians = 1
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>net.ipv4.conf.default.log_martians = 1
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a># Ignore ICMP broadcast (Smurf attack prevention)
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>net.ipv4.icmp_echo_ignore_broadcasts = 1
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a># Ignore bogus ICMP error responses
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>net.ipv4.icmp_ignore_bogus_error_responses = 1
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a># SYN cookies — protect against SYN flood
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>net.ipv4.tcp_syncookies = 1
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>
+<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a># TCP timestamps — disable to reduce fingerprinting
+<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>net.ipv4.tcp_timestamps = 0
+<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>
+<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a># ── Kernel hardening ─────────────────────────────────────────────────────────
+<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>
+<a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a># Restrict dmesg to root only
+<a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>kernel.dmesg_restrict = 1
+<a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a>
+<a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a># Restrict kernel pointer exposure
+<a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a>kernel.kptr_restrict = 2
+<a id="__codelineno-0-56" name="__codelineno-0-56" href="#__codelineno-0-56"></a>
+<a id="__codelineno-0-57" name="__codelineno-0-57" href="#__codelineno-0-57"></a># Disable core dumps for setuid programs
+<a id="__codelineno-0-58" name="__codelineno-0-58" href="#__codelineno-0-58"></a>fs.suid_dumpable = 0
+<a id="__codelineno-0-59" name="__codelineno-0-59" href="#__codelineno-0-59"></a>
+<a id="__codelineno-0-60" name="__codelineno-0-60" href="#__codelineno-0-60"></a># Restrict ptrace — 1 = only parent can ptrace child; 3 = disabled entirely
+<a id="__codelineno-0-61" name="__codelineno-0-61" href="#__codelineno-0-61"></a>kernel.yama.ptrace_scope = 1
+<a id="__codelineno-0-62" name="__codelineno-0-62" href="#__codelineno-0-62"></a>
+<a id="__codelineno-0-63" name="__codelineno-0-63" href="#__codelineno-0-63"></a># Disable magic SysRq key
+<a id="__codelineno-0-64" name="__codelineno-0-64" href="#__codelineno-0-64"></a>kernel.sysrq = 0
+<a id="__codelineno-0-65" name="__codelineno-0-65" href="#__codelineno-0-65"></a>
+<a id="__codelineno-0-66" name="__codelineno-0-66" href="#__codelineno-0-66"></a># Randomise virtual address space (ASLR) — 2 = full randomisation
+<a id="__codelineno-0-67" name="__codelineno-0-67" href="#__codelineno-0-67"></a>kernel.randomize_va_space = 2
+<a id="__codelineno-0-68" name="__codelineno-0-68" href="#__codelineno-0-68"></a>
+<a id="__codelineno-0-69" name="__codelineno-0-69" href="#__codelineno-0-69"></a># Restrict access to kernel address space
+<a id="__codelineno-0-70" name="__codelineno-0-70" href="#__codelineno-0-70"></a>kernel.perf_event_paranoid = 3
 </code></pre></div></p>
-<h2 id="kernel-hardening-sysctl">Kernel Hardening — sysctl<a class="headerlink" href="#kernel-hardening-sysctl" title="Permanent link">&para;</a></h2>
-<p>Apply via <code>/etc/sysctl.d/99-hardening.conf</code>. Load with <code>sysctl --system</code>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a># /etc/sysctl.d/99-hardening.conf
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a># ── Network hardening ────────────────────────────────────────────────────────
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a># Disable IP forwarding (unless this is a router)
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>net.ipv4.ip_forward = 0
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>net.ipv6.conf.all.forwarding = 0
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a># Disable IPv6 if not used
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>net.ipv6.conf.all.disable_ipv6 = 1
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>net.ipv6.conf.default.disable_ipv6 = 1
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a># Prevent source routing
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>net.ipv4.conf.all.accept_source_route = 0
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>net.ipv4.conf.default.accept_source_route = 0
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>net.ipv6.conf.all.accept_source_route = 0
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a># Prevent ICMP redirects (MITM vector)
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>net.ipv4.conf.all.accept_redirects = 0
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>net.ipv4.conf.default.accept_redirects = 0
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>net.ipv4.conf.all.send_redirects = 0
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>net.ipv6.conf.all.accept_redirects = 0
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a># Enable reverse path filtering (anti-spoofing)
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>net.ipv4.conf.all.rp_filter = 1
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>net.ipv4.conf.default.rp_filter = 1
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a># Log suspicious packets
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>net.ipv4.conf.all.log_martians = 1
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>net.ipv4.conf.default.log_martians = 1
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a># Ignore ICMP broadcast (Smurf attack prevention)
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>net.ipv4.icmp_echo_ignore_broadcasts = 1
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a># Ignore bogus ICMP error responses
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>net.ipv4.icmp_ignore_bogus_error_responses = 1
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a># SYN cookies — protect against SYN flood
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>net.ipv4.tcp_syncookies = 1
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a># TCP timestamps — disable to reduce fingerprinting
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>net.ipv4.tcp_timestamps = 0
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>
-<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a># ── Kernel hardening ─────────────────────────────────────────────────────────
-<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>
-<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a># Restrict dmesg to root only
-<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>kernel.dmesg_restrict = 1
-<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>
-<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a># Restrict kernel pointer exposure
-<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>kernel.kptr_restrict = 2
-<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>
-<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a># Disable core dumps for setuid programs
-<a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a>fs.suid_dumpable = 0
-<a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a>
-<a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a># Restrict ptrace — 1 = only parent can ptrace child; 3 = disabled entirely
-<a id="__codelineno-1-56" name="__codelineno-1-56" href="#__codelineno-1-56"></a>kernel.yama.ptrace_scope = 1
-<a id="__codelineno-1-57" name="__codelineno-1-57" href="#__codelineno-1-57"></a>
-<a id="__codelineno-1-58" name="__codelineno-1-58" href="#__codelineno-1-58"></a># Disable magic SysRq key
-<a id="__codelineno-1-59" name="__codelineno-1-59" href="#__codelineno-1-59"></a>kernel.sysrq = 0
-<a id="__codelineno-1-60" name="__codelineno-1-60" href="#__codelineno-1-60"></a>
-<a id="__codelineno-1-61" name="__codelineno-1-61" href="#__codelineno-1-61"></a># Randomise virtual address space (ASLR) — 2 = full randomisation
-<a id="__codelineno-1-62" name="__codelineno-1-62" href="#__codelineno-1-62"></a>kernel.randomize_va_space = 2
-<a id="__codelineno-1-63" name="__codelineno-1-63" href="#__codelineno-1-63"></a>
-<a id="__codelineno-1-64" name="__codelineno-1-64" href="#__codelineno-1-64"></a># Restrict access to kernel address space
-<a id="__codelineno-1-65" name="__codelineno-1-65" href="#__codelineno-1-65"></a>kernel.perf_event_paranoid = 3
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Apply without rebooting</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>sysctl<span class="w"> </span>--system
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Verify a specific parameter</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>sysctl<span class="w"> </span>net.ipv4.ip_forward
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>sysctl<span class="w"> </span>kernel.randomize_va_space
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Apply without rebooting</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>sysctl<span class="w"> </span>--system
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Verify a specific parameter</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>sysctl<span class="w"> </span>net.ipv4.ip_forward
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>sysctl<span class="w"> </span>kernel.randomize_va_space
 </code></pre></div>
 <h2 id="auditd-system-call-and-file-auditing">auditd — System Call and File Auditing<a class="headerlink" href="#auditd-system-call-and-file-auditing" title="Permanent link">&para;</a></h2>
 <p>auditd records privileged operations, file access, and authentication events. Logs go to <code>/var/log/audit/audit.log</code>.</p>
 <h3 id="install-and-enable">Install and Enable<a class="headerlink" href="#install-and-enable" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>dnf<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>audit<span class="w"> </span>auditd
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>auditd
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>dnf<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>audit<span class="w"> </span>auditd
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>auditd
 </code></pre></div>
 <h3 id="audit-rules-etcauditrulesd">Audit Rules — /etc/audit/rules.d/<a class="headerlink" href="#audit-rules-etcauditrulesd" title="Permanent link">&para;</a></h3>
 <p>Place rules in <code>/etc/audit/rules.d/99-hardening.rules</code>. Loaded by <code>augenrules --load</code>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a># /etc/audit/rules.d/99-hardening.rules
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a># Delete all existing rules first
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>-D
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a># Set buffer size — increase on busy systems
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>-b 8192
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a># Failure mode: 1 = print warning; 2 = panic (use 2 on high-security systems)
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>-f 1
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a># ── Identity and authentication ───────────────────────────────────────────────
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>-w /etc/passwd -p wa -k identity
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>-w /etc/shadow -p wa -k identity
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>-w /etc/group -p wa -k identity
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>-w /etc/gshadow -p wa -k identity
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>-w /etc/sudoers -p wa -k sudoers
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>-w /etc/sudoers.d/ -p wa -k sudoers
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>-w /etc/security/access.conf -p wa -k login_access
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>
-<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a># ── Authentication events ─────────────────────────────────────────────────────
-<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>-w /var/log/lastlog -p wa -k logins
-<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>-w /var/run/faillock/ -p wa -k logins
-<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>
-<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a># ── SSH configuration changes ─────────────────────────────────────────────────
-<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>-w /etc/ssh/sshd_config -p wa -k sshd_config
-<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a>
-<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a># ── Privileged command execution ──────────────────────────────────────────────
-<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a>-a always,exit -F arch=b64 -S execve -F euid=0 -k privileged_exec
-<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a>-w /usr/bin/sudo -p x -k sudo_exec
-<a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a>-w /usr/bin/su -p x -k su_exec
-<a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a>
-<a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a># ── Network configuration ─────────────────────────────────────────────────────
-<a id="__codelineno-4-34" name="__codelineno-4-34" href="#__codelineno-4-34"></a>-a always,exit -F arch=b64 -S sethostname -S setdomainname -k hostname_change
-<a id="__codelineno-4-35" name="__codelineno-4-35" href="#__codelineno-4-35"></a>-w /etc/hosts -p wa -k network_config
-<a id="__codelineno-4-36" name="__codelineno-4-36" href="#__codelineno-4-36"></a>-w /etc/sysconfig/network -p wa -k network_config
-<a id="__codelineno-4-37" name="__codelineno-4-37" href="#__codelineno-4-37"></a>
-<a id="__codelineno-4-38" name="__codelineno-4-38" href="#__codelineno-4-38"></a># ── Module loading ────────────────────────────────────────────────────────────
-<a id="__codelineno-4-39" name="__codelineno-4-39" href="#__codelineno-4-39"></a>-w /sbin/insmod -p x -k modules
-<a id="__codelineno-4-40" name="__codelineno-4-40" href="#__codelineno-4-40"></a>-w /sbin/rmmod -p x -k modules
-<a id="__codelineno-4-41" name="__codelineno-4-41" href="#__codelineno-4-41"></a>-w /sbin/modprobe -p x -k modules
-<a id="__codelineno-4-42" name="__codelineno-4-42" href="#__codelineno-4-42"></a>-a always,exit -F arch=b64 -S init_module -S delete_module -k modules
-<a id="__codelineno-4-43" name="__codelineno-4-43" href="#__codelineno-4-43"></a>
-<a id="__codelineno-4-44" name="__codelineno-4-44" href="#__codelineno-4-44"></a># ── Cron ──────────────────────────────────────────────────────────────────────
-<a id="__codelineno-4-45" name="__codelineno-4-45" href="#__codelineno-4-45"></a>-w /etc/cron.allow -p wa -k cron
-<a id="__codelineno-4-46" name="__codelineno-4-46" href="#__codelineno-4-46"></a>-w /etc/cron.deny -p wa -k cron
-<a id="__codelineno-4-47" name="__codelineno-4-47" href="#__codelineno-4-47"></a>-w /etc/cron.d/ -p wa -k cron
-<a id="__codelineno-4-48" name="__codelineno-4-48" href="#__codelineno-4-48"></a>-w /etc/cron.daily/ -p wa -k cron
-<a id="__codelineno-4-49" name="__codelineno-4-49" href="#__codelineno-4-49"></a>-w /var/spool/cron/ -p wa -k cron
-<a id="__codelineno-4-50" name="__codelineno-4-50" href="#__codelineno-4-50"></a>
-<a id="__codelineno-4-51" name="__codelineno-4-51" href="#__codelineno-4-51"></a># ── Time ─────────────────────────────────────────────────────────────────────
-<a id="__codelineno-4-52" name="__codelineno-4-52" href="#__codelineno-4-52"></a>-a always,exit -F arch=b64 -S adjtimex -S settimeofday -S clock_settime -k time_change
-<a id="__codelineno-4-53" name="__codelineno-4-53" href="#__codelineno-4-53"></a>
-<a id="__codelineno-4-54" name="__codelineno-4-54" href="#__codelineno-4-54"></a># ── Make rules immutable — requires reboot to change (comment out during setup)
-<a id="__codelineno-4-55" name="__codelineno-4-55" href="#__codelineno-4-55"></a>-e 2
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a># /etc/audit/rules.d/99-hardening.rules
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a># Delete all existing rules first
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>-D
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a># Set buffer size — increase on busy systems
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>-b 8192
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a># Failure mode: 1 = print warning; 2 = panic (use 2 on high-security systems)
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>-f 1
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a># ── Identity and authentication ───────────────────────────────────────────────
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>-w /etc/passwd -p wa -k identity
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>-w /etc/shadow -p wa -k identity
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>-w /etc/group -p wa -k identity
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>-w /etc/gshadow -p wa -k identity
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>-w /etc/sudoers -p wa -k sudoers
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>-w /etc/sudoers.d/ -p wa -k sudoers
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>-w /etc/security/access.conf -p wa -k login_access
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a># ── Authentication events ─────────────────────────────────────────────────────
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>-w /var/log/lastlog -p wa -k logins
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>-w /var/run/faillock/ -p wa -k logins
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a># ── SSH configuration changes ─────────────────────────────────────────────────
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>-w /etc/ssh/sshd_config -p wa -k sshd_config
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a># ── Privileged command execution ──────────────────────────────────────────────
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>-a always,exit -F arch=b64 -S execve -F euid=0 -k privileged_exec
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>-w /usr/bin/sudo -p x -k sudo_exec
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>-w /usr/bin/su -p x -k su_exec
+<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>
+<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a># ── Network configuration ─────────────────────────────────────────────────────
+<a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a>-a always,exit -F arch=b64 -S sethostname -S setdomainname -k hostname_change
+<a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a>-w /etc/hosts -p wa -k network_config
+<a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a>-w /etc/sysconfig/network -p wa -k network_config
+<a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a>
+<a id="__codelineno-3-38" name="__codelineno-3-38" href="#__codelineno-3-38"></a># ── Module loading ────────────────────────────────────────────────────────────
+<a id="__codelineno-3-39" name="__codelineno-3-39" href="#__codelineno-3-39"></a>-w /sbin/insmod -p x -k modules
+<a id="__codelineno-3-40" name="__codelineno-3-40" href="#__codelineno-3-40"></a>-w /sbin/rmmod -p x -k modules
+<a id="__codelineno-3-41" name="__codelineno-3-41" href="#__codelineno-3-41"></a>-w /sbin/modprobe -p x -k modules
+<a id="__codelineno-3-42" name="__codelineno-3-42" href="#__codelineno-3-42"></a>-a always,exit -F arch=b64 -S init_module -S delete_module -k modules
+<a id="__codelineno-3-43" name="__codelineno-3-43" href="#__codelineno-3-43"></a>
+<a id="__codelineno-3-44" name="__codelineno-3-44" href="#__codelineno-3-44"></a># ── Cron ──────────────────────────────────────────────────────────────────────
+<a id="__codelineno-3-45" name="__codelineno-3-45" href="#__codelineno-3-45"></a>-w /etc/cron.allow -p wa -k cron
+<a id="__codelineno-3-46" name="__codelineno-3-46" href="#__codelineno-3-46"></a>-w /etc/cron.deny -p wa -k cron
+<a id="__codelineno-3-47" name="__codelineno-3-47" href="#__codelineno-3-47"></a>-w /etc/cron.d/ -p wa -k cron
+<a id="__codelineno-3-48" name="__codelineno-3-48" href="#__codelineno-3-48"></a>-w /etc/cron.daily/ -p wa -k cron
+<a id="__codelineno-3-49" name="__codelineno-3-49" href="#__codelineno-3-49"></a>-w /var/spool/cron/ -p wa -k cron
+<a id="__codelineno-3-50" name="__codelineno-3-50" href="#__codelineno-3-50"></a>
+<a id="__codelineno-3-51" name="__codelineno-3-51" href="#__codelineno-3-51"></a># ── Time ─────────────────────────────────────────────────────────────────────
+<a id="__codelineno-3-52" name="__codelineno-3-52" href="#__codelineno-3-52"></a>-a always,exit -F arch=b64 -S adjtimex -S settimeofday -S clock_settime -k time_change
+<a id="__codelineno-3-53" name="__codelineno-3-53" href="#__codelineno-3-53"></a>
+<a id="__codelineno-3-54" name="__codelineno-3-54" href="#__codelineno-3-54"></a># ── Make rules immutable — requires reboot to change (comment out during setup)
+<a id="__codelineno-3-55" name="__codelineno-3-55" href="#__codelineno-3-55"></a>-e 2
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Load rules</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>augenrules<span class="w"> </span>--load
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Verify loaded rules</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>auditctl<span class="w"> </span>-l
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Check auditd status</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>systemctl<span class="w"> </span>status<span class="w"> </span>auditd
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>auditctl<span class="w"> </span>-s
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Load rules</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>augenrules<span class="w"> </span>--load
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Verify loaded rules</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>auditctl<span class="w"> </span>-l
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Check auditd status</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>systemctl<span class="w"> </span>status<span class="w"> </span>auditd
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>auditctl<span class="w"> </span>-s
 </code></pre></div>
 <h3 id="querying-audit-logs">Querying Audit Logs<a class="headerlink" href="#querying-audit-logs" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Authentication failures today</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ausearch<span class="w"> </span>-m<span class="w"> </span>USER_AUTH<span class="w"> </span>--success<span class="w"> </span>no<span class="w"> </span>--start<span class="w"> </span>today
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Changes to /etc/sudoers</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>ausearch<span class="w"> </span>-f<span class="w"> </span>/etc/sudoers<span class="w"> </span>--start<span class="w"> </span>today
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Commands run as root</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>ausearch<span class="w"> </span>-m<span class="w"> </span>EXECVE<span class="w"> </span>-ua<span class="w"> </span><span class="m">0</span><span class="w"> </span>--start<span class="w"> </span>today
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Events by key name</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>ausearch<span class="w"> </span>-k<span class="w"> </span>identity<span class="w"> </span>--start<span class="w"> </span>today
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># Human-readable report</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>aureport<span class="w"> </span>--summary
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>aureport<span class="w"> </span>--login<span class="w"> </span>--failed<span class="w"> </span>--start<span class="w"> </span>today
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>aureport<span class="w"> </span>--auth<span class="w"> </span>--start<span class="w"> </span>today
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Authentication failures today</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ausearch<span class="w"> </span>-m<span class="w"> </span>USER_AUTH<span class="w"> </span>--success<span class="w"> </span>no<span class="w"> </span>--start<span class="w"> </span>today
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Changes to /etc/sudoers</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>ausearch<span class="w"> </span>-f<span class="w"> </span>/etc/sudoers<span class="w"> </span>--start<span class="w"> </span>today
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Commands run as root</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>ausearch<span class="w"> </span>-m<span class="w"> </span>EXECVE<span class="w"> </span>-ua<span class="w"> </span><span class="m">0</span><span class="w"> </span>--start<span class="w"> </span>today
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Events by key name</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>ausearch<span class="w"> </span>-k<span class="w"> </span>identity<span class="w"> </span>--start<span class="w"> </span>today
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># Human-readable report</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>aureport<span class="w"> </span>--summary
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>aureport<span class="w"> </span>--login<span class="w"> </span>--failed<span class="w"> </span>--start<span class="w"> </span>today
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>aureport<span class="w"> </span>--auth<span class="w"> </span>--start<span class="w"> </span>today
 </code></pre></div>
 <h2 id="login-policy-etclogindefs">Login Policy — /etc/login.defs<a class="headerlink" href="#login-policy-etclogindefs" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># /etc/login.defs — password aging and account policy</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>PASS_MAX_DAYS<span class="w">   </span><span class="m">90</span><span class="w">        </span><span class="c1"># Maximum days before password must be changed</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>PASS_MIN_DAYS<span class="w">   </span><span class="m">1</span><span class="w">         </span><span class="c1"># Minimum days between password changes</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>PASS_WARN_AGE<span class="w">   </span><span class="m">14</span><span class="w">        </span><span class="c1"># Days to warn before expiry</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>PASS_MIN_LEN<span class="w">    </span><span class="m">14</span><span class="w">        </span><span class="c1"># Minimum password length (if not using pam_pwquality)</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>LOGIN_RETRIES<span class="w">   </span><span class="m">5</span><span class="w">         </span><span class="c1"># Failed login attempts before lockout</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>LOGIN_TIMEOUT<span class="w">   </span><span class="m">60</span><span class="w">        </span><span class="c1"># Seconds before login times out</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>UMASK<span class="w">           </span><span class="m">027</span><span class="w">       </span><span class="c1"># Default umask — files created as 640, dirs as 750</span>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>USERGROUPS_ENAB<span class="w"> </span>yes<span class="w">       </span><span class="c1"># Remove private group when user is deleted</span>
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>CREATE_HOME<span class="w">     </span>yes
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="c1"># Encrypt passwords with yescrypt (RHEL 9 default) or SHA-512</span>
-<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>ENCRYPT_METHOD<span class="w">  </span>SHA512
-<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>SHA_CRYPT_MIN_ROUNDS<span class="w"> </span><span class="m">5000</span>
-<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>SHA_CRYPT_MAX_ROUNDS<span class="w"> </span><span class="m">100000</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># /etc/login.defs — password aging and account policy</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>PASS_MAX_DAYS<span class="w">   </span><span class="m">90</span><span class="w">        </span><span class="c1"># Maximum days before password must be changed</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>PASS_MIN_DAYS<span class="w">   </span><span class="m">1</span><span class="w">         </span><span class="c1"># Minimum days between password changes</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>PASS_WARN_AGE<span class="w">   </span><span class="m">14</span><span class="w">        </span><span class="c1"># Days to warn before expiry</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>PASS_MIN_LEN<span class="w">    </span><span class="m">14</span><span class="w">        </span><span class="c1"># Minimum password length (if not using pam_pwquality)</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>LOGIN_RETRIES<span class="w">   </span><span class="m">5</span><span class="w">         </span><span class="c1"># Failed login attempts before lockout</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>LOGIN_TIMEOUT<span class="w">   </span><span class="m">60</span><span class="w">        </span><span class="c1"># Seconds before login times out</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>UMASK<span class="w">           </span><span class="m">027</span><span class="w">       </span><span class="c1"># Default umask — files created as 640, dirs as 750</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>USERGROUPS_ENAB<span class="w"> </span>yes<span class="w">       </span><span class="c1"># Remove private group when user is deleted</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>CREATE_HOME<span class="w">     </span>yes
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c1"># Encrypt passwords with yescrypt (RHEL 9 default) or SHA-512</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>ENCRYPT_METHOD<span class="w">  </span>SHA512
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>SHA_CRYPT_MIN_ROUNDS<span class="w"> </span><span class="m">5000</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>SHA_CRYPT_MAX_ROUNDS<span class="w"> </span><span class="m">100000</span>
 </code></pre></div>
 <h2 id="pam-password-policy">PAM Password Policy<a class="headerlink" href="#pam-password-policy" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a># /etc/pam.d/system-auth — full hardened stack
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a># ── auth ─────────────────────────────────────────────────────────────────────
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>auth        required      pam_env.so
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>auth        required      pam_faillock.so preauth silent deny=5 unlock_time=900
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>auth        sufficient    pam_unix.so nullok
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>auth        sufficient    pam_sss.so forward_pass
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>auth        [default=die] pam_faillock.so authfail deny=5 unlock_time=900
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>auth        requisite     pam_succeed_if.so uid &gt;= 1000 quiet_success
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>auth        required      pam_deny.so
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a># ── account ──────────────────────────────────────────────────────────────────
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>account     required      pam_unix.so
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>account     sufficient    pam_localuser.so
-<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>account     sufficient    pam_succeed_if.so uid &lt; 1000 quiet
-<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>account     [default=bad success=ok user_unknown=ignore] pam_sss.so
-<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>account     required      pam_permit.so
-<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>account     required      pam_faillock.so
-<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>account     required      pam_access.so
-<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>
-<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a># ── password ─────────────────────────────────────────────────────────────────
-<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a>password    requisite     pam_pwquality.so try_first_pass local_users_only \
-<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a>                          retry=3 minlen=14 minclass=3 maxrepeat=3 dictcheck=1
-<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a>password    sufficient    pam_unix.so sha512 shadow nullok use_authtok remember=24
-<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a>password    sufficient    pam_sss.so use_authtok
-<a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a>password    required      pam_deny.so
-<a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a>
-<a id="__codelineno-8-28" name="__codelineno-8-28" href="#__codelineno-8-28"></a># ── session ──────────────────────────────────────────────────────────────────
-<a id="__codelineno-8-29" name="__codelineno-8-29" href="#__codelineno-8-29"></a>session     optional      pam_keyinit.so revoke
-<a id="__codelineno-8-30" name="__codelineno-8-30" href="#__codelineno-8-30"></a>session     required      pam_limits.so
-<a id="__codelineno-8-31" name="__codelineno-8-31" href="#__codelineno-8-31"></a>session     optional      pam_oddjob_mkhomedir.so umask=0077
-<a id="__codelineno-8-32" name="__codelineno-8-32" href="#__codelineno-8-32"></a>session     [success=1 default=ignore] pam_succeed_if.so service in crond quiet use_uid
-<a id="__codelineno-8-33" name="__codelineno-8-33" href="#__codelineno-8-33"></a>session     required      pam_unix.so
-<a id="__codelineno-8-34" name="__codelineno-8-34" href="#__codelineno-8-34"></a>session     optional      pam_sss.so
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a># /etc/pam.d/system-auth — full hardened stack
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a># ── auth ─────────────────────────────────────────────────────────────────────
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>auth        required      pam_env.so
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>auth        required      pam_faillock.so preauth silent deny=5 unlock_time=900
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>auth        sufficient    pam_unix.so nullok
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>auth        sufficient    pam_sss.so forward_pass
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>auth        [default=die] pam_faillock.so authfail deny=5 unlock_time=900
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>auth        requisite     pam_succeed_if.so uid &gt;= 1000 quiet_success
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>auth        required      pam_deny.so
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a># ── account ──────────────────────────────────────────────────────────────────
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>account     required      pam_unix.so
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>account     sufficient    pam_localuser.so
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>account     sufficient    pam_succeed_if.so uid &lt; 1000 quiet
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>account     [default=bad success=ok user_unknown=ignore] pam_sss.so
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>account     required      pam_permit.so
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>account     required      pam_faillock.so
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>account     required      pam_access.so
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a># ── password ─────────────────────────────────────────────────────────────────
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>password    requisite     pam_pwquality.so try_first_pass local_users_only \
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>                          retry=3 minlen=14 minclass=3 maxrepeat=3 dictcheck=1
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>password    sufficient    pam_unix.so sha512 shadow nullok use_authtok remember=24
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>password    sufficient    pam_sss.so use_authtok
+<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>password    required      pam_deny.so
+<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a>
+<a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a># ── session ──────────────────────────────────────────────────────────────────
+<a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a>session     optional      pam_keyinit.so revoke
+<a id="__codelineno-7-30" name="__codelineno-7-30" href="#__codelineno-7-30"></a>session     required      pam_limits.so
+<a id="__codelineno-7-31" name="__codelineno-7-31" href="#__codelineno-7-31"></a>session     optional      pam_oddjob_mkhomedir.so umask=0077
+<a id="__codelineno-7-32" name="__codelineno-7-32" href="#__codelineno-7-32"></a>session     [success=1 default=ignore] pam_succeed_if.so service in crond quiet use_uid
+<a id="__codelineno-7-33" name="__codelineno-7-33" href="#__codelineno-7-33"></a>session     required      pam_unix.so
+<a id="__codelineno-7-34" name="__codelineno-7-34" href="#__codelineno-7-34"></a>session     optional      pam_sss.so
 </code></pre></div>
 <h2 id="file-system-hardening">File System Hardening<a class="headerlink" href="#file-system-hardening" title="Permanent link">&para;</a></h2>
 <h3 id="etcfstab-mount-options">/etc/fstab Mount Options<a class="headerlink" href="#etcfstab-mount-options" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># /etc/fstab — secure mount options for sensitive filesystems</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>/dev/mapper/data<span class="w">  </span>/var/tmp<span class="w">   </span>xfs<span class="w">  </span>defaults,nodev,nosuid,noexec<span class="w">  </span><span class="m">0</span><span class="w"> </span><span class="m">0</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>/dev/mapper/data<span class="w">  </span>/tmp<span class="w">       </span>xfs<span class="w">  </span>defaults,nodev,nosuid,noexec<span class="w">  </span><span class="m">0</span><span class="w"> </span><span class="m">0</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>/dev/mapper/home<span class="w">  </span>/home<span class="w">      </span>xfs<span class="w">  </span>defaults,nodev,nosuid<span class="w">         </span><span class="m">0</span><span class="w"> </span><span class="m">0</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>tmpfs<span class="w">             </span>/dev/shm<span class="w">   </span>tmpfs<span class="w"> </span>defaults,nodev,nosuid,noexec<span class="w">  </span><span class="m">0</span><span class="w"> </span><span class="m">0</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># /etc/fstab — secure mount options for sensitive filesystems</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>/dev/mapper/data<span class="w">  </span>/var/tmp<span class="w">   </span>xfs<span class="w">  </span>defaults,nodev,nosuid,noexec<span class="w">  </span><span class="m">0</span><span class="w"> </span><span class="m">0</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>/dev/mapper/data<span class="w">  </span>/tmp<span class="w">       </span>xfs<span class="w">  </span>defaults,nodev,nosuid,noexec<span class="w">  </span><span class="m">0</span><span class="w"> </span><span class="m">0</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>/dev/mapper/home<span class="w">  </span>/home<span class="w">      </span>xfs<span class="w">  </span>defaults,nodev,nosuid<span class="w">         </span><span class="m">0</span><span class="w"> </span><span class="m">0</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>tmpfs<span class="w">             </span>/dev/shm<span class="w">   </span>tmpfs<span class="w"> </span>defaults,nodev,nosuid,noexec<span class="w">  </span><span class="m">0</span><span class="w"> </span><span class="m">0</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Verify mount options</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>mount<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;/tmp|/home|/var/tmp|/dev/shm&quot;</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Remount with new options without rebooting</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>mount<span class="w"> </span>-o<span class="w"> </span>remount,noexec,nosuid,nodev<span class="w"> </span>/tmp
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Verify mount options</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>mount<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;/tmp|/home|/var/tmp|/dev/shm&quot;</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Remount with new options without rebooting</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>mount<span class="w"> </span>-o<span class="w"> </span>remount,noexec,nosuid,nodev<span class="w"> </span>/tmp
 </code></pre></div>
 <h3 id="disable-unused-filesystems">Disable Unused Filesystems<a class="headerlink" href="#disable-unused-filesystems" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># /etc/modprobe.d/hardening.conf — prevent loading unused filesystem modules</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>install<span class="w"> </span>cramfs<span class="w"> </span>/bin/true
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>install<span class="w"> </span>freevxfs<span class="w"> </span>/bin/true
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>install<span class="w"> </span>jffs2<span class="w"> </span>/bin/true
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>install<span class="w"> </span>hfs<span class="w"> </span>/bin/true
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>install<span class="w"> </span>hfsplus<span class="w"> </span>/bin/true
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>install<span class="w"> </span>squashfs<span class="w"> </span>/bin/true
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>install<span class="w"> </span>udf<span class="w"> </span>/bin/true
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>install<span class="w"> </span>usb-storage<span class="w"> </span>/bin/true<span class="w">    </span><span class="c1"># If USB storage is not required</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># /etc/modprobe.d/hardening.conf — prevent loading unused filesystem modules</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>install<span class="w"> </span>cramfs<span class="w"> </span>/bin/true
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>install<span class="w"> </span>freevxfs<span class="w"> </span>/bin/true
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>install<span class="w"> </span>jffs2<span class="w"> </span>/bin/true
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>install<span class="w"> </span>hfs<span class="w"> </span>/bin/true
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>install<span class="w"> </span>hfsplus<span class="w"> </span>/bin/true
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>install<span class="w"> </span>squashfs<span class="w"> </span>/bin/true
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>install<span class="w"> </span>udf<span class="w"> </span>/bin/true
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>install<span class="w"> </span>usb-storage<span class="w"> </span>/bin/true<span class="w">    </span><span class="c1"># If USB storage is not required</span>
 </code></pre></div>
 <h2 id="secure-boot-and-kernel">Secure Boot and Kernel<a class="headerlink" href="#secure-boot-and-kernel" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Verify GRUB password is set (RHEL)</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>grep<span class="w"> </span><span class="s2">&quot;^password&quot;</span><span class="w"> </span>/etc/grub.d/40_custom<span class="w"> </span>/boot/grub2/grub.cfg<span class="w"> </span><span class="m">2</span>&gt;/dev/null
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Set GRUB2 superuser password</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>grub2-setpassword
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># Check if Secure Boot is enabled</span>
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>mokutil<span class="w"> </span>--sb-state
-<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="c1"># or</span>
-<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>dmesg<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;secure boot&quot;</span>
-<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>
-<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="c1"># Verify no unsigned kernel modules</span>
-<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>modinfo<span class="w"> </span>&lt;module-name&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>signer
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Verify GRUB password is set (RHEL)</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>grep<span class="w"> </span><span class="s2">&quot;^password&quot;</span><span class="w"> </span>/etc/grub.d/40_custom<span class="w"> </span>/boot/grub2/grub.cfg<span class="w"> </span><span class="m">2</span>&gt;/dev/null
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Set GRUB2 superuser password</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>grub2-setpassword
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1"># Check if Secure Boot is enabled</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>mokutil<span class="w"> </span>--sb-state
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="c1"># or</span>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>dmesg<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;secure boot&quot;</span>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="c1"># Verify no unsigned kernel modules</span>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>modinfo<span class="w"> </span>&lt;module-name&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>signer
 </code></pre></div>
 <h2 id="cron-and-scheduled-tasks">Cron and Scheduled Tasks<a class="headerlink" href="#cron-and-scheduled-tasks" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Restrict cron access to root and wheel</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="nb">echo</span><span class="w"> </span>root<span class="w"> </span>&gt;<span class="w"> </span>/etc/cron.allow
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>/etc/cron.allow
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="c1"># Restrict at access</span>
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="nb">echo</span><span class="w"> </span>root<span class="w"> </span>&gt;<span class="w"> </span>/etc/at.allow
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>/etc/at.allow
-<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>
-<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="c1"># Secure cron directories — owner root, no world access</span>
-<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>chmod<span class="w"> </span><span class="m">700</span><span class="w"> </span>/etc/cron.d<span class="w"> </span>/etc/cron.daily<span class="w"> </span>/etc/cron.weekly<span class="w"> </span>/etc/cron.monthly
-<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>/etc/crontab
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Restrict cron access to root and wheel</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nb">echo</span><span class="w"> </span>root<span class="w"> </span>&gt;<span class="w"> </span>/etc/cron.allow
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>/etc/cron.allow
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="c1"># Restrict at access</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="nb">echo</span><span class="w"> </span>root<span class="w"> </span>&gt;<span class="w"> </span>/etc/at.allow
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>/etc/at.allow
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="c1"># Secure cron directories — owner root, no world access</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>chmod<span class="w"> </span><span class="m">700</span><span class="w"> </span>/etc/cron.d<span class="w"> </span>/etc/cron.daily<span class="w"> </span>/etc/cron.weekly<span class="w"> </span>/etc/cron.monthly
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>/etc/crontab
 </code></pre></div>
 <h2 id="cis-control-reference">CIS Control Reference<a class="headerlink" href="#cis-control-reference" title="Permanent link">&para;</a></h2>
 <table>
@@ -3895,30 +3845,30 @@ CIS benchmark controls, kernel hardening via sysctl, auditd configuration, login
 </tbody>
 </table>
 <h2 id="firewall-baseline">Firewall Baseline<a class="headerlink" href="#firewall-baseline" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># RHEL — firewalld baseline</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>firewall-cmd<span class="w"> </span>--set-default-zone<span class="o">=</span>drop
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>firewall-cmd<span class="w"> </span>--permanent<span class="w"> </span>--zone<span class="o">=</span>drop<span class="w"> </span>--add-service<span class="o">=</span>ssh
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>firewall-cmd<span class="w"> </span>--permanent<span class="w"> </span>--zone<span class="o">=</span>drop<span class="w"> </span>--add-service<span class="o">=</span>https
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>firewall-cmd<span class="w"> </span>--reload
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>firewall-cmd<span class="w"> </span>--list-all
-<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>
-<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="c1"># Ubuntu — UFW baseline</span>
-<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>ufw<span class="w"> </span>default<span class="w"> </span>deny<span class="w"> </span>incoming
-<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>ufw<span class="w"> </span>default<span class="w"> </span>allow<span class="w"> </span>outgoing
-<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>ufw<span class="w"> </span>allow<span class="w"> </span>ssh
-<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>ufw<span class="w"> </span><span class="nb">enable</span>
-<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>ufw<span class="w"> </span>status<span class="w"> </span>verbose
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># RHEL — firewalld baseline</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>firewall-cmd<span class="w"> </span>--set-default-zone<span class="o">=</span>drop
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>firewall-cmd<span class="w"> </span>--permanent<span class="w"> </span>--zone<span class="o">=</span>drop<span class="w"> </span>--add-service<span class="o">=</span>ssh
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>firewall-cmd<span class="w"> </span>--permanent<span class="w"> </span>--zone<span class="o">=</span>drop<span class="w"> </span>--add-service<span class="o">=</span>https
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>firewall-cmd<span class="w"> </span>--reload
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>firewall-cmd<span class="w"> </span>--list-all
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="c1"># Ubuntu — UFW baseline</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>ufw<span class="w"> </span>default<span class="w"> </span>deny<span class="w"> </span>incoming
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>ufw<span class="w"> </span>default<span class="w"> </span>allow<span class="w"> </span>outgoing
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>ufw<span class="w"> </span>allow<span class="w"> </span>ssh
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>ufw<span class="w"> </span><span class="nb">enable</span>
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>ufw<span class="w"> </span>status<span class="w"> </span>verbose
 </code></pre></div>
 <h2 id="post-hardening-verification">Post-Hardening Verification<a class="headerlink" href="#post-hardening-verification" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Run lynis after hardening to compare baseline</span>
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>lynis<span class="w"> </span>audit<span class="w"> </span>system<span class="w"> </span>--quick<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># Quick CIS checks</span>
-<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>sysctl<span class="w"> </span>net.ipv4.ip_forward<span class="w"> </span>net.ipv4.tcp_syncookies<span class="w"> </span>kernel.randomize_va_space
-<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>getenforce
-<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>systemctl<span class="w"> </span>is-active<span class="w"> </span>auditd<span class="w"> </span>firewalld
-<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>sshd<span class="w"> </span>-T<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;permitrootlogin|passwordauthentication|x11forwarding&quot;</span>
-<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>stat<span class="w"> </span>/etc/shadow<span class="w"> </span>/etc/gshadow<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Access:&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Run lynis after hardening to compare baseline</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>lynis<span class="w"> </span>audit<span class="w"> </span>system<span class="w"> </span>--quick<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Quick CIS checks</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>sysctl<span class="w"> </span>net.ipv4.ip_forward<span class="w"> </span>net.ipv4.tcp_syncookies<span class="w"> </span>kernel.randomize_va_space
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>getenforce
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>systemctl<span class="w"> </span>is-active<span class="w"> </span>auditd<span class="w"> </span>firewalld
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>sshd<span class="w"> </span>-T<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;permitrootlogin|passwordauthentication|x11forwarding&quot;</span>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>stat<span class="w"> </span>/etc/shadow<span class="w"> </span>/etc/gshadow<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Access:&quot;</span>
 </code></pre></div>
 
 

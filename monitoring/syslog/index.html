@@ -3520,7 +3520,7 @@
 Syslog and Centralized Logging reference covering Syslog Service Health, Configure rsyslog to Forward to Central Collector, journald to Syslog Bridge, Windows Event Forwarding, Syslog Severity Levels (RFC 5424) and 2 more sections.
 </div>
 
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────────────── Monitoring — Syslog ─────────────────────────────────────────┐
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────────────── Monitoring — Syslog ─────────────────────────────────────────┐
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │            Syslog — Centralised Log Collection: RFC 5424 over UDP/514 and TLS/6514            │   │
@@ -3563,55 +3563,12 @@ Syslog and Centralized Logging reference covering Syslog Service Health, Configu
 <a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│                                                                                                       │
 <a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-┌───────────────────────────────────────── Monitoring — Syslog ─────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │            Syslog — Centralised Log Collection: RFC 5424 over UDP/514 and TLS/6514            │   │
-│   │        Sources: ESXi hosts · vCenter · NSX managers · storage arrays · network switches       │   │
-│   │          Collectors: rsyslog/syslog-ng on-prem · Aria Log Insight · Splunk forwarder          │   │
-│   │          Parsing: structured data fields: facility · severity · hostname · msgid · SD         │   │
-│   │         ESXi config: esxcli system syslog config set --loghost=<IP>:514 --protocol=udp        │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    TLS transport (port 6514) is required for syslog crossing security zone boundaries                 │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │           Sources           │  │          Collectors         │  │          Consumers          │   │
-│   │        ESXi: UDP 514        │  │       rsyslog HA pair       │  │       Aria Log Insight      │   │
-│   │       vCenter: UDP 514      │  │       syslog-ng relay       │  │        Splunk indexer       │   │
-│   │        NSX: TLS 6514        │  │      Log Insight agent      │  │       SIEM correlation      │   │
-│   │     Storage: SNMP+syslog    │  │       Queue: 10k msg/s      │  │      Alert rules engine     │   │
-│   │      Switches: UDP 514      │  │      TLS cert rotation      │  │       Retention policy      │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  rsyslog VMs: 2x on dedicated VLAN · Log Insight cluster on vSphere · NFS for log storage             │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  RFC 5424          = IETF standard defining syslog message format with structured data                │
-│  Facility          = Log category code (e.g. kern=0, user=1, mail=2, daemon=3)                        │
-│  Severity          = Log level: 0=Emergency · 1=Alert · 2=Crit · 3=Err · 4=Warn · 5=Notice            │
-│  rsyslog           = High-performance Linux syslog daemon; supports TCP/UDP/TLS/RELP                  │
-│  syslog-ng         = Enterprise syslog daemon with advanced filtering and routing                     │
-│  Log Insight       = VMware Aria Log Insight; structured log search and alerting                      │
-│  TLS 6514          = Encrypted syslog transport; required for cross-zone log forwarding               │
-│  RELP              = Reliable Event Logging Protocol; guaranteed delivery over TCP                    │
-│  SD (structured)   = RFC 5424 key=value pairs in the structured-data section of syslog                │
-│  esxcli syslog     = ESXi command to configure remote syslog destination and protocol                 │
-│  SIEM              = Security Information and Event Management; consumes syslog for threat detection  │
-│  Queue depth       = In-memory message buffer in collector; overflow causes message loss              │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>```bash
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a># Apply after editing
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>systemctl restart rsyslog
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a># Test
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>logger -t TEST &quot;Forwarding test from $(hostname)&quot;
-</code></pre></div></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Apply after editing</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>rsyslog
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Test</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>logger<span class="w"> </span>-t<span class="w"> </span>TEST<span class="w"> </span><span class="s2">&quot;Forwarding test from </span><span class="k">$(</span>hostname<span class="k">)</span><span class="s2">&quot;</span>
+</code></pre></div>
 <h2 id="journald-to-syslog-bridge">journald to Syslog Bridge<a class="headerlink" href="#journald-to-syslog-bridge" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Forward journald to rsyslog (already default on most distros)</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># /etc/systemd/journald.conf:</span>

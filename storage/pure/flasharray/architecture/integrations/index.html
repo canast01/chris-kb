@@ -3723,69 +3723,13 @@ Integrations reference covering VMware Integration, Backup Integration, Pure1 Mo
 <a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>│  API token     = Authentication credential for REST and automation; scoped to array user role         │
 <a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a>│                                                                                                       │
 <a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
-┌──────────────────────────────────── Pure FlashArray Integrations ─────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │        FlashArray Integration Ecosystem — VMware, Kubernetes, Backup, Cloud, Automation       │   │
-│   │          VMware: VASA/VAAI plugin · vVols datastore · SPBM policy-driven provisioning         │   │
-│   │        Kubernetes: Pure Service Orchestrator (PSO) / Portworx; dynamic PVC provisioning       │   │
-│   │           Backup: Veeam, Commvault, Veritas via snapshot-based offload via Pure APIs          │   │
-│   │       Automation: Ansible collection, Terraform provider, REST API v2 for all operations      │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Pure REST API v2 is the integration backbone — all plugins and tools consume it                    │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │      VMware Integration     │  │   Kubernetes / Containers   │  │     Backup + Automation     │   │
-│   │  VASA: storage policy mgmt  │  │  PSO: dynamic PVC on-demand │  │  Veeam: snap-based offload  │   │
-│   │   VAAI: HW-accelerated ops  │  │ CSI driver: standard K8s API│  │  Commvault: snap management │   │
-│   │    vVols: per-VM volumes    │  │Portworx: data services layer│  │    purestorage.flasharray   │   │
-│   │   SPBM: QoS per datastore   │  │ StatefulSet persistent store│  │ Terraform: volume lifecycle │   │
-│   │   SRM: site recovery plans  │  │  Multi-attach: RWX volumes  │  │  REST v2: token auth + JSON │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    All integrations leverage REST API · VMware via VASA/VAAI · K8s via CSI/PSO                        │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   VMware Setup   │    K8s Setup     │   Backup Config   │     REST API     │    Automation    │   │
-│   │Install VASA plug │ Deploy PSO helm  │ Register array IP │   GET /arrays    │  ansible-galaxy  │   │
-│   │Create vVol store │Set storage class │  API token creds  │  POST /volumes   │  terraform init  │   │
-│   │SPBM policy assign│ Test dynamic PVC │ Snapshot schedule │   PATCH /hosts   │ pureuser API add │   │
-│   │SRM plugin config │  Verify PV bind  │   Offload verify  │ DELETE /volumes  │ Idempotent runs  │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  FlashArray controllers · ESXi hosts · K8s worker nodes · Backup media server · IP/FC SAN fabric      │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  VASA          = vSphere API for Storage Awareness; allows vSphere to query array capabilities        │
-│  VAAI          = vSphere API for Array Integration; offloads clone, zero, lock ops to array HW        │
-│  vVols         = Virtual Volumes; per-VM volume objects managed directly by FlashArray                │
-│  SPBM          = Storage Policy-Based Management; assigns QoS and protection to VMs by policy         │
-│  PSO           = Pure Service Orchestrator; Kubernetes dynamic storage provisioner for Pure arrays    │
-│  CSI           = Container Storage Interface; standard Kubernetes block/file storage API              │
-│  Portworx      = Pure-owned container data platform; distributed storage layer for K8s workloads      │
-│  SRM           = Site Recovery Manager; VMware DR orchestration using Pure replication snapshots      │
-│  REST v2       = Pure FlashArray REST API version 2; JSON, token auth, full CRUD for all objects      │
-│  Ansible coll  = purestorage.flasharray Galaxy collection; modules for volumes, hosts, PGs            │
-│  Terraform     = HashiCorp IaC; purestorage/flasharray provider for declarative volume management     │
-│  API token     = Authentication credential for REST and automation; scoped to array user role         │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>**Generate an API token for a service account:**
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>```bash
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a># On the array CLI
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>pureadmin create --role array_admin svc-monitoring
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>pureadmin apitoken create svc-monitoring
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a># Copy the token and store in a secrets manager
 </code></pre></div></p>
+<p><strong>Generate an API token for a service account:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># On the array CLI</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>pureadmin<span class="w"> </span>create<span class="w"> </span>--role<span class="w"> </span>array_admin<span class="w"> </span>svc-monitoring
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>pureadmin<span class="w"> </span>apitoken<span class="w"> </span>create<span class="w"> </span>svc-monitoring
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Copy the token and store in a secrets manager</span>
+</code></pre></div>
 <p><strong>Common API calls:</strong></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Get array status</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>GET<span class="w"> </span>/api/2.x/arrays

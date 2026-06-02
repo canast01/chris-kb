@@ -2895,30 +2895,8 @@
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#vlan-and-trunk-verification" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        VLAN and Trunk Verification
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="VLAN and Trunk Verification">
+    <nav class="md-nav" aria-label="Diagnostic Flowchart">
       <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#cisco" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Cisco
-      
-    </span>
-  </a>
-  
-</li>
         
           <li class="md-nav__item">
   <a href="#linux-8021q-vlan-interface" class="md-nav__link">
@@ -2960,7 +2938,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#cisco_1" class="md-nav__link">
+  <a href="#cisco" class="md-nav__link">
     <span class="md-ellipsis">
       
         Cisco
@@ -3306,179 +3284,147 @@ Network Connectivity Troubleshooting reference covering Overview, Failure Classi
 │    traceroute    = Shows each hop to destination; identifies where path breaks                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────── Network Connectivity Troubleshooting ─────────────────────────────────┐
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │               Network troubleshooting: isolate at which layer connectivity fails              │   │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │             Methodology: ping gateway → trace route → check firewall → MTU → VLAN             │   │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│                                                                                                       │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│                          ▼                                                 ▼                          │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│                                                                                                       │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   │               Diagnostic Steps               │  │                Common Causes                │   │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│   │         1. ping 127.0.0.1 (loopback)         │  │         Firewall rule blocking port         │   │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   │           2. ping default gateway            │  │              Wrong VLAN tagging             │   │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   │         3. traceroute to destination         │  │         MTU mismatch (jumbo frames)         │   │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │           4. Test on specific port           │  │              NIC or vmnic down              │   │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │            5. Check firewall logs            │  │                Route missing                │   │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │            6. Verify VLAN config             │  │               ARP table stale               │   │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│                                                                                                       │
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   │      Layer       │      Check       │      Command      │       Fix        │     Platform     │   │
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│   │    L2 / VLAN     │   VLAN tagging   │   show int trunk  │     Fix VLAN     │ Switch / vSwitch │   │
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│   │    L3 / Route    │   Route table    │  ip route / route │    Add route     │     All OSes     │   │
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│   │     Firewall     │    Port block    │    Test-NetConn   │   Open FW rule   │     All OSes     │   │
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│   │       MTU        │   Jumbo frames   │ ping -s 8972 -M do│    Match MTU     │      Linux       │   │
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│                                                                                                       │
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│    Key terms:                                                                                         │
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│                                                                                                       │
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│    MTU mismatch  = Jumbo frame configured on one side but not other; packets silently dropped         │
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│    ARP stale     = ARP cache holds wrong MAC; clear with arp -d or wait for TTL expiry                │
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│    Test-NetConn  = PowerShell: tests TCP connectivity to specific host and port                       │
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│    traceroute    = Shows each hop to destination; identifies where path breaks                        │
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│                                                                                                       │
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>---
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>## VLAN and Trunk Verification
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>### Cisco
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>```text
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>! Show all trunk ports and allowed VLANs
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>show interfaces trunk
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>! Example output:
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>! Port        Mode         Encapsulation  Status        Native vlan
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>! Gi0/1       on           802.1q         trunking      1
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>! Port        Vlans allowed on trunk
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>! Gi0/1       1-4094
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>! Port        Vlans allowed and active in management domain
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>! Gi0/1       1,10,20,100,200,300
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>! Check specific port VLAN assignment (access port)
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>show interfaces GigabitEthernet0/2 switchport
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>! Expected for access port:
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>! Administrative Mode: static access
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>! Access Mode VLAN: 100
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>! Verify VLAN exists in database
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>show vlan id 100
 </code></pre></div></p>
-<hr />
-<h2 id="vlan-and-trunk-verification">VLAN and Trunk Verification<a class="headerlink" href="#vlan-and-trunk-verification" title="Permanent link">&para;</a></h2>
-<h3 id="cisco">Cisco<a class="headerlink" href="#cisco" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>! Show all trunk ports and allowed VLANs
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>show interfaces trunk
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>! Example output:
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>! Port        Mode         Encapsulation  Status        Native vlan
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>! Gi0/1       on           802.1q         trunking      1
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>! Port        Vlans allowed on trunk
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>! Gi0/1       1-4094
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>! Port        Vlans allowed and active in management domain
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>! Gi0/1       1,10,20,100,200,300
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>! Check specific port VLAN assignment (access port)
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>show interfaces GigabitEthernet0/2 switchport
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>! Expected for access port:
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>! Administrative Mode: static access
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>! Access Mode VLAN: 100
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>! Verify VLAN exists in database
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>show vlan id 100
-</code></pre></div>
 <h3 id="linux-8021q-vlan-interface">Linux (802.1Q VLAN interface)<a class="headerlink" href="#linux-8021q-vlan-interface" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check VLAN interfaces defined on host</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>cat<span class="w"> </span>/proc/net/vlan/config
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># VLAN Dev name    | VLAN ID</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># eth0.100         | 100  | eth0</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># eth0.200         | 200  | eth0</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Check VLAN interface stats</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>ip<span class="w"> </span>-d<span class="w"> </span>link<span class="w"> </span>show<span class="w"> </span>eth0.100
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check VLAN interfaces defined on host</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>cat<span class="w"> </span>/proc/net/vlan/config
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># VLAN Dev name    | VLAN ID</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># eth0.100         | 100  | eth0</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># eth0.200         | 200  | eth0</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Check VLAN interface stats</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>ip<span class="w"> </span>-d<span class="w"> </span>link<span class="w"> </span>show<span class="w"> </span>eth0.100
 </code></pre></div>
 <hr />
 <h2 id="routing-table-verification">Routing Table Verification<a class="headerlink" href="#routing-table-verification" title="Permanent link">&para;</a></h2>
 <h3 id="linux">Linux<a class="headerlink" href="#linux" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Show full routing table</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ip<span class="w"> </span>route<span class="w"> </span>show
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Example:</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># default via 10.10.1.1 dev eth0 proto static metric 100</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># 10.10.1.0/24 dev eth0 proto kernel scope link src 10.10.1.55</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># 10.20.0.0/16 via 10.10.1.254 dev eth0 proto static   ← storage network route</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Find route for a specific destination</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>ip<span class="w"> </span>route<span class="w"> </span>get<span class="w"> </span><span class="m">10</span>.20.5.100
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># Expected:</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># 10.20.5.100 via 10.10.1.254 dev eth0 src 10.10.1.55</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="c1">#    cache</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="c1"># Missing route → add static route (temporary)</span>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>ip<span class="w"> </span>route<span class="w"> </span>add<span class="w"> </span><span class="m">10</span>.20.0.0/16<span class="w"> </span>via<span class="w"> </span><span class="m">10</span>.10.1.254<span class="w"> </span>dev<span class="w"> </span>eth0
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Show full routing table</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ip<span class="w"> </span>route<span class="w"> </span>show
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Example:</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># default via 10.10.1.1 dev eth0 proto static metric 100</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># 10.10.1.0/24 dev eth0 proto kernel scope link src 10.10.1.55</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># 10.20.0.0/16 via 10.10.1.254 dev eth0 proto static   ← storage network route</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Find route for a specific destination</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>ip<span class="w"> </span>route<span class="w"> </span>get<span class="w"> </span><span class="m">10</span>.20.5.100
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Expected:</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># 10.20.5.100 via 10.10.1.254 dev eth0 src 10.10.1.55</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1">#    cache</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># Missing route → add static route (temporary)</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>ip<span class="w"> </span>route<span class="w"> </span>add<span class="w"> </span><span class="m">10</span>.20.0.0/16<span class="w"> </span>via<span class="w"> </span><span class="m">10</span>.10.1.254<span class="w"> </span>dev<span class="w"> </span>eth0
 </code></pre></div>
-<h3 id="cisco_1">Cisco<a class="headerlink" href="#cisco_1" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>! Show full routing table
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>show ip route
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>! Show route for specific destination
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>show ip route 10.20.5.100
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>! Check OSPF neighbours (dynamic routing)
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>show ip ospf neighbor
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>! Check BGP peers (if in use)
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>show bgp summary
+<h3 id="cisco">Cisco<a class="headerlink" href="#cisco" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>! Show full routing table
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>show ip route
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>! Show route for specific destination
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>show ip route 10.20.5.100
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>! Check OSPF neighbours (dynamic routing)
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>show ip ospf neighbor
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>! Check BGP peers (if in use)
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>show bgp summary
 </code></pre></div>
 <hr />
 <h2 id="firewall-rule-testing">Firewall Rule Testing<a class="headerlink" href="#firewall-rule-testing" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Test TCP port reachability (nc = netcat)</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>nc<span class="w"> </span>-zv<span class="w"> </span><span class="m">10</span>.10.5.20<span class="w"> </span><span class="m">443</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Connection to 10.10.5.20 443 port [tcp/https] succeeded!</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Test UDP port</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>nc<span class="w"> </span>-zuv<span class="w"> </span><span class="m">10</span>.10.1.10<span class="w"> </span><span class="m">53</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Test multiple ports in range</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="k">for</span><span class="w"> </span>port<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">2500</span><span class="w"> </span><span class="m">2501</span><span class="w"> </span><span class="m">2502</span><span class="w"> </span><span class="m">3300</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">    </span>nc<span class="w"> </span>-zv<span class="w"> </span><span class="m">10</span>.20.1.50<span class="w"> </span><span class="nv">$port</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;succeeded|refused|timed out&quot;</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="k">done</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># Test with timeout (avoid long hangs)</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>nc<span class="w"> </span>-zv<span class="w"> </span>-w<span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="m">10</span>.10.5.20<span class="w"> </span><span class="m">8080</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="c1"># Windows equivalent</span>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>Test-NetConnection<span class="w"> </span>-ComputerName<span class="w"> </span><span class="m">10</span>.10.5.20<span class="w"> </span>-Port<span class="w"> </span><span class="m">443</span>
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="c1"># Curl for HTTP/HTTPS with full header details</span>
-<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>curl<span class="w"> </span>-v<span class="w"> </span>--connect-timeout<span class="w"> </span><span class="m">10</span><span class="w"> </span>https://app01.corp.example.com/health
-<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>
-<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="c1"># OpenSSL TLS test</span>
-<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>app01.corp.example.com:443<span class="w"> </span>-servername<span class="w"> </span>app01.corp.example.com
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Test TCP port reachability (nc = netcat)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>nc<span class="w"> </span>-zv<span class="w"> </span><span class="m">10</span>.10.5.20<span class="w"> </span><span class="m">443</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Connection to 10.10.5.20 443 port [tcp/https] succeeded!</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Test UDP port</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>nc<span class="w"> </span>-zuv<span class="w"> </span><span class="m">10</span>.10.1.10<span class="w"> </span><span class="m">53</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Test multiple ports in range</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="k">for</span><span class="w"> </span>port<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">2500</span><span class="w"> </span><span class="m">2501</span><span class="w"> </span><span class="m">2502</span><span class="w"> </span><span class="m">3300</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">    </span>nc<span class="w"> </span>-zv<span class="w"> </span><span class="m">10</span>.20.1.50<span class="w"> </span><span class="nv">$port</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;succeeded|refused|timed out&quot;</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="k">done</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Test with timeout (avoid long hangs)</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>nc<span class="w"> </span>-zv<span class="w"> </span>-w<span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="m">10</span>.10.5.20<span class="w"> </span><span class="m">8080</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="c1"># Windows equivalent</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>Test-NetConnection<span class="w"> </span>-ComputerName<span class="w"> </span><span class="m">10</span>.10.5.20<span class="w"> </span>-Port<span class="w"> </span><span class="m">443</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="c1"># Curl for HTTP/HTTPS with full header details</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>curl<span class="w"> </span>-v<span class="w"> </span>--connect-timeout<span class="w"> </span><span class="m">10</span><span class="w"> </span>https://app01.corp.example.com/health
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="c1"># OpenSSL TLS test</span>
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>app01.corp.example.com:443<span class="w"> </span>-servername<span class="w"> </span>app01.corp.example.com
 </code></pre></div>
 <hr />
 <h2 id="mtu-and-jumbo-frame-issues">MTU and Jumbo Frame Issues<a class="headerlink" href="#mtu-and-jumbo-frame-issues" title="Permanent link">&para;</a></h2>
 <p>MTU mismatches cause large packet failures while small pings succeed — common in storage networks (iSCSI, NFS over 10GbE with jumbo frames).</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Test if path supports jumbo frames (9000 byte MTU — payload 8972 = 9000 - 28)</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ping<span class="w"> </span>-M<span class="w"> </span><span class="k">do</span><span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span><span class="w"> </span><span class="m">10</span>.20.1.50
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># If MTU mismatch: &quot;From 10.10.1.1 icmp_seq=1 Frag needed and DF set (mtu = 1500)&quot;</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># If path OK: normal ping reply</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Progressive MTU test (binary search)</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="k">for</span><span class="w"> </span>size<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">8972</span><span class="w"> </span><span class="m">4096</span><span class="w"> </span><span class="m">2048</span><span class="w"> </span><span class="m">1472</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">    </span><span class="nv">result</span><span class="o">=</span><span class="k">$(</span>ping<span class="w"> </span>-M<span class="w"> </span><span class="k">do</span><span class="w"> </span>-s<span class="w"> </span><span class="nv">$size</span><span class="w"> </span>-c<span class="w"> </span><span class="m">1</span><span class="w"> </span>-W<span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">10</span>.20.1.50<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="k">)</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Size </span><span class="nv">$size</span><span class="s2">: </span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="nv">$result</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-o<span class="w"> </span><span class="s1">&#39;Frag needed\|1 received\|timeout&#39;</span><span class="k">)</span><span class="s2">&quot;</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="k">done</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># Check MTU on interface</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>ip<span class="w"> </span>link<span class="w"> </span>show<span class="w"> </span>eth0<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>mtu
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c1"># 2: eth0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 9000 ...</span>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="c1"># Set MTU (temporary)</span>
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>ip<span class="w"> </span>link<span class="w"> </span><span class="nb">set</span><span class="w"> </span>eth0<span class="w"> </span>mtu<span class="w"> </span><span class="m">9000</span>
-<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>
-<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="c1"># VMware ESXi: check vSwitch MTU</span>
-<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>esxcli<span class="w"> </span>network<span class="w"> </span>vswitch<span class="w"> </span>standard<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>mtu
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Test if path supports jumbo frames (9000 byte MTU — payload 8972 = 9000 - 28)</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ping<span class="w"> </span>-M<span class="w"> </span><span class="k">do</span><span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span><span class="w"> </span><span class="m">10</span>.20.1.50
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># If MTU mismatch: &quot;From 10.10.1.1 icmp_seq=1 Frag needed and DF set (mtu = 1500)&quot;</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># If path OK: normal ping reply</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Progressive MTU test (binary search)</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="k">for</span><span class="w"> </span>size<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">8972</span><span class="w"> </span><span class="m">4096</span><span class="w"> </span><span class="m">2048</span><span class="w"> </span><span class="m">1472</span><span class="p">;</span><span class="w"> </span><span class="k">do</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">    </span><span class="nv">result</span><span class="o">=</span><span class="k">$(</span>ping<span class="w"> </span>-M<span class="w"> </span><span class="k">do</span><span class="w"> </span>-s<span class="w"> </span><span class="nv">$size</span><span class="w"> </span>-c<span class="w"> </span><span class="m">1</span><span class="w"> </span>-W<span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">10</span>.20.1.50<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="k">)</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Size </span><span class="nv">$size</span><span class="s2">: </span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span><span class="nv">$result</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-o<span class="w"> </span><span class="s1">&#39;Frag needed\|1 received\|timeout&#39;</span><span class="k">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="k">done</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1"># Check MTU on interface</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>ip<span class="w"> </span>link<span class="w"> </span>show<span class="w"> </span>eth0<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>mtu
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="c1"># 2: eth0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 9000 ...</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="c1"># Set MTU (temporary)</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>ip<span class="w"> </span>link<span class="w"> </span><span class="nb">set</span><span class="w"> </span>eth0<span class="w"> </span>mtu<span class="w"> </span><span class="m">9000</span>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="c1"># VMware ESXi: check vSwitch MTU</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>esxcli<span class="w"> </span>network<span class="w"> </span>vswitch<span class="w"> </span>standard<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>mtu
 </code></pre></div>
 <hr />
 <h2 id="arp-table-and-mac-address-checks">ARP Table and MAC Address Checks<a class="headerlink" href="#arp-table-and-mac-address-checks" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Show ARP table — verify gateway MAC is present</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ip<span class="w"> </span>neigh<span class="w"> </span>show
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Example:</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># 10.10.1.1 dev eth0 lladdr 00:50:56:ab:cd:ef REACHABLE  ← good</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1"># 10.10.1.100 dev eth0  FAILED                            ← host unreachable / no ARP reply</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># Send ARP request manually</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>arping<span class="w"> </span>-I<span class="w"> </span>eth0<span class="w"> </span><span class="m">10</span>.10.1.100
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="c1"># Flush ARP cache for a specific entry (force re-ARP)</span>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>ip<span class="w"> </span>neigh<span class="w"> </span>del<span class="w"> </span><span class="m">10</span>.10.1.100<span class="w"> </span>dev<span class="w"> </span>eth0
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="c1"># Show MAC address table on Cisco switch (find which port a MAC is on)</span>
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="c1"># show mac address-table address 00:50:56:ab:cd:ef</span>
-<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>!<span class="w"> </span>Vlan<span class="w">    </span>Mac<span class="w"> </span>Address<span class="w">       </span>Type<span class="w">        </span>Ports
-<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>!<span class="w"> </span><span class="m">100</span><span class="w">    </span><span class="m">0050</span>.56ab.cdef<span class="w">    </span>DYNAMIC<span class="w">     </span>Gi0/5
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Show ARP table — verify gateway MAC is present</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>ip<span class="w"> </span>neigh<span class="w"> </span>show
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Example:</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># 10.10.1.1 dev eth0 lladdr 00:50:56:ab:cd:ef REACHABLE  ← good</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># 10.10.1.100 dev eth0  FAILED                            ← host unreachable / no ARP reply</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Send ARP request manually</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>arping<span class="w"> </span>-I<span class="w"> </span>eth0<span class="w"> </span><span class="m">10</span>.10.1.100
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># Flush ARP cache for a specific entry (force re-ARP)</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>ip<span class="w"> </span>neigh<span class="w"> </span>del<span class="w"> </span><span class="m">10</span>.10.1.100<span class="w"> </span>dev<span class="w"> </span>eth0
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c1"># Show MAC address table on Cisco switch (find which port a MAC is on)</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c1"># show mac address-table address 00:50:56:ab:cd:ef</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>!<span class="w"> </span>Vlan<span class="w">    </span>Mac<span class="w"> </span>Address<span class="w">       </span>Type<span class="w">        </span>Ports
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>!<span class="w"> </span><span class="m">100</span><span class="w">    </span><span class="m">0050</span>.56ab.cdef<span class="w">    </span>DYNAMIC<span class="w">     </span>Gi0/5
 </code></pre></div>
 <hr />
 <h2 id="common-failure-patterns">Common Failure Patterns<a class="headerlink" href="#common-failure-patterns" title="Permanent link">&para;</a></h2>
@@ -3544,19 +3490,19 @@ Network Connectivity Troubleshooting reference covering Overview, Failure Classi
 </table>
 <hr />
 <h2 id="mtr-analysis-and-output-interpretation">mtr Analysis and Output Interpretation<a class="headerlink" href="#mtr-analysis-and-output-interpretation" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Run mtr in report mode (12 cycles)</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>mtr<span class="w"> </span>--report<span class="w"> </span>--report-cycles<span class="w"> </span><span class="m">12</span><span class="w"> </span><span class="m">10</span>.10.5.20
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Example output:</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># HOST: app01.corp.example.com     Loss%   Snt   Last   Avg  Best  Wrst StDev</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1">#   1.|-- 10.10.1.1                 0.0%    12    0.3   0.4   0.3   0.6   0.1</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1">#   2.|-- 10.10.0.1                 0.0%    12    0.8   0.9   0.7   1.2   0.1</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1">#   3.|-- 10.10.5.20                0.0%    12    1.1   1.2   1.0   1.5   0.1</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Interpretation:</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c1"># Loss% at hop N but not hop N+1 = router ICMP rate-limiting (not real loss)</span>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="c1"># Loss% at final hop = real packet loss to destination</span>
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="c1"># Wrst &gt;&gt; Avg at a hop = intermittent congestion or flapping link</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Run mtr in report mode (12 cycles)</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>mtr<span class="w"> </span>--report<span class="w"> </span>--report-cycles<span class="w"> </span><span class="m">12</span><span class="w"> </span><span class="m">10</span>.10.5.20
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Example output:</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># HOST: app01.corp.example.com     Loss%   Snt   Last   Avg  Best  Wrst StDev</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1">#   1.|-- 10.10.1.1                 0.0%    12    0.3   0.4   0.3   0.6   0.1</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1">#   2.|-- 10.10.0.1                 0.0%    12    0.8   0.9   0.7   1.2   0.1</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1">#   3.|-- 10.10.5.20                0.0%    12    1.1   1.2   1.0   1.5   0.1</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># Interpretation:</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="c1"># Loss% at hop N but not hop N+1 = router ICMP rate-limiting (not real loss)</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="c1"># Loss% at final hop = real packet loss to destination</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="c1"># Wrst &gt;&gt; Avg at a hop = intermittent congestion or flapping link</span>
 </code></pre></div>
 <hr />
 <h2 id="escalation-criteria">Escalation Criteria<a class="headerlink" href="#escalation-criteria" title="Permanent link">&para;</a></h2>

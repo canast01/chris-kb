@@ -3898,17 +3898,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#procedure-4-create-update-recovery-media" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Procedure 4: Create / Update Recovery Media
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#procedure-5-retention-cleanup" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4157,74 +4146,38 @@
 │  RTO           = Recovery Time Objective; time from failover decision to restored service             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌────────────────────────────────────────── RASR — Procedures ──────────────────────────────────────────┐
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │              Routine Procedures              │  │                DR Procedures                │   │
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │          Add new protection source           │  │              Initiate failover              │   │
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │           Modify retention policy            │  │               Validate replica              │   │
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │          Expire old recover points           │  │              Redirect host I/O              │   │
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │             Add storage capacity             │  │         Test failover (non-disrupt)         │   │
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │           Service account rotation           │  │            Failback to production           │   │
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│                                                                                                       │
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│   │                              Change Control Requirements for RASR                             │   │
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│   │           All changes to protection policies require change ticket with rollback plan         │   │
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│   │                      Failover tests must be scheduled in maintenance window                   │   │
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│   │              Firmware/software upgrades need 48 h pre-approval and backup snapshot            │   │
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   │                  Post-change: verify jobs run successfully for 2 backup cycles                │   │
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│                                                                                                       │
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│  Physical Infrastructure:                                                                             │
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│  Isolated network segment (airgap switch) · Vault PowerStore/DD appliance · Clean-room ESXi hosts     │
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│                                                                                                       │
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│  RASR          = Ransomware Air-gap Secure Recovery; full workflow from detection to clean rest       │
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│  Vault         = isolated, air-gapped storage appliance receiving periodic replication copies         │
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  Vault Lock    = WORM lock applied after sync; prevents modification or deletion of vault copies      │
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  CyberSense    = ML analytics engine scanning vault data for corruption, encryption signatures        │
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  PPDM          = PowerProtect Data Manager; orchestrates protection policies, jobs, and recovery      │
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│  Air Gap       = physical or logical network isolation preventing attacker lateral movement to        │
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Delta Set     = incremental changed blocks replicated from production to vault each cycle            │
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│  Clean Room    = isolated recovery environment: separate vCenter, network, and workstations           │
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  Recovery Point= specific vault snapshot timestamp from which clean recovery is performed             │
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  Integrity Lock= two-person authorization required to open vault; prevents insider unlock attac       │
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  Journal       = write-order-consistent journal on vault enabling point-in-time recovery              │
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  Scan Report   = CyberSense output: clean/suspect classification per file and block                   │
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  Retention     = vault copy lifespan; typically 30–90 days of daily snapshots kept                    │
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  RTO           = Recovery Time Objective; time from failover decision to restored service             │
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│                                                                                                       │
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>---
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## Procedure 4: Create / Update Recovery Media
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>**When:** New server generation added; RASR agent updated; media hasn&#39;t been rebuilt in 6 months.
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>```text
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>RASR Console → Media → Create New Media
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>  → Select output: ISO file
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>  → Output path: \\nas01\rasr-images\media\rasr-media-15G-$(Get-Date -Format yyyyMM).iso
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  → Build
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>After creation:
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>  1. Map new ISO in iDRAC and verify it boots to WinPE.
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>  2. Confirm network driver loads and share is reachable.
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>  3. Replace old ISO reference in documentation and iDRAC pre-mapped media.
 </code></pre></div></p>
-<hr />
-<h2 id="procedure-4-create-update-recovery-media">Procedure 4: Create / Update Recovery Media<a class="headerlink" href="#procedure-4-create-update-recovery-media" title="Permanent link">&para;</a></h2>
-<p><strong>When:</strong> New server generation added; RASR agent updated; media hasn't been rebuilt in 6 months.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>RASR Console → Media → Create New Media
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  → Select output: ISO file
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  → Output path: \\nas01\rasr-images\media\rasr-media-15G-$(Get-Date -Format yyyyMM).iso
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  → Build
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>After creation:
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>  1. Map new ISO in iDRAC and verify it boots to WinPE.
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>  2. Confirm network driver loads and share is reachable.
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>  3. Replace old ISO reference in documentation and iDRAC pre-mapped media.
-</code></pre></div>
 <hr />
 <h2 id="procedure-5-retention-cleanup">Procedure 5: Retention Cleanup<a class="headerlink" href="#procedure-5-retention-cleanup" title="Permanent link">&para;</a></h2>
 <p><strong>When:</strong> Monthly, or when recovery share free space drops below 30%.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nv">$share</span>     <span class="p">=</span> <span class="s2">&quot;\\nas01\rasr-images\prod&quot;</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">$keepDaily</span> <span class="p">=</span> <span class="n">7</span>    <span class="c"># days</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nv">$keepWeekly</span> <span class="p">=</span> <span class="n">4</span>   <span class="c"># weeks</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nb">Get-ChildItem</span> <span class="nv">$share</span> <span class="n">-Recurse</span> <span class="n">-Filter</span> <span class="s2">&quot;*.wim&quot;</span> <span class="p">|</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span> <span class="o">-notmatch</span> <span class="s2">&quot;_weekly|_post-patch&quot;</span> <span class="o">-and</span> <span class="nv">$_</span><span class="p">.</span><span class="n">LastWriteTime</span> <span class="o">-lt</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddDays</span><span class="p">(-</span><span class="nv">$keepDaily</span><span class="p">)</span> <span class="p">}</span> <span class="p">|</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;Removing: </span><span class="p">$(</span><span class="nv">$_</span><span class="p">.</span><span class="n">FullName</span><span class="p">)</span><span class="s2"> [</span><span class="p">$((</span><span class="nv">$_</span><span class="p">.</span><span class="n">Length</span> <span class="p">/</span> <span class="n">1GB</span><span class="p">).</span><span class="n">ToString</span><span class="p">(</span><span class="s1">&#39;F1&#39;</span><span class="p">))</span><span class="s2"> GB]&quot;</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    <span class="c"># Remove-Item $_.FullName   # uncomment after dry-run review</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>  <span class="p">}</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c"># Review output before uncommenting Remove-Item</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nv">$share</span>     <span class="p">=</span> <span class="s2">&quot;\\nas01\rasr-images\prod&quot;</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">$keepDaily</span> <span class="p">=</span> <span class="n">7</span>    <span class="c"># days</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nv">$keepWeekly</span> <span class="p">=</span> <span class="n">4</span>   <span class="c"># weeks</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nb">Get-ChildItem</span> <span class="nv">$share</span> <span class="n">-Recurse</span> <span class="n">-Filter</span> <span class="s2">&quot;*.wim&quot;</span> <span class="p">|</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>  <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span> <span class="o">-notmatch</span> <span class="s2">&quot;_weekly|_post-patch&quot;</span> <span class="o">-and</span> <span class="nv">$_</span><span class="p">.</span><span class="n">LastWriteTime</span> <span class="o">-lt</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddDays</span><span class="p">(-</span><span class="nv">$keepDaily</span><span class="p">)</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>  <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    <span class="nb">Write-Host</span> <span class="s2">&quot;Removing: </span><span class="p">$(</span><span class="nv">$_</span><span class="p">.</span><span class="n">FullName</span><span class="p">)</span><span class="s2"> [</span><span class="p">$((</span><span class="nv">$_</span><span class="p">.</span><span class="n">Length</span> <span class="p">/</span> <span class="n">1GB</span><span class="p">).</span><span class="n">ToString</span><span class="p">(</span><span class="s1">&#39;F1&#39;</span><span class="p">))</span><span class="s2"> GB]&quot;</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    <span class="c"># Remove-Item $_.FullName   # uncomment after dry-run review</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>  <span class="p">}</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c"># Review output before uncommenting Remove-Item</span>
 </code></pre></div>
 
 

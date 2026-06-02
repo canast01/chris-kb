@@ -3278,17 +3278,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#personal-access-tokens-pat" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Personal Access Tokens (PAT)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#authentication-reference" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3512,40 +3501,21 @@
 │   │      OIDC token    = JWT issued by GitHub; cloud trusts issuer; exchanged for cloud cred      │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌─────────────────────────────────── GitHub Actions — Authentication ───────────────────────────────────┐
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   │ GitHub Actions authentication: GITHUB_TOKEN for GitHub API; OIDC for cloud; secrets for others│   │
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │    OIDC preferred for AWS/Azure/GCP — no stored secrets; short-lived token per workflow run   │   │
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │      Service accounts: use GitHub Apps (fine-grained token) over PATs for org-wide access     │   │
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│                                                                                                       │
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │                 GitHub Auth                  │  │              Cloud Auth (OIDC)              │   │
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │          GITHUB_TOKEN: auto per job          │  │       aws-actions/configure-aws-creds       │   │
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │        GitHub App: installation token        │  │       role-to-assume: arn:aws:iam::...      │   │
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   │          PAT: scoped personal token          │  │           Azure: azure/login@&lt;sha&gt;          │   │
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│   │        Deploy key: repo-level SSH key        │  │        GCP: auth.yml with workload id       │   │
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                                                                                                       │
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   │ GitHub App      = machine identity; fine-grained permissions; short-lived installation tokens │   │
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │        PAT           = Personal Access Token; scoped to user; avoid for org automation        │   │
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │      OIDC token    = JWT issued by GitHub; cloud trusts issuer; exchanged for cloud cred      │   │
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## Personal Access Tokens (PAT)
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>PATs are used when `GITHUB_TOKEN` lacks sufficient scope (e.g., cross-repository operations).
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>```bash
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a># Create a fine-grained PAT at:
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a># GitHub → Settings → Developer settings → Personal access tokens → Fine-grained tokens
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a># Store as a repository secret, then reference in workflows
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>- name: Cross-repo checkout
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>  uses: actions/checkout@v4
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>  with:
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    repository: myorg/other-repo
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>    token: ${{ secrets.PAT_TOKEN }}
 </code></pre></div></p>
-<h2 id="personal-access-tokens-pat">Personal Access Tokens (PAT)<a class="headerlink" href="#personal-access-tokens-pat" title="Permanent link">&para;</a></h2>
-<p>PATs are used when <code>GITHUB_TOKEN</code> lacks sufficient scope (e.g., cross-repository operations).</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Create a fine-grained PAT at:</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># GitHub → Settings → Developer settings → Personal access tokens → Fine-grained tokens</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Store as a repository secret, then reference in workflows</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>-<span class="w"> </span>name:<span class="w"> </span>Cross-repo<span class="w"> </span>checkout
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span>uses:<span class="w"> </span>actions/checkout@v4
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>with:
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">    </span>repository:<span class="w"> </span>myorg/other-repo
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">    </span>token:<span class="w"> </span><span class="si">${</span><span class="p">{ secrets.PAT_TOKEN </span><span class="si">}</span><span class="o">}</span>
-</code></pre></div>
 <h2 id="authentication-reference">Authentication Reference<a class="headerlink" href="#authentication-reference" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

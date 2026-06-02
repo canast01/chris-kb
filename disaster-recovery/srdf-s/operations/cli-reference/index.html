@@ -3898,17 +3898,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#failover-failback" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Failover &amp; Failback
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#swap-metro-operations" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4182,84 +4171,44 @@
 │  RF Port       = Remote Fabric port on PowerMax; used exclusively for SRDF replication traffic        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────────────────── SRDF/S — CLI Reference ────────────────────────────────────────┐
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │                                   SRDF/S — Command Reference                                  │   │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │           Use these commands for routine operations, scripting, and troubleshooting           │   │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │                                     symrdf establish -type s                                  │   │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │                                         symrdf failover                                       │   │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │                                           symrdf query                                        │   │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   │                                        symrdf -rdfg list                                      │   │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   │                                          symrdf restore                                       │   │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                                                                                                       │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│    Ports: Dark fiber FC (&lt; 5 ms RTT) · DWDM long-haul FC · 9443 (Unisphere)                           │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│                                                                                                       │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │                                       Command Categories                                      │   │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │                  Status / Query  — check current state, list jobs, show config                │   │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │                  Operations      — start, stop, failover, restore, sync, expire               │   │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │                Configuration   — add/modify policies, schedules, storage targets              │   │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │               Diagnostics     — collect logs, run health checks, test connectivity            │   │
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   │                  Scripting       — REST API or CLI for automation and reporting               │   │
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│                                                                                                       │
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│  Physical Infrastructure:                                                                             │
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  Two PowerMax arrays · Dark fiber / DWDM FC link · Low-latency network (&lt; 200 km) · RF director ports │
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│                                                                                                       │
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  SRDF/S        = Synchronous SRDF; every R1 write is mirrored to R2 before host acknowledgment        │
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│  R1            = source volume; write is held pending R2 confirmation — adds WAN RTT to latency       │
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  R2            = target volume; must acknowledge each write; acts as synchronous mirror               │
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│  RTT           = Round-Trip Time between R1 and R2 arrays; directly added to host write latency       │
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  RPO=0         = zero recovery point objective; no data loss possible under normal operation          │
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│  RTO           = Recovery Time Objective; SRDF/S failover typically &lt; 5 minutes manual, &lt; 1 min       │
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│  symrdf        = CLI for all SRDF operations: establish, split, suspend, failover, restore, ver       │
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│  Pair State    = Synchronized | Consistent | Suspended | Failed Over | Split                          │
-<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│  Consistent    = transient state where R1 write is in transit but not yet confirmed on R2             │
-<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│  Failover      = makes R2 read-write; production continues from DR site after R1 failure              │
-<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│  Restore       = re-synchronises after failover; direction is reversed until R1 catches up            │
-<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│  RDFG          = RDF Group: logical grouping of SRDF pairs sharing same link and parameters           │
-<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│  FA Port       = Front-End Adapter port on PowerMax; used for host connectivity (non-SRDF)            │
-<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│  RF Port       = Remote Fabric port on PowerMax; used exclusively for SRDF replication traffic        │
-<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│                                                                                                       │
-<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>---
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>## Failover &amp; Failback
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>Failover makes R2 the new production side. Always run in a maintenance window except during a real DR event.
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>```bash
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a># Planned failover (splits pairs, R2 becomes R/W)
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>symrdf -sid &lt;sid&gt; -g &lt;group&gt; failover -noprompt
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a># Verify R2 is now active
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>symrdf -sid &lt;sid&gt; -g &lt;group&gt; query
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a># Failback to original R1 (after restoring R1 site)
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>symrdf -sid &lt;sid&gt; -g &lt;group&gt; failback -noprompt
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a># Resynchronise after failover or split
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>symrdf -sid &lt;sid&gt; -g &lt;group&gt; resync -noprompt
 </code></pre></div></p>
-<hr />
-<h2 id="failover-failback">Failover &amp; Failback<a class="headerlink" href="#failover-failback" title="Permanent link">&para;</a></h2>
-<p>Failover makes R2 the new production side. Always run in a maintenance window except during a real DR event.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Planned failover (splits pairs, R2 becomes R/W)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;group&gt;<span class="w"> </span>failover<span class="w"> </span>-noprompt
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Verify R2 is now active</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;group&gt;<span class="w"> </span>query
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Failback to original R1 (after restoring R1 site)</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;group&gt;<span class="w"> </span>failback<span class="w"> </span>-noprompt
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Resynchronise after failover or split</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;group&gt;<span class="w"> </span>resync<span class="w"> </span>-noprompt
-</code></pre></div>
 <hr />
 <h2 id="swap-metro-operations">Swap &amp; Metro Operations<a class="headerlink" href="#swap-metro-operations" title="Permanent link">&para;</a></h2>
 <p>For SRDF/Metro or swap operations on bidirectional configurations.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Swap R1/R2 roles</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;group&gt;<span class="w"> </span>swap<span class="w"> </span>-noprompt
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Set SRDF mode to synchronous</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;group&gt;<span class="w"> </span>setmode<span class="w"> </span>-sync<span class="w"> </span>-noprompt
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Set SRDF mode to asynchronous (temporary degraded mode)</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;group&gt;<span class="w"> </span>setmode<span class="w"> </span>-acp_disk<span class="w"> </span>-noprompt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Swap R1/R2 roles</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;group&gt;<span class="w"> </span>swap<span class="w"> </span>-noprompt
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Set SRDF mode to synchronous</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;group&gt;<span class="w"> </span>setmode<span class="w"> </span>-sync<span class="w"> </span>-noprompt
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Set SRDF mode to asynchronous (temporary degraded mode)</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;group&gt;<span class="w"> </span>setmode<span class="w"> </span>-acp_disk<span class="w"> </span>-noprompt
 </code></pre></div>
 <hr />
 <h2 id="common-health-check-sequence">Common Health Check Sequence<a class="headerlink" href="#common-health-check-sequence" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Full SRDF/S pre-change health check</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>list<span class="w"> </span>-rdfg
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;group&gt;<span class="w"> </span>query
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>list<span class="w"> </span>-v
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>symdg<span class="w"> </span>show<span class="w"> </span>&lt;group_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Full SRDF/S pre-change health check</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>list<span class="w"> </span>-rdfg
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>-g<span class="w"> </span>&lt;group&gt;<span class="w"> </span>query
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>symrdf<span class="w"> </span>-sid<span class="w"> </span>&lt;sid&gt;<span class="w"> </span>list<span class="w"> </span>-v
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>symdg<span class="w"> </span>show<span class="w"> </span>&lt;group_name&gt;
 </code></pre></div>
 
 

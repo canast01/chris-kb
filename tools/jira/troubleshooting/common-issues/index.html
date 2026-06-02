@@ -3813,62 +3813,23 @@ Common Issues reference covering Quick Reference Table, OutOfMemoryError (OOM), 
 │  GC log       = enable -Xlog:gc* in JVM_SUPPORT_RECOMMENDED_ARGS for analysis                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌──────────────────────────────────────── Jira — Common Issues ─────────────────────────────────────────┐
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │                                  Jira Frequent Issue Patterns                                 │   │
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │         OOM crash: heap too small; increase -Xmx in setenv.sh; check for plugin leaks         │   │
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │          Slow issues: DB slow queries or GC pressure; check pg_stat_activity + GC log         │   │
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │         Search broken: Lucene index stale; trigger full reindex from Admin &gt; Indexing         │   │
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │         Workflow stuck: check conditions/validators; view workflow in project settings        │   │
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│                                                                                                       │
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│    Most Jira issues: memory, performance, search, workflow, or authentication                         │
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│                                                                                                       │
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                          ▼                                                 ▼                          │
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│                                                                                                       │
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│   │                    Issue                     │  │                  Resolution                 │   │
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   │                 OOM / crash                  │  │         Increase -Xmx; check plugins        │   │
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │               Slow page loads                │  │              DB index; tune GC              │   │
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │                 Search stale                 │  │           Full reindex from admin           │   │
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │                Workflow stuck                │  │         Check conditions/validators         │   │
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │               SAML login fails               │  │            Check IdP cert expiry            │   │
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │               Attachments 404                │  │            Remount NFS JIRA_HOME            │   │
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│                                                                                                       │
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  Jira VMs · PostgreSQL · NFS home · IdP (Okta/ADFS) · load balancer                                   │
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│                                                                                                       │
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  -Xmx         = JVM max heap; set in JIRA_INSTALL/bin/setenv.sh                                       │
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│  GC pressure  = excessive garbage collection; heap too small; increase -Xmx                           │
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  Full reindex = Admin &gt; System &gt; Indexing &gt; Full Re-Index; fixes search issues                        │
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  Condition    = workflow transition prerequisite; check in Project &gt; Workflows                        │
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  Validator    = field check before transition; fix fields or disable validator                        │
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  SAML cert    = IdP signing certificate; expires on schedule; update in SAML config                   │
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  NFS remount  = umount &amp;&amp; mount JIRA_HOME; or restart nfs-client.target                               │
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  DB index     = PostgreSQL indexes on jiraissue; check with EXPLAIN ANALYZE                           │
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  Plugin leak  = disable suspect plugin to confirm memory leak                                         │
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  LDAP sync    = Admin &gt; User Management &gt; User Directories &gt; Synchronise                              │
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  Indexing     = Admin &gt; System &gt; Indexing; check index status and last run time                       │
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  GC log       = enable -Xlog:gc* in JVM_SUPPORT_RECOMMENDED_ARGS for analysis                         │
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│                                                                                                       │
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Analyse with Eclipse Memory Analyser Tool (MAT) to identify leaking object graph.
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>**3. Check for Plugin Memory Leaks**
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Temporarily disable recently installed or updated plugins:
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>`Admin → Manage Apps → [plugin] → Disable`
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>**4. GC Tuning**
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>```bash
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a># Add to setenv.sh JVM_SUPPORT_RECOMMENDED_ARGS
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>-XX:+UseG1GC
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>-XX:MaxGCPauseMillis=200
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>-XX:+ExplicitGCInvokesConcurrent
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>-XX:G1HeapRegionSize=16m
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>-XX:G1ReservePercent=20
 </code></pre></div></p>
-<p>Analyse with Eclipse Memory Analyser Tool (MAT) to identify leaking object graph.</p>
-<p><strong>3. Check for Plugin Memory Leaks</strong></p>
-<p>Temporarily disable recently installed or updated plugins:
-<code>Admin → Manage Apps → [plugin] → Disable</code></p>
-<p><strong>4. GC Tuning</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Add to setenv.sh JVM_SUPPORT_RECOMMENDED_ARGS</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>-XX:+UseG1GC
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>-XX:MaxGCPauseMillis<span class="o">=</span><span class="m">200</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>-XX:+ExplicitGCInvokesConcurrent
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>-XX:G1HeapRegionSize<span class="o">=</span>16m
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>-XX:G1ReservePercent<span class="o">=</span><span class="m">20</span>
-</code></pre></div>
 <hr />
 <h2 id="slow-board-loading">Slow Board Loading<a class="headerlink" href="#slow-board-loading" title="Permanent link">&para;</a></h2>
 <h3 id="symptoms_1">Symptoms<a class="headerlink" href="#symptoms_1" title="Permanent link">&para;</a></h3>
@@ -3878,17 +3839,17 @@ Common Issues reference covering Quick Reference Table, OutOfMemoryError (OOM), 
 <li>Database slow query log shows board-related JQL</li>
 </ul>
 <h3 id="diagnosis_1">Diagnosis<a class="headerlink" href="#diagnosis_1" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check DB slow queries during board load (enable slow query log first)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>psql<span class="w"> </span>-h<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_DB_HOST</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>-U<span class="w"> </span>jira<span class="w"> </span>-d<span class="w"> </span>jiradb<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="s2">SELECT query, calls, total_exec_time, mean_exec_time</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="s2">FROM pg_stat_statements</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="s2">WHERE query ILIKE &#39;%jiraissue%&#39; OR query ILIKE &#39;%customfieldvalue%&#39;</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="s2">ORDER BY mean_exec_time DESC</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="s2">LIMIT 20;&quot;</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Check board filter JQL (get board ID from URL)</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/agile/1.0/board/42/configuration&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check DB slow queries during board load (enable slow query log first)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>psql<span class="w"> </span>-h<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_DB_HOST</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>-U<span class="w"> </span>jira<span class="w"> </span>-d<span class="w"> </span>jiradb<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="s2">SELECT query, calls, total_exec_time, mean_exec_time</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="s2">FROM pg_stat_statements</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="s2">WHERE query ILIKE &#39;%jiraissue%&#39; OR query ILIKE &#39;%customfieldvalue%&#39;</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="s2">ORDER BY mean_exec_time DESC</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="s2">LIMIT 20;&quot;</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Check board filter JQL (get board ID from URL)</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/agile/1.0/board/42/configuration&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div>
 <h3 id="common-causes-and-fixes">Common Causes and Fixes<a class="headerlink" href="#common-causes-and-fixes" title="Permanent link">&para;</a></h3>
 <table>
@@ -3926,14 +3887,14 @@ Common Issues reference covering Quick Reference Table, OutOfMemoryError (OOM), 
 </tbody>
 </table>
 <p><strong>Optimise Board Filter JQL:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>-- Before (returns ALL issues including resolved)
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>project = PROJ
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>-- After (only active work)
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>project = PROJ AND (
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>  sprint in openSprints()
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>  OR (status != Done AND updated &gt;= -14d)
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>-- Before (returns ALL issues including resolved)
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>project = PROJ
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>-- After (only active work)
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>project = PROJ AND (
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  sprint in openSprints()
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  OR (status != Done AND updated &gt;= -14d)
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>)
 </code></pre></div>
 <hr />
 <h2 id="ldap-sync-failures">LDAP Sync Failures<a class="headerlink" href="#ldap-sync-failures" title="Permanent link">&para;</a></h2>
@@ -3944,16 +3905,16 @@ Common Issues reference covering Quick Reference Table, OutOfMemoryError (OOM), 
 <li>Log entries: <code>LDAP: error code 49</code>, <code>CommunicationException</code>, <code>TimeLimitExceededException</code></li>
 </ul>
 <h3 id="diagnosis_2">Diagnosis<a class="headerlink" href="#diagnosis_2" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Test LDAP connectivity from app server</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldaps://ad.example.com:636<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>-D<span class="w"> </span><span class="s2">&quot;CN=svc-jira,OU=ServiceAccounts,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>-w<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">LDAP_PASSWORD</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>-b<span class="w"> </span><span class="s2">&quot;DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span><span class="s2">&quot;(sAMAccountName=testuser)&quot;</span><span class="w"> </span>displayName<span class="w"> </span>mail
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Check Jira logs for LDAP errors</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;ldap\|cwd\|crowd\|directory&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">  </span>/opt/atlassian/jira/logs/atlassian-jira.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|warn\|fail&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Test LDAP connectivity from app server</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ldapsearch<span class="w"> </span>-H<span class="w"> </span>ldaps://ad.example.com:636<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>-D<span class="w"> </span><span class="s2">&quot;CN=svc-jira,OU=ServiceAccounts,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>-w<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">LDAP_PASSWORD</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>-b<span class="w"> </span><span class="s2">&quot;DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span><span class="s2">&quot;(sAMAccountName=testuser)&quot;</span><span class="w"> </span>displayName<span class="w"> </span>mail
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Check Jira logs for LDAP errors</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;ldap\|cwd\|crowd\|directory&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span>/opt/atlassian/jira/logs/atlassian-jira.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|warn\|fail&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
 </code></pre></div>
 <h3 id="common-error-codes">Common Error Codes<a class="headerlink" href="#common-error-codes" title="Permanent link">&para;</a></h3>
 <table>
@@ -4010,11 +3971,11 @@ Common Issues reference covering Quick Reference Table, OutOfMemoryError (OOM), 
 <li>If sync still fails, check LDAP server load and connection limits</li>
 <li>For certificate errors (LDAPS): import LDAP server certificate to Jira JVM truststore:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>keytool<span class="w"> </span>-importcert<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span>-alias<span class="w"> </span>ldap-server<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>-file<span class="w"> </span>/tmp/ldap-server.crt<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>-keystore<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JAVA_HOME</span><span class="si">}</span><span class="s2">/lib/security/cacerts&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span>-storepass<span class="w"> </span>changeit
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>keytool<span class="w"> </span>-importcert<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span>-alias<span class="w"> </span>ldap-server<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>-file<span class="w"> </span>/tmp/ldap-server.crt<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>-keystore<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JAVA_HOME</span><span class="si">}</span><span class="s2">/lib/security/cacerts&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>-storepass<span class="w"> </span>changeit
 </code></pre></div>
 <hr />
 <h2 id="workflow-transition-failures">Workflow Transition Failures<a class="headerlink" href="#workflow-transition-failures" title="Permanent link">&para;</a></h2>
@@ -4025,13 +3986,13 @@ Common Issues reference covering Quick Reference Table, OutOfMemoryError (OOM), 
 <li>Transition succeeds for some users but not others</li>
 </ul>
 <h3 id="diagnosis_3">Diagnosis<a class="headerlink" href="#diagnosis_3" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Check workflow for issue type</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/issue/PROJ-123/transitions&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Check Jira log for validator errors during transition</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>grep<span class="w"> </span>-A5<span class="w"> </span><span class="s2">&quot;WorkflowException\|transition.*fail\|validator&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">  </span>/opt/atlassian/jira/logs/atlassian-jira.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-40
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check workflow for issue type</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/issue/PROJ-123/transitions&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Check Jira log for validator errors during transition</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>grep<span class="w"> </span>-A5<span class="w"> </span><span class="s2">&quot;WorkflowException\|transition.*fail\|validator&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span>/opt/atlassian/jira/logs/atlassian-jira.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-40
 </code></pre></div>
 <h3 id="common-causes">Common Causes<a class="headerlink" href="#common-causes" title="Permanent link">&para;</a></h3>
 <table>
@@ -4081,17 +4042,17 @@ Common Issues reference covering Quick Reference Table, OutOfMemoryError (OOM), 
 <li>No delivery errors visible in UI</li>
 </ul>
 <h3 id="diagnosis_4">Diagnosis<a class="headerlink" href="#diagnosis_4" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Check outgoing mail configuration</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/configuration&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Test SMTP from server</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>telnet<span class="w"> </span>smtp.example.com<span class="w"> </span><span class="m">587</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># Check Jira mail log</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;mail\|smtp\|notification\|email&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">  </span>/opt/atlassian/jira/logs/atlassian-jira.log<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|warn\|fail&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Check outgoing mail configuration</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/configuration&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Test SMTP from server</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>telnet<span class="w"> </span>smtp.example.com<span class="w"> </span><span class="m">587</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># Check Jira mail log</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;mail\|smtp\|notification\|email&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">  </span>/opt/atlassian/jira/logs/atlassian-jira.log<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|warn\|fail&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
 </code></pre></div>
 <h3 id="resolution">Resolution<a class="headerlink" href="#resolution" title="Permanent link">&para;</a></h3>
 <ol>
@@ -4113,31 +4074,31 @@ Common Issues reference covering Quick Reference Table, OutOfMemoryError (OOM), 
 <li>Reindex fails mid-way</li>
 </ul>
 <h3 id="diagnosis_5">Diagnosis<a class="headerlink" href="#diagnosis_5" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Check index errors in log</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;IndexException\|CorruptIndexException\|LockObtainFailedException&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span>/opt/atlassian/jira/logs/atlassian-jira.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># Check index directory size and permissions</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>ls<span class="w"> </span>-la<span class="w"> </span>/var/atlassian/application-data/jira/caches/indexes/
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>du<span class="w"> </span>-sh<span class="w"> </span>/var/atlassian/application-data/jira/caches/indexes/*
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Check index errors in log</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;IndexException\|CorruptIndexException\|LockObtainFailedException&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>/opt/atlassian/jira/logs/atlassian-jira.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Check index directory size and permissions</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>ls<span class="w"> </span>-la<span class="w"> </span>/var/atlassian/application-data/jira/caches/indexes/
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>du<span class="w"> </span>-sh<span class="w"> </span>/var/atlassian/application-data/jira/caches/indexes/*
 </code></pre></div>
 <h3 id="resolution_1">Resolution<a class="headerlink" href="#resolution_1" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># 1. Stop Jira</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>systemctl<span class="w"> </span>stop<span class="w"> </span>jira
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># 2. Delete index (safe — regenerated from DB)</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>rm<span class="w"> </span>-rf<span class="w"> </span>/var/atlassian/application-data/jira/caches/indexes/*
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># 3. Start Jira</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>systemctl<span class="w"> </span>start<span class="w"> </span>jira
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># 4. Trigger full reindex (foreground for safety)</span>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>curl<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/reindex?type=FOREGROUND&quot;</span>
-<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>
-<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="c1"># Monitor progress</span>
-<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>watch<span class="w"> </span>-n30<span class="w"> </span><span class="s2">&quot;curl -s -u </span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2"> \</span>
-<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="s2">  </span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/reindex | python3 -m json.tool&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># 1. Stop Jira</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>systemctl<span class="w"> </span>stop<span class="w"> </span>jira
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># 2. Delete index (safe — regenerated from DB)</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>rm<span class="w"> </span>-rf<span class="w"> </span>/var/atlassian/application-data/jira/caches/indexes/*
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># 3. Start Jira</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>systemctl<span class="w"> </span>start<span class="w"> </span>jira
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c1"># 4. Trigger full reindex (foreground for safety)</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>curl<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/reindex?type=FOREGROUND&quot;</span>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="c1"># Monitor progress</span>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>watch<span class="w"> </span>-n30<span class="w"> </span><span class="s2">&quot;curl -s -u </span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2"> \</span>
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a><span class="s2">  </span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/reindex | python3 -m json.tool&quot;</span>
 </code></pre></div>
 <p>A full reindex on a large instance can take 30 minutes to several hours. Schedule during low-traffic periods.</p>
 <hr />
@@ -4149,20 +4110,20 @@ Common Issues reference covering Quick Reference Table, OutOfMemoryError (OOM), 
 <li>Log contains <code>PluginException</code>, <code>UnsatisfiedLinkError</code>, or <code>ClassNotFoundException</code></li>
 </ul>
 <h3 id="diagnosis_6">Diagnosis<a class="headerlink" href="#diagnosis_6" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Check plugin-related errors</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;plugin\|app\|addon\|atlassian&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span>/opt/atlassian/jira/logs/atlassian-jira.log<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|fail\|disabled&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="c1"># List disabled/errored plugins</span>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/plugins/1.0/plugin&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="s2">import sys, json</span>
-<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="s2">for p in json.load(sys.stdin):</span>
-<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="s2">    if not p.get(&#39;enabled&#39;, True):</span>
-<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="s2">        print(f\&quot;{p.get(&#39;key&#39;)} — {p.get(&#39;name&#39;)} — {p.get(&#39;version&#39;)}\&quot;)</span>
-<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="s2">&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Check plugin-related errors</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;plugin\|app\|addon\|atlassian&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span>/opt/atlassian/jira/logs/atlassian-jira.log<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|fail\|disabled&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="c1"># List disabled/errored plugins</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_USER</span><span class="si">}</span><span class="s2">:</span><span class="si">${</span><span class="nv">JIRA_TOKEN</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">  </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JIRA_URL</span><span class="si">}</span><span class="s2">/rest/api/2/plugins/1.0/plugin&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="s2">import sys, json</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="s2">for p in json.load(sys.stdin):</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="s2">    if not p.get(&#39;enabled&#39;, True):</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="s2">        print(f\&quot;{p.get(&#39;key&#39;)} — {p.get(&#39;name&#39;)} — {p.get(&#39;version&#39;)}\&quot;)</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="s2">&quot;</span>
 </code></pre></div>
 <h3 id="resolution-steps_1">Resolution Steps<a class="headerlink" href="#resolution-steps_1" title="Permanent link">&para;</a></h3>
 <ol>
@@ -4170,15 +4131,15 @@ Common Issues reference covering Quick Reference Table, OutOfMemoryError (OOM), 
 <li><strong>Update app</strong>: <code>Admin → Manage Apps → [app] → Update</code> (if newer version available)</li>
 <li><strong>Disable and re-enable</strong>: <code>Admin → Manage Apps → [app] → Disable → Enable</code></li>
 <li><strong>Safe mode</strong>: Start Jira in safe mode to disable all user-installed apps:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Add to setenv.sh</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nv">JVM_SUPPORT_RECOMMENDED_ARGS</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JVM_SUPPORT_RECOMMENDED_ARGS</span><span class="si">}</span><span class="s2"> -Dplugin.load.mode=SAFE&quot;</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Add to setenv.sh</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nv">JVM_SUPPORT_RECOMMENDED_ARGS</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">JVM_SUPPORT_RECOMMENDED_ARGS</span><span class="si">}</span><span class="s2"> -Dplugin.load.mode=SAFE&quot;</span>
 </code></pre></div></li>
 <li><strong>Reinstall app</strong>: Uninstall and reinstall from Marketplace</li>
 <li><strong>Clear plugin cache</strong> (Data Center):
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>systemctl<span class="w"> </span>stop<span class="w"> </span>jira
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>rm<span class="w"> </span>-rf<span class="w"> </span>/var/atlassian/application-data/jira/plugins/.osgi-plugins/
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>rm<span class="w"> </span>-rf<span class="w"> </span>/var/atlassian/application-data/jira/plugins/installed-plugins/
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>systemctl<span class="w"> </span>start<span class="w"> </span>jira
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>systemctl<span class="w"> </span>stop<span class="w"> </span>jira
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>rm<span class="w"> </span>-rf<span class="w"> </span>/var/atlassian/application-data/jira/plugins/.osgi-plugins/
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>rm<span class="w"> </span>-rf<span class="w"> </span>/var/atlassian/application-data/jira/plugins/installed-plugins/
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>systemctl<span class="w"> </span>start<span class="w"> </span>jira
 </code></pre></div></li>
 </ol>
 

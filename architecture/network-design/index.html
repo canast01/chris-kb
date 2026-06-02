@@ -2655,17 +2655,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#load-balancer-placement" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Load Balancer Placement
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#cloud-connectivity" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3006,94 +2995,36 @@
 │    Micro-seg    = Per-VM firewall rules (NSX DFW); east-west traffic control inside DC                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────────── Architecture — Network Design ────────────────────────────────────┐
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │      Enterprise network design: spine-leaf topology, L3 segmentation, security zones, BGP     │   │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │         Spine-leaf: no STP; any leaf to any leaf = 2 hops; ECMP for load distribution         │   │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │          Zones: untrusted → DMZ → internal → restricted; firewalls at zone boundaries         │   │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│                                                                                                       │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│                          ▼                                                 ▼                          │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│                                                                                                       │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   │                   Topology                   │  │                 Segmentation                │   │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   │           Spine: 2+ core switches            │  │           VLANs per function/zone           │   │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   │              Leaf: ToR per rack              │  │             L3 boundary per zone            │   │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │             ECMP load balancing              │  │               FW between zones              │   │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │              BGP for DC routing              │  │               Micro-seg (NSX)               │   │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │            Dual uplinks per leaf             │  │               ACL on VLAN SVIs              │   │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│                                                                                                       │
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│    Key terms:                                                                                         │
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│                                                                                                       │
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│    Spine-leaf   = Two-tier DC fabric; spines interconnect all leaves; no STP; predictable latency     │
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│    ECMP         = Equal-Cost Multi-Path; traffic distributed across multiple equal-cost paths         │
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│    ToR          = Top of Rack switch; leaf switch physically mounted at top of server rack            │
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│    BGP          = Border Gateway Protocol; used for DC internal routing and WAN peering               │
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│    SVI          = Switched Virtual Interface; L3 gateway for a VLAN; ACLs applied here                │
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│    Micro-seg    = Per-VM firewall rules (NSX DFW); east-west traffic control inside DC                │
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│                                                                                                       │
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>**Zone definitions:**
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>| Zone | Description | Default Inbound Policy |
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>|------|-------------|----------------------|
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>| Untrust (Internet) | Public internet, untrusted external | Block all; explicit allow only |
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>| DMZ | Reverse proxies, public-facing APIs | Allow from Untrust on published ports only |
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>| Production | Application and database servers | Allow from DMZ on specific ports; deny internet direct |
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>| Management | ESXi management, vCenter, jump hosts | Allow only from authorised admin subnets / VPN |
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>| Storage | Storage arrays, NAS heads | Allow only from Production and Backup; deny all others |
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>| Backup | Backup repositories, media servers | Allow from Production (agent traffic); deny internet |
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>---
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>## Load Balancer Placement
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>```mermaid
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>graph TD
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    Client[&quot;Client (Internet)&quot;]
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>    ELB[&quot;External Load Balancer\n(F5 BIG-IP / NSX-T ALB)\nDMZ zone&quot;]
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>    WAF[&quot;Web Application Firewall\n(inline with ELB or cloud-native)&quot;]
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>    AppTier[&quot;Application Tier\n(Production zone)&quot;]
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>    ILB[&quot;Internal Load Balancer\n(NSX-T ALB Service Engine)\nProduction zone&quot;]
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>    DBTier[&quot;Database Tier\n(Production zone)&quot;]
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>    Client --&gt; ELB
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>    ELB --&gt; WAF
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>    WAF --&gt; AppTier
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>    AppTier --&gt; ILB
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>    ILB --&gt; DBTier
 </code></pre></div></p>
-<p><strong>Zone definitions:</strong></p>
-<table>
-<thead>
-<tr>
-<th>Zone</th>
-<th>Description</th>
-<th>Default Inbound Policy</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Untrust (Internet)</td>
-<td>Public internet, untrusted external</td>
-<td>Block all; explicit allow only</td>
-</tr>
-<tr>
-<td>DMZ</td>
-<td>Reverse proxies, public-facing APIs</td>
-<td>Allow from Untrust on published ports only</td>
-</tr>
-<tr>
-<td>Production</td>
-<td>Application and database servers</td>
-<td>Allow from DMZ on specific ports; deny internet direct</td>
-</tr>
-<tr>
-<td>Management</td>
-<td>ESXi management, vCenter, jump hosts</td>
-<td>Allow only from authorised admin subnets / VPN</td>
-</tr>
-<tr>
-<td>Storage</td>
-<td>Storage arrays, NAS heads</td>
-<td>Allow only from Production and Backup; deny all others</td>
-</tr>
-<tr>
-<td>Backup</td>
-<td>Backup repositories, media servers</td>
-<td>Allow from Production (agent traffic); deny internet</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="load-balancer-placement">Load Balancer Placement<a class="headerlink" href="#load-balancer-placement" title="Permanent link">&para;</a></h2>
-<pre class="mermaid"><code>graph TD
-    Client["Client (Internet)"]
-    ELB["External Load Balancer\n(F5 BIG-IP / NSX-T ALB)\nDMZ zone"]
-    WAF["Web Application Firewall\n(inline with ELB or cloud-native)"]
-    AppTier["Application Tier\n(Production zone)"]
-    ILB["Internal Load Balancer\n(NSX-T ALB Service Engine)\nProduction zone"]
-    DBTier["Database Tier\n(Production zone)"]
-
-    Client --&gt; ELB
-    ELB --&gt; WAF
-    WAF --&gt; AppTier
-    AppTier --&gt; ILB
-    ILB --&gt; DBTier</code></pre>
 <ul>
 <li>Place external LBs in the DMZ with VIPs on the DMZ subnet; real servers in the production zone</li>
 <li>Place internal LBs within the production zone for service-to-service load distribution</li>

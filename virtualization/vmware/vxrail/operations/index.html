@@ -4063,6 +4063,29 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#vxrail-lifecycle-manager-lcm-upgrades" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VxRail Lifecycle Manager (LCM) Upgrades
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="VxRail Lifecycle Manager (LCM) Upgrades">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#lcm-upgrade-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LCM Upgrade Workflow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#lcm-pre-upgrade-checklist" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4070,6 +4093,11 @@
       
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -4476,7 +4504,7 @@
 Day-to-day operational reference for VxRail in the VMware product context. Covers plugin health, LCM upgrade sequencing, cluster expansion, and SupportAssist automation.
 </div>
 
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────────────── VxRail — Operations ─────────────────────────────────────────┐
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────────────── VxRail — Operations ─────────────────────────────────────────┐
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │         VxRail plugin daily health checks in vCenter; iDRAC hardware alarms monitoring        │   │
@@ -4532,97 +4560,31 @@ Day-to-day operational reference for VxRail in the VMware product context. Cover
 <a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>│                                                                                                       │
 <a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-┌───────────────────────────────────────── VxRail — Operations ─────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │         VxRail plugin daily health checks in vCenter; iDRAC hardware alarms monitoring        │   │
-│   │        LCM bundle download and pre-check before upgrade; node-by-node upgrade sequence        │   │
-│   │            FW + ESXi upgraded together per node in a single LCM operation per node            │   │
-│   │        SupportAssist for proactive case creation on hardware alerts from iDRAC or OMIVV       │   │
-│   │   Post-upgrade validation: vSAN health, ESXi version, iDRAC FW, and cluster stability checks  │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Daily ops catch drift early · lifecycle upgrades per node · automation scales VxRail management    │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │          Daily Ops          │  │          Lifecycle          │  │          Automation         │   │
-│   │       VxRail plugin UI      │  │        LCM bundle DL        │  │        VxRail Mgr API       │   │
-│   │         iDRAC alarms        │  │       Pre-check health      │  │         LCM REST API        │   │
-│   │        ESXi connected       │  │       Node-by-node upg      │  │        PowerCLI vSAN        │   │
-│   │       vSAN resync chk       │  │       FW+ESXi together      │  │       Dell automation       │   │
-│   │          LCM status         │  │      Rebalance post-add     │  │        Ansible VxRail       │   │
-│   │        SupportAssist        │  │          Post-check         │  │      SupportAssist API      │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    Daily ops catch issues early · lifecycle upgrades in sequence · automation handles at-scale changes│
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │     CLI Ref      │    Health Chk    │     Procedures    │    Install/Up    │   Backup/Rest    │   │
-│   │    VxRail API    │  Plugin: green   │    Daily checks   │  LCM bundle DL   │  Config export   │   │
-│   │   LCM REST API   │    iDRAC: ok     │    Maint window   │  Pre-check run   │  vSAN config bk  │   │
-│   │  PowerCLI vSAN   │  vSAN: resync=0  │     Node maint    │   Node-by-node   │   iDRAC config   │   │
-│   │  Ansible VxRail  │ ESXi: connected  │   Expand cluster  │   Post-upg val   │  Restore redep   │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Dell PowerEdge servers · NVMe/SSD/HDD · 25GbE NICs · iDRAC OOB · ToR switches                        │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  VxRail Manager API  = REST API on VxRail Manager VM; used for LCM jobs, health queries, and config   │
-│  LCM bundle          = Signed Dell upgrade package; FW + ESXi + vSAN versions tested and bundled      │
-│  Pre-check           = Health validation run before LCM upgrade; blocks if vSAN or network issues     │
-│  Node-by-node upgrade = LCM puts one node in maintenance, upgrades FW+ESXi, then moves to next node   │
-│  SupportAssist       = Dell proactive support; auto-opens cases on hardware alert from iDRAC or OMIVV │
-│  iDRAC               = Integrated Dell Remote Access Controller; hardware health, console, and OOB    │
-│  OMIVV               = OpenManage Integration for VMware vCenter; shows Dell hardware alarms in       │
-│  vSAN rebalance      = Redistributes vSAN objects evenly after a node is added to the cluster         │
-│  Maintenance mode    = ESXi state that evacuates VMs via DRS before hardware or upgrade operations    │
-│  FW update           = Firmware update applied to iDRAC, BIOS, NICs, and drives as part of LCM bundle │
-│  PowerCLI            = VMware PowerShell module; used for vSAN health checks and cluster automation   │
-│  Post-upgrade validation = Checks ESXi version, iDRAC FW, vSAN health, and cluster stability after LCM│
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>---
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## VxRail Lifecycle Manager (LCM) Upgrades
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>The VxRail LCM is the only supported method for upgrading a VxRail cluster. It applies a single bundle that includes:
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>- ESXi patch or upgrade
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>- vCenter Server patch or upgrade
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>- vSAN patch
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>- Node firmware (BIOS, iDRAC, NIC, HBA, disk controller)
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>- VxRail Manager update
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>**Never upgrade ESXi, vCenter, or firmware independently** on VxRail nodes — the LCM tracks bundle versions and will block or fail future upgrades if versions are inconsistent.
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>### LCM Upgrade Workflow
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>**Step 1 — Obtain the upgrade bundle**
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>Download the VxRail Upgrade Bundle from Dell&#39;s support site:
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>`https://www.dell.com/support` → Product Support → VxRail → Drivers &amp; Downloads
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>The bundle is a large `.bin` file (typically 5–20 GB).
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>**Step 2 — Upload the bundle**
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>VxRail Plugin → LCM → Upload Bundle → Browse to the `.bin` file
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>Or use the VxRail Manager API:
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>```bash
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a># Upload via API (multipart)
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>curl -sk \
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>  -H &quot;Authorization: Basic $(echo -n &#39;mystic:password&#39; | base64)&quot; \
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>  -F &quot;file=@/tmp/VxRail-7.0.401-bundle.bin&quot; \
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>  &quot;https://&lt;vxrail-manager-ip&gt;/rest/vxm/v1/lcm/bundle&quot;
-</code></pre></div></p>
+<hr />
+<h2 id="vxrail-lifecycle-manager-lcm-upgrades">VxRail Lifecycle Manager (LCM) Upgrades<a class="headerlink" href="#vxrail-lifecycle-manager-lcm-upgrades" title="Permanent link">&para;</a></h2>
+<p>The VxRail LCM is the only supported method for upgrading a VxRail cluster. It applies a single bundle that includes:</p>
+<ul>
+<li>ESXi patch or upgrade</li>
+<li>vCenter Server patch or upgrade</li>
+<li>vSAN patch</li>
+<li>Node firmware (BIOS, iDRAC, NIC, HBA, disk controller)</li>
+<li>VxRail Manager update</li>
+</ul>
+<p><strong>Never upgrade ESXi, vCenter, or firmware independently</strong> on VxRail nodes — the LCM tracks bundle versions and will block or fail future upgrades if versions are inconsistent.</p>
+<h3 id="lcm-upgrade-workflow">LCM Upgrade Workflow<a class="headerlink" href="#lcm-upgrade-workflow" title="Permanent link">&para;</a></h3>
+<p><strong>Step 1 — Obtain the upgrade bundle</strong></p>
+<p>Download the VxRail Upgrade Bundle from Dell's support site:
+<code>https://www.dell.com/support</code> → Product Support → VxRail → Drivers &amp; Downloads</p>
+<p>The bundle is a large <code>.bin</code> file (typically 5–20 GB).</p>
+<p><strong>Step 2 — Upload the bundle</strong></p>
+<p>VxRail Plugin → LCM → Upload Bundle → Browse to the <code>.bin</code> file</p>
+<p>Or use the VxRail Manager API:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Upload via API (multipart)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Basic </span><span class="k">$(</span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s1">&#39;mystic:password&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>-F<span class="w"> </span><span class="s2">&quot;file=@/tmp/VxRail-7.0.401-bundle.bin&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span><span class="s2">&quot;https://&lt;vxrail-manager-ip&gt;/rest/vxm/v1/lcm/bundle&quot;</span>
+</code></pre></div>
 <p><strong>Step 3 — Run pre-upgrade checks</strong></p>
 <p>VxRail Plugin → LCM → Pre-Check</p>
 <p>The pre-check validates:

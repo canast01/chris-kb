@@ -4223,23 +4223,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Incident Triage — First Response">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#recovery-steps" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Recovery Steps
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
         <li class="md-nav__item">
@@ -4729,83 +4712,51 @@ Common Issues (Operations) reference covering Overview, Incident Triage — Firs
 │    Context broken   = Replication context in error state; replication resync to re-establish          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────── Dell Data Domain Operational Issues ─────────────────────────────────┐
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │        Common operational issues: space full, replication lag, cleaning not completing        │   │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │              Space: expire old backups; increase retention policy review cadence              │   │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│                                                                                                       │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│                  ▼                                ▼                                ▼                  │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│                                                                                                       │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   │         Space Issues        │  │      Replication Issues     │  │      Performance Issues     │   │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│   │       Filesystem &gt; 80%      │  │       Replication lag       │  │       Slow backup jobs      │   │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   │       Cleaning blocked      │  │        Context broken       │  │        Slow restores        │   │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   │       MTree quota hit       │  │       Bandwidth limit       │  │         NVRAM errors        │   │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │      Expired not freed      │  │       WAN instability       │  │       High dedupe miss      │   │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │       No COD available      │  │        Authentication       │  │       Disk contention       │   │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│                                                                                                       │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │      Issue       │    Root cause    │        Fix        │      Verify      │     Prevent      │   │
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   │     FS full      │Retention too long│  Expire old data  │  Space recovers  │  Monitor &lt; 80%   │   │
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│   │     Rep lag      │  WAN congestion  │   Throttle/time   │  Lag decreases   │  QoS WAN policy  │   │
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│   │  Cleaning stuck  │  Active writes   │   Run off-hours   │ Clean completes  │  Schedule cron   │   │
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│   │   Slow backup    │  Network/NVRAM   │    Check NVRAM    │  Throughput up   │  Health monitor  │   │
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│                                                                                                       │
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│    Key terms:                                                                                         │
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│                                                                                                       │
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│    Cleaning blocked = Active writes/replication prevent cleaning from completing; run off-hours       │
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│    High dedupe miss = New data with low dedup ratio arriving; check for new backup type or agent      │
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│    Context broken   = Replication context in error state; replication resync to re-establish          │
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│                                                                                                       │
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>### Recovery Steps
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>```bash
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a># Step 1 — attempt soft recovery (disable then re-enable)
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>replication disable &lt;context_id&gt;
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>replication enable &lt;context_id&gt;
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>replication show  # wait for status to update
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a># Step 2 — if still in error, check authentication
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a># On both source and destination:
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>replication show all | grep -i auth
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a># Step 3 — if certificates are mismatched, re-establish trust
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>adminaccess certify &lt;remote-dd-hostname&gt;
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a># Step 4 — if the context is stuck and unfixable, resync
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>replication resync &lt;context_id&gt;
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a># Note: resync re-initialises — it will retransmit any changes since last sync
 </code></pre></div></p>
-<h3 id="recovery-steps">Recovery Steps<a class="headerlink" href="#recovery-steps" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Step 1 — attempt soft recovery (disable then re-enable)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>replication<span class="w"> </span>disable<span class="w"> </span>&lt;context_id&gt;
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>replication<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>&lt;context_id&gt;
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>replication<span class="w"> </span>show<span class="w">  </span><span class="c1"># wait for status to update</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Step 2 — if still in error, check authentication</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># On both source and destination:</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>replication<span class="w"> </span>show<span class="w"> </span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>auth
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Step 3 — if certificates are mismatched, re-establish trust</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>adminaccess<span class="w"> </span>certify<span class="w"> </span>&lt;remote-dd-hostname&gt;
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Step 4 — if the context is stuck and unfixable, resync</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>replication<span class="w"> </span>resync<span class="w"> </span>&lt;context_id&gt;
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># Note: resync re-initialises — it will retransmit any changes since last sync</span>
-</code></pre></div>
 <hr />
 <h2 id="issue-replication-lag-growing">Issue: Replication Lag Growing<a class="headerlink" href="#issue-replication-lag-growing" title="Permanent link">&para;</a></h2>
 <p><strong>Symptoms:</strong> <code>replication status</code> shows increasing <code>Pre-Comp Remaining</code> or lag in hours; DR copy is falling behind the production backup window.</p>
 <p><strong>Causes:</strong> WAN bandwidth saturation; high ingest rate on source during backup window exceeding replication throughput; replication throttle set too conservatively; network packet loss causing TCP retransmission.</p>
 <h3 id="investigation">Investigation<a class="headerlink" href="#investigation" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># 1. Current lag and throughput</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>replication<span class="w"> </span>status<span class="w">  </span><span class="c1"># note Throughput (MB/s) and Estimated Completion</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># 2. Check network interface statistics on both ends</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>net<span class="w"> </span>show<span class="w"> </span>stats
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># 3. Check replication throttle settings</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>replication<span class="w"> </span>throttle<span class="w"> </span>show
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># 4. Review source ingest rate</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>filesys<span class="w"> </span>show<span class="w"> </span>compression<span class="w">  </span><span class="c1"># note the recent write rate</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># 1. Current lag and throughput</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>replication<span class="w"> </span>status<span class="w">  </span><span class="c1"># note Throughput (MB/s) and Estimated Completion</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># 2. Check network interface statistics on both ends</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>net<span class="w"> </span>show<span class="w"> </span>stats
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># 3. Check replication throttle settings</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>replication<span class="w"> </span>throttle<span class="w"> </span>show
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># 4. Review source ingest rate</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>filesys<span class="w"> </span>show<span class="w"> </span>compression<span class="w">  </span><span class="c1"># note the recent write rate</span>
 </code></pre></div>
 <h3 id="actions">Actions<a class="headerlink" href="#actions" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Increase replication bandwidth (if throttle is too conservative)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>replication<span class="w"> </span>throttle<span class="w"> </span><span class="nb">set</span><span class="w"> </span>schedule<span class="w"> </span>&lt;schedule-name&gt;<span class="w"> </span>bandwidth<span class="w"> </span><span class="m">0</span><span class="w">  </span><span class="c1"># 0 = unlimited</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Or set a specific bandwidth in kbps (e.g., 500 MB/s = 4,000,000 kbps)</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>replication<span class="w"> </span>throttle<span class="w"> </span><span class="nb">set</span><span class="w"> </span>schedule<span class="w"> </span>&lt;schedule-name&gt;<span class="w"> </span>bandwidth<span class="w"> </span><span class="m">4000000</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Trigger an immediate sync after bandwidth adjustment</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>replication<span class="w"> </span>sync<span class="w"> </span>&lt;context_id&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Increase replication bandwidth (if throttle is too conservative)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>replication<span class="w"> </span>throttle<span class="w"> </span><span class="nb">set</span><span class="w"> </span>schedule<span class="w"> </span>&lt;schedule-name&gt;<span class="w"> </span>bandwidth<span class="w"> </span><span class="m">0</span><span class="w">  </span><span class="c1"># 0 = unlimited</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Or set a specific bandwidth in kbps (e.g., 500 MB/s = 4,000,000 kbps)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>replication<span class="w"> </span>throttle<span class="w"> </span><span class="nb">set</span><span class="w"> </span>schedule<span class="w"> </span>&lt;schedule-name&gt;<span class="w"> </span>bandwidth<span class="w"> </span><span class="m">4000000</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Trigger an immediate sync after bandwidth adjustment</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>replication<span class="w"> </span>sync<span class="w"> </span>&lt;context_id&gt;
 </code></pre></div>
 <p>If the lag is caused by a backup window overlap, work with backup teams to stagger backup windows to create a replication catchup window.</p>
 <hr />
@@ -4813,22 +4764,22 @@ Common Issues (Operations) reference covering Overview, Incident Triage — Firs
 <p><strong>Symptoms:</strong> Backup jobs fail with authentication error; DDBoost client appears as <code>Disconnected</code> in <code>ddboost show clients</code>; backup application reports "storage server authentication failed".</p>
 <p><strong>Causes:</strong> DD Boost user password changed on the DD but not updated in the backup application; DD Boost user deleted and recreated; backup software version incompatibility with the installed DDVDP or OST plug-in version.</p>
 <h3 id="investigation-and-resolution">Investigation and Resolution<a class="headerlink" href="#investigation-and-resolution" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># 1. List all DD Boost users and their storage unit assignments</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ddboost<span class="w"> </span>user<span class="w"> </span>list
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>ddboost<span class="w"> </span>storage-unit<span class="w"> </span>list
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># 2. Verify the specific client appears and its state</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>ddboost<span class="w"> </span>show<span class="w"> </span>clients<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;backup-server-name&gt;
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># 3. Check if the DDBoost service itself is running</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>ddboost<span class="w"> </span>status
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># 4. Test connectivity from backup server to DD port 2049 (DD Boost port)</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># (run on the backup server)</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># nc -zv &lt;dd-hostname&gt; 2049</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="c1"># 5. Reset the DD Boost user password if credential drift is suspected</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>ddboost<span class="w"> </span>user<span class="w"> </span>change<span class="w"> </span>password<span class="w"> </span>&lt;ddboost-username&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># 1. List all DD Boost users and their storage unit assignments</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ddboost<span class="w"> </span>user<span class="w"> </span>list
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>ddboost<span class="w"> </span>storage-unit<span class="w"> </span>list
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># 2. Verify the specific client appears and its state</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>ddboost<span class="w"> </span>show<span class="w"> </span>clients<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;backup-server-name&gt;
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># 3. Check if the DDBoost service itself is running</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>ddboost<span class="w"> </span>status
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># 4. Test connectivity from backup server to DD port 2049 (DD Boost port)</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># (run on the backup server)</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># nc -zv &lt;dd-hostname&gt; 2049</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="c1"># 5. Reset the DD Boost user password if credential drift is suspected</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>ddboost<span class="w"> </span>user<span class="w"> </span>change<span class="w"> </span>password<span class="w"> </span>&lt;ddboost-username&gt;
 </code></pre></div>
 <p>After resetting the password, update the credentials in the backup application:
 - <strong>Veeam:</strong> Edit the backup repository → update credentials
@@ -4839,18 +4790,18 @@ Common Issues (Operations) reference covering Overview, Incident Triage — Firs
 <p><strong>Symptoms:</strong> <code>filesys show compression</code> shows a global ratio below 10:1 or a significant drop from the previous week; capacity growing faster than expected.</p>
 <p><strong>Causes:</strong> New data type being backed up that does not deduplicate well (encrypted databases, already-compressed files, virtual machine images with rapid change rate); DD Boost source-side dedup (DSP) disabled in backup software; first-pass full backup (no prior data for dedup against).</p>
 <h3 id="investigation_1">Investigation<a class="headerlink" href="#investigation_1" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># 1. Global dedup ratio and trend</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>filesys<span class="w"> </span>show<span class="w"> </span>compression
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># 2. Per-MTree dedup ratio — identify which MTree is low</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># (run for each MTree)</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>mtree<span class="w"> </span>show<span class="w"> </span>compression<span class="w"> </span>mtree<span class="w"> </span>/data/col1/&lt;mtree-name&gt;
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># 3. Check DD Boost DSP status</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>ddboost<span class="w"> </span>option<span class="w"> </span>show<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>dist-seg
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># 4. Enable DSP if disabled</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>ddboost<span class="w"> </span>option<span class="w"> </span><span class="nb">set</span><span class="w"> </span>distributed-segment-processing<span class="w"> </span>enabled
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># 1. Global dedup ratio and trend</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>filesys<span class="w"> </span>show<span class="w"> </span>compression
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># 2. Per-MTree dedup ratio — identify which MTree is low</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># (run for each MTree)</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>mtree<span class="w"> </span>show<span class="w"> </span>compression<span class="w"> </span>mtree<span class="w"> </span>/data/col1/&lt;mtree-name&gt;
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># 3. Check DD Boost DSP status</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>ddboost<span class="w"> </span>option<span class="w"> </span>show<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>dist-seg
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># 4. Enable DSP if disabled</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>ddboost<span class="w"> </span>option<span class="w"> </span><span class="nb">set</span><span class="w"> </span>distributed-segment-processing<span class="w"> </span>enabled
 </code></pre></div>
 <p><strong>Data types with inherently low dedup ratios (expected behaviour):</strong></p>
 <table>
@@ -4899,24 +4850,24 @@ Common Issues (Operations) reference covering Overview, Incident Triage — Firs
 <p><strong>Symptoms:</strong> <code>filesys status</code> shows <code>Disabled</code> after a DD reboot or power cycle; backup jobs cannot connect; DDBoost clients unable to authenticate.</p>
 <p><strong>Causes:</strong> Hardware fault prevented the filesystem from mounting (check for disk alerts); NVRAM issue; DDOS did not complete clean shutdown before power loss.</p>
 <h3 id="resolution">Resolution<a class="headerlink" href="#resolution" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># 1. Check filesystem status</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>filesys<span class="w"> </span>status
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># 2. Check for hardware alerts</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>alerts<span class="w"> </span>show<span class="w"> </span>current
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># 3. Check disk health</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>disk<span class="w"> </span>show<span class="w"> </span>state
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># 4. Review the system log for errors at/around the reboot time</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>log<span class="w"> </span>view<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-100
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># 5. If no hardware alerts and disks are healthy, manually enable</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>filesys<span class="w"> </span><span class="nb">enable</span>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="c1"># 6. Confirm filesystem is running</span>
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>filesys<span class="w"> </span>status
-<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>filesys<span class="w"> </span>show<span class="w"> </span>space
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># 1. Check filesystem status</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>filesys<span class="w"> </span>status
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># 2. Check for hardware alerts</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>alerts<span class="w"> </span>show<span class="w"> </span>current
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># 3. Check disk health</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>disk<span class="w"> </span>show<span class="w"> </span>state
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># 4. Review the system log for errors at/around the reboot time</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>log<span class="w"> </span>view<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-100
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># 5. If no hardware alerts and disks are healthy, manually enable</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>filesys<span class="w"> </span><span class="nb">enable</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="c1"># 6. Confirm filesystem is running</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>filesys<span class="w"> </span>status
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>filesys<span class="w"> </span>show<span class="w"> </span>space
 </code></pre></div>
 <p>If the filesystem fails to enable after <code>filesys enable</code> and <code>alerts show current</code> shows disk or NVRAM errors, do not proceed with manual recovery — open a Dell support case immediately. Forcing a filesystem enable in a degraded state risks data corruption.</p>
 <hr />
@@ -4924,64 +4875,64 @@ Common Issues (Operations) reference covering Overview, Incident Triage — Firs
 <p><strong>Symptoms:</strong> Backup software cannot import or use VTL tapes; VTL drive shows offline in backup application; FC-attached tape library not visible.</p>
 <p><strong>Causes:</strong> VTL slot configuration mismatch with backup software cartridge count; FC zoning not configured between backup media server HBA and DD VTL FC ports; VTL not enabled or VTL licence not active.</p>
 <h3 id="investigation_2">Investigation<a class="headerlink" href="#investigation_2" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># 1. Check VTL status</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>vtl<span class="w"> </span>status
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># 2. List VTL slots and drives</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>vtl<span class="w"> </span>show<span class="w"> </span>slots
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>vtl<span class="w"> </span>show<span class="w"> </span>drives
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># 3. List VTL libraries</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>vtl<span class="w"> </span>show<span class="w"> </span>libraries
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="c1"># 4. Confirm VTL is enabled</span>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>vtl<span class="w"> </span><span class="nb">enable</span>
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="c1"># 5. Check that the VTL FC ports are visible in the SAN fabric</span>
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="c1"># (run on the backup media server)</span>
-<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="c1"># systool -c fc_host -v | grep port_name</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># 1. Check VTL status</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>vtl<span class="w"> </span>status
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># 2. List VTL slots and drives</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>vtl<span class="w"> </span>show<span class="w"> </span>slots
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>vtl<span class="w"> </span>show<span class="w"> </span>drives
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># 3. List VTL libraries</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>vtl<span class="w"> </span>show<span class="w"> </span>libraries
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># 4. Confirm VTL is enabled</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>vtl<span class="w"> </span><span class="nb">enable</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c1"># 5. Check that the VTL FC ports are visible in the SAN fabric</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c1"># (run on the backup media server)</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="c1"># systool -c fc_host -v | grep port_name</span>
 </code></pre></div>
 <p>Verify FC zoning: the backup media server HBA ports must be zoned to the DD VTL FC target ports. Consult the SAN team to confirm zoning and that the LUN is presented correctly.</p>
 <hr />
 <h2 id="issue-disk-in-failed-or-absent-state">Issue: Disk in Failed or Absent State<a class="headerlink" href="#issue-disk-in-failed-or-absent-state" title="Permanent link">&para;</a></h2>
 <p><strong>Symptoms:</strong> <code>disk show state</code> shows a disk in <code>Failed</code>, <code>Absent</code>, or <code>Reconstructing</code> state; alert is active in <code>alerts show current</code>; RAID rebuild may be in progress.</p>
 <h3 id="immediate-actions">Immediate Actions<a class="headerlink" href="#immediate-actions" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># 1. Identify the failed disk</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>disk<span class="w"> </span>show<span class="w"> </span>state<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;failed|absent|unknown|reconstructing&quot;</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># 2. Get full detail</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>disk<span class="w"> </span>show<span class="w"> </span>hardware<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-B5<span class="w"> </span>-A10<span class="w"> </span>&lt;slot-number&gt;
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># 3. Check RAID rebuild status</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>raid<span class="w"> </span>show<span class="w"> </span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;rebuilding|reconstruct|percent&quot;</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># 4. Monitor rebuild progress</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>raid<span class="w"> </span>show<span class="w"> </span>detail
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># 1. Identify the failed disk</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>disk<span class="w"> </span>show<span class="w"> </span>state<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;failed|absent|unknown|reconstructing&quot;</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># 2. Get full detail</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>disk<span class="w"> </span>show<span class="w"> </span>hardware<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-B5<span class="w"> </span>-A10<span class="w"> </span>&lt;slot-number&gt;
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># 3. Check RAID rebuild status</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>raid<span class="w"> </span>show<span class="w"> </span>all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;rebuilding|reconstruct|percent&quot;</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># 4. Monitor rebuild progress</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>raid<span class="w"> </span>show<span class="w"> </span>detail
 </code></pre></div>
 <p><strong>Do not remove or reseat a disk without a Dell support case open.</strong> On some DD models, removing an additional disk during a RAID rebuild will cause data loss. Always wait for Dell support guidance before physically replacing a disk.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Check if a hot spare has been allocated and rebuild has started automatically</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>disk<span class="w"> </span>show<span class="w"> </span>state<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>spare
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>raid<span class="w"> </span>show<span class="w"> </span>detail<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>rebuild
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Check if a hot spare has been allocated and rebuild has started automatically</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>disk<span class="w"> </span>show<span class="w"> </span>state<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>spare
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>raid<span class="w"> </span>show<span class="w"> </span>detail<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>rebuild
 </code></pre></div>
 <hr />
 <h2 id="issue-cloudiq-showing-array-offline-no-telemetry">Issue: CloudIQ Showing Array Offline / No Telemetry<a class="headerlink" href="#issue-cloudiq-showing-array-offline-no-telemetry" title="Permanent link">&para;</a></h2>
 <p><strong>Symptoms:</strong> Data Domain is not visible in CloudIQ; capacity forecasting not updating; no health recommendations being generated.</p>
 <p><strong>Causes:</strong> SCG (Secure Connect Gateway) appliance offline or unreachable from the DD management network; AutoSupport disabled on the DD; firewall blocking outbound HTTPS from SCG to Dell support endpoints.</p>
 <h3 id="resolution_1">Resolution<a class="headerlink" href="#resolution_1" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># 1. Check AutoSupport status on the DD</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>autosupport<span class="w"> </span>status
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># 2. Attempt a test send</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>autosupport<span class="w"> </span><span class="nb">test</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># 3. Verify SCG registration</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="c1"># System Manager → Administration → Autosupport → ESRS/SCG</span>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># 4. Check network path from DD to SCG</span>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>net<span class="w"> </span>ping<span class="w"> </span>&lt;scg-appliance-ip&gt;
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>
-<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="c1"># 5. Re-enable AutoSupport if disabled</span>
-<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>autosupport<span class="w"> </span><span class="nb">enable</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># 1. Check AutoSupport status on the DD</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>autosupport<span class="w"> </span>status
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># 2. Attempt a test send</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>autosupport<span class="w"> </span><span class="nb">test</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># 3. Verify SCG registration</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="c1"># System Manager → Administration → Autosupport → ESRS/SCG</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c1"># 4. Check network path from DD to SCG</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>net<span class="w"> </span>ping<span class="w"> </span>&lt;scg-appliance-ip&gt;
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="c1"># 5. Re-enable AutoSupport if disabled</span>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>autosupport<span class="w"> </span><span class="nb">enable</span>
 </code></pre></div>
 <p>If <code>autosupport test</code> fails with a network error, work with the network team to confirm that outbound HTTPS (port 443) is permitted from the SCG appliance to <code>esrs3.dell.com</code> and related Dell support FQDNs.</p>
 <hr />
@@ -4989,23 +4940,23 @@ Common Issues (Operations) reference covering Overview, Incident Triage — Firs
 <p><strong>Symptoms:</strong> Backup jobs taking longer than expected; DD Boost throughput below expected for the DD model; backup window is not being met.</p>
 <p><strong>Causes:</strong> DD Boost DSP (Distributed Segment Processing) disabled; network MTU mismatch causing fragmentation; LACP bonding not configured; filesystem cleaning running during backup window; insufficient CPU on backup server proxy.</p>
 <h3 id="investigation_3">Investigation<a class="headerlink" href="#investigation_3" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># 1. Current DD throughput during backup window</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>ddboost<span class="w"> </span>show<span class="w"> </span>stats
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># 2. Check DSP status</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>ddboost<span class="w"> </span>option<span class="w"> </span>show<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>dist-seg
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1"># 3. Network interface statistics during backup</span>
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>net<span class="w"> </span>show<span class="w"> </span>stats<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;error|drop|collision&quot;</span>
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>
-<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="c1"># 4. Check MTU</span>
-<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>net<span class="w"> </span>show<span class="w"> </span>config<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>mtu
-<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>
-<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="c1"># 5. Is cleaning running during the backup window?</span>
-<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>filesys<span class="w"> </span>clean<span class="w"> </span>status
-<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>
-<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a><span class="c1"># 6. Check system resource usage</span>
-<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>system<span class="w"> </span>show<span class="w"> </span>stats
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># 1. Current DD throughput during backup window</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>ddboost<span class="w"> </span>show<span class="w"> </span>stats
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># 2. Check DSP status</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>ddboost<span class="w"> </span>option<span class="w"> </span>show<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>dist-seg
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># 3. Network interface statistics during backup</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>net<span class="w"> </span>show<span class="w"> </span>stats<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;error|drop|collision&quot;</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># 4. Check MTU</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>net<span class="w"> </span>show<span class="w"> </span>config<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>mtu
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="c1"># 5. Is cleaning running during the backup window?</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>filesys<span class="w"> </span>clean<span class="w"> </span>status
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="c1"># 6. Check system resource usage</span>
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>system<span class="w"> </span>show<span class="w"> </span>stats
 </code></pre></div>
 <p><strong>Recommended configuration for maximum throughput:</strong>
 - Enable DSP: <code>ddboost option set distributed-segment-processing enabled</code>

@@ -4245,89 +4245,25 @@ Health Checks reference covering Overview, SyncIQ Replication Health, PowerScale
 │  Configuration = shares, exports, quotas, NFS aliases; Eyeglass syncs these between clusters          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌────────────────────────────────── Superna Eyeglass — Health Checks ───────────────────────────────────┐
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │                           Superna Eyeglass — Health Check Procedures                          │   │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │                 Run these checks daily/weekly to confirm protection is working                │   │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │                                         igls sync status                                      │   │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │                  Review job completion rate — target 100%; investigate failures               │   │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │                         Check replication/backup lag against RPO target                       │   │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│                                                                                                       │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   │      Check       │  What to verify  │      Expected     │    Frequency     │  Action if bad   │   │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   │    Job status    │All jobs complete │    100% success   │      Daily       │ Triage failures  │   │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│   │    Lag / RPO     │ Replication lag  │    &lt; RPO target   │      Daily       │  Tune bandwidth  │   │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   │     Capacity     │ Repo space used  │     &lt; 80% full    │      Weekly      │ Expand or expire │   │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   │   Restore test   │  Random restore  │    Data intact    │     Monthly      │ Fix backup chain │   │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│                                                                                                       │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│  Physical Infrastructure:                                                                             │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│  ESXi VM (Eyeglass appliance) · PowerScale cluster pair (production + DR) · SyncIQ replication link   │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│                                                                                                       │
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│  Eyeglass      = Superna Eyeglass; software appliance for NAS DR and ransomware protection            │
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│  RAPA          = Ransomware Protection with Automated Response; detects and quarantines threats       │
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│  SyncIQ        = PowerScale built-in replication; Eyeglass monitors and orchestrates policies         │
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  DFS-N         = Windows Distributed File System Namespace; Eyeglass automates failover of DFS        │
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  Failover      = Eyeglass-orchestrated shift of NAS access from production to DR cluster              │
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│  Failback      = reversing failover; Eyeglass re-syncs DR changes back and cuts back to product       │
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  Quota Sync    = Eyeglass replicates SmartQuotas from source to DR to preserve user limits            │
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│  Export Sync   = NFS exports and SMB shares replicated so clients can reconnect at DR site            │
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  Quarantine    = RAPA isolation of suspect directory; blocks writes, alerts ops team                  │
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│  Shadow Copy   = Eyeglass exposes PowerScale snapshots as Windows Previous Versions for NFS sha       │
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  Runbook       = Eyeglass DR Assistant guided checklist for pre-checks, failover, and validation      │
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│  igls          = Eyeglass CLI; used for status, sync, DR, and RAPA operations                         │
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│  SmartConnect  = PowerScale DNS load balancing; failover changes SmartConnect zone delegation         │
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│  Configuration = shares, exports, quotas, NFS aliases; Eyeglass syncs these between clusters          │
-<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│                                                                                                       │
-<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>| SyncIQ Status | Meaning | Action |
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>|---|---|---|
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>| running | Active sync in progress | Monitor; confirm completion |
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>| finished | Last run completed successfully | OK |
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>| failed | Last run failed | Check reports for errors; restart if needed |
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>| paused | Policy is paused | Confirm intentional; resume if not |
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>| disabled | Policy is disabled | Confirm intentional; enable if DR policy |
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>```mermaid
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>flowchart LR
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    prodCluster[&quot;Production PowerScale\nCluster&quot;]
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    egApp[&quot;Eyeglass Appliance\negcli drpolicy status&quot;]
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    drCluster[&quot;DR PowerScale\nCluster&quot;]
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    prodCluster --&gt;|&quot;SyncIQ replication\n(continuous / scheduled)&quot;| drCluster
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    egApp --&gt;|&quot;monitors SyncIQ\npolicy state&quot;| prodCluster
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>    egApp --&gt;|&quot;checks DR readiness\nvia OneFS API&quot;| drCluster
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>    egApp --&gt;|&quot;alert if lag &gt; RPO threshold&quot;| alert[&quot;SNMP / Email\nAlert&quot;]
 </code></pre></div></p>
-<table>
-<thead>
-<tr>
-<th>SyncIQ Status</th>
-<th>Meaning</th>
-<th>Action</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>running</td>
-<td>Active sync in progress</td>
-<td>Monitor; confirm completion</td>
-</tr>
-<tr>
-<td>finished</td>
-<td>Last run completed successfully</td>
-<td>OK</td>
-</tr>
-<tr>
-<td>failed</td>
-<td>Last run failed</td>
-<td>Check reports for errors; restart if needed</td>
-</tr>
-<tr>
-<td>paused</td>
-<td>Policy is paused</td>
-<td>Confirm intentional; resume if not</td>
-</tr>
-<tr>
-<td>disabled</td>
-<td>Policy is disabled</td>
-<td>Confirm intentional; enable if DR policy</td>
-</tr>
-</tbody>
-</table>
-<pre class="mermaid"><code>flowchart LR
-    prodCluster["Production PowerScale\nCluster"]
-    egApp["Eyeglass Appliance\negcli drpolicy status"]
-    drCluster["DR PowerScale\nCluster"]
-
-    prodCluster --&gt;|"SyncIQ replication\n(continuous / scheduled)"| drCluster
-    egApp --&gt;|"monitors SyncIQ\npolicy state"| prodCluster
-    egApp --&gt;|"checks DR readiness\nvia OneFS API"| drCluster
-    egApp --&gt;|"alert if lag &gt; RPO threshold"| alert["SNMP / Email\nAlert"]</code></pre>
 <hr />
 <h2 id="powerscale-cluster-health">PowerScale Cluster Health<a class="headerlink" href="#powerscale-cluster-health" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># On each PowerScale cluster (production and DR)</span>
