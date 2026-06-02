@@ -4137,6 +4137,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#storage-accounts-blobs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage Accounts &amp; Blobs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#networking" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4362,7 +4373,7 @@ Commonly used Azure CLI (`az`) commands for managing compute, storage, networkin
 <blockquote>
 <p>Requires <code>az login</code> or service principal credentials. Use <code>az account set --subscription &lt;id&gt;</code> to target a specific subscription.</p>
 </blockquote>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────────────── Azure CLI Reference ─────────────────────────────────────────┐
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────────────── Azure CLI Reference ─────────────────────────────────────────┐
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │                 Azure CLI — az command-line tool for managing Azure resources                 │   │
@@ -4417,89 +4428,85 @@ Commonly used Azure CLI (`az`) commands for managing compute, storage, networkin
 <a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a>│                                                                                                       │
 <a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-┌───────────────────────────────────────── Azure CLI Reference ─────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                 Azure CLI — az command-line tool for managing Azure resources                 │   │
-│   │    Structured as: az <group> <command> [--options] — e.g. az vm list --resource-group myRG    │   │
-│   │  Auth: az login (browser) · az login --service-principal · az account set --subscription <id> │   │
-│   │              Output formats: --output json (default) | table | tsv | yaml | none              │   │
-│   │      Query: --query uses JMESPath; e.g. --query "[?powerState==<code>VM running</code>].name" -o tsv     │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    az CLI organises by resource type — vm, network, storage, account, backup, monitor, identity, aks  │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │       Compute (VM/AKS)      │  │       Storage / Disks       │  │      Identity / Network     │   │
-│   │    az vm list/show/start    │  │    az storage account ls    │  │    az ad user/group list    │   │
-│   │    az vm stop/deallocate    │  │     az disk list/create     │  │   az role assignment list   │   │
-│   │     az vm resize/create     │  │      az snapshot create     │  │     az network vnet list    │   │
-│   │    az aks get-credentials   │  │   az storage blob up/down   │  │   az network nsg rule list  │   │
-│   │      az vm run-command      │  │    az keyvault secret get   │  │    az monitor alert list    │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    Compute CLI manages VMs/AKS · Storage CLI handles blobs and disks                                  │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │     Account      │ Virtual Machines │      Storage      │    Networking    │   Backup / KV    │   │
-│   │     az login     │   vm list --rg   │    blob upload    │    vnet list     │  backup item ls  │   │
-│   │   account set    │  vm start/stop   │   blob download   │   nsg rule add   │  kv secret get   │   │
-│   │   account list   │    vm resize     │    disk create    │     lb list      │  backup protect  │   │
-│   │    sp create     │    vm run-cmd    │    snapshot cp    │   vnet peering   │   kv key list    │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Azure Resource Manager API · Azure AD token endpoint · Azure CloudShell or local workstation         │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Azure CLI v2     = Current az CLI; install via Homebrew/apt/pip; az --version to verify              │
-│  az login         = Browser-based interactive login; stores token in ~/.azure/; expires after 1 hour  │
-│  Service principal= Non-human identity; use az login --service-principal for automation               │
-│  az account set   = Switch active subscription; use with --subscription <name or id>                  │
-│  --resource-group = Required for most resource commands; shorthand --g; targets RG scope              │
-│  --query          = JMESPath filter on JSON output; e.g. [].name for list of resource names           │
-│  --output table   = Renders JSON as a formatted table; useful for terminal readability                │
-│  az vm run-command= Execute a script inside a VM via VM agent; works without SSH or port access       │
-│  az configure     = Set default resource group, output format, and location for the CLI session       │
-│  CloudShell       = Browser-based shell in Azure portal; pre-authenticated; az available by default   │
-│  --no-wait        = Submits a long-running operation without blocking the terminal; async execution   │
-│  az find          = AI-powered CLI helper; suggests relevant commands for a given scenario            │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>---
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## Storage Accounts &amp; Blobs
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Azure Blob Storage stores unstructured data (files, backups, images) in containers within a storage account. SAS tokens grant time-limited access without sharing account keys.
+<div class="kb-grid kb-grid-3">
+
+<a class="kb-card" href="account/">
+  <strong>Account</strong>
+  <span>Login, subscription management, and service principal commands.</span>
+</a>
+
+<a class="kb-card" href="virtual-machines/">
+  <strong>Virtual Machines</strong>
+  <span>VM lifecycle, resize, run-command, and AKS credentials.</span>
+</a>
+
+<a class="kb-card" href="storage/">
+  <strong>Storage</strong>
+  <span>Storage accounts, containers, and blob upload/download.</span>
+</a>
+
+<a class="kb-card" href="disks/">
+  <strong>Disks</strong>
+  <span>Managed disk and snapshot management commands.</span>
+</a>
+
+<a class="kb-card" href="networking/">
+  <strong>Networking</strong>
+  <span>VNet, subnets, NSGs, public IPs, and load balancers.</span>
+</a>
+
+<a class="kb-card" href="identity/">
+  <strong>Identity & RBAC</strong>
+  <span>Users, groups, service principals, and role assignments.</span>
+</a>
+
+<a class="kb-card" href="monitor/">
+  <strong>Monitor & Alerts</strong>
+  <span>Activity log, metrics, alerts, and diagnostic settings.</span>
+</a>
+
+<a class="kb-card" href="key-vault/">
+  <strong>Key Vault</strong>
+  <span>Secrets, keys, and certificate management commands.</span>
+</a>
+
+<a class="kb-card" href="aks/">
+  <strong>AKS</strong>
+  <span>Cluster management, node pools, and upgrade commands.</span>
+</a>
+
+<a class="kb-card" href="backup/">
+  <strong>Backup & Recovery</strong>
+  <span>Recovery Services vault, backup items, and job commands.</span>
+</a>
+
+</div>
+
+<hr />
+<h2 id="storage-accounts-blobs">Storage Accounts &amp; Blobs<a class="headerlink" href="#storage-accounts-blobs" title="Permanent link">&para;</a></h2>
+<p>Azure Blob Storage stores unstructured data (files, backups, images) in containers within a storage account. SAS tokens grant time-limited access without sharing account keys.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Storage accounts</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>az<span class="w"> </span>storage<span class="w"> </span>account<span class="w"> </span>list<span class="w"> </span>--output<span class="w"> </span>table
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>az<span class="w"> </span>storage<span class="w"> </span>account<span class="w"> </span>show<span class="w"> </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>--name<span class="w"> </span>&lt;account&gt;
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>az<span class="w"> </span>storage<span class="w"> </span>account<span class="w"> </span>create<span class="w"> </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>--name<span class="w"> </span>&lt;account&gt;<span class="w"> </span>--sku<span class="w"> </span>Standard_LRS<span class="w"> </span>--kind<span class="w"> </span>StorageV2
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>az<span class="w"> </span>storage<span class="w"> </span>account<span class="w"> </span>delete<span class="w"> </span>--resource-group<span class="w"> </span>&lt;rg&gt;<span class="w"> </span>--name<span class="w"> </span>&lt;account&gt;<span class="w"> </span>--yes
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>```bash
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a># Storage accounts
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>az storage account list --output table
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>az storage account show --resource-group &lt;rg&gt; --name &lt;account&gt;
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>az storage account create --resource-group &lt;rg&gt; --name &lt;account&gt; --sku Standard_LRS --kind StorageV2
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>az storage account delete --resource-group &lt;rg&gt; --name &lt;account&gt; --yes
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a># Containers
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>az storage container list --account-name &lt;account&gt;
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>az storage container create --account-name &lt;account&gt; --name &lt;container&gt;
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a># Blobs
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>az storage blob list --account-name &lt;account&gt; --container-name &lt;container&gt;
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>az storage blob upload --account-name &lt;account&gt; --container-name &lt;container&gt; \
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>  --file &lt;local_file&gt; --name &lt;blob_name&gt;
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>az storage blob download --account-name &lt;account&gt; --container-name &lt;container&gt; \
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>  --name &lt;blob_name&gt; --file &lt;local_file&gt;
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>az storage blob delete --account-name &lt;account&gt; --container-name &lt;container&gt; --name &lt;blob_name&gt;
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a># SAS token (time-limited access URL)
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>az storage container generate-sas --account-name &lt;account&gt; --name &lt;container&gt; \
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>  --permissions rwdl --expiry 2025-12-31
-</code></pre></div></p>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Containers</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>az<span class="w"> </span>storage<span class="w"> </span>container<span class="w"> </span>list<span class="w"> </span>--account-name<span class="w"> </span>&lt;account&gt;
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>az<span class="w"> </span>storage<span class="w"> </span>container<span class="w"> </span>create<span class="w"> </span>--account-name<span class="w"> </span>&lt;account&gt;<span class="w"> </span>--name<span class="w"> </span>&lt;container&gt;
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Blobs</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>az<span class="w"> </span>storage<span class="w"> </span>blob<span class="w"> </span>list<span class="w"> </span>--account-name<span class="w"> </span>&lt;account&gt;<span class="w"> </span>--container-name<span class="w"> </span>&lt;container&gt;
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>az<span class="w"> </span>storage<span class="w"> </span>blob<span class="w"> </span>upload<span class="w"> </span>--account-name<span class="w"> </span>&lt;account&gt;<span class="w"> </span>--container-name<span class="w"> </span>&lt;container&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">  </span>--file<span class="w"> </span>&lt;local_file&gt;<span class="w"> </span>--name<span class="w"> </span>&lt;blob_name&gt;
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>az<span class="w"> </span>storage<span class="w"> </span>blob<span class="w"> </span>download<span class="w"> </span>--account-name<span class="w"> </span>&lt;account&gt;<span class="w"> </span>--container-name<span class="w"> </span>&lt;container&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">  </span>--name<span class="w"> </span>&lt;blob_name&gt;<span class="w"> </span>--file<span class="w"> </span>&lt;local_file&gt;
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>az<span class="w"> </span>storage<span class="w"> </span>blob<span class="w"> </span>delete<span class="w"> </span>--account-name<span class="w"> </span>&lt;account&gt;<span class="w"> </span>--container-name<span class="w"> </span>&lt;container&gt;<span class="w"> </span>--name<span class="w"> </span>&lt;blob_name&gt;
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="c1"># SAS token (time-limited access URL)</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>az<span class="w"> </span>storage<span class="w"> </span>container<span class="w"> </span>generate-sas<span class="w"> </span>--account-name<span class="w"> </span>&lt;account&gt;<span class="w"> </span>--name<span class="w"> </span>&lt;container&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">  </span>--permissions<span class="w"> </span>rwdl<span class="w"> </span>--expiry<span class="w"> </span><span class="m">2025</span>-12-31
+</code></pre></div>
 <hr />
 <h2 id="networking">Networking<a class="headerlink" href="#networking" title="Permanent link">&para;</a></h2>
 <p>Manage virtual networks, subnets, network security groups (NSGs), public IPs, and load balancers. VNets are the private network space in Azure — subnets segment them further.</p>

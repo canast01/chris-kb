@@ -3699,6 +3699,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#rds-connection-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RDS Connection Issues
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#vpc-flow-logs-analysing-traffic" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3877,7 +3888,7 @@
 Troubleshooting reference covering S3 Access Denied, IAM Permission Denied, RDS Connection Issues, VPC Flow Logs — Analysing Traffic, Lambda Timeout Issues.
 </div>
 
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="err">┌────────────────────────────────────</span> <span class="n">AWS</span> <span class="n">Troubleshooting</span> <span class="n">Overview</span> <span class="err">─────────────────────────────────────┐</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="err">┌────────────────────────────────────</span> <span class="n">AWS</span> <span class="n">Troubleshooting</span> <span class="n">Overview</span> <span class="err">─────────────────────────────────────┐</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="err">│</span>                                                                                                       <span class="err">│</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="err">│</span>   <span class="err">┌───────────────────────────────────────────────────────────────────────────────────────────────┐</span>   <span class="err">│</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="err">│</span>   <span class="err">│</span>                <span class="n">AWS</span> <span class="n">Troubleshooting</span> <span class="err">—</span> <span class="n">Common</span> <span class="n">Issues</span><span class="p">,</span> <span class="n">Diagnostics</span><span class="p">,</span> <span class="n">and</span> <span class="n">Escalation</span>               <span class="err">│</span>   <span class="err">│</span>
@@ -3932,77 +3943,40 @@ Troubleshooting reference covering S3 Access Denied, IAM Permission Denied, RDS 
 <a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a><span class="err">│</span>                                                                                                       <span class="err">│</span>
 <a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a><span class="err">└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</span>
 </code></pre></div>
-┌──────────────────────────────────── AWS Troubleshooting Overview ─────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                AWS Troubleshooting — Common Issues, Diagnostics, and Escalation               │   │
-│   │   Common issues: IAM permission denied · SG/NACL blocking traffic · EC2 instance unreachable  │   │
-│   │  Diagnostics: CloudWatch Logs · CloudTrail event history · VPC Flow Logs · EC2 serial console │   │
-│   │    Tools: AWS CLI describe commands · Policy Simulator · Reachability Analyzer · CloudShell   │   │
-│   │ Escalation: AWS Support cases; collect account ID, region, resource ARN, error message + time │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Common issues guide investigation · Diagnostics locate root cause · Escalation engages AWS support │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │        Common Issues        │  │         Diagnostics         │  │          Escalation         │   │
-│   │     EC2: 2/2 status fail    │  │     CW Logs: app errors     │  │     Account ID + region     │   │
-│   │      SG: port not open      │  │   CloudTrail: API history   │  │    Resource ARN: include    │   │
-│   │      IAM: Access Denied     │  │    VPC Flow Logs: traffic   │  │     Error message + time    │   │
-│   │      RDS: conn refused      │  │    Policy Simulator: test   │  │       Severity: P1-P4       │   │
-│   │      S3: 403 on object      │  │    Reachability Analyzer    │  │    TAM: strategic issues    │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    Identify issue category → gather diagnostics (logs + trail + flow) → resolve or escalate with data │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │  Common Issues   │   Diagnostics    │     Escalation    │    CLI Tools     │  Console Tools   │   │
-│   │ EC2 unreachable  │ CW Logs: filter  │   P1: 24/7 phone  │   describe-sgs   │ Policy Simulator │   │
-│   │ SG: missing rule │ CloudTrail: who? │   Case: open now  │  flow-logs: get  │  Reach Analyzer  │   │
-│   │   IAM: denied    │  VPC Flow Logs   │  ARN + error msg  │  sts get-caller  │  EC2 serial con  │   │
-│   │  S3: bucket ACL  │  Serial console  │  Trusted Advisor  │   ec2 describe   │  AWS Health evt  │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  EC2 Nitro hosts · VPC network fabric · AWS Support infrastructure · CloudTrail S3 log delivery       │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  EC2 status check = System check (infra) + instance check (OS); failure triggers alarm or             │
-│  Policy Simulator = IAM console tool; tests IAM policies to check if an action would be allowed/denied│
-│  Reachability Analyzer= VPC tool; traces packet path between source and destination; finds blocking   │
-│  VPC Flow Logs   = Captures accepted/rejected traffic metadata for subnets, VPCs, or ENIs             │
-│  CloudTrail      = Records every AWS API call; start with event history for the last 90 days in       │
-│  EC2 Serial Console= Out-of-band console access; useful when SSH/SSM unreachable; OS-level triage     │
-│  Trusted Advisor  = AWS checks across cost, security, performance, fault tolerance, and service limits│
-│  P1 case          = Production down; 24/7 response; call +1-800-xxx alongside opening console case    │
-│  TAM              = Technical Account Manager; named AWS contact for strategic and critical escalation│
-│  sts get-caller-identity= CLI command returning current identity; first step when debugging IAM issues│
-│  Session Manager  = SSM feature; connect to EC2 without SSH when networking is broken but SSM agent   │
-│  Access Denied    = IAM error; check CloudTrail for the denied call; use Policy Simulator to trace    │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>## RDS Connection Issues
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>```bash
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a># Check RDS security group
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>aws rds describe-db-instances --db-instance-identifier &lt;db-id&gt; \
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    --query &#39;DBInstances[*].VpcSecurityGroups&#39;
+<div class="kb-grid kb-grid-3">
+
+<a class="kb-card" href="common-issues/">
+  <strong>Common Issues</strong>
+  <span>Known problems, symptoms, and resolution steps.</span>
+</a>
+
+<a class="kb-card" href="diagnostics/">
+  <strong>Diagnostics</strong>
+  <span>Diagnostic commands, log locations, and data collection.</span>
+</a>
+
+<a class="kb-card" href="escalation/">
+  <strong>Escalation</strong>
+  <span>When and how to escalate to AWS Support with the right data.</span>
+</a>
+
+</div>
+
+<h2 id="rds-connection-issues">RDS Connection Issues<a class="headerlink" href="#rds-connection-issues" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check RDS security group</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>aws<span class="w"> </span>rds<span class="w"> </span>describe-db-instances<span class="w"> </span>--db-instance-identifier<span class="w"> </span>&lt;db-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span>--query<span class="w"> </span><span class="s1">&#39;DBInstances[*].VpcSecurityGroups&#39;</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Verify security group allows inbound on DB port from app subnet</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-security-groups<span class="w"> </span>--group-ids<span class="w"> </span>&lt;rds-sg-id&gt;
 <a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a># Verify security group allows inbound on DB port from app subnet
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>aws ec2 describe-security-groups --group-ids &lt;rds-sg-id&gt;
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a># Check RDS status
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>aws rds describe-db-instances --db-instance-identifier &lt;db-id&gt; \
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    --query &#39;DBInstances[*].[DBInstanceStatus,Endpoint]&#39;
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a># If connection refused after failover:
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>aws rds describe-events --source-identifier &lt;db-id&gt; --duration 60
-</code></pre></div></p>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Check RDS status</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>aws<span class="w"> </span>rds<span class="w"> </span>describe-db-instances<span class="w"> </span>--db-instance-identifier<span class="w"> </span>&lt;db-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">    </span>--query<span class="w"> </span><span class="s1">&#39;DBInstances[*].[DBInstanceStatus,Endpoint]&#39;</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># If connection refused after failover:</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>aws<span class="w"> </span>rds<span class="w"> </span>describe-events<span class="w"> </span>--source-identifier<span class="w"> </span>&lt;db-id&gt;<span class="w"> </span>--duration<span class="w"> </span><span class="m">60</span>
+</code></pre></div>
 <h2 id="vpc-flow-logs-analysing-traffic">VPC Flow Logs — Analysing Traffic<a class="headerlink" href="#vpc-flow-logs-analysing-traffic" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Query Flow Logs in CloudWatch Insights</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># CloudWatch → Logs Insights → select flow log group</span>
