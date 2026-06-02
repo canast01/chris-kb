@@ -128,6 +128,7 @@ ESXi CLI Tool Map
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+```bash
 # Maintenance mode
 esxcli system maintenanceMode get
 esxcli system maintenanceMode set --enabled true

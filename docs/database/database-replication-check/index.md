@@ -57,6 +57,7 @@ FROM pg_replication_slots;
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+```bash
 # Quick one-liner — show lag and thread status
 mysql -u root -e "SHOW SLAVE STATUS\G" | grep -E "Slave_(IO|SQL)_Running|Seconds_Behind|Last_(IO|SQL)_Error"
 ```

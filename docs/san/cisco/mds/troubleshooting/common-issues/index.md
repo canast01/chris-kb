@@ -83,6 +83,7 @@ show fcdomain domain-list vsan 10
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+```bash
 # Check reason
 show interface fc1/4
 # Look for: "Port is in error-disabled state"

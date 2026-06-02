@@ -99,6 +99,7 @@ show logging last 100 | grep fc1/3
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+```bash
 # Find the reason for errDisabled
 show interface fc1/4 | include err
 

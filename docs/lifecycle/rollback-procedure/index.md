@@ -59,6 +59,7 @@ flowchart TD
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+```bash
 # Windows — uninstall cumulative update
 wusa /uninstall /kb:<KBnumber> /quiet /norestart
 ```

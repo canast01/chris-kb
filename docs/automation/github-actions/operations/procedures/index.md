@@ -52,6 +52,7 @@ flowchart TD
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+```bash
 # .github/workflows/main.yml (calling workflow)
 jobs:
   deploy-staging:

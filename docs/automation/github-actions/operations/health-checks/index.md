@@ -49,6 +49,7 @@ flowchart TD
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+```bash
 # Validate using ajv-cli against the schema
 npm install -g ajv-cli
 ajv validate \

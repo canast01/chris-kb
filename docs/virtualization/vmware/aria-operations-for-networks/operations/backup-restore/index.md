@@ -93,6 +93,7 @@ echo "Token: $TOKEN"
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+```bash
 # crontab entry — runs daily at 02:00
 0 2 * * * /usr/local/bin/aon-backup.sh >> /var/log/aon-backup.log 2>&1
 ```
