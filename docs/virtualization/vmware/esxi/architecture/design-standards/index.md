@@ -8,30 +8,30 @@ Design Standards reference covering BIOS / UEFI Baseline, VMkernel Adapter Layou
 ESXi Host Design Checklist — Standard Layout
 ```text
 ┌──────────────────────────────────────────────────────────┐
-│  Naming & DNS                                            │
-│  └── FQDN: esxi-<nn>.<domain>  (A + PTR records)         │
-│                                                          │
-│  BIOS / UEFI Baseline                                    │
-│  ├── Hyperthreading: Enabled                             │
-│  ├── Power Policy: High Performance                      │
-│  ├── C-States: Disabled (or C1 only)                     │
-│  ├── IOMMU / VT-d: Enabled                               │
-│  ├── Secure Boot + TPM 2.0: Enabled                      │
-│  └── IPMI / iDRAC / iLO: Enabled on OOB NIC              │
-│                                                          │
-│  NIC Layout (vDS — 4 pNICs minimum)                      │
-│  ├── vmnic0 + vmnic1 → vDS uplinks (active/active)       │
-│  └── vmnic2 + vmnic3 → vDS uplinks (teamed, LACP)        │
-│                                                          │
-│  VMkernel Adapters                                       │
-│  ├── vmk0  Management    1500 MTU  Mgmt VLAN             │
-│  ├── vmk1  vMotion       9000 MTU  vMotion VLAN          │
-│  ├── vmk2  vSAN          9000 MTU  vSAN VLAN             │
-│  └── vmk3  NFS / iSCSI   9000 MTU  Storage VLAN          │
-│                                                          │
-│  Boot Device: M.2 NVMe (preferred)                       │
-│  HBA Config: FC / NVMe-oF — single-initiator zoning      │
-│  NTP: 2+ servers matching vCenter NTP sources            │
+│  Naming & DNS                                                                                         │
+│  └── FQDN: esxi-<nn>.<domain>  (A + PTR records)                                                      │
+│                                                                                                       │
+│  BIOS / UEFI Baseline                                                                                 │
+│  ├── Hyperthreading: Enabled                                                                          │
+│  ├── Power Policy: High Performance                                                                   │
+│  ├── C-States: Disabled (or C1 only)                                                                  │
+│  ├── IOMMU / VT-d: Enabled                                                                            │
+│  ├── Secure Boot + TPM 2.0: Enabled                                                                   │
+│  └── IPMI / iDRAC / iLO: Enabled on OOB NIC                                                           │
+│                                                                                                       │
+│  NIC Layout (vDS — 4 pNICs minimum)                                                                   │
+│  ├── vmnic0 + vmnic1 → vDS uplinks (active/active)                                                    │
+│  └── vmnic2 + vmnic3 → vDS uplinks (teamed, LACP)                                                     │
+│                                                                                                       │
+│  VMkernel Adapters                                                                                    │
+│  ├── vmk0  Management    1500 MTU  Mgmt VLAN                                                          │
+│  ├── vmk1  vMotion       9000 MTU  vMotion VLAN                                                       │
+│  ├── vmk2  vSAN          9000 MTU  vSAN VLAN                                                          │
+│  └── vmk3  NFS / iSCSI   9000 MTU  Storage VLAN                                                       │
+│                                                                                                       │
+│  Boot Device: M.2 NVMe (preferred)                                                                    │
+│  HBA Config: FC / NVMe-oF — single-initiator zoning                                                   │
+│  NTP: 2+ servers matching vCenter NTP sources                                                         │
 └──────────────────────────────────────────────────────────┘
 ```
 ┌─────────────────────────────────────── ESXi — Design Standards ───────────────────────────────────────┐

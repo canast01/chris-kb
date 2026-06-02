@@ -8,16 +8,16 @@ Access Control reference covering Pool-Level Admin Delegation, Desktop Pool Enti
   RBAC: AD Groups → Entitlements → Pools
 ```text
 ┌──────────────┐    ┌───────────────────┐    ┌─────────────────────┐
-│ AD Groups    │    │ Horizon Roles      │    │ Desktop Pools /     │
-│              │    │                   │    │ Access Groups        │
-│ CORP\Horizon─┼───►│ Administrators    │    │                     │
-│ -Admins      │    │ (full config)     │    │ ┌─────────────────┐  │
-│              │    ├───────────────────┤    │ │ Pool-Win10-Float│  │
-│ CORP\Horizon─┼───►│ Help Desk Admin   │    │ │   entitlements  │  │
-│ -HelpDesk    │    │ (session mgmt)    │    │ │                 │  │
-│              │    ├───────────────────┤    │ │ VDI-LON-KW-     │  │
-│ CORP\Horizon─┼───►│ Inventory Admin   │───►│ │ W11-IC-Users    │  │
-│ -Pool-Admins │    │ (scoped to group) │    │ └─────────────────┘  │
+│ AD Groups    │    │ Horizon Roles      │    │ Desktop Pools /                                         │
+│              │    │                   │    │ Access Groups                                            │
+│ CORP\Horizon─┼───►│ Administrators    │    │                                                          │
+│ -Admins      │    │ (full config)     │    │ ┌─────────────────┐                                      │
+│              │    ├───────────────────┤    │ │ Pool-Win10-Float│                                      │
+│ CORP\Horizon─┼───►│ Help Desk Admin   │    │ │   entitlements  │                                      │
+│ -HelpDesk    │    │ (session mgmt)    │    │ │                 │                                      │
+│              │    ├───────────────────┤    │ │ VDI-LON-KW-     │                                      │
+│ CORP\Horizon─┼───►│ Inventory Admin   │───►│ │ W11-IC-Users    │                                      │
+│ -Pool-Admins │    │ (scoped to group) │    │ └─────────────────┘                                      │
 └──────────────┘    └───────────────────┘    └─────────────────────┘
 ```
 ┌─────────────────────────────────── VMware Horizon — Access Control ───────────────────────────────────┐

@@ -8,24 +8,24 @@ NTP Drift reference covering Drift Concepts, Reading Drift Values, Drift File, I
         CLOCK DRIFT AND NTP CORRECTION
 ```text
 ┌──────────────────────────────────────────────────────────────┐
-│  Without NTP:                                                │
-│  Real time  ─────────────────────────────────────────────►  │
-│  System clk ──────────────────────────────────────────────►  │
-│             └──── drift (+12 ppm = +1.04s/day)────────────   │
-│                                                              │
-│  With NTP (slewing — gradual correction):                    │
-│  System clk ─────── NTP adjusts freq slowly ────────────────►│
-│              ▲ offset detected    ▲ slew complete            │
-│              └──────────────────  └─── freq correction saved │
-│              max slew: ~500 ppm                              │
-│                                                              │
-│  Stepping (abrupt jump — large offset only):                 │
-│  System clk ──────────────►  STEP ──────────────────────────►│
-│              offset > 1s detected  clock jumps to correct    │
-│                                                              │
-│  Drift file (/var/lib/chrony/drift):                         │
-│  Stores frequency correction so daemon starts pre-calibrated │
-│  Content: single float, e.g.  12.345678  (ppm)              │
+│  Without NTP:                                                                                         │
+│  Real time  ─────────────────────────────────────────────►                                            │
+│  System clk ──────────────────────────────────────────────►                                           │
+│             └──── drift (+12 ppm = +1.04s/day)────────────                                            │
+│                                                                                                       │
+│  With NTP (slewing — gradual correction):                                                             │
+│  System clk ─────── NTP adjusts freq slowly ────────────────►                                         │
+│              ▲ offset detected    ▲ slew complete                                                     │
+│              └──────────────────  └─── freq correction saved                                          │
+│              max slew: ~500 ppm                                                                       │
+│                                                                                                       │
+│  Stepping (abrupt jump — large offset only):                                                          │
+│  System clk ──────────────►  STEP ──────────────────────────►                                         │
+│              offset > 1s detected  clock jumps to correct                                             │
+│                                                                                                       │
+│  Drift file (/var/lib/chrony/drift):                                                                  │
+│  Stores frequency correction so daemon starts pre-calibrated                                          │
+│  Content: single float, e.g.  12.345678  (ppm)                                                        │
 └──────────────────────────────────────────────────────────────┘
 ```
 

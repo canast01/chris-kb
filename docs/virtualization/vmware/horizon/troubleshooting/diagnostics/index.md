@@ -8,21 +8,21 @@ Diagnostics reference covering Collect Horizon Support Bundle, Windows Event Log
   Diagnostic Data Sources
 ```powershell
 ┌──────────────────────────────────────────────────────────────┐
-│  Connection Server                UAG                        │
-│  ┌────────────────────────────┐   ┌────────────────────────┐ │
-│  │ C:\ProgramData\VMware\VDM\ │   │ /opt/vmware/gateway/   │ │
-│  │  logs\debug-<date>.txt     │   │  logs/esmanager.log    │ │
-│  │  audit-<date>.txt          │   │ REST: GET /rest/v1/    │ │
-│  │  ws_tomcat-<date>.txt      │   │  config/logs/collect   │ │
-│  └────────────────────────────┘   └────────────────────────┘ │
-│                                                              │
-│  Desktop VM (guest)               DCT Support Bundle         │
-│  ┌────────────────────────────┐   ┌────────────────────────┐ │
-│  │ C:\ProgramData\VMware\VDM\ │   │ Horizon Console →      │ │
-│  │  logs\ (Horizon Agent)     │   │  Help → Download       │ │
-│  │ Get-Service "VMware        │   │  Support Bundle        │ │
-│  │  Horizon View Agent"       │   │  (ZIP of all CS logs)  │ │
-│  └────────────────────────────┘   └────────────────────────┘ │
+│  Connection Server                UAG                                                                 │
+│  ┌────────────────────────────┐   ┌────────────────────────┐                                          │
+│  │ C:\ProgramData\VMware\VDM\ │   │ /opt/vmware/gateway/   │                                          │
+│  │  logs\debug-<date>.txt     │   │  logs/esmanager.log    │                                          │
+│  │  audit-<date>.txt          │   │ REST: GET /rest/v1/    │                                          │
+│  │  ws_tomcat-<date>.txt      │   │  config/logs/collect   │                                          │
+│  └────────────────────────────┘   └────────────────────────┘                                          │
+│                                                                                                       │
+│  Desktop VM (guest)               DCT Support Bundle                                                  │
+│  ┌────────────────────────────┐   ┌────────────────────────┐                                          │
+│  │ C:\ProgramData\VMware\VDM\ │   │ Horizon Console →      │                                          │
+│  │  logs\ (Horizon Agent)     │   │  Help → Download       │                                          │
+│  │ Get-Service "VMware        │   │  Support Bundle        │                                          │
+│  │  Horizon View Agent"       │   │  (ZIP of all CS logs)  │                                          │
+│  └────────────────────────────┘   └────────────────────────┘                                          │
 └──────────────────────────────────────────────────────────────┘
 ```
 ┌──────────────────────────────────── VMware Horizon — Diagnostics ─────────────────────────────────────┐

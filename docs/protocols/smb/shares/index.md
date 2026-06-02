@@ -8,21 +8,21 @@ SMB Shares reference covering Overview, Creating Shares with PowerShell, Creatin
         SHARE TYPES AND UNC PATH STRUCTURE
 ```text
 ┌──────────────────────────────────────────────────────────────┐
-│  \\server\Finance          ◄── standard share (visible)      │
-│  \\server\Finance$         ◄── hidden share ($ suffix)       │
-│  \\domain\Finance          ◄── DFS namespace share           │
-│  \\server\C$               ◄── administrative share (built-in)│
-│                                                              │
-│  DFS NAMESPACE RESOLUTION:                                   │
-│  \\corp.example.com\Files\Finance                            │
-│            │                                                 │
-│            ▼  DFS referral                                   │
-│  \\fileserver01\Finance  (actual share, transparent to user) │
-│            or                                                │
-│  \\fileserver02\Finance  (redundant target, failover)        │
-│                                                              │
-│  Share permissions apply to NETWORK access only;            │
-│  NTFS ACLs apply to both local and network access.          │
+│  \\server\Finance          ◄── standard share (visible)                                               │
+│  \\server\Finance$         ◄── hidden share ($ suffix)                                                │
+│  \\domain\Finance          ◄── DFS namespace share                                                    │
+│  \\server\C$               ◄── administrative share (built-in)                                        │
+│                                                                                                       │
+│  DFS NAMESPACE RESOLUTION:                                                                            │
+│  \\corp.example.com\Files\Finance                                                                     │
+│            │                                                                                          │
+│            ▼  DFS referral                                                                            │
+│  \\fileserver01\Finance  (actual share, transparent to user)                                          │
+│            or                                                                                         │
+│  \\fileserver02\Finance  (redundant target, failover)                                                 │
+│                                                                                                       │
+│  Share permissions apply to NETWORK access only;                                                      │
+│  NTFS ACLs apply to both local and network access.                                                    │
 └──────────────────────────────────────────────────────────────┘
 ```
 

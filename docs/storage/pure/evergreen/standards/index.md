@@ -8,17 +8,17 @@ Pure Storage Evergreen Standards reference covering Naming Conventions, Build Ba
 Evergreen Standards — Object Naming and Design
 ```text
 ┌──────────────────────────────────────────────────────────┐
-│  Array    │  <site>-fa-<nn>   e.g. lon-fa-01             │
+│  Array    │  <site>-fa-<nn>   e.g. lon-fa-01                                                          │
 ├──────────────────────────────────────────────────────────┤
-│  Volume   │  <env>-<app>-<vol##>                         │
+│  Volume   │  <env>-<app>-<vol##>                                                                      │
 ├──────────────────────────────────────────────────────────┤
-│  Host     │  matches OS hostname exactly                 │
+│  Host     │  matches OS hostname exactly                                                              │
 ├──────────────────────────────────────────────────────────┤
-│  HGroup   │  <env>-<cluster>                             │
+│  HGroup   │  <env>-<cluster>                                                                          │
 ├──────────────────────────────────────────────────────────┤
-│  PGroup   │  <env>-<app>-pg                              │
+│  PGroup   │  <env>-<app>-pg                                                                           │
 ├──────────────────────────────────────────────────────────┤
-│  Snapshot │  <volname>.<YYYY-MM-DD>                      │
+│  Snapshot │  <volname>.<YYYY-MM-DD>                                                                   │
 └──────────────────────────────────────────────────────────┘
 ```
 ## Naming Conventions

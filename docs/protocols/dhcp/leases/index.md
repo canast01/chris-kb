@@ -8,22 +8,22 @@ DHCP Leases reference covering Overview, Viewing Leases, Finding IP from MAC, Le
         LEASE LIFECYCLE AND RENEWAL TIMERS
 ```text
 ┌──────────────────────────────────────────────────────────────┐
-│  Lease duration: 8 days (example)                            │
-│                                                              │
-│  │◄──────────────── 8 days ─────────────────────────────►│  │
-│  │                                                        │  │
-│  ▼ T0         T1 (50%)       T2 (87.5%)       T3 (100%)  │  │
-│  ├────────────┼──────────────┼────────────────┼───────────┤  │
-│  │   Using    │  Renew (unicast               │           │  │
-│  │   lease    │  to server)  │  Rebind (broad.│ Expired   │  │
-│  │            │              │  to any server)│           │  │
-│  └────────────┴──────────────┴────────────────┴───────────┘  │
-│                                                              │
-│  T1 = lease * 0.5  → client unicasts renewal request        │
-│  T2 = lease * 0.875 → client broadcasts to any DHCP server  │
-│  T3 = lease expires → client must start DORA again          │
-│                                                              │
-│  Lease states: Active | Expired | Declined | ActiveReservation│
+│  Lease duration: 8 days (example)                                                                     │
+│                                                                                                       │
+│  │◄──────────────── 8 days ─────────────────────────────►│                                            │
+│  │                                                        │                                           │
+│  ▼ T0         T1 (50%)       T2 (87.5%)       T3 (100%)  │                                            │
+│  ├────────────┼──────────────┼────────────────┼───────────┤                                           │
+│  │   Using    │  Renew (unicast               │           │                                           │
+│  │   lease    │  to server)  │  Rebind (broad.│ Expired   │                                           │
+│  │            │              │  to any server)│           │                                           │
+│  └────────────┴──────────────┴────────────────┴───────────┘                                           │
+│                                                                                                       │
+│  T1 = lease * 0.5  → client unicasts renewal request                                                  │
+│  T2 = lease * 0.875 → client broadcasts to any DHCP server                                            │
+│  T3 = lease expires → client must start DORA again                                                    │
+│                                                                                                       │
+│  Lease states: Active | Expired | Declined | ActiveReservation                                        │
 └──────────────────────────────────────────────────────────────┘
 ```
 

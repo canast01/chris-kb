@@ -8,22 +8,22 @@ Diagnostics reference covering Collect SRM Support Bundle, vSphere Replication L
   SRM Diagnostic Data Sources
 ```text
 ┌──────────────────────────────────────────────────────────────┐
-│  SRM Server (Windows)           SRM Appliance (Linux)        │
-│  ┌──────────────────────────┐   ┌──────────────────────────┐ │
-│  │ C:\ProgramData\VMware\   │   │ /var/log/vmware/srm/     │ │
-│  │  VMware vCenter SRM\     │   │  vmware-dr.log           │ │
-│  │  Logs\vmware-dr.log      │   │                          │ │
-│  └──────────────────────────┘   └──────────────────────────┘ │
-│                                                              │
-│  VR Appliance Logs              SRA Logs                     │
-│  ┌──────────────────────────┐   ┌──────────────────────────┐ │
-│  │ /var/log/vmware/hms/     │   │ Pure: C:\ProgramData\    │ │
-│  │ /var/log/vmware/vrms/    │   │  Pure Storage\SRA\Logs\  │ │
-│  │ VRA VAMI → Support →     │   │ Dell: C:\ProgramData\    │ │
-│  │  Download Bundle         │   │  EMC\SRA\Logs\           │ │
-│  └──────────────────────────┘   └──────────────────────────┘ │
-│                                                              │
-│  Support Bundle: Site Recovery → Summary → Download          │
+│  SRM Server (Windows)           SRM Appliance (Linux)                                                 │
+│  ┌──────────────────────────┐   ┌──────────────────────────┐                                          │
+│  │ C:\ProgramData\VMware\   │   │ /var/log/vmware/srm/     │                                          │
+│  │  VMware vCenter SRM\     │   │  vmware-dr.log           │                                          │
+│  │  Logs\vmware-dr.log      │   │                          │                                          │
+│  └──────────────────────────┘   └──────────────────────────┘                                          │
+│                                                                                                       │
+│  VR Appliance Logs              SRA Logs                                                              │
+│  ┌──────────────────────────┐   ┌──────────────────────────┐                                          │
+│  │ /var/log/vmware/hms/     │   │ Pure: C:\ProgramData\    │                                          │
+│  │ /var/log/vmware/vrms/    │   │  Pure Storage\SRA\Logs\  │                                          │
+│  │ VRA VAMI → Support →     │   │ Dell: C:\ProgramData\    │                                          │
+│  │  Download Bundle         │   │  EMC\SRA\Logs\           │                                          │
+│  └──────────────────────────┘   └──────────────────────────┘                                          │
+│                                                                                                       │
+│  Support Bundle: Site Recovery → Summary → Download                                                   │
 └──────────────────────────────────────────────────────────────┘
 ```
 ┌────────────────────────────────────── VMware SRM — Diagnostics ───────────────────────────────────────┐

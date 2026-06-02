@@ -8,28 +8,28 @@ ESXi Encryption reference covering Encrypt a VM, vSAN Encryption, ESXi Host Encr
 ESXi Encryption Stack
 ```text
 ┌─────────────────────────────────────────────────────────┐
-│  Key Provider                                           │
-│  ├── Native Key Provider (NKP) — vCenter-managed        │
-│  ├── Standard KMS — external KMIP server (Thales etc)   │
-│  └── Trust Authority — attestation-based (high-assurance)│
-│                │                                        │
-│                ▼ keys delivered to ESXi host            │
+│  Key Provider                                                                                         │
+│  ├── Native Key Provider (NKP) — vCenter-managed                                                      │
+│  ├── Standard KMS — external KMIP server (Thales etc)                                                 │
+│  └── Trust Authority — attestation-based (high-assurance)                                             │
+│                │                                                                                      │
+│                ▼ keys delivered to ESXi host                                                          │
 ├─────────────────────────────────────────────────────────┤
-│  VM Encryption (per-VM, at-rest)                        │
-│  ├── Encrypts: .vmx, .vmdk, .log files                  │
-│  ├── Applied via Storage Policy in vCenter              │
-│  └── Encrypted vMotion: disabled / opportunistic /      │
-│                         required (per-VM setting)       │
+│  VM Encryption (per-VM, at-rest)                                                                      │
+│  ├── Encrypts: .vmx, .vmdk, .log files                                                                │
+│  ├── Applied via Storage Policy in vCenter                                                            │
+│  └── Encrypted vMotion: disabled / opportunistic /                                                    │
+│                         required (per-VM setting)                                                     │
 ├─────────────────────────────────────────────────────────┤
-│  vSAN Encryption                                        │
-│  ├── Data-at-Rest: full vSAN datastore encryption       │
-│  │   └── Enabling on live cluster triggers full rebuild │
-│  └── Data-in-Transit: vSAN network hop encryption       │
-│      (no KMS required; enable without rebuild)          │
+│  vSAN Encryption                                                                                      │
+│  ├── Data-at-Rest: full vSAN datastore encryption                                                     │
+│  │   └── Enabling on live cluster triggers full rebuild                                               │
+│  └── Data-in-Transit: vSAN network hop encryption                                                     │
+│      (no KMS required; enable without rebuild)                                                        │
 ├─────────────────────────────────────────────────────────┤
-│  Boot Integrity                                         │
-│  ├── UEFI Secure Boot — validates bootloader + VIBs     │
-│  └── TPM 2.0 — host attestation (vSphere 7.0+)          │
+│  Boot Integrity                                                                                       │
+│  ├── UEFI Secure Boot — validates bootloader + VIBs                                                   │
+│  └── TPM 2.0 — host attestation (vSphere 7.0+)                                                        │
 └─────────────────────────────────────────────────────────┘
 ```
 ┌────────────────────────────────────────── ESXi — Encryption ──────────────────────────────────────────┐

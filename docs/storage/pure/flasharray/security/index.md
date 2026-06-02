@@ -8,23 +8,23 @@ FlashArray — Security reference: Authentication, Access Control, Encryption, H
 FlashArray Security Layers
 ```text
 ┌──────────────────────────────────────────────────────────┐
-│  Identity & Auth                                         │
-│  ├── SAML SSO (Okta / Azure AD) → MFA enforced           │
-│  ├── AD/LDAP group → role mapping                        │
-│  └── API tokens for automation (storage_admin / readonly)│
+│  Identity & Auth                                                                                      │
+│  ├── SAML SSO (Okta / Azure AD) → MFA enforced                                                        │
+│  ├── AD/LDAP group → role mapping                                                                     │
+│  └── API tokens for automation (storage_admin / readonly)                                             │
 ├──────────────────────────────────────────────────────────┤
-│  RBAC                                                    │
-│  array_admin │ storage_admin │ ops_admin │ readonly      │
+│  RBAC                                                                                                 │
+│  array_admin │ storage_admin │ ops_admin │ readonly                                                   │
 ├──────────────────────────────────────────────────────────┤
-│  Network Controls                                        │
-│  ├── Management on dedicated VLAN (SSH + HTTPS only)     │
-│  └── Replication on dedicated VLAN (TLS)                 │
+│  Network Controls                                                                                     │
+│  ├── Management on dedicated VLAN (SSH + HTTPS only)                                                  │
+│  └── Replication on dedicated VLAN (TLS)                                                              │
 ├──────────────────────────────────────────────────────────┤
-│  Data at Rest                                            │
-│  └── AES-256-XTS (NVMe SEDs, always-on, hardware)        │
+│  Data at Rest                                                                                         │
+│  └── AES-256-XTS (NVMe SEDs, always-on, hardware)                                                     │
 ├──────────────────────────────────────────────────────────┤
-│  Immutability                                            │
-│  └── SafeMode — Pure Support required to destroy snaps   │
+│  Immutability                                                                                         │
+│  └── SafeMode — Pure Support required to destroy snaps                                                │
 └──────────────────────────────────────────────────────────┘
 ```
 

@@ -8,11 +8,11 @@ Authentication reference covering Create a Break-Glass Local Account, Password P
 ESXi Authentication Paths
 ```text
 ┌──────────────────────────────────────────────────────────┐
-│  Recommended Path (day-to-day)                           │
-│                                                          │
-│  User → vCenter SSO → AD identity source                 │
-│                └── AD Kerberos / LDAP auth               │
-│                └── Role mapped in vCenter → ESXi         │
+│  Recommended Path (day-to-day)                                                                        │
+│                                                                                                       │
+│  User → vCenter SSO → AD identity source                                                              │
+│                └── AD Kerberos / LDAP auth                                                            │
+│                └── Role mapped in vCenter → ESXi                                                      │
 └──────────────────────────┬───────────────────────────────┘
                            │
 ```
@@ -110,13 +110,13 @@ ESXi Authentication Paths
 ```
 ```
 ┌──────────────────────────────────────────────────────────┐
-│  /Security/PasswordQualityControl                        │
-│  ├── Minimum length: 12 chars                            │
-│  ├── Complexity: upper + lower + digit + special         │
-│  ├── History: last 5 passwords                           │
-│  /Security/AccountLockFailures = 5 attempts              │
-│  /Security/AccountUnlockTime   = 900 seconds             │
-│  /Config/Etc/issue             = login banner text        │
+│  /Security/PasswordQualityControl                                                                     │
+│  ├── Minimum length: 12 chars                                                                         │
+│  ├── Complexity: upper + lower + digit + special                                                      │
+│  ├── History: last 5 passwords                                                                        │
+│  /Security/AccountLockFailures = 5 attempts                                                           │
+│  /Security/AccountUnlockTime   = 900 seconds                                                          │
+│  /Config/Etc/issue             = login banner text                                                    │
 └──────────────────────────────────────────────────────────┘
 ```
 ```

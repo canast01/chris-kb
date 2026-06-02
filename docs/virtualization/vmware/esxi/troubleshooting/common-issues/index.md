@@ -8,33 +8,33 @@ Common Issues reference covering Resolution Steps, All Paths Down (APD) — Stor
 ESXi Common Issue Resolution Paths
 ```text
 ┌────────────────────────────────────────────────────────┐
-│  Host Disconnected from vCenter                        │
-│  └── restart hostd → vpxa → check NTP / cert           │
-│                                                        │
-│  All Paths Down (APD)                                  │
-│  ├── State: APD → transient, paths may return          │
-│  └── State: PDL → permanent, power off VMs             │
-│      Fix: rescan HBAs, check SAN fabric / zoning       │
-│                                                        │
-│  High CPU Ready (%RDY)                                 │
-│  ├── > 10% per vCPU → investigate                      │
-│  ├── Reduce vCPU count (right-size VM)                 │
-│  ├── Remove CPU limits (should be -1 / unlimited)      │
-│  └── DRS migration or add hosts to cluster             │
-│                                                        │
-│  High Memory Balloon / Swap                            │
-│  ├── Balloon (MCTLSZ) → acceptable                     │
-│  ├── Host swap (SWR/s > 0) → performance problem       │
-│  └── Fix: DRS migrate, add RAM, set reservations       │
-│                                                        │
-│  PSOD (Purple Screen of Death)                         │
-│  ├── Screenshot the panic string + offset              │
-│  ├── Collect core dump: /var/core/ or vmkdump/         │
-│  ├── vm-support -w /tmp/ → support bundle              │
-│  └── Open P1 with Broadcom Support                     │
-│                                                        │
-│  NTP Drift → Auth Failures                             │
-│  └── esxcli system ntp set + /etc/init.d/ntpd restart  │
+│  Host Disconnected from vCenter                                                                       │
+│  └── restart hostd → vpxa → check NTP / cert                                                          │
+│                                                                                                       │
+│  All Paths Down (APD)                                                                                 │
+│  ├── State: APD → transient, paths may return                                                         │
+│  └── State: PDL → permanent, power off VMs                                                            │
+│      Fix: rescan HBAs, check SAN fabric / zoning                                                      │
+│                                                                                                       │
+│  High CPU Ready (%RDY)                                                                                │
+│  ├── > 10% per vCPU → investigate                                                                     │
+│  ├── Reduce vCPU count (right-size VM)                                                                │
+│  ├── Remove CPU limits (should be -1 / unlimited)                                                     │
+│  └── DRS migration or add hosts to cluster                                                            │
+│                                                                                                       │
+│  High Memory Balloon / Swap                                                                           │
+│  ├── Balloon (MCTLSZ) → acceptable                                                                    │
+│  ├── Host swap (SWR/s > 0) → performance problem                                                      │
+│  └── Fix: DRS migrate, add RAM, set reservations                                                      │
+│                                                                                                       │
+│  PSOD (Purple Screen of Death)                                                                        │
+│  ├── Screenshot the panic string + offset                                                             │
+│  ├── Collect core dump: /var/core/ or vmkdump/                                                        │
+│  ├── vm-support -w /tmp/ → support bundle                                                             │
+│  └── Open P1 with Broadcom Support                                                                    │
+│                                                                                                       │
+│  NTP Drift → Auth Failures                                                                            │
+│  └── esxcli system ntp set + /etc/init.d/ntpd restart                                                 │
 └────────────────────────────────────────────────────────┘
 ```
 ┌──────────────────────────────────────── ESXi — Common Issues ─────────────────────────────────────────┐

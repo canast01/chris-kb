@@ -8,22 +8,22 @@ SNMP polling is the process of an NMS periodically querying devices to collect m
         SNMP POLLING CYCLE
 ```text
 ┌─────────────────────────────────────────────────────────────┐
-│  NMS (every 60s)              Device agent                  │
-│  ┌─────────────────┐          ┌──────────────────────────┐  │
-│  │ Schedule: 60s   │          │                          │  │
-│  │  ┌───────────┐  │          │ MIB                      │  │
-│  │  │ GET/BULK  ├──┼──UDP 161►│ 1.3.6.1.2.1.2.2.1.10.*  │  │
-│  │  │ ifInOctets│  │          │ (ifInOctets per port)    │  │
-│  │  └───────────┘  │          │           │              │  │
-│  │                 │◄─────────┤ OID values returned      │  │
-│  │  ┌───────────┐  │ response │ 1.2.3.4...= 1284903240   │  │
-│  │  │  Store in │  │          └──────────────────────────┘  │
-│  │  │  TSDB     │  │                                        │
-│  │  └───────────┘  │  Operations:                           │
-│  └─────────────────┘  GET    = single OID                   │
-│                        GETNEXT = next OID in tree           │
-│                        GETBULK = multiple OIDs (efficient)  │
-│                        SET     = write value (RW only)      │
+│  NMS (every 60s)              Device agent                                                            │
+│  ┌─────────────────┐          ┌──────────────────────────┐                                            │
+│  │ Schedule: 60s   │          │                          │                                            │
+│  │  ┌───────────┐  │          │ MIB                      │                                            │
+│  │  │ GET/BULK  ├──┼──UDP 161►│ 1.3.6.1.2.1.2.2.1.10.*  │                                             │
+│  │  │ ifInOctets│  │          │ (ifInOctets per port)    │                                            │
+│  │  └───────────┘  │          │           │              │                                            │
+│  │                 │◄─────────┤ OID values returned      │                                            │
+│  │  ┌───────────┐  │ response │ 1.2.3.4...= 1284903240   │                                            │
+│  │  │  Store in │  │          └──────────────────────────┘                                            │
+│  │  │  TSDB     │  │                                                                                  │
+│  │  └───────────┘  │  Operations:                                                                     │
+│  └─────────────────┘  GET    = single OID                                                             │
+│                        GETNEXT = next OID in tree                                                     │
+│                        GETBULK = multiple OIDs (efficient)                                            │
+│                        SET     = write value (RW only)                                                │
 └─────────────────────────────────────────────────────────────┘
 ```
 Unlike traps, polling is initiated by the manager on a schedule.

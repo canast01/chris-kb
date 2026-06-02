@@ -8,17 +8,17 @@ Scripts reference covering Get All Protected VMs and RPO Compliance, Get Last Te
   SRM Automation via PowerCLI + REST API
 ```powershell
 ┌──────────────────────────────────────────────────────────────┐
-│  Connect-SrmServer ──► $srm.ExtensionData.*                  │
-│                                                              │
-│  Reporting Scripts             Operational Scripts           │
-│  ┌──────────────────────┐      ┌──────────────────────────┐  │
-│  │ Protected VMs +      │      │ Run test recovery         │  │
-│  │  RPO compliance CSV  │      │ Monitor request state    │  │
-│  │ Last test date +     │      │ Alert: plans not tested  │  │
-│  │  result per plan     │      │  in 30 days              │  │
-│  │ Recovery plan        │      │ Check placeholder VMs    │  │
-│  │  summary export      │      │  missing at recov. site  │  │
-│  └──────────────────────┘      └──────────────────────────┘  │
+│  Connect-SrmServer ──► $srm.ExtensionData.*                                                           │
+│                                                                                                       │
+│  Reporting Scripts             Operational Scripts                                                    │
+│  ┌──────────────────────┐      ┌──────────────────────────┐                                           │
+│  │ Protected VMs +      │      │ Run test recovery         │                                          │
+│  │  RPO compliance CSV  │      │ Monitor request state    │                                           │
+│  │ Last test date +     │      │ Alert: plans not tested  │                                           │
+│  │  result per plan     │      │  in 30 days              │                                           │
+│  │ Recovery plan        │      │ Check placeholder VMs    │                                           │
+│  │  summary export      │      │  missing at recov. site  │                                           │
+│  └──────────────────────┘      └──────────────────────────┘                                           │
 └──────────────────────────────────────────────────────────────┘
 ```
 ┌────────────────────────────────── VMware SRM — Operational Scripts ───────────────────────────────────┐

@@ -8,23 +8,23 @@ Diagnostics reference covering Service Status Verification, Certificate Expiry C
   LCM Diagnostic Data Sources
 ```text
 ┌─────────────────────────────────────────────────────────────────┐
-│  LCM Appliance (SSH as root)       LCM API                      │
-│  ┌───────────────────────────┐     ┌──────────────────────────┐  │
-│  │ vracli support-bundle     │     │ GET /lcm/api/v1/health   │  │
-│  │ /var/log/vmware/vrlcm/    │     │ GET /api/v2/environments │  │
-│  │  lcm-app.log (main)       │     │  → health per product    │  │
-│  │  lcm-install.log (deploy) │     │ GET /api/v2/requests     │  │
-│  │  locker.log (cert/pw ops) │     │  ?state=RUNNING          │  │
-│  │  upgrade/ (per upgrade)   │     └──────────────────────────┘  │
-│  └───────────────────────────┘                                   │
-│                                                                  │
-│  System Checks                     Certificate Checks            │
-│  ┌───────────────────────────┐     ┌──────────────────────────┐  │
-│  │ systemctl list-units      │     │ openssl s_client :443    │  │
-│  │  --type=service | grep lcm│     │ GET /api/v1/certificates │  │
-│  │ df -h (disk thresholds)   │     │  days-to-expiry          │  │
-│  │ chronyc tracking (NTP)    │     └──────────────────────────┘  │
-│  └───────────────────────────┘                                   │
+│  LCM Appliance (SSH as root)       LCM API                                                            │
+│  ┌───────────────────────────┐     ┌──────────────────────────┐                                       │
+│  │ vracli support-bundle     │     │ GET /lcm/api/v1/health   │                                       │
+│  │ /var/log/vmware/vrlcm/    │     │ GET /api/v2/environments │                                       │
+│  │  lcm-app.log (main)       │     │  → health per product    │                                       │
+│  │  lcm-install.log (deploy) │     │ GET /api/v2/requests     │                                       │
+│  │  locker.log (cert/pw ops) │     │  ?state=RUNNING          │                                       │
+│  │  upgrade/ (per upgrade)   │     └──────────────────────────┘                                       │
+│  └───────────────────────────┘                                                                        │
+│                                                                                                       │
+│  System Checks                     Certificate Checks                                                 │
+│  ┌───────────────────────────┐     ┌──────────────────────────┐                                       │
+│  │ systemctl list-units      │     │ openssl s_client :443    │                                       │
+│  │  --type=service | grep lcm│     │ GET /api/v1/certificates │                                       │
+│  │ df -h (disk thresholds)   │     │  days-to-expiry          │                                       │
+│  │ chronyc tracking (NTP)    │     └──────────────────────────┘                                       │
+│  └───────────────────────────┘                                                                        │
 └─────────────────────────────────────────────────────────────────┘
 ```
 ┌───────────────────────────────────── Aria Suite LCM Diagnostics ──────────────────────────────────────┐

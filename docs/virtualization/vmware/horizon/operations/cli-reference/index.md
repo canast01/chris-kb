@@ -8,22 +8,22 @@ CLI Reference reference covering Session Management, vdmexport / vdmimport, UAG 
   Horizon CLI Tools
 ```powershell
 ┌──────────────────────────────────────────────────────────────────┐
-│  vdmadmin.exe          │  vdmexport / vdmimport                  │
-│  ┌────────────────┐    │  ┌──────────────────────────────────┐   │
-│  │ -L -sessions   │    │  │ vdmexport -f backup.ldif         │   │
-│  │ -L -pools      │    │  │ vdmimport -f backup.ldif         │   │
-│  │ -L -servers    │    │  └──────────────────────────────────┘   │
-│  │ -D -m <vm>     │    │                                         │
-│  └────────────────┘    │  hzedge (UAG shell)                     │
-│                        │  ┌──────────────────────────────────┐   │
-│  VMware.Hv.Helper      │  │ hzedge gethealth                 │   │
-│  ┌────────────────┐    │  │ hzedge getblast / getpcoip       │   │
-│  │ Connect-HVServer│   │  └──────────────────────────────────┘   │
-│  │ Get-HVPool      │   │                                         │
-│  │ Get-HVSession   │   │  Horizon REST API                       │
-│  │ Get-HVMachine   │   │  ┌──────────────────────────────────┐   │
-│  └────────────────┘    │  │ POST /rest/login → Bearer token  │   │
-│                        │  │ GET  /rest/inventory/v1/sessions  │   │
+│  vdmadmin.exe          │  vdmexport / vdmimport                                                       │
+│  ┌────────────────┐    │  ┌──────────────────────────────────┐                                        │
+│  │ -L -sessions   │    │  │ vdmexport -f backup.ldif         │                                        │
+│  │ -L -pools      │    │  │ vdmimport -f backup.ldif         │                                        │
+│  │ -L -servers    │    │  └──────────────────────────────────┘                                        │
+│  │ -D -m <vm>     │    │                                                                              │
+│  └────────────────┘    │  hzedge (UAG shell)                                                          │
+│                        │  ┌──────────────────────────────────┐                                        │
+│  VMware.Hv.Helper      │  │ hzedge gethealth                 │                                        │
+│  ┌────────────────┐    │  │ hzedge getblast / getpcoip       │                                        │
+│  │ Connect-HVServer│   │  └──────────────────────────────────┘                                        │
+│  │ Get-HVPool      │   │                                                                              │
+│  │ Get-HVSession   │   │  Horizon REST API                                                            │
+│  │ Get-HVMachine   │   │  ┌──────────────────────────────────┐                                        │
+│  └────────────────┘    │  │ POST /rest/login → Bearer token  │                                        │
+│                        │  │ GET  /rest/inventory/v1/sessions  │                                       │
 └───────────────────────────┴──────────────────────────────────────┘
 ```
 ┌─────────────────────────────────── VMware Horizon — CLI Reference ────────────────────────────────────┐

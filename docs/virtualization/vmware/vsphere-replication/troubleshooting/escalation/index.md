@@ -8,28 +8,28 @@ Escalation reference covering Before Opening a Support Case, Severity Definition
   VR Escalation Path
 ```text
 ┌─────────────────────────────────────────────────────────────────┐
-│  Step 1: Collect (both sites)                                   │
-│  ┌─────────────────────────────────────────────────────────┐    │
-│  │ VRA support bundle (VAMI) │ ESXi hbr.log / hostd.log    │    │
-│  │ vCenter system logs       │ Replication status capture  │    │
-│  │ VR / vSphere / SRM version│ Symptom timeline + errors   │    │
-│  └─────────────────────────────────────────────────────────┘    │
-│                  │                                              │
-│                  ▼                                              │
-│  Step 2: Severity Assessment                                    │
-│  ┌──────────────────────────────────────────────────────┐       │
-│  │ Sev 1: active recovery failing  → open SR + call NOW │       │
-│  │ Sev 2: all replications down    → open SR (urgent)   │       │
-│  │ Sev 3: subset RPO violation     → open SR (normal)   │       │
-│  └──────────────────────────────────────────────────────┘       │
-│                  │                                              │
-│                  ▼                                              │
-│  Step 3: Escalation Triggers                                    │
-│  ┌──────────────────────────────────────────────────────┐       │
-│  │ Sev 1 unresolved >2h → Critical Escalation Team      │       │
-│  │ Recurring / SLA breach → TAM engagement              │       │
-│  │ Suspected defect      → VR Engineering via SR        │       │
-│  └──────────────────────────────────────────────────────┘       │
+│  Step 1: Collect (both sites)                                                                         │
+│  ┌─────────────────────────────────────────────────────────┐                                          │
+│  │ VRA support bundle (VAMI) │ ESXi hbr.log / hostd.log    │                                          │
+│  │ vCenter system logs       │ Replication status capture  │                                          │
+│  │ VR / vSphere / SRM version│ Symptom timeline + errors   │                                          │
+│  └─────────────────────────────────────────────────────────┘                                          │
+│                  │                                                                                    │
+│                  ▼                                                                                    │
+│  Step 2: Severity Assessment                                                                          │
+│  ┌──────────────────────────────────────────────────────┐                                             │
+│  │ Sev 1: active recovery failing  → open SR + call NOW │                                             │
+│  │ Sev 2: all replications down    → open SR (urgent)   │                                             │
+│  │ Sev 3: subset RPO violation     → open SR (normal)   │                                             │
+│  └──────────────────────────────────────────────────────┘                                             │
+│                  │                                                                                    │
+│                  ▼                                                                                    │
+│  Step 3: Escalation Triggers                                                                          │
+│  ┌──────────────────────────────────────────────────────┐                                             │
+│  │ Sev 1 unresolved >2h → Critical Escalation Team      │                                             │
+│  │ Recurring / SLA breach → TAM engagement              │                                             │
+│  │ Suspected defect      → VR Engineering via SR        │                                             │
+│  └──────────────────────────────────────────────────────┘                                             │
 └─────────────────────────────────────────────────────────────────┘
 ```
 

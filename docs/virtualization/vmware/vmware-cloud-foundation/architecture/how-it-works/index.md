@@ -8,8 +8,8 @@ How It Works reference covering Bundle Management, Password Management, Certific
 VCF Bring-Up and Lifecycle Flow
 ```text
 ┌──────────────────────────────────────────────────────┐
-│  Cloud Builder (bring-up tool)                       │
-│  reads deployment parameter workbook                 │
+│  Cloud Builder (bring-up tool)                                                                        │
+│  reads deployment parameter workbook                                                                  │
 └──────────────────────┬───────────────────────────────┘
 ```
 ┌─────────────────────────────── VMware Cloud Foundation — How It Works ────────────────────────────────┐
@@ -62,14 +62,14 @@ VCF Bring-Up and Lifecycle Flow
           ▼
 ```text
 ┌─────────────────────────────────────────────────────┐
-│  Upgrade Sequence                                    │
-│  SDDC Manager → vCenter → ESXi → NSX → vSAN FW       │
-│                                                      │
-│  1. Download bundle from depot                       │
-│  2. Run Precheck (DNS, NTP, certs, vSAN, passwords)  │
-│  3. Resolve WARN/ERROR items                         │
-│  4. Schedule window → SDDC Manager applies BOM       │
-│  5. Post-upgrade validation                          │
+│  Upgrade Sequence                                                                                     │
+│  SDDC Manager → vCenter → ESXi → NSX → vSAN FW                                                        │
+│                                                                                                       │
+│  1. Download bundle from depot                                                                        │
+│  2. Run Precheck (DNS, NTP, certs, vSAN, passwords)                                                   │
+│  3. Resolve WARN/ERROR items                                                                          │
+│  4. Schedule window → SDDC Manager applies BOM                                                        │
+│  5. Post-upgrade validation                                                                           │
 └─────────────────────────────────────────────────────┘
 ```
           │ manages new workload domains
@@ -77,9 +77,9 @@ VCF Bring-Up and Lifecycle Flow
 ```text
 ```
 ┌─────────────────────────────────────────────────────┐
-│  Workload Domain Provisioning                        │
-│  Commission hosts → Create domain → SDDC Manager     │
-│  deploys dedicated vCenter, NSX, vSAN as a unit      │
+│  Workload Domain Provisioning                                                                         │
+│  Commission hosts → Create domain → SDDC Manager                                                      │
+│  deploys dedicated vCenter, NSX, vSAN as a unit                                                       │
 └─────────────────────────────────────────────────────┘
 ```text
 ┌─────────────────────────────── VMware Cloud Foundation — How It Works ────────────────────────────────┐

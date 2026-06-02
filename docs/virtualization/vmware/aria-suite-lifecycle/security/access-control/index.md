@@ -8,21 +8,21 @@ Access Control reference covering Service Account for API Automation, Separation
   LCM RBAC — AD Groups → LCM Roles
 ```text
 ┌─────────────────────────────────────────────────────────────────┐
-│  AD (via VIDM sync)          LCM Roles                          │
-│  ┌─────────────────────┐     ┌─────────────────────────────┐    │
-│  │ GG-LCM-Admins       │────►│ LCM Admin                   │    │
-│  │                     │     │  deploy/upgrade/Locker/users │    │
-│  ├─────────────────────┤     ├─────────────────────────────┤    │
-│  │ GG-LCM-Operators    │────►│ LCM Content Developer       │    │
-│  │                     │     │  extract/deploy content packs│    │
-│  │                     │     │  read env health             │    │
-│  ├─────────────────────┤     ├─────────────────────────────┤    │
-│  │ GG-LCM-ReadOnly     │────►│ Viewer                      │    │
-│  │                     │     │  read-only; no write ops    │    │
-│  └─────────────────────┘     └─────────────────────────────┘    │
-│                                                                 │
-│  API service account: svc-lcm-api@local → min required role     │
-│  Never assign roles to individual user accounts                 │
+│  AD (via VIDM sync)          LCM Roles                                                                │
+│  ┌─────────────────────┐     ┌─────────────────────────────┐                                          │
+│  │ GG-LCM-Admins       │────►│ LCM Admin                   │                                          │
+│  │                     │     │  deploy/upgrade/Locker/users │                                         │
+│  ├─────────────────────┤     ├─────────────────────────────┤                                          │
+│  │ GG-LCM-Operators    │────►│ LCM Content Developer       │                                          │
+│  │                     │     │  extract/deploy content packs│                                         │
+│  │                     │     │  read env health             │                                         │
+│  ├─────────────────────┤     ├─────────────────────────────┤                                          │
+│  │ GG-LCM-ReadOnly     │────►│ Viewer                      │                                          │
+│  │                     │     │  read-only; no write ops    │                                          │
+│  └─────────────────────┘     └─────────────────────────────┘                                          │
+│                                                                                                       │
+│  API service account: svc-lcm-api@local → min required role                                           │
+│  Never assign roles to individual user accounts                                                       │
 └─────────────────────────────────────────────────────────────────┘
 ```
 ┌──────────────────────────────────── Aria Suite LCM Access Control ────────────────────────────────────┐

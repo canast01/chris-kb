@@ -8,14 +8,14 @@ Health Checks reference covering VRA and Site Pairing Status, Check All Replicat
   Health Check Chain
 ```text
 ┌──────────────────┐    ┌──────────────────┐    ┌──────────────────┐
-│  VRA Status      │    │  VR Agents       │    │  Replication     │
-│  (both sites)    │───►│  on ESXi hosts   │───►│  Status per VM   │
-│  ┌────────────┐  │    │  ┌────────────┐  │    │  ┌────────────┐  │
-│  │ hms/vrms   │  │    │  │ hbrsvc     │  │    │  │ Green: OK  │  │
-│  │ running?   │  │    │  │ running on │  │    │  │ Amber: near│  │
-│  │ Site pair  │  │    │  │ source host│  │    │  │  RPO limit │  │
-│  │ Connected? │  │    │  └────────────┘  │    │  │ Red: RPO   │  │
-│  └────────────┘  │    └──────────────────┘    │  │  VIOLATION │  │
+│  VRA Status      │    │  VR Agents       │    │  Replication                                          │
+│  (both sites)    │───►│  on ESXi hosts   │───►│  Status per VM                                        │
+│  ┌────────────┐  │    │  ┌────────────┐  │    │  ┌────────────┐                                       │
+│  │ hms/vrms   │  │    │  │ hbrsvc     │  │    │  │ Green: OK  │                                       │
+│  │ running?   │  │    │  │ running on │  │    │  │ Amber: near│                                       │
+│  │ Site pair  │  │    │  │ source host│  │    │  │  RPO limit │                                       │
+│  │ Connected? │  │    │  └────────────┘  │    │  │ Red: RPO   │                                       │
+│  └────────────┘  │    └──────────────────┘    │  │  VIOLATION │                                       │
 └──────────────────┘                            │  └────────────┘  │
 ```
                                                 └──────────────────┘

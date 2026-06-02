@@ -8,25 +8,25 @@ NTFS Permissions reference covering Overview, NTFS Permission Types, icacls Refe
         NTFS ACL STRUCTURE
 ```text
 ┌──────────────────────────────────────────────────────────────┐
-│  C:\Shares\Finance  (folder object)                          │
-│  ┌──────────────────────────────────────────────────────┐    │
-│  │  Security Descriptor                                 │    │
-│  │  ┌────────────────┐  Owner: DOMAIN\admin             │    │
-│  │  │ DACL           │                                  │    │
-│  │  │ (access control│  ACEs (Access Control Entries):  │    │
-│  │  │  list)         │  ├─ Allow: DOMAIN\Finance_Users  │    │
-│  │  │                │  │         Modify (OI)(CI)       │    │
-│  │  │                │  ├─ Allow: DOMAIN\Domain Admins  │    │
-│  │  │                │  │         Full Control (OI)(CI) │    │
-│  │  │                │  └─ Deny:  DOMAIN\Interns        │    │
-│  │  │                │            Write (OI)(CI)        │    │
-│  │  └────────────────┘                                  │    │
-│  │  ┌────────────────┐                                  │    │
-│  │  │ SACL           │  Audit: Everyone FullControl     │    │
-│  │  │ (audit list)   │  → Event ID 4663 in Security log │    │
-│  │  └────────────────┘                                  │    │
-│  └──────────────────────────────────────────────────────┘    │
-│  (I) = inherited from parent   explicit = set directly here  │
+│  C:\Shares\Finance  (folder object)                                                                   │
+│  ┌──────────────────────────────────────────────────────┐                                             │
+│  │  Security Descriptor                                 │                                             │
+│  │  ┌────────────────┐  Owner: DOMAIN\admin             │                                             │
+│  │  │ DACL           │                                  │                                             │
+│  │  │ (access control│  ACEs (Access Control Entries):  │                                             │
+│  │  │  list)         │  ├─ Allow: DOMAIN\Finance_Users  │                                             │
+│  │  │                │  │         Modify (OI)(CI)       │                                             │
+│  │  │                │  ├─ Allow: DOMAIN\Domain Admins  │                                             │
+│  │  │                │  │         Full Control (OI)(CI) │                                             │
+│  │  │                │  └─ Deny:  DOMAIN\Interns        │                                             │
+│  │  │                │            Write (OI)(CI)        │                                             │
+│  │  └────────────────┘                                  │                                             │
+│  │  ┌────────────────┐                                  │                                             │
+│  │  │ SACL           │  Audit: Everyone FullControl     │                                             │
+│  │  │ (audit list)   │  → Event ID 4663 in Security log │                                             │
+│  │  └────────────────┘                                  │                                             │
+│  └──────────────────────────────────────────────────────┘                                             │
+│  (I) = inherited from parent   explicit = set directly here                                           │
 └──────────────────────────────────────────────────────────────┘
 ```
 

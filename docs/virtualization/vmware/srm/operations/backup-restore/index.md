@@ -8,23 +8,23 @@ Backup and Restore reference covering Backup Schedule Recommendation, SRM Config
   SRM Backup Sources
 ```text
 ┌──────────────────────────────────────────────────────────────┐
-│  vCenter VCSA Backup (covers most SRM config)                │
-│  ┌──────────────────────────────────────────────────────┐    │
-│  │  Recovery Plans + Protection Groups + IP rules       │    │
-│  │  → stored in vCenter Postgres DB (seat + common)     │    │
-│  └──────────────────────────────────────────────────────┘    │
-│                                                              │
-│  SRM Appliance Snapshot (covers SRA credentials + certs)     │
-│  ┌──────────────────────────────────────────────────────┐    │
-│  │  Site pairing cert trust + SRA array credentials     │    │
-│  │  → govc snapshot.create / VM snapshot                │    │
-│  └──────────────────────────────────────────────────────┘    │
-│                                                              │
-│  VR Appliance Snapshot + VAMI config backup                  │
-│  ┌──────────────────────────────────────────────────────┐    │
-│  │  VRA registration + certificates                     │    │
-│  │  → VRA VAMI → Administration → Backup               │     │
-│  └──────────────────────────────────────────────────────┘    │
+│  vCenter VCSA Backup (covers most SRM config)                                                         │
+│  ┌──────────────────────────────────────────────────────┐                                             │
+│  │  Recovery Plans + Protection Groups + IP rules       │                                             │
+│  │  → stored in vCenter Postgres DB (seat + common)     │                                             │
+│  └──────────────────────────────────────────────────────┘                                             │
+│                                                                                                       │
+│  SRM Appliance Snapshot (covers SRA credentials + certs)                                              │
+│  ┌──────────────────────────────────────────────────────┐                                             │
+│  │  Site pairing cert trust + SRA array credentials     │                                             │
+│  │  → govc snapshot.create / VM snapshot                │                                             │
+│  └──────────────────────────────────────────────────────┘                                             │
+│                                                                                                       │
+│  VR Appliance Snapshot + VAMI config backup                                                           │
+│  ┌──────────────────────────────────────────────────────┐                                             │
+│  │  VRA registration + certificates                     │                                             │
+│  │  → VRA VAMI → Administration → Backup               │                                              │
+│  └──────────────────────────────────────────────────────┘                                             │
 └──────────────────────────────────────────────────────────────┘
 ```
 ┌──────────────────────────────────── VMware SRM — Backup & Restore ────────────────────────────────────┐

@@ -8,29 +8,29 @@ ESXi CLI Reference reference covering Network, Storage — Devices & Paths, Data
 ESXi CLI Tool Map
 ```text
 ┌─────────────────────────────────────────────────────────┐
-│  esxcli — structured CLI for host management            │
-│  ├── system    hostname, ntp, syslog, accounts           │
-│  ├── network   nic, vswitch, ip, firewall, route         │
-│  ├── storage   core (devices, paths), nmp, vmfs, san     │
-│  ├── software  vib list/install/update, acceptance       │
-│  ├── hardware  platform, cpu, memory, sensors, ipmi      │
-│  └── vsan      cluster, health, storage, network         │
-│                                                          │
-│  vim-cmd — VM and host operations                        │
-│  ├── vmsvc/   power, snapshot, config, summary           │
-│  └── hostsvc/ storage, maintenance mode, datastore       │
-│                                                          │
-│  vmkfstools — VMDK operations                            │
-│  ├── -c  create  -i  clone  -X  extend  -k  check        │
-│  └── -p  partition info  -e  check and fix               │
-│                                                          │
-│  esxtop — real-time performance (interactive)            │
-│  ├── c  CPU view  (%RDY, %CSTP, %USED)                   │
-│  ├── m  Memory view (MCTLSZ balloon, SWCUR swap)         │
-│  ├── d  Disk I/O view (DAVG latency)                     │
-│  └── n  Network view (drops, throughput)                 │
-│                                                          │
-│  Logs  /var/log/vmkernel.log  hostd  vpxa  fdm  auth     │
+│  esxcli — structured CLI for host management                                                          │
+│  ├── system    hostname, ntp, syslog, accounts                                                        │
+│  ├── network   nic, vswitch, ip, firewall, route                                                      │
+│  ├── storage   core (devices, paths), nmp, vmfs, san                                                  │
+│  ├── software  vib list/install/update, acceptance                                                    │
+│  ├── hardware  platform, cpu, memory, sensors, ipmi                                                   │
+│  └── vsan      cluster, health, storage, network                                                      │
+│                                                                                                       │
+│  vim-cmd — VM and host operations                                                                     │
+│  ├── vmsvc/   power, snapshot, config, summary                                                        │
+│  └── hostsvc/ storage, maintenance mode, datastore                                                    │
+│                                                                                                       │
+│  vmkfstools — VMDK operations                                                                         │
+│  ├── -c  create  -i  clone  -X  extend  -k  check                                                     │
+│  └── -p  partition info  -e  check and fix                                                            │
+│                                                                                                       │
+│  esxtop — real-time performance (interactive)                                                         │
+│  ├── c  CPU view  (%RDY, %CSTP, %USED)                                                                │
+│  ├── m  Memory view (MCTLSZ balloon, SWCUR swap)                                                      │
+│  ├── d  Disk I/O view (DAVG latency)                                                                  │
+│  └── n  Network view (drops, throughput)                                                              │
+│                                                                                                       │
+│  Logs  /var/log/vmkernel.log  hostd  vpxa  fdm  auth                                                  │
 └─────────────────────────────────────────────────────────┘
 ```
 ┌──────────────────────────────────────── ESXi — CLI Reference ─────────────────────────────────────────┐

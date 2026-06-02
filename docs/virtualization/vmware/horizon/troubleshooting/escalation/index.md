@@ -8,23 +8,23 @@ Escalation reference covering Engage VMware Support, Escalation Within VMware, U
   Escalation Path
 ```text
 ┌──────────────────────────────────────────────────────────────┐
-│  Internal Triage (L1/L2)                                     │
-│  ┌─────────────────────────────────────────────────────────┐ │
-│  │ Collect: support bundle + UAG logs + agent logs +        │ │
-│  │          affected VM name + session ID + Horizon version │ │
-│  └──────────────────────────┬──────────────────────────────┘ │
-│                             │                                │
-│  ┌──────────────────────────▼──────────────────────────────┐ │
-│  │ Sev Assessment                                           │ │
-│  │  Sev 1 — full VDI outage ──► Open SR + call VMware now  │ │
-│  │  Sev 2 — partial outage   ──► Open SR (24x7)            │ │
-│  │  Sev 3 — single user/pool ──► Open SR (business hours)  │ │
-│  └──────────────────────────┬──────────────────────────────┘ │
-│                             │                                │
-│  ┌──────────────────────────▼──────────────────────────────┐ │
-│  │ VMware Support → TAM / Critical Escalation (if Sev 1    │ │
-│  │  unresolved within SLA)  → Horizon Engineering          │ │
-│  └─────────────────────────────────────────────────────────┘ │
+│  Internal Triage (L1/L2)                                                                              │
+│  ┌─────────────────────────────────────────────────────────┐                                          │
+│  │ Collect: support bundle + UAG logs + agent logs +        │                                         │
+│  │          affected VM name + session ID + Horizon version │                                         │
+│  └──────────────────────────┬──────────────────────────────┘                                          │
+│                             │                                                                         │
+│  ┌──────────────────────────▼──────────────────────────────┐                                          │
+│  │ Sev Assessment                                           │                                         │
+│  │  Sev 1 — full VDI outage ──► Open SR + call VMware now  │                                          │
+│  │  Sev 2 — partial outage   ──► Open SR (24x7)            │                                          │
+│  │  Sev 3 — single user/pool ──► Open SR (business hours)  │                                          │
+│  └──────────────────────────┬──────────────────────────────┘                                          │
+│                             │                                                                         │
+│  ┌──────────────────────────▼──────────────────────────────┐                                          │
+│  │ VMware Support → TAM / Critical Escalation (if Sev 1    │                                          │
+│  │  unresolved within SLA)  → Horizon Engineering          │                                          │
+│  └─────────────────────────────────────────────────────────┘                                          │
 └──────────────────────────────────────────────────────────────┘
 ```
 ┌───────────────────────────────────── VMware Horizon — Escalation ─────────────────────────────────────┐

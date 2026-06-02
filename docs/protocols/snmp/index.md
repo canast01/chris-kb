@@ -11,23 +11,23 @@ Simple Network Management Protocol (SNMP) polls device metrics and receives asyn
         SNMP ARCHITECTURE
 ```text
 ┌─────────────────────────────────────────────────────────────┐
-│                                                             │
-│   ┌─────────────────┐          ┌────────────────────────┐  │
-│   │   NMS (Manager) │          │  Device (Agent)        │  │
-│   │  Prometheus /   │          │  Switch, Router,       │  │
-│   │  Zabbix /       │          │  Storage, Server       │  │
-│   │  LibreNMS       │          │                        │  │
-│   │                 │          │  ┌──────────────────┐  │  │
-│   │  POLLING ───────┼─UDP 161──┼─►│  SNMP Agent      │  │  │
-│   │  GET/GETBULK    │          │  │  ┌────────────┐  │  │  │
-│   │  OID values ◄───┼──────────┼──│  │   MIB      │  │  │  │
-│   │                 │          │  │  │ (OID tree) │  │  │  │
-│   │  TRAPS ◄────────┼─UDP 162──┼──│  └────────────┘  │  │  │
-│   │  (async events) │          │  └──────────────────┘  │  │
-│   └─────────────────┘          └────────────────────────┘  │
-│                                                             │
-│   v1/v2c: community string (plaintext)                      │
-│   v3:     USM user + SHA auth + AES encryption              │
+│                                                                                                       │
+│   ┌─────────────────┐          ┌────────────────────────┐                                             │
+│   │   NMS (Manager) │          │  Device (Agent)        │                                             │
+│   │  Prometheus /   │          │  Switch, Router,       │                                             │
+│   │  Zabbix /       │          │  Storage, Server       │                                             │
+│   │  LibreNMS       │          │                        │                                             │
+│   │                 │          │  ┌──────────────────┐  │                                             │
+│   │  POLLING ───────┼─UDP 161──┼─►│  SNMP Agent      │  │                                             │
+│   │  GET/GETBULK    │          │  │  ┌────────────┐  │  │                                             │
+│   │  OID values ◄───┼──────────┼──│  │   MIB      │  │  │                                             │
+│   │                 │          │  │  │ (OID tree) │  │  │                                             │
+│   │  TRAPS ◄────────┼─UDP 162──┼──│  └────────────┘  │  │                                             │
+│   │  (async events) │          │  └──────────────────┘  │                                             │
+│   └─────────────────┘          └────────────────────────┘                                             │
+│                                                                                                       │
+│   v1/v2c: community string (plaintext)                                                                │
+│   v3:     USM user + SHA auth + AES encryption                                                        │
 └─────────────────────────────────────────────────────────────┘
 ```
 

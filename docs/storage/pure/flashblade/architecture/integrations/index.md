@@ -8,11 +8,11 @@ Integrations reference covering VMware Integration, Backup Integration, Pure1 Mo
 FlashBlade Integration Map
 ```text
 ┌──────────────────────────────────────────────────────────┐
-│                       FlashBlade                         │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐                │
-│  │  NFS/SMB │  │    S3    │  │   Mgmt   │                │
-│  │  data    │  │  object  │  │  HTTPS   │                │
-│  └────┬─────┘  └────┬─────┘  └────┬─────┘                │
+│                       FlashBlade                                                                      │
+│  ┌──────────┐  ┌──────────┐  ┌──────────┐                                                             │
+│  │  NFS/SMB │  │    S3    │  │   Mgmt   │                                                             │
+│  │  data    │  │  object  │  │  HTTPS   │                                                             │
+│  └────┬─────┘  └────┬─────┘  └────┬─────┘                                                             │
 └───────┼─────────────┼─────────────┼──────────────────────┘
 ```
         │             │             │

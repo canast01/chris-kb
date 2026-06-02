@@ -8,8 +8,8 @@ Procedures reference covering Maintenance Windows, Capacity Reclamation Workflow
 Aria Operations — Alert Lifecycle
 ```text
 ┌─────────────────────────────────────────────────────┐
-│  Alert Fires                                        │
-│  (symptom threshold breached for N wait cycles)     │
+│  Alert Fires                                                                                          │
+│  (symptom threshold breached for N wait cycles)                                                       │
 └──────────────────────┬──────────────────────────────┘
 ```
 ┌───────────────────────────────────── Aria Operations Procedures ──────────────────────────────────────┐
@@ -60,10 +60,10 @@ Aria Operations — Alert Lifecycle
                        ▼
 ```text
 ┌─────────────────────────────────────────────────────┐
-│  Ops Team Triage                                    │
-│  Alerts → All Alerts → filter Critical/Immediate    │
-│  → open alert → Symptoms tab → affected object      │
-│  → review metric history                            │
+│  Ops Team Triage                                                                                      │
+│  Alerts → All Alerts → filter Critical/Immediate                                                      │
+│  → open alert → Symptoms tab → affected object                                                        │
+│  → review metric history                                                                              │
 └──────────────────────┬──────────────────────────────┘
 ```
                        │ root cause found?
@@ -72,10 +72,10 @@ Aria Operations — Alert Lifecycle
                 ▼             ▼
 ```text
 ┌───────────────────┐  ┌─────────────────────────────┐
-│ Acknowledge alert │  │ Escalate · add notes         │
-│ Resolve issue     │  │ Open ITSM ticket             │
+│ Acknowledge alert │  │ Escalate · add notes                                                           │
+│ Resolve issue     │  │ Open ITSM ticket                                                               │
 │ Cancel alert only │  └─────────────────────────────┘
-│ after full fix                                      │
+│ after full fix                                                                                        │
 └───────────────────┘
 ```
           │
@@ -83,9 +83,9 @@ Aria Operations — Alert Lifecycle
 ```text
 ```
 ┌─────────────────────────────────────────────────────┐
-│  Planned Maintenance? → Create Maintenance Schedule │
-│  Admin → Maintenance Schedules → Add Schedule       │
-│  select objects + time window → alerts suppressed   │
+│  Planned Maintenance? → Create Maintenance Schedule                                                   │
+│  Admin → Maintenance Schedules → Add Schedule                                                         │
+│  select objects + time window → alerts suppressed                                                     │
 └─────────────────────────────────────────────────────┘
 ```text
 ┌───────────────────────────────────── Aria Operations Procedures ──────────────────────────────────────┐

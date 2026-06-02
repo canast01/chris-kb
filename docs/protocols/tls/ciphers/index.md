@@ -62,7 +62,7 @@ A cipher suite specifies the algorithms used for key exchange, authentication, e
 
 ```text
 TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-│   │         │   │        │   │
+│   │         │   │        │                                                                            │
 │   │         │   │        │   MAC (integrity)
 │   │         │   │        mode
 │   │         │   key size

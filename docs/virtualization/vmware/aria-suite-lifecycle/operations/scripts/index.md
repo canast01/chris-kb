@@ -8,22 +8,22 @@ Scripts reference covering Pre-Upgrade Disk Check, Environment Health Summary, B
   LCM Automation Scripts
 ```text
 ┌─────────────────────────────────────────────────────────────────┐
-│  Script                    Purpose                              │
-│  ┌──────────────────────────────────────────────────────────┐   │
-│  │ cert-expiry-check.sh   Query Locker → list certs         │   │
-│  │                         expiring within N days           │   │
-│  │ pre-upgrade-disk.sh    Check all mounts < threshold      │   │
-│  │                         pass/fail gate before upgrade    │   │
-│  │ lcm-health-summary.sh  Env health + running requests     │   │
-│  │                         + disk usage summary             │   │
-│  │ locker-password-export  Alias + username list (no values)│   │
-│  │ ntp-check.sh           SSH to all nodes; check time sync │   │
-│  │ trigger-upgrade.sh     API-driven upgrade with polling   │   │
-│  │                         until COMPLETED/FAILED           │   │
-│  └──────────────────────────────────────────────────────────┘   │
-│                                                                 │
-│  All scripts: POST /lcm/authz/api/v2/login → bearer token       │
-│  API base: https://<lcm>/lcm/lcmservice/api/v2                  │
+│  Script                    Purpose                                                                    │
+│  ┌──────────────────────────────────────────────────────────┐                                         │
+│  │ cert-expiry-check.sh   Query Locker → list certs         │                                         │
+│  │                         expiring within N days           │                                         │
+│  │ pre-upgrade-disk.sh    Check all mounts < threshold      │                                         │
+│  │                         pass/fail gate before upgrade    │                                         │
+│  │ lcm-health-summary.sh  Env health + running requests     │                                         │
+│  │                         + disk usage summary             │                                         │
+│  │ locker-password-export  Alias + username list (no values)│                                         │
+│  │ ntp-check.sh           SSH to all nodes; check time sync │                                         │
+│  │ trigger-upgrade.sh     API-driven upgrade with polling   │                                         │
+│  │                         until COMPLETED/FAILED           │                                         │
+│  └──────────────────────────────────────────────────────────┘                                         │
+│                                                                                                       │
+│  All scripts: POST /lcm/authz/api/v2/login → bearer token                                             │
+│  API base: https://<lcm>/lcm/lcmservice/api/v2                                                        │
 └─────────────────────────────────────────────────────────────────┘
 ```
 ┌─────────────────────────────────────── Aria Suite LCM Scripts ────────────────────────────────────────┐

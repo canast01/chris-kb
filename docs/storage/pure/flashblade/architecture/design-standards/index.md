@@ -8,17 +8,17 @@ Design Standards reference covering Naming Conventions, Sizing Guidelines, Build
 FlashBlade Design Checklist
 ```text
 ┌───────────────────────────────────────────────────────────┐
-│  Naming          │  filesystem / bucket / account pattern │
+│  Naming          │  filesystem / bucket / account pattern                                             │
 ├───────────────────────────────────────────────────────────┤
-│  Protocol        │  NFS export policy, SMB share, S3 ACL  │
+│  Protocol        │  NFS export policy, SMB share, S3 ACL                                              │
 ├───────────────────────────────────────────────────────────┤
-│  Capacity        │  quota per filesystem / bucket         │
+│  Capacity        │  quota per filesystem / bucket                                                     │
 ├───────────────────────────────────────────────────────────┤
-│  Data Protection │  snapshot policy per filesystem/bucket │
+│  Data Protection │  snapshot policy per filesystem/bucket                                             │
 ├───────────────────────────────────────────────────────────┤
-│  Replication     │  ActiveDR replication group + RPO      │
+│  Replication     │  ActiveDR replication group + RPO                                                  │
 ├───────────────────────────────────────────────────────────┤
-│  Security        │  NFS export IPs, SMB AD join, S3 keys  │
+│  Security        │  NFS export IPs, SMB AD join, S3 keys                                              │
 └───────────────────────────────────────────────────────────┘
 ```
 

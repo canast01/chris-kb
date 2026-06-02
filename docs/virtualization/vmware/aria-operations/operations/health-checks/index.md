@@ -8,11 +8,11 @@ Health Checks reference covering Cluster Node Health via API, Adapter Health, Di
 Aria Operations — Health Check Coverage Map
 ```text
 ┌─────────────────────────────────────────────────────┐
-│  Cluster Node Health                                │
-│  Admin → Cluster Management                         │
-│  vracli cluster health                              │
-│  Expected: all nodes ONLINE                         │
-│  Watch: OFFLINE · DEGRADED · SYNCING                │
+│  Cluster Node Health                                                                                  │
+│  Admin → Cluster Management                                                                           │
+│  vracli cluster health                                                                                │
+│  Expected: all nodes ONLINE                                                                           │
+│  Watch: OFFLINE · DEGRADED · SYNCING                                                                  │
 └──────────────────────┬──────────────────────────────┘
 ```
 ┌──────────────────────────────────── Aria Operations Health Checks ────────────────────────────────────┐
@@ -64,9 +64,9 @@ Aria Operations — Health Check Coverage Map
 ```text
 ```
 ┌─────────────────────────────────────────────────────┐
-│  NTP Health (all nodes must be < 1 second drift)    │
-│  chronyc tracking (per node)                        │
-│  chronyc makestep (force sync if drifted)           │
+│  NTP Health (all nodes must be < 1 second drift)                                                      │
+│  chronyc tracking (per node)                                                                          │
+│  chronyc makestep (force sync if drifted)                                                             │
 └─────────────────────────────────────────────────────┘
 ```text
 ┌──────────────────────────────────── Aria Operations Health Checks ────────────────────────────────────┐

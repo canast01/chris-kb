@@ -8,22 +8,22 @@ A TLS certificate is a signed X.509 document that binds a public key to an ident
         CERTIFICATE FIELD STRUCTURE (X.509)
 ```text
 ┌──────────────────────────────────────────────────────────────┐
-│  Certificate                                                 │
-│  ┌──────────────────────────────────────────────────────┐    │
-│  │  Subject:  CN=web.example.com, O=Example Corp        │    │
-│  │  SANs:     DNS:web.example.com, DNS:api.example.com  │    │
-│  │            IP:10.0.0.10                              │    │
-│  │  Issuer:   CN=Example Intermediate CA                │    │
-│  │  Valid:    2026-01-01  to  2027-01-01                │    │
-│  │  Key:      RSA 4096  (or ECDSA P-256)                │    │
-│  │  Key Usage: Digital Signature, Key Encipherment      │    │
-│  │  EKU:      TLS Web Server Authentication             │    │
-│  ├──────────────────────────────────────────────────────┤    │
-│  │  Signature: SHA-256 with RSA (by Intermediate CA)   │    │
-│  └──────────────────────────────────────────────────────┘    │
-│                                                              │
-│  Client checks: SAN matches hostname + not expired +         │
-│                 chain traces to trusted root CA              │
+│  Certificate                                                                                          │
+│  ┌──────────────────────────────────────────────────────┐                                             │
+│  │  Subject:  CN=web.example.com, O=Example Corp        │                                             │
+│  │  SANs:     DNS:web.example.com, DNS:api.example.com  │                                             │
+│  │            IP:10.0.0.10                              │                                             │
+│  │  Issuer:   CN=Example Intermediate CA                │                                             │
+│  │  Valid:    2026-01-01  to  2027-01-01                │                                             │
+│  │  Key:      RSA 4096  (or ECDSA P-256)                │                                             │
+│  │  Key Usage: Digital Signature, Key Encipherment      │                                             │
+│  │  EKU:      TLS Web Server Authentication             │                                             │
+│  ├──────────────────────────────────────────────────────┤                                             │
+│  │  Signature: SHA-256 with RSA (by Intermediate CA)   │                                              │
+│  └──────────────────────────────────────────────────────┘                                             │
+│                                                                                                       │
+│  Client checks: SAN matches hostname + not expired +                                                  │
+│                 chain traces to trusted root CA                                                       │
 └──────────────────────────────────────────────────────────────┘
 ```
 The certificate allows clients to verify they are talking to the correct server and to establish encrypted sessions.

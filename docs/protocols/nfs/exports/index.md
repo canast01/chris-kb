@@ -8,21 +8,21 @@ NFS Exports reference covering Overview, /etc/exports Syntax, Key Export Options
         SERVER-SIDE EXPORT CONFIGURATION
 ```text
 ┌──────────────────────────────────────────────────────────────┐
-│  /etc/exports                                                │
-│  ┌────────────────────────────────────────────────────────┐  │
-│  │ /data/shared  192.168.10.0/24(rw,sync,no_subtree_check)│  │
-│  │ /data/readonly  *(ro,sync,root_squash)                 │  │
-│  └──────────────────────┬─────────────────────────────────┘  │
-│                         │ exportfs -ra (reload without restart)│
-│                         ▼                                    │
-│  ┌────────────────────────────────────────────────────────┐  │
-│  │  Active exports (exportfs -v)                          │  │
-│  │  /data/shared  192.168.10.0/24(rw,sync,...)           │  │
-│  │  /data/readonly  <world>(ro,sync,root_squash,...)      │  │
-│  └──────────────────────┬─────────────────────────────────┘  │
-│                         │ TCP 2049                            │
-│                         ▼                                    │
-│                    NFS clients mount                         │
+│  /etc/exports                                                                                         │
+│  ┌────────────────────────────────────────────────────────┐                                           │
+│  │ /data/shared  192.168.10.0/24(rw,sync,no_subtree_check)│                                           │
+│  │ /data/readonly  *(ro,sync,root_squash)                 │                                           │
+│  └──────────────────────┬─────────────────────────────────┘                                           │
+│                         │ exportfs -ra (reload without restart)                                       │
+│                         ▼                                                                             │
+│  ┌────────────────────────────────────────────────────────┐                                           │
+│  │  Active exports (exportfs -v)                          │                                           │
+│  │  /data/shared  192.168.10.0/24(rw,sync,...)           │                                            │
+│  │  /data/readonly  <world>(ro,sync,root_squash,...)      │                                           │
+│  └──────────────────────┬─────────────────────────────────┘                                           │
+│                         │ TCP 2049                                                                    │
+│                         ▼                                                                             │
+│                    NFS clients mount                                                                  │
 └──────────────────────────────────────────────────────────────┘
 ```
 

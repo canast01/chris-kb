@@ -8,10 +8,10 @@ Access Control reference covering Credential Rotation, Quarterly Access Review C
 VCF RBAC Model — Role Assignment Flow
 ```text
 ┌─────────────────────────────────────────────────────┐
-│  Active Directory                                   │
-│  ┌──────────────────────────────────────────────┐   │
-│  │  GG-VCF-Admins · GG-VCF-Operators · ...     │    │
-│  └──────────────────────────────────────────────┘   │
+│  Active Directory                                                                                     │
+│  ┌──────────────────────────────────────────────┐                                                     │
+│  │  GG-VCF-Admins · GG-VCF-Operators · ...     │                                                      │
+│  └──────────────────────────────────────────────┘                                                     │
 └───────────────────────┬─────────────────────────────┘
 ```
 ┌────────────────────────────── VMware Cloud Foundation — Access Control ───────────────────────────────┐
@@ -65,10 +65,10 @@ Credential Rotation (all via SDDC Manager — never manually):
 ```text
 ```
 ┌─────────────────────────────────────────────────────┐
-│  SDDC Manager → Security → Credentials → Rotate     │
-│  ESXi root · vCenter SSO admin · NSX admin          │
-│  SDDC Manager admin · vSAN iSCSI accounts           │
-│  Schedule: every 90 days (or per policy)            │
+│  SDDC Manager → Security → Credentials → Rotate                                                       │
+│  ESXi root · vCenter SSO admin · NSX admin                                                            │
+│  SDDC Manager admin · vSAN iSCSI accounts                                                             │
+│  Schedule: every 90 days (or per policy)                                                              │
 └─────────────────────────────────────────────────────┘
 ```text
 ┌────────────────────────────── VMware Cloud Foundation — Access Control ───────────────────────────────┐

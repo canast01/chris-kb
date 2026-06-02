@@ -8,23 +8,23 @@ DNS Records reference covering Overview, Common Record Types, Managing Records w
         COMMON RECORD TYPES
 ```text
 ┌──────────────────────────────────────────────────────────────┐
-│  Forward zone: corp.local                                    │
-│  ┌────┬─────────────────────────────────────────────────┐   │
-│  │ A  │ web01  →  192.168.10.100  (IPv4 address)        │   │
-│  │AAAA│ web01  →  2001:db8::1     (IPv6 address)        │   │
-│  │CNAME│www   →  web01.example.local (alias)               │   │
-│  │ MX │ @     →  10 mail.example.local (mail exchanger)    │   │
-│  │ NS │ @     →  dc01.example.local  (nameserver)          │   │
-│  │TXT │ @     →  "v=spf1 ..."    (SPF/DKIM/verify)      │   │
-│  │SRV │_ldap._tcp → dc01:389     (service locator)      │   │
-│  └────┴─────────────────────────────────────────────────┘   │
-│                                                              │
-│  Reverse zone: 10.168.192.in-addr.arpa                       │
-│  ┌─────┬────────────────────────────────────────────────┐   │
-│  │ PTR │ 100  →  web01.example.local  (reverse lookup)     │   │
-│  └─────┴────────────────────────────────────────────────┘   │
-│                                                              │
-│  SOA record: serial + refresh + retry + expire + min-TTL    │
+│  Forward zone: corp.local                                                                             │
+│  ┌────┬─────────────────────────────────────────────────┐                                             │
+│  │ A  │ web01  →  192.168.10.100  (IPv4 address)        │                                             │
+│  │AAAA│ web01  →  2001:db8::1     (IPv6 address)        │                                             │
+│  │CNAME│www   →  web01.example.local (alias)               │                                          │
+│  │ MX │ @     →  10 mail.example.local (mail exchanger)    │                                          │
+│  │ NS │ @     →  dc01.example.local  (nameserver)          │                                          │
+│  │TXT │ @     →  "v=spf1 ..."    (SPF/DKIM/verify)      │                                             │
+│  │SRV │_ldap._tcp → dc01:389     (service locator)      │                                             │
+│  └────┴─────────────────────────────────────────────────┘                                             │
+│                                                                                                       │
+│  Reverse zone: 10.168.192.in-addr.arpa                                                                │
+│  ┌─────┬────────────────────────────────────────────────┐                                             │
+│  │ PTR │ 100  →  web01.example.local  (reverse lookup)     │                                          │
+│  └─────┴────────────────────────────────────────────────┘                                             │
+│                                                                                                       │
+│  SOA record: serial + refresh + retry + expire + min-TTL                                              │
 └──────────────────────────────────────────────────────────────┘
 ```
 

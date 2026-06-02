@@ -8,25 +8,25 @@ VxRail Firmware reference covering Overview, Where It Fits, Daily Checks, Health
 VxRail Firmware Stack (bottom to top)
 ```text
 ┌──────────────────────────────────────────────────────────────┐
-│  Hardware Layer                                              │
-│  ┌────────────┐  ┌────────────┐  ┌────────────────────────┐  │
-│  │  BIOS/UEFI │  │  iDRAC FW  │  │  Storage Controller FW │  │
-│  │  (CPU/mem) │  │  (BMC/OOB) │  │  (RAID/HBA)            │  │
-│  └─────┬──────┘  └─────┬──────┘  └──────────┬─────────────┘  │
+│  Hardware Layer                                                                                       │
+│  ┌────────────┐  ┌────────────┐  ┌────────────────────────┐                                           │
+│  │  BIOS/UEFI │  │  iDRAC FW  │  │  Storage Controller FW │                                           │
+│  │  (CPU/mem) │  │  (BMC/OOB) │  │  (RAID/HBA)            │                                           │
+│  └─────┬──────┘  └─────┬──────┘  └──────────┬─────────────┘                                           │
 └────────┼───────────────┼─────────────────────┼───────────────┘
          │               │                     │
 ```
                                    │  all bundled in
 ```text
 ┌──────────────────────────────────▼───────────────────────────┐
-│  VxRail Composite Bundle                                     │
-│  (certified combination of all firmware + vSphere versions)  │
+│  VxRail Composite Bundle                                                                              │
+│  (certified combination of all firmware + vSphere versions)                                           │
 └──────────────────────────────────┬───────────────────────────┘
 ```
                                    │  applied via
 ┌──────────────────────────────────▼───────────────────────────┐
-│  VxRail Manager LCM                                          │
-│  validates compatibility → applies rolling across nodes      │
+│  VxRail Manager LCM                                                                                   │
+│  validates compatibility → applies rolling across nodes                                               │
 └──────────────────────────────────────────────────────────────┘
 
 ## Overview

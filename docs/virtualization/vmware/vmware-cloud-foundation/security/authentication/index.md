@@ -8,7 +8,7 @@ Authentication reference covering Common Issues, Related Reference.
 VCF Authentication Flow
 ```text
 ┌─────────────────────────────────────────────────────┐
-│  Operator / Admin                                   │
+│  Operator / Admin                                                                                     │
 └──────────────────────┬──────────────────────────────┘
 ```
 ┌────────────────────────────── VMware Cloud Foundation — Authentication ───────────────────────────────┐
@@ -63,12 +63,12 @@ VCF Authentication Flow
 ```text
 ```
 ┌──────────────┐ ┌──────────────┐ ┌──────────────────┐
-│ vCenter SSO  │ │ NSX Manager  │ │ SDDC Manager      │
-│              │ │              │ │ Password Manager  │
-│ Same AD      │ │ Same AD      │ │                   │
-│ identity     │ │ identity     │ │ Rotates all       │
-│ source       │ │ source       │ │ component creds   │
-│              │ │              │ │ on schedule       │
+│ vCenter SSO  │ │ NSX Manager  │ │ SDDC Manager                                                        │
+│              │ │              │ │ Password Manager                                                    │
+│ Same AD      │ │ Same AD      │ │                                                                     │
+│ identity     │ │ identity     │ │ Rotates all                                                         │
+│ source       │ │ source       │ │ component creds                                                     │
+│              │ │              │ │ on schedule                                                         │
 └──────────────┘ └──────────────┘ └──────────────────┘
 ```text
 ┌────────────────────────────── VMware Cloud Foundation — Authentication ───────────────────────────────┐

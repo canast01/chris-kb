@@ -8,20 +8,20 @@ Access Control reference covering Least-Privilege Role Assignments, SRA Credenti
   SRM RBAC: Recovery Plan Roles → vCenter Permissions
 ```text
 ┌──────────────────────────────────────────────────────────────┐
-│  AD Groups                SRM Roles (via vCenter Global Perms)│
-│  ┌────────────────┐       ┌───────────────────────────────┐   │
-│  │ CORP\SRM-Admins│──────►│ Site Recovery Administrator   │   │
-│  │                │       │ (configure + execute)         │   │
-│  ├────────────────┤       ├───────────────────────────────┤   │
-│  │ CORP\SRM-DR-   │──────►│ Site Recovery Recovery Admin  │   │
-│  │ RunTeam        │       │ (execute only — no config)    │   │
-│  ├────────────────┤       ├───────────────────────────────┤   │
-│  │ CORP\Infra-    │──────►│ Site Recovery User            │   │
-│  │ ReadOnly       │       │ (view only)                   │   │
-│  └────────────────┘       └───────────────────────────────┘   │
-│                                                               │
-│  SRA credentials: stored encrypted in SRM                    │
-│  Rotate: array API token ──► update in SRM ──► delete old    │
+│  AD Groups                SRM Roles (via vCenter Global Perms)                                        │
+│  ┌────────────────┐       ┌───────────────────────────────┐                                           │
+│  │ CORP\SRM-Admins│──────►│ Site Recovery Administrator   │                                           │
+│  │                │       │ (configure + execute)         │                                           │
+│  ├────────────────┤       ├───────────────────────────────┤                                           │
+│  │ CORP\SRM-DR-   │──────►│ Site Recovery Recovery Admin  │                                           │
+│  │ RunTeam        │       │ (execute only — no config)    │                                           │
+│  ├────────────────┤       ├───────────────────────────────┤                                           │
+│  │ CORP\Infra-    │──────►│ Site Recovery User            │                                           │
+│  │ ReadOnly       │       │ (view only)                   │                                           │
+│  └────────────────┘       └───────────────────────────────┘                                           │
+│                                                                                                       │
+│  SRA credentials: stored encrypted in SRM                                                             │
+│  Rotate: array API token ──► update in SRM ──► delete old                                             │
 └──────────────────────────────────────────────────────────────┘
 ```
 ┌───────────────────────────────────── VMware SRM — Access Control ─────────────────────────────────────┐

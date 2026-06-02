@@ -8,23 +8,23 @@ Standards reference covering Pre-Deployment Checklist, Deployment Size Reference
   LCM Design Standards at a Glance
 ```text
 ┌─────────────────────────────────────────────────────────────────┐
-│  Upgrade Order (strict)          Sizing (per environment)       │
-│  ┌─────────────────────────┐     ┌──────────────────────────┐   │
-│  │ 1. LCM itself           │     │ XS:  4vCPU / 16GB  lab   │   │
-│  │ 2. Workspace ONE Access │     │ Sm:  8vCPU / 24GB  dev   │   │
-│  │ 3. Aria Operations      │     │ Md: 16vCPU / 32GB  prod  │   │
-│  │ 4. Aria Automation      │     │ Lg: 24vCPU / 48GB  large │   │
-│  │ 5. Aria Log Insight     │     └──────────────────────────┘   │
-│  │ 6. Aria Ops for Networks│                                    │
-│  └─────────────────────────┘     Certificates                   │
-│                                  ┌──────────────────────────┐   │
-│  Pre-Deploy Checklist            │ RSA 4096-bit, SHA-256    │   │
-│  ┌─────────────────────────┐     │ SAN: FQDN + VIP          │   │
-│  │ DNS A + PTR records     │     │ Max 2 yr validity        │   │
-│  │ NTP delta < 5 seconds   │     │ Full chain in Locker     │   │
-│  │ NFS 200GB+ per version  │     └──────────────────────────┘   │
-│  │ Static IPs in IPAM      │                                    │
-│  └─────────────────────────┘                                    │
+│  Upgrade Order (strict)          Sizing (per environment)                                             │
+│  ┌─────────────────────────┐     ┌──────────────────────────┐                                         │
+│  │ 1. LCM itself           │     │ XS:  4vCPU / 16GB  lab   │                                         │
+│  │ 2. Workspace ONE Access │     │ Sm:  8vCPU / 24GB  dev   │                                         │
+│  │ 3. Aria Operations      │     │ Md: 16vCPU / 32GB  prod  │                                         │
+│  │ 4. Aria Automation      │     │ Lg: 24vCPU / 48GB  large │                                         │
+│  │ 5. Aria Log Insight     │     └──────────────────────────┘                                         │
+│  │ 6. Aria Ops for Networks│                                                                          │
+│  └─────────────────────────┘     Certificates                                                         │
+│                                  ┌──────────────────────────┐                                         │
+│  Pre-Deploy Checklist            │ RSA 4096-bit, SHA-256    │                                         │
+│  ┌─────────────────────────┐     │ SAN: FQDN + VIP          │                                         │
+│  │ DNS A + PTR records     │     │ Max 2 yr validity        │                                         │
+│  │ NTP delta < 5 seconds   │     │ Full chain in Locker     │                                         │
+│  │ NFS 200GB+ per version  │     └──────────────────────────┘                                         │
+│  │ Static IPs in IPAM      │                                                                          │
+│  └─────────────────────────┘                                                                          │
 └─────────────────────────────────────────────────────────────────┘
 ```
 ┌─────────────────────────────────── Aria Suite LCM Design Standards ───────────────────────────────────┐

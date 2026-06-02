@@ -8,44 +8,44 @@ FlashBlade Common Issues reference covering NFS/SMB mount problems, S3 403 error
 ┌───────────────────────────────────── FlashBlade — Common Issues ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      FlashBlade troubleshooting: NFS/SMB · S3 · Capacity · Blades · ActiveDR replication     │   │
-│   │    Triage by symptom category; use purefb CLI for diagnostics; open case for blade faults    │   │
+│   │      FlashBlade troubleshooting: NFS/SMB · S3 · Capacity · Blades · ActiveDR replication     │    │
+│   │    Triage by symptom category; use purefb CLI for diagnostics; open case for blade faults    │    │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │      NFS / SMB Issues       │  │     S3 / Object Store       │  │    Capacity & Hardware       │   │
-│   │      ─────────────────      │  │     ─────────────────       │  │    ─────────────────         │   │
-│   │  Stale handle → remount     │  │  403 Forbidden: regen key   │  │  FS near limit → expand      │   │
-│   │  Mount hang → check VIP     │  │  purefb objectstoreuser     │  │  update --provisioned        │   │
-│   │  SMB fail → rejoin AD       │  │  Check bucket access policy │  │  Blade failed → open case    │   │
-│   │  High latency → use pNFS    │  │  Review access key status   │  │  Rebalancing → wait 24h      │   │
+│   │      NFS / SMB Issues       │  │     S3 / Object Store       │  │    Capacity & Hardware       │  │
+│   │      ─────────────────      │  │     ─────────────────       │  │    ─────────────────         │  │
+│   │  Stale handle → remount     │  │  403 Forbidden: regen key   │  │  FS near limit → expand      │  │
+│   │  Mount hang → check VIP     │  │  purefb objectstoreuser     │  │  update --provisioned        │  │
+│   │  SMB fail → rejoin AD       │  │  Check bucket access policy │  │  Blade failed → open case    │  │
+│   │  High latency → use pNFS    │  │  Review access key status   │  │  Rebalancing → wait 24h      │  │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
 │                          ▼                                                 ▼                          │
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Category   │     Symptom          │       Action          │     CLI Command          │       │   │
-│   │   NFS/SMB    │  Stale file handle   │  Unmount/remount      │  purefb network iface    │       │   │
-│   │   S3         │  403 Forbidden       │  Regenerate key       │  purefb objectstoreuser  │       │   │
-│   │   Capacity   │  FS near limit       │  Expand provisioned   │  purefb filesystem update│       │   │
-│   │   Hardware   │  Blade failed        │  Open support case    │  purefb blade list       │       │   │
-│   │   ActiveDR   │  Replication lag     │  Check link/bandwidth │  purefb replication list │       │   │
+│   │   Category   │     Symptom          │       Action          │     CLI Command          │       │  │
+│   │   NFS/SMB    │  Stale file handle   │  Unmount/remount      │  purefb network iface    │       │  │
+│   │   S3         │  403 Forbidden       │  Regenerate key       │  purefb objectstoreuser  │       │  │
+│   │   Capacity   │  FS near limit       │  Expand provisioned   │  purefb filesystem update│       │  │
+│   │   Hardware   │  Blade failed        │  Open support case    │  purefb blade list       │       │  │
+│   │   ActiveDR   │  Replication lag     │  Check link/bandwidth │  purefb replication list │       │  │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: FlashBlade chassis · storage blades · metadata blades · data VIPs · replication link    │
+│    Physical: FlashBlade chassis · storage blades · metadata blades · data VIPs · replication link     │
 │                                                                                                       │
 │    Key terms:                                                                                         │
 │                                                                                                       │
-│    VIP            = Virtual IP for NFS/SMB data access; must be reachable from all client hosts      │
-│    pNFS           = Parallel NFS (NFSv4.1); enables parallel access across multiple storage blades   │
-│    ActiveDR       = Pure async replication with RPO tracking; check lag with replication list        │
-│    purefb         = FlashBlade CLI; used for all config, diagnostics, and operational status         │
-│    Rebalancing    = Post-blade-add data redistribution; normal state; alert only if stuck >24h       │
-│    Provisioned    = Logical filesystem size ceiling; expand non-disruptively at any time             │
-│    Access key     = S3 credential pair per object store user; regenerate on any 403 errors          │
-│    Snapshot policy= Must be linked to a filesystem to create snapshots; check with policy list       │
+│    VIP            = Virtual IP for NFS/SMB data access; must be reachable from all client hosts       │
+│    pNFS           = Parallel NFS (NFSv4.1); enables parallel access across multiple storage blades    │
+│    ActiveDR       = Pure async replication with RPO tracking; check lag with replication list         │
+│    purefb         = FlashBlade CLI; used for all config, diagnostics, and operational status          │
+│    Rebalancing    = Post-blade-add data redistribution; normal state; alert only if stuck >24h        │
+│    Provisioned    = Logical filesystem size ceiling; expand non-disruptively at any time              │
+│    Access key     = S3 credential pair per object store user; regenerate on any 403 errors            │
+│    Snapshot policy= Must be linked to a filesystem to create snapshots; check with policy list        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

@@ -8,31 +8,31 @@ Common Issues reference covering Common Issues, Technical Deep Dive.
 VCF Common Failure Points — Quick Reference
 ```text
 ┌─────────────────────────────────────────────────────┐
-│  Symptom                 → Primary Check            │
+│  Symptom                 → Primary Check                                                              │
 ├─────────────────────────────────────────────────────┤
-│  Domain Warning/Error    → SDDC Mgr Dashboard       │
-│                            expand domain view       │
+│  Domain Warning/Error    → SDDC Mgr Dashboard                                                         │
+│                            expand domain view                                                         │
 ├─────────────────────────────────────────────────────┤
-│  LCM upgrade stuck       → SDDC Mgr → Tasks         │
-│                            /vcf/lcm/lcm-debug.log   │
+│  LCM upgrade stuck       → SDDC Mgr → Tasks                                                           │
+│                            /vcf/lcm/lcm-debug.log                                                     │
 ├─────────────────────────────────────────────────────┤
-│  Certificate expiry warn → SDDC Mgr → Security      │
-│                            → Certificate Mgmt       │
+│  Certificate expiry warn → SDDC Mgr → Security                                                        │
+│                            → Certificate Mgmt                                                         │
 ├─────────────────────────────────────────────────────┤
-│  NSX transport degraded  → NSX Mgr → Fabric/Nodes   │
-│                            check NSX agent on ESXi  │
+│  NSX transport degraded  → NSX Mgr → Fabric/Nodes                                                     │
+│                            check NSX agent on ESXi                                                    │
 ├─────────────────────────────────────────────────────┤
-│  BGP peer down           → NSX Mgr → Networking     │
-│                            → Tier-0 → BGP           │
+│  BGP peer down           → NSX Mgr → Networking                                                       │
+│                            → Tier-0 → BGP                                                             │
 ├─────────────────────────────────────────────────────┤
-│  SDDC Manager disk full  → SSH: df -h               │
-│                            archive /nfs/.../bundles  │
+│  SDDC Manager disk full  → SSH: df -h                                                                 │
+│                            archive /nfs/.../bundles                                                   │
 ├─────────────────────────────────────────────────────┤
-│  Password rotation fail  → SDDC Mgr → Security      │
-│                            → Credentials → status   │
+│  Password rotation fail  → SDDC Mgr → Security                                                        │
+│                            → Credentials → status                                                     │
 ├─────────────────────────────────────────────────────┤
-│  Bundle download fail    → depot.vmware.com reachable│
-│                            proxy/firewall check      │
+│  Bundle download fail    → depot.vmware.com reachable                                                 │
+│                            proxy/firewall check                                                       │
 └─────────────────────────────────────────────────────┘
 ```
 ┌─────────────────────────────── VMware Cloud Foundation — Common Issues ───────────────────────────────┐

@@ -8,22 +8,22 @@ Health Checks reference covering Cluster Node Health via API, Locker Health Chec
   LCM Health Check Chain
 ```text
 ┌─────────────────────────────────────────────────────────────────┐
-│  LCM Appliance           Locker              Environments        │
-│  ┌──────────────────┐    ┌──────────────┐    ┌──────────────┐   │
-│  │ systemctl status │    │ Certs: days  │    │ All cards    │   │
-│  │  lcm / nginx     │    │  to expiry   │    │  GREEN?      │   │
-│  │ df -h (disk <80%)│    │  < 30 days   │    │ No RUNNING   │   │
-│  │ chronyc tracking │    │  → renew now │    │  requests?   │   │
-│  │  (NTP < 5s drift)│    └──────────────┘    └──────────────┘   │
-│  └──────────────────┘                                           │
-│                                                                 │
-│  Pre-Upgrade Gate (all must pass)                               │
-│  ┌─────────────────────────────────────────────────────────┐    │
-│  │ ✓ All env cards GREEN   ✓ No in-progress requests       │    │
-│  │ ✓ /data < 75%           ✓ NFS mount active + writable   │    │
-│  │ ✓ NTP delta < 5s        ✓ No certs expiring < 7 days    │    │
-│  │ ✓ VM snapshots taken    ✓ LCM pre-check passes          │    │
-│  └─────────────────────────────────────────────────────────┘    │
+│  LCM Appliance           Locker              Environments                                             │
+│  ┌──────────────────┐    ┌──────────────┐    ┌──────────────┐                                         │
+│  │ systemctl status │    │ Certs: days  │    │ All cards    │                                         │
+│  │  lcm / nginx     │    │  to expiry   │    │  GREEN?      │                                         │
+│  │ df -h (disk <80%)│    │  < 30 days   │    │ No RUNNING   │                                         │
+│  │ chronyc tracking │    │  → renew now │    │  requests?   │                                         │
+│  │  (NTP < 5s drift)│    └──────────────┘    └──────────────┘                                         │
+│  └──────────────────┘                                                                                 │
+│                                                                                                       │
+│  Pre-Upgrade Gate (all must pass)                                                                     │
+│  ┌─────────────────────────────────────────────────────────┐                                          │
+│  │ ✓ All env cards GREEN   ✓ No in-progress requests       │                                          │
+│  │ ✓ /data < 75%           ✓ NFS mount active + writable   │                                          │
+│  │ ✓ NTP delta < 5s        ✓ No certs expiring < 7 days    │                                          │
+│  │ ✓ VM snapshots taken    ✓ LCM pre-check passes          │                                          │
+│  └─────────────────────────────────────────────────────────┘                                          │
 └─────────────────────────────────────────────────────────────────┘
 ```
 ┌──────────────────────────────────── Aria Suite LCM Health Checks ─────────────────────────────────────┐

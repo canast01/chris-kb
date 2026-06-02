@@ -8,23 +8,23 @@ How It Works reference covering Networking Architecture, VMkernel Adapters (vmk)
 VMkernel Internals — Resource Stack
 ```text
 ┌────────────────────────────────────────────────────────────┐
-│  VMkernel (bare-metal, no general OS underneath)           │
-│                                                            │
-│  CPU Scheduler                    Memory Manager           │
-│  ├── NUMA-aware placement         ├── TPS (dedup pages)    │
-│  ├── vCPU → pCPU assignment       ├── Balloon driver       │
-│  ├── CPU Ready / Co-stop tracking ├── Compression          │
-│  └── Reservations & limits        └── Host swap (.vswp)    │
-│                                                            │
-│  Storage Stack                    Network Stack            │
-│  ├── PSA (Pluggable Storage Arch) ├── vSwitch / vDS        │
-│  │   ├── NMP (multipathing)       ├── Port groups          │
-│  │   │   ├── PSP (RR / MRU / FX) ├── vmkernel adapters     │
-│  │   │   └── SATP (array rules)  │   vmk0 mgmt             │
-│  │   └── VAAI (array offload)    │   vmk1 vMotion          │
-│  └── Datastores                   │   vmk2 vSAN            │
-│      VMFS6 / NFS / vSAN           │   vmk3 iSCSI/NFS       │
-│                                   └── pNICs (vmnic0..n)    │
+│  VMkernel (bare-metal, no general OS underneath)                                                      │
+│                                                                                                       │
+│  CPU Scheduler                    Memory Manager                                                      │
+│  ├── NUMA-aware placement         ├── TPS (dedup pages)                                               │
+│  ├── vCPU → pCPU assignment       ├── Balloon driver                                                  │
+│  ├── CPU Ready / Co-stop tracking ├── Compression                                                     │
+│  └── Reservations & limits        └── Host swap (.vswp)                                               │
+│                                                                                                       │
+│  Storage Stack                    Network Stack                                                       │
+│  ├── PSA (Pluggable Storage Arch) ├── vSwitch / vDS                                                   │
+│  │   ├── NMP (multipathing)       ├── Port groups                                                     │
+│  │   │   ├── PSP (RR / MRU / FX) ├── vmkernel adapters                                                │
+│  │   │   └── SATP (array rules)  │   vmk0 mgmt                                                        │
+│  │   └── VAAI (array offload)    │   vmk1 vMotion                                                     │
+│  └── Datastores                   │   vmk2 vSAN                                                       │
+│      VMFS6 / NFS / vSAN           │   vmk3 iSCSI/NFS                                                  │
+│                                   └── pNICs (vmnic0..n)                                               │
 └────────────────────────────────────────────────────────────┘
 ```
 ┌───────────────────────────────────────── ESXi — How It Works ─────────────────────────────────────────┐

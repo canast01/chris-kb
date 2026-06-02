@@ -57,21 +57,21 @@ VCF Operational Procedures — Decision Map
        │               │                │
        ▼               ▼                ▼
 ┌──────────────┐ ┌──────────────┐ ┌────────────────┐
-│ Patching /   │ │ Password     │ │ Certificate       │
-│ Upgrading    │ │ Management   │ │ Management        │
-│              │ │              │ │                   │
-│ SDDC Mgr     │ │ SDDC Mgr     │ │ SDDC Mgr          │
-│ → LCM        │ │ → Security   │ │ → Security        │
-│ → Upgrade    │ │ → Password   │ │ → Certificate     │
-│              │ │   Management │ │   Management      │
-│ Order:       │ │              │ │                   │
-│ SDDC Mgr     │ │ Rotate via   │ │ Generate CSR      │
-│ → vCenter    │ │ SDDC Mgr     │ │ → sign → import   │
-│ → ESXi       │ │ (not direct  │ │                   │
-│ → NSX → vSAN │ │ in product)  │ │ Order:            │
-│              │ │              │ │ SDDC Mgr          │
-│ Pre-check    │ │ Update vault │ │ → vCenter         │
-│ first!       │ │ after rotate │ │ → NSX → ESXi      │
+│ Patching /   │ │ Password     │ │ Certificate                                                         │
+│ Upgrading    │ │ Management   │ │ Management                                                          │
+│              │ │              │ │                                                                     │
+│ SDDC Mgr     │ │ SDDC Mgr     │ │ SDDC Mgr                                                            │
+│ → LCM        │ │ → Security   │ │ → Security                                                          │
+│ → Upgrade    │ │ → Password   │ │ → Certificate                                                       │
+│              │ │   Management │ │   Management                                                        │
+│ Order:       │ │              │ │                                                                     │
+│ SDDC Mgr     │ │ Rotate via   │ │ Generate CSR                                                        │
+│ → vCenter    │ │ SDDC Mgr     │ │ → sign → import                                                     │
+│ → ESXi       │ │ (not direct  │ │                                                                     │
+│ → NSX → vSAN │ │ in product)  │ │ Order:                                                              │
+│              │ │              │ │ SDDC Mgr                                                            │
+│ Pre-check    │ │ Update vault │ │ → vCenter                                                           │
+│ first!       │ │ after rotate │ │ → NSX → ESXi                                                        │
 └──────────────┘ └──────────────┘ └────────────────┘
 ```text
 ┌───────────────────────────── VMware Cloud Foundation — Common Procedures ─────────────────────────────┐

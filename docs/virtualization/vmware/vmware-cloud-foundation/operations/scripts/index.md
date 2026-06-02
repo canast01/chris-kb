@@ -8,8 +8,8 @@ Scripts reference covering Trigger SoS Health Check and Poll Result (Bash).
 VCF API Automation — Data Flow
 ```text
 ┌─────────────────────────────────────────────────────┐
-│  Automation Script / Pipeline                       │
-│  (Python / Bash / PowerShell)                       │
+│  Automation Script / Pipeline                                                                         │
+│  (Python / Bash / PowerShell)                                                                         │
 └──────────────────────┬──────────────────────────────┘
 ```
 ┌──────────────────────────── VMware Cloud Foundation — Operational Scripts ────────────────────────────┐
@@ -63,11 +63,11 @@ VCF API Automation — Data Flow
 ```text
 ```
 ┌─────────────────────────────────────────────────────┐
-│  Script Output / Integration                        │
-│  → stdout / CSV / JSON                              │
-│  → monitoring platform (HTTP POST)                  │
-│  → ITSM ticketing system                            │
-│  → CMDB asset discovery                             │
+│  Script Output / Integration                                                                          │
+│  → stdout / CSV / JSON                                                                                │
+│  → monitoring platform (HTTP POST)                                                                    │
+│  → ITSM ticketing system                                                                              │
+│  → CMDB asset discovery                                                                               │
 └─────────────────────────────────────────────────────┘
 ```powershell
 ┌──────────────────────────── VMware Cloud Foundation — Operational Scripts ────────────────────────────┐

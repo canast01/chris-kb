@@ -8,7 +8,7 @@ Scripts reference covering Export Active Alerts to CSV (Python), Capacity Report
 Aria Operations API — Script Interaction Pattern
 ```text
 ┌─────────────────────────────────────────────────────┐
-│  Script / Automation Pipeline                       │
+│  Script / Automation Pipeline                                                                         │
 └──────────────────────┬──────────────────────────────┘
 ```
 ┌─────────────────────────────────────── Aria Operations Scripts ───────────────────────────────────────┐
@@ -60,11 +60,11 @@ Aria Operations API — Script Interaction Pattern
 ```text
 ```
 ┌─────────────────────────────────────────────────────┐
-│  Output / Integration                               │
-│  → CSV export (alerts, capacity, idle VMs)          │
-│  → monitoring dashboard (HTTP POST)                 │
-│  → ITSM integration                                 │
-│  NOTE: re-authenticate every 25 min for long runs   │
+│  Output / Integration                                                                                 │
+│  → CSV export (alerts, capacity, idle VMs)                                                            │
+│  → monitoring dashboard (HTTP POST)                                                                   │
+│  → ITSM integration                                                                                   │
+│  NOTE: re-authenticate every 25 min for long runs                                                     │
 └─────────────────────────────────────────────────────┘
 ```text
 ┌─────────────────────────────────────── Aria Operations Scripts ───────────────────────────────────────┐

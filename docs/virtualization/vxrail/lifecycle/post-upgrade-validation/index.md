@@ -8,14 +8,14 @@ VxRail Post-Upgrade Validation reference covering Overview, Where It Fits, Daily
 Post-Upgrade Validation Sequence
 ```text
 ┌────────────┐     ┌────────────┐     ┌────────────┐     ┌────────────┐
-│  Services  │     │   Health   │     │    VMs     │     │    Docs    │
-│            │     │            │     │            │     │            │
-│ VxRail Mgr │ →   │ vSAN Sky-  │ →   │ DRS / HA   │ →   │ Change     │
-│ shows      │     │ line green │     │ healthy    │     │ ticket     │
-│ target ver │     │ no resync  │     │ VMs all up │     │ updated    │
-│            │     │            │     │            │     │            │
-│ all hosts  │     │ FW matches │     │ backups    │     │ versions   │
-│ Connected  │     │ baseline   │     │ working    │     │ recorded   │
+│  Services  │     │   Health   │     │    VMs     │     │    Docs                                      │
+│            │     │            │     │            │     │                                              │
+│ VxRail Mgr │ →   │ vSAN Sky-  │ →   │ DRS / HA   │ →   │ Change                                       │
+│ shows      │     │ line green │     │ healthy    │     │ ticket                                       │
+│ target ver │     │ no resync  │     │ VMs all up │     │ updated                                      │
+│            │     │            │     │            │     │                                              │
+│ all hosts  │     │ FW matches │     │ backups    │     │ versions                                     │
+│ Connected  │     │ baseline   │     │ working    │     │ recorded                                     │
 └────────────┘     └────────────┘     └────────────┘     └────────────┘
 ```
        │                 │                  │                   │

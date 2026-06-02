@@ -8,22 +8,22 @@ Hardening reference covering Post-Deployment Checklist, Restrict SSH Access, Res
   VR Hardening Controls
 ```text
 ┌──────────────────────────────────────────────────────────────┐
-│  Credentials                 Network Restrictions            │
-│  ┌──────────────────────┐    ┌──────────────────────────┐    │
-│  │ Change admin / root  │    │ Port 5480 (VAMI):        │    │
-│  │  passwords post-     │    │  mgmt subnet only        │    │
-│  │  deploy              │    │ Port 31031 (repl data):  │    │
-│  │ SSH: key-based only  │    │  source ESXi IPs only    │    │
-│  │ PermitRootLogin: no  │    │ Port 443 (API):          │    │
-│  └──────────────────────┘    │  mgmt subnet only        │    │
-│                              └──────────────────────────┘    │
-│  Certificate                 WAN Encryption                  │
-│  ┌──────────────────────┐    ┌──────────────────────────┐    │
-│  │ Replace self-signed  │    │ Enable replication       │    │
-│  │  with CA-signed cert │    │  data encryption for     │    │
-│  │ Renew 30 days before │    │  all WAN replications    │    │
-│  │  expiry              │    └──────────────────────────┘    │
-│  └──────────────────────┘                                    │
+│  Credentials                 Network Restrictions                                                     │
+│  ┌──────────────────────┐    ┌──────────────────────────┐                                             │
+│  │ Change admin / root  │    │ Port 5480 (VAMI):        │                                             │
+│  │  passwords post-     │    │  mgmt subnet only        │                                             │
+│  │  deploy              │    │ Port 31031 (repl data):  │                                             │
+│  │ SSH: key-based only  │    │  source ESXi IPs only    │                                             │
+│  │ PermitRootLogin: no  │    │ Port 443 (API):          │                                             │
+│  └──────────────────────┘    │  mgmt subnet only        │                                             │
+│                              └──────────────────────────┘                                             │
+│  Certificate                 WAN Encryption                                                           │
+│  ┌──────────────────────┐    ┌──────────────────────────┐                                             │
+│  │ Replace self-signed  │    │ Enable replication       │                                             │
+│  │  with CA-signed cert │    │  data encryption for     │                                             │
+│  │ Renew 30 days before │    │  all WAN replications    │                                             │
+│  │  expiry              │    └──────────────────────────┘                                             │
+│  └──────────────────────┘                                                                             │
 └──────────────────────────────────────────────────────────────┘
 ```
 

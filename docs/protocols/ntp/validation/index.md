@@ -8,21 +8,21 @@ NTP Validation reference covering Validation Checklist, Validation Commands, Pos
         VALIDATION CHECKLIST
 ```text
 ┌──────────────────────────────────────────────────────────────┐
-│  chronyc tracking                                            │
-│  ├── Leap status: Normal            ✓ (not synchronised = ✗) │
-│  ├── Stratum: 2–4                   ✓ (16 = no source = ✗)  │
-│  ├── System time: < 100ms           ✓ (> 1s = risk)         │
-│  └── Last offset: < 10ms            ✓                        │
-│                                                              │
-│  chronyc sources -v                                          │
-│  ├── At least one source with *     ✓ (all ? = blocked)     │
-│  └── Reach = 377                    ✓ (< 377 = packet loss)  │
-│                                                              │
-│  ntpdate -q <server>                                         │
-│  └── Returns offset + delay         ✓ (timeout = UDP blocked)│
-│                                                              │
-│  PASS criteria:                                              │
-│  offset < 128ms, stratum ≤ 3, reach = 377, Leap = Normal    │
+│  chronyc tracking                                                                                     │
+│  ├── Leap status: Normal            ✓ (not synchronised = ✗)                                          │
+│  ├── Stratum: 2–4                   ✓ (16 = no source = ✗)                                            │
+│  ├── System time: < 100ms           ✓ (> 1s = risk)                                                   │
+│  └── Last offset: < 10ms            ✓                                                                 │
+│                                                                                                       │
+│  chronyc sources -v                                                                                   │
+│  ├── At least one source with *     ✓ (all ? = blocked)                                               │
+│  └── Reach = 377                    ✓ (< 377 = packet loss)                                           │
+│                                                                                                       │
+│  ntpdate -q <server>                                                                                  │
+│  └── Returns offset + delay         ✓ (timeout = UDP blocked)                                         │
+│                                                                                                       │
+│  PASS criteria:                                                                                       │
+│  offset < 128ms, stratum ≤ 3, reach = 377, Leap = Normal                                              │
 └──────────────────────────────────────────────────────────────┘
 ```
 

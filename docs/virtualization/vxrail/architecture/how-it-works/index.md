@@ -8,8 +8,8 @@ How It Works reference covering Overview, HCI Node Cluster, Cluster Topology, No
 VxRail LCM Flow — How It Works
 ```text
 ┌─────────────────────────────────────────────────────────────┐
-│  VxRail Manager (VM on cluster)                             │
-│  LCM Engine · vCenter plugin · REST API · Health monitor    │
+│  VxRail Manager (VM on cluster)                                                                       │
+│  LCM Engine · vCenter plugin · REST API · Health monitor                                              │
 └───────────────┬─────────────────────────────────────────────┘
 ```
                 │ orchestrates

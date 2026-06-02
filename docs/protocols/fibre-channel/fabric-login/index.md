@@ -8,8 +8,8 @@ Fabric login is the process by which FC ports register with the fabric and estab
         FC LOGIN SEQUENCE
 ```text
 ┌──────────┐        ┌───────────┐        ┌───────────┐
-│ Host HBA │        │ FC Switch │        │  Storage  │
-│          │        │(Name Svr) │        │  Target   │
+│ Host HBA │        │ FC Switch │        │  Storage                                                     │
+│          │        │(Name Svr) │        │  Target                                                      │
 └────┬─────┘        └─────┬─────┘        └─────┬─────┘
 ```
      │  1. FLOGI           │                    │

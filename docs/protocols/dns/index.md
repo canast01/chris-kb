@@ -11,23 +11,23 @@ Domain Name System (DNS) is the foundational naming protocol of IP networks, res
         DNS RESOLUTION PATH
 ```text
 ┌─────────────────────────────────────────────────────────────────┐
-│                                                                 │
-│  ┌────────┐  ┌──────────────┐  ┌────────────────────────────┐  │
-│  │ Client │  │ Recursive    │  │   Authoritative DNS        │  │
-│  │        ├─►│ Resolver     │  │                            │  │
-│  │ app    │  │ (local DC /  │  │  ┌──────┐ ┌─────┐ ┌─────┐ │  │
-│  │ stub   │  │ forwarder /  │  │  │ Root │ │ TLD │ │zone │ │  │
-│  └────────┘  │ 8.8.8.8)     │  │  │  .   │ │.com │ │auth │ │  │
-│              │              ├─►│  └──┬───┘ └──┬──┘ └──┬──┘ │  │
-│              │  cache check ◄──┤     │ root    │ TLD   │auth│  │
-│              │  → cache miss   │     │ referral│ ref.  │resp│  │
-│              └──────┬─────────┘  └──────────────────────────┘  │
-│                     │                                           │
-│                     ▼ answer (IP)                               │
-│              ┌──────────────┐                                   │
-│              │ client gets  │  TTL controls how long it's cached│
-│              │ A record     │                                   │
-│              └──────────────┘                                   │
+│                                                                                                       │
+│  ┌────────┐  ┌──────────────┐  ┌────────────────────────────┐                                         │
+│  │ Client │  │ Recursive    │  │   Authoritative DNS        │                                         │
+│  │        ├─►│ Resolver     │  │                            │                                         │
+│  │ app    │  │ (local DC /  │  │  ┌──────┐ ┌─────┐ ┌─────┐ │                                          │
+│  │ stub   │  │ forwarder /  │  │  │ Root │ │ TLD │ │zone │ │                                          │
+│  └────────┘  │ 8.8.8.8)     │  │  │  .   │ │.com │ │auth │ │                                          │
+│              │              ├─►│  └──┬───┘ └──┬──┘ └──┬──┘ │                                          │
+│              │  cache check ◄──┤     │ root    │ TLD   │auth│                                         │
+│              │  → cache miss   │     │ referral│ ref.  │resp│                                         │
+│              └──────┬─────────┘  └──────────────────────────┘                                         │
+│                     │                                                                                 │
+│                     ▼ answer (IP)                                                                     │
+│              ┌──────────────┐                                                                         │
+│              │ client gets  │  TTL controls how long it's cached                                      │
+│              │ A record     │                                                                         │
+│              └──────────────┘                                                                         │
 └─────────────────────────────────────────────────────────────────┘
 ```
 

@@ -56,8 +56,8 @@ Encryption reference covering Connection Server Certificate, UAG Certificate, Cl
 ```
 ┌──────────────┐  Blast AES  ┌───────────┐                      ▼
 │  Horizon     │─────────────►│  UAG      │─────────────►┌──────────────────┐
-│  Client      │  8443/TCP   │  Blast GW │  8443 proxy  │  Desktop VM      │
-│  (Blast)     │             └───────────┘              │  (Blast agent)   │
+│  Client      │  8443/TCP   │  Blast GW │  8443 proxy  │  Desktop VM                                   │
+│  (Blast)     │             └───────────┘              │  (Blast agent)                                │
 └──────────────┘                                        └──────────────────┘
 ```text
 ┌───────────────────────────────────── VMware Horizon — Encryption ─────────────────────────────────────┐

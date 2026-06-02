@@ -8,8 +8,8 @@ CLI Reference reference covering vracli Commands, chkconfig (Legacy / Service En
 Aria Operations — CLI Command Reference Map
 ```text
 ┌─────────────────────────────────────────────────────┐
-│  SSH: admin@<aria-ops-primary-fqdn>                 │
-│       (sudo -i for advanced maintenance tasks)      │
+│  SSH: admin@<aria-ops-primary-fqdn>                                                                   │
+│       (sudo -i for advanced maintenance tasks)                                                        │
 └──────────────────────┬──────────────────────────────┘
 ```
 ┌──────────────────────────────────── Aria Operations CLI Reference ────────────────────────────────────┐
@@ -102,11 +102,11 @@ Aria Operations — CLI Command Reference Map
 ```
 ```
 ┌─────────────────────────────────────────────────────┐
-│  REST API  base: https://<aria-ops>/suite-api/api   │
-│  POST /api/auth/token/acquire   authenticate        │
-│  GET  /api/resources            list objects        │
-│  GET  /api/alerts?activeOnly=true  active alerts    │
-│  GET  /api/cluster/nodes        node status         │
+│  REST API  base: https://<aria-ops>/suite-api/api                                                     │
+│  POST /api/auth/token/acquire   authenticate                                                          │
+│  GET  /api/resources            list objects                                                          │
+│  GET  /api/alerts?activeOnly=true  active alerts                                                      │
+│  GET  /api/cluster/nodes        node status                                                           │
 └─────────────────────────────────────────────────────┘
 ```
 ```

@@ -8,29 +8,29 @@ Escalation reference covering SR Handoff Checklist, VMware by Broadcom Knowledge
   LCM Escalation Path
 ```text
 ┌─────────────────────────────────────────────────────────────────┐
-│  Step 1: Collect upfront (avoids data-request delay)            │
-│  ┌─────────────────────────────────────────────────────────┐    │
-│  │ vracli support-bundle   │ LCM + product versions        │    │
-│  │ Request ID (if upgrade) │ Upgrade log (/vrlcm/upgrade/) │    │
-│  │ openssl x509 output     │ Timeline: last good → failure  │    │
-│  └─────────────────────────────────────────────────────────┘    │
-│                  │                                              │
-│                  ▼                                              │
-│  Step 2: Severity Assessment                                    │
-│  ┌──────────────────────────────────────────────────────────┐   │
-│  │ S1: prod env down, no workaround → open SR + call NOW    │   │
-│  │ S2: major feature unavailable → open SR (urgent)         │   │
-│  │ S3: partial degradation, workaround → normal SR          │   │
-│  │ S4: question / how-to → normal SR / KB search            │   │
-│  └──────────────────────────────────────────────────────────┘   │
-│                  │                                              │
-│                  ▼                                              │
-│  Step 3: Escalation Triggers                                    │
-│  ┌──────────────────────────────────────────────────────────┐   │
-│  │ S1 unresolved > 2h → Critical Escalation Team            │   │
-│  │ Recurring / SLA breach → TAM engagement                  │   │
-│  │ Do NOT power cycle partial-upgrade VMs without SR OK     │   │
-│  └──────────────────────────────────────────────────────────┘   │
+│  Step 1: Collect upfront (avoids data-request delay)                                                  │
+│  ┌─────────────────────────────────────────────────────────┐                                          │
+│  │ vracli support-bundle   │ LCM + product versions        │                                          │
+│  │ Request ID (if upgrade) │ Upgrade log (/vrlcm/upgrade/) │                                          │
+│  │ openssl x509 output     │ Timeline: last good → failure  │                                         │
+│  └─────────────────────────────────────────────────────────┘                                          │
+│                  │                                                                                    │
+│                  ▼                                                                                    │
+│  Step 2: Severity Assessment                                                                          │
+│  ┌──────────────────────────────────────────────────────────┐                                         │
+│  │ S1: prod env down, no workaround → open SR + call NOW    │                                         │
+│  │ S2: major feature unavailable → open SR (urgent)         │                                         │
+│  │ S3: partial degradation, workaround → normal SR          │                                         │
+│  │ S4: question / how-to → normal SR / KB search            │                                         │
+│  └──────────────────────────────────────────────────────────┘                                         │
+│                  │                                                                                    │
+│                  ▼                                                                                    │
+│  Step 3: Escalation Triggers                                                                          │
+│  ┌──────────────────────────────────────────────────────────┐                                         │
+│  │ S1 unresolved > 2h → Critical Escalation Team            │                                         │
+│  │ Recurring / SLA breach → TAM engagement                  │                                         │
+│  │ Do NOT power cycle partial-upgrade VMs without SR OK     │                                         │
+│  └──────────────────────────────────────────────────────────┘                                         │
 └─────────────────────────────────────────────────────────────────┘
 ```
 ┌────────────────────────────────────── Aria Suite LCM Escalation ──────────────────────────────────────┐

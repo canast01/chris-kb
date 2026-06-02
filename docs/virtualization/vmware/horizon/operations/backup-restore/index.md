@@ -8,17 +8,17 @@ Backup and Restore reference covering Verify the Backup, App Volumes Manager Dat
   Backup Sources                        Backup Methods
 ```text
 ┌─────────────────────┐               ┌────────────────────────────┐
-│  Connection Server  │──vdmexport───►│  LDIF file (pod config)    │
+│  Connection Server  │──vdmexport───►│  LDIF file (pod config)                                         │
 │  (ADAM/LDAP)        │               └────────────────────────────┘
 ├─────────────────────┤               ┌────────────────────────────┐
-│  App Volumes SQL DB │──SQL backup──►│  cloudvolumes.bak          │
+│  App Volumes SQL DB │──SQL backup──►│  cloudvolumes.bak                                               │
 │  (cloudvolumes)     │               └────────────────────────────┘
 ├─────────────────────┤               ┌────────────────────────────┐
-│  DEM Config Share   │──robocopy────►│  \\fileserver\DEMConfig\   │
+│  DEM Config Share   │──robocopy────►│  \\fileserver\DEMConfig\                                        │
 │  (\\server\share)   │               └────────────────────────────┘
 ├─────────────────────┤               ┌────────────────────────────┐
-│  Golden Image VM    │──snapshot────►│  PUBLISHED snapshot        │
-│  + AppStack VMDKs   │               │  on datastore              │
+│  Golden Image VM    │──snapshot────►│  PUBLISHED snapshot                                             │
+│  + AppStack VMDKs   │               │  on datastore                                                   │
 └─────────────────────┘               └────────────────────────────┘
 ```
 ┌────────────────────────────────── VMware Horizon — Backup & Restore ──────────────────────────────────┐

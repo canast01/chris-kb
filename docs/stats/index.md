@@ -20,12 +20,12 @@ Visitor statistics for chrisanastasiadis.com
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │       Traffic Sources       │  │       Top Content            │  │       Audience              │   │
-│   │       ─────────────         │  │       ─────────────          │  │       ─────────────         │   │
-│   │  Organic search             │  │  Infrastructure pages        │  │  Unique visitors            │   │
-│   │  Direct / bookmark          │  │  Troubleshooting guides      │  │  Session duration           │   │
-│   │  Referral links             │  │  CLI reference pages         │  │  Pages per session          │   │
-│   │  Social / GitHub            │  │  Architecture diagrams       │  │  Returning visitors         │   │
+│   │       Traffic Sources       │  │       Top Content            │  │       Audience              │  │
+│   │       ─────────────         │  │       ─────────────          │  │       ─────────────         │  │
+│   │  Organic search             │  │  Infrastructure pages        │  │  Unique visitors            │  │
+│   │  Direct / bookmark          │  │  Troubleshooting guides      │  │  Session duration           │  │
+│   │  Referral links             │  │  CLI reference pages         │  │  Pages per session          │  │
+│   │  Social / GitHub            │  │  Architecture diagrams       │  │  Returning visitors         │  │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
 │                          ▼                                                 ▼                          │
@@ -38,14 +38,14 @@ Visitor statistics for chrisanastasiadis.com
 │   │   Bounce rate         │   Single-page sessions; lower = better content discovery              │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Hosted: GitHub Pages · chrisanastasiadis.com (Namecheap DNS · Cloudflare CDN)                     │
+│    Hosted: GitHub Pages · chrisanastasiadis.com (Namecheap DNS · Cloudflare CDN)                      │
 │                                                                                                       │
 │    Key terms:                                                                                         │
 │                                                                                                       │
-│    Deploy trigger  = GitHub Actions workflow; runs mkdocs build on every push to main                │
-│    Stats refresh   = Analytics data updates at deploy time; push a commit to force refresh           │
-│    Cloudflare      = CDN and DNS proxy; provides caching, DDoS protection, and HTTPS                 │
-│    GitHub Pages    = Static site hosting; serves the built MkDocs output from the gh-pages branch    │
+│    Deploy trigger  = GitHub Actions workflow; runs mkdocs build on every push to main                 │
+│    Stats refresh   = Analytics data updates at deploy time; push a commit to force refresh            │
+│    Cloudflare      = CDN and DNS proxy; provides caching, DDoS protection, and HTTPS                  │
+│    GitHub Pages    = Static site hosting; serves the built MkDocs output from the gh-pages branch     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

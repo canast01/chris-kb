@@ -8,22 +8,22 @@ DHCP Scopes reference covering Overview, Creating a Scope, Exclusions, Scope Pla
         SCOPE STRUCTURE
 ```text
 ┌──────────────────────────────────────────────────────────────┐
-│  Scope: Corp LAN – Floor 1 (192.168.10.0/24)                 │
-│  ┌──────────────────────────────────────────────────────┐    │
-│  │  Range:  192.168.10.1 – 192.168.10.254               │    │
-│  │  ┌─────────────────────────────────────────────┐     │    │
-│  │  │ Exclusions: .1–.20  (network devices, GW)  │     │    │
-│  │  │             .21–.50 (servers, static)       │     │    │
-│  │  │             .51–.99 (printers, AP, resvd)   │     │    │
-│  │  └─────────────────────────────────────────────┘     │    │
-│  │  Dynamic pool: .100 – .254 (workstations)             │    │
-│  │  Lease time:  8 days (servers) / 24h (workstations)   │    │
-│  │                                                       │    │
-│  │  Options delivered with lease:                        │    │
-│  │  003 Router:  192.168.10.1                            │    │
-│  │  006 DNS:     10.0.0.53, 10.0.0.54                    │    │
-│  │  015 Domain:  corp.local                              │    │
-│  └──────────────────────────────────────────────────────┘    │
+│  Scope: Corp LAN – Floor 1 (192.168.10.0/24)                                                          │
+│  ┌──────────────────────────────────────────────────────┐                                             │
+│  │  Range:  192.168.10.1 – 192.168.10.254               │                                             │
+│  │  ┌─────────────────────────────────────────────┐     │                                             │
+│  │  │ Exclusions: .1–.20  (network devices, GW)  │     │                                              │
+│  │  │             .21–.50 (servers, static)       │     │                                             │
+│  │  │             .51–.99 (printers, AP, resvd)   │     │                                             │
+│  │  └─────────────────────────────────────────────┘     │                                             │
+│  │  Dynamic pool: .100 – .254 (workstations)             │                                            │
+│  │  Lease time:  8 days (servers) / 24h (workstations)   │                                            │
+│  │                                                       │                                            │
+│  │  Options delivered with lease:                        │                                            │
+│  │  003 Router:  192.168.10.1                            │                                            │
+│  │  006 DNS:     10.0.0.53, 10.0.0.54                    │                                            │
+│  │  015 Domain:  corp.local                              │                                            │
+│  └──────────────────────────────────────────────────────┘                                             │
 └──────────────────────────────────────────────────────────────┘
 ```
 

@@ -8,22 +8,22 @@ CLI Reference reference covering SRM REST API — Recovery Plans, PowerCLI for S
   SRM CLI / API Access
 ```powershell
 ┌──────────────────────────────────────────────────────────────┐
-│  SRM REST API (vCenter SSO token)                            │
-│  ┌──────────────────────────────────────────────────────┐    │
-│  │ POST /rest/com/vmware/cis/session → session token    │    │
-│  │ GET  /api/vcenter/dr/recovery/plans                  │    │
-│  │ POST /api/vcenter/dr/recovery/plans/<id>/start       │    │
-│  │      { "recovery_type": "TEST" | "FAILOVER" }        │    │
-│  └──────────────────────────────────────────────────────┘    │
-│                                                              │
-│  PowerCLI (VMware.VimAutomation.Srm)                         │
-│  ┌──────────────────────────────────────────────────────┐    │
-│  │ Connect-SrmServer -SrmServerAddress <fqdn>           │    │
-│  │ $srm.ExtensionData.Recovery.ListPlans()              │    │
-│  │ $srm.ExtensionData.Protection.ListProtectionGroups() │    │
-│  │ $srm.ExtensionData.Recovery.Start($plan, "TEST")     │    │
-│  │ $srm.ExtensionData.Recovery.Start($plan, "CLEANUP")  │    │
-│  └──────────────────────────────────────────────────────┘    │
+│  SRM REST API (vCenter SSO token)                                                                     │
+│  ┌──────────────────────────────────────────────────────┐                                             │
+│  │ POST /rest/com/vmware/cis/session → session token    │                                             │
+│  │ GET  /api/vcenter/dr/recovery/plans                  │                                             │
+│  │ POST /api/vcenter/dr/recovery/plans/<id>/start       │                                             │
+│  │      { "recovery_type": "TEST" | "FAILOVER" }        │                                             │
+│  └──────────────────────────────────────────────────────┘                                             │
+│                                                                                                       │
+│  PowerCLI (VMware.VimAutomation.Srm)                                                                  │
+│  ┌──────────────────────────────────────────────────────┐                                             │
+│  │ Connect-SrmServer -SrmServerAddress <fqdn>           │                                             │
+│  │ $srm.ExtensionData.Recovery.ListPlans()              │                                             │
+│  │ $srm.ExtensionData.Protection.ListProtectionGroups() │                                             │
+│  │ $srm.ExtensionData.Recovery.Start($plan, "TEST")     │                                             │
+│  │ $srm.ExtensionData.Recovery.Start($plan, "CLEANUP")  │                                             │
+│  └──────────────────────────────────────────────────────┘                                             │
 └──────────────────────────────────────────────────────────────┘
 ```
 ┌───────────────────────────────────── VMware SRM — CLI Reference ──────────────────────────────────────┐

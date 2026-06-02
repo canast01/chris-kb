@@ -8,37 +8,37 @@ VxRail Daily Checks reference covering Overview, Where It Fits, Daily Checks, He
 Daily Check Sequence
 ```text
 ┌─────────────────────────────────────────────────────────────┐
-│  1. VxRail Manager                                          │
-│     cluster health green · no failed lifecycle tasks        │
-│     no active alerts · service up                           │
+│  1. VxRail Manager                                                                                    │
+│     cluster health green · no failed lifecycle tasks                                                  │
+│     no active alerts · service up                                                                     │
 └──────────────────────────┬──────────────────────────────────┘
                            │
 ```
 ┌──────────────────────────▼──────────────────────────────────┐
-│  2. vCenter                                                  │
-│     all hosts Connected · no critical alarms                 │
-│     recent tasks clean · HA / DRS healthy                   │
+│  2. vCenter                                                                                           │
+│     all hosts Connected · no critical alarms                                                          │
+│     recent tasks clean · HA / DRS healthy                                                             │
 └──────────────────────────┬──────────────────────────────────┘
                            │
 ```text
 ```
 ┌──────────────────────────▼──────────────────────────────────┐
-│  3. ESXi Hosts                                               │
-│     services healthy · NTP synchronized · no warnings       │
+│  3. ESXi Hosts                                                                                        │
+│     services healthy · NTP synchronized · no warnings                                                 │
 └──────────────────────────┬──────────────────────────────────┘
 ```text
                            │
 ```
 ┌──────────────────────────▼──────────────────────────────────┐
-│  4. vSAN                                                     │
-│     Skyline Health green · no degraded objects              │
-│     no unexpected resync · capacity within limits           │
+│  4. vSAN                                                                                              │
+│     Skyline Health green · no degraded objects                                                        │
+│     no unexpected resync · capacity within limits                                                     │
 └──────────────────────────┬──────────────────────────────────┘
 ```
                            │
 ┌──────────────────────────▼──────────────────────────────────┐
-│  5. iDRAC (each node)                                        │
-│     no hardware alerts · fans/PSU/disk/NIC all healthy      │
+│  5. iDRAC (each node)                                                                                 │
+│     no hardware alerts · fans/PSU/disk/NIC all healthy                                                │
 └─────────────────────────────────────────────────────────────┘
 
 ## Overview

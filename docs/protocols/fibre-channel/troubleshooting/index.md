@@ -8,25 +8,25 @@ FC Troubleshooting reference covering Diagnostic Flow, Quick Diagnostics, Common
         TRIAGE: HOST CANNOT SEE LUN
 ```text
 ┌─────────────────────────────────────────────────────────────┐
-│  1. No LUN visible on host                                  │
-│          │                                                  │
-│          ▼                                                  │
-│  Check WWPN in zone? ── No ──► Add WWPN to zone, activate  │
-│          │ Yes                                              │
-│          ▼                                                  │
-│  Zone set active? ──── No ──► cfgenable / zoneset activate  │
-│          │ Yes                                              │
-│          ▼                                                  │
-│  Target port online? ─ No ──► Check SFP, cable, port state │
-│          │ Yes                                              │
-│          ▼                                                  │
-│  LUN mapped to host group? No ► Add host to storage group  │
-│          │ Yes                                              │
-│          ▼                                                  │
-│  Multipath sees paths? ─ No ──► Rescan HBAs, reload mpio   │
-│          │ Yes                                              │
-│          ▼                                                  │
-│  Check OS / filesystem layer                                │
+│  1. No LUN visible on host                                                                            │
+│          │                                                                                            │
+│          ▼                                                                                            │
+│  Check WWPN in zone? ── No ──► Add WWPN to zone, activate                                             │
+│          │ Yes                                                                                        │
+│          ▼                                                                                            │
+│  Zone set active? ──── No ──► cfgenable / zoneset activate                                            │
+│          │ Yes                                                                                        │
+│          ▼                                                                                            │
+│  Target port online? ─ No ──► Check SFP, cable, port state                                            │
+│          │ Yes                                                                                        │
+│          ▼                                                                                            │
+│  LUN mapped to host group? No ► Add host to storage group                                             │
+│          │ Yes                                                                                        │
+│          ▼                                                                                            │
+│  Multipath sees paths? ─ No ──► Rescan HBAs, reload mpio                                              │
+│          │ Yes                                                                                        │
+│          ▼                                                                                            │
+│  Check OS / filesystem layer                                                                          │
 └─────────────────────────────────────────────────────────────┘
 ```
 

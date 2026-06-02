@@ -8,10 +8,10 @@ ESXi Access Control reference covering Exception Users, Local Account Management
 ESXi Access Control Model
 ```text
 ┌──────────────────────────────────────────────────────┐
-│  vCenter (Primary path — day-to-day operations)      │
-│  ├── AD / SSO identity source                        │
-│  ├── Role-based permissions propagated to ESXi       │
-│  └── Lockdown Mode: blocks all direct host access    │
+│  vCenter (Primary path — day-to-day operations)                                                       │
+│  ├── AD / SSO identity source                                                                         │
+│  ├── Role-based permissions propagated to ESXi                                                        │
+│  └── Lockdown Mode: blocks all direct host access                                                     │
 └──────────────────────┬───────────────────────────────┘
                        │ vpxa / hostd (HTTPS 443/902)
 ```

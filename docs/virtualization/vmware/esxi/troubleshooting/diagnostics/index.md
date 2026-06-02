@@ -8,29 +8,29 @@ ESXi Diagnostics reference covering Common Issues, Log Analysis, Performance Tro
 ESXi Diagnostic Data Sources
 ```text
 ┌──────────────────────────────────────────────────────────┐
-│  vSphere Client (GUI)                                    │
-│  ├── Host → Monitor → Issues & Alarms                    │
-│  ├── Host → Monitor → Tasks (recent task failures)       │
-│  └── Host → Monitor → Performance (CPU, mem, storage)    │
+│  vSphere Client (GUI)                                                                                 │
+│  ├── Host → Monitor → Issues & Alarms                                                                 │
+│  ├── Host → Monitor → Tasks (recent task failures)                                                    │
+│  └── Host → Monitor → Performance (CPU, mem, storage)                                                 │
 ├──────────────────────────────────────────────────────────┤
-│  ESXi Shell / SSH (CLI)                                  │
-│  ├── /var/log/vmkernel.log  storage, network, drivers    │
-│  ├── /var/log/hostd.log     API, VM ops, config          │
-│  ├── /var/log/vpxa.log      vCenter agent comms          │
-│  ├── /var/log/fdm.log       HA / Fault Domain Manager    │
-│  ├── /var/log/auth.log      SSH logins, PAM failures     │
-│  └── esxtop                 interactive real-time perf   │
-│      c=CPU  m=Mem  d=Disk  n=Net                         │
+│  ESXi Shell / SSH (CLI)                                                                               │
+│  ├── /var/log/vmkernel.log  storage, network, drivers                                                 │
+│  ├── /var/log/hostd.log     API, VM ops, config                                                       │
+│  ├── /var/log/vpxa.log      vCenter agent comms                                                       │
+│  ├── /var/log/fdm.log       HA / Fault Domain Manager                                                 │
+│  ├── /var/log/auth.log      SSH logins, PAM failures                                                  │
+│  └── esxtop                 interactive real-time perf                                                │
+│      c=CPU  m=Mem  d=Disk  n=Net                                                                      │
 ├──────────────────────────────────────────────────────────┤
-│  Support Bundle                                          │
-│  └── vm-support -w /tmp/                                 │
-│      Includes all logs + config + network + storage state│
+│  Support Bundle                                                                                       │
+│  └── vm-support -w /tmp/                                                                              │
+│      Includes all logs + config + network + storage state                                             │
 ├──────────────────────────────────────────────────────────┤
-│  Key Performance Thresholds                              │
-│  ├── CPU Ready    < 5%    │ > 10% → investigate          │
-│  ├── Mem Balloon  ~0      │ Growing → monitor            │
-│  ├── Mem Swap     = 0     │ > 0 → urgent                 │
-│  └── DS Latency   < 10ms  │ > 20ms → investigate         │
+│  Key Performance Thresholds                                                                           │
+│  ├── CPU Ready    < 5%    │ > 10% → investigate                                                       │
+│  ├── Mem Balloon  ~0      │ Growing → monitor                                                         │
+│  ├── Mem Swap     = 0     │ > 0 → urgent                                                              │
+│  └── DS Latency   < 10ms  │ > 20ms → investigate                                                      │
 └──────────────────────────────────────────────────────────┘
 ```
 ┌───────────────────────────────────────── ESXi — Diagnostics ──────────────────────────────────────────┐

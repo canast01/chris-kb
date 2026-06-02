@@ -8,24 +8,24 @@ CLI Reference reference covering Services, Certificates, Proxy & Network, NTP & 
   LCM CLI Coverage (SSH to LCM as root)
 ```text
 ┌─────────────────────────────────────────────────────────────────┐
-│  vracli sub-commands                                            │
-│  ┌───────────────────────────────────────────────────────┐      │
-│  │ status             → appliance + service health       │      │
-│  │ cluster status     → node quorum state                │      │
-│  │ services list/restart/stop/start                      │      │
-│  │ certificate list/show/import/delete                   │      │
-│  │ proxy show/set/clear                                  │      │
-│  │ network show / dns set                                │      │
-│  │ ntp show/set                                          │      │
-│  │ support-bundle     → generate log bundle              │      │
-│  └───────────────────────────────────────────────────────┘      │
-│                                                                 │
-│  Log Files                      System Checks                   │
-│  ┌─────────────────────────┐    ┌────────────────────────────┐  │
-│  │ /var/log/lcm/lcm-app.log│    │ timedatectl status (NTP)   │  │
-│  │ /var/log/lcm/lcm-debug  │    │ chronyc makestep           │  │
-│  │ journalctl -u <svc>     │    │ df -h (disk)               │  │
-│  └─────────────────────────┘    └────────────────────────────┘  │
+│  vracli sub-commands                                                                                  │
+│  ┌───────────────────────────────────────────────────────┐                                            │
+│  │ status             → appliance + service health       │                                            │
+│  │ cluster status     → node quorum state                │                                            │
+│  │ services list/restart/stop/start                      │                                            │
+│  │ certificate list/show/import/delete                   │                                            │
+│  │ proxy show/set/clear                                  │                                            │
+│  │ network show / dns set                                │                                            │
+│  │ ntp show/set                                          │                                            │
+│  │ support-bundle     → generate log bundle              │                                            │
+│  └───────────────────────────────────────────────────────┘                                            │
+│                                                                                                       │
+│  Log Files                      System Checks                                                         │
+│  ┌─────────────────────────┐    ┌────────────────────────────┐                                        │
+│  │ /var/log/lcm/lcm-app.log│    │ timedatectl status (NTP)   │                                        │
+│  │ /var/log/lcm/lcm-debug  │    │ chronyc makestep           │                                        │
+│  │ journalctl -u <svc>     │    │ df -h (disk)               │                                        │
+│  └─────────────────────────┘    └────────────────────────────┘                                        │
 └─────────────────────────────────────────────────────────────────┘
 ```
 ┌──────────────────────────────────── Aria Suite LCM CLI Reference ─────────────────────────────────────┐

@@ -8,7 +8,7 @@ An iSCSI session is a logical connection between an initiator and a target, esta
         SESSION SETUP SEQUENCE
 ```text
 ┌──────────────┐                         ┌──────────────────┐
-│  Initiator   │                         │     Target       │
+│  Initiator   │                         │     Target                                                   │
 └──────┬───────┘                         └─────────┬────────┘
 ```
        │  1. SendTargets discovery                  │

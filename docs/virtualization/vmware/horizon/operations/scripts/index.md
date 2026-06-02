@@ -8,22 +8,22 @@ Scripts reference covering Get Session Count by Pool, Force Logoff Disconnected 
   Automation via PowerCLI / REST API
 ```powershell
 ┌──────────────────────────────────────────────────────────┐
-│  Connect-HVServer ──► token/session                      │
-│                                                          │
-│  Session Management        Pool Management               │
-│  ┌──────────────────┐      ┌──────────────────────────┐  │
-│  │ Get-HVLocalSession│     │ Get-HVPool               │  │
-│  │ Invoke-HVSession  │     │ Get-HVMachine -ErrorState│  │
-│  │ Logoff            │     │ Remove-HVDesktop         │  │
-│  └──────────────────┘      └──────────────────────────┘  │
-│                                                          │
-│  Reporting                 REST API (Bearer token)        │
-│  ┌──────────────────┐      ┌──────────────────────────┐  │
-│  │ Entitlement      │      │ POST /rest/login          │  │
-│  │ report CSV       │      │ GET  /inventory/v1/pools  │  │
-│  │ Pool availability│      │ POST /action/refresh      │  │
-│  │ alert script     │      └──────────────────────────┘  │
-│  └──────────────────┘                                    │
+│  Connect-HVServer ──► token/session                                                                   │
+│                                                                                                       │
+│  Session Management        Pool Management                                                            │
+│  ┌──────────────────┐      ┌──────────────────────────┐                                               │
+│  │ Get-HVLocalSession│     │ Get-HVPool               │                                               │
+│  │ Invoke-HVSession  │     │ Get-HVMachine -ErrorState│                                               │
+│  │ Logoff            │     │ Remove-HVDesktop         │                                               │
+│  └──────────────────┘      └──────────────────────────┘                                               │
+│                                                                                                       │
+│  Reporting                 REST API (Bearer token)                                                    │
+│  ┌──────────────────┐      ┌──────────────────────────┐                                               │
+│  │ Entitlement      │      │ POST /rest/login          │                                              │
+│  │ report CSV       │      │ GET  /inventory/v1/pools  │                                              │
+│  │ Pool availability│      │ POST /action/refresh      │                                              │
+│  │ alert script     │      └──────────────────────────┘                                               │
+│  └──────────────────┘                                                                                 │
 └──────────────────────────────────────────────────────────┘
 ```
 ┌──────────────────────────────── VMware Horizon — Operational Scripts ─────────────────────────────────┐

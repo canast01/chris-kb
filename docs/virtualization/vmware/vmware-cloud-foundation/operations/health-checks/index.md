@@ -8,11 +8,11 @@ Health Checks reference covering Common Operational Issues.
 VCF Daily Health Check — Coverage Map
 ```text
 ┌─────────────────────────────────────────────────────┐
-│  SDDC Manager                                       │
-│  ├─ Dashboard: all domains green?                   │
-│  ├─ Security → Certs: no expiry < 60 days?          │
-│  ├─ LCM → Bundles: critical patches pending?        │
-│  └─ Admin → Backup: last backup timestamp OK?       │
+│  SDDC Manager                                                                                         │
+│  ├─ Dashboard: all domains green?                                                                     │
+│  ├─ Security → Certs: no expiry < 60 days?                                                            │
+│  ├─ LCM → Bundles: critical patches pending?                                                          │
+│  └─ Admin → Backup: last backup timestamp OK?                                                         │
 └──────────────────────┬──────────────────────────────┘
 ```
 ┌─────────────────────────────── VMware Cloud Foundation — Health Checks ───────────────────────────────┐

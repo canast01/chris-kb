@@ -15,12 +15,12 @@ Usage Metrics reference covering Current totals, Section growth, Health checks.
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │       Content Totals        │  │      Top 3 Sections          │  │      Content Types          │   │
-│   │       ─────────────         │  │      ─────────────           │  │      ─────────────          │   │
-│   │  Total pages:       2,100+  │  │  Storage:          346       │  │  Mermaid flowcharts: 1,206  │   │
-│   │  Sections:             27   │  │  Virtualization:   344       │  │  Formatted tables:   1,023  │   │
-│   │  CLI reference pages:  251  │  │  Cloud:            223       │  │  CLI reference pages:  251  │   │
-│   │  Pages per section:    78   │  │  Disaster Recovery: 134      │  │  ASCII diagrams:     129+   │   │
+│   │       Content Totals        │  │      Top 3 Sections          │  │      Content Types          │  │
+│   │       ─────────────         │  │      ─────────────           │  │      ─────────────          │  │
+│   │  Total pages:       2,100+  │  │  Storage:          346       │  │  Mermaid flowcharts: 1,206  │  │
+│   │  Sections:             27   │  │  Virtualization:   344       │  │  Formatted tables:   1,023  │  │
+│   │  CLI reference pages:  251  │  │  Cloud:            223       │  │  CLI reference pages:  251  │  │
+│   │  Pages per section:    78   │  │  Disaster Recovery: 134      │  │  ASCII diagrams:     129+   │  │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
 │                          ▼                                                 ▼                          │
@@ -33,16 +33,16 @@ Usage Metrics reference covering Current totals, Section growth, Health checks.
 │   │   Disaster Rcvry   │   134   │  Automation         │    67   │  Certifications   │    37      │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Health: ./validate-site.sh · ./audit-site.sh · ./preview-site.sh                                  │
+│    Health: ./validate-site.sh · ./audit-site.sh · ./preview-site.sh                                   │
 │                                                                                                       │
 │    Key terms:                                                                                         │
 │                                                                                                       │
-│    Section         = Top-level KB area (Storage, Virtualization, Cloud, etc.)                        │
-│    CLI reference   = Page with CLI commands, flags, and usage examples                               │
-│    Mermaid         = Flowchart or sequence diagram embedded in a fenced mermaid block                │
-│    ASCII diagram   = Full-width box-drawing architecture diagram (103+ chars wide)                   │
-│    audit-site.sh   = Script that counts pages, checks structure, and flags quality issues            │
-│    validate-site.sh= Strict MkDocs build check; run before every commit                             │
+│    Section         = Top-level KB area (Storage, Virtualization, Cloud, etc.)                         │
+│    CLI reference   = Page with CLI commands, flags, and usage examples                                │
+│    Mermaid         = Flowchart or sequence diagram embedded in a fenced mermaid block                 │
+│    ASCII diagram   = Full-width box-drawing architecture diagram (103+ chars wide)                    │
+│    audit-site.sh   = Script that counts pages, checks structure, and flags quality issues             │
+│    validate-site.sh= Strict MkDocs build check; run before every commit                               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

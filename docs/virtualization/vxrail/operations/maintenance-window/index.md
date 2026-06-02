@@ -8,13 +8,13 @@ VxRail Maintenance Window reference covering Overview, Where It Fits, Daily Chec
 Maintenance Window Flow
 ```text
 ┌──────────────────┐   ┌──────────────────┐   ┌──────────────────┐
-│  Pre-Maintenance │   │    Execute       │   │  Post-Validate   │
-│                  │   │                  │   │                  │
-│ health checks    │ → │ scope of work    │ → │ services up?     │
-│ comms sent       │   │ iDRAC access     │   │ no new alerts?   │
-│ backups current  │   │ confirmed        │   │ vSAN healthy?    │
-│ rollback ready   │   │ follow runbook   │   │ VMs running?     │
-│ change ticket    │   │ do not extend    │   │ update ticket    │
+│  Pre-Maintenance │   │    Execute       │   │  Post-Validate                                          │
+│                  │   │                  │   │                                                         │
+│ health checks    │ → │ scope of work    │ → │ services up?                                            │
+│ comms sent       │   │ iDRAC access     │   │ no new alerts?                                          │
+│ backups current  │   │ confirmed        │   │ vSAN healthy?                                           │
+│ rollback ready   │   │ follow runbook   │   │ VMs running?                                            │
+│ change ticket    │   │ do not extend    │   │ update ticket                                           │
 └──────────────────┘   └──────────────────┘   └──────────────────┘
 ```
          │                      │                      │

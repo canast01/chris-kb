@@ -8,16 +8,16 @@ ESXi Scripts reference covering Storage Path Health Check (Bash / esxcli), ESXi 
 ESXi Automation Scripts — Tool Selection
 ```powershell
 ┌───────────────────────────────────────────────────────┐
-│  Task                         Recommended Tool        │
-│  ─────────────────────────────────────────────────    │
-│  Multi-host cluster health    PowerCLI (.ps1)         │
-│  Storage path check           Bash / esxcli (.sh)     │
-│  Event and error collection   Python + pyVmomi (.py)  │
-│  NTP audit across hosts       Bash + SSH (.sh)        │
-│  Config compliance at scale   Ansible + community.    │
-│                               vmware collection        │
-│  REST API health (no module)  PowerShell Invoke-REST   │
-│  SSH-based ad-hoc checks      Plink / CMD batch (.bat) │
+│  Task                         Recommended Tool                                                        │
+│  ─────────────────────────────────────────────────                                                    │
+│  Multi-host cluster health    PowerCLI (.ps1)                                                         │
+│  Storage path check           Bash / esxcli (.sh)                                                     │
+│  Event and error collection   Python + pyVmomi (.py)                                                  │
+│  NTP audit across hosts       Bash + SSH (.sh)                                                        │
+│  Config compliance at scale   Ansible + community.                                                    │
+│                               vmware collection                                                       │
+│  REST API health (no module)  PowerShell Invoke-REST                                                  │
+│  SSH-based ad-hoc checks      Plink / CMD batch (.bat)                                                │
 └───────────────────────────────────────────────────────┘
 ```
 ┌─────────────────────────────────────────── ESXi — Scripts ────────────────────────────────────────────┐

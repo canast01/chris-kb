@@ -8,9 +8,9 @@ Health Checks reference covering Desktop Pool Health, Active Session Count vs Li
   Health Check Chain
 ```text
 ┌──────────────────┐    ┌──────────────────┐    ┌──────────────────┐
-│  Connection      │    │  Composer /      │    │  vCenter         │
-│  Servers         │───►│  App Volumes Mgr │───►│  (pool/datastore │
-│  (all green?)    │    │  (healthy?)      │    │   capacity?)      │
+│  Connection      │    │  Composer /      │    │  vCenter                                              │
+│  Servers         │───►│  App Volumes Mgr │───►│  (pool/datastore                                      │
+│  (all green?)    │    │  (healthy?)      │    │   capacity?)                                          │
 └──────────────────┘    └──────────────────┘    └──────────────────┘
 ```
 ┌─────────────────────────────────── VMware Horizon — Health Checks ────────────────────────────────────┐
@@ -64,9 +64,9 @@ Health Checks reference covering Desktop Pool Health, Active Session Count vs Li
 ```text
 ```
 ┌──────────────────┐
-│  Desktop Pools                                                   │
-│  (Available > 0,                                                 │
-│   Error = 0?)                                                    │
+│  Desktop Pools                                                                                        │
+│  (Available > 0,                                                                                      │
+│   Error = 0?)                                                                                         │
 └──────────────────┘
 ```text
 ┌─────────────────────────────────── VMware Horizon — Health Checks ────────────────────────────────────┐

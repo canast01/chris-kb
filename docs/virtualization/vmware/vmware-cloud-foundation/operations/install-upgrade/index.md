@@ -8,9 +8,9 @@ Install & Upgrade reference covering Async Patches, Upgrade Readiness, Bring-Up.
 VCF Upgrade Flow — SDDC Manager Orchestration
 ```text
 ┌─────────────────────────────────────────────────────┐
-│  Step 1: Bundle Acquisition                         │
-│  depot.vmware.com ──► SDDC Manager bundle store     │
-│  (or offline: .tar file ► local depot)              │
+│  Step 1: Bundle Acquisition                                                                           │
+│  depot.vmware.com ──► SDDC Manager bundle store                                                       │
+│  (or offline: .tar file ► local depot)                                                                │
 └──────────────────────────┬──────────────────────────┘
 ```
 ┌───────────────────────────── VMware Cloud Foundation — Install & Upgrade ─────────────────────────────┐
@@ -63,21 +63,21 @@ VCF Upgrade Flow — SDDC Manager Orchestration
                            ▼
 ```text
 ┌─────────────────────────────────────────────────────┐
-│  Step 3: Upgrade Sequence (BOM order, no skipping)  │
-│                                                     │
-│  ① SDDC Manager (always first)                      │
-│         │                                           │
-│         ▼                                           │
-│  ② vCenter (management domain, then workload)       │
-│         │                                           │
-│         ▼                                           │
-│  ③ ESXi hosts (rolling, cluster by cluster)         │
-│         │                                           │
-│         ▼                                           │
-│  ④ NSX-T Manager cluster → Edge clusters            │
-│         │                                           │
-│         ▼                                           │
-│  ⑤ vSAN firmware/driver (HCL-validated)             │
+│  Step 3: Upgrade Sequence (BOM order, no skipping)                                                    │
+│                                                                                                       │
+│  ① SDDC Manager (always first)                                                                        │
+│         │                                                                                             │
+│         ▼                                                                                             │
+│  ② vCenter (management domain, then workload)                                                         │
+│         │                                                                                             │
+│         ▼                                                                                             │
+│  ③ ESXi hosts (rolling, cluster by cluster)                                                           │
+│         │                                                                                             │
+│         ▼                                                                                             │
+│  ④ NSX-T Manager cluster → Edge clusters                                                              │
+│         │                                                                                             │
+│         ▼                                                                                             │
+│  ⑤ vSAN firmware/driver (HCL-validated)                                                               │
 └──────────────────────────┬──────────────────────────┘
 ```
                            │
@@ -85,8 +85,8 @@ VCF Upgrade Flow — SDDC Manager Orchestration
 ```text
 ```
 ┌─────────────────────────────────────────────────────┐
-│  Step 4: Post-Upgrade Validation                    │
-│  All domains green · services healthy · no alarms   │
+│  Step 4: Post-Upgrade Validation                                                                      │
+│  All domains green · services healthy · no alarms                                                     │
 └─────────────────────────────────────────────────────┘
 ```text
 ┌───────────────────────────── VMware Cloud Foundation — Install & Upgrade ─────────────────────────────┐

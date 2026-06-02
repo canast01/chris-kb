@@ -7,23 +7,23 @@ Server Message Block (SMB) is a network file sharing protocol running over TCP p
         SMB ARCHITECTURE
 ```text
 ┌──────────────────┐     TCP 445      ┌──────────────────────────┐
-│  Windows/Linux   │                  │   SMB SERVER (Windows)   │
-│  Client          │                  │                          │
-│                  │  1. Negotiate    │  \\server\Finance        │
-│  net use Z:      ├─────────────────►│    (UNC path / share)    │
-│  \\server\share  │  2. SessionSetup │                          │
-│                  ├─────────────────►│  Auth: Kerberos / NTLM   │
-│  Kerberos ticket │◄─────────────────┤                          │
-│  or NTLM creds   │  3. TreeConnect  │  ┌──────────────────┐    │
-│                  ├─────────────────►│  │  Share Perms     │    │
-│                  │◄─────────────────┤  │  (Everyone:Read) │    │
-│                  │  Share connected │  └────────┬─────────┘    │
-│  ┌─────────────┐ │  4. File I/O     │           │ AND          │
-│  │  Z:\files   │◄╪═════════════════►│  ┌────────▼─────────┐    │
-│  └─────────────┘ │                  │  │  NTFS ACL        │    │
-│                  │                  │  │  (user:Modify)   │    │
-│                  │                  │  └──────────────────┘    │
-│                  │                  │  Effective = most restrict│
+│  Windows/Linux   │                  │   SMB SERVER (Windows)                                          │
+│  Client          │                  │                                                                 │
+│                  │  1. Negotiate    │  \\server\Finance                                               │
+│  net use Z:      ├─────────────────►│    (UNC path / share)                                           │
+│  \\server\share  │  2. SessionSetup │                                                                 │
+│                  ├─────────────────►│  Auth: Kerberos / NTLM                                          │
+│  Kerberos ticket │◄─────────────────┤                                                                 │
+│  or NTLM creds   │  3. TreeConnect  │  ┌──────────────────┐                                           │
+│                  ├─────────────────►│  │  Share Perms     │                                           │
+│                  │◄─────────────────┤  │  (Everyone:Read) │                                           │
+│                  │  Share connected │  └────────┬─────────┘                                           │
+│  ┌─────────────┐ │  4. File I/O     │           │ AND                                                 │
+│  │  Z:\files   │◄╪═════════════════►│  ┌────────▼─────────┐                                           │
+│  └─────────────┘ │                  │  │  NTFS ACL        │                                           │
+│                  │                  │  │  (user:Modify)   │                                           │
+│                  │                  │  └──────────────────┘                                           │
+│                  │                  │  Effective = most restrict                                      │
 └──────────────────┘                  └──────────────────────────┘
 ```
 

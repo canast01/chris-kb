@@ -94,39 +94,39 @@ VMware platform knowledge base covering the full VMware stack — vCenter, ESXi,
 │  Step 1 · Physical Infrastructure                                                                     │
 │  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
 │  Rack and cable servers  ·  Confirm power + cooling capacity                                          │
-│  Configure ToR switches — VLANs: Management | vMotion | vSAN | NSX TEP | VM Uplink                   │
-│  MTU 9000 on vSAN + TEP switch ports  ·  Port channels / LAGs configured on uplinks                  │
-│  IPMI / iDRAC: out-of-band management on every host  ·  Host firmware at minimum required version    │
-│  DNS: A-records for all hosts + VIPs (vCenter FQDN, NSX Manager VIP, LCM, Edge nodes)                │
-│  NTP: two sources reachable from all hosts  ·  Time sync verified before any software deploy         │
+│  Configure ToR switches — VLANs: Management | vMotion | vSAN | NSX TEP | VM Uplink                    │
+│  MTU 9000 on vSAN + TEP switch ports  ·  Port channels / LAGs configured on uplinks                   │
+│  IPMI / iDRAC: out-of-band management on every host  ·  Host firmware at minimum required version     │
+│  DNS: A-records for all hosts + VIPs (vCenter FQDN, NSX Manager VIP, LCM, Edge nodes)                 │
+│  NTP: two sources reachable from all hosts  ·  Time sync verified before any software deploy          │
 │                                                                                                       │
 │                                      │  install ESXi ISO on each host                                 │
 │                                      ▼                                                                │
 │  Step 2 · ESXi  (repeat for every host)                                                               │
 │  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-│  Boot from ISO  ·  Set root password  ·  vmk0: management IP, subnet mask, default gateway           │
-│  Set hostname + DNS suffix  ·  Configure NTP  ·  Enable SSH temporarily for initial setup            │
-│  Verify HTTPS/443 reachable from jump host before continuing to the next host                        │
-│  All hosts must be up and reachable on management VLAN before deploying vCenter                      │
-│  Disable SSH on each host after initial config; re-enable only when needed for maintenance           │
+│  Boot from ISO  ·  Set root password  ·  vmk0: management IP, subnet mask, default gateway            │
+│  Set hostname + DNS suffix  ·  Configure NTP  ·  Enable SSH temporarily for initial setup             │
+│  Verify HTTPS/443 reachable from jump host before continuing to the next host                         │
+│  All hosts must be up and reachable on management VLAN before deploying vCenter                       │
+│  Disable SSH on each host after initial config; re-enable only when needed for maintenance            │
 │                                                                                                       │
 │                                      │  deploy VCSA OVA to first ESXi host                            │
 │                                      ▼                                                                │
 │  Step 3 · vCenter Server (VCSA)                                                                       │
 │  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-│  Deploy VCSA OVA — Stage 1: appliance config  ·  Stage 2: SSO domain + vCenter services              │
-│  SSO domain: vsphere.local  ·  Assign management IP, hostname, DNS, NTP for the VCSA                 │
-│  Create Datacenter + Cluster  ·  Add all ESXi hosts to cluster inventory                             │
-│  Create vDS  ·  Migrate vmk0 (mgmt) to vDS  ·  Add vmk1 (vMotion) + vmk2 (vSAN) per host            │
-│  Enable HA with admission control  ·  DRS: fully automated  ·  Create vLCM baseline image            │
-│  Connect Active Directory as identity source  ·  Create admin roles  ·  Assign AD groups             │
-│  Enable VCSA file-based backup to SFTP — schedule daily  ·  Confirm backup restores successfully     │
+│  Deploy VCSA OVA — Stage 1: appliance config  ·  Stage 2: SSO domain + vCenter services               │
+│  SSO domain: vsphere.local  ·  Assign management IP, hostname, DNS, NTP for the VCSA                  │
+│  Create Datacenter + Cluster  ·  Add all ESXi hosts to cluster inventory                              │
+│  Create vDS  ·  Migrate vmk0 (mgmt) to vDS  ·  Add vmk1 (vMotion) + vmk2 (vSAN) per host              │
+│  Enable HA with admission control  ·  DRS: fully automated  ·  Create vLCM baseline image             │
+│  Connect Active Directory as identity source  ·  Create admin roles  ·  Assign AD groups              │
+│  Enable VCSA file-based backup to SFTP — schedule daily  ·  Confirm backup restores successfully      │
 │                                                                                                       │
 │      │  enable vSAN on cluster                                       │  deploy NSX Manager OVA (×3)   │
 │      ▼                                                               ▼                                │
 │  ┌──────────────────────────────────────────────┐  ┌──────────────────────────────────────────────┐   │
 │  │  Step 4 · vSAN                               │  │  Step 5 · NSX                                │   │
-│  │  Cluster → Configure → vSAN → Turn on        │  │  Deploy NSX Manager OVA ×3 (cluster VIP)    │   │
+│  │  Cluster → Configure → vSAN → Turn on        │  │  Deploy NSX Manager OVA ×3 (cluster VIP)    │    │
 │  │  Claim disks: assign cache + capacity role   │  │  Register vCenter as compute manager         │   │
 │  │  Disk groups: 1 cache SSD + 1–7 cap disks    │  │  Create Transport Zones: Overlay + VLAN TZ   │   │
 │  │  Tag vmk2 for vSAN; verify unicast agents    │  │  Create Uplink Profile: MTU 9000, LAG mode   │   │
@@ -134,33 +134,33 @@ VMware platform knowledge base covering the full VMware stack — vCenter, ESXi,
 │  │  Skyline Health: all checks green            │  │  Deploy Edge nodes ×2  ·  Edge Cluster       │   │
 │  │  Create SPBM policies (FTT level, RAID type) │  │  T0 Gateway: BGP or static peer to router    │   │
 │  │  Enable Performance Service                  │  │  T1 Gateway: connected to T0, NAT + LB       │   │
-│  │  Enable dedup + compression if applicable    │  │  Create overlay segments for workloads        │   │
+│  │  Enable dedup + compression if applicable    │  │  Create overlay segments for workloads        │  │
 │  │  Verify object policy compliance: all green  │  │  DFW: define groups + firewall rule sets     │   │
 │  └──────────────────────────────────────────────┘  └──────────────────────────────────────────────┘   │
 │      │                                                               │                                │
-│      └──────────────────────────────┬────────────────────────────────┘                               │
+│      └──────────────────────────────┬────────────────────────────────┘                                │
 │                                     │  (optional) deploy monitoring layer                             │
 │                                     ▼                                                                 │
 │  Step 6 · Aria Suite  (optional — deploy after vCenter is stable)                                     │
 │  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-│  Deploy Aria Suite Lifecycle Manager (LCM) OVA first — LCM manages all Aria installs + upgrades      │
-│  Via LCM → Aria Operations (vROps): register vCenter adapter, import vSAN + NSX mgmt packs           │
-│  Via LCM → Aria Operations for Logs: deploy log agents on ESXi, configure syslog forwarding          │
-│  Via LCM → Aria Automation: connect vCenter + NSX endpoints, create cloud accounts + blueprints      │
-│  Via LCM → Aria Operations for Networks (optional): NSX flow analysis + physical switch visibility   │
-│  Configure alert policies: capacity > 70%, health score < 80%, resync throughput, cert expiry        │
+│  Deploy Aria Suite Lifecycle Manager (LCM) OVA first — LCM manages all Aria installs + upgrades       │
+│  Via LCM → Aria Operations (vROps): register vCenter adapter, import vSAN + NSX mgmt packs            │
+│  Via LCM → Aria Operations for Logs: deploy log agents on ESXi, configure syslog forwarding           │
+│  Via LCM → Aria Automation: connect vCenter + NSX endpoints, create cloud accounts + blueprints       │
+│  Via LCM → Aria Operations for Networks (optional): NSX flow analysis + physical switch visibility    │
+│  Configure alert policies: capacity > 70%, health score < 80%, resync throughput, cert expiry         │
 │                                                                                                       │
 │                                     │  (optional) add-on products — any order after Step 3            │
 │                                     ▼                                                                 │
 │  Step 7 · Add-on Products                                                                             │
 │  ─────────────────────────────────────────────────────────────────────────────────────────────────    │
-│  SRM: deploy SRM appliance + vSphere Replication at both sites  ·  configure recovery plans          │
-│  Horizon: deploy Connection Servers + Unified Access Gateway  ·  configure desktop + app pools       │
-│  HCX: deploy HCX Manager  ·  activate licence  ·  pair sites  ·  create service mesh                 │
-│  Tanzu: enable Workload Management on cluster  ·  deploy Supervisor  ·  create namespaces + classes  │
+│  SRM: deploy SRM appliance + vSphere Replication at both sites  ·  configure recovery plans           │
+│  Horizon: deploy Connection Servers + Unified Access Gateway  ·  configure desktop + app pools        │
+│  HCX: deploy HCX Manager  ·  activate licence  ·  pair sites  ·  create service mesh                  │
+│  Tanzu: enable Workload Management on cluster  ·  deploy Supervisor  ·  create namespaces + classes   │
 │                                                                                                       │
 │  VCF path:    SDDC Manager automates steps 2–5 via a single guided bringup workflow                   │
-│  VxRail path: Dell HCI appliance — VxRail Manager handles ESXi + vCenter + vSAN automatically        │
+│  VxRail path: Dell HCI appliance — VxRail Manager handles ESXi + vCenter + vSAN automatically         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

@@ -8,25 +8,25 @@ LDAP Binds reference covering Overview, Simple Bind, SASL / Kerberos Bind, Servi
         LDAP BIND TYPES
 ```text
 ┌──────────────────────────────────────────────────────────────┐
-│  ANONYMOUS BIND                                              │
-│  ldapsearch -x -H ldap://dc01 -b "DC=corp,DC=local" ...     │
-│  No credentials — limited or no access in AD (blocked default)│
-│                                                              │
-│  SIMPLE BIND (DN + password)                                 │
-│  ldapsearch -H ldaps://dc01:636                             │
-│             -D "CN=svc-ldap,OU=Svc,DC=corp,DC=local"        │
-│             -w "P@ssw0rd!"                                  │
-│  ⚠ Plaintext unless using LDAPS / StartTLS                   │
-│                                                              │
-│  SASL / GSSAPI BIND (Kerberos)                               │
-│  kinit svc-ldap@CORP.LOCAL                                  │
-│  ldapsearch -H ldap://dc01 -Y GSSAPI ...                    │
-│  Uses Kerberos ticket — no password sent over wire           │
-│  ✓ Preferred for Active Directory environments               │
-│                                                              │
-│  Port requirements:                                          │
-│  Simple bind ──► must use LDAPS (636) or StartTLS           │
-│  SASL GSSAPI ──► plain 389 ok (Kerberos handles security)    │
+│  ANONYMOUS BIND                                                                                       │
+│  ldapsearch -x -H ldap://dc01 -b "DC=corp,DC=local" ...                                               │
+│  No credentials — limited or no access in AD (blocked default)                                        │
+│                                                                                                       │
+│  SIMPLE BIND (DN + password)                                                                          │
+│  ldapsearch -H ldaps://dc01:636                                                                       │
+│             -D "CN=svc-ldap,OU=Svc,DC=corp,DC=local"                                                  │
+│             -w "P@ssw0rd!"                                                                            │
+│  ⚠ Plaintext unless using LDAPS / StartTLS                                                            │
+│                                                                                                       │
+│  SASL / GSSAPI BIND (Kerberos)                                                                        │
+│  kinit svc-ldap@CORP.LOCAL                                                                            │
+│  ldapsearch -H ldap://dc01 -Y GSSAPI ...                                                              │
+│  Uses Kerberos ticket — no password sent over wire                                                    │
+│  ✓ Preferred for Active Directory environments                                                        │
+│                                                                                                       │
+│  Port requirements:                                                                                   │
+│  Simple bind ──► must use LDAPS (636) or StartTLS                                                     │
+│  SASL GSSAPI ──► plain 389 ok (Kerberos handles security)                                             │
 └──────────────────────────────────────────────────────────────┘
 ```
 

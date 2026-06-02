@@ -8,24 +8,24 @@ DNS Lookups reference covering Overview, nslookup, dig, Resolve-DnsName (PowerSh
         FORWARD vs REVERSE LOOKUPS
 ```text
 ┌──────────────────────────────────────────────────────────────┐
-│  FORWARD LOOKUP (name → IP)                                  │
-│  dig A web01.example.local @10.0.0.53                           │
-│  → ANSWER: web01.example.local. 3600 IN A 192.168.10.100        │
-│                                                              │
-│  REVERSE LOOKUP (IP → name)                                  │
-│  dig -x 192.168.10.100 @10.0.0.53                            │
-│  → ANSWER: 100.10.168.192.in-addr.arpa. PTR web01.example.local.│
-│                                                              │
-│  ITERATIVE (resolver asks each level):                       │
-│  client ─► root (.) ─► TLD (.com) ─► authoritative ─► answer│
-│                                                              │
-│  RECURSIVE (resolver does all work):                         │
-│  client ─► recursive resolver ─────────────────────► answer │
-│            (resolver iterates internally, returns final IP)  │
-│                                                              │
-│  TTL: time-to-live in seconds; cached until expired          │
-│  dig output: web01.example.local.  3600  IN  A  192.168.10.100  │
-│              name               TTL  class type  value       │
+│  FORWARD LOOKUP (name → IP)                                                                           │
+│  dig A web01.example.local @10.0.0.53                                                                 │
+│  → ANSWER: web01.example.local. 3600 IN A 192.168.10.100                                              │
+│                                                                                                       │
+│  REVERSE LOOKUP (IP → name)                                                                           │
+│  dig -x 192.168.10.100 @10.0.0.53                                                                     │
+│  → ANSWER: 100.10.168.192.in-addr.arpa. PTR web01.example.local.                                      │
+│                                                                                                       │
+│  ITERATIVE (resolver asks each level):                                                                │
+│  client ─► root (.) ─► TLD (.com) ─► authoritative ─► answer                                          │
+│                                                                                                       │
+│  RECURSIVE (resolver does all work):                                                                  │
+│  client ─► recursive resolver ─────────────────────► answer                                           │
+│            (resolver iterates internally, returns final IP)                                           │
+│                                                                                                       │
+│  TTL: time-to-live in seconds; cached until expired                                                   │
+│  dig output: web01.example.local.  3600  IN  A  192.168.10.100                                        │
+│              name               TTL  class type  value                                                │
 └──────────────────────────────────────────────────────────────┘
 ```
 

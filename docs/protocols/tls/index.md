@@ -12,7 +12,7 @@ TLS (Transport Layer Security) provides encryption, integrity, and authenticatio
         TLS HANDSHAKE (TLS 1.3 simplified)
 ```text
 ┌─────────────┐                              ┌──────────────────┐
-│   Client    │                              │     Server       │
+│   Client    │                              │     Server                                               │
 └──────┬──────┘                              └────────┬─────────┘
 ```
        │  1. ClientHello                              │

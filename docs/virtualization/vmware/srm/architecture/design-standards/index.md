@@ -8,23 +8,23 @@ Design Standards reference covering Test Network Design, IP Customization Strate
   Replication Topology + Recovery Plan Structure
 ```text
 ┌──────────────────────────────────────────────────────────────┐
-│  Protected Site               Recovery Site                  │
-│  ┌────────────┐               ┌────────────┐                 │
-│  │ VMs on     │──VR/SRA──────►│ Replica    │                 │
-│  │ replicated │  (RPO target) │ VMDKs      │                 │
-│  │ datastore  │               └────────────┘                 │
-│  └────────────┘                                              │
-│                                                              │
-│  Recovery Plan (priority groups):                            │
-│  ┌───────────────────────────────────────────────────────┐   │
-│  │  Priority 1: DCs / DNS / DHCP  ──► power on first    │    │
-│  │  Priority 2: Database servers  ──► wait for P1 done  │    │
-│  │  Priority 3: App servers       ──► wait for P2 done  │    │
-│  │  Priority 4: Web / LB          ──► wait for P3 done  │    │
-│  │  Priority 5: Non-critical      ──► last              │    │
-│  └───────────────────────────────────────────────────────┘   │
-│                                                              │
-│  Network Mapping: Protected VLAN ──► Recovery VLAN / Test    │
+│  Protected Site               Recovery Site                                                           │
+│  ┌────────────┐               ┌────────────┐                                                          │
+│  │ VMs on     │──VR/SRA──────►│ Replica    │                                                          │
+│  │ replicated │  (RPO target) │ VMDKs      │                                                          │
+│  │ datastore  │               └────────────┘                                                          │
+│  └────────────┘                                                                                       │
+│                                                                                                       │
+│  Recovery Plan (priority groups):                                                                     │
+│  ┌───────────────────────────────────────────────────────┐                                            │
+│  │  Priority 1: DCs / DNS / DHCP  ──► power on first    │                                             │
+│  │  Priority 2: Database servers  ──► wait for P1 done  │                                             │
+│  │  Priority 3: App servers       ──► wait for P2 done  │                                             │
+│  │  Priority 4: Web / LB          ──► wait for P3 done  │                                             │
+│  │  Priority 5: Non-critical      ──► last              │                                             │
+│  └───────────────────────────────────────────────────────┘                                            │
+│                                                                                                       │
+│  Network Mapping: Protected VLAN ──► Recovery VLAN / Test                                             │
 └──────────────────────────────────────────────────────────────┘
 ```
 ┌──────────────────────────────────── VMware SRM — Design Standards ────────────────────────────────────┐

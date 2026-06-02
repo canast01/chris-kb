@@ -8,25 +8,25 @@ Encryption reference covering Importing a Signed Certificate into Locker, Verify
   LCM Encryption Coverage
 ```text
 ┌─────────────────────────────────────────────────────────────────┐
-│  Locker (certificate + secret vault)                            │
-│  ┌─────────────────────────────────────────────────────────┐    │
-│  │ All certs/passwords encrypted with Locker Master        │    │
-│  │  Password (set at initial setup)                        │    │
-│  │ Passwords NEVER returned via API (alias + username only)│    │
-│  │ Locker Master Password → offline vault only             │    │
-│  └─────────────────────────────────────────────────────────┘    │
-│                                                                 │
-│  Certificate Lifecycle                    TLS                   │
-│  ┌────────────────────────────┐    ┌────────────────────┐       │
-│  │ Valid: >60 days  no action │    │ LCM 8.x: TLS 1.2+  │       │
-│  │ Expiring: 30-60  schedule  │    │ TLS 1.0/1.1 off    │       │
-│  │ Critical: 7-30   renew now │    │ Verify with        │       │
-│  │ Emergency: <7    immediate │    │  openssl s_client  │       │
-│  │ Expired         prod fails │    └────────────────────┘       │
-│  └────────────────────────────┘                                 │
-│                                                                 │
-│  Replace cert: Locker → Import → Environments → Replace Cert    │
-│  (Never replace certificates directly on product appliances)    │
+│  Locker (certificate + secret vault)                                                                  │
+│  ┌─────────────────────────────────────────────────────────┐                                          │
+│  │ All certs/passwords encrypted with Locker Master        │                                          │
+│  │  Password (set at initial setup)                        │                                          │
+│  │ Passwords NEVER returned via API (alias + username only)│                                          │
+│  │ Locker Master Password → offline vault only             │                                          │
+│  └─────────────────────────────────────────────────────────┘                                          │
+│                                                                                                       │
+│  Certificate Lifecycle                    TLS                                                         │
+│  ┌────────────────────────────┐    ┌────────────────────┐                                             │
+│  │ Valid: >60 days  no action │    │ LCM 8.x: TLS 1.2+  │                                             │
+│  │ Expiring: 30-60  schedule  │    │ TLS 1.0/1.1 off    │                                             │
+│  │ Critical: 7-30   renew now │    │ Verify with        │                                             │
+│  │ Emergency: <7    immediate │    │  openssl s_client  │                                             │
+│  │ Expired         prod fails │    └────────────────────┘                                             │
+│  └────────────────────────────┘                                                                       │
+│                                                                                                       │
+│  Replace cert: Locker → Import → Environments → Replace Cert                                          │
+│  (Never replace certificates directly on product appliances)                                          │
 └─────────────────────────────────────────────────────────────────┘
 ```
 ┌────────────────────────────────────── Aria Suite LCM Encryption ──────────────────────────────────────┐

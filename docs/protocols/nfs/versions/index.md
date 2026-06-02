@@ -8,18 +8,18 @@ NFS Versions reference covering Version Comparison, Recommended Version, Checkin
         NFSv3 vs NFSv4 vs NFSv4.1 COMPARISON
 ```text
 ┌─────────────────────┬──────────────┬──────────────┬──────────────┐
-│ Feature             │   NFSv3      │   NFSv4      │  NFSv4.1     │
+│ Feature             │   NFSv3      │   NFSv4      │  NFSv4.1                                          │
 ├─────────────────────┼──────────────┼──────────────┼──────────────┤
-│ Transport           │ UDP or TCP   │ TCP only     │ TCP only     │
-│ Port                │ 2049+111     │ 2049 only    │ 2049 only    │
-│ Stateful            │ No           │ Yes          │ Yes          │
-│ Locking             │ NLM (extra)  │ Built-in     │ Built-in     │
-│ Kerberos auth       │ Optional     │ Supported    │ Supported    │
-│ pNFS (parallel)     │ No           │ No           │ Yes          │
-│ ACLs                │ No native    │ NFSv4 ACLs   │ NFSv4 ACLs  │
-│ ID mapping          │ UID/GID nums │ user@domain  │ user@domain  │
+│ Transport           │ UDP or TCP   │ TCP only     │ TCP only                                          │
+│ Port                │ 2049+111     │ 2049 only    │ 2049 only                                         │
+│ Stateful            │ No           │ Yes          │ Yes                                               │
+│ Locking             │ NLM (extra)  │ Built-in     │ Built-in                                          │
+│ Kerberos auth       │ Optional     │ Supported    │ Supported                                         │
+│ pNFS (parallel)     │ No           │ No           │ Yes                                               │
+│ ACLs                │ No native    │ NFSv4 ACLs   │ NFSv4 ACLs                                        │
+│ ID mapping          │ UID/GID nums │ user@domain  │ user@domain                                       │
 ├─────────────────────┼──────────────┼──────────────┼──────────────┤
-│ Recommended for     │ Legacy only  │ General use  │ Modern/perf  │
+│ Recommended for     │ Legacy only  │ General use  │ Modern/perf                                       │
 └─────────────────────┴──────────────┴──────────────┴──────────────┘
 ```
 

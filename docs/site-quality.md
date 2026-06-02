@@ -15,12 +15,12 @@ Site Quality Dashboard reference covering Current state, Pages by section, Quali
 │                  ▼                                ▼                                ▼                  │
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │     Structure Rules         │  │      Content Rules           │  │       CI / Tooling          │   │
-│   │     ─────────────           │  │      ─────────────           │  │       ─────────────         │   │
+│   │     Structure Rules         │  │      Content Rules           │  │       CI / Tooling          │  │
+│   │     ─────────────           │  │      ─────────────           │  │       ─────────────         │  │
 │   │  Every page in nav          │  │  ≥ 3 ## sections on CLI pg  │  │  validate-site.sh before    │   │
 │   │  index.md → card grid only  │  │  ≥ 1 code block on CLI pg   │  │  commit (strict build)      │   │
-│   │  No raw kb-grid in content  │  │  Mermaid via fenced block    │  │  audit-site.sh for counts   │   │
-│   │  Products under vendor nav  │  │  No raw HTML mermaid divs    │  │  preview-site.sh to check   │   │
+│   │  No raw kb-grid in content  │  │  Mermaid via fenced block    │  │  audit-site.sh for counts   │  │
+│   │  Products under vendor nav  │  │  No raw HTML mermaid divs    │  │  preview-site.sh to check   │  │
 │   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
 │                                                                                                       │
 │                          ▼                                                 ▼                          │
@@ -33,16 +33,16 @@ Site Quality Dashboard reference covering Current state, Pages by section, Quali
 │   │   Disaster Rcvry   │   134   │  Automation         │    67   │  Certifications   │    37      │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
-│    Physical: GitHub Pages / Cloudflare CDN · MkDocs Material build · Actions CI pipeline            │
+│    Physical: GitHub Pages / Cloudflare CDN · MkDocs Material build · Actions CI pipeline              │
 │                                                                                                       │
 │    Key terms:                                                                                         │
 │                                                                                                       │
-│    kb-summary      = Required <div> block on every page; summarises content for search/nav           │
-│    kb-card         = Anchor-style card (<a class="kb-card">) used in landing page grids             │
-│    kb-grid         = Card grid container; appears on index.md pages only, never content pages        │
-│    CLI reference   = Page with commands, flags, and examples; must have ≥ 3 sections + code block    │
-│    Mermaid         = Diagram syntax rendered by mkdocs-material; must use fenced ```mermaid block    │
-│    validate-site.sh= Runs mkdocs build --strict; fails on any warning; run before every commit       │
+│    kb-summary      = Required <div> block on every page; summarises content for search/nav            │
+│    kb-card         = Anchor-style card (<a class="kb-card">) used in landing page grids               │
+│    kb-grid         = Card grid container; appears on index.md pages only, never content pages         │
+│    CLI reference   = Page with commands, flags, and examples; must have ≥ 3 sections + code block     │
+│    Mermaid         = Diagram syntax rendered by mkdocs-material; must use fenced ```mermaid block     │
+│    validate-site.sh= Runs mkdocs build --strict; fails on any warning; run before every commit        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```

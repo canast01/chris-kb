@@ -12,23 +12,23 @@ SNMPv3 adds authentication and encryption to SNMP, replacing the plaintext commu
         SNMPv3 authPriv SECURITY MODEL (USM)
 ```text
 ┌──────────────────────────────────────────────────────────────┐
-│  NMS                              Device agent               │
-│  ┌────────────────────┐           ┌──────────────────────┐   │
-│  │ SNMPv3 GET request │           │ USM validation       │   │
-│  │                    │           │                      │   │
-│  │ securityName: monUsr           │ 1. Verify username   │   │
-│  │ authProtocol: SHA  ├──────────►│ 2. Check SHA HMAC    │   │
-│  │ authKey: <pass>    │ encrypted │ 3. Decrypt AES       │   │
-│  │ privProtocol: AES  │  UDP 161  │ 4. Process OID query │   │
-│  │ privKey: <pass>    │           │                      │   │
-│  │                    │◄──────────┤ 5. Encrypt response  │   │
-│  │ OID value returned │           │ 6. Sign with SHA     │   │
-│  └────────────────────┘           └──────────────────────┘   │
-│                                                              │
-│  Security levels:                                            │
-│  noAuthNoPriv ─ no auth, no encryption (avoid)              │
-│  authNoPriv   ─ SHA auth, no encryption (metrics only)      │
-│  authPriv     ─ SHA auth + AES encryption  ◄── use this     │
+│  NMS                              Device agent                                                        │
+│  ┌────────────────────┐           ┌──────────────────────┐                                            │
+│  │ SNMPv3 GET request │           │ USM validation       │                                            │
+│  │                    │           │                      │                                            │
+│  │ securityName: monUsr           │ 1. Verify username   │                                            │
+│  │ authProtocol: SHA  ├──────────►│ 2. Check SHA HMAC    │                                            │
+│  │ authKey: <pass>    │ encrypted │ 3. Decrypt AES       │                                            │
+│  │ privProtocol: AES  │  UDP 161  │ 4. Process OID query │                                            │
+│  │ privKey: <pass>    │           │                      │                                            │
+│  │                    │◄──────────┤ 5. Encrypt response  │                                            │
+│  │ OID value returned │           │ 6. Sign with SHA     │                                            │
+│  └────────────────────┘           └──────────────────────┘                                            │
+│                                                                                                       │
+│  Security levels:                                                                                     │
+│  noAuthNoPriv ─ no auth, no encryption (avoid)                                                        │
+│  authNoPriv   ─ SHA auth, no encryption (metrics only)                                                │
+│  authPriv     ─ SHA auth + AES encryption  ◄── use this                                               │
 └──────────────────────────────────────────────────────────────┘
 ```
 It is the required version for any environment with compliance requirements.

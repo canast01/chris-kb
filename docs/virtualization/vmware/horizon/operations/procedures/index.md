@@ -8,23 +8,23 @@ Procedures reference covering Entitle an AD Group to a Pool, Push a Golden Image
   Common Operational Procedures
 ```text
 ┌──────────────────────────────────────────────────────────────┐
-│  Create Pool     │  Push Image      │  Manage Sessions       │
-│  ┌────────────┐  │  ┌────────────┐  │  ┌──────────────────┐  │
-│  │Golden image│  │  │Update      │  │  │Force logoff      │  │
-│  │ + snapshot │  │  │snapshot in │  │  │Disconnect stale  │  │
-│  │      │     │  │  │pool config │  │  │Send message      │  │
-│  │      ▼     │  │  │      │     │  │  └──────────────────┘  │
-│  │ Instant    │  │  │      ▼     │  │                        │
-│  │ Clone pool │  │  │ Rolling    │  │  Entitlements          │
-│  │ provision  │  │  │ refresh    │  │  ┌──────────────────┐  │
-│  └────────────┘  │  └────────────┘  │  │AD group → pool   │  │
-│                  │                  │  │mapping           │  │
-│  Add CS Replica  │  Handle Error VM │  └──────────────────┘  │
-│  ┌────────────┐  │  ┌────────────┐  │                        │
-│  │Install +   │  │  │Reset or    │  │                        │
-│  │Join to pod │  │  │delete + re-│  │                        │
-│  └────────────┘  │  │provision   │  │                        │
-│                  │  └────────────┘  │                        │
+│  Create Pool     │  Push Image      │  Manage Sessions                                                │
+│  ┌────────────┐  │  ┌────────────┐  │  ┌──────────────────┐                                           │
+│  │Golden image│  │  │Update      │  │  │Force logoff      │                                           │
+│  │ + snapshot │  │  │snapshot in │  │  │Disconnect stale  │                                           │
+│  │      │     │  │  │pool config │  │  │Send message      │                                           │
+│  │      ▼     │  │  │      │     │  │  └──────────────────┘                                           │
+│  │ Instant    │  │  │      ▼     │  │                                                                 │
+│  │ Clone pool │  │  │ Rolling    │  │  Entitlements                                                   │
+│  │ provision  │  │  │ refresh    │  │  ┌──────────────────┐                                           │
+│  └────────────┘  │  └────────────┘  │  │AD group → pool   │                                           │
+│                  │                  │  │mapping           │                                           │
+│  Add CS Replica  │  Handle Error VM │  └──────────────────┘                                           │
+│  ┌────────────┐  │  ┌────────────┐  │                                                                 │
+│  │Install +   │  │  │Reset or    │  │                                                                 │
+│  │Join to pod │  │  │delete + re-│  │                                                                 │
+│  └────────────┘  │  │provision   │  │                                                                 │
+│                  │  └────────────┘  │                                                                 │
 └──────────────────────────────────────────────────────────────┘
 ```
 ┌───────────────────────────────── VMware Horizon — Common Procedures ──────────────────────────────────┐

@@ -8,17 +8,17 @@ Integration reference covering NSX Adapter, Active Directory / LDAP Authenticati
 Aria Operations — Adapter and Outbound Integration Map
 ```text
 ┌─────────────────────────────────────────────────────┐
-│  Data Sources (Inbound Adapters)                    │
-│                                                     │
-│  ┌──────────┐  ┌──────────┐  ┌────────────────────┐ │
-│  │ vCenter  │  │  NSX-T   │  │  Storage           │ │
-│  │ Adapter  │  │ Adapter  │  │  (Pure, NetApp,    │ │
-│  │          │  │          │  │   vSAN built-in)   │ │
-│  │ read-only│  │ auditor  │  │                    │ │
-│  │ min. role│  │ role min.│  │                    │ │
-│  └────┬─────┘  └────┬─────┘  └─────────┬──────────┘ │
-│       └─────────────┴──────────────────┘            │
-│                          │                          │
+│  Data Sources (Inbound Adapters)                                                                      │
+│                                                                                                       │
+│  ┌──────────┐  ┌──────────┐  ┌────────────────────┐                                                   │
+│  │ vCenter  │  │  NSX-T   │  │  Storage           │                                                   │
+│  │ Adapter  │  │ Adapter  │  │  (Pure, NetApp,    │                                                   │
+│  │          │  │          │  │   vSAN built-in)   │                                                   │
+│  │ read-only│  │ auditor  │  │                    │                                                   │
+│  │ min. role│  │ role min.│  │                    │                                                   │
+│  └────┬─────┘  └────┬─────┘  └─────────┬──────────┘                                                   │
+│       └─────────────┴──────────────────┘                                                              │
+│                          │                                                                            │
 └──────────────────────────┼──────────────────────────┘
 ```
 ┌──────────────────────────────────── Aria Operations Integrations ─────────────────────────────────────┐
@@ -70,9 +70,9 @@ Aria Operations — Adapter and Outbound Integration Map
           ▼                ▼                      ▼
 ```text
 ┌──────────────┐  ┌──────────────┐  ┌────────────────┐
-│  SMTP        │  │  ServiceNow  │  │  Webhook / REST │
-│  (email      │  │  (ITSM       │  │  (Slack, Teams, │
-│   alerts)    │  │   incidents) │  │   custom ITSM)  │
+│  SMTP        │  │  ServiceNow  │  │  Webhook / REST                                                   │
+│  (email      │  │  (ITSM       │  │  (Slack, Teams,                                                   │
+│   alerts)    │  │   incidents) │  │   custom ITSM)                                                    │
 └──────────────┘  └──────────────┘  └────────────────┘
 ```
           │
@@ -80,8 +80,8 @@ Aria Operations — Adapter and Outbound Integration Map
 ```text
 ```
 ┌─────────────────────────────────────────────────────┐
-│  Aria Ops for Logs (Log Insight Adapter)            │
-│  forwards alerts for log correlation                │
+│  Aria Ops for Logs (Log Insight Adapter)                                                              │
+│  forwards alerts for log correlation                                                                  │
 └─────────────────────────────────────────────────────┘
 ```powershell
 ┌──────────────────────────────────── Aria Operations Integrations ─────────────────────────────────────┐

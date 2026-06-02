@@ -8,23 +8,23 @@ Diagnostics reference covering VRA Log Locations, Collect VRA Support Bundle, Ch
   VR Diagnostic Data Sources
 ```text
 ┌─────────────────────────────────────────────────────────────────┐
-│  VRA Appliance (both sites)    ESXi Source Host                 │
-│  ┌───────────────────────┐     ┌─────────────────────────┐      │
-│  │ VAMI → Support Bundle │     │ /var/log/hbr.log        │      │
-│  │ /opt/vmware/logs/hms/ │     │ /var/log/hostd.log      │      │
-│  │ /opt/vmware/logs/vrms/│     │ /etc/init.d/hbrsvc stat │      │
-│  │ journalctl -u hms     │     │ nc -vz <VRA> 31031      │      │
-│  │ journalctl -u vrms    │     └─────────────────────────┘      │
-│  └───────────────────────┘                                      │
-│                                                                 │
-│  Connectivity Tests              vCenter                        │
-│  ┌───────────────────────┐     ┌─────────────────────────┐      │
-│  │ ESXi → VRA:31031      │     │ Monitor → Recent Tasks  │      │
-│  │ VRA → VRA:44046       │     │ filter "HBR" / "VR"     │      │
-│  │ openssl s_client :443 │     │ Export System Logs      │      │
-│  │ REST /api/rest/vr/    │     └─────────────────────────┘      │
-│  │   health (no auth)    │                                      │
-│  └───────────────────────┘                                      │
+│  VRA Appliance (both sites)    ESXi Source Host                                                       │
+│  ┌───────────────────────┐     ┌─────────────────────────┐                                            │
+│  │ VAMI → Support Bundle │     │ /var/log/hbr.log        │                                            │
+│  │ /opt/vmware/logs/hms/ │     │ /var/log/hostd.log      │                                            │
+│  │ /opt/vmware/logs/vrms/│     │ /etc/init.d/hbrsvc stat │                                            │
+│  │ journalctl -u hms     │     │ nc -vz <VRA> 31031      │                                            │
+│  │ journalctl -u vrms    │     └─────────────────────────┘                                            │
+│  └───────────────────────┘                                                                            │
+│                                                                                                       │
+│  Connectivity Tests              vCenter                                                              │
+│  ┌───────────────────────┐     ┌─────────────────────────┐                                            │
+│  │ ESXi → VRA:31031      │     │ Monitor → Recent Tasks  │                                            │
+│  │ VRA → VRA:44046       │     │ filter "HBR" / "VR"     │                                            │
+│  │ openssl s_client :443 │     │ Export System Logs      │                                            │
+│  │ REST /api/rest/vr/    │     └─────────────────────────┘                                            │
+│  │   health (no auth)    │                                                                            │
+│  └───────────────────────┘                                                                            │
 └─────────────────────────────────────────────────────────────────┘
 ```
 

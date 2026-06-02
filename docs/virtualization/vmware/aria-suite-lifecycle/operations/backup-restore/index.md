@@ -8,23 +8,23 @@ Backup & Restore reference covering Option 2 — VADP-Compatible Backup (Preferr
   LCM Backup Strategy
 ```text
 ┌─────────────────────────────────────────────────────────────────┐
-│  What to Back Up              Method                            │
-│  ┌───────────────────────┐    ┌─────────────────────────────┐   │
-│  │ LCM appliance VM      │───►│ VADP backup (Veeam etc.)    │   │
-│  │  /var/lib/vrlcm/      │    │  nightly + quiesce          │   │
-│  │  /opt/vmware/vrlcm/   │    │ OR VM snapshot pre-change   │   │
-│  │  (DB + Locker)        │    │  (delete within 48h)        │   │
-│  └───────────────────────┘    └─────────────────────────────┘   │
-│  ┌───────────────────────┐    ┌─────────────────────────────┐   │
-│  │ NFS Binary Repo       │───►│ NFS snapshot (NetApp/Pure)  │   │
-│  │  /data (.pak files)   │    │ OR rsync to secondary       │   │
-│  └───────────────────────┘    └─────────────────────────────┘   │
-│  ┌───────────────────────┐    ┌─────────────────────────────┐   │
-│  │ Environment config    │───►│ LCM API export to JSON      │   │
-│  │  (deploy manifests)   │    │  stored version-controlled  │   │
-│  └───────────────────────┘    └─────────────────────────────┘   │
-│                                                                 │
-│  Locker Master Password → offline vault (required for restore)  │
+│  What to Back Up              Method                                                                  │
+│  ┌───────────────────────┐    ┌─────────────────────────────┐                                         │
+│  │ LCM appliance VM      │───►│ VADP backup (Veeam etc.)    │                                         │
+│  │  /var/lib/vrlcm/      │    │  nightly + quiesce          │                                         │
+│  │  /opt/vmware/vrlcm/   │    │ OR VM snapshot pre-change   │                                         │
+│  │  (DB + Locker)        │    │  (delete within 48h)        │                                         │
+│  └───────────────────────┘    └─────────────────────────────┘                                         │
+│  ┌───────────────────────┐    ┌─────────────────────────────┐                                         │
+│  │ NFS Binary Repo       │───►│ NFS snapshot (NetApp/Pure)  │                                         │
+│  │  /data (.pak files)   │    │ OR rsync to secondary       │                                         │
+│  └───────────────────────┘    └─────────────────────────────┘                                         │
+│  ┌───────────────────────┐    ┌─────────────────────────────┐                                         │
+│  │ Environment config    │───►│ LCM API export to JSON      │                                         │
+│  │  (deploy manifests)   │    │  stored version-controlled  │                                         │
+│  └───────────────────────┘    └─────────────────────────────┘                                         │
+│                                                                                                       │
+│  Locker Master Password → offline vault (required for restore)                                        │
 └─────────────────────────────────────────────────────────────────┘
 ```
 ┌─────────────────────────────────── Aria Suite LCM Backup & Restore ───────────────────────────────────┐

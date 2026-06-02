@@ -8,22 +8,22 @@ NFS Troubleshooting reference covering Diagnostic Flow, Quick Diagnostics, Commo
         TRIAGE: STALE NFS HANDLE / MOUNT FAILURE
 ```text
 ┌──────────────────────────────────────────────────────────────┐
-│  1. nc -zv <server> 2049 ── fail ──► firewall / routing     │
-│          │ ok                                                │
-│          ▼                                                   │
-│  2. showmount -e <server> ─ no export ► check /etc/exports  │
-│          │ export visible                                    │
-│          ▼                                                   │
-│  3. Mount attempt fails? ── yes ───► check export ACL (IP)  │
-│          │ mounts ok                                         │
-│          ▼                                                   │
-│  4. Stale file handle? ──── yes ───► umount -l; remount     │
-│          │ no                                                │
-│          ▼                                                   │
-│  5. Permission denied? ──── yes ───► check UID/GID mapping  │
-│          │ no                        check root_squash       │
-│          ▼                                                   │
-│  6. Check server exports & network (nfsstat -c for retrans) │
+│  1. nc -zv <server> 2049 ── fail ──► firewall / routing                                               │
+│          │ ok                                                                                         │
+│          ▼                                                                                            │
+│  2. showmount -e <server> ─ no export ► check /etc/exports                                            │
+│          │ export visible                                                                             │
+│          ▼                                                                                            │
+│  3. Mount attempt fails? ── yes ───► check export ACL (IP)                                            │
+│          │ mounts ok                                                                                  │
+│          ▼                                                                                            │
+│  4. Stale file handle? ──── yes ───► umount -l; remount                                               │
+│          │ no                                                                                         │
+│          ▼                                                                                            │
+│  5. Permission denied? ──── yes ───► check UID/GID mapping                                            │
+│          │ no                        check root_squash                                                │
+│          ▼                                                                                            │
+│  6. Check server exports & network (nfsstat -c for retrans)                                           │
 └──────────────────────────────────────────────────────────────┘
 ```
 

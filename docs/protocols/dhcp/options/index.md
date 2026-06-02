@@ -8,24 +8,24 @@ DHCP Options reference covering Overview, Common Option Codes, Setting Scope-Lev
         DHCP OPTION HIERARCHY (most specific wins)
 ```text
 ┌──────────────────────────────────────────────────────────────┐
-│  Server-level options (apply to ALL scopes)                  │
-│  ┌──────────────────────────────────────────────────────┐    │
-│  │  006 DNS: 10.0.0.53, 10.0.0.54  (server-wide)        │    │
-│  └──────────────────────────┬─────────────────────────┘    │
-│                             │ inherited unless overridden    │
-│  Scope-level options        ▼                               │
-│  ┌──────────────────────────────────────────────────────┐    │
-│  │  003 Router: 192.168.10.1  (per subnet)              │    │
-│  │  015 Domain: corp.local                              │    │
-│  └──────────────────────────┬─────────────────────────┘    │
-│                             │ inherited unless overridden    │
-│  Reservation-level options  ▼                               │
-│  ┌──────────────────────────────────────────────────────┐    │
-│  │  006 DNS: 10.0.0.60  (overrides for this MAC/IP)     │    │
-│  └──────────────────────────────────────────────────────┘    │
-│                                                              │
-│  Common codes:  003=gateway  006=DNS  042=NTP                │
-│                 066=TFTP server  067=PXE boot file           │
+│  Server-level options (apply to ALL scopes)                                                           │
+│  ┌──────────────────────────────────────────────────────┐                                             │
+│  │  006 DNS: 10.0.0.53, 10.0.0.54  (server-wide)        │                                             │
+│  └──────────────────────────┬─────────────────────────┘                                               │
+│                             │ inherited unless overridden                                             │
+│  Scope-level options        ▼                                                                         │
+│  ┌──────────────────────────────────────────────────────┐                                             │
+│  │  003 Router: 192.168.10.1  (per subnet)              │                                             │
+│  │  015 Domain: corp.local                              │                                             │
+│  └──────────────────────────┬─────────────────────────┘                                               │
+│                             │ inherited unless overridden                                             │
+│  Reservation-level options  ▼                                                                         │
+│  ┌──────────────────────────────────────────────────────┐                                             │
+│  │  006 DNS: 10.0.0.60  (overrides for this MAC/IP)     │                                             │
+│  └──────────────────────────────────────────────────────┘                                             │
+│                                                                                                       │
+│  Common codes:  003=gateway  006=DNS  042=NTP                                                         │
+│                 066=TFTP server  067=PXE boot file                                                    │
 └──────────────────────────────────────────────────────────────┘
 ```
 

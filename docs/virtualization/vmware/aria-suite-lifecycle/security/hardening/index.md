@@ -8,23 +8,23 @@ Hardening reference covering SSH Hardening on the LCM Appliance, TLS Configurati
   LCM Hardening Controls
 ```text
 ┌──────────────────────────────────────────────────────────────┐
-│  Credentials                 SSH                             │
-│  ┌──────────────────────┐    ┌──────────────────────────┐    │
-│  │ admin@local: change  │    │ PermitRootLogin:         │    │
-│  │  immediately, vault  │    │  prohibit-password       │    │
-│  │ Locker Master PW:    │    │ Restrict to mgmt CIDR:   │    │
-│  │  offline vault only  │    │  /etc/hosts.allow        │    │
-│  └──────────────────────┘    └──────────────────────────┘    │
-│                                                              │
-│  Certificates               Network / Firewall               │
-│  ┌──────────────────────┐    ┌──────────────────────────┐    │
-│  │ All via Locker only  │    │ Inbound: 443 (UI/API)    │    │
-│  │ RSA 4096-bit min     │    │          22 (SSH only    │    │
-│  │ Full chain import    │    │           from PAW/jump) │    │
-│  │ TLS 1.0/1.1 disabled │    │ Outbound: vCenter 443    │    │
-│  └──────────────────────┘    │  VIDM 443 / NFS 2049     │    │
-│                              └──────────────────────────┘    │
-│  VIDM for all interactive users; no shared local accounts    │
+│  Credentials                 SSH                                                                      │
+│  ┌──────────────────────┐    ┌──────────────────────────┐                                             │
+│  │ admin@local: change  │    │ PermitRootLogin:         │                                             │
+│  │  immediately, vault  │    │  prohibit-password       │                                             │
+│  │ Locker Master PW:    │    │ Restrict to mgmt CIDR:   │                                             │
+│  │  offline vault only  │    │  /etc/hosts.allow        │                                             │
+│  └──────────────────────┘    └──────────────────────────┘                                             │
+│                                                                                                       │
+│  Certificates               Network / Firewall                                                        │
+│  ┌──────────────────────┐    ┌──────────────────────────┐                                             │
+│  │ All via Locker only  │    │ Inbound: 443 (UI/API)    │                                             │
+│  │ RSA 4096-bit min     │    │          22 (SSH only    │                                             │
+│  │ Full chain import    │    │           from PAW/jump) │                                             │
+│  │ TLS 1.0/1.1 disabled │    │ Outbound: vCenter 443    │                                             │
+│  └──────────────────────┘    │  VIDM 443 / NFS 2049     │                                             │
+│                              └──────────────────────────┘                                             │
+│  VIDM for all interactive users; no shared local accounts                                             │
 └──────────────────────────────────────────────────────────────┘
 ```
 ┌────────────────────────────────── Aria Suite LCM Security Hardening ──────────────────────────────────┐

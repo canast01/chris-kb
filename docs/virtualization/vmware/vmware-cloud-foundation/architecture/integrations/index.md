@@ -8,7 +8,7 @@ Integrations reference covering NSX Federation (Multi-Site VCF), Backup Integrat
 VCF Integration Topology
 ```text
 ┌─────────────────────────────────────────────────────┐
-│  SDDC Manager (integration hub)                      │
+│  SDDC Manager (integration hub)                                                                       │
 └──┬──────┬──────┬──────┬──────┬──────────────────────┘
 ```
 ┌─────────────────────────────── VMware Cloud Foundation — Integrations ────────────────────────────────┐
@@ -62,15 +62,15 @@ NSX Federation (multi-site)
 ```text
 ```
 ┌──────────────────────────────────────────────────────┐
-│  Global NSX Manager (outside VCF LCM)                │
-│                        │ global policy               │
-│              ┌─────────┴──────────┐                  │
-│              ▼                    ▼                  │
-│   ┌──────────────────┐  ┌──────────────────┐         │
-│   │ VCF Site A       │  │ VCF Site B       │         │
-│   │ Local NSX Mgr    │  │ Local NSX Mgr    │         │
-│   │ (data plane)     │  │ (data plane)     │         │
-│   └──────────────────┘  └──────────────────┘         │
+│  Global NSX Manager (outside VCF LCM)                                                                 │
+│                        │ global policy                                                                │
+│              ┌─────────┴──────────┐                                                                   │
+│              ▼                    ▼                                                                   │
+│   ┌──────────────────┐  ┌──────────────────┐                                                          │
+│   │ VCF Site A       │  │ VCF Site B       │                                                          │
+│   │ Local NSX Mgr    │  │ Local NSX Mgr    │                                                          │
+│   │ (data plane)     │  │ (data plane)     │                                                          │
+│   └──────────────────┘  └──────────────────┘                                                          │
 └──────────────────────────────────────────────────────┘
 ```text
 ┌─────────────────────────────── VMware Cloud Foundation — Integrations ────────────────────────────────┐

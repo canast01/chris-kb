@@ -8,9 +8,9 @@ VxRail Cluster Expansion reference covering Overview, Where It Fits, Daily Check
 Add Node Flow
 ```text
 ┌──────────────────────────────────────────────────────────────┐
-│  Planning                                                    │
-│  same SKU as cluster · compatible firmware · IP/DNS ready    │
-│  network cabling plan · iDRAC IP assigned                    │
+│  Planning                                                                                             │
+│  same SKU as cluster · compatible firmware · IP/DNS ready                                             │
+│  network cabling plan · iDRAC IP assigned                                                             │
 └──────────────────────────────┬───────────────────────────────┘
 ```
                                │

@@ -8,11 +8,11 @@ ESXi Escalation reference covering SLA Tiers, Escalation.
 ESXi Escalation Path — Broadcom Support
 ```text
 ┌─────────────────────────────────────────────────────────┐
-│  Collect Before Calling                                 │
-│  ├── esxcli system version get  (ESXi version + build)  │
-│  ├── esxcli hardware platform get  (server model)       │
-│  ├── vm-support -w /tmp/  (full support bundle)         │
-│  └── esxtop -b -d 2 -n 30  (if performance issue)       │
+│  Collect Before Calling                                                                               │
+│  ├── esxcli system version get  (ESXi version + build)                                                │
+│  ├── esxcli hardware platform get  (server model)                                                     │
+│  ├── vm-support -w /tmp/  (full support bundle)                                                       │
+│  └── esxtop -b -d 2 -n 30  (if performance issue)                                                     │
 └──────────────────────────┬──────────────────────────────┘
                            │
 ```
@@ -63,13 +63,13 @@ ESXi Escalation Path — Broadcom Support
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ┌──────────────────────────▼──────────────────────────────┐
-│  Escalation Triggers                                    │
-│  ├── Case not progressing → request internal escalation │
-│  ├── Business Critical → TAM direct contact             │
-│  └── P1 stalled → Escalation Management request         │
-│                                                         │
-│  Portal: https://support.broadcom.com                   │
-│  HCL check: https://compatibilityguide.broadcom.com     │
+│  Escalation Triggers                                                                                  │
+│  ├── Case not progressing → request internal escalation                                               │
+│  ├── Business Critical → TAM direct contact                                                           │
+│  └── P1 stalled → Escalation Management request                                                       │
+│                                                                                                       │
+│  Portal: https://support.broadcom.com                                                                 │
+│  HCL check: https://compatibilityguide.broadcom.com                                                   │
 └─────────────────────────────────────────────────────────┘
 ```text
 ┌────────────────────────────────────────── ESXi — Escalation ──────────────────────────────────────────┐

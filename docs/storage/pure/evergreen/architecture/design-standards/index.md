@@ -8,17 +8,17 @@ Design Standards reference covering Naming Conventions, Build Baseline, Subscrip
 Evergreen Subscription Design Checklist
 ```text
 ┌──────────────────────────────────────────────────────────┐
-│  Tier selection   │  //X / //C / //E — match workload    │
+│  Tier selection   │  //X / //C / //E — match workload                                                 │
 ├──────────────────────────────────────────────────────────┤
-│  Capacity sizing  │  committed TiB + True Forward headroom│
+│  Capacity sizing  │  committed TiB + True Forward headroom                                            │
 ├──────────────────────────────────────────────────────────┤
-│  Naming           │  site-fa-01 / env-app-vol01 etc.      │
+│  Naming           │  site-fa-01 / env-app-vol01 etc.                                                  │
 ├──────────────────────────────────────────────────────────┤
-│  Protection       │  PGroup per app, SafeMode enabled     │
+│  Protection       │  PGroup per app, SafeMode enabled                                                 │
 ├──────────────────────────────────────────────────────────┤
-│  Refresh schedule │  ~3 yr Ever Modern, plan 90 days ahead│
+│  Refresh schedule │  ~3 yr Ever Modern, plan 90 days ahead                                            │
 ├──────────────────────────────────────────────────────────┤
-│  Pure1 phone-home │  always active — required for support │
+│  Pure1 phone-home │  always active — required for support                                             │
 └──────────────────────────────────────────────────────────┘
 ```
 

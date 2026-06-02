@@ -8,25 +8,25 @@ LDAP Queries reference covering Overview, Filter Syntax, Common AD Attributes, P
         LDAP QUERY STRUCTURE
 ```text
 ┌──────────────────────────────────────────────────────────────┐
-│  ldapsearch -H ldap://dc01 -D "svc@corp.local" -w "pass"    │
-│             -b "DC=corp,DC=local"                           │
-│             -s sub                                          │
-│             "(sAMAccountName=jsmith)"                       │
-│             cn mail memberOf                                │
-│                                                              │
-│  Components:                                                 │
-│  ┌─────────────────────────────────────────────────────┐    │
-│  │ -b  Base DN:  DC=corp,DC=local   (search root)       │    │
-│  │ -s  Scope:    base/one/sub       (depth)             │    │
-│  │     filter:  (sAMAccountName=jsmith)   (RFC 4515)    │    │
-│  │     attrs:   cn mail memberOf          (return these) │    │
-│  └─────────────────────────────────────────────────────┘    │
-│                                                              │
-│  Filter examples:                                            │
-│  (objectClass=user)           all users                      │
-│  (&(objectClass=user)(mail=*)) users with email              │
-│  (|(cn=Finance)(cn=IT))       Finance OR IT groups           │
-│  (!(userAccountControl:...=2)) not disabled                  │
+│  ldapsearch -H ldap://dc01 -D "svc@corp.local" -w "pass"                                              │
+│             -b "DC=corp,DC=local"                                                                     │
+│             -s sub                                                                                    │
+│             "(sAMAccountName=jsmith)"                                                                 │
+│             cn mail memberOf                                                                          │
+│                                                                                                       │
+│  Components:                                                                                          │
+│  ┌─────────────────────────────────────────────────────┐                                              │
+│  │ -b  Base DN:  DC=corp,DC=local   (search root)       │                                             │
+│  │ -s  Scope:    base/one/sub       (depth)             │                                             │
+│  │     filter:  (sAMAccountName=jsmith)   (RFC 4515)    │                                             │
+│  │     attrs:   cn mail memberOf          (return these) │                                            │
+│  └─────────────────────────────────────────────────────┘                                              │
+│                                                                                                       │
+│  Filter examples:                                                                                     │
+│  (objectClass=user)           all users                                                               │
+│  (&(objectClass=user)(mail=*)) users with email                                                       │
+│  (|(cn=Finance)(cn=IT))       Finance OR IT groups                                                    │
+│  (!(userAccountControl:...=2)) not disabled                                                           │
 └──────────────────────────────────────────────────────────────┘
 ```
 

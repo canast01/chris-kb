@@ -12,25 +12,25 @@ TLS (LDAP) reference covering Overview, Certificate Requirements for LDAPS, Conf
         STARTTLS vs LDAPS
 ```text
 ┌──────────────────────────────────────────────────────────────┐
-│  STARTTLS (port 389 → upgrade to TLS)                        │
-│  ┌────────────┐         ┌──────────────────────────────┐     │
-│  │ App        │         │ DC port 389                  │     │
-│  │            ├────────►│ 1. plain TCP connect         │     │
-│  │ -H ldap:   │         │ 2. STARTTLS extended op      │     │
-│  │ :389 -ZZ   ├────────►│ 3. TLS negotiated (same conn)│     │
-│  │            │◄────────┤ 4. cert check + query        │     │
-│  └────────────┘         └──────────────────────────────┘     │
-│  Risk: downgrade attack if STARTTLS not enforced              │
-│                                                              │
-│  LDAPS (port 636 — TLS from first byte)                      │
-│  ┌────────────┐         ┌──────────────────────────────┐     │
-│  │ App        │         │ DC port 636                  │     │
-│  │            ├────────►│ 1. TLS handshake immediately │     │
-│  │ -H ldaps:  │         │ 2. cert verified             │     │
-│  │ :636       ├────────►│ 3. LDAP bind + query         │     │
-│  │            │◄────────┤                              │     │
-│  └────────────┘         └──────────────────────────────┘     │
-│  Preferred; no downgrade risk                                │
+│  STARTTLS (port 389 → upgrade to TLS)                                                                 │
+│  ┌────────────┐         ┌──────────────────────────────┐                                              │
+│  │ App        │         │ DC port 389                  │                                              │
+│  │            ├────────►│ 1. plain TCP connect         │                                              │
+│  │ -H ldap:   │         │ 2. STARTTLS extended op      │                                              │
+│  │ :389 -ZZ   ├────────►│ 3. TLS negotiated (same conn)│                                              │
+│  │            │◄────────┤ 4. cert check + query        │                                              │
+│  └────────────┘         └──────────────────────────────┘                                              │
+│  Risk: downgrade attack if STARTTLS not enforced                                                      │
+│                                                                                                       │
+│  LDAPS (port 636 — TLS from first byte)                                                               │
+│  ┌────────────┐         ┌──────────────────────────────┐                                              │
+│  │ App        │         │ DC port 636                  │                                              │
+│  │            ├────────►│ 1. TLS handshake immediately │                                              │
+│  │ -H ldaps:  │         │ 2. cert verified             │                                              │
+│  │ :636       ├────────►│ 3. LDAP bind + query         │                                              │
+│  │            │◄────────┤                              │                                              │
+│  └────────────┘         └──────────────────────────────┘                                              │
+│  Preferred; no downgrade risk                                                                         │
 └──────────────────────────────────────────────────────────────┘
 ```
 

@@ -8,17 +8,17 @@ ESXi Backup & Restore reference covering VM-Level Backup.
 ESXi Backup & Restore Flow
 ```powershell
 ┌────────────────────────────────────────────────────────┐
-│  ESXi Host Configuration Backup                        │
-│  ├── PowerCLI: Get-VMHostFirmware -BackupConfiguration │
-│  ├── vSphere Client: Host → Configure → Export         │
-│  └── Captures: network, storage, services, advanced    │
-│                                                        │
-│  VM Data Backup (via VADP / Veeam)                     │
-│  ├── CBT enabled → incremental block tracking          │
-│  ├── Transport: Hot-add (same host) preferred          │
-│  │              NBD (network) fallback                 │
-│  │              Direct SAN (FC/iSCSI proxy)            │
-│  └── Quiescing: VMware Tools snapshot for consistency  │
+│  ESXi Host Configuration Backup                                                                       │
+│  ├── PowerCLI: Get-VMHostFirmware -BackupConfiguration                                                │
+│  ├── vSphere Client: Host → Configure → Export                                                        │
+│  └── Captures: network, storage, services, advanced                                                   │
+│                                                                                                       │
+│  VM Data Backup (via VADP / Veeam)                                                                    │
+│  ├── CBT enabled → incremental block tracking                                                         │
+│  ├── Transport: Hot-add (same host) preferred                                                         │
+│  │              NBD (network) fallback                                                                │
+│  │              Direct SAN (FC/iSCSI proxy)                                                           │
+│  └── Quiescing: VMware Tools snapshot for consistency                                                 │
 └───────────────────────┬────────────────────────────────┘
                         │
 ```

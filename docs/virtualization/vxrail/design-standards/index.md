@@ -8,22 +8,22 @@
 VxRail Design Requirements — Key Standards
 ```text
 ┌─────────────────────────────────────────────────────────────┐
-│  Network VLAN Separation (required)                         │
-│                                                             │
-│  VLAN: Management   MTU 1500   ESXi mgmt, vCenter           │
-│  VLAN: vMotion      MTU 9000   live VM migration (jumbo)    │
-│  VLAN: vSAN         MTU 9000   storage traffic (jumbo)      │
-│  VLAN: VxRail Mgmt  MTU 1500   VxRail Manager internal      │
-│  VLAN: VM Traffic   per-app    workload connectivity        │
+│  Network VLAN Separation (required)                                                                   │
+│                                                                                                       │
+│  VLAN: Management   MTU 1500   ESXi mgmt, vCenter                                                     │
+│  VLAN: vMotion      MTU 9000   live VM migration (jumbo)                                              │
+│  VLAN: vSAN         MTU 9000   storage traffic (jumbo)                                                │
+│  VLAN: VxRail Mgmt  MTU 1500   VxRail Manager internal                                                │
+│  VLAN: VM Traffic   per-app    workload connectivity                                                  │
 └──────────────────────────────┬──────────────────────────────┘
                                │
 ```
                                │
 ┌──────────────────────────────▼──────────────────────────────┐
-│  Firmware / Software Rule                                    │
-│  All updates MUST go through VxRail LCM Composite Bundle    │
-│  Never update vSphere, vSAN, or firmware independently      │
-│  Verify HCL alignment after every LCM bundle apply          │
+│  Firmware / Software Rule                                                                             │
+│  All updates MUST go through VxRail LCM Composite Bundle                                              │
+│  Never update vSphere, vSAN, or firmware independently                                                │
+│  Verify HCL alignment after every LCM bundle apply                                                    │
 └─────────────────────────────────────────────────────────────┘
 
 ---

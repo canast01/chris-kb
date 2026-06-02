@@ -8,10 +8,10 @@ Backup & Restore reference covering Manual Backup via CLI, Backup via REST API, 
 Aria Operations — Backup Architecture
 ```text
 ┌─────────────────────────────────────────────────────┐
-│  Aria Operations Cluster                            │
-│  ┌──────────┐  ┌──────────┐  ┌────────────────┐     │
-│  │ Primary  │  │ Replica  │  │ Data nodes     │     │
-│  └──────────┘  └──────────┘  └────────────────┘     │
+│  Aria Operations Cluster                                                                              │
+│  ┌──────────┐  ┌──────────┐  ┌────────────────┐                                                       │
+│  │ Primary  │  │ Replica  │  │ Data nodes     │                                                       │
+│  └──────────┘  └──────────┘  └────────────────┘                                                       │
 └──────────────────────┬──────────────────────────────┘
 ```
 ┌────────────────────────────────── Aria Operations Backup & Restore ───────────────────────────────────┐
@@ -63,14 +63,14 @@ Aria Operations — Backup Architecture
 ```text
 ```
 ┌─────────────────────────────────────────────────────┐
-│  Restore Process                                    │
-│  Admin → Backup/Restore → select backup → Restore   │
-│  10–20 min unavailability during restore            │
-│  Re-enter all adapter credentials after restore     │
-│                                                     │
-│  Full DR (with metric history):                     │
-│  VM-level backup (Veeam/Commvault) of all nodes     │
-│  + Cassandra repair after restore                   │
+│  Restore Process                                                                                      │
+│  Admin → Backup/Restore → select backup → Restore                                                     │
+│  10–20 min unavailability during restore                                                              │
+│  Re-enter all adapter credentials after restore                                                       │
+│                                                                                                       │
+│  Full DR (with metric history):                                                                       │
+│  VM-level backup (Veeam/Commvault) of all nodes                                                       │
+│  + Cassandra repair after restore                                                                     │
 └─────────────────────────────────────────────────────┘
 ```text
 ┌────────────────────────────────── Aria Operations Backup & Restore ───────────────────────────────────┐

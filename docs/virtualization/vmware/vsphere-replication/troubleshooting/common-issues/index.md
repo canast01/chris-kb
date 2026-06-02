@@ -8,26 +8,26 @@ Common Issues reference covering VM Stuck in RPO Violation, Initial Sync Taking 
   VR Triage Decision Tree
 ```text
 ┌─────────────────────────────────────────────────────────────────┐
-│  Symptom                  Check                  Fix            │
-│  ┌─────────────────┐      ┌──────────────────┐                  │
-│  │ RPO Violation   │─────►│ Bandwidth?        │─► QoS / raise   │
-│  │ (amber/red)     │      │ ESXi CPU ready %? │   RPO value     │
-│  │                 │      │ VRA disk full?    │─► expand VMDK   │
-│  └─────────────────┘      └──────────────────┘                  │
-│  ┌─────────────────┐      ┌──────────────────┐                  │
-│  │ Site Pair       │─────►│ VRA services up?  │─► start hms/    │
-│  │ Disconnected    │      │ TCP 44046 open?   │   vrms          │
-│  │                 │      │ Cert expired?     │─► refresh       │
-│  └─────────────────┘      └──────────────────┘   thumbprints    │
-│  ┌─────────────────┐      ┌──────────────────┐                  │
-│  │ Conn Refused /  │─────►│ TCP 31031 open?   │─► firewall      │
-│  │ Initial Sync    │      │ Route to VRA?     │   rule / seed   │
-│  │ Stalled         │      │ Seed available?   │   pre-copy      │
-│  └─────────────────┘      └──────────────────┘                  │
-│  ┌─────────────────┐      ┌──────────────────┐                  │
-│  │ No Datastore    │─────►│ Target datastore  │─► mount DS /    │
-│  │ Available       │      │ mounted? space?   │   free space    │
-│  └─────────────────┘      └──────────────────┘                  │
+│  Symptom                  Check                  Fix                                                  │
+│  ┌─────────────────┐      ┌──────────────────┐                                                        │
+│  │ RPO Violation   │─────►│ Bandwidth?        │─► QoS / raise                                         │
+│  │ (amber/red)     │      │ ESXi CPU ready %? │   RPO value                                           │
+│  │                 │      │ VRA disk full?    │─► expand VMDK                                         │
+│  └─────────────────┘      └──────────────────┘                                                        │
+│  ┌─────────────────┐      ┌──────────────────┐                                                        │
+│  │ Site Pair       │─────►│ VRA services up?  │─► start hms/                                          │
+│  │ Disconnected    │      │ TCP 44046 open?   │   vrms                                                │
+│  │                 │      │ Cert expired?     │─► refresh                                             │
+│  └─────────────────┘      └──────────────────┘   thumbprints                                          │
+│  ┌─────────────────┐      ┌──────────────────┐                                                        │
+│  │ Conn Refused /  │─────►│ TCP 31031 open?   │─► firewall                                            │
+│  │ Initial Sync    │      │ Route to VRA?     │   rule / seed                                         │
+│  │ Stalled         │      │ Seed available?   │   pre-copy                                            │
+│  └─────────────────┘      └──────────────────┘                                                        │
+│  ┌─────────────────┐      ┌──────────────────┐                                                        │
+│  │ No Datastore    │─────►│ Target datastore  │─► mount DS /                                          │
+│  │ Available       │      │ mounted? space?   │   free space                                          │
+│  └─────────────────┘      └──────────────────┘                                                        │
 └─────────────────────────────────────────────────────────────────┘
 ```
 

@@ -8,26 +8,26 @@ CLI Reference reference covering Support Bundles, SDDC Manager REST API, Passwor
 VCF CLI Tool Map — Where to Run What
 ```text
 ┌─────────────────────────────────────────────────────┐
-│  SDDC Manager Appliance (SSH: vcf user → sudo)      │
-│                                                     │
-│  SoS utility                                        │
-│  sudo python3 /opt/vmware/sddc-support/sos          │
-│    --health-summary      full cross-domain check    │
-│    --health-check        per-domain check           │
-│    --password-health     credential status          │
-│    --certificate-health  cert expiry scan           │
-│                                                     │
-│  vcf-support-bundle                                 │
-│    --type sddc           full SDDC Manager bundle   │
-│    --type lcm            LCM-specific bundle        │
-│    --type nsx            NSX-related events         │
-│                                                     │
-│  SDDC Manager REST API  (https://<sddc-mgr>/v1)     │
-│    GET  /v1/domains      list all domains           │
-│    GET  /v1/clusters     list all clusters          │
-│    GET  /v1/hosts        list all hosts             │
-│    GET  /v1/credentials  list managed credentials   │
-│    PATCH /v1/credentials rotate a credential        │
+│  SDDC Manager Appliance (SSH: vcf user → sudo)                                                        │
+│                                                                                                       │
+│  SoS utility                                                                                          │
+│  sudo python3 /opt/vmware/sddc-support/sos                                                            │
+│    --health-summary      full cross-domain check                                                      │
+│    --health-check        per-domain check                                                             │
+│    --password-health     credential status                                                            │
+│    --certificate-health  cert expiry scan                                                             │
+│                                                                                                       │
+│  vcf-support-bundle                                                                                   │
+│    --type sddc           full SDDC Manager bundle                                                     │
+│    --type lcm            LCM-specific bundle                                                          │
+│    --type nsx            NSX-related events                                                           │
+│                                                                                                       │
+│  SDDC Manager REST API  (https://<sddc-mgr>/v1)                                                       │
+│    GET  /v1/domains      list all domains                                                             │
+│    GET  /v1/clusters     list all clusters                                                            │
+│    GET  /v1/hosts        list all hosts                                                               │
+│    GET  /v1/credentials  list managed credentials                                                     │
+│    PATCH /v1/credentials rotate a credential                                                          │
 └─────────────────────────────────────────────────────┘
 ```
 ┌─────────────────────────────── VMware Cloud Foundation — CLI Reference ───────────────────────────────┐

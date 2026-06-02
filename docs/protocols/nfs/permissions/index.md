@@ -8,22 +8,22 @@ NFS Permissions reference covering Overview, UID/GID Mapping, NFSv4 ID Mapping (
         NFS PERMISSION LAYERS
 ```text
 ┌──────────────────────────────────────────────────────────────┐
-│  Layer 1 — EXPORT OPTIONS (server /etc/exports)              │
-│  ┌────────────────────────────────────────────────────────┐  │
-│  │  IP restriction: only 192.168.10.0/24 can mount        │  │
-│  │  root_squash: root on client → UID 65534 (nfsnobody)   │  │
-│  │  ro / rw: read-only or read-write at mount level        │  │
-│  └────────────────────────────────────────────────────────┘  │
-│                         │ mount permitted                    │
-│                         ▼                                    │
-│  Layer 2 — POSIX UID/GID on files (server filesystem)        │
-│  ┌────────────────────────────────────────────────────────┐  │
-│  │  File owner: UID 1001 (must match client UID 1001)      │  │
-│  │  Permissions: rwxr-xr-x                                │  │
-│  │  NFSv4: user@domain mapping via idmapd                 │  │
-│  └────────────────────────────────────────────────────────┘  │
-│                         │                                    │
-│  Effective access = export options AND POSIX permissions     │
+│  Layer 1 — EXPORT OPTIONS (server /etc/exports)                                                       │
+│  ┌────────────────────────────────────────────────────────┐                                           │
+│  │  IP restriction: only 192.168.10.0/24 can mount        │                                           │
+│  │  root_squash: root on client → UID 65534 (nfsnobody)   │                                           │
+│  │  ro / rw: read-only or read-write at mount level        │                                          │
+│  └────────────────────────────────────────────────────────┘                                           │
+│                         │ mount permitted                                                             │
+│                         ▼                                                                             │
+│  Layer 2 — POSIX UID/GID on files (server filesystem)                                                 │
+│  ┌────────────────────────────────────────────────────────┐                                           │
+│  │  File owner: UID 1001 (must match client UID 1001)      │                                          │
+│  │  Permissions: rwxr-xr-x                                │                                           │
+│  │  NFSv4: user@domain mapping via idmapd                 │                                           │
+│  └────────────────────────────────────────────────────────┘                                           │
+│                         │                                                                             │
+│  Effective access = export options AND POSIX permissions                                              │
 └──────────────────────────────────────────────────────────────┘
 ```
 

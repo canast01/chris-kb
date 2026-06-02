@@ -8,7 +8,7 @@ SMB Sessions reference covering Overview, Listing and Managing Sessions, SMB Sig
         SMB SESSION ESTABLISHMENT
 ```text
 ┌────────────┐                              ┌─────────────────┐
-│  Client    │                              │   SMB Server    │
+│  Client    │                              │   SMB Server                                              │
 └─────┬──────┘                              └────────┬────────┘
 ```
       │  1. Negotiate (dialect selection)             │
