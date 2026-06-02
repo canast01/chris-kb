@@ -61,61 +61,65 @@ AWS CLI Reference reference covering EC2 — Instances, EC2 — Images, Volumes 
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-┌────────────────────────────────────────── AWS CLI Reference ──────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                  AWS CLI — Command-Line Interface for AWS Service Management                  │   │
-│   │      Structured as: aws <service> <command> [--options] — e.g. aws ec2 describe-instances     │   │
-│   │        Auth: profiles in ~/.aws/credentials; assume-role; IAM Identity Center SSO login       │   │
-│   │          Output formats: --output json (default) | table | text | yaml | yaml-stream          │   │
-│   │       Pagination: --max-items / --starting-token; or --no-paginate for full result sets       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    AWS CLI organises commands by service — EC2, S3, IAM, RDS, EKS, SSM, CloudFormation, CloudWatch    │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │     Compute (EC2/Lambda)    │  │     Storage (S3/EBS/EFS)    │  │      Identity (IAM/SSO)     │   │
-│   │    ec2 describe-instances   │  │    s3 ls / cp / sync / rm   │  │     iam list-users/roles    │   │
-│   │   ec2 start/stop-instances  │  │     ec2 describe-volumes    │  │   iam get-policy/document   │   │
-│   │     ec2 create-snapshot     │  │   ec2 create-volume/attach  │  │       sts assume-role       │   │
-│   │      lambda invoke/list     │  │   efs describe-filesystems  │  │      sso login / logout     │   │
-│   │      ssm start-session      │  │      s3api head-bucket      │  │    iam simulate-principal   │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    Compute CLI manages instances · Storage CLI handles S3/EBS/EFS                                     │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │    EC2 / SSM     │        S3        │        IAM        │    RDS / EKS     │    CloudWatch    │   │
-│   │describe-instances│ s3 sync src dst  │     list-roles    │ rds describe-db  │ get-metric-data  │   │
-│   │ssm start-session │  s3api list-obj  │    assume-role    │  eks get-token   │ put-metric-alarm │   │
-│   │  run-instances   │  cp --recursive  │   create-policy   │eks list-clusters │ describe-alarms  │   │
-│   │   send-command   │    rb --force    │    delete-role    │ rds failover-db  │ logs filter-log  │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  AWS Regions · API endpoints (HTTPS) · IAM authentication layer · CloudShell or local workstation     │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  AWS CLI v2     = Current CLI version; install via pip or official pkg; aws --version to verify       │
-│  Named profile  = ~/.aws/credentials named section; use --profile name or AWS_PROFILE env var         │
-│  assume-role    = sts assume-role --role-arn ... --role-session-name; exports temp credentials        │
-│  --query        = JMESPath filter on JSON output; e.g. --query "Instances[*].InstanceId"              │
-│  --filter       = Server-side filter; e.g. --filters "Name=tag:Env,Values=prod" on describe calls     │
-│  --output table = Formats JSON output as ASCII table for human-readable inspection in terminal        │
-│  aws configure  = Interactive setup; writes region, key ID, secret, and output format to ~/.aws       │
-│  sso login      = Initiates browser-based IAM Identity Center login; caches SSO token locally         │
-│  --dry-run      = Validates permissions without executing; useful for IAM policy troubleshooting      │
-│  CloudShell     = Browser-based shell in AWS console; pre-authenticated, no local install needed      │
-│  --no-paginate  = Retrieves all pages of a paginated result in a single command call                  │
-│  --region       = Overrides default region for a single command; or set AWS_DEFAULT_REGION env var    │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+<div class="kb-grid kb-grid-3">
+
+<a class="kb-card" href="ec2-instances/">
+  <strong>EC2 Instances</strong>
+  <span>Instance lifecycle, describe, start, stop, and run commands.</span>
+</a>
+
+<a class="kb-card" href="ec2-storage/">
+  <strong>EC2 Storage</strong>
+  <span>EBS volumes, snapshots, and AMI management.</span>
+</a>
+
+<a class="kb-card" href="s3/">
+  <strong>S3</strong>
+  <span>Bucket and object operations, sync, and S3 API commands.</span>
+</a>
+
+<a class="kb-card" href="iam/">
+  <strong>IAM</strong>
+  <span>Users, roles, policies, and STS assume-role commands.</span>
+</a>
+
+<a class="kb-card" href="vpc/">
+  <strong>VPC & Networking</strong>
+  <span>VPC, subnets, route tables, security groups, and gateways.</span>
+</a>
+
+<a class="kb-card" href="cloudwatch/">
+  <strong>CloudWatch</strong>
+  <span>Alarms, metrics, and log group commands.</span>
+</a>
+
+<a class="kb-card" href="cloudformation/">
+  <strong>CloudFormation</strong>
+  <span>Stack lifecycle, events, and template validation.</span>
+</a>
+
+<a class="kb-card" href="rds/">
+  <strong>RDS</strong>
+  <span>Database instance management and snapshot commands.</span>
+</a>
+
+<a class="kb-card" href="eks/">
+  <strong>EKS</strong>
+  <span>Cluster management, kubeconfig, and node group commands.</span>
+</a>
+
+<a class="kb-card" href="ssm/">
+  <strong>SSM</strong>
+  <span>Session Manager, Run Command, and Parameter Store.</span>
+</a>
+
+<a class="kb-card" href="lambda/">
+  <strong>Lambda</strong>
+  <span>Function management, invocation, and deployment commands.</span>
+</a>
+
+</div>
 
 ---
 

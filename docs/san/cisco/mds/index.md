@@ -52,6 +52,30 @@ Cisco MDS 9000 series switches knowledge base covering fabric architecture, zoni
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+<div class="kb-grid kb-grid-2">
+
+<a class="kb-card" href="architecture/">
+  <strong>Architecture</strong>
+  <span>VSAN design, ISL topology, FCoE gateway, and FCIP WAN extension.</span>
+</a>
+
+<a class="kb-card" href="operations/">
+  <strong>Operations</strong>
+  <span>Zone management, ISSU firmware upgrades, health monitoring, and backup.</span>
+</a>
+
+<a class="kb-card" href="security/">
+  <strong>Security</strong>
+  <span>RBAC, TACACS+, DH-CHAP, SNMPv3, and AES-256 link encryption.</span>
+</a>
+
+<a class="kb-card" href="troubleshooting/">
+  <strong>Troubleshooting</strong>
+  <span>Port issues, VSAN isolation, domain conflicts, and ISL problems.</span>
+</a>
+
+</div>
+
 ---
 
 ## Upgrade Workflow Summary

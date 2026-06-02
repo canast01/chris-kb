@@ -62,6 +62,40 @@ Operations reference covering Change Readiness, Incident Triage, Maintenance Win
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+<div class="kb-grid kb-grid-3">
+
+<a class="kb-card" href="procedures/">
+  <strong>Procedures</strong>
+  <span>Step-by-step operational procedures and runbooks.</span>
+</a>
+
+<a class="kb-card" href="health-checks/">
+  <strong>Health Checks</strong>
+  <span>Proactive Azure health monitoring and validation routines.</span>
+</a>
+
+<a class="kb-card" href="install-upgrade/">
+  <strong>Install & Upgrade</strong>
+  <span>Azure service deployment and version management procedures.</span>
+</a>
+
+<a class="kb-card" href="backup-restore/">
+  <strong>Backup & Restore</strong>
+  <span>Azure Backup jobs, RSV restore, and snapshot recovery.</span>
+</a>
+
+<a class="kb-card" href="cli-reference/">
+  <strong>CLI Reference</strong>
+  <span>Azure CLI command reference for day-to-day operations.</span>
+</a>
+
+<a class="kb-card" href="scripts/">
+  <strong>Scripts</strong>
+  <span>Automation scripts for common operational tasks.</span>
+</a>
+
+</div>
+
 ## Change Readiness
 
 - [ ] VM snapshot or Recovery Services vault backup verified before change

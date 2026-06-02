@@ -23,6 +23,26 @@ Request True Forward amendment          purearray monitor
 Controller refresh issue:
   Contact Pure account team (90+ days lead time for scheduling)
 ```
+
+<div class="kb-grid kb-grid-3">
+
+<a class="kb-card" href="common-issues/">
+  <strong>Common Issues</strong>
+  <span>Known problems, symptoms, and resolution steps.</span>
+</a>
+
+<a class="kb-card" href="diagnostics/">
+  <strong>Diagnostics</strong>
+  <span>Diagnostic commands, log locations, and data collection.</span>
+</a>
+
+<a class="kb-card" href="escalation/">
+  <strong>Escalation</strong>
+  <span>When and how to escalate to Pure Storage support with the right data.</span>
+</a>
+
+</div>
+
 ## Common Issues
 
 | Symptom | Likely Cause | Action |
