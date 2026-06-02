@@ -3724,6 +3724,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#pair-in-invalid-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pair in Invalid State
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#pair-in-split-state" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3985,112 +3996,109 @@
     style engageSupport fill:#be123c,color:#fff
     style escalateNet fill:#b45309,color:#fff
     style checkDataAuth fill:#be123c,color:#fff</code></pre>
-┌─────────────────────────────────────── SRDF/S — Common Issues ────────────────────────────────────────┐
-│                                                                                                       │
-│   │     Symptom      │   Likely Cause   │    First Check    │       Fix        │      Verify      │   │
-│   │  Write latency   │   RTT &gt; budget   │ symrdf query -per │distance / bandwi │     symstat      │   │
-│   │ Pair Consistent  │transient congest │    symrdf query   │monitor; usually  │    symrdf -v     │   │
-│   │   Link failure   │   RF port down   │ symcfg list -rdfg │failover immediat │  symrdf failove  │   │
-│   │   R2 not ready   │   array fault    │ check R2 Unispher │fix array, re-est │  symrdf establi  │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                     General Triage Pattern                                    │   │
-│   │          Is the issue new or recurring? New = recent change; Recurring = config problem       │   │
-│   │             Is it isolated to one source or all? Isolated = agent; All = server/repo          │   │
-│   │                                  Check logs first: symrdf query                               │   │
-│   │                    If unresolved in 2h: open vendor case with full log bundle                 │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Two PowerMax arrays · Dark fiber / DWDM FC link · Low-latency network (&lt; 200 km) · RF director ports │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  SRDF/S        = Synchronous SRDF; every R1 write is mirrored to R2 before host acknowledgment        │
-│  R1            = source volume; write is held pending R2 confirmation — adds WAN RTT to latency       │
-│  R2            = target volume; must acknowledge each write; acts as synchronous mirror               │
-│  RTT           = Round-Trip Time between R1 and R2 arrays; directly added to host write latency       │
-│  RPO=0         = zero recovery point objective; no data loss possible under normal operation          │
-│  RTO           = Recovery Time Objective; SRDF/S failover typically &lt; 5 minutes manual, &lt; 1 min       │
-│  symrdf        = CLI for all SRDF operations: establish, split, suspend, failover, restore, ver       │
-│  Pair State    = Synchronized | Consistent | Suspended | Failed Over | Split                          │
-│  Consistent    = transient state where R1 write is in transit but not yet confirmed on R2             │
-│  Failover      = makes R2 read-write; production continues from DR site after R1 failure              │
-│  Restore       = re-synchronises after failover; direction is reversed until R1 catches up            │
-│  RDFG          = RDF Group: logical grouping of SRDF pairs sharing same link and parameters           │
-│  FA Port       = Front-End Adapter port on PowerMax; used for host connectivity (non-SRDF)            │
-│  RF Port       = Remote Fabric port on PowerMax; used exclusively for SRDF replication traffic        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>---
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>## Pair in `Invalid` State
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>**Symptom:** Pair state shows `Invalid` — typically after an unresolved split or an earlier failover that was not cleanly restored.
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>```bash
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a># Check the event log for the event that caused the Invalid state
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>symevent -sid &lt;r1_sid&gt; list -last 30 | grep -i &quot;SRDF\|Invalid\|failover&quot;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────────────────── SRDF/S — Common Issues ────────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   │     Symptom      │   Likely Cause   │    First Check    │       Fix        │      Verify      │   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │  Write latency   │   RTT &gt; budget   │ symrdf query -per │distance / bandwi │     symstat      │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │ Pair Consistent  │transient congest │    symrdf query   │monitor; usually  │    symrdf -v     │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │   Link failure   │   RF port down   │ symcfg list -rdfg │failover immediat │  symrdf failove  │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │   R2 not ready   │   array fault    │ check R2 Unispher │fix array, re-est │  symrdf establi  │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│                                                                                                       │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   │                                     General Triage Pattern                                    │   │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   │          Is the issue new or recurring? New = recent change; Recurring = config problem       │   │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│   │             Is it isolated to one source or all? Isolated = agent; All = server/repo          │   │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   │                                  Check logs first: symrdf query                               │   │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   │                    If unresolved in 2h: open vendor case with full log bundle                 │   │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│                                                                                                       │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│  Physical Infrastructure:                                                                             │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│  Two PowerMax arrays · Dark fiber / DWDM FC link · Low-latency network (&lt; 200 km) · RF director ports │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│                                                                                                       │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│  SRDF/S        = Synchronous SRDF; every R1 write is mirrored to R2 before host acknowledgment        │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│  R1            = source volume; write is held pending R2 confirmation — adds WAN RTT to latency       │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│  R2            = target volume; must acknowledge each write; acts as synchronous mirror               │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  RTT           = Round-Trip Time between R1 and R2 arrays; directly added to host write latency       │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  RPO=0         = zero recovery point objective; no data loss possible under normal operation          │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│  RTO           = Recovery Time Objective; SRDF/S failover typically &lt; 5 minutes manual, &lt; 1 min       │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  symrdf        = CLI for all SRDF operations: establish, split, suspend, failover, restore, ver       │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│  Pair State    = Synchronized | Consistent | Suspended | Failed Over | Split                          │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  Consistent    = transient state where R1 write is in transit but not yet confirmed on R2             │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│  Failover      = makes R2 read-write; production continues from DR site after R1 failure              │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  Restore       = re-synchronises after failover; direction is reversed until R1 catches up            │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│  RDFG          = RDF Group: logical grouping of SRDF pairs sharing same link and parameters           │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│  FA Port       = Front-End Adapter port on PowerMax; used for host connectivity (non-SRDF)            │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│  RF Port       = Remote Fabric port on PowerMax; used exclusively for SRDF replication traffic        │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│                                                                                                       │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
+<hr />
+<h2 id="pair-in-invalid-state">Pair in <code>Invalid</code> State<a class="headerlink" href="#pair-in-invalid-state" title="Permanent link">&para;</a></h2>
+<p><strong>Symptom:</strong> Pair state shows <code>Invalid</code> — typically after an unresolved split or an earlier failover that was not cleanly restored.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check the event log for the event that caused the Invalid state</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>symevent<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>list<span class="w"> </span>-last<span class="w"> </span><span class="m">30</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;SRDF\|Invalid\|failover&quot;</span>
+</code></pre></div>
 <p><strong>Resolution (R1 is authoritative — no real failover occurred):</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>resync<span class="w"> </span>-noprompt
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Pushes R1 data to R2 and re-establishes sync</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>resync<span class="w"> </span>-noprompt
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Pushes R1 data to R2 and re-establishes sync</span>
 </code></pre></div>
 <p><strong>Resolution (R2 has the latest data — a real failover occurred):</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Confirm with application team that R2 has the correct data</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Then fail back to R1</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;r2_sid&gt;<span class="w"> </span>failback<span class="w"> </span>-noprompt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Confirm with application team that R2 has the correct data</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Then fail back to R1</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;r2_sid&gt;<span class="w"> </span>failback<span class="w"> </span>-noprompt
 </code></pre></div>
 <p><strong>Do not resync or restore without first confirming which side has the authoritative data.</strong> An incorrect resync will permanently overwrite data.</p>
 <hr />
 <h2 id="pair-in-split-state">Pair in <code>Split</code> State<a class="headerlink" href="#pair-in-split-state" title="Permanent link">&para;</a></h2>
 <p>A <code>Split</code> state means both R1 and R2 are R/W and data is diverging. This is normal during a planned failover but is an incident if unexpected.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check when the split occurred</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>symevent<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>list<span class="w"> </span>-last<span class="w"> </span>24h<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;split\|SRDF&quot;</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Identify which side has writes since the split</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>symdev<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>show<span class="w"> </span>&lt;dev_id&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Modified&quot;</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>symdev<span class="w"> </span>-sid<span class="w"> </span>&lt;r2_sid&gt;<span class="w"> </span>show<span class="w"> </span>&lt;dev_id&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Modified&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check when the split occurred</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>symevent<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>list<span class="w"> </span>-last<span class="w"> </span>24h<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;split\|SRDF&quot;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Identify which side has writes since the split</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>symdev<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>show<span class="w"> </span>&lt;dev_id&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Modified&quot;</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>symdev<span class="w"> </span>-sid<span class="w"> </span>&lt;r2_sid&gt;<span class="w"> </span>show<span class="w"> </span>&lt;dev_id&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;Modified&quot;</span>
 </code></pre></div>
 <p><strong>Never re-establish a split pair without application team sign-off.</strong> Restoring R1 overwrites any R2 writes made during the split period and vice versa.</p>
 <hr />
 <h2 id="isl-fcip-link-failure">ISL / FCIP Link Failure<a class="headerlink" href="#isl-fcip-link-failure" title="Permanent link">&para;</a></h2>
 <p><strong>Symptom:</strong> SRDF link is down; pairs move to <code>Suspended</code> or <code>Write Disabled</code>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check SRDF director port state</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>list<span class="w"> </span>-dir<span class="w"> </span>all<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;RDF|Port|State&quot;</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># From SAN switch (Cisco MDS)</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>show<span class="w"> </span>fcip<span class="w"> </span>session
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>show<span class="w"> </span>port-channel<span class="w"> </span>summary<span class="w">  </span><span class="c1"># if using port-channel</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>show<span class="w"> </span>interface<span class="w"> </span>gigabitEthernet<span class="w"> </span>X/X
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># From Brocade</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>portshow<span class="w"> </span>&lt;port&gt;
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>portcfgshow<span class="w">  </span><span class="c1"># check FCIP port config</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check SRDF director port state</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>symcfg<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>list<span class="w"> </span>-dir<span class="w"> </span>all<span class="w"> </span>-v<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;RDF|Port|State&quot;</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># From SAN switch (Cisco MDS)</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>show<span class="w"> </span>fcip<span class="w"> </span>session
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>show<span class="w"> </span>port-channel<span class="w"> </span>summary<span class="w">  </span><span class="c1"># if using port-channel</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>show<span class="w"> </span>interface<span class="w"> </span>gigabitEthernet<span class="w"> </span>X/X
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># From Brocade</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>portshow<span class="w"> </span>&lt;port&gt;
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>portcfgshow<span class="w">  </span><span class="c1"># check FCIP port config</span>
 </code></pre></div>
 <p><strong>Recovery after link restoration:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Pair should auto-resume once link is restored (depending on configuration)</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># If pairs remain Suspended, manually resume:</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>resume<span class="w"> </span>-noprompt
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Verify Synchronized state is reached (may take time to fully sync)</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>query
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Pair should auto-resume once link is restored (depending on configuration)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># If pairs remain Suspended, manually resume:</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>resume<span class="w"> </span>-noprompt
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Verify Synchronized state is reached (may take time to fully sync)</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>query
 </code></pre></div>
 <hr />
 <h2 id="unintended-failover-during-maintenance">Unintended Failover During Maintenance<a class="headerlink" href="#unintended-failover-during-maintenance" title="Permanent link">&para;</a></h2>
 <p><strong>Cause:</strong> Maintenance was performed without declaring a maintenance window; SRDF monitors triggered automatic protection responses.</p>
 <p><strong>Prevention:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Before any maintenance that touches SRDF links, directors, or the arrays:</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># Step 1 — Suspend SRDF/S pair (converts to async temporarily)</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span><span class="nb">suspend</span><span class="w"> </span>-noprompt
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Step 2 — Disable SRDF health monitoring alerts in the monitoring platform for the duration</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Step 3 — Perform maintenance</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Step 4 — Resume and verify Synchronized state before re-enabling monitoring</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>resume<span class="w"> </span>-noprompt
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>query
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Before any maintenance that touches SRDF links, directors, or the arrays:</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># Step 1 — Suspend SRDF/S pair (converts to async temporarily)</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span><span class="nb">suspend</span><span class="w"> </span>-noprompt
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Step 2 — Disable SRDF health monitoring alerts in the monitoring platform for the duration</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Step 3 — Perform maintenance</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># Step 4 — Resume and verify Synchronized state before re-enabling monitoring</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>resume<span class="w"> </span>-noprompt
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>symrdf<span class="w"> </span>-g<span class="w"> </span>&lt;dgname&gt;<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>query
 </code></pre></div>
 
 

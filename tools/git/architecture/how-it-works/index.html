@@ -3152,6 +3152,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#refs-and-branches" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Refs and Branches
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#github-enterprise-gitlab-self-managed-architecture" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3410,63 +3421,61 @@ Git is a distributed version control system where every working copy is a full r
     FORK --&gt;|git push| LC
     LC --&gt;|git push| FORK
     FORK --&gt;|Pull Request / MR| REMOTE</code></pre>
-┌───────────────────────────────────────── Git — How It Works ──────────────────────────────────────────┐
-│                                                                                                       │
-│  Git commit lifecycle: working tree → index → local repo → remote repo.                               │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Commit Creation                │  │              Branch Operations              │   │
-│   │       git add → writes blob to objects       │  │          Create: git branch <name>          │   │
-│   │      git add → updates index with tree       │  │      Switch: git checkout / git switch      │   │
-│   │       git commit → creates commit obj        │  │         Merge: 3-way or fast-forward        │   │
-│   │         HEAD ref moves to new commit         │  │         Delete: git branch -d <name>        │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Commits chain via parent pointers; branches are just movable pointers                              │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Merge vs Rebase                │  │                 Remote Sync                 │   │
-│   │        Merge: preserves history fork         │  │        git fetch: update remote refs        │   │
-│   │          Merge commit: two parents           │  │        git pull: fetch + merge/rebase       │   │
-│   │          Rebase: linearises history          │  │     git push: send commits + update ref     │   │
-│   │         Rebase rewrites SHA-1 hashes         │  │       Force push: dangerous on shared       │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Developer workstation · Git remote server · CI trigger on push event                                 │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  3-way merge  = git identifies common ancestor to resolve two diverged branches                       │
-│  Fast-forward = no merge commit; branch pointer advances along linear history                         │
-│  Rebase       = moves or re-applies commits; produces new SHAs; rewrites history                      │
-│  Force push   = overwrites remote history; use only on personal/feature branches                      │
-│  Reflog       = local recovery log; git reflog finds commits after accidental reset                   │
-│  Detached HEAD= HEAD points to commit, not branch; commits not attached to branch                     │
-│  Conflict     = overlapping changes in same file; must resolve manually                               │
-│  Squash merge = combine PR commits into single commit on target branch                                │
-│  Cherry-pick  = applies diff of specific commit onto current branch                                   │
-│  Bisect       = binary search through history to find commit that introduced bug                      │
-│  Amend        = rewrites last commit; do not amend pushed commits                                     │
-│  Stash        = stores dirty working tree temporarily; git stash pop restores                         │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>---
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>## Refs and Branches
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>```text
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>.git/
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>├── HEAD                    → ref: refs/heads/main
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>├── refs/
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   ├── heads/              → local branches
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   ├── remotes/
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   │   └── origin/
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   └── tags/
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>└── packed-refs             → bulk storage for many refs
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────────────── Git — How It Works ──────────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Git commit lifecycle: working tree → index → local repo → remote repo.                               │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│                                                                                                       │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │               Commit Creation                │  │              Branch Operations              │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │       git add → writes blob to objects       │  │          Create: git branch &lt;name&gt;          │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │      git add → updates index with tree       │  │      Switch: git checkout / git switch      │   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   │       git commit → creates commit obj        │  │         Merge: 3-way or fast-forward        │   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   │         HEAD ref moves to new commit         │  │         Delete: git branch -d &lt;name&gt;        │   │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                                                                                                       │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│    Commits chain via parent pointers; branches are just movable pointers                              │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│                                                                                                       │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│                                                                                                       │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │               Merge vs Rebase                │  │                 Remote Sync                 │   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │        Merge: preserves history fork         │  │        git fetch: update remote refs        │   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │          Merge commit: two parents           │  │        git pull: fetch + merge/rebase       │   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   │          Rebase: linearises history          │  │     git push: send commits + update ref     │   │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   │         Rebase rewrites SHA-1 hashes         │  │       Force push: dangerous on shared       │   │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│                                                                                                       │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  Developer workstation · Git remote server · CI trigger on push event                                 │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│                                                                                                       │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│                                                                                                       │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  3-way merge  = git identifies common ancestor to resolve two diverged branches                       │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│  Fast-forward = no merge commit; branch pointer advances along linear history                         │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  Rebase       = moves or re-applies commits; produces new SHAs; rewrites history                      │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│  Force push   = overwrites remote history; use only on personal/feature branches                      │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│  Reflog       = local recovery log; git reflog finds commits after accidental reset                   │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│  Detached HEAD= HEAD points to commit, not branch; commits not attached to branch                     │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│  Conflict     = overlapping changes in same file; must resolve manually                               │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│  Squash merge = combine PR commits into single commit on target branch                                │
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│  Cherry-pick  = applies diff of specific commit onto current branch                                   │
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│  Bisect       = binary search through history to find commit that introduced bug                      │
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│  Amend        = rewrites last commit; do not amend pushed commits                                     │
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│  Stash        = stores dirty working tree temporarily; git stash pop restores                         │
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│                                                                                                       │
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
+<hr />
+<h2 id="refs-and-branches">Refs and Branches<a class="headerlink" href="#refs-and-branches" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>.git/
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>├── HEAD                    → ref: refs/heads/main
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>├── refs/
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   ├── heads/              → local branches
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   ├── remotes/
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │   └── origin/
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   └── tags/
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>└── packed-refs             → bulk storage for many refs
+</code></pre></div>
 <table>
 <thead>
 <tr>
@@ -3581,17 +3590,17 @@ Git is a distributed version control system where every working copy is a full r
     Rails-&gt;&gt;Rails: trigger webhooks / CI pipelines (async)</code></pre>
 <hr />
 <h2 id="storage-layout">Storage Layout<a class="headerlink" href="#storage-layout" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># GitLab on-disk layout (default Omnibus)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>/var/opt/gitlab/
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>├──<span class="w"> </span>git-data/
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│<span class="w">   </span>└──<span class="w"> </span>repositories/
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│<span class="w">       </span>└──<span class="w"> </span>&lt;namespace&gt;/
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│<span class="w">           </span>└──<span class="w"> </span>&lt;project&gt;.git/
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│<span class="w">               </span>├──<span class="w"> </span>objects/
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│<span class="w">               </span>├──<span class="w"> </span>refs/
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│<span class="w">               </span>└──<span class="w"> </span>hooks/
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>└──<span class="w"> </span>gitlab-rails/
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span>└──<span class="w"> </span>uploads/
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># GitLab on-disk layout (default Omnibus)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>/var/opt/gitlab/
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>├──<span class="w"> </span>git-data/
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>│<span class="w">   </span>└──<span class="w"> </span>repositories/
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>│<span class="w">       </span>└──<span class="w"> </span>&lt;namespace&gt;/
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>│<span class="w">           </span>└──<span class="w"> </span>&lt;project&gt;.git/
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>│<span class="w">               </span>├──<span class="w"> </span>objects/
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>│<span class="w">               </span>├──<span class="w"> </span>refs/
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>│<span class="w">               </span>└──<span class="w"> </span>hooks/
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>└──<span class="w"> </span>gitlab-rails/
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">    </span>└──<span class="w"> </span>uploads/
 </code></pre></div>
 
 

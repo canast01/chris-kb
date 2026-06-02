@@ -3492,69 +3492,67 @@ Authentication reference covering Credential Flow — API Authentication, .env F
     secretsMgr --&gt; apiKey
     apiKey --&gt; bearerHeader
     bearerHeader --&gt; apiEndpoint</code></pre>
-┌─────────────────────────────────────── Python — Authentication ───────────────────────────────────────┐
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │     Python authentication: boto3 credential chain, paramiko SSH key, requests auth classes    │   │
-│   │    boto3 credential chain: env var → ~/.aws/credentials → IAM role → container credentials    │   │
-│   │         Never use access keys in code; prefer IAM roles (EC2) or OIDC (GitHub Actions)        │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              AWS Authentication              │  │              SSH and REST Auth              │   │
-│   │          IAM role: boto3.Session()           │  │       paramiko.RSAKey.from_private_key      │   │
-│   │           Assume role: STS client            │  │         requests.auth.HTTPBasicAuth         │   │
-│   │        boto3.Session(profile_name=X)         │  │       Bearer: headers={"Auth": "..."}       │   │
-│   │           No hardcoded access keys           │  │          OAuth2: requests-oauthlib          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      STS AssumeRole = boto3 STS client; returns temp credentials for cross-account access     │   │
-│   │     Credential chain= boto3 tries in order: env vars, shared file, container, EC2 metadata    │   │
-│   │  keyring library = OS keychain integration; python-keyring; store/retrieve API tokens safely  │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>```python
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>```python
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>from dotenv import load_dotenv
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>import os
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>load_dotenv()   # loads .env from the current directory
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>api_key = os.environ.get(&quot;API_KEY&quot;)
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>api_url = os.environ.get(&quot;API_URL&quot;, &quot;https://api.example.com&quot;)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────────────────── Python — Authentication ───────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   │     Python authentication: boto3 credential chain, paramiko SSH key, requests auth classes    │   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │    boto3 credential chain: env var → ~/.aws/credentials → IAM role → container credentials    │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │         Never use access keys in code; prefer IAM roles (EC2) or OIDC (GitHub Actions)        │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│                                                                                                       │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   │              AWS Authentication              │  │              SSH and REST Auth              │   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   │          IAM role: boto3.Session()           │  │       paramiko.RSAKey.from_private_key      │   │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   │           Assume role: STS client            │  │         requests.auth.HTTPBasicAuth         │   │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   │        boto3.Session(profile_name=X)         │  │       Bearer: headers={&quot;Auth&quot;: &quot;...&quot;}       │   │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│   │           No hardcoded access keys           │  │          OAuth2: requests-oauthlib          │   │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│                                                                                                       │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │      STS AssumeRole = boto3 STS client; returns temp credentials for cross-account access     │   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │     Credential chain= boto3 tries in order: env vars, shared file, container, EC2 metadata    │   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │  keyring library = OS keychain integration; python-keyring; store/retrieve API tokens safely  │   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># .env file — add to .gitignore</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nv">API_KEY</span><span class="o">=</span>mykey
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nv">API_URL</span><span class="o">=</span>https://api.example.com
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nv">DB_PASSWORD</span><span class="o">=</span>s3cr3t
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">dotenv</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_dotenv</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="n">load_dotenv</span><span class="p">()</span>   <span class="c1"># loads .env from the current directory</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="n">api_key</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;API_KEY&quot;</span><span class="p">)</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="n">api_url</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;API_URL&quot;</span><span class="p">,</span> <span class="s2">&quot;https://api.example.com&quot;</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># .env file — add to .gitignore</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">API_KEY</span><span class="o">=</span>mykey
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nv">API_URL</span><span class="o">=</span>https://api.example.com
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nv">DB_PASSWORD</span><span class="o">=</span>s3cr3t
 </code></pre></div>
 <h2 id="oauth-20-client-credentials">OAuth 2.0 (Client Credentials)<a class="headerlink" href="#oauth-20-client-credentials" title="Permanent link">&para;</a></h2>
 <p>Used for machine-to-machine authentication where no user interaction is needed.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_access_token</span><span class="p">(</span><span class="n">token_url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">client_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">client_secret</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="n">resp</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>        <span class="n">token_url</span><span class="p">,</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>        <span class="n">data</span><span class="o">=</span><span class="p">{</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>            <span class="s2">&quot;grant_type&quot;</span><span class="p">:</span> <span class="s2">&quot;client_credentials&quot;</span><span class="p">,</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>            <span class="s2">&quot;client_id&quot;</span><span class="p">:</span> <span class="n">client_id</span><span class="p">,</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>            <span class="s2">&quot;client_secret&quot;</span><span class="p">:</span> <span class="n">client_secret</span><span class="p">,</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>            <span class="s2">&quot;scope&quot;</span><span class="p">:</span> <span class="n">scope</span><span class="p">,</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>        <span class="p">},</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>        <span class="n">timeout</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>    <span class="p">)</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>    <span class="n">resp</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>    <span class="k">return</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;access_token&quot;</span><span class="p">]</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="n">token</span> <span class="o">=</span> <span class="n">get_access_token</span><span class="p">(</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>    <span class="n">token_url</span><span class="o">=</span><span class="s2">&quot;https://auth.example.com/oauth/token&quot;</span><span class="p">,</span>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>    <span class="n">client_id</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;CLIENT_ID&quot;</span><span class="p">],</span>
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>    <span class="n">client_secret</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;CLIENT_SECRET&quot;</span><span class="p">],</span>
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>    <span class="n">scope</span><span class="o">=</span><span class="s2">&quot;read:servers write:servers&quot;</span><span class="p">,</span>
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="p">)</span>
-<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>
-<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Authorization&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Bearer </span><span class="si">{</span><span class="n">token</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="k">def</span><span class="w"> </span><span class="nf">get_access_token</span><span class="p">(</span><span class="n">token_url</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">client_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">client_secret</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">scope</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="n">resp</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>        <span class="n">token_url</span><span class="p">,</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>        <span class="n">data</span><span class="o">=</span><span class="p">{</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>            <span class="s2">&quot;grant_type&quot;</span><span class="p">:</span> <span class="s2">&quot;client_credentials&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>            <span class="s2">&quot;client_id&quot;</span><span class="p">:</span> <span class="n">client_id</span><span class="p">,</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>            <span class="s2">&quot;client_secret&quot;</span><span class="p">:</span> <span class="n">client_secret</span><span class="p">,</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>            <span class="s2">&quot;scope&quot;</span><span class="p">:</span> <span class="n">scope</span><span class="p">,</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>        <span class="p">},</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>        <span class="n">timeout</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>    <span class="p">)</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>    <span class="n">resp</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>    <span class="k">return</span> <span class="n">resp</span><span class="o">.</span><span class="n">json</span><span class="p">()[</span><span class="s2">&quot;access_token&quot;</span><span class="p">]</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="n">token</span> <span class="o">=</span> <span class="n">get_access_token</span><span class="p">(</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>    <span class="n">token_url</span><span class="o">=</span><span class="s2">&quot;https://auth.example.com/oauth/token&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>    <span class="n">client_id</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;CLIENT_ID&quot;</span><span class="p">],</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>    <span class="n">client_secret</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;CLIENT_SECRET&quot;</span><span class="p">],</span>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>    <span class="n">scope</span><span class="o">=</span><span class="s2">&quot;read:servers write:servers&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="p">)</span>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Authorization&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Bearer </span><span class="si">{</span><span class="n">token</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">}</span>
 </code></pre></div>
 <h2 id="credential-management-reference">Credential Management Reference<a class="headerlink" href="#credential-management-reference" title="Permanent link">&para;</a></h2>
 <table>

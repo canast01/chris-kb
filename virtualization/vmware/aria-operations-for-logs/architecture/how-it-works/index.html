@@ -4510,50 +4510,49 @@ How It Works reference covering Overview, Log Pipeline Architecture, ESXi Syslog
   class VRLI ctrl
   class IDX store
   class SRC1,SRC2,SRC3,ADMIN host</code></pre>
-┌─────────────────────────────── Aria Operations for Logs — How It Works ───────────────────────────────┐
-│                                                                                                       │
-│  Centralised log aggregation, indexing, and alerting for VMware and multi-cloud environments.         │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Ingestion Layer                │  │                Analysis Layer               │   │
-│   │        Syslog: UDP/TCP 514, TLS 6514         │  │       Real-time indexing of log events      │   │
-│   │       vSphere agent: ESXi/vCenter logs       │  │     Interactive analytics: filter+group     │   │
-│   │       CF/vRLI agent: app log shipping        │  │       Field extraction: auto + custom       │   │
-│   │      REST ingest API for custom sources      │  │        Dashboards: saved query views        │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Alerts fire on query thresholds; Aria Ops integration correlates logs with metrics.                  │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │           Alerting and Forwarding            │  │                 Integration                 │   │
-│   │        Alert: query matches threshold        │  │    Aria Operations: log launch-in-context   │   │
-│   │       Notify: email/webhook/ServiceNow       │  │         vCenter: VM log correlation         │   │
-│   │       Forward: syslog to SIEM (Splunk)       │  │        NSX: DFW rule match log events       │   │
-│   │       Archive: export to S3/NFS for DR       │  │       VxRail: hardware event ingestion      │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Linux VM (vRLI appliance) · NIC for syslog ingestion · vCenter · ESXi hosts · NTP                    │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  vRLI              = vRealize Log Insight; former name for Aria Operations for Logs                   │
-│  Syslog            = Protocol for log transmission; UDP 514 (unreliable) or TCP/TLS 6514              │
-│  vSphere agent     = vRLI agent on ESXi and vCenter; ships structured logs directly                   │
-│  Field extraction  = vRLI parses log text to create queryable structured fields                       │
-│  Interactive analytics= vRLI UI for free-text search, filter, group, and timeline analysis            │
-│  Alert             = Query-based trigger; fires when event count or pattern exceeds threshold         │
-│  Content pack      = Pre-built dashboards and alerts for a specific product (e.g. NSX, vSAN)          │
-│  Launch in context = Aria Ops alert opens vRLI filtered to same host/timeframe                        │
-│  SIEM forwarding   = vRLI forwards selected events to Splunk or other SIEM via syslog                 │
-│  Archive           = Long-term log export to NFS or S3 for compliance retention                       │
-│  Worker node       = Additional vRLI VM for horizontal scale; master distributes ingestion            │
-│  Ingestion API     = REST endpoint for pushing structured JSON logs from custom applications          │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────────── Aria Operations for Logs — How It Works ───────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Centralised log aggregation, indexing, and alerting for VMware and multi-cloud environments.         │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│                                                                                                       │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │               Ingestion Layer                │  │                Analysis Layer               │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │        Syslog: UDP/TCP 514, TLS 6514         │  │       Real-time indexing of log events      │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │       vSphere agent: ESXi/vCenter logs       │  │     Interactive analytics: filter+group     │   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   │       CF/vRLI agent: app log shipping        │  │       Field extraction: auto + custom       │   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   │      REST ingest API for custom sources      │  │        Dashboards: saved query views        │   │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                                                                                                       │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  Alerts fire on query thresholds; Aria Ops integration correlates logs with metrics.                  │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│                                                                                                       │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│                                                                                                       │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │           Alerting and Forwarding            │  │                 Integration                 │   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │        Alert: query matches threshold        │  │    Aria Operations: log launch-in-context   │   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │       Notify: email/webhook/ServiceNow       │  │         vCenter: VM log correlation         │   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   │       Forward: syslog to SIEM (Splunk)       │  │        NSX: DFW rule match log events       │   │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   │       Archive: export to S3/NFS for DR       │  │       VxRail: hardware event ingestion      │   │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│                                                                                                       │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  Linux VM (vRLI appliance) · NIC for syslog ingestion · vCenter · ESXi hosts · NTP                    │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│                                                                                                       │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│                                                                                                       │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  vRLI              = vRealize Log Insight; former name for Aria Operations for Logs                   │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│  Syslog            = Protocol for log transmission; UDP 514 (unreliable) or TCP/TLS 6514              │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  vSphere agent     = vRLI agent on ESXi and vCenter; ships structured logs directly                   │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│  Field extraction  = vRLI parses log text to create queryable structured fields                       │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│  Interactive analytics= vRLI UI for free-text search, filter, group, and timeline analysis            │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│  Alert             = Query-based trigger; fires when event count or pattern exceeds threshold         │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│  Content pack      = Pre-built dashboards and alerts for a specific product (e.g. NSX, vSAN)          │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│  Launch in context = Aria Ops alert opens vRLI filtered to same host/timeframe                        │
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│  SIEM forwarding   = vRLI forwards selected events to Splunk or other SIEM via syslog                 │
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│  Archive           = Long-term log export to NFS or S3 for compliance retention                       │
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│  Worker node       = Additional vRLI VM for horizontal scale; master distributes ingestion            │
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│  Ingestion API     = REST endpoint for pushing structured JSON logs from custom applications          │
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│                                                                                                       │
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
 
 

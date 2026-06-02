@@ -3958,52 +3958,51 @@ How It Works reference covering Overview, Management Group Hierarchy, Identity A
   class TENANT,MG ctrl
   class SUBP,SUBD cloud
   class HUB,SP1,SP2 net</code></pre>
-┌────────────────────────────────── Azure Architecture — How It Works ──────────────────────────────────┐
-│                                                                                                       │
-│  Azure organises resources in a hierarchy: Management Groups → Subscriptions → RGs → Resources.       │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Resource Hierarchy              │  │            Resource Manager (ARM)           │   │
-│   │       Root Management Group: top level       │  │        ARM: single control plane API        │   │
-│   │       Management Groups: OU equivalent       │  │     Resource Provider: register per svc     │   │
-│   │     Subscriptions: billing + access unit     │  │         ARM template: IaC JSON/Bicep        │   │
-│   │     Resource Groups: lifecycle container     │  │           RBAC: scope at any level          │   │
-│   │      Resources: VMs, storage, databases      │  │        Policy: enforced via ARM layer       │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Policies assigned at MG inherit down; RBAC assigned at RG controls resource access.                  │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Authentication Flow              │  │              Service Deployment             │   │
-│   │         Entra ID: identity provider          │  │       Portal: web UI for all resources      │   │
-│   │          Token: OAuth2 / OIDC flow           │  │          CLI: az resource commands          │   │
-│   │      ARM API: accepts token + validates      │  │           SDK: .NET/Python/Java/JS          │   │
-│   │        Policy evaluated at ARM layer         │  │         IaC: Bicep / Terraform / ARM        │   │
-│   │       RBAC: checked before resource op       │  │         DevOps: GitHub Actions / ADO        │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Azure regions · Availability Zones · Physical data centres · Global backbone network                 │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Management Group= Container above subscriptions for policy and RBAC inheritance                      │
-│  Subscription    = Billing and access control boundary; contains resource groups                      │
-│  Resource Group  = Logical container for related resources sharing a lifecycle                        │
-│  ARM             = Azure Resource Manager; unified control plane for all Azure resources              │
-│  Resource Provider= Azure service that supplies resource types, e.g. Microsoft.Compute                │
-│  Bicep           = Domain-specific language that compiles to ARM templates                            │
-│  RBAC            = Role-Based Access Control; assigned to identity at a scope                         │
-│  Azure Policy    = Service enforcing governance rules at ARM layer; deny or audit                     │
-│  Entra ID        = Azure Active Directory; cloud identity provider for all Azure auth                 │
-│  OAuth2 token    = Short-lived bearer token issued by Entra ID for ARM API calls                      │
-│  Root MG         = Top-level management group; all subscriptions under one tenant                     │
-│  IaC             = Infrastructure as Code; define Azure resources in declarative templates            │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌────────────────────────────────── Azure Architecture — How It Works ──────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Azure organises resources in a hierarchy: Management Groups → Subscriptions → RGs → Resources.       │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│                                                                                                       │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │              Resource Hierarchy              │  │            Resource Manager (ARM)           │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │       Root Management Group: top level       │  │        ARM: single control plane API        │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │       Management Groups: OU equivalent       │  │     Resource Provider: register per svc     │   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   │     Subscriptions: billing + access unit     │  │         ARM template: IaC JSON/Bicep        │   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   │     Resource Groups: lifecycle container     │  │           RBAC: scope at any level          │   │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   │      Resources: VMs, storage, databases      │  │        Policy: enforced via ARM layer       │   │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                                                                                                       │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  Policies assigned at MG inherit down; RBAC assigned at RG controls resource access.                  │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│                                                                                                       │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│                                                                                                       │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │             Authentication Flow              │  │              Service Deployment             │   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │         Entra ID: identity provider          │  │       Portal: web UI for all resources      │   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   │          Token: OAuth2 / OIDC flow           │  │          CLI: az resource commands          │   │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   │      ARM API: accepts token + validates      │  │           SDK: .NET/Python/Java/JS          │   │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│   │        Policy evaluated at ARM layer         │  │         IaC: Bicep / Terraform / ARM        │   │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│   │       RBAC: checked before resource op       │  │         DevOps: GitHub Actions / ADO        │   │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│                                                                                                       │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  Azure regions · Availability Zones · Physical data centres · Global backbone network                 │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│                                                                                                       │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│                                                                                                       │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  Management Group= Container above subscriptions for policy and RBAC inheritance                      │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│  Subscription    = Billing and access control boundary; contains resource groups                      │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│  Resource Group  = Logical container for related resources sharing a lifecycle                        │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│  ARM             = Azure Resource Manager; unified control plane for all Azure resources              │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│  Resource Provider= Azure service that supplies resource types, e.g. Microsoft.Compute                │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│  Bicep           = Domain-specific language that compiles to ARM templates                            │
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│  RBAC            = Role-Based Access Control; assigned to identity at a scope                         │
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│  Azure Policy    = Service enforcing governance rules at ARM layer; deny or audit                     │
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│  Entra ID        = Azure Active Directory; cloud identity provider for all Azure auth                 │
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│  OAuth2 token    = Short-lived bearer token issued by Entra ID for ARM API calls                      │
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│  Root MG         = Top-level management group; all subscriptions under one tenant                     │
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>│  IaC             = Infrastructure as Code; define Azure resources in declarative templates            │
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>│                                                                                                       │
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
 
 

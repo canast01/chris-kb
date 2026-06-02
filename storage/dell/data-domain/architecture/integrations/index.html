@@ -3983,6 +3983,39 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#commvault-sisl-dd-boost" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CommVault (SISL + DD Boost)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#avamar-rain-dedup-with-dd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Avamar (RAIN Dedup with DD)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nfs-generic-backup-targets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NFS — Generic Backup Targets
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#cifssmb-windows-backup-targets" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4246,94 +4279,90 @@ Integrations reference covering DD Boost Backup Flow, NetBackup (OST with DD Boo
     ddReceiver --&gt; sisl
     sisl --&gt; nvramCache
     nvramCache --&gt; ddfs</code></pre>
-┌──────────────────────────────────── Dell Data Domain Integrations ────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │         Data Domain integrates with major backup applications via DD Boost or NFS/CIFS        │   │
-│   │           DDMC (Data Domain Management Center) manages multiple DD systems centrally          │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │         Backup Apps         │  │          Management         │  │        Cloud/Archive        │   │
-│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
-│   │        Dell Networker       │  │             DDMC            │  │        DD Cloud Tier        │   │
-│   │      Veritas NetBackup      │  │           CloudIQ           │  │            AWS S3           │   │
-│   │         Veeam Backup        │  │        Secure Connect       │  │          Azure Blob         │   │
-│   │         Dell Avamar         │  │         SNMP alerts         │  │        S3-compatible        │   │
-│   │          Commvault          │  │         Syslog/SIEM         │  │          ECS object         │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│   │   Integration    │     Protocol     │      Feature      │      Config      │      Notes       │   │
-│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
-│   │    Networker     │     DD Boost     │   App-side dedup  │   DDBDA plugin   │    Preferred     │   │
-│   │      Veeam       │     DD Boost     │   App-side dedup  │   Boost plugin   │      v9.5+       │   │
-│   │    NetBackup     │   OST/DD Boost   │   Optimised dup   │    OST plugin    │    Preferred     │   │
-│   │       DDMC       │      HTTPS       │    Central mgmt   │  Add DD to DDMC  │     Multi-DD     │   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    DDBDA  = Dell Data Domain Boost for Backup Application; Networker integration library              │
-│    DDMC   = Data Domain Management Center; central web UI managing multiple DD systems                │
-│    OST    = OpenStorage Technology; NetBackup plugin enabling direct API integration with DD          │
-│    Cloud Tier= DDOS tier moving aged data to object storage; read-back transparent                    │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>## CommVault (SISL + DD Boost)
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>CommVault integrates with DD via DD Boost using the MediaAgent. SISL ensures that deduplicated segments are efficiently identified before transfer.
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>1. Install the DD Boost plug-in on the CommVault MediaAgent
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>2. Create a DD Boost storage unit and user on the DD
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>3. In CommVault, add a Cloud Library with type `Dell EMC Data Domain Boost`
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>4. Configure the MediaAgent to use the DD Boost storage unit
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>## Avamar (RAIN Dedup with DD)
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>Avamar uses its RAIN (Redundant Array of Independent Nodes) deduplication engine in combination with DD for long-term retention. The integration uses DD Boost.
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>1. Configure the Avamar Data Store to replicate to the DD via DD Boost (DDVDP plugin or OST-compatible path)
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>2. Create a replication schedule in Avamar pointing at the DD storage unit
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>3. Verify dedup efficiency — Avamar + DD achieves compounded deduplication
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>## NFS — Generic Backup Targets
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>For backup software that does not support DD Boost, mount the DD MTree over NFS.
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>```bash
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a># On the DD — create an NFS export for an MTree
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>nfs add /data/col1/mtree-generic-prod clients &lt;client-ip-or-subnet&gt; options ro=&lt;client&gt;,rw=&lt;client&gt;
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a># Verify export
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>nfs show exports
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────────── Dell Data Domain Integrations ────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │         Data Domain integrates with major backup applications via DD Boost or NFS/CIFS        │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │           DDMC (Data Domain Management Center) manages multiple DD systems centrally          │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│                                                                                                       │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│                                                                                                       │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   │         Backup Apps         │  │          Management         │  │        Cloud/Archive        │   │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│   │        Dell Networker       │  │             DDMC            │  │        DD Cloud Tier        │   │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   │      Veritas NetBackup      │  │           CloudIQ           │  │            AWS S3           │   │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   │         Veeam Backup        │  │        Secure Connect       │  │          Azure Blob         │   │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │         Dell Avamar         │  │         SNMP alerts         │  │        S3-compatible        │   │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │          Commvault          │  │         Syslog/SIEM         │  │          ECS object         │   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│                                                                                                       │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │   Integration    │     Protocol     │      Feature      │      Config      │      Notes       │   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   │    Networker     │     DD Boost     │   App-side dedup  │   DDBDA plugin   │    Preferred     │   │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│   │      Veeam       │     DD Boost     │   App-side dedup  │   Boost plugin   │      v9.5+       │   │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│   │    NetBackup     │   OST/DD Boost   │   Optimised dup   │    OST plugin    │    Preferred     │   │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│   │       DDMC       │      HTTPS       │    Central mgmt   │  Add DD to DDMC  │     Multi-DD     │   │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│                                                                                                       │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│    Key terms:                                                                                         │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│                                                                                                       │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│    DDBDA  = Dell Data Domain Boost for Backup Application; Networker integration library              │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│    DDMC   = Data Domain Management Center; central web UI managing multiple DD systems                │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│    OST    = OpenStorage Technology; NetBackup plugin enabling direct API integration with DD          │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│    Cloud Tier= DDOS tier moving aged data to object storage; read-back transparent                    │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│                                                                                                       │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
+<h2 id="commvault-sisl-dd-boost">CommVault (SISL + DD Boost)<a class="headerlink" href="#commvault-sisl-dd-boost" title="Permanent link">&para;</a></h2>
+<p>CommVault integrates with DD via DD Boost using the MediaAgent. SISL ensures that deduplicated segments are efficiently identified before transfer.</p>
+<ol>
+<li>Install the DD Boost plug-in on the CommVault MediaAgent</li>
+<li>Create a DD Boost storage unit and user on the DD</li>
+<li>In CommVault, add a Cloud Library with type <code>Dell EMC Data Domain Boost</code></li>
+<li>Configure the MediaAgent to use the DD Boost storage unit</li>
+</ol>
+<h2 id="avamar-rain-dedup-with-dd">Avamar (RAIN Dedup with DD)<a class="headerlink" href="#avamar-rain-dedup-with-dd" title="Permanent link">&para;</a></h2>
+<p>Avamar uses its RAIN (Redundant Array of Independent Nodes) deduplication engine in combination with DD for long-term retention. The integration uses DD Boost.</p>
+<ol>
+<li>Configure the Avamar Data Store to replicate to the DD via DD Boost (DDVDP plugin or OST-compatible path)</li>
+<li>Create a replication schedule in Avamar pointing at the DD storage unit</li>
+<li>Verify dedup efficiency — Avamar + DD achieves compounded deduplication</li>
+</ol>
+<h2 id="nfs-generic-backup-targets">NFS — Generic Backup Targets<a class="headerlink" href="#nfs-generic-backup-targets" title="Permanent link">&para;</a></h2>
+<p>For backup software that does not support DD Boost, mount the DD MTree over NFS.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># On the DD — create an NFS export for an MTree</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>nfs<span class="w"> </span>add<span class="w"> </span>/data/col1/mtree-generic-prod<span class="w"> </span>clients<span class="w"> </span>&lt;client-ip-or-subnet&gt;<span class="w"> </span>options<span class="w"> </span><span class="nv">ro</span><span class="o">=</span>&lt;client&gt;,rw<span class="o">=</span>&lt;client&gt;
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Verify export</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>nfs<span class="w"> </span>show<span class="w"> </span>exports
+</code></pre></div>
 <p>Client mount:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>mount<span class="w"> </span>-t<span class="w"> </span>nfs<span class="w"> </span>&lt;dd-hostname&gt;:/data/col1/mtree-generic-prod<span class="w"> </span>/mnt/dd-backup
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>mount<span class="w"> </span>-t<span class="w"> </span>nfs<span class="w"> </span>&lt;dd-hostname&gt;:/data/col1/mtree-generic-prod<span class="w"> </span>/mnt/dd-backup
 </code></pre></div>
 <h2 id="cifssmb-windows-backup-targets">CIFS/SMB — Windows Backup Targets<a class="headerlink" href="#cifssmb-windows-backup-targets" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># On the DD — create a CIFS share for an MTree</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>cifs<span class="w"> </span>shares<span class="w"> </span>add<span class="w"> </span>/data/col1/mtree-generic-win<span class="w"> </span>share-name<span class="w"> </span>dd-win-backup
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Verify share</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>cifs<span class="w"> </span>show<span class="w"> </span>shares
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># On the DD — create a CIFS share for an MTree</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>cifs<span class="w"> </span>shares<span class="w"> </span>add<span class="w"> </span>/data/col1/mtree-generic-win<span class="w"> </span>share-name<span class="w"> </span>dd-win-backup
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Verify share</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>cifs<span class="w"> </span>show<span class="w"> </span>shares
 </code></pre></div>
 <h2 id="rest-api">REST API<a class="headerlink" href="#rest-api" title="Permanent link">&para;</a></h2>
 <p>The DD REST API enables programmatic management of MTrees, replication, and system status. Useful for automation and monitoring integration.</p>
 <p>Base URL: <code>https://&lt;dd-hostname&gt;:3009/rest/v3.0</code></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Authenticate and get session token</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>sysadmin:&lt;password&gt;<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>https://&lt;dd-hostname&gt;:3009/rest/v3.0/auth<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;auth-info&quot;:{&quot;user&quot;:&quot;sysadmin&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;}}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Get filesystem status</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;x-dd-auth-token: &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span>https://&lt;dd-hostname&gt;:3009/rest/v3.0/dd-systems/0/filesystems<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># List MTrees</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;x-dd-auth-token: &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">  </span>https://&lt;dd-hostname&gt;:3009/rest/v3.0/dd-systems/0/mtrees<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Authenticate and get session token</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>sysadmin:&lt;password&gt;<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>https://&lt;dd-hostname&gt;:3009/rest/v3.0/auth<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;auth-info&quot;:{&quot;user&quot;:&quot;sysadmin&quot;,&quot;password&quot;:&quot;&lt;password&gt;&quot;}}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Get filesystem status</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;x-dd-auth-token: &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span>https://&lt;dd-hostname&gt;:3009/rest/v3.0/dd-systems/0/filesystems<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># List MTrees</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;x-dd-auth-token: &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">  </span>https://&lt;dd-hostname&gt;:3009/rest/v3.0/dd-systems/0/mtrees<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
 </code></pre></div>
 <h2 id="cloudiq-monitoring-via-scg">CloudIQ Monitoring via SCG<a class="headerlink" href="#cloudiq-monitoring-via-scg" title="Permanent link">&para;</a></h2>
 <p>Data Domain telemetry is forwarded to Dell CloudIQ via the Secure Connect Gateway (SCG). CloudIQ provides capacity trending, performance analytics, and proactive health recommendations.</p>
@@ -4342,30 +4371,30 @@ Integrations reference covering DD Boost Backup Flow, NetBackup (OST with DD Boo
 <li>Confirm telemetry in CloudIQ portal: the DD should appear under <strong>Infrastructure → Storage</strong></li>
 <li>CloudIQ capacity forecasting will project time-to-full based on historical consumption</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Verify autosupport/SCG status on the DD</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>autosupport<span class="w"> </span>status
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>autosupport<span class="w"> </span><span class="nb">test</span><span class="w">  </span><span class="c1"># sends a test bundle; confirm receipt in CloudIQ within 30 minutes</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Verify autosupport/SCG status on the DD</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>autosupport<span class="w"> </span>status
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>autosupport<span class="w"> </span><span class="nb">test</span><span class="w">  </span><span class="c1"># sends a test bundle; confirm receipt in CloudIQ within 30 minutes</span>
 </code></pre></div>
 <h2 id="snmp-monitoring">SNMP Monitoring<a class="headerlink" href="#snmp-monitoring" title="Permanent link">&para;</a></h2>
 <p>Data Domain can send SNMP traps to a monitoring platform (Nagios, Zabbix, PRTG, SolarWinds).</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Configure SNMP community and trap destination</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>snmp<span class="w"> </span>add<span class="w"> </span>trapdest<span class="w"> </span>&lt;monitor-host&gt;<span class="w"> </span>community<span class="w"> </span>&lt;community-string&gt;
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>snmp<span class="w"> </span>show<span class="w"> </span>config
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Download the DD MIB from Dell Support for custom monitoring</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># MIB file: DATA_DOMAIN-MIB.txt</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Configure SNMP community and trap destination</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>snmp<span class="w"> </span>add<span class="w"> </span>trapdest<span class="w"> </span>&lt;monitor-host&gt;<span class="w"> </span>community<span class="w"> </span>&lt;community-string&gt;
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>snmp<span class="w"> </span>show<span class="w"> </span>config
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Download the DD MIB from Dell Support for custom monitoring</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># MIB file: DATA_DOMAIN-MIB.txt</span>
 </code></pre></div>
 <h2 id="authentication-ldap-integration">Authentication — LDAP Integration<a class="headerlink" href="#authentication-ldap-integration" title="Permanent link">&para;</a></h2>
 <p>Data Domain supports LDAP/Active Directory for management authentication, avoiding local user sprawl.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Configure LDAP</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>authentication<span class="w"> </span>ldap<span class="w"> </span><span class="nb">enable</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>authentication<span class="w"> </span>ldap<span class="w"> </span><span class="nb">set</span><span class="w"> </span>bind-dn<span class="w"> </span><span class="s2">&quot;CN=svc-dd-ldap,OU=ServiceAccounts,DC=corp,DC=example,DC=com&quot;</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>authentication<span class="w"> </span>ldap<span class="w"> </span><span class="nb">set</span><span class="w"> </span>server<span class="w"> </span>&lt;ldap-server-ip&gt;
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>authentication<span class="w"> </span>ldap<span class="w"> </span><span class="nb">set</span><span class="w"> </span>base-dn<span class="w"> </span><span class="s2">&quot;DC=corp,DC=example,DC=com&quot;</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Verify LDAP connectivity</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>authentication<span class="w"> </span>ldap<span class="w"> </span>status
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>authentication<span class="w"> </span>ldap<span class="w"> </span><span class="nb">test</span><span class="w"> </span>user<span class="w"> </span>&lt;username&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Configure LDAP</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>authentication<span class="w"> </span>ldap<span class="w"> </span><span class="nb">enable</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>authentication<span class="w"> </span>ldap<span class="w"> </span><span class="nb">set</span><span class="w"> </span>bind-dn<span class="w"> </span><span class="s2">&quot;CN=svc-dd-ldap,OU=ServiceAccounts,DC=corp,DC=example,DC=com&quot;</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>authentication<span class="w"> </span>ldap<span class="w"> </span><span class="nb">set</span><span class="w"> </span>server<span class="w"> </span>&lt;ldap-server-ip&gt;
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>authentication<span class="w"> </span>ldap<span class="w"> </span><span class="nb">set</span><span class="w"> </span>base-dn<span class="w"> </span><span class="s2">&quot;DC=corp,DC=example,DC=com&quot;</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Verify LDAP connectivity</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>authentication<span class="w"> </span>ldap<span class="w"> </span>status
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>authentication<span class="w"> </span>ldap<span class="w"> </span><span class="nb">test</span><span class="w"> </span>user<span class="w"> </span>&lt;username&gt;
 </code></pre></div>
 
 

@@ -3389,50 +3389,49 @@ ServiceNow is delivered as a multi-instance SaaS platform running on dedicated i
         DEV
         TEST
     end</code></pre>
-┌────────────────────────────────────── ServiceNow — How It Works ──────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                             ServiceNow Request and Automation Flow                            │   │
-│   │        User/API → HTTPS → Now Platform → GlideDB; Business Rules fire on record change        │   │
-│   │            Incident: create → categorise → assign → resolve → close (ITIL workflow)           │   │
-│   │           MID Server: ECC Queue poll → probe execution → result posted back to SNOW           │   │
-│   │              Flow Designer: trigger (table record event) → actions → integrations             │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    ServiceNow processes three parallel flows: ITSM, automation, and discovery                         │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │          ITSM Flow          │  │       Automation Flow       │  │        Discovery Flow       │   │
-│   │     User submits ticket     │  │      Flow trigger fires     │  │        Schedule runs        │   │
-│   │      Business Rule runs     │  │       Actions execute       │  │        ECC Queue item       │   │
-│   │       Assignment rule       │  │        REST call out        │  │        MID probe runs       │   │
-│   │       SLA clock starts      │  │       Response parsed       │  │        Result posted        │   │
-│   │      Notification sent      │  │        Record updated       │  │         CMDB updated        │   │
-│   │       Resolve / close       │  │      Log entry written      │  │        CI discovered        │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  ServiceNow cloud infra · MID Server VM on-prem · SMTP relay · LDAP/AD DCs                            │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Business Rule = server-side GlideScript triggered on DB insert/update/delete/query                   │
-│  Assignment rule = auto-assigns incident to group based on category/subcategory                       │
-│  SLA clock    = ServiceNow tracks breach time against SLA definition                                  │
-│  Flow trigger  = event that starts a Flow Designer flow (e.g. record insert)                          │
-│  Action        = Flow Designer step: REST call, approval, sub-flow, script                            │
-│  ECC Queue     = ServiceNow table; MID Server polls for probe/sensor commands                         │
-│  Discovery probe = MID Server script that probes target IP for CI data                                │
-│  CI            = Configuration Item; managed in CMDB (server, app, service, etc.)                     │
-│  GlideRecord   = JS API for DB access: gr.addQuery(); gr.query(); gr.next()                           │
-│  Notification  = email/SMS/push triggered by SNOW event or Business Rule                              │
-│  Resolve       = final active state before Close; SLA stops on resolve                                │
-│  CMDB update   = Discovery writes CI attributes to CMDB after probe results                           │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌────────────────────────────────────── ServiceNow — How It Works ──────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │                             ServiceNow Request and Automation Flow                            │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │        User/API → HTTPS → Now Platform → GlideDB; Business Rules fire on record change        │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │            Incident: create → categorise → assign → resolve → close (ITIL workflow)           │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │           MID Server: ECC Queue poll → probe execution → result posted back to SNOW           │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │              Flow Designer: trigger (table record event) → actions → integrations             │   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│                                                                                                       │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│    ServiceNow processes three parallel flows: ITSM, automation, and discovery                         │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                                                                                                       │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│                                                                                                       │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │          ITSM Flow          │  │       Automation Flow       │  │        Discovery Flow       │   │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │     User submits ticket     │  │      Flow trigger fires     │  │        Schedule runs        │   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │      Business Rule runs     │  │       Actions execute       │  │        ECC Queue item       │   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │       Assignment rule       │  │        REST call out        │  │        MID probe runs       │   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │       SLA clock starts      │  │       Response parsed       │  │        Result posted        │   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   │      Notification sent      │  │        Record updated       │  │         CMDB updated        │   │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   │       Resolve / close       │  │      Log entry written      │  │        CI discovered        │   │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│                                                                                                       │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  ServiceNow cloud infra · MID Server VM on-prem · SMTP relay · LDAP/AD DCs                            │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│                                                                                                       │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│                                                                                                       │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  Business Rule = server-side GlideScript triggered on DB insert/update/delete/query                   │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│  Assignment rule = auto-assigns incident to group based on category/subcategory                       │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  SLA clock    = ServiceNow tracks breach time against SLA definition                                  │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│  Flow trigger  = event that starts a Flow Designer flow (e.g. record insert)                          │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│  Action        = Flow Designer step: REST call, approval, sub-flow, script                            │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│  ECC Queue     = ServiceNow table; MID Server polls for probe/sensor commands                         │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│  Discovery probe = MID Server script that probes target IP for CI data                                │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│  CI            = Configuration Item; managed in CMDB (server, app, service, etc.)                     │
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│  GlideRecord   = JS API for DB access: gr.addQuery(); gr.query(); gr.next()                           │
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│  Notification  = email/SMS/push triggered by SNOW event or Business Rule                              │
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│  Resolve       = final active state before Close; SLA stops on resolve                                │
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│  CMDB update   = Discovery writes CI attributes to CMDB after probe results                           │
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│                                                                                                       │
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
 <table>
 <thead>

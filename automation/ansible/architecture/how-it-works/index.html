@@ -3220,6 +3220,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#module-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module Execution
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#roles" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3499,49 +3510,45 @@ Ansible is an agentless IT automation engine that automates provisioning, config
     CN --&gt;|WinRM or SSH| MN3[Windows Host]
     CN --&gt;|HTTPS API| MN4[Cloud API\nAWS / Azure / vSphere]
     CN --&gt;|SSH| MN5[Linux Host]</code></pre>
-┌─────────────────────────────────────── Ansible — How It Works ────────────────────────────────────────┐
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │  Execution flow: ansible-playbook reads inventory + playbook → connects to hosts → runs tasks │   │
-│   │      Each task calls a module; module code is transferred to the remote host and executed     │   │
-│   │  Results returned as JSON; Ansible evaluates changed/ok/failed; handlers notified on changed  │   │
-│   │       AWX wraps this: stores credentials, queues jobs, streams events to UI in real time      │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │        Step 1: Parse        │  │       Step 2: Connect       │  │       Step 3: Execute       │   │
-│   │        Load inventory       │  │        SSH/WinRM open       │  │     Module runs on host     │   │
-│   │     Parse playbook YAML     │  │     Gather facts (setup)    │  │     JSON result returned    │   │
-│   │      Resolve variables      │  │     Multiplexed SSH conn    │  │    changed / ok / failed    │   │
-│   │     Apply filters/limits    │  │    Fork N hosts parallel    │  │      Handlers triggered     │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Gather facts     = module: setup; collects OS, IP, memory, disk, fqdn for use in templates  │   │
-│   │        Check mode    = --check flag; simulates without applying; modules report changes       │   │
-│   │    Diff mode        = --diff flag; shows before/after for file edits; combine with --check    │   │
-│   │  Fork             = max parallel host connections; default 5; increase for large inventories  │   │
-│   │ Serial           = limit hosts per batch in rolling update; e.g. serial: 1 for canary deploys │   │
-│   │       delegate_to      = run task on a different host (e.g. register DNS on a jump host)      │   │
-│   │        when             = conditional expression; task skipped when condition is False        │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>---
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>## Module Execution
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>Ansible transfers a Python script (or PowerShell for Windows) to the managed node, executes it, collects the JSON output, and removes it.
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>```mermaid
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>sequenceDiagram
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    participant CN as Control Node
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    participant MN as Managed Node
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    CN-&gt;&gt;MN: SSH connect
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    CN-&gt;&gt;MN: Transfer module (Python + args JSON)
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>    MN-&gt;&gt;MN: Execute module
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>    MN--&gt;&gt;CN: Return JSON result {changed, rc, stdout}
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    CN-&gt;&gt;MN: Remove module temp files
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    CN-&gt;&gt;MN: SSH disconnect
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────────────────── Ansible — How It Works ────────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   │  Execution flow: ansible-playbook reads inventory + playbook → connects to hosts → runs tasks │   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │      Each task calls a module; module code is transferred to the remote host and executed     │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │  Results returned as JSON; Ansible evaluates changed/ok/failed; handlers notified on changed  │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │       AWX wraps this: stores credentials, queues jobs, streams events to UI in real time      │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│                                                                                                       │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   │        Step 1: Parse        │  │       Step 2: Connect       │  │       Step 3: Execute       │   │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   │        Load inventory       │  │        SSH/WinRM open       │  │     Module runs on host     │   │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   │     Parse playbook YAML     │  │     Gather facts (setup)    │  │     JSON result returned    │   │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│   │      Resolve variables      │  │     Multiplexed SSH conn    │  │    changed / ok / failed    │   │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   │     Apply filters/limits    │  │    Fork N hosts parallel    │  │      Handlers triggered     │   │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│                                                                                                       │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │   Gather facts     = module: setup; collects OS, IP, memory, disk, fqdn for use in templates  │   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │        Check mode    = --check flag; simulates without applying; modules report changes       │   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │    Diff mode        = --diff flag; shows before/after for file edits; combine with --check    │   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   │  Fork             = max parallel host connections; default 5; increase for large inventories  │   │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   │ Serial           = limit hosts per batch in rolling update; e.g. serial: 1 for canary deploys │   │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│   │       delegate_to      = run task on a different host (e.g. register DNS on a jump host)      │   │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│   │        when             = conditional expression; task skipped when condition is False        │   │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
+<hr />
+<h2 id="module-execution">Module Execution<a class="headerlink" href="#module-execution" title="Permanent link">&para;</a></h2>
+<p>Ansible transfers a Python script (or PowerShell for Windows) to the managed node, executes it, collects the JSON output, and removes it.</p>
+<pre class="mermaid"><code>sequenceDiagram
+    participant CN as Control Node
+    participant MN as Managed Node
+    CN-&gt;&gt;MN: SSH connect
+    CN-&gt;&gt;MN: Transfer module (Python + args JSON)
+    MN-&gt;&gt;MN: Execute module
+    MN--&gt;&gt;CN: Return JSON result {changed, rc, stdout}
+    CN-&gt;&gt;MN: Remove module temp files
+    CN-&gt;&gt;MN: SSH disconnect</code></pre>
 <hr />
 <h2 id="roles">Roles<a class="headerlink" href="#roles" title="Permanent link">&para;</a></h2>
 <p>Roles provide a structured, reusable packaging format bundling tasks, handlers, variables, templates, and files.</p>

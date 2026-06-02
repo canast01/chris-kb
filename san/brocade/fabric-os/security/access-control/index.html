@@ -3226,6 +3226,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#modify-an-existing-ipfilter-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modify an Existing IPfilter Policy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#show-current-ipfilter-state" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3527,130 +3538,130 @@
     mgmtUsers["Management Users\n(ops, NOC, security)"] --&gt; ipfilter
     switches["Switches / ISLs"] --&gt; scc
     devices["Host HBAs\nStorage Targets"] --&gt; dcc</code></pre>
-┌───────────────────────────────── Brocade Fabric OS — Access Control ──────────────────────────────────┐
-│                                                                                                       │
-│  Access control: RBAC roles, login accounts, TACACS+/RADIUS, SCC/DCC zoning policies.                 │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             User Accounts &amp; RBAC             │  │         Remote Auth (TACACS+/RADIUS)        │   │
-│   │        Built-in roles: admin/user/ops        │  │         TACACS+ server primary/back         │   │
-│   │         Custom roles via roleConfig          │  │          RADIUS: fallback to local          │   │
-│   │        userconfig: create/modify user        │  │          aaaconfig: set auth order          │   │
-│   │         Account lockout: 3 attempts          │  │          acp filter: ACL on switch          │   │
-│   │       Virtual Fabric RBAC per chassis        │  │          Audit log for all CLI cmds         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Local RBAC and remote TACACS+/RADIUS enforce who can run CLI commands on the switch.                 │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              SCC / DCC Policies              │  │          Management Access Control          │   │
-│   │        SCC: switch connection control        │  │           SSH only: no Telnet/FTP           │   │
-│   │        DCC: device connection control        │  │           HTTPS for Web GUI / API           │   │
-│   │        SCC: limit which switches join        │  │         IP filter: src IP whitelist         │   │
-│   │         DCC: bind ports to WWN list          │  │          Out-of-band mgmt: eth port         │   │
-│   │         secpolicyadd to build policy         │  │          SNMPv3 only: disable v1/v2         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Brocade switch chassis · management Ethernet port · TACACS+ / RADIUS server                          │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  RBAC           = Role-Based Access Control; Fabric OS roles control CLI permissions                  │
-│  roleConfig     = CLI command to create/modify custom RBAC role definitions                           │
-│  userconfig     = Fabric OS CLI to create, modify, or delete local user accounts                      │
-│  TACACS+        = Terminal Access Controller Access Control System; centralized CLI auth              │
-│  aaaconfig      = CLI to set authentication order (local, TACACS+, RADIUS)                            │
-│  SCC            = Switch Connection Control policy; restricts which switches join fabric              │
-│  DCC            = Device Connection Control policy; binds host WWNs to specific ports                 │
-│  secpolicyadd   = CLI to add members to SCC/DCC security policies                                     │
-│  Virtual Fabric = logical switch partitioning on Brocade directors; per-VF RBAC                       │
-│  acp            = Access Control Policy; IP-level ACL for switch management access                    │
-│  SNMPv3         = SNMP version 3; provides authentication and encryption for SNMP                     │
-│  WWN            = World Wide Name; 64-bit FC identifier for HBAs and switch ports                     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>&gt; **Warning:** Always verify your management workstation&#39;s source IP is in the permitted range before activating an IPfilter policy. An incorrect policy will lock you out of the switch — recovery requires console access.
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>### Modify an Existing IPfilter Policy
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>```bash
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a># Clone the active policy before modifying (safe approach)
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>ipfilter --clone san_mgmt_policy -name san_mgmt_policy_new
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a># Add a rule to the cloned policy
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>ipfilter --addrule san_mgmt_policy_new \
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>  -sip 10.10.200.0/24 -dp 22 -proto tcp -act permit
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a># Activate the updated policy
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>ipfilter --activate san_mgmt_policy_new
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a># Delete the old policy
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>ipfilter --delete san_mgmt_policy
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────── Brocade Fabric OS — Access Control ──────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Access control: RBAC roles, login accounts, TACACS+/RADIUS, SCC/DCC zoning policies.                 │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│                                                                                                       │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │             User Accounts &amp; RBAC             │  │         Remote Auth (TACACS+/RADIUS)        │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │        Built-in roles: admin/user/ops        │  │         TACACS+ server primary/back         │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │         Custom roles via roleConfig          │  │          RADIUS: fallback to local          │   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   │        userconfig: create/modify user        │  │          aaaconfig: set auth order          │   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   │         Account lockout: 3 attempts          │  │          acp filter: ACL on switch          │   │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   │       Virtual Fabric RBAC per chassis        │  │          Audit log for all CLI cmds         │   │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                                                                                                       │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  Local RBAC and remote TACACS+/RADIUS enforce who can run CLI commands on the switch.                 │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│                                                                                                       │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│                                                                                                       │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │              SCC / DCC Policies              │  │          Management Access Control          │   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │        SCC: switch connection control        │  │           SSH only: no Telnet/FTP           │   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   │        DCC: device connection control        │  │           HTTPS for Web GUI / API           │   │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   │        SCC: limit which switches join        │  │         IP filter: src IP whitelist         │   │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│   │         DCC: bind ports to WWN list          │  │          Out-of-band mgmt: eth port         │   │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│   │         secpolicyadd to build policy         │  │          SNMPv3 only: disable v1/v2         │   │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│                                                                                                       │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  Brocade switch chassis · management Ethernet port · TACACS+ / RADIUS server                          │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│                                                                                                       │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│                                                                                                       │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  RBAC           = Role-Based Access Control; Fabric OS roles control CLI permissions                  │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│  roleConfig     = CLI command to create/modify custom RBAC role definitions                           │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│  userconfig     = Fabric OS CLI to create, modify, or delete local user accounts                      │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│  TACACS+        = Terminal Access Controller Access Control System; centralized CLI auth              │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│  aaaconfig      = CLI to set authentication order (local, TACACS+, RADIUS)                            │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│  SCC            = Switch Connection Control policy; restricts which switches join fabric              │
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│  DCC            = Device Connection Control policy; binds host WWNs to specific ports                 │
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│  secpolicyadd   = CLI to add members to SCC/DCC security policies                                     │
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│  Virtual Fabric = logical switch partitioning on Brocade directors; per-VF RBAC                       │
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│  acp            = Access Control Policy; IP-level ACL for switch management access                    │
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│  SNMPv3         = SNMP version 3; provides authentication and encryption for SNMP                     │
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>│  WWN            = World Wide Name; 64-bit FC identifier for HBAs and switch ports                     │
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>│                                                                                                       │
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
-<h3 id="show-current-ipfilter-state">Show Current IPfilter State<a class="headerlink" href="#show-current-ipfilter-state" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List all IPfilter policies</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ipfilter<span class="w"> </span>--show
+<blockquote>
+<p><strong>Warning:</strong> Always verify your management workstation's source IP is in the permitted range before activating an IPfilter policy. An incorrect policy will lock you out of the switch — recovery requires console access.</p>
+</blockquote>
+<h3 id="modify-an-existing-ipfilter-policy">Modify an Existing IPfilter Policy<a class="headerlink" href="#modify-an-existing-ipfilter-policy" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Clone the active policy before modifying (safe approach)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ipfilter<span class="w"> </span>--clone<span class="w"> </span>san_mgmt_policy<span class="w"> </span>-name<span class="w"> </span>san_mgmt_policy_new
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Show rules in a specific policy</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>ipfilter<span class="w"> </span>--show<span class="w"> </span>san_mgmt_policy
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Show which policy is active</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>ipfilter<span class="w"> </span>--show<span class="w"> </span>-active
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Add a rule to the cloned policy</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>ipfilter<span class="w"> </span>--addrule<span class="w"> </span>san_mgmt_policy_new<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span>-sip<span class="w"> </span><span class="m">10</span>.10.200.0/24<span class="w"> </span>-dp<span class="w"> </span><span class="m">22</span><span class="w"> </span>-proto<span class="w"> </span>tcp<span class="w"> </span>-act<span class="w"> </span>permit
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Activate the updated policy</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>ipfilter<span class="w"> </span>--activate<span class="w"> </span>san_mgmt_policy_new
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Delete the old policy</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>ipfilter<span class="w"> </span>--delete<span class="w"> </span>san_mgmt_policy
+</code></pre></div>
+<h3 id="show-current-ipfilter-state">Show Current IPfilter State<a class="headerlink" href="#show-current-ipfilter-state" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List all IPfilter policies</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>ipfilter<span class="w"> </span>--show
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Show rules in a specific policy</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>ipfilter<span class="w"> </span>--show<span class="w"> </span>san_mgmt_policy
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Show which policy is active</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>ipfilter<span class="w"> </span>--show<span class="w"> </span>-active
 </code></pre></div>
 <hr />
 <h2 id="secure-fabric-os-policies">Secure Fabric OS Policies<a class="headerlink" href="#secure-fabric-os-policies" title="Permanent link">&para;</a></h2>
 <p>Secure Fabric OS provides fabric-plane access control — controlling which switches can join the fabric (SCC) and which devices can log in on specific ports (DCC).</p>
 <h3 id="scc-policy-switch-connection-control">SCC Policy (Switch Connection Control)<a class="headerlink" href="#scc-policy-switch-connection-control" title="Permanent link">&para;</a></h3>
 <p>SCC defines which switches are permitted to form ISLs and join the fabric. Any switch not in the SCC policy is rejected when it attempts to connect.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Show current SCC policy</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>secpolicyshow<span class="w"> </span><span class="s2">&quot;SCC_POLICY&quot;</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Add a switch to the SCC policy (by switch WWN)</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>secpolicyadd<span class="w"> </span><span class="s2">&quot;SCC_POLICY&quot;</span>,<span class="w"> </span><span class="s2">&quot;&lt;switch-wwn&gt;&quot;</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Show all defined security policies</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>secpolicyshow
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Activate the security policy database</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>secpolicyactivate
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Save the security policy database</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>secpolicysave
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Show current SCC policy</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>secpolicyshow<span class="w"> </span><span class="s2">&quot;SCC_POLICY&quot;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Add a switch to the SCC policy (by switch WWN)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>secpolicyadd<span class="w"> </span><span class="s2">&quot;SCC_POLICY&quot;</span>,<span class="w"> </span><span class="s2">&quot;&lt;switch-wwn&gt;&quot;</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Show all defined security policies</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>secpolicyshow
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Activate the security policy database</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>secpolicyactivate
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># Save the security policy database</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>secpolicysave
 </code></pre></div>
 <h3 id="dcc-policy-device-connection-control">DCC Policy (Device Connection Control)<a class="headerlink" href="#dcc-policy-device-connection-control" title="Permanent link">&para;</a></h3>
 <p>DCC restricts which device WWPNs are permitted to log into specific switch ports. This prevents unauthorised devices from connecting to the SAN fabric even if they have physical access to a switch port.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Show current DCC policy</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>secpolicyshow<span class="w"> </span><span class="s2">&quot;DCC_POLICY&quot;</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Add a device WWPN to a specific port in the DCC policy</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Format: &lt;device-wwpn&gt; on port &lt;domain_id&gt;,&lt;port&gt;</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>secpolicyadd<span class="w"> </span><span class="s2">&quot;DCC_POLICY&quot;</span>,<span class="w"> </span><span class="s2">&quot;&lt;device-wwpn&gt;;*&quot;</span><span class="w">    </span><span class="c1"># Allow on any port</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>secpolicyadd<span class="w"> </span><span class="s2">&quot;DCC_POLICY&quot;</span>,<span class="w"> </span><span class="s2">&quot;&lt;device-wwpn&gt;;&lt;domain-id&gt;,&lt;port&gt;&quot;</span><span class="w">   </span><span class="c1"># Allow on specific port only</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Activate changes</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>secpolicyactivate
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Show current DCC policy</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>secpolicyshow<span class="w"> </span><span class="s2">&quot;DCC_POLICY&quot;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Add a device WWPN to a specific port in the DCC policy</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Format: &lt;device-wwpn&gt; on port &lt;domain_id&gt;,&lt;port&gt;</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>secpolicyadd<span class="w"> </span><span class="s2">&quot;DCC_POLICY&quot;</span>,<span class="w"> </span><span class="s2">&quot;&lt;device-wwpn&gt;;*&quot;</span><span class="w">    </span><span class="c1"># Allow on any port</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>secpolicyadd<span class="w"> </span><span class="s2">&quot;DCC_POLICY&quot;</span>,<span class="w"> </span><span class="s2">&quot;&lt;device-wwpn&gt;;&lt;domain-id&gt;,&lt;port&gt;&quot;</span><span class="w">   </span><span class="c1"># Allow on specific port only</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Activate changes</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>secpolicyactivate
 </code></pre></div>
 <p>DCC is most valuable in high-security environments where physical port access cannot be fully controlled. For most enterprise SANs, zoning provides sufficient fabric-plane access control without the overhead of DCC management.</p>
 <hr />
 <h2 id="fabric-binding">Fabric Binding<a class="headerlink" href="#fabric-binding" title="Permanent link">&para;</a></h2>
 <p>Fabric binding prevents unauthorised switches from joining the fabric by requiring all member switches to be listed in the fabric binding list. It is enforced at the ISL level.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Show fabric binding status</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>fabricbinding<span class="w"> </span>--show
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Show the list of permitted switches in the binding</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>fabricbinding<span class="w"> </span>--show<span class="w"> </span>-details
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Add a switch to the binding list</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>fabricbinding<span class="w"> </span>--add<span class="w"> </span>&lt;switch-wwn&gt;
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Enable fabric binding enforcement</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>fabricbinding<span class="w"> </span>--enable
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Verify</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>fabricbinding<span class="w"> </span>--show
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Show fabric binding status</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>fabricbinding<span class="w"> </span>--show
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Show the list of permitted switches in the binding</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>fabricbinding<span class="w"> </span>--show<span class="w"> </span>-details
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Add a switch to the binding list</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>fabricbinding<span class="w"> </span>--add<span class="w"> </span>&lt;switch-wwn&gt;
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Enable fabric binding enforcement</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>fabricbinding<span class="w"> </span>--enable
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># Verify</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>fabricbinding<span class="w"> </span>--show
 </code></pre></div>
 <hr />
 <h2 id="access-control-standards">Access Control Standards<a class="headerlink" href="#access-control-standards" title="Permanent link">&para;</a></h2>

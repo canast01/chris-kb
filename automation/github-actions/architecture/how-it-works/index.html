@@ -3220,6 +3220,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#concurrency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Concurrency
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#artifacts" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3431,60 +3442,78 @@ GitHub Actions is an event-driven CI/CD and automation platform embedded directl
     S3 --&gt; A[Upload Artifact]
     S5 --&gt; A
     A --&gt; NOTIFY[Notification / Downstream Jobs]</code></pre>
-┌──────────────────────────────────── GitHub Actions — How It Works ────────────────────────────────────┐
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │ Event fires → GitHub evaluates on: triggers → matching workflows queued → runner picks up job │   │
-│   │     Runner clones repo, restores cache, executes steps, uploads artifacts, reports status     │   │
-│   │          Secrets injected as env vars at runtime; masked in log output automatically          │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │        Trigger Phase        │  │       Execution Phase       │  │         Result Phase        │   │
-│   │   Event: push/PR/schedule   │  │      Runner accepts job     │  │     Status check posted     │   │
-│   │    on: filter evaluation    │  │        Repo checkout        │  │     Artifacts available     │   │
-│   │     Workflow file parsed    │  │        Cache restore        │  │      Logs retained 90d      │   │
-│   │     Jobs queued parallel    │  │      Steps run in order     │  │      Notify: PR, Slack      │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │     GITHUB_TOKEN    = auto-generated per-job token; scoped to repo; expires when job ends     │   │
-│   │      permissions:    = restrict GITHUB_TOKEN scopes per job; principle of least privilege     │   │
-│   │    needs:          = declare job dependency; forces sequential execution and output passing   │   │
-│   │        if: condition   = conditional step/job execution; uses expression syntax ${{ }}        │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>| Scope | Registration Level | Shared Across |
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>|---|---|---|
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>| Repository | Single repository settings | That repo only |
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>| Organisation | Organisation settings | All repos granted access |
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>| Enterprise | Enterprise settings | All orgs in the enterprise |
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>!!! warning &quot;Self-Hosted Runner Security&quot;
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    Never run self-hosted runners on public repositories — a forked PR can execute arbitrary code on the host.
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>---
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>## Concurrency
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>Concurrency groups prevent duplicate workflow runs for the same logical scope.
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>```yaml
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>concurrency:
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>  group: ${{ github.workflow }}-${{ github.ref }}
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>  cancel-in-progress: true
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────────── GitHub Actions — How It Works ────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   │ Event fires → GitHub evaluates on: triggers → matching workflows queued → runner picks up job │   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │     Runner clones repo, restores cache, executes steps, uploads artifacts, reports status     │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │          Secrets injected as env vars at runtime; masked in log output automatically          │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│                                                                                                       │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   │        Trigger Phase        │  │       Execution Phase       │  │         Result Phase        │   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   │   Event: push/PR/schedule   │  │      Runner accepts job     │  │     Status check posted     │   │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   │    on: filter evaluation    │  │        Repo checkout        │  │     Artifacts available     │   │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   │     Workflow file parsed    │  │        Cache restore        │  │      Logs retained 90d      │   │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│   │     Jobs queued parallel    │  │      Steps run in order     │  │      Notify: PR, Slack      │   │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│                                                                                                       │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │     GITHUB_TOKEN    = auto-generated per-job token; scoped to repo; expires when job ends     │   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │      permissions:    = restrict GITHUB_TOKEN scopes per job; principle of least privilege     │   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │    needs:          = declare job dependency; forces sequential execution and output passing   │   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │        if: condition   = conditional step/job execution; uses expression syntax ${{ }}        │   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
+<table>
+<thead>
+<tr>
+<th>Scope</th>
+<th>Registration Level</th>
+<th>Shared Across</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Repository</td>
+<td>Single repository settings</td>
+<td>That repo only</td>
+</tr>
+<tr>
+<td>Organisation</td>
+<td>Organisation settings</td>
+<td>All repos granted access</td>
+</tr>
+<tr>
+<td>Enterprise</td>
+<td>Enterprise settings</td>
+<td>All orgs in the enterprise</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition warning">
+<p class="admonition-title">Self-Hosted Runner Security</p>
+<p>Never run self-hosted runners on public repositories — a forked PR can execute arbitrary code on the host.</p>
+</div>
+<hr />
+<h2 id="concurrency">Concurrency<a class="headerlink" href="#concurrency" title="Permanent link">&para;</a></h2>
+<p>Concurrency groups prevent duplicate workflow runs for the same logical scope.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">concurrency</span><span class="p">:</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">group</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ github.workflow }}-${{ github.ref }}</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="nt">cancel-in-progress</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</code></pre></div>
 <hr />
 <h2 id="artifacts">Artifacts<a class="headerlink" href="#artifacts" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/upload-artifact@v4</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">with</span><span class="p">:</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dist-package</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dist/</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="nt">retention-days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/download-artifact@v4</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span><span class="nt">with</span><span class="p">:</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dist-package</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">    </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dist/</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/upload-artifact@v4</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">with</span><span class="p">:</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dist-package</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dist/</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span><span class="nt">retention-days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/download-artifact@v4</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span><span class="nt">with</span><span class="p">:</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dist-package</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">    </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dist/</span>
 </code></pre></div>
 <table>
 <thead>

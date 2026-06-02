@@ -3326,6 +3326,45 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#2-log-checks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Log Checks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Log Checks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#log-locations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Log Locations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quick-error-scan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Error Scan
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#3-disk-space" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3662,131 +3701,167 @@ This page defines the daily health check procedure for Confluence Data Center. R
     L -- No --&gt; L1[Investigate offline node\nCheck Hazelcast logs]
     L -- Yes --&gt; M[Review scheduled jobs\nfor failures]
     M --&gt; N([Health Check Complete\nLog result])</code></pre>
-┌───────────────────────────────────── Confluence — Health Checks ──────────────────────────────────────┐
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Application Health              │  │            Infrastructure Health            │   │
-│   │               GET /status → OK               │  │                DB connection                │   │
-│   │               Heap usage &lt; 80%               │  │                  Disk &lt; 80%                 │   │
-│   │             Thread count normal              │  │               NFS mount check               │   │
-│   │                No OOM in logs                │  │               Backup completed              │   │
-│   │               Search index OK                │  │                  SMTP test                  │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Confluence server · PostgreSQL · NFS for home dir · SMTP relay · load balancer                       │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  GET /status = Confluence health endpoint; returns RUNNING or error state                             │
-│  Heap usage = JVM heap percentage; &gt;80% risks OOM; check via Admin &gt; System Info                      │
-│  OOM = OutOfMemoryError; kills Confluence if heap exhausted; check catalina.out                       │
-│  Thread count = Active HTTP threads; high count indicates slow requests backing up                    │
-│  Search index = Lucene index in CONFLUENCE_HOME/index; trigger reindex if stale                       │
-│  DB connection = Confluence checks DB pool; if exhausted, pages fail to load                          │
-│  NFS mount = CONFLUENCE_HOME on NFS; if unmounted, attachments return 404                             │
-│  SMTP test = Send test email from Admin &gt; Mail Servers; confirms notifications work                   │
-│  Backup completed = Check CONFLUENCE_HOME/backups/ for fresh archive                                  │
-│  System Info = Admin &gt; System Information; shows memory, JVM version, and config                      │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Response states:
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>| State | Meaning |
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>|---|---|
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>| `RUNNING` | Fully operational |
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>| `STARTING` | Startup in progress (wait) |
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>| `STOPPING` | Shutdown in progress |
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>| `ERROR` | Failed — check logs immediately |
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>| `FIRST_RUN` | Awaiting setup wizard |
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>---
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>## 2. Log Checks
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>### Log Locations
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>| Log File | Purpose |
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>|---|---|
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>| `&lt;CONFLUENCE_HOME&gt;/logs/atlassian-confluence.log` | Main application log |
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>| `&lt;INSTALL&gt;/logs/catalina.out` | Tomcat stdout / JVM output |
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>| `&lt;CONFLUENCE_HOME&gt;/logs/atlassian-confluence-security.log` | Authentication events |
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>| `&lt;CONFLUENCE_HOME&gt;/logs/atlassian-confluence-index-recovery.log` | Index recovery events |
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>### Quick Error Scan
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>```bash
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>LOG=&quot;/var/atlassian/application-data/confluence/logs/atlassian-confluence.log&quot;
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a># Count errors in the last 24 hours (assumes log rotation daily)
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>grep -c &quot;ERROR&quot; &quot;$LOG&quot;
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a># Show the last 20 error lines with timestamp
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>grep &quot;ERROR&quot; &quot;$LOG&quot; | tail -20
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a># Look for OOM indicators
-<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>grep -E &quot;(OutOfMemoryError|java.lang.OutOfMemory)&quot; &quot;$LOG&quot; | tail -5
-<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>
-<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a># Check for LDAP/login failures
-<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>grep -E &quot;(AuthenticationException|CrowdException|LDAP)&quot; &quot;$LOG&quot; | tail -10
-<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>
-<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a># Check for index errors
-<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>grep -E &quot;(IndexException|LuceneIndex|index corrupt)&quot; &quot;$LOG&quot; | tail -10
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────────── Confluence — Health Checks ──────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │              Application Health              │  │            Infrastructure Health            │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │               GET /status → OK               │  │                DB connection                │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │               Heap usage &lt; 80%               │  │                  Disk &lt; 80%                 │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │             Thread count normal              │  │               NFS mount check               │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │                No OOM in logs                │  │               Backup completed              │   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   │               Search index OK                │  │                  SMTP test                  │   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│                                                                                                       │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│  Physical Infrastructure:                                                                             │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  Confluence server · PostgreSQL · NFS for home dir · SMTP relay · load balancer                       │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│                                                                                                       │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│                                                                                                       │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│  GET /status = Confluence health endpoint; returns RUNNING or error state                             │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│  Heap usage = JVM heap percentage; &gt;80% risks OOM; check via Admin &gt; System Info                      │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│  OOM = OutOfMemoryError; kills Confluence if heap exhausted; check catalina.out                       │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│  Thread count = Active HTTP threads; high count indicates slow requests backing up                    │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│  Search index = Lucene index in CONFLUENCE_HOME/index; trigger reindex if stale                       │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│  DB connection = Confluence checks DB pool; if exhausted, pages fail to load                          │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│  NFS mount = CONFLUENCE_HOME on NFS; if unmounted, attachments return 404                             │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│  SMTP test = Send test email from Admin &gt; Mail Servers; confirms notifications work                   │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  Backup completed = Check CONFLUENCE_HOME/backups/ for fresh archive                                  │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  System Info = Admin &gt; System Information; shows memory, JVM version, and config                      │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│                                                                                                       │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
+<p>Response states:</p>
+<table>
+<thead>
+<tr>
+<th>State</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>RUNNING</code></td>
+<td>Fully operational</td>
+</tr>
+<tr>
+<td><code>STARTING</code></td>
+<td>Startup in progress (wait)</td>
+</tr>
+<tr>
+<td><code>STOPPING</code></td>
+<td>Shutdown in progress</td>
+</tr>
+<tr>
+<td><code>ERROR</code></td>
+<td>Failed — check logs immediately</td>
+</tr>
+<tr>
+<td><code>FIRST_RUN</code></td>
+<td>Awaiting setup wizard</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="2-log-checks">2. Log Checks<a class="headerlink" href="#2-log-checks" title="Permanent link">&para;</a></h2>
+<h3 id="log-locations">Log Locations<a class="headerlink" href="#log-locations" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Log File</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&lt;CONFLUENCE_HOME&gt;/logs/atlassian-confluence.log</code></td>
+<td>Main application log</td>
+</tr>
+<tr>
+<td><code>&lt;INSTALL&gt;/logs/catalina.out</code></td>
+<td>Tomcat stdout / JVM output</td>
+</tr>
+<tr>
+<td><code>&lt;CONFLUENCE_HOME&gt;/logs/atlassian-confluence-security.log</code></td>
+<td>Authentication events</td>
+</tr>
+<tr>
+<td><code>&lt;CONFLUENCE_HOME&gt;/logs/atlassian-confluence-index-recovery.log</code></td>
+<td>Index recovery events</td>
+</tr>
+</tbody>
+</table>
+<h3 id="quick-error-scan">Quick Error Scan<a class="headerlink" href="#quick-error-scan" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nv">LOG</span><span class="o">=</span><span class="s2">&quot;/var/atlassian/application-data/confluence/logs/atlassian-confluence.log&quot;</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Count errors in the last 24 hours (assumes log rotation daily)</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;ERROR&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$LOG</span><span class="s2">&quot;</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># Show the last 20 error lines with timestamp</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>grep<span class="w"> </span><span class="s2">&quot;ERROR&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$LOG</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Look for OOM indicators</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;(OutOfMemoryError|java.lang.OutOfMemory)&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$LOG</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-5
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># Check for LDAP/login failures</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;(AuthenticationException|CrowdException|LDAP)&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$LOG</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-10
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="c1"># Check for index errors</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;(IndexException|LuceneIndex|index corrupt)&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$LOG</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-10
+</code></pre></div>
 <hr />
 <h2 id="3-disk-space">3. Disk Space<a class="headerlink" href="#3-disk-space" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="ch">#!/bin/bash</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># confluence-disk-check.sh</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nv">WARN_THRESHOLD</span><span class="o">=</span><span class="m">80</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nv">CRIT_THRESHOLD</span><span class="o">=</span><span class="m">90</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="nv">INSTALL_DIR</span><span class="o">=</span><span class="s2">&quot;/opt/atlassian/confluence&quot;</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="nv">HOME_DIR</span><span class="o">=</span><span class="s2">&quot;/var/atlassian/application-data/confluence&quot;</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nv">SHARED_HOME</span><span class="o">=</span><span class="s2">&quot;/mnt/confluence-shared&quot;</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>check_disk<span class="o">()</span><span class="w"> </span><span class="o">{</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span><span class="nb">local</span><span class="w"> </span><span class="nv">path</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$1</span><span class="s2">&quot;</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">  </span><span class="nb">local</span><span class="w"> </span><span class="nv">label</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$2</span><span class="s2">&quot;</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">  </span><span class="nb">local</span><span class="w"> </span>pct
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">  </span><span class="nv">pct</span><span class="o">=</span><span class="k">$(</span>df<span class="w"> </span>-h<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$path</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;NR==2 {gsub(/%/,&quot;&quot;,$5); print $5}&#39;</span><span class="k">)</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$pct</span><span class="s2">&quot;</span><span class="w"> </span>-ge<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$CRIT_THRESHOLD</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;CRITICAL: </span><span class="nv">$label</span><span class="s2"> at </span><span class="si">${</span><span class="nv">pct</span><span class="si">}</span><span class="s2">% (</span><span class="nv">$path</span><span class="s2">)&quot;</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">  </span><span class="k">elif</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$pct</span><span class="s2">&quot;</span><span class="w"> </span>-ge<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$WARN_THRESHOLD</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;WARNING: </span><span class="nv">$label</span><span class="s2"> at </span><span class="si">${</span><span class="nv">pct</span><span class="si">}</span><span class="s2">% (</span><span class="nv">$path</span><span class="s2">)&quot;</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="w">  </span><span class="k">else</span>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;OK: </span><span class="nv">$label</span><span class="s2"> at </span><span class="si">${</span><span class="nv">pct</span><span class="si">}</span><span class="s2">% (</span><span class="nv">$path</span><span class="s2">)&quot;</span>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">  </span><span class="k">fi</span>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="o">}</span>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>check_disk<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$INSTALL_DIR</span><span class="s2">&quot;</span><span class="w">  </span><span class="s2">&quot;Install directory&quot;</span>
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>check_disk<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$HOME_DIR</span><span class="s2">&quot;</span><span class="w">     </span><span class="s2">&quot;Local home&quot;</span>
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>check_disk<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$SHARED_HOME</span><span class="s2">&quot;</span><span class="w">  </span><span class="s2">&quot;Shared home (attachments/index)&quot;</span>
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="c1"># Show largest directories under shared home</span>
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Top 10 directories in shared home:&quot;</span>
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>du<span class="w"> </span>-sh<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SHARED_HOME</span><span class="si">}</span><span class="s2">/&quot;</span>*<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-rh<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="ch">#!/bin/bash</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># confluence-disk-check.sh</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nv">WARN_THRESHOLD</span><span class="o">=</span><span class="m">80</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nv">CRIT_THRESHOLD</span><span class="o">=</span><span class="m">90</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="nv">INSTALL_DIR</span><span class="o">=</span><span class="s2">&quot;/opt/atlassian/confluence&quot;</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="nv">HOME_DIR</span><span class="o">=</span><span class="s2">&quot;/var/atlassian/application-data/confluence&quot;</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="nv">SHARED_HOME</span><span class="o">=</span><span class="s2">&quot;/mnt/confluence-shared&quot;</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>check_disk<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span><span class="nb">local</span><span class="w"> </span><span class="nv">path</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$1</span><span class="s2">&quot;</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">  </span><span class="nb">local</span><span class="w"> </span><span class="nv">label</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$2</span><span class="s2">&quot;</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">  </span><span class="nb">local</span><span class="w"> </span>pct
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">  </span><span class="nv">pct</span><span class="o">=</span><span class="k">$(</span>df<span class="w"> </span>-h<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$path</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;NR==2 {gsub(/%/,&quot;&quot;,$5); print $5}&#39;</span><span class="k">)</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$pct</span><span class="s2">&quot;</span><span class="w"> </span>-ge<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$CRIT_THRESHOLD</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;CRITICAL: </span><span class="nv">$label</span><span class="s2"> at </span><span class="si">${</span><span class="nv">pct</span><span class="si">}</span><span class="s2">% (</span><span class="nv">$path</span><span class="s2">)&quot;</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">  </span><span class="k">elif</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$pct</span><span class="s2">&quot;</span><span class="w"> </span>-ge<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$WARN_THRESHOLD</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;WARNING: </span><span class="nv">$label</span><span class="s2"> at </span><span class="si">${</span><span class="nv">pct</span><span class="si">}</span><span class="s2">% (</span><span class="nv">$path</span><span class="s2">)&quot;</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">  </span><span class="k">else</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;OK: </span><span class="nv">$label</span><span class="s2"> at </span><span class="si">${</span><span class="nv">pct</span><span class="si">}</span><span class="s2">% (</span><span class="nv">$path</span><span class="s2">)&quot;</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="w">  </span><span class="k">fi</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="o">}</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>check_disk<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$INSTALL_DIR</span><span class="s2">&quot;</span><span class="w">  </span><span class="s2">&quot;Install directory&quot;</span>
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>check_disk<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$HOME_DIR</span><span class="s2">&quot;</span><span class="w">     </span><span class="s2">&quot;Local home&quot;</span>
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>check_disk<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$SHARED_HOME</span><span class="s2">&quot;</span><span class="w">  </span><span class="s2">&quot;Shared home (attachments/index)&quot;</span>
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="c1"># Show largest directories under shared home</span>
+<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;&quot;</span>
+<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Top 10 directories in shared home:&quot;</span>
+<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>du<span class="w"> </span>-sh<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SHARED_HOME</span><span class="si">}</span><span class="s2">/&quot;</span>*<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-rh<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10
 </code></pre></div>
 <hr />
 <h2 id="4-database-connectivity-and-latency">4. Database Connectivity and Latency<a class="headerlink" href="#4-database-connectivity-and-latency" title="Permanent link">&para;</a></h2>
 <h3 id="connectivity-test">Connectivity Test<a class="headerlink" href="#connectivity-test" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># PostgreSQL connectivity from app server</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>psql<span class="w"> </span>-h<span class="w"> </span>db.internal.example.com<span class="w"> </span>-U<span class="w"> </span>confluence<span class="w"> </span>-d<span class="w"> </span>confluencedb<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-c<span class="w"> </span><span class="s2">&quot;SELECT version();&quot;</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;(PostgreSQL|error|FATAL)&quot;</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Connection count (compare to max_connections)</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>psql<span class="w"> </span>-h<span class="w"> </span>db.internal.example.com<span class="w"> </span>-U<span class="w"> </span>confluence<span class="w"> </span>-d<span class="w"> </span>confluencedb<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>-c<span class="w"> </span><span class="s2">&quot;SELECT count(*) AS active_connections FROM pg_stat_activity WHERE state = &#39;active&#39;;&quot;</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Check max connections setting</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>psql<span class="w"> </span>-h<span class="w"> </span>db.internal.example.com<span class="w"> </span>-U<span class="w"> </span>confluence<span class="w"> </span>-d<span class="w"> </span>confluencedb<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span>-c<span class="w"> </span><span class="s2">&quot;SHOW max_connections;&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># PostgreSQL connectivity from app server</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>psql<span class="w"> </span>-h<span class="w"> </span>db.internal.example.com<span class="w"> </span>-U<span class="w"> </span>confluence<span class="w"> </span>-d<span class="w"> </span>confluencedb<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>-c<span class="w"> </span><span class="s2">&quot;SELECT version();&quot;</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;(PostgreSQL|error|FATAL)&quot;</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Connection count (compare to max_connections)</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>psql<span class="w"> </span>-h<span class="w"> </span>db.internal.example.com<span class="w"> </span>-U<span class="w"> </span>confluence<span class="w"> </span>-d<span class="w"> </span>confluencedb<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span>-c<span class="w"> </span><span class="s2">&quot;SELECT count(*) AS active_connections FROM pg_stat_activity WHERE state = &#39;active&#39;;&quot;</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Check max connections setting</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>psql<span class="w"> </span>-h<span class="w"> </span>db.internal.example.com<span class="w"> </span>-U<span class="w"> </span>confluence<span class="w"> </span>-d<span class="w"> </span>confluencedb<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">  </span>-c<span class="w"> </span><span class="s2">&quot;SHOW max_connections;&quot;</span>
 </code></pre></div>
 <h3 id="latency-test">Latency Test<a class="headerlink" href="#latency-test" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Simple query latency measurement</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">time</span><span class="w"> </span>psql<span class="w"> </span>-h<span class="w"> </span>db.internal.example.com<span class="w"> </span>-U<span class="w"> </span>confluence<span class="w"> </span>-d<span class="w"> </span>confluencedb<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>-c<span class="w"> </span><span class="s2">&quot;SELECT id, title FROM content WHERE contenttype = &#39;PAGE&#39; LIMIT 100;&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>&gt;<span class="w"> </span>/dev/null
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Simple query latency measurement</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">time</span><span class="w"> </span>psql<span class="w"> </span>-h<span class="w"> </span>db.internal.example.com<span class="w"> </span>-U<span class="w"> </span>confluence<span class="w"> </span>-d<span class="w"> </span>confluencedb<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>-c<span class="w"> </span><span class="s2">&quot;SELECT id, title FROM content WHERE contenttype = &#39;PAGE&#39; LIMIT 100;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>&gt;<span class="w"> </span>/dev/null
 </code></pre></div>
 <table>
 <thead>
@@ -3820,13 +3895,13 @@ This page defines the daily health check procedure for Confluence Data Center. R
 </table>
 <hr />
 <h2 id="5-search-index-status">5. Search Index Status<a class="headerlink" href="#5-search-index-status" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># REST API — check indexing queue size</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$CF_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="s2">&quot;https://confluence.example.com/rest/api/search/index&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.&#39;</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Admin UI equivalents:</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Admin &gt; General Configuration &gt; Content Indexing</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Admin &gt; General Configuration &gt; Troubleshooting and Support &gt; Index Tracker</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># REST API — check indexing queue size</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$CF_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="s2">&quot;https://confluence.example.com/rest/api/search/index&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.&#39;</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Admin UI equivalents:</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Admin &gt; General Configuration &gt; Content Indexing</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Admin &gt; General Configuration &gt; Troubleshooting and Support &gt; Index Tracker</span>
 </code></pre></div>
 <p>Via the admin console, check:</p>
 <ul>
@@ -3835,26 +3910,26 @@ This page defines the daily health check procedure for Confluence Data Center. R
 <li><strong>Last reindex time</strong>: Should match the last content modification time</li>
 </ul>
 <h3 id="trigger-a-re-index-if-needed">Trigger a Re-index (if needed)<a class="headerlink" href="#trigger-a-re-index-if-needed" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Trigger re-indexing via REST</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$CF_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="s2">&quot;https://confluence.example.com/rest/api/search/index/reindex&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Trigger re-indexing via REST</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$CF_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="s2">&quot;https://confluence.example.com/rest/api/search/index/reindex&quot;</span>
 </code></pre></div>
 <hr />
 <h2 id="6-cluster-node-status-data-center">6. Cluster Node Status (Data Center)<a class="headerlink" href="#6-cluster-node-status-data-center" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Admin UI: Admin &gt; General Configuration &gt; Clustering</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># REST API — cluster node info</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$CF_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span><span class="s2">&quot;https://confluence.example.com/rest/api/cluster/nodes&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.&#39;</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Expected output structure:</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># {</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1">#   &quot;nodes&quot;: [</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1">#     { &quot;id&quot;: &quot;...&quot;, &quot;address&quot;: &quot;10.0.1.11&quot;, &quot;state&quot;: &quot;ACTIVE&quot;, &quot;version&quot;: &quot;8.5.4&quot; },</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1">#     { &quot;id&quot;: &quot;...&quot;, &quot;address&quot;: &quot;10.0.1.12&quot;, &quot;state&quot;: &quot;ACTIVE&quot;, &quot;version&quot;: &quot;8.5.4&quot; },</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1">#     { &quot;id&quot;: &quot;...&quot;, &quot;address&quot;: &quot;10.0.1.13&quot;, &quot;state&quot;: &quot;ACTIVE&quot;, &quot;version&quot;: &quot;8.5.4&quot; }</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1">#   ]</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c1"># }</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Admin UI: Admin &gt; General Configuration &gt; Clustering</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1"># REST API — cluster node info</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>curl<span class="w"> </span>-s<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer </span><span class="nv">$CF_TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span><span class="s2">&quot;https://confluence.example.com/rest/api/cluster/nodes&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.&#39;</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Expected output structure:</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># {</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1">#   &quot;nodes&quot;: [</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1">#     { &quot;id&quot;: &quot;...&quot;, &quot;address&quot;: &quot;10.0.1.11&quot;, &quot;state&quot;: &quot;ACTIVE&quot;, &quot;version&quot;: &quot;8.5.4&quot; },</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="c1">#     { &quot;id&quot;: &quot;...&quot;, &quot;address&quot;: &quot;10.0.1.12&quot;, &quot;state&quot;: &quot;ACTIVE&quot;, &quot;version&quot;: &quot;8.5.4&quot; },</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="c1">#     { &quot;id&quot;: &quot;...&quot;, &quot;address&quot;: &quot;10.0.1.13&quot;, &quot;state&quot;: &quot;ACTIVE&quot;, &quot;version&quot;: &quot;8.5.4&quot; }</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="c1">#   ]</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="c1"># }</span>
 </code></pre></div>
 <p>Cluster checks:</p>
 <table>
@@ -3889,8 +3964,8 @@ This page defines the daily health check procedure for Confluence Data Center. R
 </tbody>
 </table>
 <h3 id="hazelcast-port-connectivity">Hazelcast Port Connectivity<a class="headerlink" href="#hazelcast-port-connectivity" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># From node-2, verify port 5801 is reachable on node-1</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>nc<span class="w"> </span>-zv<span class="w"> </span><span class="m">10</span>.0.1.11<span class="w"> </span><span class="m">5801</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;OK&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;FAIL&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># From node-2, verify port 5801 is reachable on node-1</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>nc<span class="w"> </span>-zv<span class="w"> </span><span class="m">10</span>.0.1.11<span class="w"> </span><span class="m">5801</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;OK&quot;</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;FAIL&quot;</span>
 </code></pre></div>
 <hr />
 <h2 id="7-scheduled-jobs">7. Scheduled Jobs<a class="headerlink" href="#7-scheduled-jobs" title="Permanent link">&para;</a></h2>
@@ -4002,52 +4077,52 @@ This page defines the daily health check procedure for Confluence Data Center. R
 </table>
 <hr />
 <h2 id="health-check-script-automated">Health Check Script (Automated)<a class="headerlink" href="#health-check-script-automated" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="ch">#!/bin/bash</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1"># confluence-healthcheck.sh — run via cron, output to log / alerting system</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="nv">CF_URL</span><span class="o">=</span><span class="s2">&quot;https://confluence.example.com&quot;</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="nv">CF_TOKEN</span><span class="o">=</span><span class="s2">&quot;&lt;PAT&gt;&quot;</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="nv">REPORT</span><span class="o">=</span><span class="s2">&quot;/var/log/confluence-health-</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span><span class="s2">.log&quot;</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="nv">FAILURES</span><span class="o">=</span><span class="m">0</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>check<span class="o">()</span><span class="w"> </span><span class="o">{</span>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">  </span><span class="nb">local</span><span class="w"> </span><span class="nv">label</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$1</span><span class="s2">&quot;</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">  </span><span class="nb">local</span><span class="w"> </span><span class="nv">result</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$2</span><span class="s2">&quot;</span>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">  </span><span class="nb">local</span><span class="w"> </span><span class="nv">expected</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$3</span><span class="s2">&quot;</span>
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$result</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">==</span><span class="w"> </span>*<span class="s2">&quot;</span><span class="nv">$expected</span><span class="s2">&quot;</span>*<span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
-<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;OK  | </span><span class="nv">$label</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>-a<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$REPORT</span><span class="s2">&quot;</span>
-<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="w">  </span><span class="k">else</span>
-<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;FAIL| </span><span class="nv">$label</span><span class="s2"> — got: </span><span class="nv">$result</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>-a<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$REPORT</span><span class="s2">&quot;</span>
-<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="w">    </span><span class="o">((</span>FAILURES++<span class="o">))</span>
-<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="w">  </span><span class="k">fi</span>
-<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="o">}</span>
-<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>
-<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a><span class="c1"># 1. HTTP status</span>
-<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a><span class="nv">status</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sf<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">CF_URL</span><span class="si">}</span><span class="s2">/status&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.state&#39;</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="k">)</span>
-<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a>check<span class="w"> </span><span class="s2">&quot;HTTP status&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$status</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;RUNNING&quot;</span>
-<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a>
-<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a><span class="c1"># 2. Disk space</span>
-<a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a><span class="nv">disk_pct</span><span class="o">=</span><span class="k">$(</span>df<span class="w"> </span>/mnt/confluence-shared<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;NR==2 {gsub(/%/,&quot;&quot;,$5); print $5}&#39;</span><span class="k">)</span>
-<a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$disk_pct</span><span class="s2">&quot;</span><span class="w"> </span>-lt<span class="w"> </span><span class="m">80</span><span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>check<span class="w"> </span><span class="s2">&quot;Disk space (shared home)&quot;</span><span class="w"> </span><span class="s2">&quot;OK&quot;</span><span class="w"> </span><span class="s2">&quot;OK&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-28" name="__codelineno-8-28" href="#__codelineno-8-28"></a><span class="w">  </span><span class="o">||</span><span class="w"> </span>check<span class="w"> </span><span class="s2">&quot;Disk space (shared home)&quot;</span><span class="w"> </span><span class="s2">&quot;FAIL (</span><span class="si">${</span><span class="nv">disk_pct</span><span class="si">}</span><span class="s2">%)&quot;</span><span class="w"> </span><span class="s2">&quot;OK&quot;</span>
-<a id="__codelineno-8-29" name="__codelineno-8-29" href="#__codelineno-8-29"></a>
-<a id="__codelineno-8-30" name="__codelineno-8-30" href="#__codelineno-8-30"></a><span class="c1"># 3. DB connectivity</span>
-<a id="__codelineno-8-31" name="__codelineno-8-31" href="#__codelineno-8-31"></a><span class="nv">db_ok</span><span class="o">=</span><span class="k">$(</span>psql<span class="w"> </span>-h<span class="w"> </span>db.internal.example.com<span class="w"> </span>-U<span class="w"> </span>confluence<span class="w"> </span>-d<span class="w"> </span>confluencedb<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-32" name="__codelineno-8-32" href="#__codelineno-8-32"></a><span class="w">  </span>-c<span class="w"> </span><span class="s2">&quot;SELECT 1;&quot;</span><span class="w"> </span>-t<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;1&quot;</span><span class="k">)</span>
-<a id="__codelineno-8-33" name="__codelineno-8-33" href="#__codelineno-8-33"></a><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$db_ok</span><span class="s2">&quot;</span><span class="w"> </span>-eq<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>check<span class="w"> </span><span class="s2">&quot;DB connectivity&quot;</span><span class="w"> </span><span class="s2">&quot;OK&quot;</span><span class="w"> </span><span class="s2">&quot;OK&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-34" name="__codelineno-8-34" href="#__codelineno-8-34"></a><span class="w">  </span><span class="o">||</span><span class="w"> </span>check<span class="w"> </span><span class="s2">&quot;DB connectivity&quot;</span><span class="w"> </span><span class="s2">&quot;FAIL&quot;</span><span class="w"> </span><span class="s2">&quot;OK&quot;</span>
-<a id="__codelineno-8-35" name="__codelineno-8-35" href="#__codelineno-8-35"></a>
-<a id="__codelineno-8-36" name="__codelineno-8-36" href="#__codelineno-8-36"></a><span class="c1"># 4. Error count in log</span>
-<a id="__codelineno-8-37" name="__codelineno-8-37" href="#__codelineno-8-37"></a><span class="nv">error_count</span><span class="o">=</span><span class="k">$(</span>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;ERROR&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-38" name="__codelineno-8-38" href="#__codelineno-8-38"></a><span class="w">  </span>/var/atlassian/application-data/confluence/logs/atlassian-confluence.log<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="k">)</span>
-<a id="__codelineno-8-39" name="__codelineno-8-39" href="#__codelineno-8-39"></a><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$error_count</span><span class="s2">&quot;</span><span class="w"> </span>-lt<span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>check<span class="w"> </span><span class="s2">&quot;Log error count&quot;</span><span class="w"> </span><span class="s2">&quot;OK (</span><span class="si">${</span><span class="nv">error_count</span><span class="si">}</span><span class="s2">)&quot;</span><span class="w"> </span><span class="s2">&quot;OK&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-40" name="__codelineno-8-40" href="#__codelineno-8-40"></a><span class="w">  </span><span class="o">||</span><span class="w"> </span>check<span class="w"> </span><span class="s2">&quot;Log error count&quot;</span><span class="w"> </span><span class="s2">&quot;FAIL (</span><span class="si">${</span><span class="nv">error_count</span><span class="si">}</span><span class="s2"> errors)&quot;</span><span class="w"> </span><span class="s2">&quot;OK&quot;</span>
-<a id="__codelineno-8-41" name="__codelineno-8-41" href="#__codelineno-8-41"></a>
-<a id="__codelineno-8-42" name="__codelineno-8-42" href="#__codelineno-8-42"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;---&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>-a<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$REPORT</span><span class="s2">&quot;</span>
-<a id="__codelineno-8-43" name="__codelineno-8-43" href="#__codelineno-8-43"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Health check complete. Failures: </span><span class="nv">$FAILURES</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>-a<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$REPORT</span><span class="s2">&quot;</span>
-<a id="__codelineno-8-44" name="__codelineno-8-44" href="#__codelineno-8-44"></a>
-<a id="__codelineno-8-45" name="__codelineno-8-45" href="#__codelineno-8-45"></a><span class="c1"># Exit non-zero so cron / monitoring detects failures</span>
-<a id="__codelineno-8-46" name="__codelineno-8-46" href="#__codelineno-8-46"></a><span class="nb">exit</span><span class="w"> </span><span class="nv">$FAILURES</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="ch">#!/bin/bash</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="c1"># confluence-healthcheck.sh — run via cron, output to log / alerting system</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="nv">CF_URL</span><span class="o">=</span><span class="s2">&quot;https://confluence.example.com&quot;</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="nv">CF_TOKEN</span><span class="o">=</span><span class="s2">&quot;&lt;PAT&gt;&quot;</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="nv">REPORT</span><span class="o">=</span><span class="s2">&quot;/var/log/confluence-health-</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span><span class="s2">.log&quot;</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="nv">FAILURES</span><span class="o">=</span><span class="m">0</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>check<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="w">  </span><span class="nb">local</span><span class="w"> </span><span class="nv">label</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$1</span><span class="s2">&quot;</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="w">  </span><span class="nb">local</span><span class="w"> </span><span class="nv">result</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$2</span><span class="s2">&quot;</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="w">  </span><span class="nb">local</span><span class="w"> </span><span class="nv">expected</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$3</span><span class="s2">&quot;</span>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$result</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">==</span><span class="w"> </span>*<span class="s2">&quot;</span><span class="nv">$expected</span><span class="s2">&quot;</span>*<span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;OK  | </span><span class="nv">$label</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>-a<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$REPORT</span><span class="s2">&quot;</span>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="w">  </span><span class="k">else</span>
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;FAIL| </span><span class="nv">$label</span><span class="s2"> — got: </span><span class="nv">$result</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>-a<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$REPORT</span><span class="s2">&quot;</span>
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a><span class="w">    </span><span class="o">((</span>FAILURES++<span class="o">))</span>
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a><span class="w">  </span><span class="k">fi</span>
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a><span class="o">}</span>
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a><span class="c1"># 1. HTTP status</span>
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a><span class="nv">status</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sf<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">CF_URL</span><span class="si">}</span><span class="s2">/status&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.state&#39;</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="k">)</span>
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>check<span class="w"> </span><span class="s2">&quot;HTTP status&quot;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$status</span><span class="s2">&quot;</span><span class="w"> </span><span class="s2">&quot;RUNNING&quot;</span>
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>
+<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a><span class="c1"># 2. Disk space</span>
+<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a><span class="nv">disk_pct</span><span class="o">=</span><span class="k">$(</span>df<span class="w"> </span>/mnt/confluence-shared<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;NR==2 {gsub(/%/,&quot;&quot;,$5); print $5}&#39;</span><span class="k">)</span>
+<a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$disk_pct</span><span class="s2">&quot;</span><span class="w"> </span>-lt<span class="w"> </span><span class="m">80</span><span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>check<span class="w"> </span><span class="s2">&quot;Disk space (shared home)&quot;</span><span class="w"> </span><span class="s2">&quot;OK&quot;</span><span class="w"> </span><span class="s2">&quot;OK&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a><span class="w">  </span><span class="o">||</span><span class="w"> </span>check<span class="w"> </span><span class="s2">&quot;Disk space (shared home)&quot;</span><span class="w"> </span><span class="s2">&quot;FAIL (</span><span class="si">${</span><span class="nv">disk_pct</span><span class="si">}</span><span class="s2">%)&quot;</span><span class="w"> </span><span class="s2">&quot;OK&quot;</span>
+<a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a>
+<a id="__codelineno-9-30" name="__codelineno-9-30" href="#__codelineno-9-30"></a><span class="c1"># 3. DB connectivity</span>
+<a id="__codelineno-9-31" name="__codelineno-9-31" href="#__codelineno-9-31"></a><span class="nv">db_ok</span><span class="o">=</span><span class="k">$(</span>psql<span class="w"> </span>-h<span class="w"> </span>db.internal.example.com<span class="w"> </span>-U<span class="w"> </span>confluence<span class="w"> </span>-d<span class="w"> </span>confluencedb<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-32" name="__codelineno-9-32" href="#__codelineno-9-32"></a><span class="w">  </span>-c<span class="w"> </span><span class="s2">&quot;SELECT 1;&quot;</span><span class="w"> </span>-t<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;1&quot;</span><span class="k">)</span>
+<a id="__codelineno-9-33" name="__codelineno-9-33" href="#__codelineno-9-33"></a><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$db_ok</span><span class="s2">&quot;</span><span class="w"> </span>-eq<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>check<span class="w"> </span><span class="s2">&quot;DB connectivity&quot;</span><span class="w"> </span><span class="s2">&quot;OK&quot;</span><span class="w"> </span><span class="s2">&quot;OK&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-34" name="__codelineno-9-34" href="#__codelineno-9-34"></a><span class="w">  </span><span class="o">||</span><span class="w"> </span>check<span class="w"> </span><span class="s2">&quot;DB connectivity&quot;</span><span class="w"> </span><span class="s2">&quot;FAIL&quot;</span><span class="w"> </span><span class="s2">&quot;OK&quot;</span>
+<a id="__codelineno-9-35" name="__codelineno-9-35" href="#__codelineno-9-35"></a>
+<a id="__codelineno-9-36" name="__codelineno-9-36" href="#__codelineno-9-36"></a><span class="c1"># 4. Error count in log</span>
+<a id="__codelineno-9-37" name="__codelineno-9-37" href="#__codelineno-9-37"></a><span class="nv">error_count</span><span class="o">=</span><span class="k">$(</span>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;ERROR&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-38" name="__codelineno-9-38" href="#__codelineno-9-38"></a><span class="w">  </span>/var/atlassian/application-data/confluence/logs/atlassian-confluence.log<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="k">)</span>
+<a id="__codelineno-9-39" name="__codelineno-9-39" href="#__codelineno-9-39"></a><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$error_count</span><span class="s2">&quot;</span><span class="w"> </span>-lt<span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>check<span class="w"> </span><span class="s2">&quot;Log error count&quot;</span><span class="w"> </span><span class="s2">&quot;OK (</span><span class="si">${</span><span class="nv">error_count</span><span class="si">}</span><span class="s2">)&quot;</span><span class="w"> </span><span class="s2">&quot;OK&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-40" name="__codelineno-9-40" href="#__codelineno-9-40"></a><span class="w">  </span><span class="o">||</span><span class="w"> </span>check<span class="w"> </span><span class="s2">&quot;Log error count&quot;</span><span class="w"> </span><span class="s2">&quot;FAIL (</span><span class="si">${</span><span class="nv">error_count</span><span class="si">}</span><span class="s2"> errors)&quot;</span><span class="w"> </span><span class="s2">&quot;OK&quot;</span>
+<a id="__codelineno-9-41" name="__codelineno-9-41" href="#__codelineno-9-41"></a>
+<a id="__codelineno-9-42" name="__codelineno-9-42" href="#__codelineno-9-42"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;---&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>-a<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$REPORT</span><span class="s2">&quot;</span>
+<a id="__codelineno-9-43" name="__codelineno-9-43" href="#__codelineno-9-43"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Health check complete. Failures: </span><span class="nv">$FAILURES</span><span class="s2">&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>-a<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$REPORT</span><span class="s2">&quot;</span>
+<a id="__codelineno-9-44" name="__codelineno-9-44" href="#__codelineno-9-44"></a>
+<a id="__codelineno-9-45" name="__codelineno-9-45" href="#__codelineno-9-45"></a><span class="c1"># Exit non-zero so cron / monitoring detects failures</span>
+<a id="__codelineno-9-46" name="__codelineno-9-46" href="#__codelineno-9-46"></a><span class="nb">exit</span><span class="w"> </span><span class="nv">$FAILURES</span>
 </code></pre></div>
 
 
