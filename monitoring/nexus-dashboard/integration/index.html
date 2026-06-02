@@ -4186,6 +4186,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#servicenow-itsm-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ServiceNow ITSM Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#aaa-ldap-integration" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4425,50 +4436,74 @@ Nexus Dashboard Integration reference covering Overview, ACI APIC Integration, S
 │  SMTP = Email notification for NDI events; configured in ND admin settings                            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>```sql
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## ServiceNow ITSM Integration
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>P1/P2 fabric faults auto-create incidents in ServiceNow via the ND alert notification webhook.
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>```text
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Admin &gt; Notifications &gt; Create Notification
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>- Trigger: NDI Fault severity = Critical or Major
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>- Action: Webhook
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>- URL: https://&lt;instance&gt;.service-now.com/api/now/table/incident
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>- Auth: Basic (svc-nd-snow service account)
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>- Payload:
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>  {
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>    &quot;short_description&quot;: &quot;Cisco ND P1 Fault: {{fault.title}} — {{fabric.name}}&quot;,
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>    &quot;severity&quot;: &quot;1&quot;,
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>    &quot;assignment_group&quot;: &quot;network-ops&quot;,
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>    &quot;description&quot;: &quot;{{fault.description}}\nFabric: {{fabric.name}}\nNode: {{node.name}}&quot;
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>  }
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌───────────────────────────────── Nexus Dashboard — Integration Guide ─────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │               ITSM Integration               │  │             Observability Stack             │   │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │              ServiceNow webhook              │  │                Syslog to SIEM               │   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │             Auto incident create             │  │              Splunk HEC forward             │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │               PagerDuty events               │  │             Prometheus exporter             │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │              Webex Teams notify              │  │              Custom REST client             │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │              Email SMTP alerts               │  │             Grafana data source             │   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│                                                                                                       │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│  Physical Infrastructure:                                                                             │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│  ND on-prem · outbound TCP 443 to ITSM SaaS · syslog UDP 514 or TCP 514 to SIEM                       │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│                                                                                                       │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                                                                                                       │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│  ServiceNow webhook = NDI POST to ServiceNow Event endpoint on alert fire                             │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│  Auto incident = ServiceNow incident auto-created from NDI alert payload                              │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│  PagerDuty = NDI sends Events API v2 payload; on-call routing by severity                             │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│  Webex Teams = Cisco collaboration; NDI posts event summary to room via webhook                       │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│  Syslog = NDI events forwarded as syslog to SIEM for security correlation                             │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│  Splunk HEC = HTTP Event Collector; NDI events for log analytics                                      │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│  Prometheus = NDI /metrics endpoint scraped by Prometheus                                             │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│  Grafana = ND REST API proxied as Grafana data source for custom panels                               │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│  REST client = Script polling NDI API and pushing to proprietary monitoring                           │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  SMTP = Email notification for NDI events; configured in ND admin settings                            │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│                                                                                                       │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
+<h2 id="servicenow-itsm-integration">ServiceNow ITSM Integration<a class="headerlink" href="#servicenow-itsm-integration" title="Permanent link">&para;</a></h2>
+<p>P1/P2 fabric faults auto-create incidents in ServiceNow via the ND alert notification webhook.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Admin &gt; Notifications &gt; Create Notification
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>- Trigger: NDI Fault severity = Critical or Major
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>- Action: Webhook
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>- URL: https://&lt;instance&gt;.service-now.com/api/now/table/incident
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>- Auth: Basic (svc-nd-snow service account)
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>- Payload:
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>  {
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    &quot;short_description&quot;: &quot;Cisco ND P1 Fault: {{fault.title}} — {{fabric.name}}&quot;,
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    &quot;severity&quot;: &quot;1&quot;,
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>    &quot;assignment_group&quot;: &quot;network-ops&quot;,
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>    &quot;description&quot;: &quot;{{fault.description}}\nFabric: {{fabric.name}}\nNode: {{node.name}}&quot;
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>  }
+</code></pre></div>
 <h2 id="aaa-ldap-integration">AAA / LDAP Integration<a class="headerlink" href="#aaa-ldap-integration" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Admin &gt; Authentication &gt; Remote Login Domains &gt; Add
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>- Protocol: LDAP (LDAPS recommended)
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>- Server: ldaps://&lt;AD-DC&gt;:636
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>- Bind DN: CN=svc-nd-ldap,OU=ServiceAccounts,DC=company,DC=com
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>- Search base: OU=Network,DC=company,DC=com
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>- Role mapping:
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>  - AD group: ND_Admins → Nexus Dashboard Admin
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>  - AD group: ND_Operators → Fabric Operator
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>  - AD group: ND_ReadOnly → ReadOnly
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Admin &gt; Authentication &gt; Remote Login Domains &gt; Add
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>- Protocol: LDAP (LDAPS recommended)
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>- Server: ldaps://&lt;AD-DC&gt;:636
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>- Bind DN: CN=svc-nd-ldap,OU=ServiceAccounts,DC=company,DC=com
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>- Search base: OU=Network,DC=company,DC=com
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>- Role mapping:
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  - AD group: ND_Admins → Nexus Dashboard Admin
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>  - AD group: ND_Operators → Fabric Operator
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>  - AD group: ND_ReadOnly → ReadOnly
 </code></pre></div>
 <p>Set the default login domain to LDAP and retain a local break-glass admin account.</p>
 <h2 id="smtp-notifications">SMTP Notifications<a class="headerlink" href="#smtp-notifications" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Admin &gt; System Settings &gt; SMTP
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>- SMTP server: relay.company.com
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>- Port: 587 (STARTTLS)
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>- From: nexus-dashboard-alerts@company.com
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Admin &gt; System Settings &gt; SMTP
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>- SMTP server: relay.company.com
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>- Port: 587 (STARTTLS)
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>- From: nexus-dashboard-alerts@company.com
 </code></pre></div>
 <p>Create notification rules to email specific distribution lists for P2/P3 faults.</p>
 <h2 id="aria-operations-integration">Aria Operations Integration<a class="headerlink" href="#aria-operations-integration" title="Permanent link">&para;</a></h2>
 <p>The Cisco Network Insights management pack for Aria Operations imports NDI fabric health data into vROps for correlation with VMware workload metrics.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Aria Operations &gt; Admin &gt; Solutions &gt; Cisco Network Insights MP
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>- Nexus Dashboard API URL: https://&lt;ND-VIP&gt;
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>- Username / password: (read-only service account)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Aria Operations &gt; Admin &gt; Solutions &gt; Cisco Network Insights MP
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>- Nexus Dashboard API URL: https://&lt;ND-VIP&gt;
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>- Username / password: (read-only service account)
 </code></pre></div>
 <h2 id="integration-summary">Integration Summary<a class="headerlink" href="#integration-summary" title="Permanent link">&para;</a></h2>
 <table>

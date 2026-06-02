@@ -3334,6 +3334,34 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Upgrade Lifecycle">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#upgrading-plugins" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Upgrading Plugins
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plugin-upgrade-via-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Plugin Upgrade via CLI
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -3677,23 +3705,62 @@ ServiceNow cloud instances are upgraded by ServiceNow as part of the managed ser
 │  Dependency      = plugin A requires plugin B; platform resolves automatically                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>```text
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>### Upgrading Plugins
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>Some plugins have their own release cycle independent of the platform. After a major platform upgrade:
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>1. Navigate to **System Definitions &gt; Plugins**
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>2. Filter: **Upgrade Available = true**
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>3. Review each plugin&#39;s changelog
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>4. Upgrade in Dev first, validate, then promote to UAT and Production via the same change process
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>### Plugin Upgrade via CLI
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>```bash
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>snc plugin upgrade --id com.snc.itsm.workspace --profile dev
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>snc plugin upgrade --id com.snc.discovery --profile dev
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌────────────────────────────────── ServiceNow — Install and Upgrade ───────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  ServiceNow upgrade process: SN delivers patches; tenant validates and activates via HI.              │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│                                                                                                       │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │               Upgrade Planning               │  │             Plugin Installation             │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │        Review release notes (SN docs)        │  │        Request via HI portal or in-UI       │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │       Identify custom scope conflicts        │  │         Test in sub-prod before prod        │   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   │       Schedule upgrade window with SN        │  │       Verify license entitlement first      │   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   │      Pre-upgrade: snapshot update sets       │  │      Dependencies resolved by platform      │   │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                                                                                                       │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│    Plan in sub-prod first → promote to production only after full regression validation               │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│                                                                                                       │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│                                                                                                       │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │              Upgrade Execution               │  │           Post-Upgrade Validation           │   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │       Upgrade Monitor: track progress        │  │       Skipped: review skipped records       │   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │       SN handles DB migration + patch        │  │     Regression: test critical workflows     │   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   │      Customisations flagged if conflict      │  │         Integration smoke tests run         │   │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   │      Rollback: previous version restore      │  │      User acceptance sign-off required      │   │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│                                                                                                       │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  ServiceNow data centres · HI portal · sub-prod + production instances                                │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│                                                                                                       │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│                                                                                                       │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  HI portal       = ServiceNow internal portal; used to request upgrades, clones, plugins              │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│  Release notes   = SN docs page listing changes, deprecations, new features per version               │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  Custom scope    = scoped application or customisation that may conflict with base upgrade            │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│  Update Set snap = XML export of current customisations before upgrade begins                         │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│  Upgrade Monitor = sys_upgrade_history; tracks status of all upgrade steps                            │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│  Skipped records = customisations that conflicted; admin must resolve manually                        │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│  DB migration    = schema changes applied automatically during upgrade                                │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│  Rollback        = SN-managed; tenant must request via P1 case within window                          │
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│  Regression test = scripted or manual test of core workflows post-upgrade                             │
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│  Smoke test      = quick integration check: REST/LDAP/MID connections verified                        │
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│  Entitlement     = licensed plugins only; check contract before activation                            │
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│  Dependency      = plugin A requires plugin B; platform resolves automatically                        │
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│                                                                                                       │
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
+<h3 id="upgrading-plugins">Upgrading Plugins<a class="headerlink" href="#upgrading-plugins" title="Permanent link">&para;</a></h3>
+<p>Some plugins have their own release cycle independent of the platform. After a major platform upgrade:</p>
+<ol>
+<li>Navigate to <strong>System Definitions &gt; Plugins</strong></li>
+<li>Filter: <strong>Upgrade Available = true</strong></li>
+<li>Review each plugin's changelog</li>
+<li>Upgrade in Dev first, validate, then promote to UAT and Production via the same change process</li>
+</ol>
+<h3 id="plugin-upgrade-via-cli">Plugin Upgrade via CLI<a class="headerlink" href="#plugin-upgrade-via-cli" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>snc<span class="w"> </span>plugin<span class="w"> </span>upgrade<span class="w"> </span>--id<span class="w"> </span>com.snc.itsm.workspace<span class="w"> </span>--profile<span class="w"> </span>dev
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>snc<span class="w"> </span>plugin<span class="w"> </span>upgrade<span class="w"> </span>--id<span class="w"> </span>com.snc.discovery<span class="w"> </span>--profile<span class="w"> </span>dev
+</code></pre></div>
 <hr />
 <h2 id="post-upgrade-testing-checklist">Post-Upgrade Testing Checklist<a class="headerlink" href="#post-upgrade-testing-checklist" title="Permanent link">&para;</a></h2>
 <h3 id="automated">Automated<a class="headerlink" href="#automated" title="Permanent link">&para;</a></h3>

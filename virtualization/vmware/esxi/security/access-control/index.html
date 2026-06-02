@@ -2226,6 +2226,8 @@
       
         
       
+        
+      
     
     
     
@@ -4338,6 +4340,57 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#exception-users" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exception Users
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Exception Users">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#strict-lockdown-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Strict Lockdown Considerations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#local-account-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Local Account Management
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Local Account Management">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#view-local-accounts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        View Local Accounts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#add-a-local-account" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4347,8 +4400,8 @@
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#delete-an-unused-local-account" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4358,8 +4411,8 @@
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
+        
+          <li class="md-nav__item">
   <a href="#set-root-password" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4367,6 +4420,11 @@
       
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -4806,112 +4864,168 @@ ESXi Access Control reference covering Exception Users, Local Account Management
 │  Audit log   = record of permission changes; stored in vCenter events                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>```powershell
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>┌──────────────────────────────────────── ESXi — Access Control ────────────────────────────────────────┐
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│                                                                                                       │
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│  RBAC via vCenter roles, lockdown mode, and direct host permission management.                        │
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│                                                                                                       │
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │                 vCenter RBAC                 │  │           Direct Host Permissions           │   │
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │          Roles: Admin, ReadOnly, VM          │  │             Local root: SSH only            │   │
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │          Assign role to user+object          │  │           DCUI access: locked down          │   │
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │          Propagate to child objects          │  │          Exception users: emergency         │   │
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │           AD group → vSphere role            │  │         Lockdown mode: normal/strict        │   │
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   │           Audit permission changes           │  │          DCUI exception list config         │   │
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│                                                                                                       │
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│  vCenter roles govern all access; lockdown mode blocks direct ESXi SSH login.                         │
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                                                                                                       │
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│                          ▼                                                 ▼                          │
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│                                                                                                       │
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │             Privilege Management             │  │               Audit and Review              │   │
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │           No-priv users read-only            │  │          Review permissions monthly         │   │
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │           Custom roles: least priv           │  │           Remove stale AD accounts          │   │
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   │           No global admin for ops            │  │          Log access events in Aria          │   │
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│   │          PowerCLI: Get-VIPermission          │  │           Alert on root SSH login           │   │
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│   │           Service accounts: named            │  │           Export permission report          │   │
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│                                                                                                       │
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│  x86 hosts, management network, AD/LDAP, vCenter SSO, syslog target                                   │
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│                                                                                                       │
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│                                                                                                       │
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  RBAC        = Role-Based Access Control; user+role+object permission model                           │
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  Lockdown mode = ESXi state; blocks direct host login; normal or strict                               │
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  DCUI        = Direct Console UI; local keyboard/screen access to host                                │
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  Exception users = accounts allowed DCUI in lockdown; emergency access                                │
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  SSO         = Single Sign-On; vCenter identity service integrating AD                                │
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  Propagate   = permission inherited by child inventory objects                                        │
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  Least priv  = principle: grant minimum permissions needed for role                                   │
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  Custom role = vSphere role built from individual privilege checkboxes                                │
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  Get-VIPermission = PowerCLI cmdlet; lists all permissions on object                                  │
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│  Service acct= named account used by automation; not shared personal creds                            │
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  Strict lockdown = no DCUI; only vCenter API access allowed to host                                   │
-<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│  Audit log   = record of permission changes; stored in vCenter events                                 │
-<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>│                                                                                                       │
-<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌──────────────────────────────────────── ESXi — Access Control ────────────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  RBAC via vCenter roles, lockdown mode, and direct host permission management.                        │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│                                                                                                       │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │                 vCenter RBAC                 │  │           Direct Host Permissions           │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │          Roles: Admin, ReadOnly, VM          │  │             Local root: SSH only            │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │          Assign role to user+object          │  │           DCUI access: locked down          │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │          Propagate to child objects          │  │          Exception users: emergency         │   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │           AD group → vSphere role            │  │         Lockdown mode: normal/strict        │   │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │           Audit permission changes           │  │          DCUI exception list config         │   │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                                                                       │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│  vCenter roles govern all access; lockdown mode blocks direct ESXi SSH login.                         │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                                                                                                       │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│                                                                                                       │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │             Privilege Management             │  │               Audit and Review              │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │           No-priv users read-only            │  │          Review permissions monthly         │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │           Custom roles: least priv           │  │           Remove stale AD accounts          │   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │           No global admin for ops            │  │          Log access events in Aria          │   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   │          PowerCLI: Get-VIPermission          │  │           Alert on root SSH login           │   │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│   │           Service accounts: named            │  │           Export permission report          │   │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│                                                                                                       │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  x86 hosts, management network, AD/LDAP, vCenter SSO, syslog target                                   │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│                                                                                                       │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  RBAC        = Role-Based Access Control; user+role+object permission model                           │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  Lockdown mode = ESXi state; blocks direct host login; normal or strict                               │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  DCUI        = Direct Console UI; local keyboard/screen access to host                                │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  Exception users = accounts allowed DCUI in lockdown; emergency access                                │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  SSO         = Single Sign-On; vCenter identity service integrating AD                                │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  Propagate   = permission inherited by child inventory objects                                        │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  Least priv  = principle: grant minimum permissions needed for role                                   │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  Custom role = vSphere role built from individual privilege checkboxes                                │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  Get-VIPermission = PowerCLI cmdlet; lists all permissions on object                                  │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  Service acct= named account used by automation; not shared personal creds                            │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│  Strict lockdown = no DCUI; only vCenter API access allowed to host                                   │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  Audit log   = record of permission changes; stored in vCenter events                                 │
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│                                                                                                       │
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c">## Exception Users</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">Exception</span> <span class="n">users</span> <span class="k">in</span> <span class="n">Normal</span> <span class="n">Lockdown</span> <span class="n">can</span> <span class="n">still</span> <span class="n">connect</span> <span class="n">directly</span> <span class="n">to</span> <span class="n">the</span> <span class="n">host</span> <span class="n">via</span> <span class="n">SSH</span><span class="p">.</span> <span class="n">Keep</span> <span class="n">this</span> <span class="n">list</span> <span class="n">minimal</span><span class="p">:</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="p">-</span> <span class="n">One</span> <span class="n">named</span> <span class="k">break</span><span class="n">-glass</span> <span class="n">local</span> <span class="n">account</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="p">-</span> <span class="n">No</span> <span class="n">shared</span> <span class="n">accounts</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="n">Configure</span> <span class="n">via</span> <span class="n">vCenter</span><span class="p">:</span> <span class="p">**</span><span class="n">Host</span> <span class="err">→</span> <span class="n">Configure</span> <span class="err">→</span> <span class="n">Security</span> <span class="n">Profile</span> <span class="err">→</span> <span class="n">Exception</span> <span class="n">Users</span> <span class="err">→</span> <span class="n">Add</span><span class="p">**</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c">### Strict Lockdown Considerations</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="n">Use</span> <span class="n">Strict</span> <span class="n">Lockdown</span> <span class="n">only</span> <span class="k">if</span> <span class="n">vCenter</span> <span class="n">is</span> <span class="n">highly</span> <span class="n">available</span> <span class="p">(</span><span class="n">HA</span><span class="err">&#39;</span><span class="n">d</span> <span class="n">appliance</span> <span class="n">or</span> <span class="n">VCF</span><span class="p">).</span> <span class="k">If</span> <span class="n">vCenter</span> <span class="n">is</span> <span class="n">unavailable</span> <span class="k">in</span> <span class="n">Strict</span> <span class="n">Lockdown</span><span class="p">,</span> <span class="n">the</span> <span class="n">only</span> <span class="n">recovery</span> <span class="n">path</span> <span class="n">is</span> <span class="n">physical</span> <span class="n">IPMI</span><span class="p">/</span><span class="n">iDRAC</span> <span class="n">console</span> <span class="n">access</span> <span class="n">to</span> <span class="n">the</span> <span class="n">DCUI</span><span class="p">,</span> <span class="n">which</span> <span class="n">itself</span> <span class="n">does</span> <span class="n">not</span> <span class="n">permit</span> <span class="n">root</span> <span class="n">login</span> <span class="n">under</span> <span class="n">Strict</span> <span class="n">Lockdown</span> <span class="err">—</span> <span class="n">a</span> <span class="n">second</span> <span class="n">local</span> <span class="n">account</span> <span class="n">with</span> <span class="n">DCUI</span> <span class="n">access</span> <span class="n">must</span> <span class="n">be</span> <span class="n">pre-configured</span><span class="p">.</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="p">---</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c">## Local Account Management</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="n">Minimise</span> <span class="n">local</span> <span class="n">accounts</span><span class="p">.</span> <span class="n">Production</span> <span class="n">ESXi</span> <span class="n">hosts</span> <span class="n">should</span> <span class="n">have</span> <span class="n">at</span> <span class="n">most</span> <span class="n">two</span> <span class="n">local</span> <span class="n">accounts</span><span class="p">:</span>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="p">|</span> <span class="n">Account</span> <span class="p">|</span> <span class="n">Purpose</span> <span class="p">|</span> <span class="n">State</span> <span class="p">|</span>
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="p">|---|---|---|</span>
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="p">|</span> <span class="p">`</span><span class="n">root</span><span class="p">`</span> <span class="p">|</span> <span class="n">Primary</span> <span class="k">break</span><span class="n">-glass</span> <span class="p">|</span> <span class="n">Enabled</span><span class="p">;</span> <span class="n">strong</span> <span class="n">unique</span> <span class="n">password</span> <span class="n">per</span> <span class="n">host</span> <span class="p">|</span>
-<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="p">|</span> <span class="k">Break</span><span class="n">-glass</span> <span class="n">named</span> <span class="n">account</span> <span class="p">|</span> <span class="n">Secondary</span> <span class="k">break</span><span class="n">-glass</span> <span class="p">|</span> <span class="n">Enabled</span><span class="p">;</span> <span class="k">in</span> <span class="n">exception</span> <span class="n">users</span> <span class="n">list</span> <span class="p">|</span>
-<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="p">|</span> <span class="n">All</span> <span class="n">other</span> <span class="n">accounts</span> <span class="p">|</span> <span class="n">Application-specific</span> <span class="p">(</span><span class="n">deprecated</span><span class="p">)</span> <span class="p">|</span> <span class="n">Delete</span> <span class="n">or</span> <span class="n">disable</span> <span class="p">|</span>
-<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>
-<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="c">### View Local Accounts</span>
-<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>
-<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="p">```</span><span class="n">bash</span>
-<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a><span class="c"># Via ESXCLI (SSH or shell)</span>
-<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a><span class="n">esxcli</span> <span class="n">system</span> <span class="n">account</span> <span class="n">list</span>
-<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>
-<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a><span class="c"># Via vSphere API (PowerCLI)</span>
-<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a><span class="p">(</span><span class="nb">Get-VMHost</span> <span class="s2">&quot;esxi-01.example.local&quot;</span><span class="p">).</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Config</span><span class="p">.</span><span class="n">LocalAccountManager</span><span class="p">.</span><span class="n">QueryUserList</span><span class="p">()</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>┌──────────────────────────────────────── ESXi — Access Control ────────────────────────────────────────┐
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>│                                                                                                       │
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>│  RBAC via vCenter roles, lockdown mode, and direct host permission management.                        │
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>│                                                                                                       │
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>│   │                 vCenter RBAC                 │  │           Direct Host Permissions           │   │
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>│   │          Roles: Admin, ReadOnly, VM          │  │             Local root: SSH only            │   │
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>│   │          Assign role to user+object          │  │           DCUI access: locked down          │   │
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>│   │          Propagate to child objects          │  │          Exception users: emergency         │   │
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>│   │           AD group → vSphere role            │  │         Lockdown mode: normal/strict        │   │
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>│   │           Audit permission changes           │  │          DCUI exception list config         │   │
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>│                                                                                                       │
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>│  vCenter roles govern all access; lockdown mode blocks direct ESXi SSH login.                         │
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>│                                                                                                       │
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>│                                                                                                       │
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>│   │             Privilege Management             │  │               Audit and Review              │   │
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>│   │           No-priv users read-only            │  │          Review permissions monthly         │   │
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>│   │           Custom roles: least priv           │  │           Remove stale AD accounts          │   │
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>│   │           No global admin for ops            │  │          Log access events in Aria          │   │
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>│   │          PowerCLI: Get-VIPermission          │  │           Alert on root SSH login           │   │
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>│   │           Service accounts: named            │  │           Export permission report          │   │
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>│                                                                                                       │
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>│  x86 hosts, management network, AD/LDAP, vCenter SSO, syslog target                                   │
+<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>│                                                                                                       │
+<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>│                                                                                                       │
+<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>│  RBAC        = Role-Based Access Control; user+role+object permission model                           │
+<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a>│  Lockdown mode = ESXi state; blocks direct host login; normal or strict                               │
+<a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a>│  DCUI        = Direct Console UI; local keyboard/screen access to host                                │
+<a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a>│  Exception users = accounts allowed DCUI in lockdown; emergency access                                │
+<a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a>│  SSO         = Single Sign-On; vCenter identity service integrating AD                                │
+<a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a>│  Propagate   = permission inherited by child inventory objects                                        │
+<a id="__codelineno-2-38" name="__codelineno-2-38" href="#__codelineno-2-38"></a>│  Least priv  = principle: grant minimum permissions needed for role                                   │
+<a id="__codelineno-2-39" name="__codelineno-2-39" href="#__codelineno-2-39"></a>│  Custom role = vSphere role built from individual privilege checkboxes                                │
+<a id="__codelineno-2-40" name="__codelineno-2-40" href="#__codelineno-2-40"></a>│  Get-VIPermission = PowerCLI cmdlet; lists all permissions on object                                  │
+<a id="__codelineno-2-41" name="__codelineno-2-41" href="#__codelineno-2-41"></a>│  Service acct= named account used by automation; not shared personal creds                            │
+<a id="__codelineno-2-42" name="__codelineno-2-42" href="#__codelineno-2-42"></a>│  Strict lockdown = no DCUI; only vCenter API access allowed to host                                   │
+<a id="__codelineno-2-43" name="__codelineno-2-43" href="#__codelineno-2-43"></a>│  Audit log   = record of permission changes; stored in vCenter events                                 │
+<a id="__codelineno-2-44" name="__codelineno-2-44" href="#__codelineno-2-44"></a>│                                                                                                       │
+<a id="__codelineno-2-45" name="__codelineno-2-45" href="#__codelineno-2-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
+<h2 id="exception-users">Exception Users<a class="headerlink" href="#exception-users" title="Permanent link">&para;</a></h2>
+<p>Exception users in Normal Lockdown can still connect directly to the host via SSH. Keep this list minimal:</p>
+<ul>
+<li>One named break-glass local account</li>
+<li>No shared accounts</li>
+</ul>
+<p>Configure via vCenter: <strong>Host → Configure → Security Profile → Exception Users → Add</strong></p>
+<h3 id="strict-lockdown-considerations">Strict Lockdown Considerations<a class="headerlink" href="#strict-lockdown-considerations" title="Permanent link">&para;</a></h3>
+<p>Use Strict Lockdown only if vCenter is highly available (HA'd appliance or VCF). If vCenter is unavailable in Strict Lockdown, the only recovery path is physical IPMI/iDRAC console access to the DCUI, which itself does not permit root login under Strict Lockdown — a second local account with DCUI access must be pre-configured.</p>
+<hr />
+<h2 id="local-account-management">Local Account Management<a class="headerlink" href="#local-account-management" title="Permanent link">&para;</a></h2>
+<p>Minimise local accounts. Production ESXi hosts should have at most two local accounts:</p>
+<table>
+<thead>
+<tr>
+<th>Account</th>
+<th>Purpose</th>
+<th>State</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>root</code></td>
+<td>Primary break-glass</td>
+<td>Enabled; strong unique password per host</td>
+</tr>
+<tr>
+<td>Break-glass named account</td>
+<td>Secondary break-glass</td>
+<td>Enabled; in exception users list</td>
+</tr>
+<tr>
+<td>All other accounts</td>
+<td>Application-specific (deprecated)</td>
+<td>Delete or disable</td>
+</tr>
+</tbody>
+</table>
+<h3 id="view-local-accounts">View Local Accounts<a class="headerlink" href="#view-local-accounts" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Via ESXCLI (SSH or shell)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>account<span class="w"> </span>list
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Via vSphere API (PowerCLI)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="o">(</span>Get-VMHost<span class="w"> </span><span class="s2">&quot;esxi-01.example.local&quot;</span><span class="o">)</span>.ExtensionData.Config.LocalAccountManager.QueryUserList<span class="o">()</span>
+</code></pre></div>
 <h3 id="add-a-local-account">Add a Local Account<a class="headerlink" href="#add-a-local-account" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>esxcli<span class="w"> </span>system<span class="w"> </span>account<span class="w"> </span>add<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span>-i<span class="w"> </span><span class="s2">&quot;breakglass&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>-p<span class="w"> </span><span class="s2">&quot;Str0ngP@ssw0rd!!&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;Break-glass account&quot;</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># Set role on the account</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>esxcli<span class="w"> </span>system<span class="w"> </span>permission<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;breakglass&quot;</span><span class="w"> </span>-r<span class="w"> </span>Admin
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>esxcli<span class="w"> </span>system<span class="w"> </span>account<span class="w"> </span>add<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span>-i<span class="w"> </span><span class="s2">&quot;breakglass&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>-p<span class="w"> </span><span class="s2">&quot;Str0ngP@ssw0rd!!&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>-d<span class="w"> </span><span class="s2">&quot;Break-glass account&quot;</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Set role on the account</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>esxcli<span class="w"> </span>system<span class="w"> </span>permission<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;breakglass&quot;</span><span class="w"> </span>-r<span class="w"> </span>Admin
 </code></pre></div>
 <h3 id="delete-an-unused-local-account">Delete an Unused Local Account<a class="headerlink" href="#delete-an-unused-local-account" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>esxcli<span class="w"> </span>system<span class="w"> </span>account<span class="w"> </span>remove<span class="w"> </span>-i<span class="w"> </span>&lt;username&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>esxcli<span class="w"> </span>system<span class="w"> </span>account<span class="w"> </span>remove<span class="w"> </span>-i<span class="w"> </span>&lt;username&gt;
 </code></pre></div>
 <h3 id="set-root-password">Set Root Password<a class="headerlink" href="#set-root-password" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Interactively</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>passwd<span class="w"> </span>root
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Via PowerCLI (across all hosts)</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>Get-VMHost<span class="w"> </span><span class="p">|</span><span class="w"> </span>ForEach-Object<span class="w"> </span><span class="o">{</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">    </span><span class="nv">$hostObj</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">    </span><span class="nv">$spec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>New-Object<span class="w"> </span>VMware.Vim.HostAccountSpec
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">    </span><span class="nv">$spec</span>.id<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;root&quot;</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">    </span><span class="nv">$spec</span>.password<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;NewRootPassword!!&quot;</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">    </span><span class="nv">$hostObj</span>.ExtensionData.ConfigManager.AccountManager.UpdateUser<span class="o">(</span><span class="nv">$spec</span><span class="o">)</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">    </span>Write-Host<span class="w"> </span><span class="s2">&quot;Root password updated: </span><span class="k">$(</span><span class="nv">$hostObj</span>.Name<span class="k">)</span><span class="s2">&quot;</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="o">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Interactively</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>passwd<span class="w"> </span>root
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Via PowerCLI (across all hosts)</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>Get-VMHost<span class="w"> </span><span class="p">|</span><span class="w"> </span>ForEach-Object<span class="w"> </span><span class="o">{</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">    </span><span class="nv">$hostObj</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">$_</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">    </span><span class="nv">$spec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>New-Object<span class="w"> </span>VMware.Vim.HostAccountSpec
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">    </span><span class="nv">$spec</span>.id<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;root&quot;</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">    </span><span class="nv">$spec</span>.password<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;NewRootPassword!!&quot;</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">    </span><span class="nv">$hostObj</span>.ExtensionData.ConfigManager.AccountManager.UpdateUser<span class="o">(</span><span class="nv">$spec</span><span class="o">)</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">    </span>Write-Host<span class="w"> </span><span class="s2">&quot;Root password updated: </span><span class="k">$(</span><span class="nv">$hostObj</span>.Name<span class="k">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="o">}</span>
 </code></pre></div>
 <hr />
 <h2 id="vcenter-role-based-access-control">vCenter Role-Based Access Control<a class="headerlink" href="#vcenter-role-based-access-control" title="Permanent link">&para;</a></h2>
@@ -4950,14 +5064,14 @@ ESXi Access Control reference covering Exception Users, Local Account Management
 </table>
 <p>Create custom roles in vCenter with only the privileges required for the specific use case.</p>
 <h3 id="assign-a-role-powercli">Assign a Role (PowerCLI)<a class="headerlink" href="#assign-a-role-powercli" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Create a custom role</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">New-VIRole</span> <span class="n">-Name</span> <span class="s2">&quot;VM-Operator&quot;</span> <span class="n">-Privilege</span> <span class="p">(</span><span class="nb">Get-VIPrivilege</span> <span class="s2">&quot;VirtualMachine.Interact.*&quot;</span><span class="p">)</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c"># Assign role to a user on a specific cluster</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nb">New-VIPermission</span> <span class="n">-Entity</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">&quot;CL-PROD&quot;</span><span class="p">)</span> <span class="p">\</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>    <span class="n">-Principal</span> <span class="s2">&quot;CORP\vm-operators&quot;</span> <span class="p">\</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>    <span class="n">-Role</span> <span class="s2">&quot;VM-Operator&quot;</span> <span class="p">\</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>    <span class="n">-Propagate</span> <span class="nv">$true</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># Create a custom role</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">New-VIRole</span> <span class="n">-Name</span> <span class="s2">&quot;VM-Operator&quot;</span> <span class="n">-Privilege</span> <span class="p">(</span><span class="nb">Get-VIPrivilege</span> <span class="s2">&quot;VirtualMachine.Interact.*&quot;</span><span class="p">)</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c"># Assign role to a user on a specific cluster</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="nb">New-VIPermission</span> <span class="n">-Entity</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">&quot;CL-PROD&quot;</span><span class="p">)</span> <span class="p">\</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>    <span class="n">-Principal</span> <span class="s2">&quot;CORP\vm-operators&quot;</span> <span class="p">\</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>    <span class="n">-Role</span> <span class="s2">&quot;VM-Operator&quot;</span> <span class="p">\</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>    <span class="n">-Propagate</span> <span class="nv">$true</span>
 </code></pre></div>
 <h3 id="least-privilege-assignment-checklist">Least-Privilege Assignment Checklist<a class="headerlink" href="#least-privilege-assignment-checklist" title="Permanent link">&para;</a></h3>
 <ul>
@@ -4971,41 +5085,41 @@ ESXi Access Control reference covering Exception Users, Local Account Management
 <h2 id="esxi-shell-and-ssh-access-controls">ESXi Shell and SSH Access Controls<a class="headerlink" href="#esxi-shell-and-ssh-access-controls" title="Permanent link">&para;</a></h2>
 <p>The ESXi Shell and SSH service provide direct command-line access to the host. Both must be disabled in production and enabled only during maintenance or break-glass.</p>
 <h3 id="disable-shell-and-ssh">Disable Shell and SSH<a class="headerlink" href="#disable-shell-and-ssh" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Via ESXCLI on the host</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>vim-cmd<span class="w"> </span>hostsvc/disable_ssh
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>vim-cmd<span class="w"> </span>hostsvc/disable_esx_shell
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Via PowerCLI across a cluster</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>Get-VMHost<span class="w"> </span><span class="p">|</span><span class="w"> </span>Get-VMHostService<span class="w"> </span><span class="p">|</span><span class="w"> </span>Where-Object<span class="w"> </span><span class="o">{</span><span class="nv">$_</span>.Key<span class="w"> </span>-in<span class="w"> </span><span class="s2">&quot;TSM-SSH&quot;</span>,<span class="s2">&quot;TSM&quot;</span><span class="o">}</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Stop-VMHostService<span class="w"> </span>-Confirm:<span class="nv">$false</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>Get-VMHost<span class="w"> </span><span class="p">|</span><span class="w"> </span>Get-VMHostService<span class="w"> </span><span class="p">|</span><span class="w"> </span>Where-Object<span class="w"> </span><span class="o">{</span><span class="nv">$_</span>.Key<span class="w"> </span>-in<span class="w"> </span><span class="s2">&quot;TSM-SSH&quot;</span>,<span class="s2">&quot;TSM&quot;</span><span class="o">}</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Set-VMHostService<span class="w"> </span>-Policy<span class="w"> </span>Off
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Via ESXCLI on the host</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>vim-cmd<span class="w"> </span>hostsvc/disable_ssh
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>vim-cmd<span class="w"> </span>hostsvc/disable_esx_shell
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Via PowerCLI across a cluster</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>Get-VMHost<span class="w"> </span><span class="p">|</span><span class="w"> </span>Get-VMHostService<span class="w"> </span><span class="p">|</span><span class="w"> </span>Where-Object<span class="w"> </span><span class="o">{</span><span class="nv">$_</span>.Key<span class="w"> </span>-in<span class="w"> </span><span class="s2">&quot;TSM-SSH&quot;</span>,<span class="s2">&quot;TSM&quot;</span><span class="o">}</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Stop-VMHostService<span class="w"> </span>-Confirm:<span class="nv">$false</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>Get-VMHost<span class="w"> </span><span class="p">|</span><span class="w"> </span>Get-VMHostService<span class="w"> </span><span class="p">|</span><span class="w"> </span>Where-Object<span class="w"> </span><span class="o">{</span><span class="nv">$_</span>.Key<span class="w"> </span>-in<span class="w"> </span><span class="s2">&quot;TSM-SSH&quot;</span>,<span class="s2">&quot;TSM&quot;</span><span class="o">}</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Set-VMHostService<span class="w"> </span>-Policy<span class="w"> </span>Off
 </code></pre></div>
 <h3 id="set-shell-timeout">Set Shell Timeout<a class="headerlink" href="#set-shell-timeout" title="Permanent link">&para;</a></h3>
 <p>If ESXi Shell or SSH must remain enabled temporarily:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Shell auto-closes after 10 minutes of inactivity</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-o<span class="w"> </span>/UserVars/ESXiShellTimeOut<span class="w"> </span>-i<span class="w"> </span><span class="m">600</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Interactive shell sessions timeout after 5 minutes</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-o<span class="w"> </span>/UserVars/ESXiShellInteractiveTimeOut<span class="w"> </span>-i<span class="w"> </span><span class="m">300</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Shell auto-closes after 10 minutes of inactivity</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-o<span class="w"> </span>/UserVars/ESXiShellTimeOut<span class="w"> </span>-i<span class="w"> </span><span class="m">600</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Interactive shell sessions timeout after 5 minutes</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>esxcli<span class="w"> </span>system<span class="w"> </span>settings<span class="w"> </span>advanced<span class="w"> </span><span class="nb">set</span><span class="w"> </span>-o<span class="w"> </span>/UserVars/ESXiShellInteractiveTimeOut<span class="w"> </span>-i<span class="w"> </span><span class="m">300</span>
 </code></pre></div>
 <h3 id="restrict-ssh-access-by-ip">Restrict SSH Access by IP<a class="headerlink" href="#restrict-ssh-access-by-ip" title="Permanent link">&para;</a></h3>
 <p>Use the ESXi built-in firewall to limit SSH access to specific source IPs:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--ruleset-id<span class="w"> </span>sshServer<span class="w"> </span>--allowed-all<span class="w"> </span><span class="nb">false</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span>allowedip<span class="w"> </span>add<span class="w"> </span>--ruleset-id<span class="w"> </span>sshServer<span class="w"> </span>--ip-address<span class="w"> </span><span class="m">10</span>.0.1.0/24
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Verify</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span>allowedip<span class="w"> </span>list<span class="w"> </span>--ruleset-id<span class="w"> </span>sshServer
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--ruleset-id<span class="w"> </span>sshServer<span class="w"> </span>--allowed-all<span class="w"> </span><span class="nb">false</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span>allowedip<span class="w"> </span>add<span class="w"> </span>--ruleset-id<span class="w"> </span>sshServer<span class="w"> </span>--ip-address<span class="w"> </span><span class="m">10</span>.0.1.0/24
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Verify</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span>allowedip<span class="w"> </span>list<span class="w"> </span>--ruleset-id<span class="w"> </span>sshServer
 </code></pre></div>
 <hr />
 <h2 id="firewall-ruleset-management">Firewall Ruleset Management<a class="headerlink" href="#firewall-ruleset-management" title="Permanent link">&para;</a></h2>
 <p>ESXi's host-based firewall controls which services are accessible and from which source IPs.</p>
 <h3 id="review-current-state">Review Current State<a class="headerlink" href="#review-current-state" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># All rulesets and their state</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span>list
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Specific ruleset detail</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span>get<span class="w"> </span>--ruleset-id<span class="w"> </span>sshServer
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span>get<span class="w"> </span>--ruleset-id<span class="w"> </span>webAccess
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span>get<span class="w"> </span>--ruleset-id<span class="w"> </span>vSphereClient
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># All rulesets and their state</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span>list
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Specific ruleset detail</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span>get<span class="w"> </span>--ruleset-id<span class="w"> </span>sshServer
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span>get<span class="w"> </span>--ruleset-id<span class="w"> </span>webAccess
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span>get<span class="w"> </span>--ruleset-id<span class="w"> </span>vSphereClient
 </code></pre></div>
 <h3 id="minimum-required-rulesets-production">Minimum Required Rulesets (Production)<a class="headerlink" href="#minimum-required-rulesets-production" title="Permanent link">&para;</a></h3>
 <table>
@@ -5050,8 +5164,8 @@ ESXi Access Control reference covering Exception Users, Local Account Management
 </tbody>
 </table>
 <p>All other rulesets (FTP, telnet, etc.) should be disabled:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Disable an unused ruleset</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enabled<span class="w"> </span><span class="nb">false</span><span class="w"> </span>--ruleset-id<span class="w"> </span>ftpClient
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Disable an unused ruleset</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enabled<span class="w"> </span><span class="nb">false</span><span class="w"> </span>--ruleset-id<span class="w"> </span>ftpClient
 </code></pre></div>
 <h3 id="host-profile-enforcement">Host Profile Enforcement<a class="headerlink" href="#host-profile-enforcement" title="Permanent link">&para;</a></h3>
 <p>Firewall ruleset configuration is captured in Host Profiles. Changes on individual hosts that drift from the profile are flagged as non-compliant. Use <strong>Check Compliance</strong> after any firewall change to confirm the host profile still matches.</p>
@@ -5089,23 +5203,23 @@ ESXi Access Control reference covering Exception Users, Local Account Management
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Find all SSH login events (successful and failed)</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;sshd\|Accepted\|Failed\|Invalid&quot;</span><span class="w"> </span>/var/log/auth.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Find shell commands executed</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;exec\|cmd&quot;</span><span class="w"> </span>/var/log/shell.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># Find DCUI logins</span>
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;dcui\|login&quot;</span><span class="w"> </span>/var/log/vobd.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Find all SSH login events (successful and failed)</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;sshd\|Accepted\|Failed\|Invalid&quot;</span><span class="w"> </span>/var/log/auth.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Find shell commands executed</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;exec\|cmd&quot;</span><span class="w"> </span>/var/log/shell.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c1"># Find DCUI logins</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;dcui\|login&quot;</span><span class="w"> </span>/var/log/vobd.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
 </code></pre></div>
 <h3 id="syslog-forwarding">Syslog Forwarding<a class="headerlink" href="#syslog-forwarding" title="Permanent link">&para;</a></h3>
 <p>All access events must be forwarded to a central SIEM. Logs stored only in ESXi ramdisk are lost on reboot.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Configure syslog forwarding</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--loghost<span class="o">=</span><span class="s2">&quot;tcp://syslog.example.local:514&quot;</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>reload
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="c1"># Verify</span>
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>config<span class="w"> </span>get<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>loghost
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Configure syslog forwarding</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--loghost<span class="o">=</span><span class="s2">&quot;tcp://syslog.example.local:514&quot;</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>reload
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="c1"># Verify</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>esxcli<span class="w"> </span>system<span class="w"> </span>syslog<span class="w"> </span>config<span class="w"> </span>get<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>loghost
 </code></pre></div>
 <p>Configure via Host Profile to enforce consistently across all cluster hosts.</p>
 

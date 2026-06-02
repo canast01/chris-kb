@@ -2168,6 +2168,8 @@
       
         
       
+        
+      
     
     
     
@@ -4280,6 +4282,28 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#app-volumes-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        App Volumes Storage
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#full-clone-pool-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Full Clone Pool Storage
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#vlan-and-network-design" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4774,27 +4798,85 @@ Design Standards reference covering Desktop VM Sizing, Storage Sizing, VLAN and 
 │  Pod           = group of Connection Servers in same broadcast domain                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>```sql
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>### App Volumes Storage
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>| Object | Typical Size |
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>|---|---|
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| AppStack (per app package) | 1–10 GB |
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>| Writable Volume (per user) | 10–30 GB |
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>| Total AppStack storage | (# of AppStacks × avg size) — plan for 20% growth |
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>| Total writable volume storage | (# of users with WV × WV size) |
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>Store AppStacks on a datastore accessible to all ESXi hosts in the cluster (shared storage, vSAN, or NFS). Writable volumes require read-write access from the host where the desktop VM runs.
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>### Full Clone Pool Storage
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>Full Clone VMs are independent — no sharing:
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>```text
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>Total = N_VMs × (OS_disk + swap + data_disk)
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>Example: 50 VMs × (80 GB + 8 GB + 0 GB) = 4,400 GB
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌────────────────────────────────── VMware Horizon — Design Standards ──────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  Horizon design standards define Connection Server sizing, UAG placement, desktop                     │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│  pool type selection, storage tier, and display protocol choices.                                     │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│                                                                                                       │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │           Connection Server Sizing           │  │                 Pool Design                 │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │           Max 4000 sessions per CS           │  │          Instant clone: non-persist         │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │               Min 2 CS for HA                │  │         Full clone: persistent desks        │   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │           2 UAGs per site minimum            │  │            RDS farm: server-based           │   │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │          Replica CS: read-only pod           │  │           vGPU: graphics-intensive          │   │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                                                                       │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│  Instant clone pools for non-persistent; full clone for persistent with profile.                      │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                                                                                                       │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│                                                                                                       │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │              Storage Standards               │  │              Protocol Standards             │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │          vSAN: preferred for pools           │  │            Blast Extreme: default           │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │           Separate OS from profile           │  │             UDP: Blast over 8443            │   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │         vSAN dedupe: instant clones          │  │            PCoIP: legacy use only           │   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   │         Profile: CIFS share or vVol          │  │         HTML5: fallback for browsers        │   │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│                                                                                                       │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  Desktop ESXi hosts need high RAM (512GB+) and fast storage for pool density;                         │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  Connection Server VMs need 8 vCPU / 32GB RAM per 4000 sessions.                                      │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│                                                                                                       │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  Connection Server= Horizon broker; max 4000 concurrent sessions                                      │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  Replica CS    = secondary Connection Server; read-only LDAP replica                                  │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  UAG           = Unified Access Gateway; external session proxy                                       │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  Instant clone = forked from running parent VM in seconds                                             │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  Full clone    = independent persistent VM; user-assigned                                             │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  RDS farm      = RDSH hosts delivering published apps or desktops                                     │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  Blast Extreme = VMware display protocol; adaptive UDP/TCP                                            │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  PCoIP         = PC over IP; Teradici protocol; use for legacy clients                                │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  vSAN dedupe   = space savings on instant clone OS disks                                              │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  vGPU          = NVIDIA GRID partition; for CAD/graphics VDI                                          │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│  Profile share = Windows file share for DEM/FSLogix user profiles                                     │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  Pod           = group of Connection Servers in same broadcast domain                                 │
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│                                                                                                       │
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
+<h3 id="app-volumes-storage">App Volumes Storage<a class="headerlink" href="#app-volumes-storage" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Object</th>
+<th>Typical Size</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AppStack (per app package)</td>
+<td>1–10 GB</td>
+</tr>
+<tr>
+<td>Writable Volume (per user)</td>
+<td>10–30 GB</td>
+</tr>
+<tr>
+<td>Total AppStack storage</td>
+<td>(# of AppStacks × avg size) — plan for 20% growth</td>
+</tr>
+<tr>
+<td>Total writable volume storage</td>
+<td>(# of users with WV × WV size)</td>
+</tr>
+</tbody>
+</table>
+<p>Store AppStacks on a datastore accessible to all ESXi hosts in the cluster (shared storage, vSAN, or NFS). Writable volumes require read-write access from the host where the desktop VM runs.</p>
+<h3 id="full-clone-pool-storage">Full Clone Pool Storage<a class="headerlink" href="#full-clone-pool-storage" title="Permanent link">&para;</a></h3>
+<p>Full Clone VMs are independent — no sharing:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Total = N_VMs × (OS_disk + swap + data_disk)
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>Example: 50 VMs × (80 GB + 8 GB + 0 GB) = 4,400 GB
+</code></pre></div>
 <p>Add 20% headroom for snapshots during maintenance windows.</p>
 <hr />
 <h2 id="vlan-and-network-design">VLAN and Network Design<a class="headerlink" href="#vlan-and-network-design" title="Permanent link">&para;</a></h2>
@@ -5027,23 +5109,23 @@ Design Standards reference covering Desktop VM Sizing, Storage Sizing, VLAN and 
 <hr />
 <h2 id="golden-image-management">Golden Image Management<a class="headerlink" href="#golden-image-management" title="Permanent link">&para;</a></h2>
 <h3 id="snapshot-naming-convention">Snapshot Naming Convention<a class="headerlink" href="#snapshot-naming-convention" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>&lt;OS&gt;-&lt;BaseVersion&gt;-&lt;PatchDate&gt;-&lt;Status&gt;
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>Examples:
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  Win11-23H2-20240312-TESTED
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  Win11-23H2-20240312-PUBLISHED
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>  Win10-22H2-20240115-DEPRECATED
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>&lt;OS&gt;-&lt;BaseVersion&gt;-&lt;PatchDate&gt;-&lt;Status&gt;
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Examples:
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  Win11-23H2-20240312-TESTED
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  Win11-23H2-20240312-PUBLISHED
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  Win10-22H2-20240115-DEPRECATED
 </code></pre></div>
 <h3 id="golden-image-update-process">Golden Image Update Process<a class="headerlink" href="#golden-image-update-process" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>1. Power on golden image VM (do not publish during update)
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>2. Apply Windows updates, agent updates, application changes
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>3. Run internal test checklist (logon, app launch, App Volumes attach)
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>4. Shut down VM cleanly (do not snapshot while powered on)
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>5. Take snapshot with naming convention above (status: TESTED)
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>6. Publish snapshot to Instant Clone pool (Horizon Admin &gt; Pool &gt; Maintain &gt; Push Image)
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>7. Set maintenance window: &quot;Scheduled&quot; (desktops refresh on next logoff) or &quot;Force immediately&quot;
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>8. Verify first wave of refreshed desktops — check error rate in pool
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>9. Update snapshot status to PUBLISHED after verification
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>10. Remove old DEPRECATED snapshots (&gt; 3 months old) to free datastore space
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>1. Power on golden image VM (do not publish during update)
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>2. Apply Windows updates, agent updates, application changes
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>3. Run internal test checklist (logon, app launch, App Volumes attach)
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>4. Shut down VM cleanly (do not snapshot while powered on)
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>5. Take snapshot with naming convention above (status: TESTED)
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>6. Publish snapshot to Instant Clone pool (Horizon Admin &gt; Pool &gt; Maintain &gt; Push Image)
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>7. Set maintenance window: &quot;Scheduled&quot; (desktops refresh on next logoff) or &quot;Force immediately&quot;
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>8. Verify first wave of refreshed desktops — check error rate in pool
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>9. Update snapshot status to PUBLISHED after verification
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>10. Remove old DEPRECATED snapshots (&gt; 3 months old) to free datastore space
 </code></pre></div>
 <h3 id="agent-version-in-golden-image">Agent Version in Golden Image<a class="headerlink" href="#agent-version-in-golden-image" title="Permanent link">&para;</a></h3>
 <p>Keep Horizon Agent version within one minor version of Connection Server. Never run an older Connection Server with a newer Agent — unsupported. Check compatibility matrix before any update:</p>
@@ -5085,31 +5167,31 @@ Design Standards reference covering Desktop VM Sizing, Storage Sizing, VLAN and 
 <hr />
 <h2 id="naming-conventions">Naming Conventions<a class="headerlink" href="#naming-conventions" title="Permanent link">&para;</a></h2>
 <h3 id="pools-and-farms">Pools and Farms<a class="headerlink" href="#pools-and-farms" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Format: &lt;SITE&gt;-&lt;PERSONA&gt;-&lt;OS&gt;-&lt;TYPE&gt;
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>Examples:
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  LON-KW-W11-IC        London, Knowledge Worker, Win11, Instant Clone
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  NYC-TW-W11-IC        New York, Task Worker, Win11, Instant Clone
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>  LON-RDS-APPS         London, RDS Published Apps Farm
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>  LON-PW-W11-FC        London, Power User, Win11, Full Clone
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Format: &lt;SITE&gt;-&lt;PERSONA&gt;-&lt;OS&gt;-&lt;TYPE&gt;
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Examples:
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  LON-KW-W11-IC        London, Knowledge Worker, Win11, Instant Clone
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  NYC-TW-W11-IC        New York, Task Worker, Win11, Instant Clone
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>  LON-RDS-APPS         London, RDS Published Apps Farm
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>  LON-PW-W11-FC        London, Power User, Win11, Full Clone
 </code></pre></div>
 <h3 id="desktop-vm-naming-pattern-instant-clone">Desktop VM Naming Pattern (Instant Clone)<a class="headerlink" href="#desktop-vm-naming-pattern-instant-clone" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Format: &lt;SITE&gt;-&lt;PERSONA&gt;-{n:fixed=3}
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Examples:
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  LON-KW-{n:fixed=3}   → LON-KW-001, LON-KW-002, ..., LON-KW-200
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  NYC-TW-{n:fixed=3}   → NYC-TW-001, NYC-TW-002
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Format: &lt;SITE&gt;-&lt;PERSONA&gt;-{n:fixed=3}
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>Examples:
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  LON-KW-{n:fixed=3}   → LON-KW-001, LON-KW-002, ..., LON-KW-200
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>  NYC-TW-{n:fixed=3}   → NYC-TW-001, NYC-TW-002
 </code></pre></div>
 <h3 id="entitlement-groups-ad-groups">Entitlement Groups (AD Groups)<a class="headerlink" href="#entitlement-groups-ad-groups" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Format: VDI-&lt;PoolName&gt;-Users
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>Examples:
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  VDI-LON-KW-W11-IC-Users
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>  VDI-NYC-TW-W11-IC-Users
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>  VDI-LON-RDS-APPS-Users
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Format: VDI-&lt;PoolName&gt;-Users
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Examples:
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  VDI-LON-KW-W11-IC-Users
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  VDI-NYC-TW-W11-IC-Users
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>  VDI-LON-RDS-APPS-Users
 </code></pre></div>
 <h3 id="uag-appliance-names">UAG Appliance Names<a class="headerlink" href="#uag-appliance-names" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Format: uag-&lt;site&gt;-&lt;index&gt;
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>Examples:
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  uag-lon-01, uag-lon-02
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>  uag-nyc-01
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Format: uag-&lt;site&gt;-&lt;index&gt;
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>Examples:
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  uag-lon-01, uag-lon-02
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>  uag-nyc-01
 </code></pre></div>
 
 

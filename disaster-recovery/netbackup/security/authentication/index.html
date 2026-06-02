@@ -3779,6 +3779,73 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="NetBackup Certificate Authority">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#token-expiry-and-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Token Expiry and Best Practices
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#netbackup-web-ui-authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NetBackup Web UI Authentication
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#external-ca-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        External CA Support
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="External CA Support">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use-external-ca" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Use External CA
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configure-external-ca" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure External CA
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -4045,58 +4112,126 @@ Authentication reference covering NetBackup Certificate Authority, NetBackup Web
 │  NDMP          = Network Data Management Protocol; direct NAS-to-storage backup path                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>```sql
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>### Token Expiry and Best Practices
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>| Setting | Recommendation | Notes |
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>|---|---|---|
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| Default session token | 24 hours | Login tokens for interactive use |
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>| Named API tokens | 30–90 days max | Used for automation/CI; rotate on schedule |
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>| Service account tokens | 90 days | Store in secrets manager; revoke on rotation |
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>---
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>## NetBackup Web UI Authentication
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>The Web UI (port 1556 HTTPS) issues JWT session tokens upon successful login.
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>| Parameter | Default | Tuning Location |
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>|---|---|---|
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>| Session timeout | 30 minutes idle | `nbsetconfig -add WEB_SERVER_SESSION_TIMEOUT_MINUTES &lt;n&gt;` |
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>| Concurrent sessions per user | Unlimited (default) | Controlled via RBAC role configuration |
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>| JWT signing key rotation | On upgrade | Invalidates all active sessions; plan maintenance windows accordingly |
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>Authentication flow: browser → NetBackup Web Server → Auth broker → LDAP/AD or local OS → JWT issued. For SSO, configure a SAML 2.0 identity provider in **Security** → **Identity Provider**.
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>---
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>## External CA Support
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>By default NetBackup uses its built-in CA. External CA is supported when your security policy mandates certificates from a corporate PKI.
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>### When to Use External CA
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>- Organization prohibits self-signed or non-corporate CAs
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>- Certificate lifecycle managed centrally (e.g., Microsoft ADCS, Vault PKI)
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>- Audit requirement for CA chain visibility
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>### Configure External CA
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>```bash
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a># On each NetBackup host — generate a CSR
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>nbcertcmd -createCSR -cn &lt;hostname&gt; -out /tmp/&lt;hostname&gt;.csr
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a># Submit CSR to your CA; retrieve the signed cert and CA chain
-<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a># Install the signed certificate
-<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>nbcertcmd -enrollCertificate \
-<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>  -server &lt;master&gt; \
-<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>  -cert /tmp/&lt;hostname&gt;.crt \
-<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>  -certChain /tmp/ca-chain.pem
-<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>
-<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a># Verify external cert is in use
-<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>nbcertcmd -listCerts -CAType EXTERNAL
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌───────────────────────────────────── NetBackup — Authentication ──────────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │                               NetBackup — Authentication Methods                              │   │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │               NBU CA host-ID certificates; AD/LDAP for web UI login; RBAC roles               │   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │                   Management UI: HTTPS on 443 (Web UI) — browser-based login                  │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │               API: bearer token or service account; rotate credentials quarterly              │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │                 Inter-component: certificate-based mutual TLS between engines                 │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│                                                                                                       │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   │                 Human Access                 │  │                Machine Access               │   │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│   │            AD / LDAP integration             │  │               Service account               │   │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│   │              SAML SSO optional               │  │               API key / token               │   │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│   │                 MFA via IdP                  │  │               Certificate auth              │   │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│   │            Session timeout 15 min            │  │              Rotate every 90 d              │   │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   │              Audit login events              │  │             Vault-stored secrets            │   │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│                                                                                                       │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│  Physical Infrastructure:                                                                             │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│  Linux/Windows rack servers · SAN HBAs for tape · 10 GbE NIC · SCSI tape robot connection             │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│                                                                                                       │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│  Master Server = central controller: scheduler, catalog, job manager, policy engine                   │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│  Media Server  = data mover between client and storage; can be co-located with master                 │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  MSDP          = Media Server Deduplication Pool; inline variable-length block dedup                  │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  Storage Unit  = logical target: AdvancedDisk, MSDP pool, cloud LSU, or tape robot                    │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  Policy        = defines what, when, and where to back up; contains schedules and clients             │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│  Schedule      = full / differential-incremental / cumulative-incremental timing within policy        │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Retention     = how long an image is kept; set per schedule, enforced by catalog expiry              │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│  Catalog       = internal PostgreSQL DB tracking all image metadata, host IDs, and config             │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  NBU CA        = auto-issued certificate authority; signs host IDs for secure comms                   │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  vnetd         = NetBackup network daemon; multiplexes all client-master-media on port 1556           │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  bpdbjobs      = CLI to query job history: status, duration, exit code, errors                        │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  bplist        = CLI to list available backup images for a client, policy, or date range              │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  KMS           = Key Management Service for encryption keys used in backup data encryption            │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  NDMP          = Network Data Management Protocol; direct NAS-to-storage backup path                  │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│                                                                                                       │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
+<h3 id="token-expiry-and-best-practices">Token Expiry and Best Practices<a class="headerlink" href="#token-expiry-and-best-practices" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Recommendation</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Default session token</td>
+<td>24 hours</td>
+<td>Login tokens for interactive use</td>
+</tr>
+<tr>
+<td>Named API tokens</td>
+<td>30–90 days max</td>
+<td>Used for automation/CI; rotate on schedule</td>
+</tr>
+<tr>
+<td>Service account tokens</td>
+<td>90 days</td>
+<td>Store in secrets manager; revoke on rotation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="netbackup-web-ui-authentication">NetBackup Web UI Authentication<a class="headerlink" href="#netbackup-web-ui-authentication" title="Permanent link">&para;</a></h2>
+<p>The Web UI (port 1556 HTTPS) issues JWT session tokens upon successful login.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Default</th>
+<th>Tuning Location</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Session timeout</td>
+<td>30 minutes idle</td>
+<td><code>nbsetconfig -add WEB_SERVER_SESSION_TIMEOUT_MINUTES &lt;n&gt;</code></td>
+</tr>
+<tr>
+<td>Concurrent sessions per user</td>
+<td>Unlimited (default)</td>
+<td>Controlled via RBAC role configuration</td>
+</tr>
+<tr>
+<td>JWT signing key rotation</td>
+<td>On upgrade</td>
+<td>Invalidates all active sessions; plan maintenance windows accordingly</td>
+</tr>
+</tbody>
+</table>
+<p>Authentication flow: browser → NetBackup Web Server → Auth broker → LDAP/AD or local OS → JWT issued. For SSO, configure a SAML 2.0 identity provider in <strong>Security</strong> → <strong>Identity Provider</strong>.</p>
+<hr />
+<h2 id="external-ca-support">External CA Support<a class="headerlink" href="#external-ca-support" title="Permanent link">&para;</a></h2>
+<p>By default NetBackup uses its built-in CA. External CA is supported when your security policy mandates certificates from a corporate PKI.</p>
+<h3 id="when-to-use-external-ca">When to Use External CA<a class="headerlink" href="#when-to-use-external-ca" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Organization prohibits self-signed or non-corporate CAs</li>
+<li>Certificate lifecycle managed centrally (e.g., Microsoft ADCS, Vault PKI)</li>
+<li>Audit requirement for CA chain visibility</li>
+</ul>
+<h3 id="configure-external-ca">Configure External CA<a class="headerlink" href="#configure-external-ca" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># On each NetBackup host — generate a CSR</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>nbcertcmd<span class="w"> </span>-createCSR<span class="w"> </span>-cn<span class="w"> </span>&lt;hostname&gt;<span class="w"> </span>-out<span class="w"> </span>/tmp/&lt;hostname&gt;.csr
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Submit CSR to your CA; retrieve the signed cert and CA chain</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Install the signed certificate</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>nbcertcmd<span class="w"> </span>-enrollCertificate<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>-server<span class="w"> </span>&lt;master&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span>-cert<span class="w"> </span>/tmp/&lt;hostname&gt;.crt<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span>-certChain<span class="w"> </span>/tmp/ca-chain.pem
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Verify external cert is in use</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>nbcertcmd<span class="w"> </span>-listCerts<span class="w"> </span>-CAType<span class="w"> </span>EXTERNAL
+</code></pre></div>
 <p>Once external CA is configured, the NetBackup built-in CA is not used for new enrollments. Existing built-in certificates must be revoked and replaced during the transition.</p>
 <hr />
 <h2 id="service-account-security">Service Account Security<a class="headerlink" href="#service-account-security" title="Permanent link">&para;</a></h2>

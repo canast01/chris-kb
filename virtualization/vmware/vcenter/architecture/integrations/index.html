@@ -2168,6 +2168,8 @@
       
         
       
+        
+      
     
     
     
@@ -4280,6 +4282,62 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#sso-domain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SSO Domain
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#saml-federation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SAML Federation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitoring-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitoring Integration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Monitoring Integration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#aria-operations-vmware" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Aria Operations (VMware)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rest-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        REST API
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#syslog-siem" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4287,6 +4345,11 @@
       
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -4571,49 +4634,86 @@ Integrations reference covering Veeam Backup & Replication, Identity and Authent
 │  HCI     = Hyper-Converged Infrastructure; vSAN = primary HCI integration                             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>```sql
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>- **IWA**: Uses the machine account of the VCSA; requires VCSA joined to AD domain
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>- **LDAP**: Explicit bind account; use LDAPS (port 636) for encrypted queries
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>### SSO Domain
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>vCenter ships with a local `vsphere.local` SSO domain. The `administrator@vsphere.local` account is the bootstrap admin. In production:
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>- Add AD as an identity source
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>- Grant required AD groups vSphere roles
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>- Do not use `administrator@vsphere.local` for day-to-day operations
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>- Rotate `administrator@vsphere.local` password per policy; document in password vault
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>### SAML Federation
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>vCenter can act as a SAML service provider for external IdPs (ADFS, Okta, Azure AD). Configure under **SSO → Configuration → SAML Service Provider**. Useful for MFA enforcement at the IdP level.
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>## Monitoring Integration
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>### Aria Operations (VMware)
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>- Deploy Aria Operations (formerly vRealize Operations) and register vCenter as a **vCenter Adapter**
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>- Provides capacity analytics, performance anomaly detection, cost reporting
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>- Aria Operations vCenter adapter collects metrics every 5 minutes by default
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>- Predictive DRS requires Aria Operations integration with vCenter
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>### REST API
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>vCenter exposes a modern REST API at `https://&lt;vcenter&gt;/api` (vSphere 7.0+). The legacy vSphere Automation SDK endpoint is at `https://&lt;vcenter&gt;/rest`.
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>```bash
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a># Authenticate and get session token
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>curl -sk -u &#39;administrator@vsphere.local:password&#39; \
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>  -X POST https://&lt;vcenter&gt;/api/session
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a># List VMs
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>curl -sk -H &quot;vmware-api-session-id: &lt;token&gt;&quot; \
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>  https://&lt;vcenter&gt;/api/vcenter/vm
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌──────────────────────────────────── vCenter Server — Integrations ────────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  vCenter integrates with identity, storage, network, backup, and monitoring                           │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│  systems via standardised APIs and plugin frameworks.                                                 │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│                                                                                                       │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │            Identity Integrations             │  │             Storage Integrations            │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │          Active Directory via LDAP           │  │            VASA: storage policies           │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │             SAML IdP federation              │  │            vVols: per-VM volumes            │   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │               SSO local domain               │  │           NFS / iSCSI / FC mounts           │   │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │          MFA via smart card/RADIUS           │  │             HCI: vSAN integrated            │   │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                                                                       │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│  Identity gates all logins; storage providers register via VASA for policy management.                │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                                                                                                       │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│                                                                                                       │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │              Network &amp; Security              │  │             Backup &amp; Monitoring             │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │             NSX: SDN via vCenter             │  │               VADP: backup API              │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │          vDS: distributed switching          │  │           CBT: changed block track          │   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │            Firewall rules via NSX            │  │            vROps: perf monitoring           │   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   │           Microsegmentation policy           │  │             SNMP / syslog export            │   │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│                                                                                                       │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  Integration traffic crosses the management network; VADP uses NBD or SAN transport.                  │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│                                                                                                       │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│                                                                                                       │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│  VADP    = vStorage APIs for Data Protection; backup quiescing and CBT                                │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  CBT     = Changed Block Tracking; incremental backup efficiency mechanism                            │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  VASA    = vSphere APIs for Storage Awareness; policy-based storage mgmt                              │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  vVols   = Virtual Volumes; per-VM storage objects on VASA-capable arrays                             │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  vDS     = vSphere Distributed Switch; centralised network config in VC                               │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  NSX     = Network &amp; Security virtualisation; integrates with vCenter                                 │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  vROps   = VMware Aria Operations; pulls metrics via vCenter APIs                                     │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  SAML    = Security Assertion Markup Language; federated SSO token format                             │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  LDAP    = Lightweight Directory Access Protocol; AD identity source                                  │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  NBD     = Network Block Device; backup transport over TCP (slower)                                   │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  SAN     = Storage Area Network; fast backup transport via FC/iSCSI                                   │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│  HCI     = Hyper-Converged Infrastructure; vSAN = primary HCI integration                             │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│                                                                                                       │
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
+<ul>
+<li><strong>IWA</strong>: Uses the machine account of the VCSA; requires VCSA joined to AD domain</li>
+<li><strong>LDAP</strong>: Explicit bind account; use LDAPS (port 636) for encrypted queries</li>
+</ul>
+<h3 id="sso-domain">SSO Domain<a class="headerlink" href="#sso-domain" title="Permanent link">&para;</a></h3>
+<p>vCenter ships with a local <code>vsphere.local</code> SSO domain. The <code>administrator@vsphere.local</code> account is the bootstrap admin. In production:</p>
+<ul>
+<li>Add AD as an identity source</li>
+<li>Grant required AD groups vSphere roles</li>
+<li>Do not use <code>administrator@vsphere.local</code> for day-to-day operations</li>
+<li>Rotate <code>administrator@vsphere.local</code> password per policy; document in password vault</li>
+</ul>
+<h3 id="saml-federation">SAML Federation<a class="headerlink" href="#saml-federation" title="Permanent link">&para;</a></h3>
+<p>vCenter can act as a SAML service provider for external IdPs (ADFS, Okta, Azure AD). Configure under <strong>SSO → Configuration → SAML Service Provider</strong>. Useful for MFA enforcement at the IdP level.</p>
+<h2 id="monitoring-integration">Monitoring Integration<a class="headerlink" href="#monitoring-integration" title="Permanent link">&para;</a></h2>
+<h3 id="aria-operations-vmware">Aria Operations (VMware)<a class="headerlink" href="#aria-operations-vmware" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Deploy Aria Operations (formerly vRealize Operations) and register vCenter as a <strong>vCenter Adapter</strong></li>
+<li>Provides capacity analytics, performance anomaly detection, cost reporting</li>
+<li>Aria Operations vCenter adapter collects metrics every 5 minutes by default</li>
+<li>Predictive DRS requires Aria Operations integration with vCenter</li>
+</ul>
+<h3 id="rest-api">REST API<a class="headerlink" href="#rest-api" title="Permanent link">&para;</a></h3>
+<p>vCenter exposes a modern REST API at <code>https://&lt;vcenter&gt;/api</code> (vSphere 7.0+). The legacy vSphere Automation SDK endpoint is at <code>https://&lt;vcenter&gt;/rest</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Authenticate and get session token</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;administrator@vsphere.local:password&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span>https://&lt;vcenter&gt;/api/session
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># List VMs</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;vmware-api-session-id: &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>https://&lt;vcenter&gt;/api/vcenter/vm
+</code></pre></div>
 <h3 id="syslog-siem">Syslog / SIEM<a class="headerlink" href="#syslog-siem" title="Permanent link">&para;</a></h3>
 <p>vCenter forwards events as syslog (RFC 5424). Configure in VAMI or via PowerCLI:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">Set-VMHostSysLogServer</span> <span class="n">-SysLogServer</span> <span class="s1">&#39;udp://&lt;syslog-host&gt;:514&#39;</span> <span class="n">-VMHost</span> <span class="p">&lt;</span><span class="n">host</span><span class="p">&gt;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">Set-VMHostSysLogServer</span> <span class="n">-SysLogServer</span> <span class="s1">&#39;udp://&lt;syslog-host&gt;:514&#39;</span> <span class="n">-VMHost</span> <span class="p">&lt;</span><span class="n">host</span><span class="p">&gt;</span>
 </code></pre></div>
 <p>For vCenter appliance-level syslog, configure at <strong>VAMI → Syslog</strong>.</p>
 <h2 id="nsx-integration">NSX Integration<a class="headerlink" href="#nsx-integration" title="Permanent link">&para;</a></h2>

@@ -3899,6 +3899,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#dns-cutover" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DNS Cutover
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#failover-state-reference" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4231,25 +4242,60 @@ Procedures reference covering Failover, Failback, Day-to-Day Operations.
 │  Configuration = shares, exports, quotas, NFS aliases; Eyeglass syncs these between clusters          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>```sql
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>### DNS Cutover
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>Eyeglass automates DNS delegation updates if integrated with DNS; manual steps if not.
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>```bash
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a># Verify Eyeglass DNS integration is configured
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>egcli dns status
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a># If using Eyeglass automated DNS failover — confirm DNS record updated
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>egcli dns records list --zone &lt;smartconnect_zone&gt;
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a># If managing DNS manually — update the SmartConnect delegation NS record
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a># to point to the DR cluster IP pool
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a># Verify propagation
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>dig &lt;smartconnect_zone_name&gt; @&lt;internal-dns-server&gt;
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>nslookup &lt;smartconnect_zone_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────────── Superna Eyeglass — Procedures ────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │              Routine Procedures              │  │                DR Procedures                │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │          Add new protection source           │  │              Initiate failover              │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │           Modify retention policy            │  │               Validate replica              │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │          Expire old recover points           │  │              Redirect host I/O              │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │             Add storage capacity             │  │         Test failover (non-disrupt)         │   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   │           Service account rotation           │  │            Failback to production           │   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│                                                                                                       │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│   │                        Change Control Requirements for Superna Eyeglass                       │   │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   │           All changes to protection policies require change ticket with rollback plan         │   │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   │                      Failover tests must be scheduled in maintenance window                   │   │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │              Firmware/software upgrades need 48 h pre-approval and backup snapshot            │   │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │                  Post-change: verify jobs run successfully for 2 backup cycles                │   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│                                                                                                       │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│  Physical Infrastructure:                                                                             │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│  ESXi VM (Eyeglass appliance) · PowerScale cluster pair (production + DR) · SyncIQ replication link   │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│                                                                                                       │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│  Eyeglass      = Superna Eyeglass; software appliance for NAS DR and ransomware protection            │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  RAPA          = Ransomware Protection with Automated Response; detects and quarantines threats       │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  SyncIQ        = PowerScale built-in replication; Eyeglass monitors and orchestrates policies         │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│  DFS-N         = Windows Distributed File System Namespace; Eyeglass automates failover of DFS        │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  Failover      = Eyeglass-orchestrated shift of NAS access from production to DR cluster              │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│  Failback      = reversing failover; Eyeglass re-syncs DR changes back and cuts back to product       │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  Quota Sync    = Eyeglass replicates SmartQuotas from source to DR to preserve user limits            │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│  Export Sync   = NFS exports and SMB shares replicated so clients can reconnect at DR site            │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  Quarantine    = RAPA isolation of suspect directory; blocks writes, alerts ops team                  │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│  Shadow Copy   = Eyeglass exposes PowerScale snapshots as Windows Previous Versions for NFS sha       │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│  Runbook       = Eyeglass DR Assistant guided checklist for pre-checks, failover, and validation      │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│  igls          = Eyeglass CLI; used for status, sync, DR, and RAPA operations                         │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│  SmartConnect  = PowerScale DNS load balancing; failover changes SmartConnect zone delegation         │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│  Configuration = shares, exports, quotas, NFS aliases; Eyeglass syncs these between clusters          │
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│                                                                                                       │
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
+<h3 id="dns-cutover">DNS Cutover<a class="headerlink" href="#dns-cutover" title="Permanent link">&para;</a></h3>
+<p>Eyeglass automates DNS delegation updates if integrated with DNS; manual steps if not.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Verify Eyeglass DNS integration is configured</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>egcli<span class="w"> </span>dns<span class="w"> </span>status
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># If using Eyeglass automated DNS failover — confirm DNS record updated</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>egcli<span class="w"> </span>dns<span class="w"> </span>records<span class="w"> </span>list<span class="w"> </span>--zone<span class="w"> </span>&lt;smartconnect_zone&gt;
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># If managing DNS manually — update the SmartConnect delegation NS record</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># to point to the DR cluster IP pool</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Verify propagation</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>dig<span class="w"> </span>&lt;smartconnect_zone_name&gt;<span class="w"> </span>@&lt;internal-dns-server&gt;
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>nslookup<span class="w"> </span>&lt;smartconnect_zone_name&gt;
+</code></pre></div>
 <h3 id="failover-state-reference">Failover State Reference<a class="headerlink" href="#failover-state-reference" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -4287,8 +4333,8 @@ Procedures reference covering Failover, Failback, Day-to-Day Operations.
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Check policy state at any time</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>egcli<span class="w"> </span>drpolicy<span class="w"> </span>status<span class="w"> </span>--policy<span class="w"> </span>&lt;policy_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check policy state at any time</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>egcli<span class="w"> </span>drpolicy<span class="w"> </span>status<span class="w"> </span>--policy<span class="w"> </span>&lt;policy_name&gt;
 </code></pre></div>
 <hr />
 <h2 id="failback">Failback<a class="headerlink" href="#failback" title="Permanent link">&para;</a></h2>
@@ -4346,72 +4392,72 @@ Procedures reference covering Failover, Failback, Day-to-Day Operations.
     drActive --&gt;|"reverse sync\nuser data back to prod"| revSync --&gt; prodRestore
     prodRestore --&gt; dnsBack --&gt; validated</code></pre>
 <h3 id="pre-failback-checklist">Pre-Failback Checklist<a class="headerlink" href="#pre-failback-checklist" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Confirm production PowerScale cluster is online and healthy</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>isi<span class="w"> </span>status
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Confirm all nodes are up and no critical alerts</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>isi<span class="w"> </span>devices<span class="w"> </span>node<span class="w"> </span>list
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>isi<span class="w"> </span>alerts<span class="w"> </span>list<span class="w"> </span>--category<span class="w"> </span>critical
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Confirm SyncIQ service is running on production</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>isi<span class="w"> </span>sync<span class="w"> </span>service<span class="w"> </span>view
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Confirm network interfaces and SmartConnect zones are configured on production</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>isi<span class="w"> </span>network<span class="w"> </span>interfaces<span class="w"> </span>list
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>isi<span class="w"> </span>network<span class="w"> </span>pools<span class="w"> </span>list
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># Check Eyeglass DR assistant readiness on production Eyeglass instance</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>egcli<span class="w"> </span>drtest<span class="w"> </span>preflight<span class="w"> </span>--cluster<span class="w"> </span>&lt;production-cluster&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Confirm production PowerScale cluster is online and healthy</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>isi<span class="w"> </span>status
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Confirm all nodes are up and no critical alerts</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>isi<span class="w"> </span>devices<span class="w"> </span>node<span class="w"> </span>list
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>isi<span class="w"> </span>alerts<span class="w"> </span>list<span class="w"> </span>--category<span class="w"> </span>critical
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Confirm SyncIQ service is running on production</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>isi<span class="w"> </span>sync<span class="w"> </span>service<span class="w"> </span>view
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># Confirm network interfaces and SmartConnect zones are configured on production</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>isi<span class="w"> </span>network<span class="w"> </span>interfaces<span class="w"> </span>list
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>isi<span class="w"> </span>network<span class="w"> </span>pools<span class="w"> </span>list
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="c1"># Check Eyeglass DR assistant readiness on production Eyeglass instance</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>egcli<span class="w"> </span>drtest<span class="w"> </span>preflight<span class="w"> </span>--cluster<span class="w"> </span>&lt;production-cluster&gt;
 </code></pre></div>
 <h3 id="initiating-failback-via-eyeglass">Initiating Failback via Eyeglass<a class="headerlink" href="#initiating-failback-via-eyeglass" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Log in to Eyeglass DR Assistant (web UI or CLI)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Eyeglass UI: https://&lt;eyeglass-ip&gt;:8443</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># List configured DR policies — confirm current state (failed over)</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>egcli<span class="w"> </span>drpolicy<span class="w"> </span>list
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Check which policies are in DR state</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>egcli<span class="w"> </span>drpolicy<span class="w"> </span>status<span class="w"> </span>--all
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Initiate failback for a specific DR policy</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>egcli<span class="w"> </span>drfailback<span class="w"> </span>--policy<span class="w"> </span>&lt;policy_name&gt;<span class="w"> </span>--confirm
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># Monitor failback progress</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>egcli<span class="w"> </span>drfailback<span class="w"> </span>status<span class="w"> </span>--policy<span class="w"> </span>&lt;policy_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Log in to Eyeglass DR Assistant (web UI or CLI)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Eyeglass UI: https://&lt;eyeglass-ip&gt;:8443</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># List configured DR policies — confirm current state (failed over)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>egcli<span class="w"> </span>drpolicy<span class="w"> </span>list
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Check which policies are in DR state</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>egcli<span class="w"> </span>drpolicy<span class="w"> </span>status<span class="w"> </span>--all
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Initiate failback for a specific DR policy</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>egcli<span class="w"> </span>drfailback<span class="w"> </span>--policy<span class="w"> </span>&lt;policy_name&gt;<span class="w"> </span>--confirm
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Monitor failback progress</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>egcli<span class="w"> </span>drfailback<span class="w"> </span>status<span class="w"> </span>--policy<span class="w"> </span>&lt;policy_name&gt;
 </code></pre></div>
 <h3 id="reversing-synciq-replication">Reversing SyncIQ Replication<a class="headerlink" href="#reversing-synciq-replication" title="Permanent link">&para;</a></h3>
 <p>During the DR period, users may have written data to the DR cluster. This data must be synced back to production before access is cut back.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># On DR PowerScale cluster — create a reverse SyncIQ policy</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># (Eyeglass automates this, but manual verification is required)</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>list
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Confirm reverse SyncIQ policy exists and is enabled</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>view<span class="w"> </span>&lt;reverse_policy_name&gt;
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Run the reverse sync manually to trigger immediate catchup</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>isi<span class="w"> </span>sync<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>start<span class="w"> </span>&lt;reverse_policy_name&gt;
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Monitor reverse sync job completion</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>isi<span class="w"> </span>sync<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>list
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">30</span><span class="w"> </span><span class="s2">&quot;isi sync jobs list&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># On DR PowerScale cluster — create a reverse SyncIQ policy</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># (Eyeglass automates this, but manual verification is required)</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>list
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Confirm reverse SyncIQ policy exists and is enabled</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>view<span class="w"> </span>&lt;reverse_policy_name&gt;
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Run the reverse sync manually to trigger immediate catchup</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>isi<span class="w"> </span>sync<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>start<span class="w"> </span>&lt;reverse_policy_name&gt;
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># Monitor reverse sync job completion</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>isi<span class="w"> </span>sync<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>list
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">30</span><span class="w"> </span><span class="s2">&quot;isi sync jobs list&quot;</span>
 </code></pre></div>
 <h3 id="access-zone-cutover-back-to-production">Access Zone Cutover Back to Production<a class="headerlink" href="#access-zone-cutover-back-to-production" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># On production PowerScale — confirm access zones are configured</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>isi<span class="w"> </span>zone<span class="w"> </span>zones<span class="w"> </span>list
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Eyeglass: re-activate access zones on production</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>egcli<span class="w"> </span>accesszone<span class="w"> </span>activate<span class="w"> </span>--cluster<span class="w"> </span>&lt;production-cluster&gt;<span class="w"> </span>--zone<span class="w"> </span>&lt;zone_name&gt;
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Update DNS to point SmartConnect zone back to production VIP pool</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># (DNS delegation record update — done at DNS server level)</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># Verify DNS resolution for NFS/SMB clients resolves to production IPs</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>nslookup<span class="w"> </span>&lt;smartconnect_zone_name&gt;
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1"># Confirm NFS exports are accessible on production</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>list
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="c1"># Confirm SMB shares are accessible on production</span>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>isi<span class="w"> </span>smb<span class="w"> </span>shares<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># On production PowerScale — confirm access zones are configured</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>isi<span class="w"> </span>zone<span class="w"> </span>zones<span class="w"> </span>list
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Eyeglass: re-activate access zones on production</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>egcli<span class="w"> </span>accesszone<span class="w"> </span>activate<span class="w"> </span>--cluster<span class="w"> </span>&lt;production-cluster&gt;<span class="w"> </span>--zone<span class="w"> </span>&lt;zone_name&gt;
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Update DNS to point SmartConnect zone back to production VIP pool</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># (DNS delegation record update — done at DNS server level)</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Verify DNS resolution for NFS/SMB clients resolves to production IPs</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>nslookup<span class="w"> </span>&lt;smartconnect_zone_name&gt;
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># Confirm NFS exports are accessible on production</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>isi<span class="w"> </span>nfs<span class="w"> </span>exports<span class="w"> </span>list
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c1"># Confirm SMB shares are accessible on production</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>isi<span class="w"> </span>smb<span class="w"> </span>shares<span class="w"> </span>list
 </code></pre></div>
 <h3 id="post-failback-validation">Post-Failback Validation<a class="headerlink" href="#post-failback-validation" title="Permanent link">&para;</a></h3>
 <table>
@@ -4460,11 +4506,11 @@ Procedures reference covering Failover, Failback, Day-to-Day Operations.
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Final confirmation: run Eyeglass preflight on production</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>egcli<span class="w"> </span>drtest<span class="w"> </span>preflight<span class="w"> </span>--cluster<span class="w"> </span>&lt;production-cluster&gt;
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Disable reverse SyncIQ policy (DR-to-prod direction) after failback is confirmed</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>disable<span class="w"> </span>&lt;reverse_policy_name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Final confirmation: run Eyeglass preflight on production</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>egcli<span class="w"> </span>drtest<span class="w"> </span>preflight<span class="w"> </span>--cluster<span class="w"> </span>&lt;production-cluster&gt;
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Disable reverse SyncIQ policy (DR-to-prod direction) after failback is confirmed</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>disable<span class="w"> </span>&lt;reverse_policy_name&gt;
 </code></pre></div>
 <hr />
 <h2 id="day-to-day-operations">Day-to-Day Operations<a class="headerlink" href="#day-to-day-operations" title="Permanent link">&para;</a></h2>

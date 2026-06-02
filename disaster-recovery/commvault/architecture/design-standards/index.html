@@ -3948,7 +3948,7 @@
 Standards reference covering Naming Conventions, Retention Schedule, VMware vSphere Standards, Encryption Standard.
 </div>
 
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌────────────────────────── Commvault Design Standards — Sizing and Topology ───────────────────────────┐
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌────────────────────────── Commvault Design Standards — Sizing and Topology ───────────────────────────┐
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │                                       Design Principles                                       │   │
@@ -4005,63 +4005,6 @@ Standards reference covering Naming Conventions, Retention Schedule, VMware vSph
 <a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a>│  SQL Log Ship   = SQL Server log shipping replicating CSDB to DR CommServe                            │
 <a id="__codelineno-0-56" name="__codelineno-0-56" href="#__codelineno-0-56"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌────────────────────────── Commvault Design Standards — Sizing and Topology ───────────────────────────┐
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │                                       Design Principles                                       │   │
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │                 Separate CommServe and MediaAgent roles onto dedicated servers                │   │
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │         Place MediaAgents close to data sources (same site/rack) to reduce WAN traffic        │   │
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │         Size DDB on fast local NVMe: 1 GB DDB per 1 TB source data (post-dedup ratio)         │   │
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │           Minimum 2 MA per site for redundancy; use MA groups for automatic failover          │   │
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│                                                                                                       │
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│    Component sizing drives performance; under-sized MA is the most common bottleneck                  │
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│                                                                                                       │
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                   ▼                                                   │
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│                                                                                                       │
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│   │               CommServe Sizing               │  │              MediaAgent Sizing              │   │
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   │          CPU: 8-16 vCPU (SQL-heavy)          │  │        CPU: 16-32 vCPU for throughput       │   │
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │      RAM: 32-64 GB for large CommCells       │  │          RAM: 16-32 GB + DDB cache          │   │
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │          SQL: NVMe RAID-10 for CSDB          │  │       DDB: NVMe SSD, separate from OS       │   │
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │       NIC: 10 GbE for GUI/CLI traffic        │  │         NIC: 25 GbE for data streams        │   │
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │         OS: Windows Server 2019/2022         │  │         OS: Windows or Linux (RHEL)         │   │
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│                                                                                                       │
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│    Storage policy design directly impacts restore time and dedup efficiency                           │
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│                                                                                                       │
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│                                                   ▼                                                   │
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│                                                                                                       │
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│   │     Storage Design    │       Retention       │        Network        │        HA / DR        │   │
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│   │   Primary: fast disk  │     Daily: 30 days    │      Backup VLAN      │      DR CommServe     │   │
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│   │ Secondary: tape/cloud │    Weekly: 12 weeks   │     10/25 GbE NIC     │    SQL log shipping   │   │
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│   │  Dedup ratio 5:1-20:1 │   Monthly: 12 months  │     QoS throttling    │    CommCell DR site   │   │
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│   │  WORM for compliance  │     Yearly archive    │     Firewall proxy    │      RPO &lt; 1 hour     │   │
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│   │  Cloud tier: S3/Blob  │    Legal hold caps    │    Bandwidth limits   │     RTO &lt; 4 hours     │   │
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│                                                                                                       │
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  Physical Infrastructure:                                                                             │
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  CommServe: physical server preferred; avoid shared VMs for production CommCells                      │
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  DDB drives: enterprise NVMe (Samsung PM9A3 / Intel P4510); avoid SAS/SATA for DDB                    │
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  Backup network: dedicated 10/25 GbE switch; separate from production VLAN                            │
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│                                                                                                       │
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│                                                                                                       │
-<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│  CommCell DR    = Passive CommServe replica at secondary site for CS failover                         │
-<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>│  DDB Resync     = Process to rebuild DDB fingerprint index from library chunks                        │
-<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>│  Storage Policy = Container linking subclients to libraries with retention and copy rules             │
-<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>│  Dedup Ratio    = Ratio of source data size to post-dedup storage consumed                            │
-<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>│  MA Group       = Named pool of MediaAgents for load balancing and failover                           │
-<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>│  Primary Copy   = First storage policy copy; used for fast restores                                   │
-<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>│  Secondary Copy = Aux-copy destination (tape or cloud) for long-term retention                        │
-<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>│  WORM           = Write Once Read Many; immutable storage for compliance locks                        │
-<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>│  RPO            = Recovery Point Objective; max acceptable data loss (time since last backup)         │
-<a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a>│  RTO            = Recovery Time Objective; max acceptable time to complete restore                    │
-<a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a>│  Bandwidth Cap  = Throttle on MA data transfer rate to protect production network                     │
-<a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a>│  SQL Log Ship   = SQL Server log shipping replicating CSDB to DR CommServe                            │
-<a id="__codelineno-1-56" name="__codelineno-1-56" href="#__codelineno-1-56"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div></p>
 <h2 id="naming-conventions">Naming Conventions<a class="headerlink" href="#naming-conventions" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

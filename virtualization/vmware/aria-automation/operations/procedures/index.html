@@ -2342,6 +2342,8 @@
       
         
       
+        
+      
     
     
     
@@ -4476,6 +4478,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#cloud-account-connectivity-failure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cloud Account Connectivity Failure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#adding-a-new-cloud-zone-to-a-project" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4767,20 +4780,60 @@ Procedures reference covering Rotate Service Account Passwords, Stale Deployment
 │  Service account   = vRA uses a service account to authenticate to AD, vCenter, and NSX               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>```sql
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>---
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>## Cloud Account Connectivity Failure
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>1. Verify network connectivity from the Aria Automation appliance to the target system:
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>```bash
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>ssh root@vra-prod-01.example.local
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>curl -sk -o /dev/null -w &quot;%{http_code}&quot; https://vcenter-prod.example.local/rest/com/vmware/cis/session
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a># Expected: 401 (Unauthorised — server is reachable)
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a># Any other output (000, curl error) indicates network or DNS issue
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌────────────────────────────── Aria Automation — Operational Procedures ───────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  Common vRA operational tasks: cert rotation, password rotation, account changes, cleanup.            │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│                                                                                                       │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │             Certificate Rotation             │  │              Password Rotation              │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │      Generate new cert (SAN: vRA FQDN)       │  │      vRA admin password: VAMI → change      │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │        Import via LCM cert management        │  │     Postgres password: vracli + restart     │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │       LCM redeploys certs to products        │  │      Cloud account creds: update in UI      │   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │        Validate SSO and catalog after        │  │      Service account: rotate + test ABX     │   │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│                                                                                                       │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│  Account and resource management procedures keep vRA clean and correctly scoped.                      │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│                                                                                                       │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                                                                                                       │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │           Cloud Account Management           │  │               Resource Cleanup              │   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │       Add: wizard + test connectivity        │  │      Orphaned deployments: force delete     │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │        Update creds: edit + reconnect        │  │    Stale catalog items: unpublish+delete    │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │      Remove: detach from projects first      │  │      Expired leases: auto or manual del     │   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │      Data collection: trigger manually       │  │     ABX logs: retained 30d, purge older     │   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│                                                                                                       │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  vRA appliances · LCM appliance · Postgres · vIDM · vCenter · CA for cert issuance                    │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│                                                                                                       │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Cert rotation     = Replacing expiring TLS cert on vRA via LCM certificate management UI             │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│  LCM cert push     = LCM distributes updated cert to all products in the Environment                  │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  VAMI password     = Root/admin password for vRA appliance changed via VAMI web UI at :5480           │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  Postgres creds    = DB credentials stored in vracli config; update and restart service               │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  Cloud account creds= AWS access key / vCenter password stored in vRA; edit without removing          │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  Force delete      = vRA admin can hard-delete stuck deployments via API or UI override               │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  Orphaned resource = Deployment record in vRA with no matching resource in cloud account              │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  Data collection   = vRA polls cloud accounts for resource inventory; trigger via UI or API           │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  Lease expiry      = Automated deletion triggered by lease policy when deployment exceeds TTL         │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  ABX log retention = Action run logs stored 30 days; older logs purged automatically                  │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  Unpublish item    = Remove catalog item from consumer view without deleting the template             │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  Service account   = vRA uses a service account to authenticate to AD, vCenter, and NSX               │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│                                                                                                       │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
+<hr />
+<h2 id="cloud-account-connectivity-failure">Cloud Account Connectivity Failure<a class="headerlink" href="#cloud-account-connectivity-failure" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Verify network connectivity from the Aria Automation appliance to the target system:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ssh<span class="w"> </span>root@vra-prod-01.example.local
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://vcenter-prod.example.local/rest/com/vmware/cis/session
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Expected: 401 (Unauthorised — server is reachable)</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Any other output (000, curl error) indicates network or DNS issue</span>
+</code></pre></div>
 <ol>
 <li>Confirm the service account credentials have not expired:</li>
 <li>vCenter: <strong>vCenter → Administration → Single Sign On → Users and Groups → check account expiry</strong></li>
@@ -4794,8 +4847,8 @@ Procedures reference covering Rotate Service Account Passwords, Stale Deployment
 <p>If re-validation fails, check logs:</p>
 </li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>prelude<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>vra-nginx<span class="w"> </span>--tail<span class="o">=</span><span class="m">100</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|5[0-9][0-9]&quot;</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>prelude<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>iaas-gateway<span class="w"> </span>--tail<span class="o">=</span><span class="m">100</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|vcenter\|cloud&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>prelude<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>vra-nginx<span class="w"> </span>--tail<span class="o">=</span><span class="m">100</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|5[0-9][0-9]&quot;</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>prelude<span class="w"> </span>-l<span class="w"> </span><span class="nv">app</span><span class="o">=</span>iaas-gateway<span class="w"> </span>--tail<span class="o">=</span><span class="m">100</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|vcenter\|cloud&quot;</span>
 </code></pre></div>
 <hr />
 <h2 id="adding-a-new-cloud-zone-to-a-project">Adding a New Cloud Zone to a Project<a class="headerlink" href="#adding-a-new-cloud-zone-to-a-project" title="Permanent link">&para;</a></h2>
@@ -4818,8 +4871,8 @@ Procedures reference covering Rotate Service Account Passwords, Stale Deployment
 <p>Add image mappings and flavor mappings for the new cloud zone:</p>
 </li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Infrastructure → Configure → Image Mappings → add entry for new zone
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Infrastructure → Configure → Flavor Mappings → add entry for new zone
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Infrastructure → Configure → Image Mappings → add entry for new zone
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>Infrastructure → Configure → Flavor Mappings → add entry for new zone
 </code></pre></div>
 <ol>
 <li>Test by deploying a simple template targeted at the new cloud zone</li>
@@ -4828,7 +4881,7 @@ Procedures reference covering Rotate Service Account Passwords, Stale Deployment
 <h2 id="adding-an-approval-policy">Adding an Approval Policy<a class="headerlink" href="#adding-an-approval-policy" title="Permanent link">&para;</a></h2>
 <p>Approval policies require a manager or team lead to approve requests before provisioning begins.</p>
 <p><strong>Create a policy:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Service<span class="w"> </span>Broker<span class="w"> </span>→<span class="w"> </span>Content<span class="w"> </span><span class="p">&amp;</span><span class="w"> </span>Policies<span class="w"> </span>→<span class="w"> </span>Policies<span class="w"> </span>→<span class="w"> </span>New<span class="w"> </span>Policy<span class="w"> </span>→<span class="w"> </span>Approval<span class="w"> </span>Policy
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Service<span class="w"> </span>Broker<span class="w"> </span>→<span class="w"> </span>Content<span class="w"> </span><span class="p">&amp;</span><span class="w"> </span>Policies<span class="w"> </span>→<span class="w"> </span>Policies<span class="w"> </span>→<span class="w"> </span>New<span class="w"> </span>Policy<span class="w"> </span>→<span class="w"> </span>Approval<span class="w"> </span>Policy
 </code></pre></div>
 <p>Configure:
 - Name: <code>PROD VM Deployment Approval</code>
@@ -4836,13 +4889,13 @@ Procedures reference covering Rotate Service Account Passwords, Stale Deployment
 - Approver: AD group (e.g., <code>GG-VRA-Approvers</code>) — any member can approve
 - Auto-expire: 5 business days — requests unapproved within this window are auto-rejected</p>
 <p><strong>Assign to catalog item:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Service<span class="w"> </span>Broker<span class="w"> </span>→<span class="w"> </span>Content<span class="w"> </span>→<span class="w"> </span>Catalog<span class="w"> </span>Items<span class="w"> </span>→<span class="w"> </span><span class="k">select</span><span class="w"> </span>item<span class="w"> </span>→<span class="w"> </span>Policy<span class="w"> </span>→<span class="w"> </span>assign<span class="w"> </span>the<span class="w"> </span>approval<span class="w"> </span>policy
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Service<span class="w"> </span>Broker<span class="w"> </span>→<span class="w"> </span>Content<span class="w"> </span>→<span class="w"> </span>Catalog<span class="w"> </span>Items<span class="w"> </span>→<span class="w"> </span><span class="k">select</span><span class="w"> </span>item<span class="w"> </span>→<span class="w"> </span>Policy<span class="w"> </span>→<span class="w"> </span>assign<span class="w"> </span>the<span class="w"> </span>approval<span class="w"> </span>policy
 </code></pre></div>
 <p>Test by requesting the catalog item as a non-admin user — an approval request notification should be sent to the approver group.</p>
 <hr />
 <h2 id="importing-an-abx-action">Importing an ABX Action<a class="headerlink" href="#importing-an-abx-action" title="Permanent link">&para;</a></h2>
 <p>Action-Based Extensibility (ABX) actions are scripts (Python, Node.js, or PowerShell) that execute in response to event broker triggers.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Extensibility → Actions → New Action
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Extensibility → Actions → New Action
 </code></pre></div>
 <ol>
 <li>Select language (Python 3 recommended)</li>
@@ -4852,21 +4905,21 @@ Procedures reference covering Rotate Service Account Passwords, Stale Deployment
 <li>Test via <strong>Test</strong> tab before assigning to an event broker subscription</li>
 </ol>
 <p><strong>Example: Slack notification on deployment success:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="k">def</span><span class="w"> </span><span class="nf">handler</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    <span class="n">webhook_url</span> <span class="o">=</span> <span class="n">inputs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;slackWebhook&quot;</span><span class="p">)</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>    <span class="n">deployment_name</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="s2">&quot;deploymentName&quot;</span><span class="p">]</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>    <span class="n">owner</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="s2">&quot;owner&quot;</span><span class="p">]</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>    <span class="n">message</span> <span class="o">=</span> <span class="p">{</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>        <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;:white_check_mark: Deployment *</span><span class="si">{</span><span class="n">deployment_name</span><span class="si">}</span><span class="s2">* succeeded for </span><span class="si">{</span><span class="n">owner</span><span class="si">}</span><span class="s2">&quot;</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>    <span class="p">}</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>    <span class="n">resp</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">webhook_url</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">message</span><span class="p">)</span>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="n">resp</span><span class="o">.</span><span class="n">status_code</span><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="k">def</span><span class="w"> </span><span class="nf">handler</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>    <span class="n">webhook_url</span> <span class="o">=</span> <span class="n">inputs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;slackWebhook&quot;</span><span class="p">)</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>    <span class="n">deployment_name</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="s2">&quot;deploymentName&quot;</span><span class="p">]</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>    <span class="n">owner</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="s2">&quot;owner&quot;</span><span class="p">]</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>    <span class="n">message</span> <span class="o">=</span> <span class="p">{</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>        <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;:white_check_mark: Deployment *</span><span class="si">{</span><span class="n">deployment_name</span><span class="si">}</span><span class="s2">* succeeded for </span><span class="si">{</span><span class="n">owner</span><span class="si">}</span><span class="s2">&quot;</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>    <span class="p">}</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>    <span class="n">resp</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">webhook_url</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="n">message</span><span class="p">)</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="n">resp</span><span class="o">.</span><span class="n">status_code</span><span class="p">}</span>
 </code></pre></div>
 <p>Assign to an event broker subscription:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Extensibility → Subscriptions → New Subscription
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Extensibility → Subscriptions → New Subscription
 </code></pre></div>
 <ul>
 <li>Event topic: <code>Deployment Success</code></li>

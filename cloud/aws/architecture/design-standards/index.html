@@ -3757,6 +3757,39 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#security-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#approved-regions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Approved Regions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vpc-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VPC Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#network-standards" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4102,55 +4135,117 @@
 │  OU hierarchy   = Organizational Unit tree: Root → Security → Workloads → env OUs                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>```text
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>## Security Standards
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>| Control | Standard |
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>|---|---|
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>| CloudTrail | All-region trail in all accounts; logs to centralised S3 in log-archive account |
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>| Config | Enabled in all regions; conformance pack with CIS AWS Foundations Benchmark |
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>| GuardDuty | Enabled in all accounts via Organizations; alert forwarded to Security Tooling account |
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>| Security Hub | Enabled org-wide; aggregate to Security Tooling account |
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>| VPC Flow Logs | Enabled on all VPCs; logs to S3 or CloudWatch |
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>| Default VPC | Deleted from all regions on account creation |
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>## Approved Regions
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>AWS resources may only be deployed in approved regions (enforced via SCP):
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>- `eu-west-1` (Dublin) — primary
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>- `eu-west-2` (London) — secondary
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>- `us-east-1` — if required for global AWS services
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>Deploying to other regions requires an exception approved by InfoSec.
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>## VPC Architecture
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>```mermaid
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>flowchart TD
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>    subgraph vpc[&quot;VPC — 10.x.0.0/16&quot;]
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>        subgraph az1[&quot;Availability Zone A&quot;]
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>            pubSubA[&quot;Public Subnet /24\nALB · NAT GW&quot;]
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>            privSubA[&quot;Private Subnet /24\nEC2 · ECS · Lambda&quot;]
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>            isoSubA[&quot;Isolated Subnet /24\nRDS · ElastiCache&quot;]
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>        end
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>        subgraph az2[&quot;Availability Zone B&quot;]
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>            pubSubB[&quot;Public Subnet /24&quot;]
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>            privSubB[&quot;Private Subnet /24&quot;]
-<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>            isoSubB[&quot;Isolated Subnet /24&quot;]
-<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>        end
-<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>        igw[&quot;Internet Gateway&quot;]
-<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>        natGw[&quot;NAT Gateway&quot;]
-<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>        sg[&quot;Security Groups\nstateful · deny-all default&quot;]
-<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>    end
-<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>    internet[&quot;Internet&quot;]
-<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>    onprem[&quot;On-Premises\nvia Transit Gateway&quot;]
-<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>
-<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>    internet &lt;--&gt; igw &lt;--&gt; pubSubA &amp; pubSubB
-<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>    pubSubA --&gt; natGw --&gt; privSubA --&gt; isoSubA
-<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>    pubSubB --&gt; privSubB --&gt; isoSubB
-<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>    onprem &lt;--&gt; privSubA &amp; privSubB
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────── AWS Architecture — Design Standards ─────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Standards covering account structure, tagging, naming, networking, and security baseline.            │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│                                                                                                       │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │              Account Standards               │  │              Tagging Standards              │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │           One workload per account           │  │          Required: env, owner, team         │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │          No production in mgmt acct          │  │          Required: cost-centre, app         │   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   │           OU hierarchy: env-based            │  │          Enforce: SCP deny untagged         │   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   │          Separate audit + log accts          │  │         Naming: kebab-case standard         │   │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   │           Email alias per account            │  │          Automation: tag on create          │   │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                                                                                                       │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  Account and tagging standards enforced via SCPs and AWS Config rules                                 │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│                                                                                                       │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│                                                                                                       │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │             Networking Standards             │  │              Security Baseline              │   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │          Non-overlapping VPC CIDRs           │  │             MFA: enforced by SCP            │   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   │        Private subnets for workloads         │  │          Root: no programmatic keys         │   │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   │           Public: only LB + NAT GW           │  │            CloudTrail: always on            │   │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│   │            VPC flow logs: enabled            │  │            GuardDuty: org-wide on           │   │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│   │           TGW: centralised egress            │  │          CIS AWS Benchmark: target          │   │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│                                                                                                       │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  AWS Regions · Availability Zones · data centres · DirectConnect · internet edge                      │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│                                                                                                       │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│                                                                                                       │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  CIS AWS Benchmark= Center for Internet Security prescriptive AWS security controls                   │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│  Non-overlapping CIDR= VPC address ranges that do not conflict; required for TGW                      │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│  Private subnet = No internet gateway route; workloads access internet via NAT GW                     │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│  Public subnet  = Has internet gateway route; only load balancers and NAT GW placed here              │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│  Centralised egress= All internet-bound traffic routed through shared inspection VPC                  │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│  Email alias    = Shared mailbox per account; avoids personal email ownership                         │
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│  Kebab-case     = Naming convention using lowercase words separated by hyphens                        │
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│  SCP deny untagged= Preventive control blocking resource creation without required tags               │
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│  Cost-centre tag= Tag linking resources to financial cost allocation unit                             │
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│  VPC flow logs  = Network traffic metadata logs; required for security investigations                 │
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│  Audit account  = Dedicated account for security tooling (Security Hub, Config agg.)                  │
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>│  OU hierarchy   = Organizational Unit tree: Root → Security → Workloads → env OUs                     │
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>│                                                                                                       │
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
+<h2 id="security-standards">Security Standards<a class="headerlink" href="#security-standards" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Standard</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CloudTrail</td>
+<td>All-region trail in all accounts; logs to centralised S3 in log-archive account</td>
+</tr>
+<tr>
+<td>Config</td>
+<td>Enabled in all regions; conformance pack with CIS AWS Foundations Benchmark</td>
+</tr>
+<tr>
+<td>GuardDuty</td>
+<td>Enabled in all accounts via Organizations; alert forwarded to Security Tooling account</td>
+</tr>
+<tr>
+<td>Security Hub</td>
+<td>Enabled org-wide; aggregate to Security Tooling account</td>
+</tr>
+<tr>
+<td>VPC Flow Logs</td>
+<td>Enabled on all VPCs; logs to S3 or CloudWatch</td>
+</tr>
+<tr>
+<td>Default VPC</td>
+<td>Deleted from all regions on account creation</td>
+</tr>
+</tbody>
+</table>
+<h2 id="approved-regions">Approved Regions<a class="headerlink" href="#approved-regions" title="Permanent link">&para;</a></h2>
+<p>AWS resources may only be deployed in approved regions (enforced via SCP):
+- <code>eu-west-1</code> (Dublin) — primary
+- <code>eu-west-2</code> (London) — secondary
+- <code>us-east-1</code> — if required for global AWS services</p>
+<p>Deploying to other regions requires an exception approved by InfoSec.</p>
+<h2 id="vpc-architecture">VPC Architecture<a class="headerlink" href="#vpc-architecture" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    subgraph vpc["VPC — 10.x.0.0/16"]
+        subgraph az1["Availability Zone A"]
+            pubSubA["Public Subnet /24\nALB · NAT GW"]
+            privSubA["Private Subnet /24\nEC2 · ECS · Lambda"]
+            isoSubA["Isolated Subnet /24\nRDS · ElastiCache"]
+        end
+        subgraph az2["Availability Zone B"]
+            pubSubB["Public Subnet /24"]
+            privSubB["Private Subnet /24"]
+            isoSubB["Isolated Subnet /24"]
+        end
+        igw["Internet Gateway"]
+        natGw["NAT Gateway"]
+        sg["Security Groups\nstateful · deny-all default"]
+    end
+    internet["Internet"]
+    onprem["On-Premises\nvia Transit Gateway"]
+
+    internet &lt;--&gt; igw &lt;--&gt; pubSubA &amp; pubSubB
+    pubSubA --&gt; natGw --&gt; privSubA --&gt; isoSubA
+    pubSubB --&gt; privSubB --&gt; isoSubB
+    onprem &lt;--&gt; privSubA &amp; privSubB</code></pre>
 <h2 id="network-standards">Network Standards<a class="headerlink" href="#network-standards" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

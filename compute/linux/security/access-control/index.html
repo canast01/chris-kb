@@ -3091,6 +3091,34 @@
   
 </li>
         
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mandatory-access-control-selinux-rhel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mandatory Access Control — SELinux (RHEL)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Mandatory Access Control — SELinux (RHEL)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#selinux-mac-decision-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SELinux MAC Decision Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
           <li class="md-nav__item">
   <a href="#selinux-modes" class="md-nav__link">
     <span class="md-ellipsis">
@@ -3500,30 +3528,65 @@ DAC (chmod/ACL), MAC (SELinux/AppArmor), sudoers policy, and login access restri
 │  visudo      = Safe editor for sudoers; validates syntax before saving                                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>```text
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## Mandatory Access Control — SELinux (RHEL)
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>SELinux enforces mandatory policies on top of DAC. Even root is constrained by SELinux policy.
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>### SELinux MAC Decision Flow
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>```mermaid
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>flowchart TD
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    subject[&quot;Subject\nProcess with SELinux label\ne.g. httpd_t&quot;]
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>    dacCheck{&quot;DAC Check\nUnix permissions allow?&quot;}
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>    dacDeny[&quot;DENY\n(DAC blocks)&quot;]
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>    selinuxCheck{&quot;SELinux Policy\nallow rule exists?&quot;}
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>    audit[&quot;AVC Denial logged\n/var/log/audit/audit.log&quot;]
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>    allow[&quot;ALLOW\nAccess granted to object&quot;]
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>    object[&quot;Object\nFile / Socket / Port\ne.g. httpd_sys_content_t&quot;]
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>    subject --&gt; dacCheck
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>    dacCheck -- No --&gt; dacDeny
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>    dacCheck -- Yes --&gt; selinuxCheck
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>    selinuxCheck -- No --&gt; audit --&gt; dacDeny
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>    selinuxCheck -- Yes --&gt; allow --&gt; object
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌─────────────────────────────────────── Linux — Access Control ────────────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  Access control on Linux: DAC permissions, SELinux MAC, ACLs, and sudo delegation.                    │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│                                                                                                       │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │            DAC — File Permissions            │  │                MAC — SELinux                │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │          rwx per owner/group/other           │  │          Labels: user:role:type:lvl         │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │           chmod: numeric/symbolic            │  │            enforcing / permissive           │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │           chown: owner, chgrp: grp           │  │            restorecon: fix labels           │   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │           umask: default new perms           │  │            semanage: policy mgmt            │   │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │            SUID/SGID/sticky bits             │  │          audit2allow: custom rules          │   │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                                                                       │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│   │            ACLs — Extended Perms             │  │         sudo — Privilege Delegation         │   │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│   │            setfacl -m u:user:rwx             │  │            /etc/sudoers + visudo            │   │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   │              getfacl: view ACL               │  │              User/Group aliases             │   │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │            mask: effective limit             │  │            NOPASSWD: passwordless           │   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │             default ACL on dirs              │  │            Cmnd_Alias: cmd groups           │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │              inheritance rules               │  │            sudo -l: list allowed            │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│                                                                                                       │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│  x86-64 servers · filesystem with ACL support (ext4/xfs) · LDAP/AD for group info                     │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│                                                                                                       │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│                                                                                                       │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  DAC         = Discretionary AC; owner discretion controls who accesses a file                        │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│  MAC         = Mandatory AC; kernel-enforced policy independent of owner wishes                       │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  umask       = Default permission mask applied when creating new files/directories                    │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│  SUID        = Set-UID: run executable as its owner (e.g. passwd runs as root)                        │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  SGID        = Set-GID: run as group, or inherit group on new files in directory                      │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  sticky bit  = Only owner can delete their files in shared dir (e.g. /tmp)                            │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  ACL mask    = Maximum effective permission for named users/groups in ACL                             │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  setfacl     = Set file ACL entries beyond standard rwx triplet                                       │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  SELinux ctx = Security context: user:role:type:sensitivity label on every object                     │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  restorecon  = Restore default SELinux file context from policy database                              │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  audit2allow = Generate SELinux allow rule from audit denial log entries                              │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  visudo      = Safe editor for sudoers; validates syntax before saving                                │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│                                                                                                       │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
+<h2 id="mandatory-access-control-selinux-rhel">Mandatory Access Control — SELinux (RHEL)<a class="headerlink" href="#mandatory-access-control-selinux-rhel" title="Permanent link">&para;</a></h2>
+<p>SELinux enforces mandatory policies on top of DAC. Even root is constrained by SELinux policy.</p>
+<h3 id="selinux-mac-decision-flow">SELinux MAC Decision Flow<a class="headerlink" href="#selinux-mac-decision-flow" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>flowchart TD
+    subject["Subject\nProcess with SELinux label\ne.g. httpd_t"]
+    dacCheck{"DAC Check\nUnix permissions allow?"}
+    dacDeny["DENY\n(DAC blocks)"]
+    selinuxCheck{"SELinux Policy\nallow rule exists?"}
+    audit["AVC Denial logged\n/var/log/audit/audit.log"]
+    allow["ALLOW\nAccess granted to object"]
+    object["Object\nFile / Socket / Port\ne.g. httpd_sys_content_t"]
+
+    subject --&gt; dacCheck
+    dacCheck -- No --&gt; dacDeny
+    dacCheck -- Yes --&gt; selinuxCheck
+    selinuxCheck -- No --&gt; audit --&gt; dacDeny
+    selinuxCheck -- Yes --&gt; allow --&gt; object</code></pre>
 <h3 id="selinux-modes">SELinux Modes<a class="headerlink" href="#selinux-modes" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Check current mode</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>getenforce<span class="w">        </span><span class="c1"># Enforcing / Permissive / Disabled</span>

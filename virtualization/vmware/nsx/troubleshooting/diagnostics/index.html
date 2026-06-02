@@ -2168,6 +2168,8 @@
       
         
       
+        
+      
     
     
     
@@ -4319,6 +4321,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#nsx-manager-cli-diagnostics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NSX Manager CLI Diagnostics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#edge-node-cli-diagnostics" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4851,117 +4864,158 @@ Diagnostics reference covering Ports and Protocols Reference, Log Locations, NSX
 │  Bidirectional= Traceflow sends packets in both directions simultaneously                             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>```bash
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>---
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>## NSX Manager CLI Diagnostics
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>```bash
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a># SSH to any NSX Manager node
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>nsxcli
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a># Cluster and node health
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>get cluster status
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>get managers
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>get clusters
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>get corfu-cluster status
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a># Services
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>get services
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>get service http
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>get service manager
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>get service controller
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a># Transport infrastructure
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>get transport-nodes
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>get transport-node-status
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>get tunnel endpoints
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>get tunnel status
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a># Overlay
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>get logical-switches
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>get logical-routers
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a># Alarms
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>get alarms
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>get alarms | grep -i &quot;critical\|high&quot;
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a># Version
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>get version
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>get nodes
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌────────────────────────────────────────── NSX — Diagnostics ──────────────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  NSX log locations, Traceflow tool, IPFIX flow export, and support bundles.                           │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│                                                                                                       │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │                Key Log Files                 │  │                Traceflow Tool               │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │          /var/log/proton (manager)           │  │           NSX UI: Plan &gt; Traceflow          │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │             /var/log/nsx-syslog              │  │            Inject L2/L3/L4 packet           │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │          /var/log/bfd.log (routing)          │  │             See path hop by hop             │   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │           ESXi: /var/log/nsx-*.log           │  │           Identify drop + rule hit          │   │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │           Edge: /var/log/nsx-*.log           │  │             Bidirectional trace             │   │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                                                                       │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│  Logs → Traceflow for path/DFW → IPFIX for flows → bundle for GSS.                                    │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                                                                                                       │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│                                                                                                       │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │             IPFIX / Flow Export              │  │                Support Bundle               │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │          DFW IPFIX per-rule export           │  │         UI: System &gt; Support Bundle         │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │          Collector: Aria NI / sflow          │  │          API: POST /api/v1/suppbndl         │   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │          Flow visibility map build           │  │            Includes all node logs           │   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   │         Used for micro-seg planning          │  │           Select: manager + edges           │   │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│   │         Identify undocumented flows          │  │             Upload to VMware SR             │   │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│                                                                                                       │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  NSX Manager VMs, Edge VMs, ESXi nodes, IPFIX collector, management network                           │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│                                                                                                       │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  proton log  = NSX Manager core process log; cluster/config events                                    │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  Traceflow   = NSX packet path simulation; shows rule hits and drops                                  │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  IPFIX       = IP Flow Info Export; protocol for DFW flow telemetry                                   │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  Aria NI     = Aria Network Insight; NSX flow analytics platform                                      │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  sFlow       = sampling protocol; alternative to IPFIX for flows                                      │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  BFD         = Bidirectional Forwarding Detection; fast link failure detect                           │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  nsx-syslog  = aggregated NSX system log; forwarded to SIEM                                           │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  Support bundle = NSX zip; all nodes logs + configs for GSS                                           │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  SR          = Service Request; VMware GSS support ticket                                             │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  Drop observation = Traceflow result showing which rule blocked packet                                │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│  Flow visibility = map of who talks to whom; built from IPFIX data                                    │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  Bidirectional= Traceflow sends packets in both directions simultaneously                             │
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│                                                                                                       │
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
 <hr />
-<h2 id="edge-node-cli-diagnostics">Edge Node CLI Diagnostics<a class="headerlink" href="#edge-node-cli-diagnostics" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># SSH to Edge node (admin user)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># All routing commands require VRF context</span>
+<h2 id="nsx-manager-cli-diagnostics">NSX Manager CLI Diagnostics<a class="headerlink" href="#nsx-manager-cli-diagnostics" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># SSH to any NSX Manager node</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>nsxcli
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># List all logical routers (VRFs) on this Edge</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>get<span class="w"> </span>logical-routers
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Enter T0 gateway VRF</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>vrf<span class="w"> </span>&lt;vrf-id&gt;
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Cluster and node health</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>get<span class="w"> </span>cluster<span class="w"> </span>status
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>get<span class="w"> </span>managers
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>get<span class="w"> </span>clusters
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>get<span class="w"> </span>corfu-cluster<span class="w"> </span>status
 <a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Routing</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>get<span class="w"> </span>route
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>get<span class="w"> </span>route<span class="w"> </span>detail
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>get<span class="w"> </span>forwarding
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># BGP</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>get<span class="w"> </span>bgp<span class="w"> </span>neighbor<span class="w"> </span>summary
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>get<span class="w"> </span>bgp<span class="w"> </span>neighbor<span class="w"> </span>&lt;peer-ip&gt;
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>get<span class="w"> </span>bgp<span class="w"> </span>neighbor<span class="w"> </span>&lt;peer-ip&gt;<span class="w"> </span>routes
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>get<span class="w"> </span>bgp<span class="w"> </span>neighbor<span class="w"> </span>&lt;peer-ip&gt;<span class="w"> </span>advertised-routes
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>get<span class="w"> </span>bgp<span class="w"> </span>config
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Services</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>get<span class="w"> </span>services
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>get<span class="w"> </span>service<span class="w"> </span>http
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>get<span class="w"> </span>service<span class="w"> </span>manager
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>get<span class="w"> </span>service<span class="w"> </span>controller
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># Transport infrastructure</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>get<span class="w"> </span>transport-nodes
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>get<span class="w"> </span>transport-node-status
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>get<span class="w"> </span>tunnel<span class="w"> </span>endpoints
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>get<span class="w"> </span>tunnel<span class="w"> </span>status
 <a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="c1"># Exit VRF context</span>
-<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="nb">exit</span>
-<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>
-<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="c1"># Interface status</span>
-<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>get<span class="w"> </span>interfaces
-<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>get<span class="w"> </span>interface<span class="w"> </span>fp-eth0
-<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>get<span class="w"> </span>interface<span class="w"> </span>fp-eth0<span class="w"> </span>counters
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="c1"># Overlay</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>get<span class="w"> </span>logical-switches
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>get<span class="w"> </span>logical-routers
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="c1"># Alarms</span>
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>get<span class="w"> </span>alarms
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>get<span class="w"> </span>alarms<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;critical\|high&quot;</span>
 <a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>
-<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a><span class="c1"># High Availability</span>
-<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>get<span class="w"> </span>edge-cluster<span class="w"> </span>status
-<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>get<span class="w"> </span>high-availability<span class="w"> </span>status
-<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a>get<span class="w"> </span>high-availability<span class="w"> </span>channels
-<a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a>
-<a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a><span class="c1"># System</span>
-<a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a>get<span class="w"> </span>node
-<a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a>get<span class="w"> </span>node<span class="w"> </span>cpu-usage
-<a id="__codelineno-2-38" name="__codelineno-2-38" href="#__codelineno-2-38"></a>get<span class="w"> </span>node<span class="w"> </span>memory
-<a id="__codelineno-2-39" name="__codelineno-2-39" href="#__codelineno-2-39"></a>get<span class="w"> </span>services
-<a id="__codelineno-2-40" name="__codelineno-2-40" href="#__codelineno-2-40"></a>get<span class="w"> </span>version
+<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a><span class="c1"># Version</span>
+<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>get<span class="w"> </span>version
+<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>get<span class="w"> </span>nodes
+</code></pre></div>
+<hr />
+<h2 id="edge-node-cli-diagnostics">Edge Node CLI Diagnostics<a class="headerlink" href="#edge-node-cli-diagnostics" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># SSH to Edge node (admin user)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># All routing commands require VRF context</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># List all logical routers (VRFs) on this Edge</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>get<span class="w"> </span>logical-routers
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Enter T0 gateway VRF</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>vrf<span class="w"> </span>&lt;vrf-id&gt;
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Routing</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>get<span class="w"> </span>route
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>get<span class="w"> </span>route<span class="w"> </span>detail
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>get<span class="w"> </span>forwarding
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="c1"># BGP</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>get<span class="w"> </span>bgp<span class="w"> </span>neighbor<span class="w"> </span>summary
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>get<span class="w"> </span>bgp<span class="w"> </span>neighbor<span class="w"> </span>&lt;peer-ip&gt;
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>get<span class="w"> </span>bgp<span class="w"> </span>neighbor<span class="w"> </span>&lt;peer-ip&gt;<span class="w"> </span>routes
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>get<span class="w"> </span>bgp<span class="w"> </span>neighbor<span class="w"> </span>&lt;peer-ip&gt;<span class="w"> </span>advertised-routes
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>get<span class="w"> </span>bgp<span class="w"> </span>config
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="c1"># Exit VRF context</span>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="nb">exit</span>
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a><span class="c1"># Interface status</span>
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>get<span class="w"> </span>interfaces
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>get<span class="w"> </span>interface<span class="w"> </span>fp-eth0
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>get<span class="w"> </span>interface<span class="w"> </span>fp-eth0<span class="w"> </span>counters
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a><span class="c1"># High Availability</span>
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>get<span class="w"> </span>edge-cluster<span class="w"> </span>status
+<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>get<span class="w"> </span>high-availability<span class="w"> </span>status
+<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a>get<span class="w"> </span>high-availability<span class="w"> </span>channels
+<a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a>
+<a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a><span class="c1"># System</span>
+<a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a>get<span class="w"> </span>node
+<a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a>get<span class="w"> </span>node<span class="w"> </span>cpu-usage
+<a id="__codelineno-3-38" name="__codelineno-3-38" href="#__codelineno-3-38"></a>get<span class="w"> </span>node<span class="w"> </span>memory
+<a id="__codelineno-3-39" name="__codelineno-3-39" href="#__codelineno-3-39"></a>get<span class="w"> </span>services
+<a id="__codelineno-3-40" name="__codelineno-3-40" href="#__codelineno-3-40"></a>get<span class="w"> </span>version
 </code></pre></div>
 <hr />
 <h2 id="esxi-host-nsx-diagnostics">ESXi Host NSX Diagnostics<a class="headerlink" href="#esxi-host-nsx-diagnostics" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># SSH to ESXi host as root</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># Verify NSX VIBs are installed</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>nsx
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c1"># TEP vmkernel IP</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>ipv4<span class="w"> </span>get
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># TEP route reachability</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>route<span class="w"> </span>ipv4<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;tep-subnet&gt;
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># Test TEP connectivity (replace vmk2 and IP with your TEP vmk)</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk2<span class="w"> </span>&lt;remote-tep-ip&gt;
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk2<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">1572</span><span class="w"> </span>&lt;remote-tep-ip&gt;<span class="w">   </span><span class="c1"># MTU test</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="c1"># DFW filter inspection</span>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>summarize-dvfilter<span class="w">                             </span><span class="c1"># List all filters</span>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>summarize-dvfilter<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;vm-name&gt;<span class="w">           </span><span class="c1"># Filter for a specific VM</span>
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>vsipioctl<span class="w"> </span>getrules<span class="w"> </span>-f<span class="w"> </span>&lt;filter-name&gt;<span class="w">           </span><span class="c1"># Rules applied to this filter</span>
-<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>vsipioctl<span class="w"> </span>getstats<span class="w"> </span>-f<span class="w"> </span>&lt;filter-name&gt;<span class="w">           </span><span class="c1"># Rule hit counts</span>
-<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>vsipioctl<span class="w"> </span>getaddrsets<span class="w"> </span>-f<span class="w"> </span>&lt;filter-name&gt;<span class="w">        </span><span class="c1"># Security group memberships</span>
-<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>vsipioctl<span class="w"> </span>getservices<span class="w"> </span>-f<span class="w"> </span>&lt;filter-name&gt;<span class="w">        </span><span class="c1"># Service definitions in rules</span>
-<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>
-<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a><span class="c1"># vDS and VNI mapping</span>
-<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>net-vdl2<span class="w"> </span>-M<span class="w"> </span>all<span class="w"> </span>-s<span class="w"> </span><span class="m">0</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># SSH to ESXi host as root</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Verify NSX VIBs are installed</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>nsx
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># TEP vmkernel IP</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>ipv4<span class="w"> </span>get
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># TEP route reachability</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>route<span class="w"> </span>ipv4<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;tep-subnet&gt;
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># Test TEP connectivity (replace vmk2 and IP with your TEP vmk)</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk2<span class="w"> </span>&lt;remote-tep-ip&gt;
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk2<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">1572</span><span class="w"> </span>&lt;remote-tep-ip&gt;<span class="w">   </span><span class="c1"># MTU test</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="c1"># DFW filter inspection</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>summarize-dvfilter<span class="w">                             </span><span class="c1"># List all filters</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>summarize-dvfilter<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;vm-name&gt;<span class="w">           </span><span class="c1"># Filter for a specific VM</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>vsipioctl<span class="w"> </span>getrules<span class="w"> </span>-f<span class="w"> </span>&lt;filter-name&gt;<span class="w">           </span><span class="c1"># Rules applied to this filter</span>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>vsipioctl<span class="w"> </span>getstats<span class="w"> </span>-f<span class="w"> </span>&lt;filter-name&gt;<span class="w">           </span><span class="c1"># Rule hit counts</span>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>vsipioctl<span class="w"> </span>getaddrsets<span class="w"> </span>-f<span class="w"> </span>&lt;filter-name&gt;<span class="w">        </span><span class="c1"># Security group memberships</span>
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>vsipioctl<span class="w"> </span>getservices<span class="w"> </span>-f<span class="w"> </span>&lt;filter-name&gt;<span class="w">        </span><span class="c1"># Service definitions in rules</span>
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a><span class="c1"># vDS and VNI mapping</span>
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>net-vdl2<span class="w"> </span>-M<span class="w"> </span>all<span class="w"> </span>-s<span class="w"> </span><span class="m">0</span>
 </code></pre></div>
 <hr />
 <h2 id="traceflow">Traceflow<a class="headerlink" href="#traceflow" title="Permanent link">&para;</a></h2>
@@ -4969,36 +5023,36 @@ Diagnostics reference covering Ports and Protocols Reference, Log Locations, NSX
 <h3 id="launch-traceflow">Launch Traceflow<a class="headerlink" href="#launch-traceflow" title="Permanent link">&para;</a></h3>
 <p><strong>NSX Manager UI: Plan &amp; Troubleshoot → Traceflow</strong></p>
 <p>Or via API:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Create a traceflow request</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="s1">    &quot;lport_id&quot;: &quot;&lt;source-vm-logical-port-id&gt;&quot;,</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="s1">    &quot;packet&quot;: {</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="s1">      &quot;eth_header&quot;: {</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="s1">        &quot;src_mac&quot;: &quot;&lt;source-vm-mac&gt;&quot;,</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="s1">        &quot;dst_mac&quot;: &quot;&lt;gateway-or-dest-mac&gt;&quot;</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="s1">      },</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="s1">      &quot;ip_header&quot;: {</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="s1">        &quot;src_ip&quot;: &quot;10.0.1.10&quot;,</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="s1">        &quot;dst_ip&quot;: &quot;10.0.2.20&quot;,</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="s1">        &quot;ttl&quot;: 64,</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="s1">        &quot;protocol&quot;: 1</span>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="s1">      },</span>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="s1">      &quot;icmp_header&quot;: {</span>
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="s1">        &quot;icmp_type&quot;: 8,</span>
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="s1">        &quot;icmp_code&quot;: 0</span>
-<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="s1">      },</span>
-<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="s1">      &quot;resource_type&quot;: &quot;FieldsPacketData&quot;,</span>
-<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="s1">      &quot;transport_type&quot;: &quot;UNICAST&quot;</span>
-<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a><span class="s1">    }</span>
-<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/traceflows&quot;</span>
-<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a>
-<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a><span class="c1"># Poll for results</span>
-<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/traceflows/&lt;traceflow-id&gt;&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Create a traceflow request</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="s1">    &quot;lport_id&quot;: &quot;&lt;source-vm-logical-port-id&gt;&quot;,</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="s1">    &quot;packet&quot;: {</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="s1">      &quot;eth_header&quot;: {</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="s1">        &quot;src_mac&quot;: &quot;&lt;source-vm-mac&gt;&quot;,</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="s1">        &quot;dst_mac&quot;: &quot;&lt;gateway-or-dest-mac&gt;&quot;</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="s1">      },</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="s1">      &quot;ip_header&quot;: {</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="s1">        &quot;src_ip&quot;: &quot;10.0.1.10&quot;,</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="s1">        &quot;dst_ip&quot;: &quot;10.0.2.20&quot;,</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="s1">        &quot;ttl&quot;: 64,</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="s1">        &quot;protocol&quot;: 1</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="s1">      },</span>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="s1">      &quot;icmp_header&quot;: {</span>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="s1">        &quot;icmp_type&quot;: 8,</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="s1">        &quot;icmp_code&quot;: 0</span>
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="s1">      },</span>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="s1">      &quot;resource_type&quot;: &quot;FieldsPacketData&quot;,</span>
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="s1">      &quot;transport_type&quot;: &quot;UNICAST&quot;</span>
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a><span class="s1">    }</span>
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a><span class="s1">  }&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/traceflows&quot;</span>
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a><span class="c1"># Poll for results</span>
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/traceflows/&lt;traceflow-id&gt;&quot;</span>
 </code></pre></div>
 <h3 id="traceflow-output-interpretation">Traceflow Output Interpretation<a class="headerlink" href="#traceflow-output-interpretation" title="Permanent link">&para;</a></h3>
 <table>
@@ -5031,97 +5085,97 @@ Diagnostics reference covering Ports and Protocols Reference, Log Locations, NSX
 <hr />
 <h2 id="packet-capture">Packet Capture<a class="headerlink" href="#packet-capture" title="Permanent link">&para;</a></h2>
 <h3 id="edge-node-packet-capture">Edge Node Packet Capture<a class="headerlink" href="#edge-node-packet-capture" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># SSH to Edge node</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Capture on physical uplink</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>debug<span class="w"> </span>packet<span class="w"> </span>capture<span class="w"> </span>interface<span class="w"> </span>fp-eth0<span class="w"> </span>count<span class="w"> </span><span class="m">500</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>debug<span class="w"> </span>packet<span class="w"> </span>capture<span class="w"> </span>interface<span class="w"> </span>fp-eth0<span class="w"> </span>filter<span class="w"> </span><span class="s2">&quot;host 10.0.0.1 and tcp port 179&quot;</span><span class="w"> </span>count<span class="w"> </span><span class="m">200</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Capture on overlay interface (Geneve)</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>debug<span class="w"> </span>packet<span class="w"> </span>capture<span class="w"> </span>interface<span class="w"> </span>nsx-geneve<span class="w"> </span>count<span class="w"> </span><span class="m">500</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Write to file for Wireshark</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>debug<span class="w"> </span>packet<span class="w"> </span>capture<span class="w"> </span>interface<span class="w"> </span>fp-eth0<span class="w"> </span>file<span class="w"> </span>/tmp/edge-cap.pcap<span class="w"> </span>count<span class="w"> </span><span class="m">1000</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># Copy from Edge to external location</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>scp<span class="w"> </span>/tmp/edge-cap.pcap<span class="w"> </span>user@jumphost:/tmp/
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># SSH to Edge node</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Capture on physical uplink</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>debug<span class="w"> </span>packet<span class="w"> </span>capture<span class="w"> </span>interface<span class="w"> </span>fp-eth0<span class="w"> </span>count<span class="w"> </span><span class="m">500</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>debug<span class="w"> </span>packet<span class="w"> </span>capture<span class="w"> </span>interface<span class="w"> </span>fp-eth0<span class="w"> </span>filter<span class="w"> </span><span class="s2">&quot;host 10.0.0.1 and tcp port 179&quot;</span><span class="w"> </span>count<span class="w"> </span><span class="m">200</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Capture on overlay interface (Geneve)</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>debug<span class="w"> </span>packet<span class="w"> </span>capture<span class="w"> </span>interface<span class="w"> </span>nsx-geneve<span class="w"> </span>count<span class="w"> </span><span class="m">500</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Write to file for Wireshark</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>debug<span class="w"> </span>packet<span class="w"> </span>capture<span class="w"> </span>interface<span class="w"> </span>fp-eth0<span class="w"> </span>file<span class="w"> </span>/tmp/edge-cap.pcap<span class="w"> </span>count<span class="w"> </span><span class="m">1000</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># Copy from Edge to external location</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>scp<span class="w"> </span>/tmp/edge-cap.pcap<span class="w"> </span>user@jumphost:/tmp/
 </code></pre></div>
 <h3 id="esxi-host-packet-capture">ESXi Host Packet Capture<a class="headerlink" href="#esxi-host-packet-capture" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Capture on a physical NIC (vmnic)</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>pktcap-uw<span class="w"> </span>--capture<span class="w"> </span>Uplink<span class="w"> </span>--switchport<span class="w"> </span>&lt;portid&gt;<span class="w"> </span>--outfile<span class="w"> </span>/tmp/vmnic-cap.pcap<span class="w"> </span>--count<span class="w"> </span><span class="m">500</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Capture on a vDS port (VM&#39;s traffic)</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>pktcap-uw<span class="w"> </span>--capture<span class="w"> </span>VmVnic<span class="w"> </span>--switchport<span class="w"> </span>&lt;portid&gt;<span class="w"> </span>--outfile<span class="w"> </span>/tmp/vm-cap.pcap<span class="w"> </span>--count<span class="w"> </span><span class="m">200</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Find the portID for a VM&#39;s vNIC</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>net-stats<span class="w"> </span>-l<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;vm-name&gt;
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Capture with BPF filter</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>pktcap-uw<span class="w"> </span>--capture<span class="w"> </span>Uplink<span class="w"> </span>--switchport<span class="w"> </span>&lt;portid&gt;<span class="w"> </span>--filter<span class="w"> </span><span class="s2">&quot;port 6081&quot;</span><span class="w"> </span>--outfile<span class="w"> </span>/tmp/geneve-cap.pcap
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Capture on a physical NIC (vmnic)</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>pktcap-uw<span class="w"> </span>--capture<span class="w"> </span>Uplink<span class="w"> </span>--switchport<span class="w"> </span>&lt;portid&gt;<span class="w"> </span>--outfile<span class="w"> </span>/tmp/vmnic-cap.pcap<span class="w"> </span>--count<span class="w"> </span><span class="m">500</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Capture on a vDS port (VM&#39;s traffic)</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>pktcap-uw<span class="w"> </span>--capture<span class="w"> </span>VmVnic<span class="w"> </span>--switchport<span class="w"> </span>&lt;portid&gt;<span class="w"> </span>--outfile<span class="w"> </span>/tmp/vm-cap.pcap<span class="w"> </span>--count<span class="w"> </span><span class="m">200</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Find the portID for a VM&#39;s vNIC</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>net-stats<span class="w"> </span>-l<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;vm-name&gt;
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># Capture with BPF filter</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>pktcap-uw<span class="w"> </span>--capture<span class="w"> </span>Uplink<span class="w"> </span>--switchport<span class="w"> </span>&lt;portid&gt;<span class="w"> </span>--filter<span class="w"> </span><span class="s2">&quot;port 6081&quot;</span><span class="w"> </span>--outfile<span class="w"> </span>/tmp/geneve-cap.pcap
 </code></pre></div>
 <hr />
 <h2 id="api-based-diagnostics">API-Based Diagnostics<a class="headerlink" href="#api-based-diagnostics" title="Permanent link">&para;</a></h2>
 <h3 id="check-realisation-state">Check Realisation State<a class="headerlink" href="#check-realisation-state" title="Permanent link">&para;</a></h3>
 <p>After making a policy change, verify it has been realised on all transport nodes:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Check segment realisation</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/policy/api/v1/infra/segments/&lt;segment-id&gt;/state&quot;</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Check security policy realisation</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/policy/api/v1/infra/realized-state/realized-entities?intent_path=/infra/domains/default/security-policies/&lt;policy-id&gt;&quot;</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># Check T0 gateway realisation</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/policy/api/v1/infra/tier-0s/&lt;t0-id&gt;/state&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Check segment realisation</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/policy/api/v1/infra/segments/&lt;segment-id&gt;/state&quot;</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Check security policy realisation</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/policy/api/v1/infra/realized-state/realized-entities?intent_path=/infra/domains/default/security-policies/&lt;policy-id&gt;&quot;</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c1"># Check T0 gateway realisation</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/policy/api/v1/infra/tier-0s/&lt;t0-id&gt;/state&quot;</span>
 </code></pre></div>
 <h3 id="check-open-alarms">Check Open Alarms<a class="headerlink" href="#check-open-alarms" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/alarms?status=OPEN&amp;severity=CRITICAL&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="s2">import sys, json</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="s2">d = json.load(sys.stdin)</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="s2">print(f&#39;Critical alarms: {d.get(\&quot;result_count\&quot;,0)}&#39;)</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="s2">for a in d.get(&#39;results&#39;,[]):</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="s2">    src  = a.get(&#39;alarm_source&#39;,{}).get(&#39;display_name&#39;,&#39;?&#39;)</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="s2">    summ = a.get(&#39;summary&#39;,&#39;&#39;)[:100]</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="s2">    ts   = a.get(&#39;timestamp_epoch&#39;,&#39;?&#39;)</span>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="s2">    print(f&#39;  [{ts}] {src}: {summ}&#39;)</span>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="s2">&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/alarms?status=OPEN&amp;severity=CRITICAL&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="s2">import sys, json</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="s2">d = json.load(sys.stdin)</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="s2">print(f&#39;Critical alarms: {d.get(\&quot;result_count\&quot;,0)}&#39;)</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="s2">for a in d.get(&#39;results&#39;,[]):</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="s2">    src  = a.get(&#39;alarm_source&#39;,{}).get(&#39;display_name&#39;,&#39;?&#39;)</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="s2">    summ = a.get(&#39;summary&#39;,&#39;&#39;)[:100]</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="s2">    ts   = a.get(&#39;timestamp_epoch&#39;,&#39;?&#39;)</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="s2">    print(f&#39;  [{ts}] {src}: {summ}&#39;)</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="s2">&quot;</span>
 </code></pre></div>
 <h3 id="check-transport-node-connectivity-to-manager">Check Transport Node Connectivity to Manager<a class="headerlink" href="#check-transport-node-connectivity-to-manager" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Transport node should have a connection_state of &quot;success&quot; or &quot;in_sync&quot;</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/transport-nodes/&lt;tn-id&gt;/state&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="s2">import sys, json</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="s2">d = json.load(sys.stdin)</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="s2">print(f&#39;State: {d.get(\&quot;state\&quot;,\&quot;?\&quot;)}&#39;)</span>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="s2">print(f&#39;Transport failures: {d.get(\&quot;transport_failures\&quot;,[])}&#39;)</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="s2">&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Transport node should have a connection_state of &quot;success&quot; or &quot;in_sync&quot;</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/transport-nodes/&lt;tn-id&gt;/state&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="s2">import sys, json</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="s2">d = json.load(sys.stdin)</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="s2">print(f&#39;State: {d.get(\&quot;state\&quot;,\&quot;?\&quot;)}&#39;)</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="s2">print(f&#39;Transport failures: {d.get(\&quot;transport_failures\&quot;,[])}&#39;)</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="s2">&quot;</span>
 </code></pre></div>
 <hr />
 <h2 id="diagnostic-data-collection-for-support">Diagnostic Data Collection for Support<a class="headerlink" href="#diagnostic-data-collection-for-support" title="Permanent link">&para;</a></h2>
 <p>When opening a Broadcom support case for NSX:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># 1. NSX Manager support bundle (from any Manager node)</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1"># UI: System → Support Bundle → Download</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="c1"># Or via API:</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;log_age&quot;: 48}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/node/support-bundles&quot;</span>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># 2. Edge node tech support bundle (from each Edge node CLI)</span>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>collect<span class="w"> </span>tech-support
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>
-<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="c1"># 3. Cluster status snapshot</span>
-<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>nsxcli
-<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>get<span class="w"> </span>cluster<span class="w"> </span>status<span class="w"> </span>&gt;<span class="w"> </span>/tmp/cluster-status.txt
-<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>get<span class="w"> </span>transport-node-status<span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/cluster-status.txt
-<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>get<span class="w"> </span>tunnel<span class="w"> </span>status<span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/cluster-status.txt
-<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>
-<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a><span class="c1"># 4. DFW filter output from affected ESXi host</span>
-<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>summarize-dvfilter<span class="w"> </span>&gt;<span class="w"> </span>/tmp/dvfilter.txt
-<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a>vsipioctl<span class="w"> </span>getrules<span class="w"> </span>-f<span class="w"> </span>&lt;affected-filter&gt;<span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/dvfilter.txt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># 1. NSX Manager support bundle (from any Manager node)</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="c1"># UI: System → Support Bundle → Download</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="c1"># Or via API:</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;log_age&quot;: 48}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/node/support-bundles&quot;</span>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="c1"># 2. Edge node tech support bundle (from each Edge node CLI)</span>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>collect<span class="w"> </span>tech-support
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="c1"># 3. Cluster status snapshot</span>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>nsxcli
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>get<span class="w"> </span>cluster<span class="w"> </span>status<span class="w"> </span>&gt;<span class="w"> </span>/tmp/cluster-status.txt
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>get<span class="w"> </span>transport-node-status<span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/cluster-status.txt
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>get<span class="w"> </span>tunnel<span class="w"> </span>status<span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/cluster-status.txt
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a><span class="c1"># 4. DFW filter output from affected ESXi host</span>
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>summarize-dvfilter<span class="w"> </span>&gt;<span class="w"> </span>/tmp/dvfilter.txt
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>vsipioctl<span class="w"> </span>getrules<span class="w"> </span>-f<span class="w"> </span>&lt;affected-filter&gt;<span class="w"> </span>&gt;&gt;<span class="w"> </span>/tmp/dvfilter.txt
 </code></pre></div>
 <p>Provide timestamps of when the issue started, what changes were made in the 24 hours before the issue, and a clear description of the impact scope.</p>
 

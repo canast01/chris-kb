@@ -2168,6 +2168,8 @@
       
         
       
+        
+      
     
     
     
@@ -4352,6 +4354,50 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#severity-levels" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Severity Levels
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#support-tier-response-times" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Support Tier Response Times
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#escalation-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Escalation Path
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#diagnostic-commands-to-run-before-calling-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diagnostic Commands to Run Before Calling Support
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#known-vmware-security-advisories-vmsa-nsx" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4704,75 +4750,150 @@ Escalation reference covering Support Portal, When to Escalate, Information to C
 │  Config export = API GET of all NSX config; provides GSS full picture                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>```sql
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Key files within the ESXi support bundle for NSX:
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>- `/var/log/vmkernel.log` — NSX VIB and Geneve events
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>- Filter-specific logs from `vsipioctl` output
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>- `/etc/vmware/nsx/` — NSX configuration on host
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>---
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>## Severity Levels
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>| Severity | Criteria | Examples |
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>|---|---|---|
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>| P1 — Critical | Production down; data loss risk; no workaround | NSX Manager cluster UNSTABLE; all VMs on an overlay segment unreachable |
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>| P2 — Major | Production degraded; workaround exists | One Edge node down (second Edge still active); specific DFW rules not pushing |
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>| P3 — Minor | Non-production affected; low business impact | Lab NSX Manager unreachable; minor DFW logging issues |
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>| P4 — Informational | How-to questions; feature requests | Best practice questions; upgrade planning |
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>Set the correct severity at case creation — P1 cases receive immediate 24x7 engineer response.
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>---
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>## Support Tier Response Times
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>| Support Tier | P1 Initial Response | P2 Initial Response | Coverage |
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>|---|---|---|---|
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>| Production Support | 30 minutes | 4 hours | 24x7 |
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>| Business Critical Support | 15 minutes | 2 hours | 24x7 + dedicated TAM |
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>Business Critical Support includes a Technical Account Manager (TAM) for proactive guidance and expedited escalation.
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>---
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>## Escalation Path
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>1. **Initial case** — Broadcom Support Portal. Provide all required data upfront.
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>2. **Status stall** — If no meaningful progress within the expected response SLA, request case escalation through the support portal.
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>3. **TAM escalation** — If Business Critical tier, contact your TAM directly by phone or email.
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>4. **Executive escalation** — For P1 incidents not progressing, request Broadcom Escalation Management via the TAM or directly through the support portal escalation workflow.
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>---
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>## Diagnostic Commands to Run Before Calling Support
-<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>
-<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>Run these commands and have the output ready before opening a case:
-<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>
-<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>```bash
-<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a># NSX Manager CLI (SSH to any Manager node)
-<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>nsxcli
-<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>get cluster status
-<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>get managers
-<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>get services
-<a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a>get corfu-cluster status
-<a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a>get transport-node-status
-<a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a>get tunnel status
-<a id="__codelineno-1-56" name="__codelineno-1-56" href="#__codelineno-1-56"></a>get version
-<a id="__codelineno-1-57" name="__codelineno-1-57" href="#__codelineno-1-57"></a>
-<a id="__codelineno-1-58" name="__codelineno-1-58" href="#__codelineno-1-58"></a># Edge node CLI (SSH to each Edge)
-<a id="__codelineno-1-59" name="__codelineno-1-59" href="#__codelineno-1-59"></a>get version
-<a id="__codelineno-1-60" name="__codelineno-1-60" href="#__codelineno-1-60"></a>get services
-<a id="__codelineno-1-61" name="__codelineno-1-61" href="#__codelineno-1-61"></a>get interfaces
-<a id="__codelineno-1-62" name="__codelineno-1-62" href="#__codelineno-1-62"></a>get bgp neighbor summary
-<a id="__codelineno-1-63" name="__codelineno-1-63" href="#__codelineno-1-63"></a>get edge-cluster status
-<a id="__codelineno-1-64" name="__codelineno-1-64" href="#__codelineno-1-64"></a>
-<a id="__codelineno-1-65" name="__codelineno-1-65" href="#__codelineno-1-65"></a># From NSX Manager API
-<a id="__codelineno-1-66" name="__codelineno-1-66" href="#__codelineno-1-66"></a>curl -sk -u &#39;admin:password&#39; &quot;https://&lt;nsx-manager&gt;/api/v1/cluster/status&quot;
-<a id="__codelineno-1-67" name="__codelineno-1-67" href="#__codelineno-1-67"></a>curl -sk -u &#39;admin:password&#39; &quot;https://&lt;nsx-manager&gt;/api/v1/transport-nodes/status&quot;
-<a id="__codelineno-1-68" name="__codelineno-1-68" href="#__codelineno-1-68"></a>curl -sk -u &#39;admin:password&#39; &quot;https://&lt;nsx-manager&gt;/api/v1/alarms?status=OPEN&amp;severity=CRITICAL&quot;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌────────────────────────────────────────── NSX — Escalation ───────────────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  VMware GSS escalation, pre-escalation steps, severity matrix, bundle contents.                       │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│                                                                                                       │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │             Escalation Triggers              │  │             Pre-Escalation Steps            │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │           Manager cluster DEGRADED           │  │            Collect support bundle           │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │           BGP flapping unexplained           │  │           Document symptoms + time          │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │            DFW drops all traffic             │  │          Run Traceflow and capture          │   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │            Upgrade failed mid-way            │  │          Note NSX + vCenter version         │   │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │            Data plane unreachable            │  │            Verify HCL and interop           │   │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                                                                       │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│  Internal triage → bundle → VMware SR → severity assignment → bridge.                                 │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                                                                                                       │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│                                                                                                       │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │               Severity Matrix                │  │           Support Bundle Contents           │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │         S1: network down / data loss         │  │          Manager + edge + host logs         │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │           S2: major feature broken           │  │            Traceflow trace export           │   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │         S3: degraded with workaround         │  │             IPFIX collector data            │   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   │            S4: question or how-to            │  │            Config export (API/UI)           │   │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│   │           S1 = 24x7 phone support            │  │              Timeline of events             │   │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│                                                                                                       │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  NSX Manager VMs, Edge VMs, ESXi nodes, ToR switches, vCenter, OOB access                             │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│                                                                                                       │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  GSS         = Global Support Services; VMware support organisation                                   │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  SR          = Service Request; VMware ticket raised on my.vmware.com                                 │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  S1          = Severity 1; network down/data loss; 24x7 phone response                                │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  S2          = Severity 2; major degradation but workaround exists                                    │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  Support bundle = NSX diagnostic archive; manager + edge + hosts                                      │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  DEGRADED    = NSX Manager cluster health status indicating node failure                              │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  BGP flapping= BGP session cycling between up and down rapidly                                        │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  Traceflow   = NSX path debug tool; export results for GSS                                            │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  Interop     = VMware Interoperability Matrix; check version support                                  │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  HCL         = VMware Hardware Compatibility List; verify NICs/HBAs                                   │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│  Phone bridge= S1 SR triggers live call with VMware engineer                                          │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  Config export = API GET of all NSX config; provides GSS full picture                                 │
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│                                                                                                       │
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
+<p>Key files within the ESXi support bundle for NSX:
+- <code>/var/log/vmkernel.log</code> — NSX VIB and Geneve events
+- Filter-specific logs from <code>vsipioctl</code> output
+- <code>/etc/vmware/nsx/</code> — NSX configuration on host</p>
+<hr />
+<h2 id="severity-levels">Severity Levels<a class="headerlink" href="#severity-levels" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Severity</th>
+<th>Criteria</th>
+<th>Examples</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>P1 — Critical</td>
+<td>Production down; data loss risk; no workaround</td>
+<td>NSX Manager cluster UNSTABLE; all VMs on an overlay segment unreachable</td>
+</tr>
+<tr>
+<td>P2 — Major</td>
+<td>Production degraded; workaround exists</td>
+<td>One Edge node down (second Edge still active); specific DFW rules not pushing</td>
+</tr>
+<tr>
+<td>P3 — Minor</td>
+<td>Non-production affected; low business impact</td>
+<td>Lab NSX Manager unreachable; minor DFW logging issues</td>
+</tr>
+<tr>
+<td>P4 — Informational</td>
+<td>How-to questions; feature requests</td>
+<td>Best practice questions; upgrade planning</td>
+</tr>
+</tbody>
+</table>
+<p>Set the correct severity at case creation — P1 cases receive immediate 24x7 engineer response.</p>
+<hr />
+<h2 id="support-tier-response-times">Support Tier Response Times<a class="headerlink" href="#support-tier-response-times" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Support Tier</th>
+<th>P1 Initial Response</th>
+<th>P2 Initial Response</th>
+<th>Coverage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Production Support</td>
+<td>30 minutes</td>
+<td>4 hours</td>
+<td>24x7</td>
+</tr>
+<tr>
+<td>Business Critical Support</td>
+<td>15 minutes</td>
+<td>2 hours</td>
+<td>24x7 + dedicated TAM</td>
+</tr>
+</tbody>
+</table>
+<p>Business Critical Support includes a Technical Account Manager (TAM) for proactive guidance and expedited escalation.</p>
+<hr />
+<h2 id="escalation-path">Escalation Path<a class="headerlink" href="#escalation-path" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Initial case</strong> — Broadcom Support Portal. Provide all required data upfront.</li>
+<li><strong>Status stall</strong> — If no meaningful progress within the expected response SLA, request case escalation through the support portal.</li>
+<li><strong>TAM escalation</strong> — If Business Critical tier, contact your TAM directly by phone or email.</li>
+<li><strong>Executive escalation</strong> — For P1 incidents not progressing, request Broadcom Escalation Management via the TAM or directly through the support portal escalation workflow.</li>
+</ol>
+<hr />
+<h2 id="diagnostic-commands-to-run-before-calling-support">Diagnostic Commands to Run Before Calling Support<a class="headerlink" href="#diagnostic-commands-to-run-before-calling-support" title="Permanent link">&para;</a></h2>
+<p>Run these commands and have the output ready before opening a case:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># NSX Manager CLI (SSH to any Manager node)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>nsxcli
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>get<span class="w"> </span>cluster<span class="w"> </span>status
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>get<span class="w"> </span>managers
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>get<span class="w"> </span>services
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>get<span class="w"> </span>corfu-cluster<span class="w"> </span>status
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>get<span class="w"> </span>transport-node-status
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>get<span class="w"> </span>tunnel<span class="w"> </span>status
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>get<span class="w"> </span>version
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Edge node CLI (SSH to each Edge)</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>get<span class="w"> </span>version
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>get<span class="w"> </span>services
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>get<span class="w"> </span>interfaces
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>get<span class="w"> </span>bgp<span class="w"> </span>neighbor<span class="w"> </span>summary
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>get<span class="w"> </span>edge-cluster<span class="w"> </span>status
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="c1"># From NSX Manager API</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/cluster/status&quot;</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/transport-nodes/status&quot;</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/alarms?status=OPEN&amp;severity=CRITICAL&quot;</span>
+</code></pre></div>
 <p>Save all output with timestamps. Support engineers will ask for these as a first step — having them ready accelerates triage.</p>
 <hr />
 <h2 id="known-vmware-security-advisories-vmsa-nsx">Known VMware Security Advisories (VMSA) — NSX<a class="headerlink" href="#known-vmware-security-advisories-vmsa-nsx" title="Permanent link">&para;</a></h2>

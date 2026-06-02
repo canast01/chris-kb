@@ -2342,6 +2342,8 @@
       
         
       
+        
+      
     
     
     
@@ -4454,6 +4456,28 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#rotate-a-password-in-locker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rotate a Password in Locker
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#add-a-vcenter-server-to-lcm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Add a vCenter Server to LCM
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#content-migration-between-environments" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4743,34 +4767,67 @@ Procedures reference covering Rotate a Password in Locker, Add a vCenter Server 
 │  Credential Test     = LCM verifies stored account password still authenticates                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>```sql
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Via UI: **LCM → Locker → Certificates → Import Certificate** — paste PEM content for each field.
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>**Step 4 — Apply the certificate to the product:**
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>LCM → Lifecycle Operations → Environments → select product → **Replace Certificate** → choose the new Locker alias → confirm.
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>LCM applies the certificate to all product nodes. Monitor via **Requests**.
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>---
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>## Rotate a Password in Locker
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>When a service account password is changed at source (vCenter, AD, database):
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>1. LCM → Locker → Passwords → locate the alias for the changed credential
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>2. Click **Edit** → update the password value
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>3. Navigate to all products that use this credential and re-validate their connections
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>4. For vCenter-linked credentials: LCM → Settings → vCenter Server → edit → re-validate
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>---
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>## Add a vCenter Server to LCM
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>```text
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>LCM → Settings → vCenter Server → Add vCenter Server
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌────────────────────────────────────── Aria Suite LCM Procedures ──────────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  Certificate rotation, password rotation, and add product procedures for LCM.                         │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│                                                                                                       │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │             Certificate Rotation             │  │              Password Rotation              │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │          1. Import new cert to LCM           │  │          1. Update account password         │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │        2. Assign cert to environment         │  │          2. LCM: Locker &gt; Password          │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │         3. LCM: replace cert action          │  │         3. Update stored credential         │   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │           4. Validate all products           │  │            4. Test product health           │   │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│                                                                                                       │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│  Cert rotation via LCM covers all nodes; password rotation via LCM Locker.                            │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│                                                                                                       │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                                                                                                       │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │          Add Product to Environment          │  │                Remove Product               │   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │         1. Depot: ensure PAK synced          │  │            1. LCM: Delete product           │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │         2. Environment &gt; Add Product         │  │           2. LCM removes from env           │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │          3. Complete product wizard          │  │            3. Delete VM manually            │   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │         4. Validate health post-add          │  │           4. Clean DNS + firewall           │   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│                                                                                                       │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  LCM VM; managed product VMs on vSphere; CA for cert signing; AD for accounts                         │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│                                                                                                       │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Cert Rotation       = LCM replaces TLS cert across all nodes of a product                            │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│  LCM Locker          = Secure password store in LCM; holds all product creds                          │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  Password Rotation   = Update credential in LCM Locker after account pw change                        │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  Cert Import         = Upload CA-signed cert and key to LCM trust store                               │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  Cert Assignment     = Link imported cert to an environment or specific product                       │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  Replace Cert Action = LCM-orchestrated cert push to all product VMs                                  │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  Add Product         = Deploy new Aria product into existing LCM environment                          │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  Product Wizard      = LCM UI wizard collecting hostname, IP, size for new product                    │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  Remove Product      = LCM unregisters product; VM must be deleted separately                         │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  PAK Sync            = Required before adding product; ensures binary is available                    │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  Health Validation   = Post-procedure check that all products remain green                            │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  Credential Test     = LCM verifies stored account password still authenticates                       │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│                                                                                                       │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
+<p>Via UI: <strong>LCM → Locker → Certificates → Import Certificate</strong> — paste PEM content for each field.</p>
+<p><strong>Step 4 — Apply the certificate to the product:</strong></p>
+<p>LCM → Lifecycle Operations → Environments → select product → <strong>Replace Certificate</strong> → choose the new Locker alias → confirm.</p>
+<p>LCM applies the certificate to all product nodes. Monitor via <strong>Requests</strong>.</p>
+<hr />
+<h2 id="rotate-a-password-in-locker">Rotate a Password in Locker<a class="headerlink" href="#rotate-a-password-in-locker" title="Permanent link">&para;</a></h2>
+<p>When a service account password is changed at source (vCenter, AD, database):</p>
+<ol>
+<li>LCM → Locker → Passwords → locate the alias for the changed credential</li>
+<li>Click <strong>Edit</strong> → update the password value</li>
+<li>Navigate to all products that use this credential and re-validate their connections</li>
+<li>For vCenter-linked credentials: LCM → Settings → vCenter Server → edit → re-validate</li>
+</ol>
+<hr />
+<h2 id="add-a-vcenter-server-to-lcm">Add a vCenter Server to LCM<a class="headerlink" href="#add-a-vcenter-server-to-lcm" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>LCM → Settings → vCenter Server → Add vCenter Server
+</code></pre></div>
 <p>Provide:
 - vCenter FQDN (must be resolvable from LCM appliance)
 - Username: <code>svc-lcm@vsphere.local</code> (dedicated service account — not administrator@vsphere.local)
@@ -4825,7 +4882,7 @@ Procedures reference covering Rotate a Password in Locker, Add a vCenter Server 
 <hr />
 <h2 id="register-vidm-workspace-one-access">Register VIDM (Workspace ONE Access)<a class="headerlink" href="#register-vidm-workspace-one-access" title="Permanent link">&para;</a></h2>
 <p>If VIDM was deployed separately (not via Easy Installer) or needs to be re-registered:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>LCM → Settings → Identity Manager → Configure
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>LCM → Settings → Identity Manager → Configure
 </code></pre></div>
 <p>Provide:
 - VIDM FQDN

@@ -4203,55 +4203,6 @@ Dell PowerProtect DD (Data Domain) is a purpose-built backup appliance with inli
 <a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>│                                                                                                       │
 <a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌──────────────────────────────────── Dell Data Domain Architecture ────────────────────────────────────┐
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │     Data Domain: purpose-built deduplication backup appliance with DDOS; NAS/VTL front-end    │   │
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │      Inline deduplication and compression reduce backup storage by 10–55x typical ratios      │   │
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │          Protocols: NFS, CIFS/SMB, DD Boost (app-side dedup), VTL, OST (OpenStorage)          │   │
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │           Replication: DD Replicator sends only unique deduplicated data to DR site           │   │
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│                                                                                                       │
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│    Backup app writes to DD via NFS/DD Boost → inline dedup → stored in DDOS filesystem                │
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│                                                                                                       │
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│                  ▼                                ▼                                ▼                  │
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                                                                       │
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│   │     Front-End Protocols     │  │          DDOS Core          │  │         Replication         │   │
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   │         NFS (POSIX)         │  │         Inline dedup        │  │        DD Replicator        │   │
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │          CIFS / SMB         │  │         Compression         │  │        Collection rep       │   │
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │           DD Boost          │  │           DDOS FS           │  │          MTree rep          │   │
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │        VTL (FC/iSCSI)       │  │            RAID-6           │  │        DD Cloud Tier        │   │
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │            DD OST           │  │          Encryption         │  │         Cascade rep         │   │
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│                                                                                                       │
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│   │    Component     │      Model       │      Capacity     │    Throughput    │     Use case     │   │
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│   │      Entry       │      DD3300      │    Up to 96 TB    │    5.4 TB/hr     │   Remote/ROBO    │   │
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│   │       Mid        │      DD6400      │    Up to 576 TB   │     27 TB/hr     │  Mid datacenter  │   │
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│   │       High       │      DD9900      │    Up to 1 PB+    │    68.8 TB/hr    │ Large enterprise │   │
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│   │     Virtual      │       DDVE       │    Up to 96 TB    │     Software     │   Cloud/hybrid   │   │
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│                                                                                                       │
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│    Physical: head unit + expansion shelves; NVRAM write cache for inline dedup throughput             │
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│                                                                                                       │
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│    Key terms:                                                                                         │
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│                                                                                                       │
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│    DDOS         = Data Domain Operating System; purpose-built FS optimised for deduplication          │
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│    DD Boost     = Client-side library in Networker/Veeam/NBU; offloads dedup to backup client         │
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│    Inline dedup = Deduplication performed as data streams in; zero separate dedupe pass needed        │
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│    MTree        = Logical partition of DD storage; replication target; quota boundaries               │
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│    VTL          = Virtual Tape Library; emulates tape drives over FC or iSCSI                         │
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│    DD Replicator= Asynchronous replication of deduplicated data; sends only unique segments           │
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│    Collection rep= Replicates entire DD filesystem; used for full system DR                           │
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│    NVRAM        = Non-volatile RAM write cache; ensures dedup throughput without losing data          │
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│    RAID-6       = DDOS uses RAID-6 for data protection; tolerates 2 simultaneous drive failures       │
-<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│    DD Cloud Tier= Offloads inactive data from DD to object storage (AWS S3, Azure Blob, etc.)         │
-<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>│    OST          = OpenStorage Technology; backup app plugin for direct data path to DD                │
-<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>│    DDVE         = Data Domain Virtual Edition; software-only DD running on VMware/cloud               │
-<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>│                                                                                                       │
-<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
 <img alt="Data Domain Architecture" src="../../../../assets/data-domain-architecture-overview.svg" /></p>
 <div class="kb-grid kb-grid-3">
   <a class="kb-card" href="how-it-works/">

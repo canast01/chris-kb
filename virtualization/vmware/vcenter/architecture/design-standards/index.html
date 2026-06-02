@@ -2168,6 +2168,8 @@
       
         
       
+        
+      
     
     
     
@@ -4341,6 +4343,28 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#vnic-type-and-network-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vNIC Type and Network Configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#disk-provisioning-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disk Provisioning Standards
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#snapshot-policy" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4749,40 +4773,120 @@ Design Standards reference covering Naming Conventions, Cluster Configuration Ba
 │  Static IP    = required; DHCP lease expiry causes cert/DNS mismatch                                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>```text
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Tools must report `running` status in vCenter. A stale or not-running Tools status blocks live migration.
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>## vNIC Type and Network Configuration
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| Setting | Required Value |
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>|---|---|
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>| Network adapter type | VMXNET3 |
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>| E1000/E1000e | Not permitted on new builds |
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>| NIC count | One per network segment (no bonding in guest) |
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>| MAC address type | VMware-generated (do not set static MACs) |
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>Each VM connects to a named port group. Port group names follow the VLAN naming convention. Do not connect VMs directly to a vSwitch uplink.
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>PCI passthrough and SR-IOV are permitted only for workloads with documented performance requirements and approved by the platform team.
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>## Disk Provisioning Standards
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>| Scenario | Provisioning Type | Justification |
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>|---|---|---|
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>| Production VMs | Thick eager zeroed | Best performance, no lazy-zero latency |
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>| Staging/test VMs | Thin provisioned | Space efficiency acceptable |
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>| Templates | Thin provisioned | Templates are not run directly |
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>| Linked clones | Not permitted | Not used in standard builds |
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>All VM disks must reside on a vSphere datastore with sufficient free space. Alert threshold is 80% capacity; hard limit for new provisioning is 85%.
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>```bash
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a># Recommended disk layout
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>Disk 1: OS        50 GB   thick eager zeroed
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>Disk 2: Data      varies  thick eager zeroed
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>Disk 3: Swap/page 8 GB    thick eager zeroed (Windows only)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌────────────────────────────────── vCenter Server — Design Standards ──────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  Design standards define sizing, HA topology, network placement, and upgrade                          │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│  sequencing to ensure a stable and supportable vCenter deployment.                                    │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│                                                                                                       │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │               Sizing Standards               │  │               HA &amp; Resilience               │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │           Tiny: ≤10 hosts, 100 VMs           │  │          vCenter HA: active-passive         │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │          Small: ≤100 hosts, 1k VMs           │  │           Witness node: tiebreaker          │   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │          Medium: ≤400 hosts, 4k VMs          │  │           Backup: file-based daily          │   │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │          Large: ≤1k hosts, 10k VMs           │  │              RPO: 24h; RTO: &lt;1h             │   │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                                                                       │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│  Size to the largest projected inventory; HA mode requires 3 VCSA nodes.                              │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                                                                                                       │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│                                                                                                       │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │              Network Placement               │  │              Upgrade Sequencing             │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │         Mgmt network: dedicated NIC          │  │           Always upgrade VC first           │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │            DNS: A + PTR required             │  │           Then upgrade ESXi hosts           │   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │          NTP: same source as hosts           │  │             Then NSX, then tools            │   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   │          Static IP: no DHCP for VC           │  │           Snapshot VC before patch          │   │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│                                                                                                       │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  VCSA runs on an ESXi host with local/shared storage; management network is separate                  │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  from VM network; dedicated NIC or VLAN on management vDS.                                            │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│                                                                                                       │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  vCenter HA   = active/passive VCSA pair + witness; auto-failover in ~60s                             │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  Witness      = third VCSA node providing quorum vote; no data replica                                │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  File-based   = VCSA built-in backup; schedule via VAMI; excludes stats DB                            │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  VAMI         = vCenter Appliance Management Interface; port 5480                                     │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  RPO          = Recovery Point Objective; max data loss window                                        │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  RTO          = Recovery Time Objective; max acceptable downtime                                      │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  NTP          = time sync; clock skew &gt;5min breaks SSO certificates                                   │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  DNS PTR      = reverse lookup record; required for FQDN-based trust                                  │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  Upgrade seq  = vCenter first; NSX/tools after; prevents API mismatch                                 │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  Snapshot     = pre-upgrade rollback point; remove within 24–72h                                      │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│  Management vDS= dedicated distributed switch for management traffic                                  │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  Static IP    = required; DHCP lease expiry causes cert/DNS mismatch                                  │
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│                                                                                                       │
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
+<p>Tools must report <code>running</code> status in vCenter. A stale or not-running Tools status blocks live migration.</p>
+<h2 id="vnic-type-and-network-configuration">vNIC Type and Network Configuration<a class="headerlink" href="#vnic-type-and-network-configuration" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Required Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Network adapter type</td>
+<td>VMXNET3</td>
+</tr>
+<tr>
+<td>E1000/E1000e</td>
+<td>Not permitted on new builds</td>
+</tr>
+<tr>
+<td>NIC count</td>
+<td>One per network segment (no bonding in guest)</td>
+</tr>
+<tr>
+<td>MAC address type</td>
+<td>VMware-generated (do not set static MACs)</td>
+</tr>
+</tbody>
+</table>
+<p>Each VM connects to a named port group. Port group names follow the VLAN naming convention. Do not connect VMs directly to a vSwitch uplink.</p>
+<p>PCI passthrough and SR-IOV are permitted only for workloads with documented performance requirements and approved by the platform team.</p>
+<h2 id="disk-provisioning-standards">Disk Provisioning Standards<a class="headerlink" href="#disk-provisioning-standards" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Provisioning Type</th>
+<th>Justification</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Production VMs</td>
+<td>Thick eager zeroed</td>
+<td>Best performance, no lazy-zero latency</td>
+</tr>
+<tr>
+<td>Staging/test VMs</td>
+<td>Thin provisioned</td>
+<td>Space efficiency acceptable</td>
+</tr>
+<tr>
+<td>Templates</td>
+<td>Thin provisioned</td>
+<td>Templates are not run directly</td>
+</tr>
+<tr>
+<td>Linked clones</td>
+<td>Not permitted</td>
+<td>Not used in standard builds</td>
+</tr>
+</tbody>
+</table>
+<p>All VM disks must reside on a vSphere datastore with sufficient free space. Alert threshold is 80% capacity; hard limit for new provisioning is 85%.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Recommended disk layout</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>Disk<span class="w"> </span><span class="m">1</span>:<span class="w"> </span>OS<span class="w">        </span><span class="m">50</span><span class="w"> </span>GB<span class="w">   </span>thick<span class="w"> </span>eager<span class="w"> </span>zeroed
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>Disk<span class="w"> </span><span class="m">2</span>:<span class="w"> </span>Data<span class="w">      </span>varies<span class="w">  </span>thick<span class="w"> </span>eager<span class="w"> </span>zeroed
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>Disk<span class="w"> </span><span class="m">3</span>:<span class="w"> </span>Swap/page<span class="w"> </span><span class="m">8</span><span class="w"> </span>GB<span class="w">    </span>thick<span class="w"> </span>eager<span class="w"> </span>zeroed<span class="w"> </span><span class="o">(</span>Windows<span class="w"> </span>only<span class="o">)</span>
+</code></pre></div>
 <p>Do not store data on the OS VMDK. Separate OS and data disks from day one.</p>
 <h2 id="snapshot-policy">Snapshot Policy<a class="headerlink" href="#snapshot-policy" title="Permanent link">&para;</a></h2>
 <p>Snapshots are a temporary operational tool, not a backup mechanism.</p>

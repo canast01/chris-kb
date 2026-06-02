@@ -3396,6 +3396,34 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Backup and Restore Flow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#restore-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Restore Notes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#zone-database-backup-cfgsave" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Zone Database Backup (cfgsave)
+      
+    </span>
+  </a>
+  
 </li>
       
         <li class="md-nav__item">
@@ -3728,28 +3756,75 @@
 │    Test restore   = Quarterly restore test on lab/spare switch to validate backup integrity           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>```text
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>### Restore Notes
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>- The switch must be running a compatible FOS version before restoring a config — do not restore a FOS 9.x config onto a switch running FOS 8.x.
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>- After restore, some settings require a reboot to take effect (Virtual Fabric changes, for example).
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>- Zone configuration is restored but the zone set is not automatically activated. Run `cfgenable &lt;zoneset-name&gt;` manually after confirming the zone database looks correct.
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>- If restoring to a replacement switch, set the correct static domain ID before connecting to the fabric to avoid domain conflicts.
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>---
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>## Zone Database Backup (cfgsave)
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>`cfgsave` writes the current in-memory zone configuration (including any unsaved changes) to the switch&#39;s persistent flash storage. Without `cfgsave`, zone changes are lost on reboot.
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>```bash
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a># Save zone database to flash
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>cfgsave
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a># Confirm the active zone set
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>cfgshow | head -20
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────────── Brocade Fabric OS — Backup and Restore ────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │      FOS backup and restore: switch config, zone DB, and full switch replacement recovery     │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │          configupload: saves switch config (not zone DB) to SCP/FTP; schedule weekly          │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │           Zone DB backup: cfgsave persists to flash; also export zone DB via SANnav           │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │         Switch replacement: configdownload restores config; re-cable and verify fabric        │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │          Director blade: hot-swap with NDU; config on CP blade survives blade failure         │   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│                                                                                                       │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│    Schedule backup -&gt; verify backup file -&gt; test restore -&gt; store off-site copy securely              │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                                                                                                       │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│                                                                                                       │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │        Config Backup        │  │           Zone DB           │  │           Recovery          │   │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │         configupload        │  │           cfgsave           │  │        configdownload       │   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │        SCP/FTP target       │  │        SANnav export        │  │        Switch replace       │   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │       Weekly schedule       │  │        Before changes       │  │       Re-cable fabric       │   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │        Version tagged       │  │        Zone DB export       │  │         Verify zones        │   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   │        Off-site copy        │  │        Audit history        │  │         Test restore        │   │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│                                                                                                       │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│    Test restore quarterly; zone DB and config backup are independent procedures                       │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│                                                                                                       │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│                                                                                                       │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│   │   Backup type    │     Command      │     Frequency     │      Target      │      Notes       │   │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│   │  Switch config   │   configupload   │       Weekly      │    SCP server    │   All settings   │   │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│   │     Zone DB      │  cfgsave+export  │     Pre-change    │   SANnav/file    │   Fabric-wide    │   │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│   │   Full restore   │  configdownload  │     On failure    │    New switch    │ Re-cable needed  │   │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│                                                                                                       │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│    Physical: SCP/FTP backup server · offline config archive · replacement switch spare                │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│                                                                                                       │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│    Key terms:                                                                                         │
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│                                                                                                       │
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│    configupload   = FOS CLI: uploads switch config to SCP/FTP; includes port/security settings        │
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│    configdownload = FOS CLI: restores switch config from remote file; triggers partial reboot         │
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│    cfgsave        = Persists zone DB to non-volatile flash; must run after every zone change          │
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│    Zone DB export = SANnav can export zone config as text file; keep with config backup               │
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>│    Switch replace = Install new switch, configdownload, re-cable ISLs and host/storage ports          │
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>│    NDU            = Non-Disruptive Upgrade; director blades hot-swapped with no fabric impact         │
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>│    Spare switch   = Pre-configured standby switch for rapid replacement; test restore regularly       │
+<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>│    SCP server     = Secure Copy Protocol server; preferred over FTP for encrypted transfer            │
+<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>│    Off-site copy  = Backup files replicated to secondary site or object storage for DR                │
+<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>│    Audit history  = SANnav logs all zone config changes; export as evidence for compliance            │
+<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>│    Version tag    = Include FOS version and date in backup filename for traceability                  │
+<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>│    Test restore   = Quarterly restore test on lab/spare switch to validate backup integrity           │
+<a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>│                                                                                                       │
+<a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
+<h3 id="restore-notes">Restore Notes<a class="headerlink" href="#restore-notes" title="Permanent link">&para;</a></h3>
+<ul>
+<li>The switch must be running a compatible FOS version before restoring a config — do not restore a FOS 9.x config onto a switch running FOS 8.x.</li>
+<li>After restore, some settings require a reboot to take effect (Virtual Fabric changes, for example).</li>
+<li>Zone configuration is restored but the zone set is not automatically activated. Run <code>cfgenable &lt;zoneset-name&gt;</code> manually after confirming the zone database looks correct.</li>
+<li>If restoring to a replacement switch, set the correct static domain ID before connecting to the fabric to avoid domain conflicts.</li>
+</ul>
+<hr />
+<h2 id="zone-database-backup-cfgsave">Zone Database Backup (cfgsave)<a class="headerlink" href="#zone-database-backup-cfgsave" title="Permanent link">&para;</a></h2>
+<p><code>cfgsave</code> writes the current in-memory zone configuration (including any unsaved changes) to the switch's persistent flash storage. Without <code>cfgsave</code>, zone changes are lost on reboot.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Save zone database to flash</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>cfgsave
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Confirm the active zone set</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>cfgshow<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+</code></pre></div>
 <p>The zone database is included in the <code>configupload</code> archive. However, always run <code>cfgsave</code> immediately after any zoning change — before running <code>configupload</code> — so that the backup captures the latest zone state.</p>
 <hr />
 <h2 id="backup-schedule-and-retention">Backup Schedule and Retention<a class="headerlink" href="#backup-schedule-and-retention" title="Permanent link">&para;</a></h2>
@@ -3792,48 +3867,48 @@
 <li>Set the <code>backup_server</code> variable to the SCP server IP and <code>backup_path</code> to the destination directory.</li>
 <li>Run the playbook nightly via cron or a scheduling tool:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>inventory<span class="w"> </span>brocade_backup.yml
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ansible-playbook<span class="w"> </span>-i<span class="w"> </span>inventory<span class="w"> </span>brocade_backup.yml
 </code></pre></div>
 <p>Each switch backup is archived with a datestamp in the filename: <code>&lt;switchname&gt;_config_20250507.cfg</code>.</p>
 <hr />
 <h2 id="manual-backup-procedure">Manual Backup Procedure<a class="headerlink" href="#manual-backup-procedure" title="Permanent link">&para;</a></h2>
 <p>Use this procedure before any change that touches the zone database, port configuration, or switch settings.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Step 1 — Confirm switch is healthy</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>switchstatusshow
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>fabricshow
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Step 2 — Save zone database to flash</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>cfgsave
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># Step 3 — Upload configuration to backup server</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>configupload<span class="w"> </span>-all<span class="w"> </span>-scp<span class="w"> </span>-host<span class="w"> </span><span class="m">10</span>.0.0.5<span class="w"> </span>-u<span class="w"> </span>svcbackup<span class="w"> </span>-f<span class="w"> </span>/backups/brocade/dc1-san-sw01_pre-change_20250507.cfg
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Step 4 — Note the filename and timestamp in the change record</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Step 5 — Confirm the file exists on the backup server before proceeding</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Step 1 — Confirm switch is healthy</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>switchstatusshow
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>fabricshow
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Step 2 — Save zone database to flash</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>cfgsave
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Step 3 — Upload configuration to backup server</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>configupload<span class="w"> </span>-all<span class="w"> </span>-scp<span class="w"> </span>-host<span class="w"> </span><span class="m">10</span>.0.0.5<span class="w"> </span>-u<span class="w"> </span>svcbackup<span class="w"> </span>-f<span class="w"> </span>/backups/brocade/dc1-san-sw01_pre-change_20250507.cfg
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># Step 4 — Note the filename and timestamp in the change record</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># Step 5 — Confirm the file exists on the backup server before proceeding</span>
 </code></pre></div>
 <hr />
 <h2 id="restore-validation">Restore Validation<a class="headerlink" href="#restore-validation" title="Permanent link">&para;</a></h2>
 <p>After restoring a configuration (for example, after a switch replacement), run these checks to confirm the restore was successful.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># 1. Confirm zone database is correct</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>cfgshow<span class="w">                </span><span class="c1"># Zone sets, zones, and aliases should match pre-failure state</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>alishow<span class="w">                </span><span class="c1"># All expected aliases present</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># 2. Activate the zone set if not automatically restored</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>cfgenable<span class="w"> </span>&lt;zoneset-name&gt;
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>cfgsave
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># 3. Confirm all devices log back in</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>nsshow<span class="w">                 </span><span class="c1"># All expected hosts and storage targets logged in</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>nsallshow<span class="w">              </span><span class="c1"># Check across all domains</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># 4. Confirm fabric is healthy</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>fabricshow<span class="w">             </span><span class="c1"># All switches present, correct principal switch</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>islshow<span class="w">                </span><span class="c1"># All ISLs up and at correct speed</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>switchshow<span class="w">             </span><span class="c1"># All ports in expected state</span>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="c1"># 5. Check host multipath from the host side</span>
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="c1"># VMware: esxcli storage nmp device list</span>
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="c1"># Linux:  multipath -ll</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># 1. Confirm zone database is correct</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>cfgshow<span class="w">                </span><span class="c1"># Zone sets, zones, and aliases should match pre-failure state</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>alishow<span class="w">                </span><span class="c1"># All expected aliases present</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># 2. Activate the zone set if not automatically restored</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>cfgenable<span class="w"> </span>&lt;zoneset-name&gt;
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>cfgsave
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># 3. Confirm all devices log back in</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>nsshow<span class="w">                 </span><span class="c1"># All expected hosts and storage targets logged in</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>nsallshow<span class="w">              </span><span class="c1"># Check across all domains</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># 4. Confirm fabric is healthy</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>fabricshow<span class="w">             </span><span class="c1"># All switches present, correct principal switch</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>islshow<span class="w">                </span><span class="c1"># All ISLs up and at correct speed</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>switchshow<span class="w">             </span><span class="c1"># All ports in expected state</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="c1"># 5. Check host multipath from the host side</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="c1"># VMware: esxcli storage nmp device list</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="c1"># Linux:  multipath -ll</span>
 </code></pre></div>
 <hr />
 <h2 id="switch-replacement-config-restore">Switch Replacement — Config Restore<a class="headerlink" href="#switch-replacement-config-restore" title="Permanent link">&para;</a></h2>
@@ -3841,35 +3916,35 @@
 <ol>
 <li>Boot the replacement switch in isolation (not connected to the fabric).</li>
 <li>Assign the static domain ID to match the original switch:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>configure
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># Set &quot;insistDomainId&quot; to 1 at the Fabric Parameters prompt</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Set the Domain ID to the value from the SAN design register</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>configure
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># Set &quot;insistDomainId&quot; to 1 at the Fabric Parameters prompt</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Set the Domain ID to the value from the SAN design register</span>
 </code></pre></div></li>
 <li>Restore the configuration from the most recent backup:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>configdownload<span class="w"> </span>-all<span class="w"> </span>-scp<span class="w"> </span>-host<span class="w"> </span><span class="m">10</span>.0.0.5<span class="w"> </span>-u<span class="w"> </span>svcbackup<span class="w"> </span>-f<span class="w"> </span>/backups/brocade/dc1-san-sw01_config_20250507.cfg
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>configdownload<span class="w"> </span>-all<span class="w"> </span>-scp<span class="w"> </span>-host<span class="w"> </span><span class="m">10</span>.0.0.5<span class="w"> </span>-u<span class="w"> </span>svcbackup<span class="w"> </span>-f<span class="w"> </span>/backups/brocade/dc1-san-sw01_config_20250507.cfg
 </code></pre></div></li>
 <li>After configdownload completes, reboot the switch if prompted.</li>
 <li>Connect ISL cables to the core switch.</li>
 <li>Verify the switch joins the fabric:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>fabricshow<span class="w">        </span><span class="c1"># Replacement switch appears with the correct domain ID</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>topologyshow<span class="w">      </span><span class="c1"># ISL path visible</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>nsshow<span class="w">            </span><span class="c1"># Devices log back in through the replacement switch</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>fabricshow<span class="w">        </span><span class="c1"># Replacement switch appears with the correct domain ID</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>topologyshow<span class="w">      </span><span class="c1"># ISL path visible</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>nsshow<span class="w">            </span><span class="c1"># Devices log back in through the replacement switch</span>
 </code></pre></div></li>
 <li>Activate the zone set if needed:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>cfgenable<span class="w"> </span>&lt;zoneset-name&gt;
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>cfgsave
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>cfgenable<span class="w"> </span>&lt;zoneset-name&gt;
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>cfgsave
 </code></pre></div></li>
 <li>Update the CMDB with the new serial number and verify the support contract is transferred.</li>
 </ol>
 <hr />
 <h2 id="backup-integrity-check">Backup Integrity Check<a class="headerlink" href="#backup-integrity-check" title="Permanent link">&para;</a></h2>
 <p>Periodically verify that backup files are intact and restorable. For SCP-based backups, check that the file size is non-zero and the datestamp is current.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># On the backup server — list recent backups for a switch</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>ls<span class="w"> </span>-lh<span class="w"> </span>/backups/brocade/<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>dc1-san-sw01
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Spot-check a backup file</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>head<span class="w"> </span>-20<span class="w"> </span>/backups/brocade/dc1-san-sw01_config_20250507.cfg
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1"># Expected: should begin with switch identity and FOS version comments</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># On the backup server — list recent backups for a switch</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>ls<span class="w"> </span>-lh<span class="w"> </span>/backups/brocade/<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>dc1-san-sw01
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Spot-check a backup file</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>head<span class="w"> </span>-20<span class="w"> </span>/backups/brocade/dc1-san-sw01_config_20250507.cfg
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="c1"># Expected: should begin with switch identity and FOS version comments</span>
 </code></pre></div>
 <p>A valid config backup file begins with a comment block identifying the switch hostname, serial number, FOS version, and backup timestamp. If the file is empty or contains only error messages, the backup failed and must be re-run.</p>
 

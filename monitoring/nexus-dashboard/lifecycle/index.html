@@ -4194,6 +4194,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Pre-Upgrade Checklist">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#replacing-a-failed-node" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replacing a Failed Node
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -4476,33 +4493,59 @@ Nexus Dashboard Lifecycle reference covering Upgrade Overview, Compatibility Mat
 │  Verify apps = Post-upgrade check: NDI collecting, NDFC managing, NDO syncing                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>```sql
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>### Replacing a Failed Node
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>```text
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>1. Remove the failed node: Admin &gt; Cluster Configuration &gt; [Node] &gt; Delete
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>2. Deploy a new ND node (OVA or physical) with identical network configuration
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>3. Join the new node: Admin &gt; Cluster Configuration &gt; Add Node
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>4. Verify cluster returns to full quorum
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌─────────────────────────────── Nexus Dashboard — Lifecycle Management ────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │                    Deploy                    │  │                   Upgrade                   │   │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │              Bootstrap 3 nodes               │  │             Check release notes             │   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │            Assign mgmt + data IPs            │  │             Backup config first             │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │             Form cluster via UI              │  │              acs upgrade apply              │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │            Install apps (NDI etc)            │  │             Rolling node upgrade            │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │               Onboard fabrics                │  │               Verify apps post              │   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │              Configure ITSM out              │  │               Rollback if fail              │   │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│                                                                                                       │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│  Physical Infrastructure:                                                                             │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│  3 physical or VM nodes · Cisco ISO install · upgrade via acs CLI or ND UI                            │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                                                                                                       │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│                                                                                                       │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│  Bootstrap = Initial ND node setup: assign hostname, IPs, NTP, DNS via console                        │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│  Cluster form = Joining 3 nodes into quorum cluster via ND web UI                                     │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│  App install = Installing NDI, NDFC, NDO as apps from ND admin &gt; Apps                                 │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│  Fabric onboard = Adding APIC or NX-OS fabric to ND with credentials                                  │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│  acs upgrade = CLI command to apply upgrade image to cluster                                          │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│  Rolling upgrade = Upgrading nodes sequentially to maintain quorum                                    │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│  Backup = acs backup create before upgrade; stored externally                                         │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│  Rollback = Restoring from backup if upgrade causes data loss                                         │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  Release notes = Cisco release notes; check for breaking changes before upgrade                       │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  Verify apps = Post-upgrade check: NDI collecting, NDFC managing, NDO syncing                         │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│                                                                                                       │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
+<h3 id="replacing-a-failed-node">Replacing a Failed Node<a class="headerlink" href="#replacing-a-failed-node" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>1. Remove the failed node: Admin &gt; Cluster Configuration &gt; [Node] &gt; Delete
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>2. Deploy a new ND node (OVA or physical) with identical network configuration
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>3. Join the new node: Admin &gt; Cluster Configuration &gt; Add Node
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>4. Verify cluster returns to full quorum
+</code></pre></div>
 <h2 id="backup-and-restore">Backup and Restore<a class="headerlink" href="#backup-and-restore" title="Permanent link">&para;</a></h2>
 <h3 id="automated-backup-schedule">Automated Backup Schedule<a class="headerlink" href="#automated-backup-schedule" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Admin &gt; Backup and Restore &gt; Scheduled Backup
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>- Destination: SFTP (sftp://&lt;backup-host&gt;/nexus-dashboard/)
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>- Schedule: weekly, Sunday 02:00
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>- Retention: keep 4 most recent
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Admin &gt; Backup and Restore &gt; Scheduled Backup
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>- Destination: SFTP (sftp://&lt;backup-host&gt;/nexus-dashboard/)
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>- Schedule: weekly, Sunday 02:00
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>- Retention: keep 4 most recent
 </code></pre></div>
 <h3 id="manual-backup">Manual Backup<a class="headerlink" href="#manual-backup" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Admin &gt; Backup and Restore &gt; Backup Now
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>- Backs up: cluster configuration, NDFC policies, NDI baselines, user accounts
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>- Note: does not back up NDI telemetry history (that data is ephemeral)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Admin &gt; Backup and Restore &gt; Backup Now
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>- Backs up: cluster configuration, NDFC policies, NDI baselines, user accounts
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>- Note: does not back up NDI telemetry history (that data is ephemeral)
 </code></pre></div>
 <h3 id="restore">Restore<a class="headerlink" href="#restore" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Admin &gt; Backup and Restore &gt; Restore
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>- Upload backup file
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>- Select what to restore (full cluster or specific services)
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>- Confirm — cluster will be restored to the backup state
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Admin &gt; Backup and Restore &gt; Restore
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>- Upload backup file
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>- Select what to restore (full cluster or specific services)
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>- Confirm — cluster will be restored to the backup state
 </code></pre></div>
 <h2 id="eol-tracking">EOL Tracking<a class="headerlink" href="#eol-tracking" title="Permanent link">&para;</a></h2>
 <ul>

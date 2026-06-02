@@ -3476,6 +3476,34 @@
   
 </li>
         
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deployment-failures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deployment Failures
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Deployment Failures">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#configuration-push-fails-deploy-pending" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration Push Fails — "Deploy Pending"
+      
+    </span>
+  </a>
+  
+</li>
+        
           <li class="md-nav__item">
   <a href="#out-of-sync-switch-after-manual-change" class="md-nav__link">
     <span class="md-ellipsis">
@@ -3862,31 +3890,71 @@ Quick reference for common problems and resolutions.
 │  Zone stale      = DCNM zone database out of sync with switch; re-discover to fix                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>```text
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>## Deployment Failures
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>### Configuration Push Fails — &quot;Deploy Pending&quot;
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Configs remain in &quot;Deploy Pending&quot; state when the switch is unreachable or there is a config conflict.
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>```bash
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a># On DCNM — check deployment status
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>show fabric detail
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a># Check switch-specific config diff
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a># DCNM UI: Fabric → Switches → right-click → View Config Diff
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a># Force re-sync
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a># DCNM UI: Fabric → Deploy → Recalculate &amp; Deploy
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌─────────────────────────────── Cisco DCNM — Common Operational Issues ────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  Common DCNM issues: switch unreachable, zone push fail, auth error, stale data, UI slow.             │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│                                                                                                       │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │          Switch Connectivity Issues          │  │            Zone Management Issues           │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │        Switch unreachable: ping test         │  │         Zone push fail: NX-OS creds         │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │         SNMP v3 poll timeout: creds          │  │         Conflict: out-of-band change        │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │         Discovery timeout: re-add sw         │  │         Zone diff stale: re-discover        │   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │          NX-OS version unsupported           │  │        Zone lock: active edit session       │   │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │         IP change on switch: update          │  │          VSAN mismatch: verify both         │   │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                                                                       │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│  Switch connectivity verified first; zone failures trace to NX-OS credentials or VSAN.                │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                                                                                                       │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│                                                                                                       │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │             Auth &amp; Login Issues              │  │           Performance &amp; DB Issues           │   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │          ISE TACACS+ timeout check           │  │         UI slow: clear browser cache        │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │         LDAP bind fail: service acct         │  │           Elasticsearch disk full           │   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │           Token expired: re-login            │  │           Run DB prune via appmgr           │   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   │       Local fallback: ISE unreachable        │  │             appmgr restart: DCNM            │   │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│   │        Audit log: check failed logins        │  │          journalctl for service err         │   │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│                                                                                                       │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  DCNM VM · management network · Cisco ISE · Cisco MDS switch management ports                         │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│                                                                                                       │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  SNMPv3 poll     = DCNM polls switches every 5 minutes; timeout = switch shows red                    │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  NX-OS creds     = DCNM stores per-switch SSH credentials for zone push                               │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  Out-of-band     = zone change made directly on MDS bypassing DCNM; causes conflict                   │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  Zone lock       = NX-OS zone lock when another session is editing; resolve first                     │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  Re-discover     = DCNM re-polls switch to refresh stale topology and zone data                       │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  VSAN mismatch   = zone pushed to wrong VSAN; verify VSAN ID on both ends                             │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  ISE TACACS+     = Cisco ISE provides DCNM TACACS+ auth; timeout = login failure                      │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  LDAP bind       = DCNM AD integration service account; check password expiry                         │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  Elasticsearch   = DCNM performance data store; disk full causes UI performance issues                │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  appmgr          = DCNM VM CLI; restart/status/prune subcommands                                      │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│  journalctl      = Linux systemd log; shows DCNM service restart and error events                     │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  Zone stale      = DCNM zone database out of sync with switch; re-discover to fix                     │
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│                                                                                                       │
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
+<h2 id="deployment-failures">Deployment Failures<a class="headerlink" href="#deployment-failures" title="Permanent link">&para;</a></h2>
+<h3 id="configuration-push-fails-deploy-pending">Configuration Push Fails — "Deploy Pending"<a class="headerlink" href="#configuration-push-fails-deploy-pending" title="Permanent link">&para;</a></h3>
+<p>Configs remain in "Deploy Pending" state when the switch is unreachable or there is a config conflict.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># On DCNM — check deployment status</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>show<span class="w"> </span>fabric<span class="w"> </span>detail
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check switch-specific config diff</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># DCNM UI: Fabric → Switches → right-click → View Config Diff</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Force re-sync</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># DCNM UI: Fabric → Deploy → Recalculate &amp; Deploy</span>
+</code></pre></div>
 <h3 id="out-of-sync-switch-after-manual-change">"Out-of-Sync" Switch After Manual Change<a class="headerlink" href="#out-of-sync-switch-after-manual-change" title="Permanent link">&para;</a></h3>
 <p>Direct CLI changes on switches bypass DCNM and cause out-of-sync status.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Resolution:
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>1. Fabric → Switches → select affected switch → Resync
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>2. Review diff — accept DCNM intent (overwrite manual change) or
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>   update DCNM policy to match the manual change
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>3. Re-deploy
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Resolution:
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>1. Fabric → Switches → select affected switch → Resync
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>2. Review diff — accept DCNM intent (overwrite manual change) or
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>   update DCNM policy to match the manual change
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>3. Re-deploy
 </code></pre></div>
 <div class="admonition warning">
 <p class="admonition-title">Avoid direct CLI changes on DCNM-managed switches</p>
@@ -3894,72 +3962,72 @@ Quick reference for common problems and resolutions.
 </div>
 <h2 id="performance-ui-issues">Performance / UI Issues<a class="headerlink" href="#performance-ui-issues" title="Permanent link">&para;</a></h2>
 <h3 id="dcnm-web-ui-slow-or-unresponsive">DCNM Web UI Slow or Unresponsive<a class="headerlink" href="#dcnm-web-ui-slow-or-unresponsive" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check DCNM service health</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>dcnm#<span class="w"> </span>appmgr<span class="w"> </span>status<span class="w"> </span>all
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Check disk usage — full disk causes performance issues</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>df<span class="w"> </span>-h<span class="w"> </span>/
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>df<span class="w"> </span>-h<span class="w"> </span>/var
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Check ElasticSearch/PostgreSQL health</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>dcnm#<span class="w"> </span>appmgr<span class="w"> </span>show<span class="w"> </span>container-logs<span class="w"> </span>elasticsearch<span class="w"> </span><span class="m">100</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>dcnm#<span class="w"> </span>appmgr<span class="w"> </span>show<span class="w"> </span>container-logs<span class="w"> </span>postgres<span class="w"> </span><span class="m">100</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># Restart DCNM services (causes brief outage)</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>dcnm#<span class="w"> </span>appmgr<span class="w"> </span>stop<span class="w"> </span>all
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>dcnm#<span class="w"> </span>appmgr<span class="w"> </span>start<span class="w"> </span>all
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check DCNM service health</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>dcnm#<span class="w"> </span>appmgr<span class="w"> </span>status<span class="w"> </span>all
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Check disk usage — full disk causes performance issues</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>df<span class="w"> </span>-h<span class="w"> </span>/
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>df<span class="w"> </span>-h<span class="w"> </span>/var
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Check ElasticSearch/PostgreSQL health</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>dcnm#<span class="w"> </span>appmgr<span class="w"> </span>show<span class="w"> </span>container-logs<span class="w"> </span>elasticsearch<span class="w"> </span><span class="m">100</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>dcnm#<span class="w"> </span>appmgr<span class="w"> </span>show<span class="w"> </span>container-logs<span class="w"> </span>postgres<span class="w"> </span><span class="m">100</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># Restart DCNM services (causes brief outage)</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>dcnm#<span class="w"> </span>appmgr<span class="w"> </span>stop<span class="w"> </span>all
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>dcnm#<span class="w"> </span>appmgr<span class="w"> </span>start<span class="w"> </span>all
 </code></pre></div>
 <h3 id="high-cpu-on-dcnm-server">High CPU on DCNM Server<a class="headerlink" href="#high-cpu-on-dcnm-server" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Identify top processes</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>top<span class="w"> </span>-bn1<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># DCNM-specific resource check</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>dcnm#<span class="w"> </span>appmgr<span class="w"> </span>show<span class="w"> </span>resource-utilization
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Reduce polling frequency if spikes are SNMP-related</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># DCNM UI: Administration → DCNM Server → Server Properties</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># → Performance → SNMP polling interval (increase from 30s to 60s)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Identify top processes</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>top<span class="w"> </span>-bn1<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># DCNM-specific resource check</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>dcnm#<span class="w"> </span>appmgr<span class="w"> </span>show<span class="w"> </span>resource-utilization
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Reduce polling frequency if spikes are SNMP-related</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># DCNM UI: Administration → DCNM Server → Server Properties</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># → Performance → SNMP polling interval (increase from 30s to 60s)</span>
 </code></pre></div>
 <h2 id="vxlan-vpc-issues">VXLAN / VPC Issues<a class="headerlink" href="#vxlan-vpc-issues" title="Permanent link">&para;</a></h2>
 <h3 id="vpc-peer-link-down-alarm">VPC Peer-Link Down Alarm<a class="headerlink" href="#vpc-peer-link-down-alarm" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># On affected NX-OS switches</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>show<span class="w"> </span>vpc
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>show<span class="w"> </span>vpc<span class="w"> </span>peer-keepalive
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>show<span class="w"> </span>vpc<span class="w"> </span>consistency-parameters
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Common causes</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>show<span class="w"> </span>interface<span class="w"> </span>port-channel<span class="w"> </span>&lt;vpc-peer-link&gt;<span class="w">  </span><span class="c1"># check physical member state</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>show<span class="w"> </span>logging<span class="w"> </span><span class="p">|</span><span class="w"> </span>include<span class="w"> </span>vpc<span class="w">                   </span><span class="c1"># check for error messages</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># On affected NX-OS switches</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>show<span class="w"> </span>vpc
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>show<span class="w"> </span>vpc<span class="w"> </span>peer-keepalive
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>show<span class="w"> </span>vpc<span class="w"> </span>consistency-parameters
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Common causes</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>show<span class="w"> </span>interface<span class="w"> </span>port-channel<span class="w"> </span>&lt;vpc-peer-link&gt;<span class="w">  </span><span class="c1"># check physical member state</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>show<span class="w"> </span>logging<span class="w"> </span><span class="p">|</span><span class="w"> </span>include<span class="w"> </span>vpc<span class="w">                   </span><span class="c1"># check for error messages</span>
 </code></pre></div>
 <h3 id="vxlan-tunnel-not-forming">VXLAN Tunnel Not Forming<a class="headerlink" href="#vxlan-tunnel-not-forming" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check NVE interface</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>show<span class="w"> </span>nve<span class="w"> </span>peers
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>show<span class="w"> </span>nve<span class="w"> </span>vni
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>show<span class="w"> </span>bgp<span class="w"> </span>l2vpn<span class="w"> </span>evpn<span class="w"> </span>summary<span class="w">    </span><span class="c1"># EVPN peering state</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Verify loopback reachability</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>ping<span class="w"> </span>&lt;remote-vtep-loopback-ip&gt;<span class="w"> </span><span class="nb">source</span><span class="w"> </span>loopback0
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Check MTU — VXLAN adds 50 bytes overhead</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>show<span class="w"> </span>interface<span class="w"> </span>ethernet<span class="w"> </span>X/X<span class="w"> </span><span class="p">|</span><span class="w"> </span>include<span class="w"> </span>MTU
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Check NVE interface</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>show<span class="w"> </span>nve<span class="w"> </span>peers
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>show<span class="w"> </span>nve<span class="w"> </span>vni
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>show<span class="w"> </span>bgp<span class="w"> </span>l2vpn<span class="w"> </span>evpn<span class="w"> </span>summary<span class="w">    </span><span class="c1"># EVPN peering state</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1"># Verify loopback reachability</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>ping<span class="w"> </span>&lt;remote-vtep-loopback-ip&gt;<span class="w"> </span><span class="nb">source</span><span class="w"> </span>loopback0
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># Check MTU — VXLAN adds 50 bytes overhead</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>show<span class="w"> </span>interface<span class="w"> </span>ethernet<span class="w"> </span>X/X<span class="w"> </span><span class="p">|</span><span class="w"> </span>include<span class="w"> </span>MTU
 </code></pre></div>
 <h2 id="license-issues">License Issues<a class="headerlink" href="#license-issues" title="Permanent link">&para;</a></h2>
 <h3 id="license-expired-warning">"License Expired" Warning<a class="headerlink" href="#license-expired-warning" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Check license status</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>show<span class="w"> </span>license<span class="w"> </span>usage
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>show<span class="w"> </span>license<span class="w"> </span>host-id
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># DCNM UI: Administration → Licensing</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1"># → Add license file or update SmartNet token</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Check license status</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>show<span class="w"> </span>license<span class="w"> </span>usage
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>show<span class="w"> </span>license<span class="w"> </span>host-id
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># DCNM UI: Administration → Licensing</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1"># → Add license file or update SmartNet token</span>
 </code></pre></div>
 <h2 id="log-collection-for-tac">Log Collection for TAC<a class="headerlink" href="#log-collection-for-tac" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Collect DCNM logs for TAC case</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>dcnm#<span class="w"> </span>appmgr<span class="w"> </span>collect-tech-support
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Output location: /tmp/dcnm-tech-support-&lt;timestamp&gt;.tar.gz</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1"># Collect switch tech-support</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>switch#<span class="w"> </span>show<span class="w"> </span>tech-support<span class="w"> </span>&gt;<span class="w"> </span>bootflash:tech-support-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Collect DCNM logs for TAC case</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>dcnm#<span class="w"> </span>appmgr<span class="w"> </span>collect-tech-support
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Output location: /tmp/dcnm-tech-support-&lt;timestamp&gt;.tar.gz</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="c1"># Collect switch tech-support</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>switch#<span class="w"> </span>show<span class="w"> </span>tech-support<span class="w"> </span>&gt;<span class="w"> </span>bootflash:tech-support-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
 </code></pre></div>
 <h2 id="quick-diagnostics-reference">Quick Diagnostics Reference<a class="headerlink" href="#quick-diagnostics-reference" title="Permanent link">&para;</a></h2>
 <table>

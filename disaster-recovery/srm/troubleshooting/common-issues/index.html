@@ -3724,6 +3724,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#recovery-plan-stuck-running" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recovery Plan Stuck Running
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#site-pair-shows-error" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3972,25 +3983,58 @@ Common Issues reference covering Triage Decision Tree, Recovery Plan Fails at Ne
 │  Site Pair     = trust relationship between protected and recovery SRM servers                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>```powershell
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>1. SRM → Configure → Array Managers → check status
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>2. Verify SRA service is running:
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>   ```powershell
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>   Get-Service vmware-sra-*   # Windows SRM
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>   ```
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>3. Re-test array credentials: Array Manager → Edit → Test Connection
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>4. Check SRA log for specific error (Dell SRA logs: see above path)
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>5. Verify Unisphere/FlashArray/ONTAP API is accessible from SRM server:
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>   ```powershell
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>   Invoke-WebRequest -Uri &quot;https://&lt;array-ip&gt;/univmax/restapi/system/version&quot; -SkipCertificateCheck
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>   ```
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>## Recovery Plan Stuck `Running`
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>```text
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>Cause: Custom script step timed out, or a VM failed to power on
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────────────── SRM — Common Issues ─────────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   │     Symptom      │   Likely Cause   │    First Check    │       Fix        │      Verify      │   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │    Plan fails    │   SRA timeout    │ check array repli │re-run or fix SRA │  srm-cli histor  │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │     VM no IP     │customization err │ check IP customiz │ fix NIC mapping  │    vmware.log    │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │    Test stuck    │snapshot not rele │    srm cleanup    │  force cleanup   │  srm-cli cleanu  │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │   Pair broken    │  cert mismatch   │ check SRM pairing │  re-pair sites   │  srm-cli site i  │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│                                                                                                       │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   │                                     General Triage Pattern                                    │   │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   │          Is the issue new or recurring? New = recent change; Recurring = config problem       │   │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│   │             Is it isolated to one source or all? Isolated = agent; All = server/repo          │   │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   │                               Check logs first: srm-cli plan test                             │   │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   │                    If unresolved in 2h: open vendor case with full log bundle                 │   │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│                                                                                                       │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│  Physical Infrastructure:                                                                             │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│  Two vCenter instances (protected + recovery) · SRA on SRM server · Array replication link            │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│                                                                                                       │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│  SRM           = Site Recovery Manager; VMware product for DR orchestration and testing               │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│  SRA           = Storage Replication Adapter; plugin linking SRM to specific array replication        │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│  Protection Group= logical grouping of VMs covered by a single replication consistency group          │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  Recovery Plan = automated DR runbook: power-off order, datastore failover, IP customization          │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  IP Customization= per-VM network settings applied at recovery site (different subnet/gateway)        │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│  Test Failover = non-disruptive plan validation using snapshot; production unaffected                 │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  Planned Migration= graceful workload movement; VMs shutdown at protected, started at recovery        │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│  Emergency Failover= disaster scenario; VMs powered on from latest available replica                  │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  Failback      = after recovery, re-protect VMs and migrate back to production site                   │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│  Re-protect    = reverses replication direction; DR site becomes new protected site                   │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  Recovery Point= specific replication snapshot used for VM recovery; RPO = interval                   │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│  vCenter Pair  = SRM connection between two vCenter instances enables cross-site orchestration        │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│  Startup Priority= ordering within recovery plan; lower number = powers on first                      │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│  Site Pair     = trust relationship between protected and recovery SRM servers                        │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│                                                                                                       │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
+<ol>
+<li>SRM → Configure → Array Managers → check status</li>
+<li>Verify SRA service is running:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">Get-Service</span> <span class="n">vmware-sra</span><span class="p">-*</span>   <span class="c"># Windows SRM</span>
+</code></pre></div></li>
+<li>Re-test array credentials: Array Manager → Edit → Test Connection</li>
+<li>Check SRA log for specific error (Dell SRA logs: see above path)</li>
+<li>Verify Unisphere/FlashArray/ONTAP API is accessible from SRM server:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">Invoke-WebRequest</span> <span class="n">-Uri</span> <span class="s2">&quot;https://&lt;array-ip&gt;/univmax/restapi/system/version&quot;</span> <span class="n">-SkipCertificateCheck</span>
+</code></pre></div></li>
+</ol>
+<h2 id="recovery-plan-stuck-running">Recovery Plan Stuck <code>Running</code><a class="headerlink" href="#recovery-plan-stuck-running" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Cause: Custom script step timed out, or a VM failed to power on
+</code></pre></div>
 <ol>
 <li>SRM → Recovery Plans → running plan → Steps tab — identify which step is stuck</li>
 <li>If a custom script step: check the script exit code in task details; a non-zero exit causes indefinite wait</li>
@@ -3998,15 +4042,15 @@ Common Issues reference covering Triage Decision Tree, Recovery Plan Fails at Ne
 <li>As a last resort (during actual DR): manually advance the plan past the stuck step using "Force Next Step"</li>
 </ol>
 <h2 id="site-pair-shows-error">Site Pair Shows <code>Error</code><a class="headerlink" href="#site-pair-shows-error" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Cause: Certificate mismatch, vCenter connectivity, or credential expiry
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Cause: Certificate mismatch, vCenter connectivity, or credential expiry
 </code></pre></div>
 <ol>
 <li>From SRM server, verify vCenter is reachable:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="p">&lt;</span><span class="n">vcenter-fqdn</span><span class="p">&gt;</span> <span class="n">-Port</span> <span class="n">443</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="p">&lt;</span><span class="n">vcenter-fqdn</span><span class="p">&gt;</span> <span class="n">-Port</span> <span class="n">443</span>
 </code></pre></div></li>
 <li>Check certificate validity:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nv">$cert</span> <span class="p">=</span> <span class="no">[Net.ServicePointManager]</span><span class="p">::</span><span class="n">ServerCertificateValidationCallback</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Invoke-WebRequest</span> <span class="s2">&quot;https://&lt;vcenter-fqdn&gt;&quot;</span> <span class="n">-UseBasicParsing</span>
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nv">$cert</span> <span class="p">=</span> <span class="no">[Net.ServicePointManager]</span><span class="p">::</span><span class="n">ServerCertificateValidationCallback</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Invoke-WebRequest</span> <span class="s2">&quot;https://&lt;vcenter-fqdn&gt;&quot;</span> <span class="n">-UseBasicParsing</span>
 </code></pre></div></li>
 <li>Re-enter site pair credentials: SRM → Sites → Edit Credentials</li>
 </ol>

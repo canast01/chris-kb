@@ -3022,6 +3022,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#exporting-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exporting Logs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#event-log-forwarding-wef" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3361,88 +3372,131 @@ Diagnostics reference covering Windows Event Log Pipeline, Key Security Event ID
 │  PortQry        = Microsoft port connectivity scanner; tests TCP/UDP port accessibility               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>```powershell
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>## Exporting Logs
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>```powershell
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a># Export Security log to EVTX file
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>wevtutil epl Security C:\Logs\Security-$(Get-Date -Format &#39;yyyyMMdd&#39;).evtx
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a># Export filtered events to XML
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>Get-WinEvent -FilterHashtable @{ LogName=&#39;System&#39;; Level=2 } -MaxEvents 500 |
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    Export-Clixml C:\Logs\SystemErrors.xml
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a># Export to CSV for analysis
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>Get-WinEvent -FilterHashtable @{ LogName=&#39;System&#39;; Level=2; StartTime=(Get-Date).AddDays(-7) } |
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>    Select-Object TimeCreated, Id, LevelDisplayName, Message |
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>    Export-Csv C:\Logs\SystemErrors.csv -NoTypeInformation
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────────── Windows Server — Diagnostics ─────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Diagnostics: event log analysis, performance data collection, network traces, memory dumps.          │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│                                                                                                       │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │              Event Log Analysis              │  │         Performance Data Collection         │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │         wevtutil qe System /count:50         │  │         Perfmon: data collector sets        │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │        Get-WinEvent filter hash table        │  │           typeperf: counter to CSV          │   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   │        Subscriptions: WEF centralise         │  │          PAL: Perf Analysis of Logs         │   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   │         Custom views: by error level         │  │         Resource Monitor: real-time         │   │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   │           Export: evtx for offline           │  │        Process Monitor: file+reg+net        │   │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                                                                                                       │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  Event logs show what happened; Perfmon and procmon show how the system behaved.                      │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│                                                                                                       │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│                                                                                                       │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │             Network Diagnostics              │  │          Memory &amp; Crash Diagnostics         │   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │          netsh trace start capture           │  │         Task Manager: commit charge         │   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   │           Wireshark: .etl to .pcap           │  │         Poolmon: tag leak detection         │   │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   │         netstat -anob: PID per port          │  │          WinDbg: !analyze -v crash          │   │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│   │          tracert + pathping latency          │  │           procdump -ma &lt;PID&gt; dump           │   │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│   │          PortQry: remote port scan           │  │          MDSN for WER online search         │   │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│                                                                                                       │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  Physical or virtual server · NIC for packet capture · dump storage disk · OOB console                │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│                                                                                                       │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│                                                                                                       │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  wevtutil       = Windows Event Utility; CLI query, export, and clear event logs                      │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│  Get-WinEvent   = PowerShell cmdlet; powerful filter-hash queries across event logs                   │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│  WEF            = Windows Event Forwarding; aggregates events to a central collector                  │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│  Perfmon        = Performance Monitor; records counters to BLG/CSV/SQL data sets                      │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│  typeperf       = CLI perfmon; writes counter data to CSV for offline analysis                        │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│  PAL            = Performance Analysis of Logs; analyses BLG files against thresholds                 │
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│  Resource Monitor= real-time view of CPU/RAM/disk/network per process                                 │
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│  procmon        = SysInternals Process Monitor; captures file, registry, network events               │
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│  netsh trace    = built-in packet capture; outputs ETL for Message Analyser / Wireshark               │
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│  poolmon        = kernel pool monitor; detects memory tag leaks in driver pool                        │
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│  WinDbg         = Windows Debugger; analyses crash dumps; !analyze -v auto-diagnoses                  │
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>│  procdump       = SysInternals; captures process memory dump for hang/crash analysis                  │
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>│  PortQry        = Microsoft port connectivity scanner; tests TCP/UDP port accessibility               │
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>│                                                                                                       │
+<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
+<h2 id="exporting-logs">Exporting Logs<a class="headerlink" href="#exporting-logs" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Export Security log to EVTX file</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">wevtutil</span> <span class="n">epl</span> <span class="n">Security</span> <span class="n">C</span><span class="p">:\</span><span class="n">Logs</span><span class="p">\</span><span class="n">Security</span><span class="p">-$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="s1">&#39;yyyyMMdd&#39;</span><span class="p">).</span><span class="n">evtx</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># Export filtered events to XML</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">Get-WinEvent</span> <span class="n">-FilterHashtable</span> <span class="p">@{</span> <span class="n">LogName</span><span class="p">=</span><span class="s1">&#39;System&#39;</span><span class="p">;</span> <span class="n">Level</span><span class="p">=</span><span class="n">2</span> <span class="p">}</span> <span class="n">-MaxEvents</span> <span class="n">500</span> <span class="p">|</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="nb">Export-Clixml</span> <span class="n">C</span><span class="p">:\</span><span class="n">Logs</span><span class="p">\</span><span class="n">SystemErrors</span><span class="p">.</span><span class="n">xml</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c"># Export to CSV for analysis</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="nb">Get-WinEvent</span> <span class="n">-FilterHashtable</span> <span class="p">@{</span> <span class="n">LogName</span><span class="p">=</span><span class="s1">&#39;System&#39;</span><span class="p">;</span> <span class="n">Level</span><span class="p">=</span><span class="n">2</span><span class="p">;</span> <span class="n">StartTime</span><span class="p">=(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddDays</span><span class="p">(-</span><span class="n">7</span><span class="p">)</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    <span class="nb">Select-Object</span> <span class="n">TimeCreated</span><span class="p">,</span> <span class="n">Id</span><span class="p">,</span> <span class="n">LevelDisplayName</span><span class="p">,</span> <span class="n">Message</span> <span class="p">|</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    <span class="nb">Export-Csv</span> <span class="n">C</span><span class="p">:\</span><span class="n">Logs</span><span class="p">\</span><span class="n">SystemErrors</span><span class="p">.</span><span class="n">csv</span> <span class="n">-NoTypeInformation</span>
+</code></pre></div>
 <h2 id="event-log-forwarding-wef">Event Log Forwarding (WEF)<a class="headerlink" href="#event-log-forwarding-wef" title="Permanent link">&para;</a></h2>
 <p>Windows Event Forwarding collects events centrally from multiple servers.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># On collector — enable WecSvc</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">wecutil</span> <span class="n">qc</span> <span class="p">/</span><span class="n">q</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># Create subscription (from XML file)</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="n">wecutil</span> <span class="n">cs</span> <span class="n">C</span><span class="p">:\</span><span class="n">Subscriptions</span><span class="p">\</span><span class="n">security-events</span><span class="p">.</span><span class="n">xml</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c"># List subscriptions</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="n">wecutil</span> <span class="n">es</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c"># Check subscription status</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="n">wecutil</span> <span class="n">gr</span> <span class="p">&lt;</span><span class="n">SubscriptionName</span><span class="p">&gt;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># On collector — enable WecSvc</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">wecutil</span> <span class="n">qc</span> <span class="p">/</span><span class="n">q</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c"># Create subscription (from XML file)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="n">wecutil</span> <span class="n">cs</span> <span class="n">C</span><span class="p">:\</span><span class="n">Subscriptions</span><span class="p">\</span><span class="n">security-events</span><span class="p">.</span><span class="n">xml</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c"># List subscriptions</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="n">wecutil</span> <span class="n">es</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c"># Check subscription status</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="n">wecutil</span> <span class="n">gr</span> <span class="p">&lt;</span><span class="n">SubscriptionName</span><span class="p">&gt;</span>
 </code></pre></div>
 <p>On source servers, configure via GPO:
 - <code>Computer Configuration → Windows Settings → Security Settings → System Services → Windows Remote Management → Automatic</code>
 - <code>Computer Configuration → Administrative Templates → Windows Components → Event Forwarding → Configure target Subscription Manager</code></p>
 <h2 id="log-size-and-retention">Log Size and Retention<a class="headerlink" href="#log-size-and-retention" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Check current log sizes and limits</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Get-WinEvent</span> <span class="n">-ListLog</span> <span class="n">System</span><span class="p">,</span> <span class="n">Application</span><span class="p">,</span> <span class="n">Security</span> <span class="p">|</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="nb">Select-Object</span> <span class="n">LogName</span><span class="p">,</span> <span class="n">MaximumSizeInBytes</span><span class="p">,</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>        <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;CurrentSizeMB&quot;</span><span class="p">;</span> <span class="n">E</span><span class="p">={</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">FileSize</span><span class="p">/</span><span class="n">1MB</span><span class="p">,</span><span class="n">1</span><span class="p">)</span> <span class="p">}},</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>        <span class="n">LogMode</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c"># Set max size (e.g., Security log to 1 GB)</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="n">wevtutil</span> <span class="nb">sl </span><span class="n">Security</span> <span class="p">/</span><span class="n">ms</span><span class="p">:</span><span class="n">1073741824</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c"># Clear a log (after archiving)</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="n">wevtutil</span> <span class="n">cl</span> <span class="n">Application</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Check current log sizes and limits</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-WinEvent</span> <span class="n">-ListLog</span> <span class="n">System</span><span class="p">,</span> <span class="n">Application</span><span class="p">,</span> <span class="n">Security</span> <span class="p">|</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="nb">Select-Object</span> <span class="n">LogName</span><span class="p">,</span> <span class="n">MaximumSizeInBytes</span><span class="p">,</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>        <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;CurrentSizeMB&quot;</span><span class="p">;</span> <span class="n">E</span><span class="p">={</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">FileSize</span><span class="p">/</span><span class="n">1MB</span><span class="p">,</span><span class="n">1</span><span class="p">)</span> <span class="p">}},</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>        <span class="n">LogMode</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c"># Set max size (e.g., Security log to 1 GB)</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="n">wevtutil</span> <span class="nb">sl </span><span class="n">Security</span> <span class="p">/</span><span class="n">ms</span><span class="p">:</span><span class="n">1073741824</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c"># Clear a log (after archiving)</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="n">wevtutil</span> <span class="n">cl</span> <span class="n">Application</span>
 </code></pre></div>
 <h2 id="sysmon-extended-logging">Sysmon (Extended Logging)<a class="headerlink" href="#sysmon-extended-logging" title="Permanent link">&para;</a></h2>
 <p>If Sysmon is deployed:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Process creation events (Event ID 1)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-WinEvent</span> <span class="n">-LogName</span> <span class="s1">&#39;Microsoft-Windows-Sysmon/Operational&#39;</span> <span class="p">|</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Id</span> <span class="o">-eq</span> <span class="n">1</span> <span class="p">}</span> <span class="p">|</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">20</span> <span class="n">TimeCreated</span><span class="p">,</span> <span class="n">Message</span> <span class="p">|</span> <span class="nb">Format-List</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c"># Network connections (Event ID 3)</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="nb">Get-WinEvent</span> <span class="n">-LogName</span> <span class="s1">&#39;Microsoft-Windows-Sysmon/Operational&#39;</span> <span class="p">|</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Id</span> <span class="o">-eq</span> <span class="n">3</span> <span class="p">}</span> <span class="p">|</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">20</span> <span class="n">TimeCreated</span><span class="p">,</span> <span class="n">Message</span> <span class="p">|</span> <span class="nb">Format-List</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Process creation events (Event ID 1)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-WinEvent</span> <span class="n">-LogName</span> <span class="s1">&#39;Microsoft-Windows-Sysmon/Operational&#39;</span> <span class="p">|</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Id</span> <span class="o">-eq</span> <span class="n">1</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">20</span> <span class="n">TimeCreated</span><span class="p">,</span> <span class="n">Message</span> <span class="p">|</span> <span class="nb">Format-List</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c"># Network connections (Event ID 3)</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="nb">Get-WinEvent</span> <span class="n">-LogName</span> <span class="s1">&#39;Microsoft-Windows-Sysmon/Operational&#39;</span> <span class="p">|</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Id</span> <span class="o">-eq</span> <span class="n">3</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>    <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">20</span> <span class="n">TimeCreated</span><span class="p">,</span> <span class="n">Message</span> <span class="p">|</span> <span class="nb">Format-List</span>
 </code></pre></div>
 <hr />
 <h2 id="performance-analysis">Performance Analysis<a class="headerlink" href="#performance-analysis" title="Permanent link">&para;</a></h2>
 <p>Performance monitoring, baseline capture, and bottleneck identification.</p>
 <h3 id="quick-performance-snapshot">Quick Performance Snapshot<a class="headerlink" href="#quick-performance-snapshot" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># CPU usage (5-sample average)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">$cpu</span> <span class="p">=</span> <span class="nb">Get-Counter</span> <span class="s1">&#39;\Processor(_Total)\% Processor Time&#39;</span> <span class="n">-SampleInterval</span> <span class="n">2</span> <span class="n">-MaxSamples</span> <span class="n">5</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">((</span><span class="nv">$cpu</span><span class="p">.</span><span class="n">CounterSamples</span><span class="p">.</span><span class="n">CookedValue</span> <span class="p">|</span> <span class="nb">Measure-Object</span> <span class="n">-Average</span><span class="p">).</span><span class="n">Average</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c"># Memory</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nv">$os</span> <span class="p">=</span> <span class="nb">Get-CimInstance</span> <span class="n">Win32_OperatingSystem</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="no">[PSCustomObject]</span><span class="p">@{</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    <span class="n">TotalGB</span>   <span class="p">=</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$os</span><span class="p">.</span><span class="n">TotalVisibleMemorySize</span><span class="p">/</span><span class="n">1MB</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>    <span class="n">FreeGB</span>    <span class="p">=</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$os</span><span class="p">.</span><span class="n">FreePhysicalMemory</span><span class="p">/</span><span class="n">1MB</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>    <span class="n">UsedPct</span>   <span class="p">=</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">((</span><span class="nv">$os</span><span class="p">.</span><span class="n">TotalVisibleMemorySize</span> <span class="p">-</span> <span class="nv">$os</span><span class="p">.</span><span class="n">FreePhysicalMemory</span><span class="p">)/</span><span class="nv">$os</span><span class="p">.</span><span class="n">TotalVisibleMemorySize</span><span class="p">*</span><span class="n">100</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="p">}</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c"># Top processes by CPU</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="nb">Get-Process</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">CPU</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">10</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Id</span><span class="p">,</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;CPU%&quot;</span><span class="p">;</span> <span class="n">E</span><span class="p">={</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">CPU</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span> <span class="p">}},</span> <span class="n">WorkingSet</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="c"># Top processes by memory</span>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="nb">Get-Process</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">WorkingSet</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">10</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Id</span><span class="p">,</span>
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;MemMB&quot;</span><span class="p">;</span> <span class="n">E</span><span class="p">={</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">WorkingSet</span><span class="p">/</span><span class="n">1MB</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span> <span class="p">}}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># CPU usage (5-sample average)</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nv">$cpu</span> <span class="p">=</span> <span class="nb">Get-Counter</span> <span class="s1">&#39;\Processor(_Total)\% Processor Time&#39;</span> <span class="n">-SampleInterval</span> <span class="n">2</span> <span class="n">-MaxSamples</span> <span class="n">5</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">((</span><span class="nv">$cpu</span><span class="p">.</span><span class="n">CounterSamples</span><span class="p">.</span><span class="n">CookedValue</span> <span class="p">|</span> <span class="nb">Measure-Object</span> <span class="n">-Average</span><span class="p">).</span><span class="n">Average</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c"># Memory</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="nv">$os</span> <span class="p">=</span> <span class="nb">Get-CimInstance</span> <span class="n">Win32_OperatingSystem</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="no">[PSCustomObject]</span><span class="p">@{</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>    <span class="n">TotalGB</span>   <span class="p">=</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$os</span><span class="p">.</span><span class="n">TotalVisibleMemorySize</span><span class="p">/</span><span class="n">1MB</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>    <span class="n">FreeGB</span>    <span class="p">=</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$os</span><span class="p">.</span><span class="n">FreePhysicalMemory</span><span class="p">/</span><span class="n">1MB</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>    <span class="n">UsedPct</span>   <span class="p">=</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">((</span><span class="nv">$os</span><span class="p">.</span><span class="n">TotalVisibleMemorySize</span> <span class="p">-</span> <span class="nv">$os</span><span class="p">.</span><span class="n">FreePhysicalMemory</span><span class="p">)/</span><span class="nv">$os</span><span class="p">.</span><span class="n">TotalVisibleMemorySize</span><span class="p">*</span><span class="n">100</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="p">}</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c"># Top processes by CPU</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="nb">Get-Process</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">CPU</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">10</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Id</span><span class="p">,</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;CPU%&quot;</span><span class="p">;</span> <span class="n">E</span><span class="p">={</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">CPU</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span> <span class="p">}},</span> <span class="n">WorkingSet</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="c"># Top processes by memory</span>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="nb">Get-Process</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">WorkingSet</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">10</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Id</span><span class="p">,</span>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;MemMB&quot;</span><span class="p">;</span> <span class="n">E</span><span class="p">={</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">WorkingSet</span><span class="p">/</span><span class="n">1MB</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span> <span class="p">}}</span>
 </code></pre></div>
 <h3 id="performance-thresholds">Performance Thresholds<a class="headerlink" href="#performance-thresholds" title="Permanent link">&para;</a></h3>
 <table>
@@ -3487,33 +3541,33 @@ Diagnostics reference covering Windows Event Log Pipeline, Key Security Event ID
 </tbody>
 </table>
 <h3 id="data-collector-sets-perfmon">Data Collector Sets (PerfMon)<a class="headerlink" href="#data-collector-sets-perfmon" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Create a data collector set from command line</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="n">logman</span> <span class="n">create</span> <span class="n">counter</span> <span class="s2">&quot;PerfBaseline&quot;</span> <span class="p">^</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="n">-c</span> <span class="s2">&quot;\Processor(_Total)\% Processor Time&quot;</span> <span class="p">^</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>       <span class="s2">&quot;\Memory\Available MBytes&quot;</span> <span class="p">^</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>       <span class="s2">&quot;\PhysicalDisk(*)\Avg. Disk sec/Transfer&quot;</span> <span class="p">^</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>       <span class="s2">&quot;\Network Interface(*)\Bytes Total/sec&quot;</span> <span class="p">^</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    <span class="n">-si</span> <span class="n">00</span><span class="p">:</span><span class="n">00</span><span class="p">:</span><span class="n">05</span> <span class="p">^</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>    <span class="o">-f</span> <span class="n">bincirc</span> <span class="p">^</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>    <span class="n">-max</span> <span class="n">500</span> <span class="p">^</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>    <span class="n">-o</span> <span class="n">C</span><span class="p">:\</span><span class="n">PerfLogs</span><span class="p">\</span><span class="n">baseline</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="n">logman</span> <span class="nb">start </span><span class="n">PerfBaseline</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="n">logman</span> <span class="n">stop</span> <span class="n">PerfBaseline</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Create a data collector set from command line</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">logman</span> <span class="n">create</span> <span class="n">counter</span> <span class="s2">&quot;PerfBaseline&quot;</span> <span class="p">^</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    <span class="n">-c</span> <span class="s2">&quot;\Processor(_Total)\% Processor Time&quot;</span> <span class="p">^</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>       <span class="s2">&quot;\Memory\Available MBytes&quot;</span> <span class="p">^</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>       <span class="s2">&quot;\PhysicalDisk(*)\Avg. Disk sec/Transfer&quot;</span> <span class="p">^</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>       <span class="s2">&quot;\Network Interface(*)\Bytes Total/sec&quot;</span> <span class="p">^</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>    <span class="n">-si</span> <span class="n">00</span><span class="p">:</span><span class="n">00</span><span class="p">:</span><span class="n">05</span> <span class="p">^</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>    <span class="o">-f</span> <span class="n">bincirc</span> <span class="p">^</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>    <span class="n">-max</span> <span class="n">500</span> <span class="p">^</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>    <span class="n">-o</span> <span class="n">C</span><span class="p">:\</span><span class="n">PerfLogs</span><span class="p">\</span><span class="n">baseline</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="n">logman</span> <span class="nb">start </span><span class="n">PerfBaseline</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="n">logman</span> <span class="n">stop</span> <span class="n">PerfBaseline</span>
 </code></pre></div>
 <h3 id="collecting-diagnostics-for-vendortac">Collecting Diagnostics for Vendor/TAC<a class="headerlink" href="#collecting-diagnostics-for-vendortac" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># System info</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">msinfo32</span> <span class="p">/</span><span class="n">report</span> <span class="n">C</span><span class="p">:\</span><span class="n">Logs</span><span class="p">\</span><span class="n">msinfo32</span><span class="p">-$(</span><span class="n">hostname</span><span class="p">)-$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="n">yyyyMMdd</span><span class="p">).</span><span class="n">txt</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c"># Event logs export</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="n">wevtutil</span> <span class="n">epl</span> <span class="n">System</span> <span class="n">C</span><span class="p">:\</span><span class="n">Logs</span><span class="p">\</span><span class="n">System</span><span class="p">.</span><span class="n">evtx</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="n">wevtutil</span> <span class="n">epl</span> <span class="n">Application</span> <span class="n">C</span><span class="p">:\</span><span class="n">Logs</span><span class="p">\</span><span class="n">Application</span><span class="p">.</span><span class="n">evtx</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="n">wevtutil</span> <span class="n">epl</span> <span class="n">Security</span> <span class="n">C</span><span class="p">:\</span><span class="n">Logs</span><span class="p">\</span><span class="n">Security</span><span class="p">.</span><span class="n">evtx</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c"># Network trace (2-minute capture)</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="n">netsh</span> <span class="n">trace</span> <span class="nb">start </span><span class="n">capture</span><span class="p">=</span><span class="n">yes</span> <span class="n">tracefile</span><span class="p">=</span><span class="n">C</span><span class="p">:\</span><span class="n">Logs</span><span class="p">\</span><span class="n">nettrace</span><span class="p">.</span><span class="n">etl</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="nb">Start-Sleep</span> <span class="n">120</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="n">netsh</span> <span class="n">trace</span> <span class="n">stop</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># System info</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="n">msinfo32</span> <span class="p">/</span><span class="n">report</span> <span class="n">C</span><span class="p">:\</span><span class="n">Logs</span><span class="p">\</span><span class="n">msinfo32</span><span class="p">-$(</span><span class="n">hostname</span><span class="p">)-$(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="n">yyyyMMdd</span><span class="p">).</span><span class="n">txt</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c"># Event logs export</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="n">wevtutil</span> <span class="n">epl</span> <span class="n">System</span> <span class="n">C</span><span class="p">:\</span><span class="n">Logs</span><span class="p">\</span><span class="n">System</span><span class="p">.</span><span class="n">evtx</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="n">wevtutil</span> <span class="n">epl</span> <span class="n">Application</span> <span class="n">C</span><span class="p">:\</span><span class="n">Logs</span><span class="p">\</span><span class="n">Application</span><span class="p">.</span><span class="n">evtx</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="n">wevtutil</span> <span class="n">epl</span> <span class="n">Security</span> <span class="n">C</span><span class="p">:\</span><span class="n">Logs</span><span class="p">\</span><span class="n">Security</span><span class="p">.</span><span class="n">evtx</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c"># Network trace (2-minute capture)</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="n">netsh</span> <span class="n">trace</span> <span class="nb">start </span><span class="n">capture</span><span class="p">=</span><span class="n">yes</span> <span class="n">tracefile</span><span class="p">=</span><span class="n">C</span><span class="p">:\</span><span class="n">Logs</span><span class="p">\</span><span class="n">nettrace</span><span class="p">.</span><span class="n">etl</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="nb">Start-Sleep</span> <span class="n">120</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="n">netsh</span> <span class="n">trace</span> <span class="n">stop</span>
 </code></pre></div>
 
 
