@@ -94,4 +94,3 @@ Use this page for VxRail operations, support checks, lifecycle work, troubleshoo
 | Validate hardware health before lifecycle work. | Validate hardware health before lifecycle work. |
 | Keep support bundle notes with the case. | Keep support bundle notes with the case. |
 | Record post-change validation. | Record post-change validation. |
-```
