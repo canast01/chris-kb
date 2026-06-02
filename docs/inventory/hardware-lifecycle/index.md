@@ -49,6 +49,7 @@ dmidecode -t bios | grep -E "Version|Release Date"
 fwupdmgr get-devices
 fwupdmgr refresh && fwupdmgr update  # update via LVFS
 ```
+```
 ┌─────────────────────────────────── Inventory — Hardware Lifecycle ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

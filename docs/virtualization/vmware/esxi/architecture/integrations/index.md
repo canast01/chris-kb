@@ -30,6 +30,7 @@ ESXi Integration Map
           │      NBD / SAN                             │
           └────────────────────────────────────────────┘
 ```
+```
 ┌───────────────────────────────────────── ESXi — Integrations ─────────────────────────────────────────┐
 │                                                                                                       │
 │  ESXi integrates with vCenter, storage arrays, AD, backup agents, monitoring.                         │

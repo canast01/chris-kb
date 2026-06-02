@@ -30,6 +30,7 @@ echo "=== Active Alerts (Critical) ==="
 curl -sk -u "$USER:$PASS" "https://$VRLI/api/v2/alerts?severity=critical&status=active" | \
   jq -r '.alerts[] | "\(.name)\t\(.timestamp)"' | column -t
 ```
+```
 ┌──────────────────────────── Aria Operations for Logs — Scripts Reference ─────────────────────────────┐
 │                                                                                                       │
 │  vRLI scripting uses REST API for config export/import, ingest, and query automation.                 │

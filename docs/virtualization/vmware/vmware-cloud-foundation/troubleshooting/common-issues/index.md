@@ -35,6 +35,7 @@ VCF Common Failure Points — Quick Reference
 │                            proxy/firewall check                                                       │
 └─────────────────────────────────────────────────────┘
 ```
+```
 ┌─────────────────────────────── VMware Cloud Foundation — Common Issues ───────────────────────────────┐
 │                                                                                                       │
 │  Common VCF issues: upgrade task failures, credential rotation stuck, domain                          │
@@ -80,7 +81,6 @@ VCF Common Failure Points — Quick Reference
 │  Cert expiry   = check SDDC Mgr Certificates tab; renew >30d ahead                                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 ```
 
 ### Common Failure Points

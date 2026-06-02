@@ -35,6 +35,7 @@ show port-channel summary
 # 7. Check domain IDs for conflict
 show fcdomain domain-list vsan 10
 ```
+```
 ┌────────────────────────────── Cisco MDS — Troubleshooting Common Issues ──────────────────────────────┐
 │                                                                                                       │
 │  Most frequent MDS fabric issues: FLOGI failures, E_Port isolation, zoning errors.                    │
@@ -82,7 +83,6 @@ show fcdomain domain-list vsan 10
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-```bash
 # Check reason
 show interface fc1/4
 # Look for: "Port is in error-disabled state"

@@ -133,6 +133,7 @@ Christos Anastasiadis  |  May 2026
     ```text
     TRADITIONAL IT                    CLOUD (AWS)
 ```
+```
     ┌─────────────────┐               ┌─────────────────┐
     │  Buy servers     │               │  Request online  │
     │  Wait weeks      │     vs        │  Ready in mins   │
@@ -152,6 +153,7 @@ Christos Anastasiadis  |  May 2026
 
     ```text
     TRADITIONAL (guessing)            CLOUD (auto-match)
+```
 ```
     ┌──────────────────┐              ┌──────────────────┐
     │ Buy too much?    │              │  Auto Scaling    │
@@ -174,6 +176,7 @@ Christos Anastasiadis  |  May 2026
 
     ```text
     CAPEX (Traditional)               OPEX (Cloud)
+```
 ```
     ┌───────────────────┐             ┌───────────────────┐
     │ Jan: $2,000,000    │             │ Jan:  $45,000      │
@@ -217,6 +220,7 @@ Christos Anastasiadis  |  May 2026
 
     ```text
 ```
+```
     ┌──────────────────────────────────┐
     │  EC2 (Elastic Compute Cloud)     │
     │  YOU manage: OS, apps, data, SGs │
@@ -233,6 +237,7 @@ Christos Anastasiadis  |  May 2026
     AWS provides complete platform. You bring the code.
 
     ```text
+```
 ```
     ┌──────────────────────────────────────┐
     │  Elastic Beanstalk (PaaS)            │
@@ -253,6 +258,7 @@ Christos Anastasiadis  |  May 2026
 
     ```text
 ```
+```
     ┌──────────────────────────────────────┐
     │  SaaS: Open browser → Log in → Use  │
     │  Provider manages: code, DB, servers │
@@ -267,6 +273,7 @@ Christos Anastasiadis  |  May 2026
 
     ```text
     YOUR DATA CENTER          AWS CLOUD
+```
 ```
     ┌──────────────┐          ┌──────────────┐
     │  Sensitive   │◄────────►│  Web servers │
@@ -283,6 +290,7 @@ Christos Anastasiadis  |  May 2026
     Public cloud (all-in cloud).
 
     ```text
+```
 ```
     ┌────────────────────────────────────┐
     │  INTERNET → AWS Region             │
@@ -301,6 +309,7 @@ Christos Anastasiadis  |  May 2026
     independent power, cooling, and networking.
 
     ```text
+```
 ```
     ┌──────────────────────────────────────┐
     │  30+ Regions worldwide               │
@@ -435,6 +444,7 @@ Christos Anastasiadis  |  May 2026
 
     ```text
     YOUR DATA CENTER
+```
 ```
     ┌──────────────────────────────────┐
     │  AWS Outposts Rack:              │
@@ -706,6 +716,7 @@ DAY 1 COMPLETE
     Host OS = AWS hypervisor layer (Nitro/Xen — AWS manages this).
 
     ```text
+```
 ```
     ┌──────────────────────────────────────────┐
     │  EC2 Instance                            │
@@ -1114,6 +1125,7 @@ DAY 2 COMPLETE
     Scale in (remove instances) when demand drops.
 
     ```text
+```
 ```
     ┌──────────────────────────────────────────┐
     │  ASG: Min=2, Max=10, Desired=2           │

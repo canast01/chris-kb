@@ -46,6 +46,7 @@ The VAMI backup captures the SRM appliance state, database, and configuration in
 ls -lh /var/lib/applmgmt/backup/
 # Should show recent .tar.gz archive files
 ```
+```
 ┌─────────────────────────────────────── SRM — Backup & Restore ────────────────────────────────────────┐
 │                                                                                                       │
 │    Backup flow: quiesce source → snapshot/copy → transfer → write to target → catalog                 │

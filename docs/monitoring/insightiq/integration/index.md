@@ -19,6 +19,7 @@ Configuration: InsightIQ web UI > Administration > Clusters > Add Cluster
 - Collection interval: configurable (default: 30 seconds, aggregated to 5-minute buckets)
 - TLS: enforce HTTPS for API calls to OneFS management port (TCP 8080)
 ```
+```
 ┌──────────────────────────────────── InsightIQ — Integration Guide ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │

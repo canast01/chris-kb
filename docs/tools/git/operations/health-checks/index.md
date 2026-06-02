@@ -29,6 +29,7 @@ git -C /backup/repo.git fsck --full
 # "missing blob <sha>"       — CORRUPTION — object referenced but missing from disk
 # "broken link from tree"    — CORRUPTION — tree references a missing object
 ```
+```
 ┌───────────────────────────────────────── Git — Health Checks ─────────────────────────────────────────┐
 │                                                                                                       │
 │  Regular health checks for repositories: object integrity, size, stale refs, and CI status.           │

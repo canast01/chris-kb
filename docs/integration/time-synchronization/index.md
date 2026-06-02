@@ -25,6 +25,7 @@ chronyc makestep
 # Show recent drift history
 chronyc tracking | grep -E "offset|frequency|drift"
 ```
+```
 ┌────────────────────────────── Integration — Time Synchronization (NTP) ───────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

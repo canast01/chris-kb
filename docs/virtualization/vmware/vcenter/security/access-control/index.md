@@ -43,6 +43,7 @@ RBAC Permission Model
   │  svc-aria-ops          +  Read-Only    +  Root     │
   └───────────────────────────────────────────────────┘
 ```
+```
 ┌─────────────────────────────────── vCenter Server — Access Control ───────────────────────────────────┐
 │                                                                                                       │
 │  vCenter access control uses SSO for authentication and a role-based permission                       │

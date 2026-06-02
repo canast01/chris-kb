@@ -36,6 +36,7 @@ IAM CLI: Users · Roles · Policies · STS
          │          │  SessionToken           │
          └─────────►└─────────────────────────┘
 ```
+```
 ┌──────────────────────────────────────────── AWS CLI — IAM ────────────────────────────────────────────┐
 │                                                                                                       │
 │  IAM CLI commands for users, roles, policies, MFA, and access key management.                         │
@@ -81,5 +82,4 @@ IAM CLI: Users · Roles · Policies · STS
 │  update-login-profile= Changes console password for an IAM user                                       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 ```

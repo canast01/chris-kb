@@ -53,6 +53,7 @@ isi statistics client list \
   --limit=10 \
   --format table
 ```
+```
 ┌──────────────────────────────────── InsightIQ — Workload Analysis ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
@@ -83,7 +84,6 @@ isi statistics client list \
 │  Throughput required = Peak bandwidth needed; used for network and controller sizing                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 ```
 
 ## Common Workload Analysis Issues

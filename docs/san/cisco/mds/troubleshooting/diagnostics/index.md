@@ -33,6 +33,7 @@ clear counters interface fc1/1
 # Check immediately after clearing to confirm problem is active
 show interface fc1/1 counters errors
 ```
+```
 ┌─────────────────────────────── Cisco MDS — Troubleshooting Diagnostics ───────────────────────────────┐
 │                                                                                                       │
 │  Diagnostic toolset: show commands, SPAN, FC Ping/Traceroute, and tech-support bundles.               │

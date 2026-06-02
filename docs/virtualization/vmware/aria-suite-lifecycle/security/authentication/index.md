@@ -27,6 +27,7 @@ Authentication reference covering Workspace ONE Access Integration, Active Direc
 │  admin@local (UI/API) │ root (SSH) │ admin (limited shell)                                            │
 └─────────────────────────────────────────────────────────────────┘
 ```
+```
 ┌──────────────────────────────────── Aria Suite LCM Authentication ────────────────────────────────────┐
 │                                                                                                       │
 │  vIDM SSO, local admin break-glass, and API token authentication for LCM.                             │
@@ -70,6 +71,7 @@ Authentication reference covering Workspace ONE Access Integration, Active Direc
 │  90-day Rotation     = Local admin password changed every 90 days                                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 ┌──────────────────────────────────── Aria Suite LCM Authentication ────────────────────────────────────┐
 │                                                                                                       │

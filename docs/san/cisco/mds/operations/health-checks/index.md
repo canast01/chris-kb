@@ -32,6 +32,7 @@ show logging last 50
 show environment
 show version
 ```
+```
 ┌─────────────────────────────────── Cisco MDS 9000 — Health Checks ────────────────────────────────────┐
 │                                                                                                       │
 │  MDS health: show system, show interface, VSAN state, ISL utilisation, zone sync.                     │

@@ -12,6 +12,7 @@ Aria Operations — Alert Lifecycle
 │  (symptom threshold breached for N wait cycles)                                                       │
 └──────────────────────┬──────────────────────────────┘
 ```
+```
 ┌───────────────────────────────────── Aria Operations Procedures ──────────────────────────────────────┐
 │                                                                                                       │
 │  Add adapter, certificate rotation, and policy management procedures for vROps.                       │
@@ -81,6 +82,7 @@ Aria Operations — Alert Lifecycle
           │
           ▼
 ```text
+```
 ```
 ┌─────────────────────────────────────────────────────┐
 │  Planned Maintenance? → Create Maintenance Schedule                                                   │

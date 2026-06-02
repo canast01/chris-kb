@@ -40,6 +40,7 @@ show feature | include telnet|http|tftp|ftp|snmp|ssh
 # Expected: telnet disabled, http-server disabled, tftp-server disabled
 #           https-server enabled, ssh enabled, snmp enabled
 ```
+```
 ┌─────────────────────────────────── Cisco MDS — Security Hardening ────────────────────────────────────┐
 │                                                                                                       │
 │  Baseline hardening checklist: disable unused services, enforce encrypted protocols, RBAC.            │

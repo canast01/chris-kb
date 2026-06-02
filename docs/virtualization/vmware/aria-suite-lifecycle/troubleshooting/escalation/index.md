@@ -33,6 +33,7 @@ Escalation reference covering SR Handoff Checklist, VMware by Broadcom Knowledge
 │  └──────────────────────────────────────────────────────────┘                                         │
 └─────────────────────────────────────────────────────────────────┘
 ```
+```
 ┌────────────────────────────────────── Aria Suite LCM Escalation ──────────────────────────────────────┐
 │                                                                                                       │
 │  Escalation with logscraper bundle, SR process, and TAM engagement for LCM.                           │
@@ -76,7 +77,6 @@ Escalation reference covering SR Handoff Checklist, VMware by Broadcom Knowledge
 │  RCA                 = Root Cause Analysis document issued after P1 resolution                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 ```
 
 The bundle includes: LCM application logs, service logs, deployment history, Locker metadata (no passwords), system diagnostics, and recent request audit trail.

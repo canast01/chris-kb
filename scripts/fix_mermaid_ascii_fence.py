@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """
-Fix 198 KB pages where an ASCII diagram immediately follows a mermaid block
+Fix KB pages where an ASCII diagram immediately follows any code-block
 close-fence with no opening fence of its own.
 
 Pattern found (3 variants):
-  ```mermaid
-  ...graph...
+  ```lang
+  ...code...
   ```
   ┌─── ASCII diagram (NO opening ``` here!) ───┐
   │ ...
@@ -30,8 +30,7 @@ def fix_file(path):
         lines = f.readlines()
 
     depth = 0
-    in_mermaid = False
-    mermaid_closed = False
+    block_closed = False
     inserts = []   # (line_idx, text)
     deletes = set()  # line indices to remove
 
@@ -41,19 +40,14 @@ def fix_file(path):
             after = s[3:].strip()
             if depth == 0:
                 depth = 1
-                in_mermaid = (after == 'mermaid')
-                mermaid_closed = False
+                block_closed = False
             elif after == '':
-                if in_mermaid:
-                    mermaid_closed = True
-                else:
-                    mermaid_closed = False
+                block_closed = True
                 depth = 0
-                in_mermaid = False
-        elif depth == 0 and mermaid_closed and s.startswith('┌'):
+        elif depth == 0 and block_closed and s.startswith('┌'):
             # Unguarded ASCII diagram — insert opening fence before this line
             inserts.append((i, '```\n'))
-            mermaid_closed = False
+            block_closed = False
 
             # Locate the diagram's closing └
             for j in range(i + 1, len(lines)):
@@ -72,7 +66,7 @@ def fix_file(path):
                         deletes.add(non_blank[1][0])
                     break
         elif depth == 0 and s and not s.startswith('#') and not s.startswith('<'):
-            mermaid_closed = False
+            block_closed = False
 
     if not inserts and not deletes:
         return 0

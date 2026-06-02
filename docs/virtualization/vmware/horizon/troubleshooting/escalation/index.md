@@ -27,6 +27,7 @@ Escalation reference covering Engage VMware Support, Escalation Within VMware, U
 │  └─────────────────────────────────────────────────────────┘                                          │
 └──────────────────────────────────────────────────────────────┘
 ```
+```
 ┌───────────────────────────────────── VMware Horizon — Escalation ─────────────────────────────────────┐
 │                                                                                                       │
 │  Escalate Horizon issues to VMware GSS when all users are impacted, agent fails                       │
@@ -72,7 +73,6 @@ Escalation reference covering Engage VMware Support, Escalation Within VMware, U
 │  KB article    = check VMware KB before raising SR                                                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 ```
 
 ---

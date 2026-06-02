@@ -40,6 +40,7 @@ Emergency changes bypass the standard CAB cycle to address active outages or cri
 4. Confirm with stakeholders that service is restored
 5. Remove any temporary workarounds (firewall rules, bypasses)
 ```
+```
 ┌────────────────────────────────────────── Emergency Change ───────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -75,7 +76,6 @@ Emergency changes bypass the standard CAB cycle to address active outages or cri
 │    Quorum       = Minimum 2 ECAB members must approve; single approver insufficient                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 ```
 
 ## Guardrails

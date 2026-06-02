@@ -24,6 +24,7 @@ copy running-config tftp://<server>/<filename>
 # Display full running config (for manual capture)
 show running-config
 ```
+```
 ┌───────────────────────────────── Cisco MDS 9000 — Backup and Restore ─────────────────────────────────┐
 │                                                                                                       │
 │  MDS backup: running-config, zone set, startup-config to SCP/TFTP; restore sequence.                  │
@@ -69,7 +70,6 @@ show running-config
 │  Pre-change snap = always capture zone set before making any zone changes                             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 ```
 
 > After restoring, always verify: `show interface brief`, `show flogi database`, and `show zoneset active vsan all`.

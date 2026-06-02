@@ -23,6 +23,7 @@ curl -sk -X POST \
   -H "Content-Type: application/json" \
   -d '{"reason": "FALSE_POSITIVE", "comment": "Weekly backup job 22:00–02:00, expected anomaly"}'
 ```
+```
 ┌──────────────────────────────────── Dell AIOps — Troubleshooting ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
@@ -53,7 +54,6 @@ curl -sk -X POST \
 │  Dell support = Open case at support.dell.com; attach support bundle                                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 ```
 
 ## Common Troubleshooting Reference

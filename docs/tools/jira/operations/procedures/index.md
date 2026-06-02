@@ -22,6 +22,7 @@ Example:
   Terraform so that storage costs are automatically optimised without manual
   cleanup scripts.
 ```
+```
 ┌──────────────────────────────────── Jira — Operations Procedures ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

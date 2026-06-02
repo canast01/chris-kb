@@ -46,6 +46,7 @@ sudo systemctl reload nginx
 openssl s_client -connect sannav-dc1.corp.example.com:443 -servername sannav-dc1.corp.example.com \
   </dev/null 2>/dev/null | openssl x509 -noout -subject -issuer -dates
 ```
+```
 ┌───────────────────────────────────── Brocade SANnav — Encryption ─────────────────────────────────────┐
 │                                                                                                       │
 │  SANnav encryption: TLS 1.2/1.3 for all management traffic; DB and log encryption at rest.            │
@@ -91,7 +92,6 @@ openssl s_client -connect sannav-dc1.corp.example.com:443 -servername sannav-dc1
 │  syslog TLS       = encrypted syslog; audit and event logs forwarded securely to SIEM                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 ```
 
 Renew the SANnav certificate at least 30 days before expiry. A Nagios/Icinga check on port 443 with `--certificate` flag provides automated alerting.

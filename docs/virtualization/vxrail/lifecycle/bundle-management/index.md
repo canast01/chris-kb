@@ -8,12 +8,14 @@ VxRail Bundle Management reference covering Overview, Where It Fits, Daily Check
 Bundle Lifecycle Flow
 ```text
 ```
+```
 ┌─────────────────────────────────────────────────────────────┐
 │  Dell Support Portal / Offline Source                                                                 │
 │  Download VxRail Composite Bundle (.zip)                                                              │
 └──────────────────────────┬──────────────────────────────────┘
 ```text
                            │  upload via UI or SCP
+```
 ```
 ┌──────────────────────────▼──────────────────────────────────┐
 │  VxRail Manager — Bundle Upload                                                                       │
@@ -28,6 +30,7 @@ Bundle Lifecycle Flow
 │  FAIL → error detail, do not proceed                                                                  │
 └──────────────────────────┬──────────────────────────────────┘
                            │  on LCM start
+```
 ```
 ┌──────────────────────────▼──────────────────────────────────┐
 │  Stage → Apply                                                                                        │
@@ -102,4 +105,3 @@ Use this page for VxRail operations, support checks, lifecycle work, troubleshoo
 | Validate hardware health before lifecycle work. | Validate hardware health before lifecycle work. |
 | Keep support bundle notes with the case. | Keep support bundle notes with the case. |
 | Record post-change validation. | Record post-change validation. |
-```

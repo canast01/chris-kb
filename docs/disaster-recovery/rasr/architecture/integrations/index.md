@@ -26,6 +26,7 @@ RASR ships as part of the **Dell OpenManage Systems Management** bundle. The RAS
 ```powershell
 Get-Service -Name "DellRASR" | Select-Object Status, StartType
 ```
+```
 ┌────────────────────────────────── RASR — Architecture Integrations ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

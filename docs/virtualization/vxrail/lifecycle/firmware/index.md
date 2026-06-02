@@ -23,11 +23,13 @@ VxRail Firmware Stack (bottom to top)
 │  (certified combination of all firmware + vSphere versions)                                           │
 └──────────────────────────────────┬───────────────────────────┘
 ```
+```
                                    │  applied via
 ┌──────────────────────────────────▼───────────────────────────┐
 │  VxRail Manager LCM                                                                                   │
 │  validates compatibility → applies rolling across nodes                                               │
 └──────────────────────────────────────────────────────────────┘
+```
 
 ## Overview
 

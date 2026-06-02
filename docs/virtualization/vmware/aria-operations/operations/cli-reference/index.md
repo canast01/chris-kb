@@ -12,6 +12,7 @@ Aria Operations — CLI Command Reference Map
 │       (sudo -i for advanced maintenance tasks)                                                        │
 └──────────────────────┬──────────────────────────────┘
 ```
+```
 ┌──────────────────────────────────── Aria Operations CLI Reference ────────────────────────────────────┐
 │                                                                                                       │
 │  REST API, VAMI, and SSH service commands for Aria Operations (vROps).                                │
@@ -55,6 +56,7 @@ Aria Operations — CLI Command Reference Map
 │  df -h               = Disk usage; vROps is disk-heavy; monitor /storage/db                           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 ┌──────────────────────────────────── Aria Operations CLI Reference ────────────────────────────────────┐
 │                                                                                                       │

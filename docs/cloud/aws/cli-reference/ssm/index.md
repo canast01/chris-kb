@@ -29,6 +29,7 @@ SSM CLI: Session · Command · Parameter Store · Patching
   │  by-path /my/      │   │                               │
   └────────────────────┘   └───────────────────────────────┘
 ```
+```
 ┌──────────────────────────────────────────── AWS CLI — SSM ────────────────────────────────────────────┐
 │                                                                                                       │
 │  Systems Manager CLI for session manager, run command, parameter store, and patching.                 │

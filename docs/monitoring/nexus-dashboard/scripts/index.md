@@ -32,6 +32,7 @@ def nd_get(path: str, token: str, params: dict = None) -> dict:
     resp.raise_for_status()
     return resp.json()
 ```
+```
 ┌───────────────────────────────── Nexus Dashboard — Scripts Reference ─────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -63,7 +64,6 @@ def nd_get(path: str, token: str, params: dict = None) -> dict:
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```python
 
 ## ACI Fault Summary (via APIC)
 

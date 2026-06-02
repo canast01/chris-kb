@@ -22,6 +22,7 @@ nslookup <hostname>
 dig <hostname>
 dig <hostname> @<dns_server_ip>    # query a specific server directly
 ```
+```
 ┌──────────────────────────────────── Networking — Network Services ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

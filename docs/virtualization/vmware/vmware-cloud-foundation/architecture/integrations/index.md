@@ -11,6 +11,7 @@ VCF Integration Topology
 │  SDDC Manager (integration hub)                                                                       │
 └──┬──────┬──────┬──────┬──────┬──────────────────────┘
 ```
+```
 ┌─────────────────────────────── VMware Cloud Foundation — Integrations ────────────────────────────────┐
 │                                                                                                       │
 │  VCF integrates with external identity (AD/LDAP), backup tools, external KMS,                         │
@@ -60,6 +61,7 @@ VCF Integration Topology
 
 NSX Federation (multi-site)
 ```text
+```
 ```
 ┌──────────────────────────────────────────────────────┐
 │  Global NSX Manager (outside VCF LCM)                                                                 │

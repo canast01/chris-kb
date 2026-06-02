@@ -35,6 +35,7 @@ kubectl get nodes
 # Check failing pods on the affected node
 kubectl get pods --all-namespaces --field-selector spec.nodeName=<node-hostname> | grep -v Running
 ```
+```
 ┌────────────────────────── Cisco Nexus Dashboard — Operations Common Issues ───────────────────────────┐
 │                                                                                                       │
 │  Frequent ND operational issues: cluster quorum loss, app failures, site disconnects.                 │

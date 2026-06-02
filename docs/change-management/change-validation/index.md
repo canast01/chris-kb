@@ -32,6 +32,7 @@ journalctl -u <service-name> --since "10 minutes ago" | grep -i error
 # HTTP endpoint health
 curl -sf http://localhost:<port>/health && echo "OK"
 ```
+```
 ┌────────────────────────────────────────── Change Validation ──────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

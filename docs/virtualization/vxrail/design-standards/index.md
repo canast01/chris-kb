@@ -18,6 +18,7 @@ VxRail Design Requirements — Key Standards
 └──────────────────────────────┬──────────────────────────────┘
                                │
 ```
+```
                                │
 ┌──────────────────────────────▼──────────────────────────────┐
 │  Firmware / Software Rule                                                                             │
@@ -25,6 +26,7 @@ VxRail Design Requirements — Key Standards
 │  Never update vSphere, vSAN, or firmware independently                                                │
 │  Verify HCL alignment after every LCM bundle apply                                                    │
 └─────────────────────────────────────────────────────────────┘
+```
 
 ---
 ## Naming Conventions

@@ -53,6 +53,7 @@ das.isolationaddress0 = <gateway IP>
 das.isolationaddress1 = <secondary IP>
 das.usedefaultisolationaddress = false
 ```
+```
 ┌────────────────────────────────── vCenter Server — Design Standards ──────────────────────────────────┐
 │                                                                                                       │
 │  Design standards define sizing, HA topology, network placement, and upgrade                          │

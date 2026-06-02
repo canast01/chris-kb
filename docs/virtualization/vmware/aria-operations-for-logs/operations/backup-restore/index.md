@@ -36,6 +36,7 @@ curl -sk -u 'admin:<password>' \
 # Check disk usage — do not back up a node with >90% disk (indicates ingestion pressure)
 df -h /var/log/loginsight
 ```
+```
 ┌──────────────────────────── Aria Operations for Logs — Backup and Restore ────────────────────────────┐
 │                                                                                                       │
 │  Backup vRLI config, dashboards, and alerts; log data is archived separately to NFS/S3.               │

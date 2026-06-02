@@ -23,6 +23,7 @@
 # Via boxmgmt
 boxmgmt support collect_bundle
 ```
+```
 ┌───────────────────────────────────── RecoverPoint — Diagnostics ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -62,7 +63,6 @@ boxmgmt support collect_bundle
 │  Distributed CG= consistency group spanning volumes on multiple storage arrays                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 ```
 
 > If `esxcli recoverpoint` commands are not available, the RP4VM VIB is not installed or has been corrupted. Re-deploy from the RecoverPoint Deployment Manager.

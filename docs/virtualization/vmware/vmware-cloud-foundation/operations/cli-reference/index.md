@@ -30,6 +30,7 @@ VCF CLI Tool Map — Where to Run What
 │    PATCH /v1/credentials rotate a credential                                                          │
 └─────────────────────────────────────────────────────┘
 ```
+```
 ┌─────────────────────────────── VMware Cloud Foundation — CLI Reference ───────────────────────────────┐
 │                                                                                                       │
 │  VCF is primarily managed via SDDC Manager UI and REST API; PowerVCF and lcm-cli                      │
@@ -75,6 +76,7 @@ VCF CLI Tool Map — Where to Run What
 │  upgrade-status= show current upgrade state across all components                                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 ┌─────────────────────────────── VMware Cloud Foundation — CLI Reference ───────────────────────────────┐
 │                                                                                                       │

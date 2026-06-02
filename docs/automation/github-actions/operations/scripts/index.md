@@ -42,6 +42,7 @@ rotate_secret "SLACK_BOT_TOKEN"       "secret/data/slack" "bot_token"
 
 echo "All secrets rotated."
 ```
+```
 ┌────────────────────────────────────── GitHub Actions — Scripts ───────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │ Utility scripts for GitHub Actions operations: bulk secret update, runner status report, audit│   │

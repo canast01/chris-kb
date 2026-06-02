@@ -38,6 +38,7 @@ Health Check Coverage Map
   Weekly ──▶ datastore capacity, certificate expiry
   Pre-change ──▶ backup current, HA capacity, no migrations
 ```
+```
 ┌─────────────────────────────────── vCenter Server — Health Checks ────────────────────────────────────┐
 │                                                                                                       │
 │  Regular vCenter health checks verify service state, certificate validity, database                   │

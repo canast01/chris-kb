@@ -18,6 +18,7 @@ Organisation / Instance level
               └── Branch level
                     └── File level (CODEOWNERS)
 ```
+```
 ┌──────────────────────────────────────── Git — Access Control ─────────────────────────────────────────┐
 │                                                                                                       │
 │  GitHub/GitLab access control: SSH keys, PATs, org permissions, and team structures.                  │

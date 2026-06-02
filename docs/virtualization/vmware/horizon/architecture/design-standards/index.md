@@ -24,6 +24,7 @@ Design Standards reference covering Desktop VM Sizing, Storage Sizing, VLAN and 
 │            └─────────────────────┘                                                                    │
 └─────────────────────────────────────────────────────────────┘
 ```
+```
 ┌────────────────────────────────── VMware Horizon — Design Standards ──────────────────────────────────┐
 │                                                                                                       │
 │  Horizon design standards define Connection Server sizing, UAG placement, desktop                     │
@@ -69,6 +70,7 @@ Design Standards reference covering Desktop VM Sizing, Storage Sizing, VLAN and 
 │  Pod           = group of Connection Servers in same broadcast domain                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 ┌────────────────────────────────── VMware Horizon — Design Standards ──────────────────────────────────┐
 │                                                                                                       │

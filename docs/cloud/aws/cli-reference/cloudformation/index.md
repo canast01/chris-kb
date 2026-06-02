@@ -37,6 +37,7 @@ CloudFormation CLI: Stack Lifecycle
           ▼
   delete-stack ──► DELETE_COMPLETE
 ```
+```
 ┌────────────────────────────────────── AWS CLI — CloudFormation ───────────────────────────────────────┐
 │                                                                                                       │
 │  Key CloudFormation CLI commands for stack management, drift detection, and StackSets.                │
@@ -82,5 +83,4 @@ CloudFormation CLI: Stack Lifecycle
 │  ROLLBACK        = Failed update reverts to last known good configuration                             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 ```

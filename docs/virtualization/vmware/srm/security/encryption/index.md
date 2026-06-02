@@ -24,6 +24,7 @@ Encryption reference covering Encryption at Recovery Site, Certificate Managemen
 │  └──────────────────────────────────────────────────────┘                                             │
 └───────────────────────────────────────────────────────────────┘
 ```
+```
 ┌─────────────────────────────────────── VMware SRM — Encryption ───────────────────────────────────────┐
 │                                                                                                       │
 │  SRM encrypts management traffic via TLS; replication traffic encryption depends on                   │
@@ -69,6 +70,7 @@ Encryption reference covering Encryption at Recovery Site, Certificate Managemen
 │  Re-pair       = after cert replacement; required for site pair trust                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 ┌─────────────────────────────────────── VMware SRM — Encryption ───────────────────────────────────────┐
 │                                                                                                       │

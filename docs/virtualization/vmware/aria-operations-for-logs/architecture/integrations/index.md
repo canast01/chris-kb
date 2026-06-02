@@ -18,6 +18,7 @@ In Aria Operations for Logs UI:
 ```text
 Administration → Integrations → Aria Operations → Add vRealize Operations Connection
 ```
+```
 ┌─────────────────────────────── Aria Operations for Logs — Integrations ───────────────────────────────┐
 │                                                                                                       │
 │  vRLI integrates with VMware products, SIEM, ITSM, and cloud logging targets.                         │

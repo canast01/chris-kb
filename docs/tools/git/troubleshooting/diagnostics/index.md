@@ -39,6 +39,7 @@ GIT_TRACE=1 GIT_TRACE_PERFORMANCE=1 GIT_TRACE_SETUP=1 git status
 # Performance profiling — identify slow operations
 GIT_TRACE_PERFORMANCE=1 git log --oneline -100 2>&1 | grep "performance"
 ```
+```
 ┌────────────────────────────────────────── Git — Diagnostics ──────────────────────────────────────────┐
 │                                                                                                       │
 │  Diagnostic tools for Git: verbose output, trace logs, fsck, and performance profiling.               │

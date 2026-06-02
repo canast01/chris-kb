@@ -94,6 +94,7 @@ systemctl restart rsyslog
 logger -p local0.info -t dcnm "Test message"
 # Verify arrival at SIEM
 ```
+```
 ┌────────────────────────────────────── Cisco DCNM — Integrations ──────────────────────────────────────┐
 │                                                                                                       │
 │  DCNM integrates with Cisco ISE, SIEM, REST automation, CMDB, and NTP/SMTP.                           │
@@ -139,7 +140,6 @@ logger -p local0.info -t dcnm "Test message"
 │  NTP             = Network Time Protocol; required for correlated event timestamps                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 ```
 
 ### Key API Endpoints

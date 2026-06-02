@@ -125,6 +125,7 @@ mapsPolicy --enable dflt_aggressive_policy
 # Verify active policy
 mapsPolicy --show
 ```
+```
 ┌─────────────────────────────── Brocade SANnav — Operations Procedures ────────────────────────────────┐
 │                                                                                                       │
 │  Day-to-day SANnav procedures: zone changes, switch adds, firmware, health monitoring.                │
@@ -170,5 +171,4 @@ mapsPolicy --show
 │  SNMP v3         = SNMPv3 credentials required for SANnav to discover and poll switches               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 ```

@@ -26,6 +26,7 @@ realm join -U administrator corp.example.com
 realm list
 id administrator@corp.example.com
 ```
+```
 ┌──────────────────── Integration — Directory Integration (LDAP / Active Directory) ────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

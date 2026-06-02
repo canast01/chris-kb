@@ -29,6 +29,7 @@ curl -s http://alertmanager:9093/api/v2/alerts | jq '.[] | {alertname:.labels.al
 # Grafana datasource health
 curl -s -u admin:pass http://grafana:3000/api/datasources | jq '.[] | {name:.name, type:.type, url:.url}'
 ```
+```
 ┌───────────────────────────────── Integration — Service Integrations ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -60,7 +61,6 @@ curl -s -u admin:pass http://grafana:3000/api/datasources | jq '.[] | {name:.nam
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```python
 
 ## Active Directory / LDAP Integration
 

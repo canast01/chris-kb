@@ -29,6 +29,7 @@ Recovery Media (USB / iDRAC virtual ISO)
 └── WinPE boot environment
       └── RASR Recovery Engine + Dell hardware drivers
 ```
+```
 ┌───────────────────────────────────────── RASR — How It Works ─────────────────────────────────────────┐
 │                                                                                                       │
 │    RASR data flow — from source to target through the protection pipeline:                            │
@@ -83,7 +84,6 @@ Recovery Media (USB / iDRAC virtual ISO)
 │  RTO           = Recovery Time Objective; time from failover decision to restored service             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 ```
 
 ## Network Recovery Share Requirements

@@ -20,6 +20,7 @@ Hierarchy:
       └── Space Permissions (who can access and edit within a space)
               └── Page Restrictions (who can view/edit a specific page)
 ```
+```
 ┌───────────────────────────────────── Confluence — Access Control ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -64,7 +65,6 @@ Hierarchy:
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-```yaml
 Example: IT Infrastructure space (space key: INFRA)
 - View: AD group "confluence-infra-viewers"    → All IT staff
 - Edit: AD group "confluence-infra-editors"    → Infrastructure engineers

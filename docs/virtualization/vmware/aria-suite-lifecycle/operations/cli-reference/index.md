@@ -28,6 +28,7 @@ CLI Reference reference covering Services, Certificates, Proxy & Network, NTP & 
 │  └─────────────────────────┘    └────────────────────────────┘                                        │
 └─────────────────────────────────────────────────────────────────┘
 ```
+```
 ┌──────────────────────────────────── Aria Suite LCM CLI Reference ─────────────────────────────────────┐
 │                                                                                                       │
 │  VAMI management, REST API endpoints, vlcm log files, and SSH commands for LCM.                       │
@@ -71,6 +72,7 @@ CLI Reference reference covering Services, Certificates, Proxy & Network, NTP & 
 │  Depot Config Page   = VAMI page to add/edit online or local content depot                            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 ┌──────────────────────────────────── Aria Suite LCM CLI Reference ─────────────────────────────────────┐
 │                                                                                                       │

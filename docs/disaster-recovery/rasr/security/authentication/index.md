@@ -27,6 +27,7 @@ Authentication requirements:
 - Required for recovery operators: "Recovery Manager" or equivalent role
 - MFA: Enable for all management plane access where supported
 ```
+```
 ┌──────────────────────────────────────── RASR — Authentication ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

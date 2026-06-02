@@ -106,6 +106,7 @@ sudo systemctl restart rsyslog
 logger -t sannav-test "Test syslog message from SANnav"
 # Check SIEM for the test message
 ```
+```
 ┌──────────────────────────────────── Brocade SANnav — Integrations ────────────────────────────────────┐
 │                                                                                                       │
 │  SANnav integrates with SIEM, TACACS+, SNMP NMS, REST automation, and NTP/SMTP.                       │
@@ -151,7 +152,6 @@ logger -t sannav-test "Test syslog message from SANnav"
 │  SCP             = Secure Copy; used for supportsave upload and firmware transfers                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 ```
 
 ### Useful API Endpoints

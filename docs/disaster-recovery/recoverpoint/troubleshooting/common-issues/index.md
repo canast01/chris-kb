@@ -19,6 +19,7 @@ boxmgmt cg check_cg <CG-name>
 boxmgmt list cg
 boxmgmt system status
 ```
+```
 ┌──────────────────────────────────── RecoverPoint — Common Issues ─────────────────────────────────────┐
 │                                                                                                       │
 │   │     Symptom      │   Likely Cause   │    First Check    │       Fix        │      Verify      │   │

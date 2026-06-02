@@ -37,6 +37,7 @@ systemctl start dcnm-server
 systemctl stop dcnm-pm        # performance manager only
 systemctl restart dcnm-events
 ```
+```
 ┌───────────────────────────────────── Cisco DCNM — CLI Reference ──────────────────────────────────────┐
 │                                                                                                       │
 │  DCNM management CLI and key NX-OS MDS commands for fabric operations and troubleshooting.            │

@@ -12,6 +12,7 @@ Change the `admin` password immediately after completing the setup wizard:
 ```text
 Administration → Authentication → Local Users → admin → Edit → Change Password
 ```
+```
 ┌──────────────────────────────── Aria Operations for Logs — Hardening ─────────────────────────────────┐
 │                                                                                                       │
 │  Harden vRLI with TLS syslog, firewall restrictions, minimal admin accounts, and audit.               │

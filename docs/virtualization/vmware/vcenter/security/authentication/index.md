@@ -49,6 +49,7 @@ SSO Authentication Flow
                └──▶ ESXi host certs (auto-signed by VMCA)
   STS Signing Cert ──▶ signs all SAML tokens (10yr default)
 ```
+```
 ┌─────────────────────────────────── vCenter Server — Authentication ───────────────────────────────────┐
 │                                                                                                       │
 │  vCenter authentication is handled by the embedded SSO service; it validates                          │

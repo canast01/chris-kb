@@ -44,6 +44,7 @@ vCenter Hardening Layers
   │  SIEM alerts: LoginFailure, PermissionAdded, admin@  │
   └──────────────────────────────────────────────────────┘
 ```
+```
 ┌───────────────────────────────────── vCenter Server — Hardening ──────────────────────────────────────┐
 │                                                                                                       │
 │  vCenter hardening follows the VMware Security Hardening Guide and CIS benchmark;                     │

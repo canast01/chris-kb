@@ -27,6 +27,7 @@ passwd admin
 # Change default OS root password (if accessible)
 sudo passwd root
 ```
+```
 ┌───────────────────────────────── Brocade SANnav — Security Hardening ─────────────────────────────────┐
 │                                                                                                       │
 │  SANnav hardening: disable defaults, TACACS+ enforce, TLS, RBAC, patch management.                    │

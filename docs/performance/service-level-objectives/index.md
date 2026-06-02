@@ -35,6 +35,7 @@ Error budget = (1 - SLO target) × time period
 Example: 99.9% SLO for 30 days
   Error budget = (1 - 0.999) × 30 days × 24 hours = 43.2 minutes/month
 ```
+```
 ┌──────────────────────────── Performance — Service Level Objectives (SLOs) ────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

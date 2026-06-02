@@ -79,6 +79,7 @@ snmpconfig --set trapdest -index 1 \
 snmpconfig --show snmpv3
 snmpconfig --show trapdest
 ```
+```
 ┌────────────────────────────────── Brocade SANnav — Design Standards ──────────────────────────────────┐
 │                                                                                                       │
 │  Design principles: HA deployment, dedicated management VLAN, RBAC, TLS, backups.                     │
@@ -124,7 +125,6 @@ snmpconfig --show trapdest
 │  Scale-out       = deploy additional SANnav instances when port count exceeds limit                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 ```
 
 - Assign switches to the correct resource group immediately after discovery. Switches left in the default group are invisible to role-scoped SANnav operators.

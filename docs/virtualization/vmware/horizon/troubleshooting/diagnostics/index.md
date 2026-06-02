@@ -25,6 +25,7 @@ Diagnostics reference covering Collect Horizon Support Bundle, Windows Event Log
 │  └────────────────────────────┘   └────────────────────────┘                                          │
 └──────────────────────────────────────────────────────────────┘
 ```
+```
 ┌──────────────────────────────────── VMware Horizon — Diagnostics ─────────────────────────────────────┐
 │                                                                                                       │
 │  Horizon diagnostics use Connection Server logs, support bundles, Horizon admin UI,                   │
@@ -70,6 +71,7 @@ Diagnostics reference covering Collect Horizon Support Bundle, Windows Event Log
 │  Pool error    = UI shows red error; hover for provisioning reason                                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 ┌──────────────────────────────────── VMware Horizon — Diagnostics ─────────────────────────────────────┐
 │                                                                                                       │

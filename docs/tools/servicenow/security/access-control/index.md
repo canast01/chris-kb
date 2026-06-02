@@ -18,6 +18,7 @@ Role
                     ├── Record-level (specific conditions)
                     └── Field-level (specific fields)
 ```
+```
 ┌────────────────────────────────────── ServiceNow Access Control ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -63,7 +64,6 @@ Role
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-```javascript
 // List members of a group
 var groupName = 'SNOW-Administrators';
 var groupRecord = new GlideRecord('sys_user_group');

@@ -45,6 +45,7 @@ def pure1_get(path: str, token: str, params: dict = None) -> dict:
     resp.raise_for_status()
     return resp.json()
 ```
+```
 ┌────────────────────────────────────── Pure1 — Scripts Reference ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -76,7 +77,6 @@ def pure1_get(path: str, token: str, params: dict = None) -> dict:
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```python
 
 ## Pure1 Meta Anomaly Query
 

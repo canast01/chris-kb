@@ -22,6 +22,7 @@ ESXi Backup & Restore Flow
 └───────────────────────┬────────────────────────────────┘
                         │
 ```
+```
 ┌────────────────────────────────────── ESXi — Backup and Restore ──────────────────────────────────────┐
 │                                                                                                       │
 │  configBundle backup, Host Profiles, and full reinstall restore procedure.                            │
@@ -67,7 +68,6 @@ ESXi Backup & Restore Flow
 │  Cluster     = group of ESXi hosts sharing HA, DRS, and vSAN resources                                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 ```
 
 The configuration bundle includes network settings, storage policies, service state, and advanced settings. It does not include VMFS datastores or VM data.

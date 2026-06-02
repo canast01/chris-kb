@@ -146,6 +146,7 @@ Windows key → type `cmd` → press Enter
 cd C:\Users\YourName\Desktop
 python nsxt_health_check.py
 ```
+```
 ┌──────────────────────────────────────────── NSX — Scripts ────────────────────────────────────────────┐
 │                                                                                                       │
 │  NSX REST API, Python, PowerShell, and Terraform scripts for NSX automation.                          │

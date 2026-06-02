@@ -25,6 +25,7 @@ Access Control reference covering Service Account for API Automation, Separation
 │  Never assign roles to individual user accounts                                                       │
 └─────────────────────────────────────────────────────────────────┘
 ```
+```
 ┌──────────────────────────────────── Aria Suite LCM Access Control ────────────────────────────────────┐
 │                                                                                                       │
 │  Admin and User roles with vIDM group mapping for Aria Suite Lifecycle Manager.                       │
@@ -68,6 +69,7 @@ Access Control reference covering Service Account for API Automation, Separation
 │  Audit Log           = LCM records all user actions and config changes                                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 ┌──────────────────────────────────── Aria Suite LCM Access Control ────────────────────────────────────┐
 │                                                                                                       │

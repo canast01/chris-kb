@@ -34,6 +34,7 @@ acs cluster info
 # Show platform version
 acs version
 ```
+```
 ┌────────────────────────── Cisco Nexus Dashboard — Operations CLI Reference ───────────────────────────┐
 │                                                                                                       │
 │  ND CLI accessed via SSH to node IP; used for low-level cluster operations and recovery.              │

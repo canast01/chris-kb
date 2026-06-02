@@ -33,6 +33,7 @@ ESXi CLI Tool Map
 │  Logs  /var/log/vmkernel.log  hostd  vpxa  fdm  auth                                                  │
 └─────────────────────────────────────────────────────────┘
 ```
+```
 ┌──────────────────────────────────────── ESXi — CLI Reference ─────────────────────────────────────────┐
 │                                                                                                       │
 │  esxcli on-host, vim-cmd, govc (remote), and PowerCLI automation commands.                            │
@@ -78,6 +79,7 @@ ESXi CLI Tool Map
 │  vCenter API = REST + SOAP endpoint; govc/PowerCLI both use it                                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 ┌──────────────────────────────────────── ESXi — CLI Reference ─────────────────────────────────────────┐
 │                                                                                                       │
@@ -126,7 +128,6 @@ ESXi CLI Tool Map
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-```bash
 # Maintenance mode
 esxcli system maintenanceMode get
 esxcli system maintenanceMode set --enabled true

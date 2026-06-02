@@ -16,6 +16,7 @@ ESXi Authentication Paths
 └──────────────────────────┬───────────────────────────────┘
                            │
 ```
+```
 ┌──────────────────────────────────────── ESXi — Authentication ────────────────────────────────────────┐
 │                                                                                                       │
 │  SSO, AD/LDAP join, smart card (CAC), and MFA configuration for ESXi access.                          │
@@ -61,6 +62,7 @@ ESXi Authentication Paths
 │  STIG        = Security Technical Implementation Guide; DOD hardening                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 ┌──────────────────────────────────────── ESXi — Authentication ────────────────────────────────────────┐
 │                                                                                                       │

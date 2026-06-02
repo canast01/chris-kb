@@ -27,6 +27,7 @@ Hardening reference covering SSH Hardening on the LCM Appliance, TLS Configurati
 │  VIDM for all interactive users; no shared local accounts                                             │
 └──────────────────────────────────────────────────────────────┘
 ```
+```
 ┌────────────────────────────────── Aria Suite LCM Security Hardening ──────────────────────────────────┐
 │                                                                                                       │
 │  Firewall rules, MFA via vIDM, minimal SSH access, and audit hardening for LCM.                       │
@@ -71,7 +72,6 @@ Hardening reference covering SSH Hardening on the LCM Appliance, TLS Configurati
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```python
 
 ---
 

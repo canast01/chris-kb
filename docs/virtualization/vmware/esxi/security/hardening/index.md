@@ -36,6 +36,7 @@ ESXi Host Hardening Layers
 │  └── Check Compliance after every change                                                              │
 └─────────────────────────────────────────────────────────┘
 ```
+```
 ┌────────────────────────────────────────── ESXi — Hardening ───────────────────────────────────────────┐
 │                                                                                                       │
 │  CIS VMware benchmark, lockdown mode, host firewall, and hardening profile.                           │

@@ -42,6 +42,7 @@ $report | Format-Table -AutoSize
 Write-Host "`nReport saved: $OutputPath" -ForegroundColor Green
 Disconnect-VIServer -Confirm:$false
 ```
+```
 ┌────────────────────────────────── PowerShell — Scripts (Operations) ──────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │           Operational PowerShell scripts for common infrastructure management tasks           │   │
@@ -61,5 +62,4 @@ Disconnect-VIServer -Confirm:$false
 │   │     Return values = output objects not strings; allows caller to filter with Where-Object     │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 ```

@@ -13,6 +13,7 @@ Aria Automation delegates all authentication to **Workspace ONE Access (VIDM)**.
 Browser → Aria Automation UI → VIDM (SAML redirect) → AD/LDAP → VIDM session → Aria Automation JWT
 API clients → Aria Automation /csp/gateway/am/api/login → VIDM credentials → Bearer token
 ```
+```
 ┌────────────────────────────────── Aria Automation — Authentication ───────────────────────────────────┐
 │                                                                                                       │
 │  vRA authentication flows through vIDM (Workspace ONE) via SAML; local accounts are minimal.          │

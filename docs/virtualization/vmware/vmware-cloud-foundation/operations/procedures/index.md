@@ -8,6 +8,7 @@ Procedures reference covering SDDC Manager Backup, Password Management, Useful L
 VCF Operational Procedures — Decision Map
 ```text
 ```
+```
 ┌───────────────────────────── VMware Cloud Foundation — Common Procedures ─────────────────────────────┐
 │                                                                                                       │
 │  Routine VCF procedures: add host to free pool, create workload domain, rotate                        │
@@ -54,6 +55,7 @@ VCF Operational Procedures — Decision Map
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+```
        │               │                │
        ▼               ▼                ▼
 ┌──────────────┐ ┌──────────────┐ ┌────────────────┐
@@ -73,6 +75,7 @@ VCF Operational Procedures — Decision Map
 │ Pre-check    │ │ Update vault │ │ → vCenter                                                           │
 │ first!       │ │ after rotate │ │ → NSX → ESXi                                                        │
 └──────────────┘ └──────────────┘ └────────────────┘
+```
 ```text
 ┌───────────────────────────── VMware Cloud Foundation — Common Procedures ─────────────────────────────┐
 │                                                                                                       │

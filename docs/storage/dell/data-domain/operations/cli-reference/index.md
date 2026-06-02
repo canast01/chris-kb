@@ -26,6 +26,7 @@ config backup show
 # Restore from a named backup
 config backup restore <backup_name>
 ```
+```
 ┌─────────────────────────────────── Dell Data Domain CLI Reference ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

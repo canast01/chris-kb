@@ -8,6 +8,7 @@ Encryption reference covering Connection Server Certificate, UAG Certificate, Cl
   TLS Encryption Path: Client to Desktop
 ```text
 ```
+```
 ┌───────────────────────────────────── VMware Horizon — Encryption ─────────────────────────────────────┐
 │                                                                                                       │
 │  Horizon encrypts all sessions via Blast Extreme (TLS) or PCoIP; management traffic                   │
@@ -53,6 +54,7 @@ Encryption reference covering Connection Server Certificate, UAG Certificate, Cl
 │  USB tunnel    = redirected USB over TLS tunnel to desktop                                            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 ┌──────────────┐  Blast AES  ┌───────────┐                      ▼
 │  Horizon     │─────────────►│  UAG      │─────────────►┌──────────────────┐

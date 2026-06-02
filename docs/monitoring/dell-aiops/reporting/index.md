@@ -49,6 +49,7 @@ curl -sk -X GET "<download_url>" \
   -H "Authorization: Bearer <access_token>" \
   -o aiops-exec-summary.pdf
 ```
+```
 ┌─────────────────────────────────────── Dell AIOps — Reporting ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
@@ -78,7 +79,6 @@ curl -sk -X GET "<download_url>" \
 │  MTTR = Mean Time To Resolve; calculated from alert history open/close timestamps                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 ```
 
 ## Common Reporting Issues

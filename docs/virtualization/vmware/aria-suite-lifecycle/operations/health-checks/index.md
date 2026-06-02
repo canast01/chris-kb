@@ -26,6 +26,7 @@ Health Checks reference covering Cluster Node Health via API, Locker Health Chec
 │  └─────────────────────────────────────────────────────────┘                                          │
 └─────────────────────────────────────────────────────────────────┘
 ```
+```
 ┌──────────────────────────────────── Aria Suite LCM Health Checks ─────────────────────────────────────┐
 │                                                                                                       │
 │  Product health, depot connectivity, and certificate expiry checks for LCM.                           │
@@ -69,6 +70,7 @@ Health Checks reference covering Cluster Node Health via API, Locker Health Chec
 │  Logscraper          = Run after health check failure to collect diagnostic logs                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 ┌──────────────────────────────────── Aria Suite LCM Health Checks ─────────────────────────────────────┐
 │                                                                                                       │

@@ -13,6 +13,7 @@ VCF Upgrade Flow — SDDC Manager Orchestration
 │  (or offline: .tar file ► local depot)                                                                │
 └──────────────────────────┬──────────────────────────┘
 ```
+```
 ┌───────────────────────────── VMware Cloud Foundation — Install & Upgrade ─────────────────────────────┐
 │                                                                                                       │
 │  VCF installation uses Cloud Builder to deploy the management domain; upgrades                        │
@@ -83,6 +84,7 @@ VCF Upgrade Flow — SDDC Manager Orchestration
                            │
                            ▼
 ```text
+```
 ```
 ┌─────────────────────────────────────────────────────┐
 │  Step 4: Post-Upgrade Validation                                                                      │

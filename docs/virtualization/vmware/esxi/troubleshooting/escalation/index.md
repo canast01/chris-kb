@@ -16,6 +16,7 @@ ESXi Escalation Path — Broadcom Support
 └──────────────────────────┬──────────────────────────────┘
                            │
 ```
+```
 ┌────────────────────────────────────────── ESXi — Escalation ──────────────────────────────────────────┐
 │                                                                                                       │
 │  VMware GSS escalation, support bundle collection, and severity level matrix.                         │
@@ -61,6 +62,7 @@ ESXi Escalation Path — Broadcom Support
 │  Phone bridge= S1 SR triggers phone call from VMware engineer                                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 ┌──────────────────────────▼──────────────────────────────┐
 │  Escalation Triggers                                                                                  │

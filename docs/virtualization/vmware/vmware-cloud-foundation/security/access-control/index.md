@@ -14,6 +14,7 @@ VCF RBAC Model — Role Assignment Flow
 │  └──────────────────────────────────────────────┘                                                     │
 └───────────────────────┬─────────────────────────────┘
 ```
+```
 ┌────────────────────────────── VMware Cloud Foundation — Access Control ───────────────────────────────┐
 │                                                                                                       │
 │  VCF access control spans SDDC Manager (admin/operator/viewer roles), vCenter RBAC                    │
@@ -63,6 +64,7 @@ VCF RBAC Model — Role Assignment Flow
 
 Credential Rotation (all via SDDC Manager — never manually):
 ```text
+```
 ```
 ┌─────────────────────────────────────────────────────┐
 │  SDDC Manager → Security → Credentials → Rotate                                                       │

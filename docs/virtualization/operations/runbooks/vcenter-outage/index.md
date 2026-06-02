@@ -27,6 +27,7 @@ vCenter Outage Runbook reference covering Confirm Outage Scope, Check VCSA VM Po
 ping <vcenter-ip>
 nslookup <vcenter-fqdn>
 ```
+```
 ┌─────────────────────────────────────── vCenter Outage Runbook ────────────────────────────────────────┐
 │                                                                                                       │
 │    ESXi hosts continue running VMs independently; vCenter is management plane only                    │
@@ -55,7 +56,6 @@ nslookup <vcenter-fqdn>
 │    GSS          = VMware Global Support Services; escalate P1 outages with SR number                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 ```
 
 Partitions that commonly cause failures when full:

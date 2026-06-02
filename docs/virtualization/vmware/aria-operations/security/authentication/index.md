@@ -25,6 +25,7 @@ Aria Operations supports multiple authentication sources. Users can authenticate
 ```text
 Administration → Authentication Sources → Add Source
 ```
+```
 ┌─────────────────────────────────── Aria Operations Authentication ────────────────────────────────────┐
 │                                                                                                       │
 │  Local, AD/LDAP, vIDM SSO, and API token authentication for Aria Operations (vROps).                  │
@@ -69,7 +70,6 @@ Administration → Authentication Sources → Add Source
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```python
 
 Expected result: "Connection successful — X users found."
 

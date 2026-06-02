@@ -14,6 +14,7 @@ vmstat 1 5        # check wa (I/O wait) column
 iostat -xz 1 5    # %util, await, r/s, w/s on DB disk
 free -h           # check swap usage — DB paging = critical
 ```
+```
 ┌─────────────────────────────── Database — Performance Troubleshooting ────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

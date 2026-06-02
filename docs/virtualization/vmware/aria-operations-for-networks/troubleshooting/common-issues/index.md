@@ -27,6 +27,7 @@ sudo systemctl start hms   # restart if stopped
 df -h
 sudo journalctl --vacuum-size=1G   # free journal space
 ```
+```
 ┌───────────────────────────────────────── vRNI Common Issues ──────────────────────────────────────────┐
 │                                                                                                       │
 │  Common issues: data source red, no flows, LDAP login failure, and collector offline.                 │
@@ -70,7 +71,6 @@ sudo journalctl --vacuum-size=1G   # free journal space
 │  Test Connection     = vRNI built-in source test; confirms API reachability and auth                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 ```
 
 After entering new key, verify data source collection resumes (check last-sync timestamps in Settings → Data Sources).

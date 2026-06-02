@@ -57,6 +57,7 @@ aws rds modify-db-instance \
 aws rds stop-db-instance --db-instance-identifier <db-id>
 aws rds start-db-instance --db-instance-identifier <db-id>
 ```
+```
 ┌─────────────────────────────── AWS Operations — Procedures & Runbooks ────────────────────────────────┐
 │                                                                                                       │
 │  Standard operating procedures for AWS change management, incident response, and routine ops.         │
@@ -102,7 +103,6 @@ aws rds start-db-instance --db-instance-identifier <db-id>
 │  DR test         = Disaster recovery test validating RTO/RPO targets are achievable                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 ```
 
 ### Troubleshooting

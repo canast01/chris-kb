@@ -48,6 +48,7 @@ cleanup() {
 trap cleanup EXIT
 echo "Authenticated to ${DCNM_HOST}"
 ```
+```
 ┌─────────────────────────────────── Cisco DCNM — Operations Scripts ───────────────────────────────────┐
 │                                                                                                       │
 │  DCNM scripting: REST API, Ansible cisco.dcnm, zone automation, reporting scripts.                    │
@@ -94,7 +95,6 @@ echo "Authenticated to ${DCNM_HOST}"
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```python
 
 ---
 

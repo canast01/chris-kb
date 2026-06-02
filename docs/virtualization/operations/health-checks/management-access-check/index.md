@@ -36,6 +36,7 @@ Management Access Check Flow
   │  └─ Hardware     No disk / NIC / PSU alerts         │
   └─────────────────────────────────────────────────────┘
 ```
+```
 ┌─────────────────────────────────────── Management Access Check ───────────────────────────────────────┐
 │                                                                                                       │
 │    Run weekly; confirm DNS, HTTPS, and login for every management endpoint                            │

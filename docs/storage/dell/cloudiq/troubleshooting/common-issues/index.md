@@ -50,6 +50,7 @@ systemctl restart dsagw
 journalctl -u dsagw -f
 # Look for: "connection refused", "TLS handshake failed", "authentication error"
 ```
+```
 ┌───────────────────────────────────── Dell CloudIQ Common Issues ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

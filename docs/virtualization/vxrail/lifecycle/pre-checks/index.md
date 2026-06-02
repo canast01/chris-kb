@@ -17,6 +17,7 @@ Pre-Upgrade Checklist Flow
 └──────────────────────────────────────────────────────────────┘
                                │
 ```
+```
                                │
 ┌──────────────────────────────▼──────────────────────────────┐
 │  Infrastructure + Backup                                                                              │
@@ -24,6 +25,7 @@ Pre-Upgrade Checklist Flow
 │  NTP synchronized · vCenter backup current                                                            │
 │  critical VM backups done · rollback plan documented                                                  │
 └─────────────────────────────────────────────────────────────┘
+```
 
 ## VxRail Manager
 

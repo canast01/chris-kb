@@ -42,6 +42,7 @@ VCSA Procedure Flow — Maintenance Window
   │                                                  │
   └──────────────────────────────────────────────────┘
 ```
+```
 ┌───────────────────────────────── vCenter Server — Common Procedures ──────────────────────────────────┐
 │                                                                                                       │
 │  Routine vCenter procedures: certificate renewal, host add/remove, cluster                            │

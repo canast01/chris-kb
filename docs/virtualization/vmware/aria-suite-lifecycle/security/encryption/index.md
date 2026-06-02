@@ -29,6 +29,7 @@ Encryption reference covering Importing a Signed Certificate into Locker, Verify
 │  (Never replace certificates directly on product appliances)                                          │
 └─────────────────────────────────────────────────────────────────┘
 ```
+```
 ┌────────────────────────────────────── Aria Suite LCM Encryption ──────────────────────────────────────┐
 │                                                                                                       │
 │  TLS for all managed products and centralised certificate management via LCM.                         │
@@ -72,6 +73,7 @@ Encryption reference covering Importing a Signed Certificate into Locker, Verify
 │  Self-Signed Default = Default cert; replace with CA-signed before production                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 ┌────────────────────────────────────── Aria Suite LCM Encryption ──────────────────────────────────────┐
 │                                                                                                       │

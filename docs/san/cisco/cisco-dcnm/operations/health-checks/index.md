@@ -45,6 +45,7 @@ grep -i "ERROR\|SEVERE\|Exception" /var/log/dcnm/server.log | tail -50
 timedatectl status
 # Expected: synchronized: yes
 ```
+```
 ┌───────────────────────────────────── Cisco DCNM — Health Checks ──────────────────────────────────────┐
 │                                                                                                       │
 │  DCNM health checks: dashboard alerts, switch status, ISL load, zone consistency.                     │

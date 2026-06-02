@@ -12,6 +12,7 @@ Follow the same naming scheme as other LCM-managed appliances:
 ```text
 vrli-<env>-<node#>.<domain>
 ```
+```
 ┌───────────────────────────── Aria Operations for Logs — Design Standards ─────────────────────────────┐
 │                                                                                                       │
 │  Standards for sizing, retention, clustering, and source onboarding in vRLI deployments.              │
@@ -55,5 +56,4 @@ vrli-<env>-<node#>.<domain>
 │  Ingest rate       = Measured in GB/day; determines sizing (master-only vs. cluster)                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 ```

@@ -35,6 +35,7 @@ Roles are assigned to groups (AD groups synced via VIDM), not individuals.
 ```text
 Infrastructure → Administration → Projects → select project → Members → Add Members
 ```
+```
 ┌────────────────────────────────── Aria Automation — Access Control ───────────────────────────────────┐
 │                                                                                                       │
 │  vRA access is governed by project membership, catalog entitlements, and approval policies.           │

@@ -35,6 +35,7 @@ Lambda CLI: Deploy → Invoke → Monitor
   │  filter-log-events "ERROR"        │
   └───────────────────────────────────┘
 ```
+```
 ┌────────────────────────────────────────── AWS CLI — Lambda ───────────────────────────────────────────┐
 │                                                                                                       │
 │  Lambda CLI commands for function deploy, invoke, configuration, and log retrieval.                   │

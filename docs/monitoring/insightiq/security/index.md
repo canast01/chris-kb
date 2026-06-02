@@ -27,6 +27,7 @@ InsightIQ web UI > Administration > Authentication > LDAP
 - Admin group → InsightIQ Administrator role
 - Viewer group → InsightIQ ReadOnly role
 ```
+```
 ┌──────────────────────────────────────── InsightIQ — Security ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │

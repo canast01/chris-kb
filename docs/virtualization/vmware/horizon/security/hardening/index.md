@@ -25,6 +25,7 @@ Hardening reference covering Windows Hardening of Connection Server, UAG Hardeni
 │  └──────────────────────┘   └──────────────────────────┘                                              │
 └──────────────────────────────────────────────────────────────┘
 ```
+```
 ┌───────────────────────────────────── VMware Horizon — Hardening ──────────────────────────────────────┐
 │                                                                                                       │
 │  Horizon hardening follows the VMware Horizon Security Hardening Guide: TLS enforcement,              │
@@ -70,6 +71,7 @@ Hardening reference covering Windows Hardening of Connection Server, UAG Hardeni
 │  Isolated VLAN = desktop VMs cannot reach management or other VLANs                                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 ┌───────────────────────────────────── VMware Horizon — Hardening ──────────────────────────────────────┐
 │                                                                                                       │

@@ -27,6 +27,7 @@ VMkernel Internals — Resource Stack
 │                                   └── pNICs (vmnic0..n)                                               │
 └────────────────────────────────────────────────────────────┘
 ```
+```
 ┌───────────────────────────────────────── ESXi — How It Works ─────────────────────────────────────────┐
 │                                                                                                       │
 │  Type-1 hypervisor running directly on hardware; vmkernel mediates all I/O.                           │

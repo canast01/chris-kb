@@ -26,6 +26,7 @@ acs nodes list
 kubectl get nodes
 # If a node shows NotReady: investigate the node-specific issue below
 ```
+```
 ┌──────────────────────── Cisco Nexus Dashboard — Troubleshooting Common Issues ────────────────────────┐
 │                                                                                                       │
 │  Most frequent ND issues: cluster quorum, app failures, site disconnects, auth errors.                │

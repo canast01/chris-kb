@@ -30,6 +30,7 @@ keystone-collector list-arrays
 keystone-collector upgrade --check     # dry-run
 keystone-collector upgrade --apply
 ```
+```
 ┌───────────────────────────── NetApp Keystone — Operations: CLI Reference ─────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -83,7 +84,6 @@ keystone-collector upgrade --apply
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```python
 
 ## Keystone Portal API
 

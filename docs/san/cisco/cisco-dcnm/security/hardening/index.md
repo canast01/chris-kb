@@ -28,6 +28,7 @@ passwd root
 # Disable the default 'dcnm' local OS account if not needed
 usermod -L dcnm   # lock (disable password login)
 ```
+```
 ┌─────────────────────────────────── Cisco DCNM — Security Hardening ───────────────────────────────────┐
 │                                                                                                       │
 │  DCNM hardening: disable defaults, enforce ISE TACACS+, TLS, RBAC, patch management.                  │
@@ -74,7 +75,6 @@ usermod -L dcnm   # lock (disable password login)
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```yaml
 
 Configure SSH login banner:
 

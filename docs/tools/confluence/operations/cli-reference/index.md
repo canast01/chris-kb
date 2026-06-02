@@ -20,6 +20,7 @@ export CF_URL="https://confluence.example.com"
 export CF_TOKEN="<your-PAT-here>"
 export CF_AUTH="Authorization: Bearer ${CF_TOKEN}"
 ```
+```
 ┌───────────────────────────────────── Confluence — CLI Reference ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

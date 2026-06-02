@@ -29,6 +29,7 @@ Runbook Selection Flow
                                     ├─ Network change    ──► Network Validation
                                     └─ Scheduled window  ──► Maintenance Window
 ```
+```
 ┌─────────────────────────────────────── Virtualization Runbooks ───────────────────────────────────────┐
 │                                                                                                       │
 │    Practical runbooks for incidents, maintenance, lifecycle work, and RCA follow-up                   │
@@ -57,7 +58,6 @@ Runbook Selection Flow
 │    Planned work     = Scheduled change; requires approved change record before starting               │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 ```
 <div class="kb-grid kb-grid-5">
 

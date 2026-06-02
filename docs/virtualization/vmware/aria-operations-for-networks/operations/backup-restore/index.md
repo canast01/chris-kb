@@ -47,6 +47,7 @@ TOKEN=$(curl -sk -X POST "${PLATFORM}/api/ni/auth/token" \
   | python3 -c "import sys,json; print(json.load(sys.stdin)['token'])")
 echo "Token: $TOKEN"
 ```
+```
 ┌──────────────────────────────────────── vRNI Backup & Restore ────────────────────────────────────────┐
 │                                                                                                       │
 │  Configuration export via REST API and full restore steps for Aria Operations for Networks.           │
@@ -92,7 +93,6 @@ echo "Token: $TOKEN"
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-```bash
 # crontab entry — runs daily at 02:00
 0 2 * * * /usr/local/bin/aon-backup.sh >> /var/log/aon-backup.log 2>&1
 ```

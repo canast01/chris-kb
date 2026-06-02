@@ -18,6 +18,7 @@ symcfg -sid <r1_sid> list -rdfg <rdf_group_number> >> /tmp/srdf_s_prechange_$(da
 symrdf -sid <r1_sid> -rdfg <rdf_group_number> verify -synchronized
 echo "Baseline captured at $(date)"
 ```
+```
 ┌───────────────────────────────────────── SRDF/S — Procedures ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │

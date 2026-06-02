@@ -21,6 +21,7 @@ Monitor actual achieved RPO — it is always ≤ cycle time in normal operation:
 ```bash
 symrdf -g <rdfg> query -v | grep "Minimum Cycle Time"
 ```
+```
 ┌────────────────────────────────────── SRDF/A — Design Standards ──────────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │

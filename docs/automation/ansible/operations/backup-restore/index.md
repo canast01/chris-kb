@@ -30,6 +30,7 @@ git push origin --tags
 git remote add backup git@backup-gitlab.example.com:ansible/infrastructure.git
 git push backup --mirror
 ```
+```
 ┌───────────────────────────────────── Ansible — Backup & Restore ──────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │ Ansible backup: the source of truth is the git repository — playbooks, roles, inventory, vars │   │

@@ -18,6 +18,7 @@ FlashArray Encryption Architecture
 │  Removed drive: cryptographic erase (NIST SP 800-88)                                                  │
 └────────────────────────────────────────────────────────────┘
 ```
+```
 ┌────────────────────────────────────────────────────────────┐
 │  Data in Transit (TLS, always-on)                                                                     │
 │  ├── Management: HTTPS (443) + SSH (22)                                                               │

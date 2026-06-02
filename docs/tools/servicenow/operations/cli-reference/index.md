@@ -12,6 +12,7 @@ export INSTANCE="https://mycompany.service-now.com"
 export USER="api_user"
 export PASS="your-password"
 ```
+```
 ┌───────────────────────────────────── ServiceNow — CLI Reference ──────────────────────────────────────┐
 │                                                                                                       │
 │  ServiceNow CLI tools: SN CLI for source control, MID server CLI, and REST API via curl.              │

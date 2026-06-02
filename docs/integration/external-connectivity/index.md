@@ -56,6 +56,7 @@ FLOW:
 VM → pNIC1 or pNIC2 → Switch A or B → Core network
 → VPN Gateway → encrypted tunnel → AWS or Azure
 ```
+```
 ┌───────────────────────────────── Integration — External Connectivity ─────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -85,6 +86,8 @@ VM → pNIC1 or pNIC2 → Switch A or B → Core network
 │    Transparent proxy= Intercepts traffic without client config; needs CA cert for HTTPS inspection    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+```
 ```
 ┌───────────────────────────────── Integration — External Connectivity ─────────────────────────────────┐
 │                                                                                                       │

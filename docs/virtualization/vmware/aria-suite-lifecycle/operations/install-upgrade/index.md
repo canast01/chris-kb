@@ -29,6 +29,7 @@ Install & Upgrade reference covering LCM Recovery, Product Decommission via LCM,
 │  └─────────────────────────────────────────────────────────┘                                          │
 └─────────────────────────────────────────────────────────────────┘
 ```
+```
 ┌────────────────────────────────── Aria Suite LCM Install & Upgrade ───────────────────────────────────┐
 │                                                                                                       │
 │  LCM OVA deployment, depot synchronisation, and product installation via LCM.                         │
@@ -72,7 +73,6 @@ Install & Upgrade reference covering LCM Recovery, Product Decommission via LCM,
 │  NFS Depot Mount     = Local NFS share with PAK files; mounted on LCM VM                              │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 ```
 
 Store backup archives off the LCM appliance (NFS, S3, or external storage).

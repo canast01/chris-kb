@@ -68,6 +68,7 @@ sannav status
 # Change default admin password
 passwd admin
 ```
+```
 ┌──────────────────────────────── Brocade SANnav — Install and Upgrade ─────────────────────────────────┐
 │                                                                                                       │
 │  SANnav deployment: OVA to vSphere, initial config, discover switches, upgrade path.                  │

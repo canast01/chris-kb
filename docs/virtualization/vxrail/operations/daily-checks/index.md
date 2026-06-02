@@ -14,13 +14,14 @@ Daily Check Sequence
 └──────────────────────────┬──────────────────────────────────┘
                            │
 ```
+```
 ┌──────────────────────────▼──────────────────────────────────┐
 │  2. vCenter                                                                                           │
 │     all hosts Connected · no critical alarms                                                          │
 │     recent tasks clean · HA / DRS healthy                                                             │
 └──────────────────────────┬──────────────────────────────────┘
                            │
-```text
+```
 ```
 ┌──────────────────────────▼──────────────────────────────────┐
 │  3. ESXi Hosts                                                                                        │
@@ -29,6 +30,7 @@ Daily Check Sequence
 ```text
                            │
 ```
+```
 ┌──────────────────────────▼──────────────────────────────────┐
 │  4. vSAN                                                                                              │
 │     Skyline Health green · no degraded objects                                                        │
@@ -36,10 +38,12 @@ Daily Check Sequence
 └──────────────────────────┬──────────────────────────────────┘
 ```
                            │
+```
 ┌──────────────────────────▼──────────────────────────────────┐
 │  5. iDRAC (each node)                                                                                 │
 │     no hardware alerts · fans/PSU/disk/NIC all healthy                                                │
 └─────────────────────────────────────────────────────────────┘
+```
 
 ## Overview
 
@@ -107,4 +111,3 @@ Use this page for VxRail operations, support checks, lifecycle work, troubleshoo
 | Validate hardware health before lifecycle work. | Validate hardware health before lifecycle work. |
 | Keep support bundle notes with the case. | Keep support bundle notes with the case. |
 | Record post-change validation. | Record post-change validation. |
-```

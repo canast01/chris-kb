@@ -48,6 +48,7 @@ curl -sk -X GET \
   -H "Authorization: Bearer <access_token>" \
   -o cloudiq-health-report.pdf
 ```
+```
 ┌───────────────────────────────────────── CloudIQ — Reporting ─────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
@@ -77,7 +78,6 @@ curl -sk -X GET \
 │  BI tool = Business intelligence platform (Tableau, Power BI) consuming CloudIQ CSV exports           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 ```
 
 ## Sharing Reports

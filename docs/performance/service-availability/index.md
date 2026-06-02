@@ -14,6 +14,7 @@ Availability % = (Total time - Downtime) / Total time × 100
 99.95% → 4.4 hours downtime/year (21.9 min/month)
 99.99% → 52 minutes downtime/year (4.4 min/month)
 ```
+```
 ┌───────────────────────────────── Performance — Service Availability ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

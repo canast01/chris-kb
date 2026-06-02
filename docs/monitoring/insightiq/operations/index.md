@@ -35,6 +35,7 @@ Symptom: Cluster shows Disconnected or Missing in InsightIQ
 5. Restart the InsightIQ collection service if credential fix doesn't resolve:
    sudo systemctl restart iiq
 ```
+```
 ┌─────────────────────────────────────── InsightIQ — Operations ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │

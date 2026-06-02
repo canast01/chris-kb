@@ -37,6 +37,7 @@ pstcli --action show --object cluster | grep -i encrypt
 # View individual drive encryption status
 uemcli /stor/drive show -detail | grep -i encrypt
 ```
+```
 ┌────────────────────────────────────────── RASR — Encryption ──────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -78,7 +79,6 @@ uemcli /stor/drive show -detail | grep -i encrypt
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-```bash
 # Backup the LUKS header (required to recover if header is damaged)
 cryptsetup luksHeaderBackup /dev/sdX2 \
   --header-backup-file /secure-storage/rasr-usb-header.bak

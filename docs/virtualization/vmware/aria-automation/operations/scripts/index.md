@@ -49,6 +49,7 @@ if ($Results) {
     Write-Host "No failed deployments in the last 24 hours."
 }
 ```
+```
 ┌───────────────────────────────── Aria Automation — Scripts Reference ─────────────────────────────────┐
 │                                                                                                       │
 │  vRA scripting uses ABX actions (Python/Node/PS), Orchestrator workflows, and REST API calls.         │
@@ -92,5 +93,4 @@ if ($Results) {
 │  Event subscription= ABX or Orchestrator wf registered to run on specific vRA resource events         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 ```

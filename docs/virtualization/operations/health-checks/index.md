@@ -40,6 +40,7 @@ Health Check Flows
                   │ Escalate P1/P2 │
                   └────────────────┘
 ```
+```
 ┌──────────────────────────────────── Virtualization Health Checks ─────────────────────────────────────┐
 │                                                                                                       │
 │    Structured checks across daily operations, capacity planning, and change management                │
@@ -69,7 +70,6 @@ Health Check Flows
 │    Alarm      = vCenter triggered alert; P1=red critical, P2=yellow warning, P3=info                  │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 ```
 <div class="kb-grid kb-grid-3">
 

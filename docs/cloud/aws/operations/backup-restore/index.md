@@ -28,6 +28,7 @@ AWS Backup & Restore Flow
   │  instance    │ │  timestamp     │ │                │
   └──────────────┘ └────────────────┘ └────────────────┘
 ```
+```
 ┌──────────────────────────── AWS Operations — Backup & Restore Procedures ─────────────────────────────┐
 │                                                                                                       │
 │  Operational backup and restore procedures covering EC2, RDS, EBS, and S3 workflows.                  │

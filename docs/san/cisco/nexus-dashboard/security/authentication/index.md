@@ -79,6 +79,7 @@ acs certificates import-ca --cert /tmp/corp-ca.crt --name corp-ldap-ca
 # Verify
 acs certificates show-ca
 ```
+```
 ┌─────────────────────────── Cisco Nexus Dashboard — Security Authentication ───────────────────────────┐
 │                                                                                                       │
 │  ND supports local, LDAP, RADIUS, TACACS+, and SAML 2.0 authentication providers.                     │
@@ -124,7 +125,6 @@ acs certificates show-ca
 │  Metadata URL   = SAML IdP endpoint exposing signing cert and SSO URL automatically                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 ```
 ---
 

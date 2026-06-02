@@ -27,6 +27,7 @@ Backup and Restore reference covering Backup Schedule Recommendation, SRM Config
 │  └──────────────────────────────────────────────────────┘                                             │
 └──────────────────────────────────────────────────────────────┘
 ```
+```
 ┌──────────────────────────────────── VMware SRM — Backup & Restore ────────────────────────────────────┐
 │                                                                                                       │
 │  SRM backup covers the SRM Server configuration database; VMs protected by SRM are                    │
@@ -73,7 +74,6 @@ Backup and Restore reference covering Backup Schedule Recommendation, SRM Config
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```python
 
 The exported XML contains:
 - Site pairing information.

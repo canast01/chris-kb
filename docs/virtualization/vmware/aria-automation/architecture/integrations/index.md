@@ -41,6 +41,7 @@ curl -sk -H "Authorization: Bearer $TOKEN" \
 curl -sk -X POST -H "Authorization: Bearer $TOKEN" \
   "https://<vra-fqdn>/iaas/api/cloud-accounts/<account-id>/data-collection"
 ```
+```
 ┌─────────────────────────────────── Aria Automation — Integrations ────────────────────────────────────┐
 │                                                                                                       │
 │  Aria Automation integrates with identity, monitoring, ITSM, and cloud endpoints.                     │

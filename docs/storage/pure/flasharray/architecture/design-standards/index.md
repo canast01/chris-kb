@@ -8,6 +8,7 @@ FlashArray — Design Standards reference.
 FlashArray Design Checklist — Key Areas
 ```text
 ```
+```
 ┌────────────────────────────────── Pure FlashArray Design Standards ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -66,4 +67,3 @@ FlashArray Design Checklist — Key Areas
 ```
 
 For Linux DM-Multipath, use the Pure Storage recommended `multipath.conf` settings (available from Pure Support): `path_grouping_policy multibus`, `path_checker tur`, `failback immediate`, `no_path_retry 18`.
-```

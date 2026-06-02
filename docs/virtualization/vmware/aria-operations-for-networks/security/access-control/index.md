@@ -32,6 +32,7 @@ Settings → Authentication → LDAP → Configure
   Group Attribute: memberOf
   Test Connection → "Connection successful"
 ```
+```
 ┌───────────────────────────────────────── vRNI Access Control ─────────────────────────────────────────┐
 │                                                                                                       │
 │  Admin and Member roles, LDAP group mapping, and access control for vRNI.                             │

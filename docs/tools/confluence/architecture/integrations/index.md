@@ -22,6 +22,7 @@ The Confluence–Jira integration is Atlassian's flagship integration and runs b
 Confluence Admin URL:
   https://confluence.example.com/admin/applinks/listApplicationLinks.action
 ```
+```
 ┌─────────────────────────────── Confluence — Architecture Integrations ────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

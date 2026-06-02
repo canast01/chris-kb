@@ -27,6 +27,7 @@ Design Standards reference covering Test Network Design, IP Customization Strate
 │  Network Mapping: Protected VLAN ──► Recovery VLAN / Test                                             │
 └──────────────────────────────────────────────────────────────┘
 ```
+```
 ┌──────────────────────────────────── VMware SRM — Design Standards ────────────────────────────────────┐
 │                                                                                                       │
 │  SRM design standards define RPO tiers, protection group structure, test frequency,                   │
@@ -72,6 +73,7 @@ Design Standards reference covering Test Network Design, IP Customization Strate
 │  WAN BW        = replication bandwidth; plan for peak replication rate                                │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 ┌──────────────────────────────────── VMware SRM — Design Standards ────────────────────────────────────┐
 │                                                                                                       │

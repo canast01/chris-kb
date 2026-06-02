@@ -20,6 +20,7 @@ ESXi Automation Scripts — Tool Selection
 │  SSH-based ad-hoc checks      Plink / CMD batch (.bat)                                                │
 └───────────────────────────────────────────────────────┘
 ```
+```
 ┌─────────────────────────────────────────── ESXi — Scripts ────────────────────────────────────────────┐
 │                                                                                                       │
 │  PowerCLI, shell, and Python scripts automating ESXi host operations at scale.                        │
@@ -65,6 +66,7 @@ ESXi Automation Scripts — Tool Selection
 │  VMtools     = VMware Tools; guest agent enabling Invoke-VMScript                                     │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 ┌─────────────────────────────────────────── ESXi — Scripts ────────────────────────────────────────────┐
 │                                                                                                       │

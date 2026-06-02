@@ -49,6 +49,7 @@ grep -i "ERROR" /opt/sannav/logs/event-engine.log | tail -20
 timedatectl status
 # Expected: "synchronized: yes"
 ```
+```
 ┌─────────────────────────────────── Brocade SANnav — Health Checks ────────────────────────────────────┐
 │                                                                                                       │
 │  SANnav health checks: MAPS dashboards, port error trends, switch status, ISL load.                   │
@@ -94,7 +95,6 @@ timedatectl status
 │  dBm             = decibels relative to 1 milliwatt; SFP optical power measurement                    │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 ```
 
 ---

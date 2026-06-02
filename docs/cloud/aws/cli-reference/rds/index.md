@@ -32,6 +32,7 @@ RDS CLI: Instances · Snapshots · Events
   └──────────────┘ │  replica     │ └──────────────────┘
                    └──────────────┘
 ```
+```
 ┌──────────────────────────────────────────── AWS CLI — RDS ────────────────────────────────────────────┐
 │                                                                                                       │
 │  RDS CLI commands for instance lifecycle, snapshots, parameter groups, and failover.                  │

@@ -48,6 +48,7 @@ curl -k -u 'svc-aon:PASSWORD' \
   https://nsxmgr.example.local/policy/api/v1/infra/tier-0s \
   -o /dev/null -w "HTTP %{http_code}\n"
 ```
+```
 ┌────────────────────────────────────────── vRNI Integrations ──────────────────────────────────────────┐
 │                                                                                                       │
 │  NSX-T, vCenter, AWS/Azure, Splunk, and ServiceNow integrations for vRNI.                             │

@@ -24,6 +24,7 @@ SELECT pg_last_wal_receive_lsn(), pg_last_wal_replay_lsn();
 SELECT slot_name, active, restart_lsn, pg_wal_lsn_diff(pg_current_wal_lsn(), restart_lsn) AS lag_bytes
 FROM pg_replication_slots;
 ```
+```
 ┌──────────────────────────────────── Database — Replication Check ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -56,7 +57,6 @@ FROM pg_replication_slots;
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-```bash
 # Quick one-liner — show lag and thread status
 mysql -u root -e "SHOW SLAVE STATUS\G" | grep -E "Slave_(IO|SQL)_Running|Seconds_Behind|Last_(IO|SQL)_Error"
 ```

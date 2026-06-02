@@ -15,6 +15,7 @@ winget install --id Microsoft.PowerShell --source winget
 # After install, verify:
 pwsh --version
 ```
+```
 ┌─────────────────────────────────── PowerShell — Install & Upgrade ────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   PowerShell 7 install: MSI (Windows), package manager (brew, apt, yum), or GitHub releases   │   │

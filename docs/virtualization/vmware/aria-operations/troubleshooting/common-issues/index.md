@@ -24,6 +24,7 @@ tail -200 /data/vcops/log/adapters/VMwareAdapter/adapter.log | grep -i "error\|a
 # Restart the watchdog (restarts failed services automatically)
 service vmware-vcops-watchdog restart
 ```
+```
 ┌──────────────────────────────────── Aria Operations Common Issues ────────────────────────────────────┐
 │                                                                                                       │
 │  Common issues: adapter disconnected, no data in dashboards, and alert storms.                        │

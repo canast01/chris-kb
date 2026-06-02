@@ -15,6 +15,7 @@ ESXi Access Control Model
 └──────────────────────┬───────────────────────────────┘
                        │ vpxa / hostd (HTTPS 443/902)
 ```
+```
 ┌──────────────────────────────────────── ESXi — Access Control ────────────────────────────────────────┐
 │                                                                                                       │
 │  RBAC via vCenter roles, lockdown mode, and direct host permission management.                        │
@@ -60,6 +61,7 @@ ESXi Access Control Model
 │  Audit log   = record of permission changes; stored in vCenter events                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ```
 ┌──────────────────────────────────────── ESXi — Access Control ────────────────────────────────────────┐
 │                                                                                                       │

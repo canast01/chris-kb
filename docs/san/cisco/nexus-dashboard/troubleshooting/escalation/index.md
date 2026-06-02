@@ -89,6 +89,7 @@ acs system resources
 # 6. Kubernetes event log
 kubectl get events --all-namespaces --sort-by='.lastTimestamp' > /tmp/k8s-events-$(date +%Y%m%d).txt
 ```
+```
 ┌───────────────────────── Cisco Nexus Dashboard — Troubleshooting Escalation ──────────────────────────┐
 │                                                                                                       │
 │  Escalation path for ND: internal triage → Cisco TAC → cluster restore or rebuild.                    │

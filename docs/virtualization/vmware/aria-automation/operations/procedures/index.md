@@ -33,6 +33,7 @@ DEPLOYMENT_ID="<id>"
 curl -sk -X DELETE -H "Authorization: Bearer $TOKEN" \
   "https://vra-prod-01.example.local/deployment/api/deployments/$DEPLOYMENT_ID"
 ```
+```
 ┌────────────────────────────── Aria Automation — Operational Procedures ───────────────────────────────┐
 │                                                                                                       │
 │  Common vRA operational tasks: cert rotation, password rotation, account changes, cleanup.            │

@@ -76,6 +76,7 @@ keytool -import -trustcacerts -alias corp-ldap-ca \
 # Restart DCNM to apply
 /usr/local/cisco/dcm/dcnm/sbin/dcnm-server restart
 ```
+```
 ┌───────────────────────────────────── Cisco DCNM — Authentication ─────────────────────────────────────┐
 │                                                                                                       │
 │  DCNM auth: ISE TACACS+ for GUI, REST JWT, SAML SSO, local accounts as break-glass.                   │
@@ -121,7 +122,6 @@ keytool -import -trustcacerts -alias corp-ldap-ca \
 │  SNMPv3 auth     = SNMP v3 authentication (SHA); privacy (AES) for polling                            │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 ```
 ---
 

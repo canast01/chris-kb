@@ -19,6 +19,7 @@ def get_token(host, username, password):
     resp.raise_for_status()
     return resp.json()["token"]
 ```
+```
 ┌───────────────────────────────── Aria Operations — Scripts Reference ─────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -63,7 +64,6 @@ def get_token(host, username, password):
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```python
 
 ## Script Inventory
 

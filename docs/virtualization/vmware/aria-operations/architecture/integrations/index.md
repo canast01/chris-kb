@@ -21,6 +21,7 @@ Aria Operations — Adapter and Outbound Integration Map
 │                          │                                                                            │
 └──────────────────────────┼──────────────────────────┘
 ```
+```
 ┌──────────────────────────────────── Aria Operations Integrations ─────────────────────────────────────┐
 │                                                                                                       │
 │  vCenter, NSX, vRLI, ITSM, and cloud endpoint integrations for Aria Operations.                       │
@@ -78,6 +79,7 @@ Aria Operations — Adapter and Outbound Integration Map
           │
           ▼
 ```text
+```
 ```
 ┌─────────────────────────────────────────────────────┐
 │  Aria Ops for Logs (Log Insight Adapter)                                                              │

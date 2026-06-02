@@ -22,6 +22,7 @@ licenseShow        # installed licenses
 chassisShow        # chassis hardware inventory
 slotShow           # blade/slot population
 ```
+```
 ┌────────────────────────────────── Brocade Fabric OS — CLI Reference ──────────────────────────────────┐
 │                                                                                                       │
 │  Fabric OS CLI commands: fabric management, port control, zoning, diagnostics, firmware.              │

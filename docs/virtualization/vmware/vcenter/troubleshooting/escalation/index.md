@@ -45,6 +45,7 @@ Escalation Path — Broadcom / VMware Support
   │       for prolonged P1 outages                 │
   └─────────────────────────────────────────────────┘
 ```
+```
 ┌───────────────────────────────────── vCenter Server — Escalation ─────────────────────────────────────┐
 │                                                                                                       │
 │  Escalate vCenter issues to VMware GSS when self-service troubleshooting exhausts                     │
