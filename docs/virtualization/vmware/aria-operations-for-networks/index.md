@@ -61,6 +61,71 @@ Aria Operations for Networks knowledge base — architecture, operations, CLI re
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+```
+┌──────────────────────── Aria Operations for Networks — Installation Sequence ─────────────────────────┐
+│                                                                                                       │
+│  Step 1 · Pre-Deploy Checks                                                                           │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  DNS A-records for platform node and data node FQDNs  ·  PTR records created                          │
+│  NTP confirmed  ·  vCenter + NSX Manager service accounts prepared                                    │
+│  Physical switch SNMP community or SNMPv3 credentials available                                       │
+│  IPFIX: physical switches and NSX VDS support flow export                                             │
+│  Datastore: ≥200 GB for platform node  ·  ≥200 GB per data node                                       │
+│                                                                                                       │
+│                                        │  deploy platform node OVA                                    │
+│                                        ▼                                                              │
+│  Step 2 · Platform Node Deployment                                                                    │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Deploy Aria Ops for Networks OVA  ·  Role: Platform                                                  │
+│  Set FQDN, management IP, gateway, DNS, NTP  ·  Set admin password                                    │
+│  Power on  ·  Access UI at https://vrni-fqdn  ·  Initial setup wizard                                 │
+│  Accept EULA  ·  Enter licence  ·  Platform node initialises                                          │
+│  Confirm platform Running state before deploying proxy/data nodes                                     │
+│                                                                                                       │
+│                                        │  deploy proxy/data nodes                                     │
+│                                        ▼                                                              │
+│  Step 3 · Proxy Node Deployment                                                                       │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Deploy Proxy OVA  ·  Role: Proxy (also called data source node)                                      │
+│  During deploy, enter platform node FQDN and shared secret pairing key                                │
+│  Proxy joins platform cluster  ·  Appears in Admin → Infrastructure                                   │
+│  Deploy additional proxies for scale or geographic separation if needed                               │
+│  Verify all proxies connected and showing green health in platform UI                                 │
+│                                                                                                       │
+│                                        │  add data sources                                            │
+│                                        ▼                                                              │
+│  Step 4 · Data Source Configuration                                                                   │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Add vCenter: Infrastructure → Data Sources → Add vCenter  ·  Creds + thumbprint                      │
+│  Add NSX Manager: enter NSX FQDN + credentials  ·  Topology sync begins                               │
+│  Physical network: add switches via SNMP  ·  Read community / v3 credentials                          │
+│  Verify data collection: Infrastructure → Data Sources  ·  All sources green                          │
+│  Network topology auto-builds: VMs → logical → physical overlay visible                               │
+│                                                                                                       │
+│                                        │  configure flow collection                                   │
+│                                        ▼                                                              │
+│  Step 5 · Flow Collection (IPFIX)                                                                     │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  NSX: enable IPFIX in NSX Manager  ·  Collector IP = proxy node management IP                         │
+│  VDS: configure IPFIX export on distributed switch  ·  Collector IP + port 2055                       │
+│  Physical switches: configure NetFlow/IPFIX export toward proxy node                                  │
+│  Verify flows arrive: Network Map → select entity → view flows                                        │
+│  Flow data enables application discovery, security group recommendations                              │
+│                                                                                                       │
+│                                        │  configure dashboards and security groups                    │
+│                                        ▼                                                              │
+│  Step 6 · Dashboards & Security Planning                                                              │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Topology maps: browse VM-to-VM paths  ·  Identify unplanned traffic flows                            │
+│  Application discovery: AI groups related VMs into application constructs                             │
+│  Security groups: recommended NSX micro-segmentation rules from observed flows                        │
+│  Alerts: configure for new open ports, policy violations, topology changes                            │
+│  Reports: schedule weekly traffic analysis and security posture reports                               │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="architecture/">

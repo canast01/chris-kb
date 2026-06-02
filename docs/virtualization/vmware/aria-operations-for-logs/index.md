@@ -61,6 +61,71 @@ Technical and operational reference for VMware Aria Operations for Logs. Covers 
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+```
+┌────────────────────────── Aria Operations for Logs — Installation Sequence ───────────────────────────┐
+│                                                                                                       │
+│  Step 1 · Pre-Deploy Checks                                                                           │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  DNS A-record for master node FQDN and VIP  ·  PTR record created                                     │
+│  NTP confirmed  ·  Firewall: ports 514 (syslog UDP), 6514 (TLS), 9543 open                            │
+│  Datastore: ≥530 GB for master  ·  ≥530 GB per worker node                                            │
+│  Estimate log ingest rate: average environment generates 5–20 GB/day                                  │
+│  vCenter read-only service account for vSphere content pack integration                               │
+│                                                                                                       │
+│                                        │  deploy master node OVA                                      │
+│                                        ▼                                                              │
+│  Step 2 · Master Node Deployment                                                                      │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Deploy Aria Ops for Logs OVA on vCenter  ·  Size: small / medium / large                             │
+│  Set FQDN, management IP, gateway, DNS, NTP  ·  Set admin password                                    │
+│  Power on  ·  Access admin UI at https://loginsight-fqdn  ·  Setup wizard                             │
+│  Accept EULA  ·  Enter licence  ·  Master node initialises log index                                  │
+│  Confirm master node Running state before adding workers                                              │
+│                                                                                                       │
+│                                        │  add worker nodes for HA                                     │
+│                                        ▼                                                              │
+│  Step 3 · Worker Node Deployment                                                                      │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Deploy 2+ additional worker OVAs  ·  Role: Worker                                                    │
+│  Join each worker to master via Admin UI → Cluster → Add Worker                                       │
+│  Workers receive log forwarding configuration from master automatically                               │
+│  Cluster enters active-active mode: logs distributed across all nodes                                 │
+│  Verify cluster health: all nodes green  ·  No missing shards                                         │
+│                                                                                                       │
+│                                        │  configure log sources                                       │
+│                                        ▼                                                              │
+│  Step 4 · Log Sources & Agent Install                                                                 │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  vSphere Content Pack: add vCenter  ·  ESXi syslog auto-configured via pack                           │
+│  Agents: install Aria Ops for Logs agent on Linux/Windows VMs                                         │
+│  Syslog sources: configure physical switches, firewalls to forward to VIP:514                         │
+│  TLS syslog: configure sources to use port 6514 with cert validation                                  │
+│  Verify each source appears in Explore Logs with correct log stream                                   │
+│                                                                                                       │
+│                                        │  install content packs                                       │
+│                                        ▼                                                              │
+│  Step 5 · Content Packs                                                                               │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Install built-in packs: VMware vSphere, NSX-T, vSAN, Linux, Windows                                  │
+│  Content packs auto-create dashboards, queries, and alert definitions                                 │
+│  NSX content pack: forwards DFW flows and manager audit logs                                          │
+│  Third-party packs: available from VMware Marketplace for firewalls, DBs, apps                        │
+│  Verify dashboards populate with live data  ·  Adjust time range filters                              │
+│                                                                                                       │
+│                                        │  configure alerts and forwarding                             │
+│                                        ▼                                                              │
+│  Step 6 · Alerts & Log Forwarding                                                                     │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Alert queries: create threshold-based alerts on error patterns                                       │
+│  Notification channels: email, webhook (Slack, PagerDuty, ServiceNow)                                 │
+│  Log forwarding: forward filtered events to SIEM (Splunk, Elasticsearch)                              │
+│  Retention policy: default 30 days  ·  Adjust archive tier if compliance requires                     │
+│  Integration: connect to Aria Operations for correlated infrastructure alerts                         │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="architecture/">

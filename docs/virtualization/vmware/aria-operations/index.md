@@ -61,6 +61,71 @@ Technical and operational reference for VMware Aria Operations. Covers performan
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+```
+┌─────────────────────────── Aria Operations (vROps) — Installation Sequence ───────────────────────────┐
+│                                                                                                       │
+│  Step 1 · Pre-Deploy Checks                                                                           │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  DNS A-record for master node FQDN + VIP  ·  PTR records created                                      │
+│  NTP confirmed  ·  vCenter service account with read-only minimum rights                              │
+│  Datastore sizing: master ≥500 GB, analytics node ≥200 GB per additional node                         │
+│  Network: management port and NFS analytics store port reachable                                      │
+│  Decide deployment size: standard (≤1500 objects) or large (≤3000+)                                   │
+│                                                                                                       │
+│                                        │  deploy master node OVA                                      │
+│                                        ▼                                                              │
+│  Step 2 · Master Node Deployment                                                                      │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Deploy Aria Operations OVA on vCenter  ·  Select size: small/medium/large                            │
+│  Set FQDN, management IP, gateway, DNS, NTP  ·  Set admin password                                    │
+│  Power on  ·  Access admin UI at https://vrops-fqdn  ·  Initial setup wizard                          │
+│  Accept EULA  ·  Enter licence  ·  Choose master or replica role: Master                              │
+│  Wait for cluster to initialise  ·  Master node transitions to Running state                          │
+│                                                                                                       │
+│                                        │  add replica and collector nodes                             │
+│                                        ▼                                                              │
+│  Step 3 · Replica & Collector Nodes                                                                   │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Deploy additional OVAs for each data node  ·  Role: Data (replica)                                   │
+│  Join each data node to master cluster using admin UI → Cluster Management                            │
+│  Remote Collectors: deploy lightweight collector OVA for remote sites                                 │
+│  Assign collector groups to define which adapters run on which collector                              │
+│  Cluster health: all nodes green  ·  Online status confirmed before next step                         │
+│                                                                                                       │
+│                                        │  add vCenter cloud account                                   │
+│                                        ▼                                                              │
+│  Step 4 · vCenter Adapter & Cloud Account                                                             │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Add vCenter cloud account: Data Sources → Add  ·  Enter vCenter FQDN + creds                         │
+│  Accept vCenter thumbprint  ·  Collection cycle starts immediately                                    │
+│  Verify objects discovered: hosts, clusters, VMs, datastores visible                                  │
+│  Enable continuous discovery for new VM detection  ·  Collection interval: 5 min                      │
+│  Check adapter health: green status in Data Sources panel                                             │
+│                                                                                                       │
+│                                        │  add additional adapters                                     │
+│                                        ▼                                                              │
+│  Step 5 · Additional Adapters & Management Packs                                                      │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  NSX Adapter: add NSX Manager  ·  Topology maps and flow data collected                               │
+│  Storage adapters: Pure1, Dell CloudIQ, NetApp adapters from marketplace                              │
+│  OS agents: deploy Aria Operations agent on Linux/Windows VMs for in-guest                            │
+│  Third-party: SNMP adapter for physical network devices  ·  Custom metrics                            │
+│  Management packs installed from VMware Marketplace  ·  Restart collector if needed                   │
+│                                                                                                       │
+│                                        │  configure dashboards and alerts                             │
+│                                        ▼                                                              │
+│  Step 6 · Dashboards, Alerts & Reports                                                                │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Import VMware default dashboards  ·  Assign to user groups                                           │
+│  Configure alert definitions: capacity, performance, availability thresholds                          │
+│  Notification plugins: email, Slack, ServiceNow webhook  ·  Route by severity                         │
+│  Compliance: assign regulatory benchmarks (PCI, CIS) to objects                                       │
+│  Reports: schedule weekly capacity and health reports  ·  Email distribution list                     │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="architecture/">

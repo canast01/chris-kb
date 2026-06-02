@@ -79,6 +79,71 @@ Operational reference for Dell VxRail HCI. Covers architecture, lifecycle manage
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+```
+┌─────────────────────────────── VxRail Platform — Installation Sequence ───────────────────────────────┐
+│                                                                                                       │
+│  Step 1 · Physical Infrastructure                                                                     │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Rack VxRail nodes  ·  Cable to ToR switches: mgmt, vSAN, vMotion, VM uplinks                         │
+│  ToR: MTU 9000 on vSAN + vMotion ports  ·  LACP/LAG on uplinks if required                            │
+│  iDRAC: dedicated management port on every node  ·  Out-of-band access confirmed                      │
+│  DNS: A-records for all node FQDNs + VxRail Manager VIP + vCenter FQDN                                │
+│  NTP: two sources reachable from management network  ·  Time sync verified                            │
+│                                                                                                       │
+│                                        │  update firmware on every node                               │
+│                                        ▼                                                              │
+│  Step 2 · iDRAC, BIOS & Firmware                                                                      │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  iDRAC firmware at minimum required version per VxRail compatibility matrix                           │
+│  BIOS: VT-x/AMD-V on  ·  Hyperthreading on  ·  C-states tuned for workload                            │
+│  HBA/NIC firmware at VxRail-qualified levels — verify against VxRail HCL                              │
+│  Boot order: local disk first  ·  PXE disabled  ·  RAID controller configured                         │
+│  All nodes show healthy in iDRAC  ·  No outstanding hardware alerts                                   │
+│                                                                                                       │
+│                                        │  run VxRail first-run wizard                                 │
+│                                        ▼                                                              │
+│  Step 3 · VxRail Manager Bootstrap                                                                    │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Boot nodes from VxRail factory image  ·  Nodes receive management IPs                                │
+│  Access VxRail Manager first-run wizard  ·  Set mgmt network, gateway, DNS, NTP                       │
+│  Select deployment type: standard / stretched / two-node  ·  Choose vCenter mode                      │
+│  Input vSAN disk configuration  ·  Wizard validates hardware + network prereqs                        │
+│  Wizard provisions vCenter, SSO, vSAN, VxRail Manager — fully automated bringup                       │
+│                                                                                                       │
+│                                        │  vCenter available post-wizard                               │
+│                                        ▼                                                              │
+│  Step 4 · vCenter & Cluster Validation                                                                │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Login to vCenter  ·  All nodes joined cluster  ·  HA and DRS enabled                                 │
+│  Licences applied  ·  SSO identity source configured (AD integration if needed)                       │
+│  Distributed switch created by wizard  ·  Confirm port groups and uplinks                             │
+│  vSAN health: all checks green  ·  Objects in compliance  ·  No disk warnings                         │
+│  Alarm baselines set  ·  vCenter backup schedule configured                                           │
+│                                                                                                       │
+│                                        │  optional: add NSX overlay networking                        │
+│                                        ▼                                                              │
+│  Step 5 · NSX Integration (optional)                                                                  │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Deploy NSX Manager appliances via LCM or manually  ·  Register vCenter                               │
+│  Configure transport zones and uplink profiles  ·  TEP pool assigned                                  │
+│  Prepare all cluster hosts as host transport nodes  ·  Verify TEP connectivity                        │
+│  Deploy Edge cluster  ·  Configure Tier-0/Tier-1 gateways  ·  BGP/static routing                      │
+│  Micro-segmentation: review default DFW rules  ·  Enable IDS if licensed                              │
+│                                                                                                       │
+│                                        │  lifecycle management and day-2 operations                   │
+│                                        ▼                                                              │
+│  Step 6 · LCM, Monitoring & Day-2                                                                     │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  VxRail LCM: download bundle from Dell  ·  Run pre-check  ·  Schedule window                          │
+│  Register cluster with VMware Cloud (optional)  ·  Enable Skyline Health                              │
+│  Aria Operations: add vCenter adapter  ·  Configure alert policies + dashboards                       │
+│  Backup: vCenter DB schedule  ·  VxRail Manager backup  ·  NSX backup if deployed                     │
+│  Support bundle path documented  ·  iDRAC call-home alerts enabled                                    │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+
 <div class="kb-grid kb-grid-5">
 <a class="kb-card" href="architecture/"><strong>Architecture</strong><span>How it works, integrations, and design standards.</span></a>
 <a class="kb-card" href="design-standards/"><strong>Design Standards</strong><span>Naming conventions, build baseline, and configuration checklist.</span></a>

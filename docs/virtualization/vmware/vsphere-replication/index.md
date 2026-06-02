@@ -61,6 +61,71 @@ vSphere Replication knowledge base — architecture, operations, CLI references,
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+```
+┌───────────────────────────── vSphere Replication — Installation Sequence ─────────────────────────────┐
+│                                                                                                       │
+│  Step 1 · Pre-Deploy Checks                                                                           │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Two vCenter instances: source and target (same or different SSO domains)                             │
+│  Network: ports 80, 443, 31031, 44046 open between sites                                              │
+│  Latency: ≤200 ms between sites for stable replication                                                │
+│  Target datastore: sufficient free space for replica disks + delta files                              │
+│  DNS: VR appliance FQDNs resolvable from both sites  ·  PTR records created                           │
+│                                                                                                       │
+│                                        │  deploy VR appliance at source site                          │
+│                                        ▼                                                              │
+│  Step 2 · VR Appliance — Source Site                                                                  │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Deploy vSphere Replication OVA via vCenter  ·  Confirm OVF checksum                                  │
+│  Set FQDN, IP, gateway, DNS, NTP  ·  Set admin and root passwords                                     │
+│  Register with local vCenter: VR Admin UI → Configuration → vCenter Server                            │
+│  Accept vCenter thumbprint  ·  VR plugin appears in vSphere Client                                    │
+│  Source site VR appliance shows Registered status                                                     │
+│                                                                                                       │
+│                                        │  deploy VR appliance at target site                          │
+│                                        ▼                                                              │
+│  Step 3 · VR Appliance — Target Site                                                                  │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Deploy second VR OVA on target site using same procedure                                             │
+│  Register with target vCenter                                                                         │
+│  Pair target VR with source VR: VR Admin UI → Configuration → Target Sites                            │
+│  Enter source site VR FQDN + admin credentials  ·  Accept thumbprint                                  │
+│  Pairing confirmed  ·  Both sites visible in vSphere Client VR plugin                                 │
+│                                                                                                       │
+│                                        │  configure replications                                      │
+│                                        ▼                                                              │
+│  Step 4 · Configure VM Replications                                                                   │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Select VM in vSphere Client  ·  Actions → Configure Replication                                      │
+│  Choose target site and target datastore  ·  Set RPO (minimum 5 minutes)                              │
+│  Initial full sync: seed from backup or online full sync over network                                 │
+│  Enable multiple point in time (MPIT) snapshots for point-in-time recovery                            │
+│  Replication status: Initial Full Sync → Syncing  ·  Wait for first RPO met                           │
+│                                                                                                       │
+│                                        │  monitor replication health                                  │
+│                                        ▼                                                              │
+│  Step 5 · Monitor Replication                                                                         │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  vSphere Client → Site Recovery → Replications: check all VMs RPO status                              │
+│  RPO violations: amber/red indicators — investigate network or datastore latency                      │
+│  Delta disk growth: monitor if network bandwidth limits replication throughput                        │
+│  VR appliance alerts: configure email notification for replication failures                           │
+│  Integrate with SRM if orchestrated failover required (see SRM sequence)                              │
+│                                                                                                       │
+│                                        │  test recovery and failback                                  │
+│                                        ▼                                                              │
+│  Step 6 · Recovery & Failback                                                                         │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Planned migration: graceful shutdown at source  ·  VMs start cleanly at target                       │
+│  Disaster recovery: power off at source (if possible)  ·  Recover at target                           │
+│  Post-failover: reverse replication to reprotect  ·  Failback when ready                              │
+│  Failback: planned migration back to original site  ·  Verify data consistency                        │
+│  Document recovery test results  ·  Update runbook with observed RTO/RPO                              │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="architecture/">

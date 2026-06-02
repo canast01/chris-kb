@@ -61,6 +61,71 @@ Technical and operational reference for VMware Aria Suite Lifecycle Manager. Cov
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+```
+┌──────────────────────── Aria Suite Lifecycle Manager — Installation Sequence ─────────────────────────┐
+│                                                                                                       │
+│  Step 1 · Pre-Deploy Checks                                                                           │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  DNS A-record for LCM FQDN  ·  PTR record created  ·  Resolves from vCenter                           │
+│  NTP sources confirmed  ·  vCenter service account with admin rights prepared                         │
+│  Certificate Authority ready: LCM will need signed certs for all products                             │
+│  Target datastore: ≥50 GB free for LCM VM  ·  Product datastores sized separately                     │
+│  Internet or proxy access for downloading product binaries and patches                                │
+│                                                                                                       │
+│                                        │  deploy LCM OVA                                              │
+│                                        ▼                                                              │
+│  Step 2 · LCM OVA Deployment                                                                          │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Download Aria Suite Lifecycle OVA from VMware portal                                                 │
+│  Deploy OVA on vCenter: size small (labs) or medium (production)                                      │
+│  Set management IP, gateway, DNS, NTP, admin password during deploy wizard                            │
+│  Power on  ·  Access LCM UI at https://lcm-fqdn  ·  Initial login (admin/)                            │
+│  Run initial setup wizard  ·  Accept EULA  ·  Enter licence key                                       │
+│                                                                                                       │
+│                                        │  configure certificates                                      │
+│                                        ▼                                                              │
+│  Step 3 · Certificate Configuration                                                                   │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Upload CA root and intermediate certificates to LCM trust store                                      │
+│  Create certificate request for LCM itself: CN = LCM FQDN, SANs included                              │
+│  Sign CSR with internal CA  ·  Import signed cert into LCM                                            │
+│  Configure LCM to use CA-signed cert for all future product deployments                               │
+│  Verify LCM UI accessible with trusted cert  ·  No browser warnings                                   │
+│                                                                                                       │
+│                                        │  integrate vCenter and identity                              │
+│                                        ▼                                                              │
+│  Step 4 · vCenter & Identity Integration                                                              │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Lifecycle Operations → Settings → vCenter Servers: add vCenter + credentials                         │
+│  Add identity provider: Workspace ONE Access or vIDM appliance                                        │
+│  Map AD groups to LCM roles: admin, operator, viewer                                                  │
+│  Configure SMTP relay for email notifications (patch, deployment alerts)                              │
+│  Test vCenter connectivity: verify LCM can browse inventory                                           │
+│                                                                                                       │
+│                                        │  onboard or deploy Aria products                             │
+│                                        ▼                                                              │
+│  Step 5 · Product Onboard / Deploy                                                                    │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Lifecycle Operations → Environments → Create Environment                                             │
+│  Add products: Aria Operations, Aria Automation, Aria Ops for Logs, etc.                              │
+│  For existing installs: import environment (discover from vCenter)                                    │
+│  For new installs: select binary, size, network, datastore  ·  LCM deploys                            │
+│  Monitor deployment tasks  ·  Each product validated post-deploy by LCM                               │
+│                                                                                                       │
+│                                        │  day-2 operations                                            │
+│                                        ▼                                                              │
+│  Step 6 · Day-2 Operations                                                                            │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Patch management: Lifecycle Operations → Environments → Trigger Upgrade                              │
+│  Backup: configure snapshot/backup for LCM VM and all managed products                                │
+│  Certificate renewal: LCM tracks cert expiry  ·  Automates renewal workflow                           │
+│  Scale: add worker nodes or replicas through LCM for capacity growth                                  │
+│  Health: LCM health dashboard shows deployment and cert status per product                            │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="architecture/">

@@ -61,6 +61,71 @@ Technical and operational reference for VMware Aria Automation. Covers infrastru
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+```
+┌─────────────────────────────── Aria Automation — Installation Sequence ───────────────────────────────┐
+│                                                                                                       │
+│  Step 1 · Pre-Deploy Checks                                                                           │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Aria Suite LCM deployed and operational  ·  vCenter registered in LCM                                │
+│  Workspace ONE Access (vIDM) deployed and AD-integrated                                               │
+│  DNS for all Aria Automation service FQDNs: aac, aap, pipeline, service-broker                        │
+│  Certificates: CA ready to sign SAN certs for all Aria Automation services                            │
+│  Datastore: ≥250 GB for standard deployment  ·  Additional per scale tier                             │
+│                                                                                                       │
+│                                        │  deploy via LCM                                              │
+│                                        ▼                                                              │
+│  Step 2 · Deploy via Aria Suite LCM                                                                   │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  LCM → Lifecycle Operations → Environments → Add Product: Aria Automation                             │
+│  Select binary version  ·  Choose deployment size: standard / enterprise                              │
+│  Map vCenter, datastore, network  ·  Enter FQDNs for each service component                           │
+│  Configure certificates  ·  Set admin credentials  ·  Start deployment                                │
+│  Monitor LCM deployment log  ·  Deployment takes 60–90 minutes                                        │
+│                                                                                                       │
+│                                        │  add cloud accounts                                          │
+│                                        ▼                                                              │
+│  Step 3 · Cloud Account Configuration                                                                 │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Login to Aria Automation  ·  Infrastructure → Cloud Accounts → Add                                   │
+│  Add vCenter cloud account: FQDN, credentials, accept thumbprint                                      │
+│  Optionally add AWS, Azure, GCP accounts for multi-cloud support                                      │
+│  Data collection starts  ·  Hosts, clusters, datastores, networks discovered                          │
+│  Verify resource inventory populated: Infrastructure → Resources                                      │
+│                                                                                                       │
+│                                        │  configure projects and cloud zones                          │
+│                                        ▼                                                              │
+│  Step 4 · Projects & Cloud Zones                                                                      │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Cloud Zones: define per vCenter cluster with constraints (CPU/memory limits)                         │
+│  Projects: create per team or environment  ·  Assign cloud zones to project                           │
+│  Flavour mappings: map standard T-shirt sizes to vCenter VM resource specs                            │
+│  Image mappings: map logical names to VM templates per cloud account                                  │
+│  Network profiles: define IP ranges, DNS, gateway per project network                                 │
+│                                                                                                       │
+│                                        │  create blueprints and templates                             │
+│                                        ▼                                                              │
+│  Step 5 · Blueprints & Templates                                                                      │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Blueprint Designer: YAML or graphical  ·  Add vSphere.Machine resource block                         │
+│  Inputs: define parameters (flavour, image, count, custom props)                                      │
+│  Cloud Config / cloud-init: OS customisation, package install, scripts                                │
+│  ABX Actions: attach pre/post-provision serverless scripts if needed                                  │
+│  Versioning: publish blueprint version  ·  Share to Service Broker catalogue                          │
+│                                                                                                       │
+│                                        │  day-2 and governance                                        │
+│                                        ▼                                                              │
+│  Step 6 · Day-2 & Governance                                                                          │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Approval policies: require approval for large VM sizes or production deployments                     │
+│  Lease policies: auto-reclaim after N days  ·  Extend / delete on expiry                              │
+│  Pipeline: CI/CD integration  ·  Define stages: test → staging → production                           │
+│  RBAC: assign project roles to AD groups  ·  Principle of least privilege                             │
+│  Integrations: ServiceNow CMDB sync  ·  Jira ticket per deployment                                    │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="architecture/">
