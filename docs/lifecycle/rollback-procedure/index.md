@@ -21,6 +21,7 @@ flowchart TD
     H --> I[Validate rollback]
     I --> J[Incident report\nand change re-plan]
 ```
+```
 ┌───────────────────────────────────────── Rollback Procedure ──────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -58,7 +59,6 @@ flowchart TD
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-```powershell
 # Windows — uninstall cumulative update
 wusa /uninstall /kb:<KBnumber> /quiet /norestart
 ```

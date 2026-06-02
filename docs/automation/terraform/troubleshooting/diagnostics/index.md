@@ -33,6 +33,7 @@ graph LR
     symptom --> debugLog
     debugLog --> resolved
 ```
+```
 ┌─────────────────────────────────────── Terraform — Diagnostics ───────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │  Terraform diagnostic sequence: capture logs → inspect plan JSON → check state → verify auth  │   │

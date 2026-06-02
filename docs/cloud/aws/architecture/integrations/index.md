@@ -19,6 +19,7 @@ flowchart LR
 
     upload -->|"Lifecycle rule"| ia -->|"Lifecycle rule"| glacier -->|"Lifecycle rule"| deepArchive -->|"Lifecycle rule"| expire
 ```
+```
 ┌─────────────────────────────────── AWS Architecture — Integrations ───────────────────────────────────┐
 │                                                                                                       │
 │  AWS platform integrates with on-prem identity, monitoring, ITSM, and CI/CD tooling.                  │

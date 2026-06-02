@@ -33,6 +33,7 @@ flowchart LR
 
     counters -->|"threshold exceeded"| alert
 ```
+```
 ┌─────────────────────────────────── Brocade Fabric OS — Diagnostics ───────────────────────────────────┐
 │                                                                                                       │
 │  Diagnostics: error logs, portshow, MAPS rules, raslog, supportshow, and port tests.                  │

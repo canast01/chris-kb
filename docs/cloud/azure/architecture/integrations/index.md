@@ -20,6 +20,7 @@ flowchart LR
 
     request --> rbacCheck --> policyCheck --> resourceGroup --> vnetPlace --> nsgApply --> diskAttach --> extensions --> running
 ```
+```
 ┌────────────────────────────────── Azure Architecture — Integrations ──────────────────────────────────┐
 │                                                                                                       │
 │  Azure integrates with on-premises via ExpressRoute/VPN, AD sync, and hybrid networking.              │

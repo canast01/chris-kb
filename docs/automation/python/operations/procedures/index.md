@@ -83,6 +83,7 @@ graph TD
     logFile --> siem
     syslogHandler --> siem
 ```
+```
 ┌───────────────────────────────────────── Python — Procedures ─────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │  Common Python operational procedures: new project setup, dependency audit, release packaging │   │
@@ -106,7 +107,6 @@ graph TD
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```python
 
 ```python
 from apscheduler.schedulers.blocking import BlockingScheduler

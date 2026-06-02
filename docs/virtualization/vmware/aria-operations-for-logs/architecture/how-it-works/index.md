@@ -24,6 +24,7 @@ graph TB
   class IDX store
   class SRC1,SRC2,SRC3,ADMIN host
 ```
+```
 ┌─────────────────────────────── Aria Operations for Logs — How It Works ───────────────────────────────┐
 │                                                                                                       │
 │  Centralised log aggregation, indexing, and alerting for VMware and multi-cloud environments.         │
@@ -67,5 +68,4 @@ graph TB
 │  Ingestion API     = REST endpoint for pushing structured JSON logs from custom applications          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 ```

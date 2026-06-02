@@ -35,6 +35,7 @@ flowchart TD
     class q1,planFailed decision
     class start terminal
 ```
+```
 ┌───────────────────────────────────────── SRM — Common Issues ─────────────────────────────────────────┐
 │                                                                                                       │
 │   │     Symptom      │   Likely Cause   │    First Check    │       Fix        │      Verify      │   │

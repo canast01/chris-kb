@@ -22,6 +22,7 @@ flowchart LR
     PROD -- "Scheduled Clone\n(weekly)" --> UAT
     PROD -- "On-demand Clone\n(before major release)" --> DEV
 ```
+```
 ┌─────────────────────────────────── ServiceNow — Backup and Restore ───────────────────────────────────┐
 │                                                                                                       │
 │  ServiceNow SaaS backup model: ServiceNow manages infrastructure backups; tenant manages exports.     │
@@ -65,7 +66,6 @@ flowchart LR
 │  Audit log    = sys_audit table; preserved through archival for compliance evidence                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 ```
 
 Typical schedule options: daily, weekly, bi-weekly, monthly.

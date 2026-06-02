@@ -28,6 +28,7 @@ graph TD
     adGroup -->|Member| svcAccount
     svcAccount --> transcript
 ```
+```
 ┌───────────────────────────────────── PowerShell — Access Control ─────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   PowerShell access control: who can run scripts, remoting access, JEA capability delegation  │   │
@@ -49,7 +50,6 @@ graph TD
 │   │       .pssc file   = Session Configuration file; maps AD groups to role capability files      │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 ```
 
 ## Least Privilege Reference

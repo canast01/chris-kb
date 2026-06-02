@@ -63,6 +63,7 @@ flowchart TD
     style escalateNet fill:#b45309,color:#fff
     style checkDataAuth fill:#be123c,color:#fff
 ```
+```
 ┌─────────────────────────────────────── SRDF/S — Common Issues ────────────────────────────────────────┐
 │                                                                                                       │
 │   │     Symptom      │   Likely Cause   │    First Check    │       Fix        │      Verify      │   │

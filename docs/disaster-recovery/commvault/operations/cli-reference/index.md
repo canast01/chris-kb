@@ -30,6 +30,7 @@ sequenceDiagram
     JM-->>Sched: Job status: Completed
     note over MA,Storage: Auxiliary copy job (separate schedule)\ncopies from primary to secondary (offsite/tape/cloud)
 ```
+```
 ┌──────────────────────── Commvault CLI Reference — qoperation, qlist, qmodify ─────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
@@ -80,7 +81,6 @@ sequenceDiagram
 │  CV Python SDK  = Commvault.sdk Python package wrapping REST API with OOP interface                   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```python
 
 ---
 

@@ -24,6 +24,7 @@ graph LR
     exportOutput --> sendReport
     runScript --> logResult
 ```
+```
 ┌─────────────────────────────────────── Python — CLI Reference ────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │         Essential Python CLI commands for development, testing, and package management        │   │

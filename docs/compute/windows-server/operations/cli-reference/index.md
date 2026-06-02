@@ -33,6 +33,7 @@ flowchart LR
         gpoCmds["gpresult\ngpupdate"]
     end
 ```
+```
 ┌─────────────────────────────────── Windows Server — CLI Reference ────────────────────────────────────┐
 │                                                                                                       │
 │  Essential Windows Server CLI: PowerShell, cmd.exe, and server management commands.                   │

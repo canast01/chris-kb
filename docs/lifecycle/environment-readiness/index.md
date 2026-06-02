@@ -18,6 +18,7 @@ flowchart TD
     G -->|Yes| H[Ready — proceed\nwith onboarding]
     G -->|No| I[Remediate blockers\nbefore proceeding]
 ```
+```
 ┌──────────────────────────────────────── Environment Readiness ────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

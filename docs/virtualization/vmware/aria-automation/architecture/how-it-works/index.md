@@ -35,6 +35,7 @@ graph TB
   class ADMIN host
   class CLOUDS cloud
 ```
+```
 ┌─────────────────────────────────── Aria Automation — How It Works ────────────────────────────────────┐
 │                                                                                                       │
 │  Cloud-agnostic self-service automation via blueprints, cloud templates, and resource orchestration.  │
@@ -78,7 +79,6 @@ graph TB
 │  Event subscription= vRA event broker rule mapping resource event to ABX action or workflow           │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 ```
 
 ## Cloud Account Types

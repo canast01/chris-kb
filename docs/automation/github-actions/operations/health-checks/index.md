@@ -24,6 +24,7 @@ flowchart TD
     result -->|No| ok(["Health check passed"])
     result -->|Yes| investigate(["Investigate and remediate"])
 ```
+```
 ┌─────────────────────────────────── GitHub Actions — Health Checks ────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │ Health checks for GitHub Actions: runner availability, job queue depth, workflow failure rate │   │
@@ -48,7 +49,6 @@ flowchart TD
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-```bash
 # Validate using ajv-cli against the schema
 npm install -g ajv-cli
 ajv validate \

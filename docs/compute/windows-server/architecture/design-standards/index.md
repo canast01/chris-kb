@@ -18,6 +18,7 @@ flowchart LR
 
     localGPO --> siteGPO --> domainGPO --> ouParentGPO --> ouChildGPO --> applied
 ```
+```
 ┌────────────────────────────────── Windows Server — Design Standards ──────────────────────────────────┐
 │                                                                                                       │
 │  Design standards: naming conventions, OU structure, GPO hierarchy, and server hardening baseline.    │

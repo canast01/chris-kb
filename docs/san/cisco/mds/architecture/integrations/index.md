@@ -51,6 +51,7 @@ sequenceDiagram
   ESXi->>FA: PLOGI + PRLI to CT1 via Fabric B
   FA-->>ESXi: Volumes visible via both paths (ALUA)
 ```
+```
 ┌──────────────────────────────────── Cisco MDS 9000 — Integrations ────────────────────────────────────┐
 │                                                                                                       │
 │  MDS integrations: DCNM, Cisco ISE, SIEM, storage arrays, VMware vSphere, automation.                 │

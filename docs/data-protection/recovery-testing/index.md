@@ -100,6 +100,7 @@ flowchart TD
     P --> Q[Runbook Updated if Required]
     Q --> R[Report Signed Off\nFiled in GRC System]
 ```
+```
 ┌───────────────────────────────── Data Protection — Recovery Testing ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -136,7 +137,6 @@ flowchart TD
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```yaml
 
 DataLabs is ideal for:
 - Testing patches before production deployment against a live copy of the environment

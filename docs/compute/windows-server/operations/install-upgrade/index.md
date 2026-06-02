@@ -19,6 +19,7 @@ flowchart LR
     patchTuesday --> devRing --> preRing --> prodRing --> report
     preRing --> dcRing --> report
 ```
+```
 ┌──────────────────────────────── Windows Server — Install and Upgrade ─────────────────────────────────┐
 │                                                                                                       │
 │  Windows Server installation and in-place upgrade procedures including AD DS promotion.               │

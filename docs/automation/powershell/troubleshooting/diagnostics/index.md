@@ -32,6 +32,7 @@ flowchart TD
     style O fill:#c62828,color:#fff
     style N fill:#2e7d32,color:#fff
 ```
+```
 ┌────────────────────────────────────── PowerShell — Diagnostics ───────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │  PowerShell diagnostic sequence: check error object → enable verbose → trace script execution │   │

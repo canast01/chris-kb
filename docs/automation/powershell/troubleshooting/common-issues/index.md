@@ -25,6 +25,7 @@ flowchart TD
     errType -->|Script logic\nundefined var| strictMode["Set-StrictMode -Version Latest\nadd breakpoint()"]
     strictMode --> stepDebug["Set-PSBreakpoint\nstep through execution"]
 ```
+```
 ┌───────────────────────────────────── PowerShell — Common Issues ──────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │                       Most frequent PowerShell failures and their fixes                       │   │

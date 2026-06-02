@@ -22,6 +22,7 @@ flowchart TD
     errType -->|Unknown| enableDebug["TF_LOG=DEBUG\nTF_LOG_PATH=debug.log"]
     enableDebug --> reviewLog["Review provider\nAPI call trace"]
 ```
+```
 ┌────────────────────────────────────── Terraform — Common Issues ──────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │                        Most frequent Terraform failures and their fixes                       │   │
@@ -46,7 +47,6 @@ flowchart TD
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```hcl
 
 ## Workspace Issues
 

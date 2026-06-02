@@ -28,6 +28,7 @@ flowchart LR
     CN -->|HTTPS API| MN4[Cloud API\nAWS / Azure / vSphere]
     CN -->|SSH| MN5[Linux Host]
 ```
+```
 ┌─────────────────────────────────────── Ansible — How It Works ────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │  Execution flow: ansible-playbook reads inventory + playbook → connects to hosts → runs tasks │   │

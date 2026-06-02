@@ -29,6 +29,7 @@ flowchart TD
     ready -->|Yes| triggerFO
     triggerFO --> breakSync --> activateZones --> dnsSwitch --> notify --> validate --> done
 ```
+```
 ┌──────────────────────────────────── Superna Eyeglass — Procedures ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │

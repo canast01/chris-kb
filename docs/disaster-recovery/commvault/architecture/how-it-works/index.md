@@ -28,6 +28,7 @@ graph TB
   class SRC,ADMIN host
   class WEBCON mgmt
 ```
+```
 ┌─────────────────────────────── Commvault — How It Works: Job Lifecycle ───────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -97,7 +98,6 @@ graph TB
 │  Catalog        = CommCell browse index enabling file-level restore from any backup                   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```python
 
 MediaAgent best practices:
 - Deploy one MediaAgent per site for local backups

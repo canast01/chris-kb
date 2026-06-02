@@ -29,6 +29,7 @@ graph TD
         cloudEnc["D@RE before cloud offload\nCloud provider does NOT hold keys"]
     end
 ```
+```
 ┌───────────────────────────────────── Dell Data Domain Encryption ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

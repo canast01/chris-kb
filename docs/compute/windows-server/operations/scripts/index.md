@@ -20,6 +20,7 @@ flowchart LR
 
     gitRepo --> sccm --> servers --> schedTask --> output --> monitoring
 ```
+```
 ┌───────────────────────────────── Windows Server — Operations Scripts ─────────────────────────────────┐
 │                                                                                                       │
 │  PowerShell scripts for Windows Server operations: AD, disk, patching, and health checks.             │

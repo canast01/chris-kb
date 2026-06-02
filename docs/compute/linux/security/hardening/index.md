@@ -35,6 +35,7 @@ flowchart TD
     kernel --> mac --> auth --> audit
     fs --> audit
 ```
+```
 ┌────────────────────────────────────── Linux — System Hardening ───────────────────────────────────────┐
 │                                                                                                       │
 │  CIS benchmark-aligned Linux hardening: kernel, network, packages, and auditing.                      │

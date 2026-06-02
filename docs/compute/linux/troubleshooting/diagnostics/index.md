@@ -32,6 +32,7 @@ flowchart LR
     journalSrc --> rsyslogSrc --> siemDst
     journalctl --> grep
 ```
+```
 ┌───────────────────────────────────────── Linux — Diagnostics ─────────────────────────────────────────┐
 │                                                                                                       │
 │  Diagnostic tools and techniques for deep Linux system investigation.                                 │

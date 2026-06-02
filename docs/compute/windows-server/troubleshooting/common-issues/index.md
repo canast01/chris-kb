@@ -32,6 +32,7 @@ flowchart TD
     authOk -- Yes --> sessionLimit
     sessionLimit --> resolved
 ```
+```
 ┌─────────────────────────── Windows Server — Troubleshooting Common Issues ────────────────────────────┐
 │                                                                                                       │
 │  Step-by-step resolution for services, boot failures, high CPU/RAM, and network connectivity.         │

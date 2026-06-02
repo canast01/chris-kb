@@ -27,6 +27,7 @@ flowchart TD
     H --> J
     I --> J
 ```
+```
 ┌────────────────────────────────────── Veeam — Backup & Restore ───────────────────────────────────────┐
 │                                                                                                       │
 │    Backup flow: quiesce source → snapshot/copy → transfer → write to target → catalog                 │

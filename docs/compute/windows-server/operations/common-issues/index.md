@@ -38,6 +38,7 @@ flowchart TD
     resourceOk -- Yes --> svcOk
     svcOk --> resolve
 ```
+```
 ┌───────────────────────────── Windows Server — Common Operational Issues ──────────────────────────────┐
 │                                                                                                       │
 │  Common issues: high CPU/RAM, RDP failures, AD replication errors, disk full, service failures.       │

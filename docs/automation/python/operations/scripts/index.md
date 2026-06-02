@@ -28,6 +28,7 @@ graph LR
     installPkgs --> runScript
     runScript --> deactivate
 ```
+```
 ┌────────────────────────────────────────── Python — Scripts ───────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │Python utility scripts for infrastructure automation: AWS reporting, storage health, AD queries│   │
@@ -47,7 +48,6 @@ graph LR
 │   │ Output format    = JSON for machine parsing; tabulate/rich for human-readable terminal output │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 ```
 
 **What you should see**

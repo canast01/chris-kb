@@ -32,6 +32,7 @@ graph TB
     backupServer["Backup Server"] --> scp
     monSystem["Monitoring Platform"] --> snmp3
 ```
+```
 ┌─────────────────────────────────── Brocade Fabric OS — Encryption ────────────────────────────────────┐
 │                                                                                                       │
 │  Fabric OS encryption: FC-SP for fabric security, management TLS, optional data-at-rest.              │

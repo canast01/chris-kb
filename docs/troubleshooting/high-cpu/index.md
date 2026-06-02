@@ -53,6 +53,7 @@ flowchart TD
     U -- Yes --> V[jstat -gcutil PID 1000\nAnalyze heap usage]
     U -- No --> W[Find CPU-burning thread\nCorrelate thread ID hex to jstack output]
 ```
+```
 ┌────────────────────────────────────── High CPU Troubleshooting ───────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -39,6 +39,7 @@ flowchart TD
     vmkRelease --> fvekDecrypt --> driveUnlocked
     recoveryPrompt --> adEscrow --> driveUnlocked
 ```
+```
 ┌───────────────────────────────────── Windows Server — Encryption ─────────────────────────────────────┐
 │                                                                                                       │
 │  Encryption at rest via BitLocker/EFS; in transit via TLS 1.2/1.3, WinRM HTTPS, IPsec.                │

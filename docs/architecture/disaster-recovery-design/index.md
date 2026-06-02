@@ -47,6 +47,7 @@ flowchart TD
     J -->|Yes| K["Pilot Light\n(scale up on failover)"]
     J -->|No| L["Backup-Restore\n(periodic backup, manual restore process)"]
 ```
+```
 ┌─────────────────────────────── Architecture — Disaster Recovery Design ───────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -83,7 +84,6 @@ flowchart TD
 │    BCP          = Business Continuity Plan; broader than DR; includes people, process, comms          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 ```
 
 **Design decisions for DR site topology:**

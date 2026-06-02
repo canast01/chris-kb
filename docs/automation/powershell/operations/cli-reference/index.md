@@ -24,6 +24,7 @@ graph LR
     exportCsv --> sendEmail
     processLogic --> logResult
 ```
+```
 ┌───────────────────────────────────── PowerShell — CLI Reference ──────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │               Essential PowerShell commands for daily infrastructure operations               │   │

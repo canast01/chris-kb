@@ -32,6 +32,7 @@ graph TD
     rpaB --> drJournal["DR Journal Volumes"]
     drJournal --> drReplica["DR Replica Volumes"]
 ```
+```
 ┌───────────────────────────────────── RecoverPoint — Integrations ─────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

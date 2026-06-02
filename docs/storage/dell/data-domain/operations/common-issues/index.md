@@ -25,6 +25,7 @@ flowchart TD
     I -->|No| K["Check backup app logs\nfor specific error code"]
     D & F & H & J & K --> L(["Open Dell support case\nif unresolved"])
 ```
+```
 ┌───────────────────────────────── Dell Data Domain Operational Issues ─────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -20,6 +20,7 @@ flowchart TD
     serviceStatus --> apiConn --> syncLog --> dnsLog --> foLog
     foLog --> resolved(["Root cause identified\nRemediate or escalate"])
 ```
+```
 ┌─────────────────────────────────── Superna Eyeglass — Diagnostics ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -59,5 +60,4 @@ flowchart TD
 │  Configuration = shares, exports, quotas, NFS aliases; Eyeglass syncs these between clusters          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 ```

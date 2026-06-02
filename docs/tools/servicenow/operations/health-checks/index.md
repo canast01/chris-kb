@@ -38,6 +38,7 @@ flowchart TD
     REPL -- Errors found --> INV5["Purge stale ECC records\nCheck MID Server logs"]
     REPL -- Clear --> OK
 ```
+```
 ┌───────────────────────────────────── ServiceNow — Health Checks ──────────────────────────────────────┐
 │                                                                                                       │
 │  Proactive health monitoring for instance performance, integrations, and ITSM data quality.           │

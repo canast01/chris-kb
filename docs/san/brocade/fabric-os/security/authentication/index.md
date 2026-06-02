@@ -27,6 +27,7 @@ flowchart TD
     localAuth -->|No| reject3["Login denied"]
     vsaRole & tacacsRole & localRole --> session["CLI / Web session\nopened with assigned role"]
 ```
+```
 ┌───────────────────────────────── Brocade Fabric OS — Authentication ──────────────────────────────────┐
 │                                                                                                       │
 │  Authentication: DH-CHAP for switch-to-switch, FCAP, TACACS+, and local login methods.                │

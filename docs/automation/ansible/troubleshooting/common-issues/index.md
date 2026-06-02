@@ -25,6 +25,7 @@ flowchart TD
     checkModule -->|No| installCol["ansible-galaxy collection install\n<namespace.collection>"]
     checkModule -->|Yes| resolved["Examine task output\n& register debug"]
 ```
+```
 ┌─────────────────────────────────────── Ansible — Common Issues ───────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │      Most frequent Ansible failures: SSH, Python errors, Vault decrypt, module not found      │   │

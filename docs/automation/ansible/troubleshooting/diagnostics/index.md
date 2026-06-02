@@ -20,6 +20,7 @@ flowchart TD
     H --> J[Resolved]
     I --> J
 ```
+```
 ┌──────────────────────────────────────── Ansible — Diagnostics ────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 │   │   Ansible diagnostic sequence: verify connectivity → check variables → inspect module output  │   │
