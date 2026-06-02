@@ -32,3 +32,4 @@ FlashArray Day-to-Day Operations Flow
 <a class="kb-card" href="scripts/"><strong>Scripts</strong><span>Automation scripts and reusable code.</span></a>
 <a class="kb-card" href="backup-restore/"><strong>Backup & Restore</strong><span>Backup configuration, restore procedures, and validation.</span></a>
 </div>
+```

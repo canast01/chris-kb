@@ -86,3 +86,4 @@ When entering maintenance mode on a VxRail node:
 - vSAN Skyline Health is green
 - VxRail Manager shows the node as healthy
 - Firmware matches the approved cluster baseline
+```

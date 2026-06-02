@@ -96,3 +96,4 @@ ESXi Health Check — Decision Flow
 - [ ] No vmkernel errors in recent log entries
 - [ ] PowerCLI hardware summary clean
 - [ ] No unexpected maintenance mode hosts
+```

@@ -303,38 +303,6 @@ Swagger UI: `https://<vcenter>/apiexplorer`
 
 ## Identity Federation (vSphere 8)
 
-```
-┌─────────────────────────── vCenter — Identity Federation Flow (vSphere 8) ────────────────────────────┐
-│                                                                                                       │
-│  Identity federation lets vCenter delegate authentication to an external Identity Provider (IdP)      │
-│  such as ADFS, Okta, or Ping. vCenter trusts SAML / OIDC assertions from the registered IdP.          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │           Traditional (SSO / LDAP)           │  │           Federated (External IdP)          │   │
-│  ─────────────────────────────────────────────────────────────────────────────────────────            │
-│   │ User → vCenter login page                    │  │ User → vCenter → redirect to IdP            │   │
-│   │ vCenter checks local SSO store               │  │ IdP authenticates (AD, MFA, etc.)           │   │
-│   │ SSO queries AD/LDAP directly                 │  │ IdP issues SAML assertion / token           │   │
-│   │ vCenter issues session token                 │  │ vCenter validates assertion, maps           │   │
-│   │ All auth logic inside vCenter                │  │   user to local role, grants access         │   │
-│   │ No external IdP required                     │  │ Password never sent to vCenter              │   │
-│   │                                              │  │                                             │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Federation setup (vSphere 8):                                                                      │
-│      1.  Register external IdP in vCenter SSO → Configuration → Identity Federation                   │
-│      2.  Upload IdP metadata (entity ID, signing cert, SSO URL)                                       │
-│      3.  Configure redirect URI in IdP to vCenter callback endpoint                                   │
-│      4.  Map IdP groups/users to vCenter roles (Administration → Global Permissions)                  │
-│                                                                                                       │
-│    IdP        = Identity Provider; external auth service (ADFS, Okta, Azure AD, Ping)                 │
-│    SAML       = Security Assertion Markup Language; XML-based auth assertion format                   │
-│    OIDC       = OpenID Connect; OAuth 2.0-based; token is a signed JWT                                │
-│    Assertion  = signed claim from IdP confirming user identity and group membership                   │
-│    KMIP       = Key Management Interoperability Protocol; used for KMS communication                  │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 
