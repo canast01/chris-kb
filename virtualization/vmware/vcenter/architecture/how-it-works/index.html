@@ -4402,6 +4402,83 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#vcenter-ha-vcha-topology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vCenter HA (VCHA) — Topology
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#identity-federation-vsphere-8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Identity Federation (vSphere 8)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vm-encryption-key-hierarchy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VM Encryption — Key Hierarchy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#content-library-publish-subscribe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Content Library — Publish &amp; Subscribe
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resource-pools-shares-limits-reservations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resource Pools — Shares, Limits &amp; Reservations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vmotion-types-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vMotion Types — Comparison
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#drs-placement-balancing-logic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DRS — Placement &amp; Balancing Logic
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -5054,6 +5131,204 @@ How It Works reference covering Deployment Model, Core Services, Main Dependenci
 <a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="w">    </span>-X<span class="w"> </span>DELETE<span class="w"> </span>https://vcenter.example.local/api/session
 </code></pre></div>
 <p>Swagger UI: <code>https://&lt;vcenter&gt;/apiexplorer</code></p>
+<hr />
+<h2 id="vcenter-ha-vcha-topology">vCenter HA (VCHA) — Topology<a class="headerlink" href="#vcenter-ha-vcha-topology" title="Permanent link">&para;</a></h2>
+<hr />
+<h2 id="identity-federation-vsphere-8">Identity Federation (vSphere 8)<a class="headerlink" href="#identity-federation-vsphere-8" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>┌─────────────────────────── vCenter — Identity Federation Flow (vSphere 8) ────────────────────────────┐
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>│                                                                                                       │
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>│  Identity federation lets vCenter delegate authentication to an external Identity Provider (IdP)      │
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>│  such as ADFS, Okta, or Ping. vCenter trusts SAML / OIDC assertions from the registered IdP.          │
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>│                                                                                                       │
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>│   │           Traditional (SSO / LDAP)           │  │           Federated (External IdP)          │   │
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>│   │ User → vCenter login page                    │  │ User → vCenter → redirect to IdP            │   │
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>│   │ vCenter checks local SSO store               │  │ IdP authenticates (AD, MFA, etc.)           │   │
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>│   │ SSO queries AD/LDAP directly                 │  │ IdP issues SAML assertion / token           │   │
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>│   │ vCenter issues session token                 │  │ vCenter validates assertion, maps           │   │
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>│   │ All auth logic inside vCenter                │  │   user to local role, grants access         │   │
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>│   │ No external IdP required                     │  │ Password never sent to vCenter              │   │
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>│   │                                              │  │                                             │   │
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>│                                                                                                       │
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>│    Federation setup (vSphere 8):                                                                      │
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>│      1.  Register external IdP in vCenter SSO → Configuration → Identity Federation                   │
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>│      2.  Upload IdP metadata (entity ID, signing cert, SSO URL)                                       │
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>│      3.  Configure redirect URI in IdP to vCenter callback endpoint                                   │
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>│      4.  Map IdP groups/users to vCenter roles (Administration → Global Permissions)                  │
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>│                                                                                                       │
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>│    IdP        = Identity Provider; external auth service (ADFS, Okta, Azure AD, Ping)                 │
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>│    SAML       = Security Assertion Markup Language; XML-based auth assertion format                   │
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>│    OIDC       = OpenID Connect; OAuth 2.0-based; token is a signed JWT                                │
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>│    Assertion  = signed claim from IdP confirming user identity and group membership                   │
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>│    KMIP       = Key Management Interoperability Protocol; used for KMS communication                  │
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>│                                                                                                       │
+<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<hr />
+<h2 id="vm-encryption-key-hierarchy">VM Encryption — Key Hierarchy<a class="headerlink" href="#vm-encryption-key-hierarchy" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>┌───────────────────────────── VM Encryption — Key Hierarchy (KMS / vTPM) ──────────────────────────────┐
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>│                                                                                                       │
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>│  VM encryption uses a two-tier key model. Keys never leave the KMS in plaintext;                      │
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>│  vCenter only holds the encrypted DEK (wrapped by the KEK stored in the KMS).                         │
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>│                                                                                                       │
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>│   │         Key Management Server (KMS)          │  │              VM Storage Layout              │   │
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>│   │ External KMIP-compliant server               │  │ .vmx file — VM config (encrypted)           │   │
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>│   │ Stores Key Encrypting Keys (KEKs)            │  │ .vmdk — virtual disk (encrypted)            │   │
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>│   │ vCenter connects via KMIP/TLS                │  │ .nvram — firmware vars (encrypted)          │   │
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>│   │ vCenter requests KEK per VM                  │  │ .vswp swap excluded from encryption         │   │
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>│   │ KEK never leaves KMS in plaintext            │  │ DEK generated by vSphere per VM             │   │
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>│   │ Revoke KEK = VM cannot power on              │  │ DEK wrapped by KEK → stored in vmx          │   │
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>│   │                                              │  │                                             │   │
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>│                                                                                                       │
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>│    Encrypt / decrypt flow:                                                                            │
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>│      1.  Admin enables VM encryption in storage policy                                                │
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>│      2.  vCenter fetches KEK from KMS (KMIP GET key)                                                  │
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>│      3.  vSphere generates a random DEK for this VM                                                   │
+<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>│      4.  DEK is encrypted with KEK → cipher-DEK stored in .vmx                                        │
+<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>│      5.  All I/O (read/write) encrypted/decrypted transparently using DEK in RAM                      │
+<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a>│      6.  On power-off DEK is discarded; power-on requires fresh KEK from KMS                          │
+<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a>│                                                                                                       │
+<a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a>│    KMS    = Key Management Server; external; holds KEKs; accessed via KMIP                            │
+<a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a>│    KMIP   = Key Management Interoperability Protocol (port 5696)                                      │
+<a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a>│    KEK    = Key Encrypting Key; stored in KMS; wraps the DEK                                          │
+<a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a>│    DEK    = Data Encrypting Key; generated by vSphere; used for actual I/O                            │
+<a id="__codelineno-6-30" name="__codelineno-6-30" href="#__codelineno-6-30"></a>│    vTPM   = virtual Trusted Platform Module; requires vCenter KMS to unseal                           │
+<a id="__codelineno-6-31" name="__codelineno-6-31" href="#__codelineno-6-31"></a>│                                                                                                       │
+<a id="__codelineno-6-32" name="__codelineno-6-32" href="#__codelineno-6-32"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<hr />
+<h2 id="content-library-publish-subscribe">Content Library — Publish &amp; Subscribe<a class="headerlink" href="#content-library-publish-subscribe" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>┌─────────────────────────── Content Library — Publish &amp; Subscribe Topology ────────────────────────────┐
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>│                                                                                                       │
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>│  A published library exposes its catalogue over HTTPS. Subscribed libraries on any                    │
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>│  vCenter instance sync the content locally, enabling fast VM deployment without cross-site I/O.       │
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>│                                                                                                       │
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>│   │      Published Library (source vCenter)      │  │     Subscribed Library (target vCenter)     │   │
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>│   │ Contains: OVF/OVA templates                  │  │ Subscribes to published HTTPS URL           │   │
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>│   │   VM templates (native format)               │  │ Sync policy: on-demand or immediate         │   │
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>│   │   ISO images                                 │  │ Content cached locally on datastore         │   │
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>│   │   Scripts and files                          │  │ VM deploy uses local copy — fast            │   │
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>│   │ Publication endpoint: HTTPS URL              │  │ Read-only — changes made at source          │   │
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>│   │ HTTPS + optional password                    │  │ Multiple subscribers supported              │   │
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>│   │                                              │  │                                             │   │
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>│                                                                                                       │
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>│    Published → Subscribed sync flow:                                                                  │
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>│      1.  Admin creates local library → enables &quot;Published&quot; checkbox → gets HTTPS URL                  │
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>│      2.  On target vCenter: New Subscribed Library → paste URL → set sync policy                      │
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>│      3.  Initial full sync downloads all items to target datastore                                    │
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>│      4.  Updates: source library changes → subscribers detect delta → sync diff only                  │
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>│      5.  Deploy VM from subscribed library = pulls from local datastore copy                          │
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>│                                                                                                       │
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>│    OVF template  = Open Virtualisation Format; portable VM descriptor + disk(s)                       │
+<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>│    On-demand     = content downloaded only when needed for deployment                                 │
+<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a>│    Immediate     = content synced as soon as source library updates                                   │
+<a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a>│    ISO sync      = entire ISO downloaded; large files sync in background                              │
+<a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a>│                                                                                                       │
+<a id="__codelineno-7-30" name="__codelineno-7-30" href="#__codelineno-7-30"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<hr />
+<h2 id="resource-pools-shares-limits-reservations">Resource Pools — Shares, Limits &amp; Reservations<a class="headerlink" href="#resource-pools-shares-limits-reservations" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>┌─────────────────────────── Resource Pools — Shares, Limits &amp; Reservations ────────────────────────────┐
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>│                                                                                                       │
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>│  Resource pools create a hierarchy of guaranteed and throttled resource entitlements.                 │
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>│  Shares determine proportional access when contention exists; limits cap usage absolutely.            │
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>│                                                                                                       │
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>│    Cluster root  (all hosts combined: e.g. 128 pCPU, 1024 GB RAM)                                     │
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>│    │                                                                                                  │
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>│    ├── Resource Pool: Production  [shares: High 8000, limit: none, reservation: 64 GHz]               │
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>│    │     │  VMs here guaranteed 64 GHz floor; can burst to cluster max                                │
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>│    │     ├── VM-Prod-1  (4 vCPU, reservation: 4 GHz)                                                  │
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>│    │     └── VM-Prod-2  (8 vCPU, no reservation)                                                      │
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>│    │                                                                                                  │
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>│    ├── Resource Pool: Dev  [shares: Normal 4000, limit: 32 GHz, reservation: none]                    │
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>│    │     │  VMs capped at 32 GHz total even if cluster is idle                                        │
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>│    │     └── VM-Dev-1  (2 vCPU, no reservation or limit)                                              │
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>│    │                                                                                                  │
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>│    └── Resource Pool: Test  [shares: Low 2000, limit: 16 GHz, reservation: none]                      │
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>│          │  During contention: Prod gets 2x Dev shares, 4x Test shares                                │
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>│          └── VM-Test-1  (2 vCPU, limit: 2 GHz — hard cap always enforced)                             │
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>│                                                                                                       │
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>│    Shares      = relative priority during contention; High:Normal:Low = 4:2:1                         │
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a>│    Reservation = guaranteed minimum CPU/mem; cluster must be able to meet all reservations            │
+<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a>│    Limit       = hard ceiling on usage; never exceeded even if resources are free                     │
+<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a>│    Expandable  = if set, child pool can borrow from parent when parent has slack                      │
+<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a>│    Overhead    = vSphere reserves CPU/mem for VMkernel overhead per running VM                        │
+<a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a>│                                                                                                       │
+<a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<hr />
+<h2 id="vmotion-types-comparison">vMotion Types — Comparison<a class="headerlink" href="#vmotion-types-comparison" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>┌─────────────────────────────── VM Migration — vMotion Type Comparison ────────────────────────────────┐
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>│                                                                                                       │
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>│    Type                  VM State     What Moves           Storage         vCenter                    │
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>│    ────────────────────────────────────────────────────────────────────────────────────               │
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>│    vMotion               Powered ON   CPU + memory state   Stays on same   Same SSO                   │
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>│                                       vNIC reconnects      datastore       domain                     │
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>│                                       &lt; 1 s downtime                                                  │
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>│                                                                                                       │
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>│    Storage vMotion       Powered ON   VMDK files (live)    Moves to new    Same SSO                   │
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>│    (svMotion)                         VM stays running     datastore       domain                     │
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>│                                       Mirror → switch                                                 │
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>│                                                                                                       │
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>│    Cold Migration        Powered OFF  All VM files         Moves (opt.)    Same or                    │
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>│                                       .vmx .vmdk .nvram    New datastore   cross-VC                   │
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>│                                       No memory to xfer    or same                                    │
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>│                                                                                                       │
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>│    Cross-vCenter Export  Powered OFF  All VM files         Moves           Different                  │
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>│    (cross-VC vMotion*)   (or ON**)    Registered at dest   Optional        vCenters                   │
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>│    * Enhanced linked mode required for powered-on cross-VC vMotion (xvMotion)                         │
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>│                                                                                                       │
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>│    vMotion requirements: shared storage visible from both hosts; same L2 or vDS port group;           │
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>│      compatible CPU families (or EVC mode enabled); sufficient memory on target host.                 │
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>│                                                                                                       │
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>│    vMotion    = live migration of running VM between hosts; no storage move                           │
+<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>│    svMotion   = live storage migration; VM stays on same host; VMDK mirrored then cut                 │
+<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a>│    EVC        = Enhanced vMotion Compatibility; masks CPU features for cross-gen moves                │
+<a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a>│    xvMotion   = cross-vCenter vMotion (powered-on); requires Enhanced Linked Mode                     │
+<a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a>│                                                                                                       │
+<a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<hr />
+<h2 id="drs-placement-balancing-logic">DRS — Placement &amp; Balancing Logic<a class="headerlink" href="#drs-placement-balancing-logic" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>┌────────────────────────────────── DRS — Placement &amp; Balancing Logic ──────────────────────────────────┐
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>│                                                                                                       │
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>│   │       Initial Placement (VM power-on)        │  │       Ongoing Balancing (every 5 min)       │   │
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>│   │ DRS scores all eligible hosts                │  │ Measures host resource utilisation          │   │
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>│   │ Prefers host with most headroom              │  │ Calculates cluster imbalance score          │   │
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>│   │ Respects: affinity rules,                    │  │ Generates migration recommendations         │   │
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>│   │  reservations, NUMA topology                 │  │ Weighs move cost vs. benefit gained         │   │
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>│   │ Picks best-scored host,                      │  │ Applies recs per automation level:          │   │
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>│   │  powers on VM there                          │  │  Manual / Partial / Fully Automated         │   │
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>│   │                                              │  │                                             │   │
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>│                                                                                                       │
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>│    Automation levels:                                                                                 │
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>│      Manual          — DRS generates recommendations; admin reviews and applies each                  │
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>│      Partially Auto  — Auto power-on placement; manual approval for ongoing balancing                 │
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>│      Fully Automated — Auto placement + auto migration; threshold 1 (aggr) – 5 (cons)                 │
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>│                                                                                                       │
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>│    Affinity / Anti-affinity rules:                                                                    │
+<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a>│      VM-VM affinity      — keep these VMs on the same host (HA pair, licensing)                       │
+<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a>│      VM-VM anti-affinity — keep these VMs on different hosts (HA separation)                          │
+<a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a>│      VM-Host affinity    — prefer or require VMs on specific hosts (licensing, hardware)              │
+<a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a>│                                                                                                       │
+<a id="__codelineno-10-25" name="__codelineno-10-25" href="#__codelineno-10-25"></a>│    DRS     = Distributed Resource Scheduler; runs in vCenter; uses vMotion to balance                 │
+<a id="__codelineno-10-26" name="__codelineno-10-26" href="#__codelineno-10-26"></a>│    Score   = per-host metric: 0 (ideal) to 100 (overloaded); DRS targets uniform score                │
+<a id="__codelineno-10-27" name="__codelineno-10-27" href="#__codelineno-10-27"></a>│    Imbal.  = deviation of host scores from cluster average; triggers migration at threshold           │
+<a id="__codelineno-10-28" name="__codelineno-10-28" href="#__codelineno-10-28"></a>│    DPM     = Distributed Power Management; companion to DRS; powers off idle hosts                    │
+<a id="__codelineno-10-29" name="__codelineno-10-29" href="#__codelineno-10-29"></a>│                                                                                                       │
+<a id="__codelineno-10-30" name="__codelineno-10-30" href="#__codelineno-10-30"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 
 
 

@@ -4370,6 +4370,83 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#storage-protocol-stack-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Storage Protocol Stack — Comparison
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vsphere-ha-admission-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vSphere HA — Admission Control
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#proactive-ha-hardware-degradation-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proactive HA — Hardware Degradation Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nioc-network-io-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NIOC — Network I/O Control
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vsphere-lifecycle-manager-image-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vSphere Lifecycle Manager — Image Workflow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dpu-smartnic-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DPU / SmartNIC — Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vtpm-secure-boot-chain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vTPM &amp; Secure Boot Chain
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -4838,6 +4915,249 @@ How It Works reference covering Networking Architecture, VMkernel Adapters (vmk)
 <li><code>/var/log/vobd.log</code> — VM observer daemon (HA events)</li>
 <li><code>/var/log/syslog.log</code> — general system log</li>
 </ul>
+<hr />
+<h2 id="storage-protocol-stack-comparison">Storage Protocol Stack — Comparison<a class="headerlink" href="#storage-protocol-stack-comparison" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>┌───────────────────────────────── ESXi — Storage Protocol Comparison ──────────────────────────────────┐
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>│                                                                                                       │
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>│    Protocol     Initiator         Transport         Array presents     ESXi sees                      │
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>│    ─────────────────────────────────────────────────────────────────────────────────                  │
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>│    Fibre         HBA (QLogic/      FC fabric         LUN (SCSI block)   naa.xxxx                      │
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>│    Channel       Emulex)           16/32/64 GFC      Zoned per HBA      VMFS or RDM                   │
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>│                                                                                                       │
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>│    iSCSI SW      vmknic + TCP/IP   Ethernet (1/10/   LUN (SCSI block)   naa.xxxx                      │
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>│    initiator     stack (no HBA)    25 GbE)           CHAP auth          VMFS or RDM                   │
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>│                                                                                                       │
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>│    iSCSI HW      iSCSI HBA        Ethernet          LUN (SCSI block)   naa.xxxx                       │
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>│    initiator     (TOE offload)     1/10/25 GbE       CHAP auth          VMFS or RDM                   │
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>│                                                                                                       │
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>│    NFS v3        NFS client in     Ethernet          Export (file)      /vmfs/volumes/                │
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>│                  vmkernel          1/10/25 GbE       No CHAP; IP auth   UUID                          │
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>│                                                                                                       │
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>│    NFS v4.1      NFS client in     Ethernet          Export (file)      /vmfs/volumes/                │
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>│                  vmkernel          1/10/25 GbE       Kerberos / SYS     UUID (pNFS ok)                │
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>│                                                                                                       │
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>│    vSAN          vSAN VMkernel     Ethernet (RDMA    Local disk groups  vsanDatastore                 │
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>│                  (vmk UDP)         optional)         pooled across hosts (single DS)                  │
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>│                                                                                                       │
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>│    VAAI    = vStorage APIs for Array Integration; offloads clone/zeroing to array                     │
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>│    VMFS    = VMware File System; clustered; shared read/write across all ESXi hosts                   │
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>│    RDM     = Raw Device Mapping; guest OS accesses LUN directly; bypasses VMFS                        │
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>│    pNFS    = parallel NFS; NFSv4.1 feature; multiple I/O paths to same mount                          │
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>│    naa.    = Network Address Authority; ESXi canonical name for a storage device                      │
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>│                                                                                                       │
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<hr />
+<h2 id="vsphere-ha-admission-control">vSphere HA — Admission Control<a class="headerlink" href="#vsphere-ha-admission-control" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>┌──────────────────────────────── vSphere HA — Admission Control Modes ─────────────────────────────────┐
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>│                                                                                                       │
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>│  Admission Control ensures the cluster retains enough spare capacity to restart all                   │
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>│  VMs from N failed hosts. It blocks VM power-on if headroom would drop below the policy.              │
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>│                                                                                                       │
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>│   │         Cluster Resource Percentage          │  │                 Slot Policy                 │   │
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>│   │ Default mode in vSphere 6.5+                 │  │ Legacy mode; still available                │   │
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>│   │ Reserve X% of total cluster                  │  │ Slot = largest VM CPU + largest VM          │   │
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>│   │   CPU and memory as failover                 │  │   memory in cluster                         │   │
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>│   │   capacity (e.g. 25% each)                   │  │ Slots reserved = hosts to tolerate          │   │
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>│   │ Simple: easy to reason about                 │  │ Conservative: one large VM inflates         │   │
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>│   │ Adjustable per cluster                       │  │   slot size for all VMs                     │   │
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>│   │                                              │  │                                             │   │
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>│                                                                                                       │
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>│    Dedicated Failover Hosts mode:                                                                     │
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>│      Named ESXi hosts held completely idle — reserved exclusively for HA recovery.                    │
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>│      No VMs run on them normally; they are powered on and waiting.                                    │
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>│      Most resource-expensive option; guarantees instant failover capacity.                            │
+<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>│                                                                                                       │
+<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>│    Admission Control enforcement:                                                                     │
+<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a>│      vCenter blocks VM power-on if the operation would consume reserved failover capacity.            │
+<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a>│      DRS does not migrate VMs to failover hosts (VM-Host anti-affinity rule auto-created).            │
+<a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a>│                                                                                                       │
+<a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a>│    HA restarts VMs in priority order: High → Medium → Low → Disabled                                  │
+<a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a>│    VM Monitoring: restarts a VM if VMware Tools heartbeat fails for &gt; threshold seconds               │
+<a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a>│                                                                                                       │
+<a id="__codelineno-6-30" name="__codelineno-6-30" href="#__codelineno-6-30"></a>│    AC      = Admission Control; enforced by vCenter HA; not by ESXi itself                            │
+<a id="__codelineno-6-31" name="__codelineno-6-31" href="#__codelineno-6-31"></a>│    Slot    = unit of failover reservation; slot policy sizes slot to worst-case VM                    │
+<a id="__codelineno-6-32" name="__codelineno-6-32" href="#__codelineno-6-32"></a>│    FTH     = Failures To Host (tolerate); HA restarts VMs after this many host failures               │
+<a id="__codelineno-6-33" name="__codelineno-6-33" href="#__codelineno-6-33"></a>│                                                                                                       │
+<a id="__codelineno-6-34" name="__codelineno-6-34" href="#__codelineno-6-34"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<hr />
+<h2 id="proactive-ha-hardware-degradation-flow">Proactive HA — Hardware Degradation Flow<a class="headerlink" href="#proactive-ha-hardware-degradation-flow" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>┌──────────────────────────── Proactive HA — Hardware Degradation Response ─────────────────────────────┐
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>│                                                                                                       │
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>│  Proactive HA works alongside DRS to evacuate VMs from hosts showing hardware degradation             │
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>│  before the hardware fails — rather than reacting after failure.                                      │
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>│                                                                                                       │
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>│    Flow:                                                                                              │
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>│                                                                                                       │
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>│    ① Hardware health event                                                                            │
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>│         Server management agent (IPMI/iDRAC/iLO) or partner module detects:                           │
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>│         degraded fan, PSU failure, memory ECC errors, NIC errors, temperature warning                 │
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>│                                                                                                       │
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>│    ② vCenter receives health update                                                                   │
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>│         CIM provider or Proactive HA provider sends event to vCenter                                  │
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>│         vCenter marks host with a degradation level: Moderate or Severe                               │
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>│                                                                                                       │
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>│    ③ DRS generates evacuation recommendation                                                          │
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>│         Moderate → DRS quarantines host: no new VMs placed; existing VMs may stay                     │
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>│         Severe   → DRS recommends evacuating all VMs off the host immediately                         │
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>│                                                                                                       │
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>│    ④ VMs migrated proactively                                                                         │
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>│         vMotion moves VMs to healthy hosts in cluster before hardware failure                         │
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>│         Host enters Quarantine Mode or Maintenance Mode per severity                                  │
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>│                                                                                                       │
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>│    ⑤ Hardware repaired                                                                                │
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>│         Admin repairs hardware → clears degradation state → host re-enters cluster                    │
+<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>│                                                                                                       │
+<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a>│    Proactive HA = DRS extension; requires Proactive HA provider (Dell, HPE, Lenovo, etc.)             │
+<a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a>│    Quarantine   = host receives no new VMs but existing VMs can stay (Moderate)                       │
+<a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a>│    Maintenance  = host evacuated completely; no VMs running (Severe)                                  │
+<a id="__codelineno-7-30" name="__codelineno-7-30" href="#__codelineno-7-30"></a>│                                                                                                       │
+<a id="__codelineno-7-31" name="__codelineno-7-31" href="#__codelineno-7-31"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<hr />
+<h2 id="nioc-network-io-control">NIOC — Network I/O Control<a class="headerlink" href="#nioc-network-io-control" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>┌───────────────────────────── NIOC — Network I/O Control Traffic Classes ──────────────────────────────┐
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>│                                                                                                       │
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>│  NIOC divides physical uplink bandwidth among competing traffic types using shares,                   │
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>│  reservations, and limits — preventing any single traffic class from starving others.                 │
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>│                                                                                                       │
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>│    Physical uplink (e.g. 2 × 25 GbE = 50 Gbps aggregate per host)                                     │
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>│    │                                                                                                  │
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>│    ├── System Traffic Classes (configured on the dvSwitch):                                           │
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>│    │     Management        shares: 20   limit: none   reservation: 0 Mbps                             │
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>│    │     vMotion           shares: 50   limit: none   reservation: 0 Mbps                             │
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>│    │     vSAN              shares: 100  limit: none   reservation: 0 Mbps                             │
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>│    │     vSphere Repl.     shares: 50   limit: none   reservation: 0 Mbps                             │
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>│    │     iSCSI             shares: 50   limit: none   reservation: 0 Mbps                             │
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>│    │     NFS               shares: 50   limit: none   reservation: 0 Mbps                             │
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>│    │     FT Logging        shares: 50   limit: none   reservation: 0 Mbps                             │
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>│    │                                                                                                  │
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>│    └── VM Traffic (per port group):                                                                   │
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>│          Each port group can set shares (High/Normal/Low) + optional bandwidth limit                  │
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>│          Applies when uplink is congested; no enforcement at &lt; 75% utilisation                        │
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>│                                                                                                       │
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>│    Enforcement: NIOC only activates when an uplink exceeds 75% utilisation threshold.                 │
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a>│    Below that, all traffic flows at line rate. Above it, shares determine allocation.                 │
+<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a>│                                                                                                       │
+<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a>│    NIOC    = Network I/O Control; requires dvSwitch (Enterprise Plus licence)                         │
+<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a>│    Shares  = relative priority during congestion; vSAN 2x management gets 5x more                     │
+<a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a>│    Limit   = hard ceiling in Mbps/Gbps; enforced even when uplink is idle                             │
+<a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a>│    Reserv. = guaranteed Mbps always available; cluster must be able to meet total                     │
+<a id="__codelineno-8-28" name="__codelineno-8-28" href="#__codelineno-8-28"></a>│                                                                                                       │
+<a id="__codelineno-8-29" name="__codelineno-8-29" href="#__codelineno-8-29"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<hr />
+<h2 id="vsphere-lifecycle-manager-image-workflow">vSphere Lifecycle Manager — Image Workflow<a class="headerlink" href="#vsphere-lifecycle-manager-image-workflow" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>┌─────────────────────────── vSphere Lifecycle Manager — Image-Based Upgrade ───────────────────────────┐
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>│                                                                                                       │
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>│  vLCM manages ESXi hosts using a cluster image (base ESXi + add-on VIBs + firmware).                  │
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>│  Compliance-based workflow: define desired state → measure deviation → remediate.                     │
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>│                                                                                                       │
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>│    ① Define Cluster Image                                                                             │
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>│         Base ESXi release  +  vendor add-ons (driver VIBs)  +  firmware spec                          │
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>│         Stored in SDDC depot (online) or imported from offline bundle                                 │
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>│                                                                                                       │
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>│    ② Check for Recommended Image                                                                      │
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>│         vLCM queries depot for latest validated image for this hardware                               │
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>│         Hardware Compatibility Check: cross-references host HCL automatically                         │
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>│                                                                                                       │
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>│    ③ Compliance Check                                                                                 │
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>│         vLCM compares each host installed components against cluster image                            │
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>│         Non-compliant hosts listed with delta: missing VIBs, wrong firmware version                   │
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>│                                                                                                       │
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>│    ④ Pre-check                                                                                        │
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>│         Validates host is ready for remediation: no open VMs, DRS enabled,                            │
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>│         sufficient cluster capacity to evacuate one host at a time                                    │
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>│                                                                                                       │
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>│    ⑤ Remediation (rolling, one host at a time)                                                        │
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>│         DRS evacuates host → host enters maintenance mode → vLCM applies image                        │
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>│         Host reboots → vLCM validates installed version → exits maintenance mode                      │
+<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>│                                                                                                       │
+<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a>│    ⑥ Post-check                                                                                       │
+<a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a>│         All hosts compliant → cluster image version confirmed → health checks pass                    │
+<a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a>│                                                                                                       │
+<a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a>│    vLCM image  = desired state: base ESXi + add-ons + firmware spec                                   │
+<a id="__codelineno-9-30" name="__codelineno-9-30" href="#__codelineno-9-30"></a>│    Baseline    = legacy VUM approach; vLCM images replace baselines in vSphere 7+                     │
+<a id="__codelineno-9-31" name="__codelineno-9-31" href="#__codelineno-9-31"></a>│    HW compat.  = vLCM queries VMware HCL API; flags unsupported driver/firmware combos                │
+<a id="__codelineno-9-32" name="__codelineno-9-32" href="#__codelineno-9-32"></a>│                                                                                                       │
+<a id="__codelineno-9-33" name="__codelineno-9-33" href="#__codelineno-9-33"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<hr />
+<h2 id="dpu-smartnic-architecture">DPU / SmartNIC — Architecture<a class="headerlink" href="#dpu-smartnic-architecture" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>┌───────────────────────── vSphere 8 — DPU (Data Processing Unit) Architecture ─────────────────────────┐
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>│                                                                                                       │
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>│  A DPU (SmartNIC) offloads networking and security from the host CPU to a dedicated                   │
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>│  processor on the NIC, freeing all host CPU cycles for VM workloads.                                  │
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>│                                                                                                       │
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>│   │        Without DPU (traditional ESXi)        │  │       With DPU (vSphere 8 + SmartNIC)       │   │
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>│   │ Host CPU handles everything:                 │  │ Host CPU: VM compute only                   │   │
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>│   │  · VM guest OS compute                       │  │ DPU handles all I/O plane work:             │   │
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>│   │  · NSX networking (overlay)                  │  │  · vNIC I/O + packet processing             │   │
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>│   │  · DFW rule evaluation                       │  │  · NSX overlay encap/decap                  │   │
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>│   │  · Encryption/decryption                     │  │  · Distributed Firewall rules               │   │
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>│   │  · vSwitch / uplink mgmt                     │  │  · Encryption offload                       │   │
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>│   │ CPU% used for networking                     │  │ Networking CPU% ≈ 0 on host CPU             │   │
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>│   │                                              │  │                                             │   │
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>│                                                                                                       │
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>│    DPU components (e.g. NVIDIA BlueField, Pensando/AMD):                                              │
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>│      · ARM processors on NIC SoC  · On-NIC RAM (8–32 GB)  · PCIe host interface                       │
+<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a>│      · Runs a separate ESXi instance (ESXi-DPU) or management agent                                   │
+<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a>│                                                                                                       │
+<a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a>│    vSphere 8 integration:                                                                             │
+<a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a>│      · vCenter manages DPU as part of host inventory                                                  │
+<a id="__codelineno-10-25" name="__codelineno-10-25" href="#__codelineno-10-25"></a>│      · NSX policies pushed to DPU directly; no host CPU involvement for DFW                           │
+<a id="__codelineno-10-26" name="__codelineno-10-26" href="#__codelineno-10-26"></a>│      · vSphere Distributed Services Engine = feature name for DPU offload in vSphere 8                │
+<a id="__codelineno-10-27" name="__codelineno-10-27" href="#__codelineno-10-27"></a>│                                                                                                       │
+<a id="__codelineno-10-28" name="__codelineno-10-28" href="#__codelineno-10-28"></a>│    DPU   = Data Processing Unit; SmartNIC with dedicated ARM CPUs and RAM                             │
+<a id="__codelineno-10-29" name="__codelineno-10-29" href="#__codelineno-10-29"></a>│    SoC   = System on Chip; the DPU processor integrating CPU + NIC + crypto                           │
+<a id="__codelineno-10-30" name="__codelineno-10-30" href="#__codelineno-10-30"></a>│    DSE   = vSphere Distributed Services Engine; the DPU offload feature in vSphere 8                  │
+<a id="__codelineno-10-31" name="__codelineno-10-31" href="#__codelineno-10-31"></a>│                                                                                                       │
+<a id="__codelineno-10-32" name="__codelineno-10-32" href="#__codelineno-10-32"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<hr />
+<h2 id="vtpm-secure-boot-chain">vTPM &amp; Secure Boot Chain<a class="headerlink" href="#vtpm-secure-boot-chain" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>┌─────────────────────────────── VM Security — vTPM &amp; Secure Boot Chain ────────────────────────────────┐
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>│                                                                                                       │
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>│  vTPM provides a virtualised Trusted Platform Module 2.0 to guest VMs. Secure Boot                    │
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>│  validates the OS bootloader signature before the OS kernel loads — at UEFI layer.                    │
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>│                                                                                                       │
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>│    Secure Boot chain (UEFI firmware → OS):                                                            │
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>│                                                                                                       │
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>│    ① UEFI firmware (OVMF in VMware)                                                                   │
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>│         Contains Platform Key (PK), Key Exchange Keys (KEK), allowed DB signers                       │
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>│         Validates signature of bootloader before executing it                                         │
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>│                                                                                                       │
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>│    ② Bootloader (GRUB2 / Windows Boot Manager)                                                        │
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>│         Must be signed by a key in UEFI DB (Microsoft or custom CA)                                   │
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>│         Bootloader then validates OS kernel signature                                                 │
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>│                                                                                                       │
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>│    ③ OS Kernel                                                                                        │
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>│         Signed kernel modules only (Secure Boot enforced at kernel level too)                         │
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>│         Unsigned drivers blocked — common source of Secure Boot failures on ESXi                      │
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>│                                                                                                       │
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>│    vTPM provides (per VM):                                                                            │
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>│      · PCR (Platform Configuration Registers) — measurements of boot chain integrity                  │
+<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>│      · Key storage — BitLocker encryption keys sealed to TPM PCR state                                │
+<a id="__codelineno-11-23" name="__codelineno-11-23" href="#__codelineno-11-23"></a>│      · Attestation — prove to remote party that VM booted from expected software                      │
+<a id="__codelineno-11-24" name="__codelineno-11-24" href="#__codelineno-11-24"></a>│      · vTPM state stored encrypted in VM files; requires vCenter KMS to unseal                        │
+<a id="__codelineno-11-25" name="__codelineno-11-25" href="#__codelineno-11-25"></a>│                                                                                                       │
+<a id="__codelineno-11-26" name="__codelineno-11-26" href="#__codelineno-11-26"></a>│    Requirements for vTPM:                                                                             │
+<a id="__codelineno-11-27" name="__codelineno-11-27" href="#__codelineno-11-27"></a>│      · VM hardware version 14+  · EFI firmware (not BIOS)  · vCenter KMS configured                   │
+<a id="__codelineno-11-28" name="__codelineno-11-28" href="#__codelineno-11-28"></a>│                                                                                                       │
+<a id="__codelineno-11-29" name="__codelineno-11-29" href="#__codelineno-11-29"></a>│    vTPM   = virtual TPM 2.0; provided by vSphere; no physical TPM on host needed                      │
+<a id="__codelineno-11-30" name="__codelineno-11-30" href="#__codelineno-11-30"></a>│    PCR    = Platform Config Register; hash chain of boot measurements stored in TPM                   │
+<a id="__codelineno-11-31" name="__codelineno-11-31" href="#__codelineno-11-31"></a>│    VBS    = Virtualisation Based Security (Windows); uses vTPM + Hyper-V compatibility                │
+<a id="__codelineno-11-32" name="__codelineno-11-32" href="#__codelineno-11-32"></a>│    UEFI   = Unified Extensible Firmware Interface; replaces BIOS; required for vTPM                   │
+<a id="__codelineno-11-33" name="__codelineno-11-33" href="#__codelineno-11-33"></a>│                                                                                                       │
+<a id="__codelineno-11-34" name="__codelineno-11-34" href="#__codelineno-11-34"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 
 
 
