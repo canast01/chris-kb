@@ -132,15 +132,12 @@ Christos Anastasiadis  |  May 2026
 
     ```text
     TRADITIONAL IT                    CLOUD (AWS)
-```
-```
     ┌─────────────────┐               ┌─────────────────┐
     │  Buy servers     │               │  Request online  │
     │  Wait weeks      │     vs        │  Ready in mins   │
     │  Pay upfront     │               │  Pay per use     │
     │  Guess capacity  │               │  Scale anytime   │
     └─────────────────┘               └─────────────────┘
-```text
     ```
 
 ??? question "Q2. Which cloud advantage eliminates the need to guess how much infrastructure capacity you need?"
@@ -153,15 +150,12 @@ Christos Anastasiadis  |  May 2026
 
     ```text
     TRADITIONAL (guessing)            CLOUD (auto-match)
-```
-```
     ┌──────────────────┐              ┌──────────────────┐
     │ Buy too much?    │              │  Auto Scaling    │
     │  wasted capacity │   vs         │  scales UP/DOWN  │
     │ Buy too little?  │              │  Always matches  │
     │  crashes!        │              │  actual demand   │
     └──────────────────┘              └──────────────────┘
-```text
     ```
 
 ??? question "Q3. What does "trade fixed expense for variable expense" mean?"
@@ -176,14 +170,11 @@ Christos Anastasiadis  |  May 2026
 
     ```text
     CAPEX (Traditional)               OPEX (Cloud)
-```
-```
     ┌───────────────────┐             ┌───────────────────┐
     │ Jan: $2,000,000    │             │ Jan:  $45,000      │
     │ (buy servers)      │    vs       │ Feb:  $48,000      │
     │ Feb-Dec: maintain  │             │ (matches usage)    │
     └───────────────────┘             └───────────────────┘
-```text
     ```
 
 ??? question "Q4. Which cloud model gives the most control over infrastructure?"
@@ -192,19 +183,15 @@ Christos Anastasiadis  |  May 2026
 
     ```text
     RESPONSIBILITY STACK
-```
-```
     ┌──────────────────────────────────────────────┐
     │           IaaS        PaaS        SaaS       │
     │        ┌────────┐  ┌────────┐  ┌────────┐   │
-```text
     │  YOU → │  App   │  │  App   │  │        │   │
     │  YOU → │  Data  │  │  Data  │  │  AWS   │   │
     │  YOU → │  OS    │  │        │  │manages │   │
     │  AWS → │  Virt  │  │  AWS   │  │  ALL   │   │
     │  AWS → │  HW/DC │  │manages │  │        │   │
     │        └────────┘  └────────┘  └────────┘   │
-```
     │  Control: HIGH         MID          LOW      │
     └──────────────────────────────────────────────┘
     ```
@@ -219,14 +206,11 @@ Christos Anastasiadis  |  May 2026
       except AWS owns the physical hardware.
 
     ```text
-```
-```
     ┌──────────────────────────────────┐
     │  EC2 (Elastic Compute Cloud)     │
     │  YOU manage: OS, apps, data, SGs │
     │  AWS manages: hardware, hypervisor│
     └──────────────────────────────────┘
-```text
     ```
 
 ??? question "Q6. Elastic Beanstalk is an example of which model?"
@@ -237,15 +221,12 @@ Christos Anastasiadis  |  May 2026
     AWS provides complete platform. You bring the code.
 
     ```text
-```
-```
     ┌──────────────────────────────────────┐
     │  Elastic Beanstalk (PaaS)            │
     │  YOU → Upload your code              │
     │  AWS → Provisions EC2, OS, LB, ASG   │
     │  App is running! (you did nothing)   │
     └──────────────────────────────────────┘
-```text
     ```
 
 ??? question "Q7. Which cloud model requires managing the least infrastructure?"
@@ -257,14 +238,11 @@ Christos Anastasiadis  |  May 2026
     Examples: Gmail, Salesforce, ServiceNow, Jira
 
     ```text
-```
-```
     ┌──────────────────────────────────────┐
     │  SaaS: Open browser → Log in → Use  │
     │  Provider manages: code, DB, servers │
     │  You manage: NOTHING                 │
     └──────────────────────────────────────┘
-```text
     ```
 
 ??? question "Q8. A company wants to keep sensitive data on-premises while using AWS for other workloads. Which deployment model?"
@@ -273,15 +251,12 @@ Christos Anastasiadis  |  May 2026
 
     ```text
     YOUR DATA CENTER          AWS CLOUD
-```
-```
     ┌──────────────┐          ┌──────────────┐
     │  Sensitive   │◄────────►│  Web servers │
     │  financial   │  VPN /   │  Dev/test    │
     │  records     │  Direct  │  Analytics   │
     │  (on-prem)   │  Connect │  Backups     │
     └──────────────┘          └──────────────┘
-```text
     Classic hybrid cloud pattern.
     ```
 
@@ -290,14 +265,11 @@ Christos Anastasiadis  |  May 2026
     Public cloud (all-in cloud).
 
     ```text
-```
-```
     ┌────────────────────────────────────┐
     │  INTERNET → AWS Region             │
     │  EC2, S3, RDS, Lambda — 100% cloud │
     │  No servers you own anywhere       │
     └────────────────────────────────────┘
-```text
     ```
 
 ??? question "Q10. What is an AWS Region?"
@@ -309,8 +281,6 @@ Christos Anastasiadis  |  May 2026
     independent power, cooling, and networking.
 
     ```text
-```
-```
     ┌──────────────────────────────────────┐
     │  30+ Regions worldwide               │
     │  Examples: us-east-1 (N. Virginia)   │
@@ -318,7 +288,6 @@ Christos Anastasiadis  |  May 2026
     │  Data stays IN region unless you     │
     │  explicitly move it                  │
     └──────────────────────────────────────┘
-```text
     ```
 
 ??? question "Q11. How many AZs does each AWS Region have at minimum?"
@@ -327,15 +296,11 @@ Christos Anastasiadis  |  May 2026
 
     ```text
     AWS REGION (e.g. us-east-1)
-```
-```
     ┌─────────────────────────────────────┐
     │  ┌─────────┐  ┌─────────┐  ┌─────┐  │
-```text
     │  │   AZ-1  │  │   AZ-2  │  │AZ-3 │  │
     │  │(min req)│  │(min req)│  │     │  │
     │  └─────────┘  └─────────┘  └─────┘  │
-```
     │       └────────────┴────────────┘    │
     │         High-bandwidth private fiber  │
     └─────────────────────────────────────┘
@@ -348,15 +313,11 @@ Christos Anastasiadis  |  May 2026
 
     ```text
     AVAILABILITY ZONE
-```
-```
     ┌──────────────────────────────────┐
     │  ┌──────────┐  ┌──────────┐      │
-```text
     │  │  Data    │  │  Data    │      │
     │  │ Center A │  │ Center B │      │
     │  └──────────┘  └──────────┘      │
-```
     │  Independent power and cooling    │
     │  Connected to other AZs via       │
     │  private high-bandwidth fiber     │
@@ -374,15 +335,11 @@ Christos Anastasiadis  |  May 2026
 
     ```text
     SINGLE AZ (bad)          MULTI-AZ (good)
-```
-```
     ┌─────────────┐          ┌─────────────────────┐
     │     AZ-1    │          │  AZ-1    │  AZ-2    │
     │  ┌────────┐ │          │ ┌──────┐ │ ┌──────┐ │
-```text
     │  │  App   │ │          │ │ App  │ │ │ App  │ │
     │  └────────┘ │          │ └──────┘ │ └──────┘ │
-```
     │  AZ fails   │          │ AZ fails │ Still UP!│
     │  OUTAGE!    │          │          │    ✓     │
     └─────────────┘          └─────────────────────┘
@@ -444,15 +401,12 @@ Christos Anastasiadis  |  May 2026
 
     ```text
     YOUR DATA CENTER
-```
-```
     ┌──────────────────────────────────┐
     │  AWS Outposts Rack:              │
     │  EC2 | EBS | RDS | ECS           │
     │  AWS hardware in YOUR building   │
     │  Connects to AWS via Direct Connect│
     └──────────────────────────────────┘
-```text
     Extend on-prem to AWS.
     ```
 
@@ -702,7 +656,7 @@ DAY 1 COMPLETE
     AWS = Security OF the cloud (physical infra, hardware, hypervisor).
     Customer = Security IN the cloud (data, IAM, OS, apps, network config).
 
-```text
+    ```text
     CUSTOMER: Your data, IAM, OS patching, app code, security groups
     ═══════════════════════════════════ THE LINE
     AWS: Physical facilities, hardware, hypervisor, global network
@@ -716,8 +670,6 @@ DAY 1 COMPLETE
     Host OS = AWS hypervisor layer (Nitro/Xen — AWS manages this).
 
     ```text
-```
-```
     ┌──────────────────────────────────────────┐
     │  EC2 Instance                            │
     │  GUEST OS (Windows/Linux) ← YOU patch   │
@@ -725,7 +677,6 @@ DAY 1 COMPLETE
     │  HYPERVISOR (Nitro)       ← AWS patches  │
     │  PHYSICAL SERVER          ← AWS manages  │
     └──────────────────────────────────────────┘
-```text
     ```
 
 ??? question "Q3. Who patches the database engine on RDS?"
@@ -820,7 +771,7 @@ DAY 1 COMPLETE
 
 ??? question "Q18. What is an IAM Group?"
 
-```sql
+    ```sql
     Collection of IAM users. Attach policies to groups, not individuals.
     New person joins → add to group → instantly gets all permissions.
     Person leaves → remove from group → instantly loses permissions.
@@ -1125,15 +1076,12 @@ DAY 2 COMPLETE
     Scale in (remove instances) when demand drops.
 
     ```text
-```
-```
     ┌──────────────────────────────────────────┐
     │  ASG: Min=2, Max=10, Desired=2           │
     │  CPU > 70%: launch more instances        │
     │  CPU < 30%: terminate some instances     │
     │  Always right-sized, never over-paying   │
     └──────────────────────────────────────────┘
-```text
     ```
 
 ??? question "Q12. Difference between scaling out and scaling up?"
@@ -1143,7 +1091,7 @@ DAY 2 COMPLETE
 
 ??? question "Q13. Which ELB operates at Layer 7 and supports HTTP/HTTPS routing?"
 
-```bash
+    ```bash
     Application Load Balancer (ALB).
     Layer 7 = Application layer. Can route by URL path, hostname, headers.
     Example: /api/* → Server Group A, /web/* → Server Group B
@@ -1431,7 +1379,7 @@ FSx: Windows File Server (SMB/AD), Lustre (HPC), NetApp ONTAP, OpenZFS
 
 ??? question "Q9. How to automatically move S3 objects between classes over time?"
 
-```sql
+    ```sql
     S3 Lifecycle Rules — define policies to transition or expire objects.
     Example: Standard → Standard-IA (day 30) → Glacier (day 90) → Delete (day 365)
     ```
@@ -1713,7 +1661,7 @@ Athena: Serverless SQL queries directly on S3 data. $5/TB scanned.
 
 ??? question "Q3. Difference between RDS Multi-AZ and Read Replicas?"
 
-```sql
+    ```sql
     Multi-AZ: SYNCHRONOUS replication → HIGH AVAILABILITY → automatic failover.
     Read Replica: ASYNCHRONOUS replication → PERFORMANCE → read scaling only.
     Multi-AZ standby: CANNOT be read from (failover only).
@@ -1799,7 +1747,7 @@ Athena: Serverless SQL queries directly on S3 data. $5/TB scanned.
 
 ??? question "Q18. Which DB for immutable cryptographically verifiable transactions?"
 
-```text
+    ```text
     Amazon QLDB — Quantum Ledger Database.
     Hash chain: change old record → hash chain breaks → tampering detected.
     Use for: banking ledgers, supply chain, insurance, financial compliance.
@@ -2110,7 +2058,7 @@ API Gateway: create/manage APIs, works with Lambda for serverless APIs
 
 ??? question "Q16. What problem does Transit Gateway solve?"
 
-```text
+    ```text
     Hub-and-spoke model connecting all VPCs and on-premises networks.
     Transitive routing: A → TGW → C without direct A↔C peering.
     50 VPCs + DX/VPN = just 51 TGW attachments instead of 1,225 peerings.
@@ -2118,7 +2066,7 @@ API Gateway: create/manage APIs, works with Lambda for serverless APIs
 
 ??? question "Q17. Difference between VPN Gateway and Direct Connect?"
 
-```text
+    ```text
     VPN: encrypted over PUBLIC internet. Hours to set up. Cheap. Variable performance.
     Direct Connect: PRIVATE fiber. Weeks to set up. Expensive. Consistent low latency.
     EXAM: "consistent performance" → DX. "quick/cheap" → VPN.
@@ -2153,7 +2101,7 @@ API Gateway: create/manage APIs, works with Lambda for serverless APIs
 
 ??? question "Q23. Difference between CloudFront and Global Accelerator?"
 
-```text
+    ```text
     CloudFront: CACHES content at edge. HTTP/HTTPS only. CDN.
     Global Accelerator: ROUTES traffic over AWS private network. TCP/UDP.
                         No caching. Provides 2 static anycast IPs.
@@ -2285,7 +2233,7 @@ API Gateway: create/manage APIs, works with Lambda for serverless APIs
 
 ??? question "Q46. What does CloudFront's "origin" refer to?"
 
-```text
+    ```text
     The source of original content — S3 bucket, EC2, ALB, or any HTTP server.
     Multiple origins per distribution with path-based routing.
     /images/* → S3, /api/* → ALB, /* → default.
@@ -2293,7 +2241,7 @@ API Gateway: create/manage APIs, works with Lambda for serverless APIs
 
 ??? question "Q47. Accelerate file uploads from worldwide users to S3?"
 
-```text
+    ```text
     S3 Transfer Acceleration — uses CloudFront edge locations.
     Upload to mybucket.s3-accelerate.amazonaws.com.
     Users in Brazil upload → nearest edge → AWS backbone → S3 in US.
@@ -2423,7 +2371,7 @@ STS: Security Token Service — issues temporary credentials for roles.
 
 ??? question "Q9. Does GuardDuty require agents on EC2?"
 
-```text
+    ```text
     NO. Fully managed. Reads logs that already exist.
     Enable → click "Enable" → monitoring starts. No software to install.
     ```
@@ -2663,7 +2611,7 @@ STS: Security Token Service — issues temporary credentials for roles.
 
 ??? question "Q50. Company considering AWS migration needs compliance certs. Where?"
 
-```text
+    ```text
     AWS Artifact — immediate access to all AWS compliance documentation.
     Log in → download → give to auditor. 5 minutes total. FREE.
     ```
@@ -2736,7 +2684,7 @@ Cost Optimization, Sustainability
 
 ??? question "Q2. What is a CloudFormation Stack?"
 
-```sql
+    ```sql
     Collection of AWS resources created, updated, deleted as a unit.
     Template → Stack. Delete stack → all resources deleted automatically.
     Prevents orphaned resources (forgotten EC2s, security groups, etc.).
@@ -2761,7 +2709,7 @@ Cost Optimization, Sustainability
 
 ??? question "Q6. Is data transfer OUT of AWS charged?"
 
-```text
+    ```text
     YES — outbound to internet ~$0.09/GB.
     S3 → CloudFront: FREE. CloudFront → users: cheaper than S3 direct.
     Cross-region: ~$0.02/GB. Same region/AZ via private IP: FREE.
@@ -2798,7 +2746,7 @@ Cost Optimization, Sustainability
 
 ??? question "Q12. Which tool estimates costs BEFORE deploying?"
 
-```text
+    ```text
     AWS Pricing Calculator at calculator.aws. No AWS account needed. FREE.
     Build estimate: add services → see monthly cost → share URL.
     ```
@@ -2911,7 +2859,7 @@ Cost Optimization, Sustainability
 
 ??? question "Q32. What is a CloudFormation ChangeSet?"
 
-```sql
+    ```sql
     Preview of changes BEFORE executing update. Shows: + Add, ~ Modify, - Delete.
     Prevents accidental deletions (like production database).
     Review ChangeSet → fix issues → execute safely.
@@ -2968,7 +2916,7 @@ Cost Optimization, Sustainability
 
 ??? question "Q42. Give partner access without creating IAM users?"
 
-```text
+    ```text
     IAM Roles with cross-account trust policy.
     Partner assumes role → gets temporary credentials → accesses specific resources.
     Role can be revoked instantly. No permanent credentials shared.
@@ -3087,7 +3035,7 @@ Step Functions: orchestrate workflows with visual state machines.
 
 ??? question "Q3. Moving MySQL from EC2 to RDS with minimal changes. Which R?"
 
-```bash
+    ```bash
     Replatform — move to managed service with minor optimization.
     App code: unchanged. Operations: better (AWS manages patching/backups).
     Other examples: Tomcat on EC2 → Elastic Beanstalk, Redis on EC2 → ElastiCache.
@@ -3129,7 +3077,7 @@ Step Functions: orchestrate workflows with visual state machines.
 
 ??? question "Q10. What is AWS Application Migration Service (MGN)?"
 
-```sql
+    ```sql
     Continuous block-level replication from source servers to AWS.
     Steps: Install agent → Continuous replication → Test launch → Cutover.
     Downtime: minutes (only during final cutover). Zero data loss.
@@ -3138,7 +3086,7 @@ Step Functions: orchestrate workflows with visual state machines.
 
 ??? question "Q11. What is AWS DataSync?"
 
-```text
+    ```text
     Automated data transfer between on-premises storage and AWS.
     Use for: bulk/scheduled batch transfers. One-time migration.
     Supports: on-prem NFS/SMB to S3/EFS/FSx. Also S3→S3, EFS→EFS.
@@ -3236,7 +3184,7 @@ Step Functions: orchestrate workflows with visual state machines.
 
 ??? question "Q27. Which R for replacing on-premises HR software with Workday SaaS?"
 
-```sql
+    ```sql
     Repurchase — moving from self-managed app to commercial SaaS.
     Other examples: on-prem CRM → Salesforce, on-prem email → Google Workspace.
     ITSM = IT Service Management (ServiceNow, Jira are common tools).
@@ -3479,7 +3427,7 @@ Connect:     Cloud contact center
 
 ??? question "Q7. Add product recommendations to e-commerce site?"
 
-```text
+    ```text
     Amazon Personalize — real-time personalized recommendations.
     Same ML as Amazon.com. Feed historical data → train model → query API.
     No ML expertise needed.
@@ -3493,7 +3441,7 @@ Connect:     Cloud contact center
 
 ??? question "Q9. What is AWS Glue?"
 
-```text
+    ```text
     Serverless ETL service — extract, transform, load data for analytics.
     Connects: S3, RDS, DynamoDB → transforms → delivers to Redshift, S3.
     Runs on managed Spark. Glue Crawlers: auto-discover schema.
@@ -3526,7 +3474,7 @@ Connect:     Cloud contact center
 
 ??? question "Q14. What is AWS X-Ray?"
 
-```bash
+    ```bash
     Distributed tracing — trace requests through all microservices.
     Shows which service is slow/erroring.
     Service Map: API GW (15ms) → Lambda (45ms) → RDS (890ms) ← PROBLEM!
@@ -3547,7 +3495,7 @@ Connect:     Cloud contact center
 
 ??? question "Q17. Service for ML-powered intelligent enterprise search?"
 
-```text
+    ```text
     Amazon Kendra — understands natural language questions.
     "How many vacation days in first year?" → reads HR docs → returns direct answer.
     Not just keyword matching — understands context and intent.
@@ -3581,7 +3529,7 @@ Connect:     Cloud contact center
 
 ??? question "Q22. REVIEW: Security Group vs NACL?"
 
-```text
+    ```text
     Security Group: INSTANCE level, STATEFUL, ALLOW only.
     NACL: SUBNET level, STATELESS, ALLOW + DENY.
     "Block specific IP" → NACL. "Open port 443 on EC2" → Security Group.
@@ -3589,7 +3537,7 @@ Connect:     Cloud contact center
 
 ??? question "Q23. REVIEW: RDS Multi-AZ vs Read Replicas?"
 
-```text
+    ```text
     Multi-AZ: SYNCHRONOUS, HIGH AVAILABILITY, automatic failover, cannot read standby.
     Read Replica: ASYNCHRONOUS, PERFORMANCE, read scaling, any region.
     "Disaster recovery" → Multi-AZ. "Scale reads" → Read Replica.
@@ -3602,7 +3550,7 @@ Connect:     Cloud contact center
 
 ??? question "Q25. REVIEW: Difference between SNS and SQS?"
 
-```text
+    ```text
     SNS: push to MANY simultaneously, fan-out, message lost if subscriber down.
     SQS: STORED queue, one consumer per message, persists up to 14 days.
     "Send to multiple recipients" → SNS. "Decouple applications" → SQS.
@@ -3610,7 +3558,7 @@ Connect:     Cloud contact center
 
 ??? question "Q26. REVIEW: Direct Connect vs VPN?"
 
-```text
+    ```text
     Direct Connect: PRIVATE fiber, CONSISTENT performance, weeks, expensive.
     VPN: ENCRYPTED internet, VARIABLE performance, hours, cheap.
     "Consistent performance" → DX. "Quick/cheap setup" → VPN.
@@ -3624,7 +3572,7 @@ Connect:     Cloud contact center
 
 ??? question "Q28. REVIEW: CloudFront vs Global Accelerator?"
 
-```text
+    ```text
     CloudFront: CACHES content at edge, HTTP/HTTPS only, CDN.
     Global Accelerator: ROUTES over AWS private network, TCP/UDP, static IPs.
     "Cache images globally" → CF. "Two static IPs for whitelist" → GA.
@@ -3632,7 +3580,7 @@ Connect:     Cloud contact center
 
 ??? question "Q29. REVIEW: Secrets Manager vs Parameter Store?"
 
-```text
+    ```text
     Secrets Manager: secrets + auto-rotation, $0.40/secret/month.
     Parameter Store: config + secrets, FREE standard tier, no auto-rotation.
     "DB passwords with auto-rotation" → SM. "Config values" → PS.
@@ -3640,7 +3588,7 @@ Connect:     Cloud contact center
 
 ??? question "Q30. REVIEW: S3 vs EBS vs EFS vs Instance Store?"
 
-```text
+    ```text
     S3: object/unlimited. EBS: block/single-instance/persistent.
     EFS: file/multi-instance/persistent. Instance Store: temporary/fastest.
     "Multiple EC2 share files" → EFS. "Database volume" → EBS.
@@ -3700,7 +3648,7 @@ Connect:     Cloud contact center
 
 ??? question "Q40. REVIEW: What does Replatform mean?"
 
-```text
+    ```text
     "Lift, tinker, and shift" — minor optimization, no re-architecture.
     App code unchanged. Architecture mostly same. Operations improved.
     Examples: EC2 MySQL → RDS MySQL. Tomcat EC2 → Elastic Beanstalk.
@@ -3714,7 +3662,7 @@ Connect:     Cloud contact center
 
 ??? question "Q42. What is Amazon Forecast?"
 
-```python
+    ```python
     ML time-series forecasting. Demand, staffing, energy predictions.
     Feed historical data → Forecast trains model → return predictions with confidence.
     Same technology Amazon uses for supply chain forecasting.
@@ -3745,7 +3693,7 @@ Connect:     Cloud contact center
 
 ??? question "Q47. REVIEW: Which S3 class is cheapest with 12-hour retrieval?"
 
-```python
+    ```python
     S3 Glacier Deep Archive — $0.00099/GB/month. 12-hour retrieval. 180-day min.
     Storage class order (cheapest last):
     Standard → Intelligent → Standard-IA → One Zone-IA → Glacier Instant
