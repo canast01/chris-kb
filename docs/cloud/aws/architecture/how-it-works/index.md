@@ -28,6 +28,7 @@ graph TB
   class VPC,PUB,PRIV net
   class IGW,TGW cloud
 ```
+```
 ┌─────────────────────────────────── AWS Architecture — How It Works ───────────────────────────────────┐
 │                                                                                                       │
 │  Multi-account org: management root governs OUs; workload accounts isolated by purpose.               │
@@ -73,7 +74,6 @@ graph TB
 │  Log archive    = Dedicated account receiving all central logs; immutable S3 bucket                   │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 ```
 
 - **Humans**: IAM Identity Center — no direct IAM users in member accounts
