@@ -27,6 +27,7 @@ Daily Check Sequence
 │  3. ESXi Hosts                                                                                        │
 │     services healthy · NTP synchronized · no warnings                                                 │
 └──────────────────────────┬──────────────────────────────────┘
+```
 ```text
                            │
 ```
