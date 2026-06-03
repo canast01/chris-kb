@@ -3613,7 +3613,7 @@ Routine health checks detect degradation before users are impacted. This page de
 
 <hr />
 <h2 id="health-check-decision-flow">Health Check Decision Flow<a class="headerlink" href="#health-check-decision-flow" title="Permanent link">&para;</a></h2>
-<p><pre class="mermaid"><code>flowchart TD
+<pre class="mermaid"><code>flowchart TD
     START(["Daily Health Check\nStart (08:00 local)"])
     AVAIL{"Instance\nResponding?"}
     PERF{"Stats Page\nNo Alerts?"}
@@ -3639,57 +3639,57 @@ Routine health checks detect degradation before users are impacted. This page de
     LDAP -- Yes --&gt; REPL
 
     REPL -- Errors found --&gt; INV5["Purge stale ECC records\nCheck MID Server logs"]
-    REPL -- Clear --&gt; OK</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────────── ServiceNow — Health Checks ──────────────────────────────────────┐
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Proactive health monitoring for instance performance, integrations, and ITSM data quality.           │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│                                                                                                       │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │             Instance Performance             │  │              Integration Health             │   │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │      Instance Stats: thread pool usage       │  │      MID server: connected + version OK     │   │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │        DB statistics: slow query log         │  │         ECC queue: no stuck messages        │   │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   │         Memory: GC frequency + heap          │  │      REST: endpoint connectivity tests      │   │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   │          Scheduled jobs: no backlog          │  │       LDAP: last sync timestamp &lt; 24 h      │   │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                                                                                                       │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│    Performance and integration checks → escalate to ServiceNow support if thresholds exceeded         │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│                                                                                                       │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│                          ▼                                                 ▼                          │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│                                                                                                       │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │              ITSM Data Quality               │  │               Security Posture              │   │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │         Open P1/P2 incidents: &lt; SLA          │  │    ACL audit: no over-permissioned roles    │   │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │         SLA compliance rate: &gt; 95 %          │  │     Login failures: review sys_log_auth     │   │
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   │       Stale changes: review RFC queue        │  │      Admin count: minimum required only     │   │
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   │        CMDB coverage: CI pop. &gt; 90 %         │  │      MFA enforcement: all users enabled     │   │
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│                                                                                                       │
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  ServiceNow SaaS nodes · MID server hosts · LDAP/AD · monitoring dashboard                            │
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│                                                                                                       │
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│                                                                                                       │
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  Instance Stats  = stats.do page; shows node thread pool, DB pool, memory usage                       │
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│  Slow query log  = DB performance log; identifies queries &gt; threshold (default 5 s)                   │
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  GC frequency    = Java garbage collection rate; high frequency indicates memory pressure             │
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│  ECC queue       = External Communication Channel; integration message buffer                         │
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│  MID server      = on-prem agent for discovery/integrations; version must match instance              │
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│  SLA compliance  = % of SLA goals met; breach indicates staffing or workflow issue                    │
-<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│  RFC queue       = Request for Change queue; stale records indicate process gaps                      │
-<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│  CMDB coverage   = % of expected CIs populated; low coverage weakens impact analysis                  │
-<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│  sys_log_auth    = authentication log table; failed logins visible here                               │
-<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│  ACL audit       = review of access control lists for over-permissioned roles                         │
-<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│  Heap            = JVM memory space; approaching limit causes slowness before OOM                     │
-<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│  Sched job backlog= queued jobs not yet executed; indicates thread starvation                         │
-<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│                                                                                                       │
-<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div></p>
+    REPL -- Clear --&gt; OK
+```text
+┌───────────────────────────────────── ServiceNow — Health Checks ──────────────────────────────────────┐
+│                                                                                                       │
+│  Proactive health monitoring for instance performance, integrations, and ITSM data quality.           │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Instance Performance             │  │              Integration Health             │   │
+│   │      Instance Stats: thread pool usage       │  │      MID server: connected + version OK     │   │
+│   │        DB statistics: slow query log         │  │         ECC queue: no stuck messages        │   │
+│   │         Memory: GC frequency + heap          │  │      REST: endpoint connectivity tests      │   │
+│   │          Scheduled jobs: no backlog          │  │       LDAP: last sync timestamp &lt; 24 h      │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Performance and integration checks → escalate to ServiceNow support if thresholds exceeded         │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              ITSM Data Quality               │  │               Security Posture              │   │
+│   │         Open P1/P2 incidents: &lt; SLA          │  │    ACL audit: no over-permissioned roles    │   │
+│   │         SLA compliance rate: &gt; 95 %          │  │     Login failures: review sys_log_auth     │   │
+│   │       Stale changes: review RFC queue        │  │      Admin count: minimum required only     │   │
+│   │        CMDB coverage: CI pop. &gt; 90 %         │  │      MFA enforcement: all users enabled     │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  ServiceNow SaaS nodes · MID server hosts · LDAP/AD · monitoring dashboard                            │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Instance Stats  = stats.do page; shows node thread pool, DB pool, memory usage                       │
+│  Slow query log  = DB performance log; identifies queries &gt; threshold (default 5 s)                   │
+│  GC frequency    = Java garbage collection rate; high frequency indicates memory pressure             │
+│  ECC queue       = External Communication Channel; integration message buffer                         │
+│  MID server      = on-prem agent for discovery/integrations; version must match instance              │
+│  SLA compliance  = % of SLA goals met; breach indicates staffing or workflow issue                    │
+│  RFC queue       = Request for Change queue; stale records indicate process gaps                      │
+│  CMDB coverage   = % of expected CIs populated; low coverage weakens impact analysis                  │
+│  sys_log_auth    = authentication log table; failed logins visible here                               │
+│  ACL audit       = review of access control lists for over-permissioned roles                         │
+│  Heap            = JVM memory space; approaching limit causes slowness before OOM                     │
+│  Sched job backlog= queued jobs not yet executed; indicates thread starvation                         │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</code></pre>
 <p>Baseline your active session count over 2 weeks to establish normal business-hours peaks. An unexplained 3x spike often indicates a script loop or runaway REST integration.</p>
 <hr />
 <h2 id="4-scheduled-job-health">4. Scheduled Job Health<a class="headerlink" href="#4-scheduled-job-health" title="Permanent link">&para;</a></h2>
 <p>Navigate to: <strong>System Scheduler &gt; Scheduled Jobs</strong></p>
 <p>Filter for jobs in <strong>Error</strong> state:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>state = error
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>state = error
 </code></pre></div>
 <h3 id="common-scheduled-jobs-to-monitor">Common Scheduled Jobs to Monitor<a class="headerlink" href="#common-scheduled-jobs-to-monitor" title="Permanent link">&para;</a></h3>
 <table>
@@ -3781,34 +3781,34 @@ Routine health checks detect degradation before users are impacted. This page de
 </tbody>
 </table>
 <h3 id="mid-server-service-check-linux">MID Server Service Check (Linux)<a class="headerlink" href="#mid-server-service-check-linux" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># On the MID Server host</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>mid-server
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Restart if needed</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>mid-server
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Tail MID Server log</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>tail<span class="w"> </span>-f<span class="w"> </span>/opt/servicenow/mid/agent/logs/agent0.log.0
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># On the MID Server host</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>mid-server
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Restart if needed</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>mid-server
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Tail MID Server log</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>tail<span class="w"> </span>-f<span class="w"> </span>/opt/servicenow/mid/agent/logs/agent0.log.0
 </code></pre></div>
 <h3 id="mid-server-service-check-windows">MID Server Service Check (Windows)<a class="headerlink" href="#mid-server-service-check-windows" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Check service state</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="s2">&quot;ServiceNow MID Server_*&quot;</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c"># Restart</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nb">Restart-Service</span> <span class="n">-Name</span> <span class="s2">&quot;ServiceNow MID Server_myinstance&quot;</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c"># View log</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="nb">Get-Content</span> <span class="s2">&quot;C:\ServiceNow\MID Server\agent\logs\agent0.log.0&quot;</span> <span class="n">-Tail</span> <span class="n">50</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Check service state</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="s2">&quot;ServiceNow MID Server_*&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c"># Restart</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nb">Restart-Service</span> <span class="n">-Name</span> <span class="s2">&quot;ServiceNow MID Server_myinstance&quot;</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c"># View log</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="nb">Get-Content</span> <span class="s2">&quot;C:\ServiceNow\MID Server\agent\logs\agent0.log.0&quot;</span> <span class="n">-Tail</span> <span class="n">50</span>
 </code></pre></div>
 <hr />
 <h2 id="6-ecc-queue-error-review">6. ECC Queue Error Review<a class="headerlink" href="#6-ecc-queue-error-review" title="Permanent link">&para;</a></h2>
 <p>Navigate to: <strong>MID Server &gt; ECC Queue</strong></p>
 <p>Filter: <code>state = error</code></p>
 <p>A healthy instance should have zero ECC queue errors. Errors indicate failed communication between the instance and MID Servers.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Check ECC error count via API</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$SN_USER</span><span class="s2">:</span><span class="nv">$SN_PASS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$INSTANCE</span><span class="s2">/api/now/stats/ecc_queue?sysparm_query=state=error&amp;sysparm_count=true&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Accept: application/json&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.result.stats.count&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check ECC error count via API</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>curl<span class="w"> </span>-s<span class="w"> </span>-u<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$SN_USER</span><span class="s2">:</span><span class="nv">$SN_PASS</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$INSTANCE</span><span class="s2">/api/now/stats/ecc_queue?sysparm_query=state=error&amp;sysparm_count=true&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Accept: application/json&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.result.stats.count&#39;</span>
 </code></pre></div>
 <p><strong>Resolution steps:</strong></p>
 <ol>
@@ -3861,22 +3861,22 @@ Routine health checks detect degradation before users are impacted. This page de
 <hr />
 <h2 id="health-check-log-template">Health Check Log Template<a class="headerlink" href="#health-check-log-template" title="Permanent link">&para;</a></h2>
 <p>Record daily health check results in a shared log (ticket, spreadsheet, or knowledge article):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nt">Date</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2026-05-08</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nt">Checked by</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">C. Anastasiadis</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nt">Instance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mycompany.service-now.com</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nt">Availability</span><span class="p">:</span><span class="w">       </span><span class="l l-Scalar l-Scalar-Plain">PASS  (HTTP 200, login OK)</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="nt">Stats page</span><span class="p">:</span><span class="w">         </span><span class="l l-Scalar l-Scalar-Plain">PASS  (heap 62%, no thread alerts)</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="nt">Active sessions</span><span class="p">:</span><span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">PASS  (142 — within baseline 120-160)</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="nt">Scheduled jobs</span><span class="p">:</span><span class="w">     </span><span class="l l-Scalar l-Scalar-Plain">WARN  (LDAP Import failed — investigating)</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="nt">MID Server health:  PASS  (MID1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Up, MID2</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Up)</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="nt">ECC queue errors</span><span class="p">:</span><span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">PASS  (0 errors)</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="nt">LDAP sync:          FAIL  (Last sync</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30 hours ago — see above)</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="nt">System log errors</span><span class="p">:</span><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">PASS  (2 errors — duplicate key, non-critical)</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="nt">Actions</span><span class="p">:</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Triggered manual LDAP import at 08:15 — resolved</span>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Opened INC0042187 for LDAP import job failure root cause</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nt">Date</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2026-05-08</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nt">Checked by</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">C. Anastasiadis</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nt">Instance</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mycompany.service-now.com</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nt">Availability</span><span class="p">:</span><span class="w">       </span><span class="l l-Scalar l-Scalar-Plain">PASS  (HTTP 200, login OK)</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nt">Stats page</span><span class="p">:</span><span class="w">         </span><span class="l l-Scalar l-Scalar-Plain">PASS  (heap 62%, no thread alerts)</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="nt">Active sessions</span><span class="p">:</span><span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">PASS  (142 — within baseline 120-160)</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="nt">Scheduled jobs</span><span class="p">:</span><span class="w">     </span><span class="l l-Scalar l-Scalar-Plain">WARN  (LDAP Import failed — investigating)</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="nt">MID Server health:  PASS  (MID1</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Up, MID2</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Up)</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="nt">ECC queue errors</span><span class="p">:</span><span class="w">   </span><span class="l l-Scalar l-Scalar-Plain">PASS  (0 errors)</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="nt">LDAP sync:          FAIL  (Last sync</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">30 hours ago — see above)</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="nt">System log errors</span><span class="p">:</span><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">PASS  (2 errors — duplicate key, non-critical)</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="nt">Actions</span><span class="p">:</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Triggered manual LDAP import at 08:15 — resolved</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Opened INC0042187 for LDAP import job failure root cause</span>
 </code></pre></div>
 
 

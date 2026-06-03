@@ -3473,7 +3473,7 @@ LUKS/dm-crypt full-disk encryption, NBDE (Network Bound Disk Encryption), TLS fo
 <h2 id="luks-full-disk-encryption">LUKS — Full Disk Encryption<a class="headerlink" href="#luks-full-disk-encryption" title="Permanent link">&para;</a></h2>
 <p>LUKS (Linux Unified Key Setup) is the standard block device encryption layer on Linux, implemented via <code>dm-crypt</code>.</p>
 <h3 id="encrypt-a-new-block-device">Encrypt a New Block Device<a class="headerlink" href="#encrypt-a-new-block-device" title="Permanent link">&para;</a></h3>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Install cryptsetup</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Install cryptsetup</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>dnf<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>cryptsetup<span class="w">   </span><span class="c1"># RHEL</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>apt<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>cryptsetup<span class="w">   </span><span class="c1"># Ubuntu</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
@@ -3489,209 +3489,209 @@ LUKS/dm-crypt full-disk encryption, NBDE (Network Bound Disk Encryption), TLS fo
 <a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="c1"># Mount it</span>
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>mkdir<span class="w"> </span>/mnt/secure-data
 <a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>mount<span class="w"> </span>/dev/mapper/secure-data<span class="w"> </span>/mnt/secure-data
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="sb">```</span>text
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>┌─────────────────────────────────────────<span class="w"> </span>Linux<span class="w"> </span>—<span class="w"> </span>Encryption<span class="w"> </span>──────────────────────────────────────────┐
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│<span class="w">                                                                                                       </span>│
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│<span class="w">  </span>Encryption<span class="w"> </span>at<span class="w"> </span>rest<span class="w"> </span><span class="o">(</span>LUKS<span class="o">)</span><span class="w"> </span>and<span class="w"> </span><span class="k">in</span><span class="w"> </span>transit<span class="w"> </span><span class="o">(</span>TLS/SSH<span class="o">)</span><span class="w"> </span><span class="k">for</span><span class="w"> </span>Linux<span class="w"> </span>systems.<span class="w">                                </span>│
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│<span class="w">                                                                                                       </span>│
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│<span class="w">   </span>┌──────────────────────────────────────────────┐<span class="w">  </span>┌─────────────────────────────────────────────┐<span class="w">   </span>│
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│<span class="w">   </span>│<span class="w">            </span>Disk<span class="w"> </span>Encryption<span class="w"> </span>—<span class="w"> </span>LUKS<span class="w">            </span>│<span class="w">  </span>│<span class="w">            </span>Transport<span class="w"> </span>—<span class="w"> </span>TLS<span class="w"> </span>/<span class="w"> </span>SSH<span class="w">            </span>│<span class="w">   </span>│
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│<span class="w">   </span>│<span class="w">            </span>cryptsetup<span class="w"> </span>luksFormat<span class="w">             </span>│<span class="w">  </span>│<span class="w">              </span>OpenSSL:<span class="w"> </span>cert<span class="w"> </span>mgmt<span class="w">             </span>│<span class="w">   </span>│
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│<span class="w">   </span>│<span class="w">            </span>dm-crypt:<span class="w"> </span>kernel<span class="w"> </span>layer<span class="w">            </span>│<span class="w">  </span>│<span class="w">               </span>TLS<span class="w"> </span><span class="m">1</span>.2/1.3<span class="w"> </span>only<span class="w">              </span>│<span class="w">   </span>│
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│<span class="w">   </span>│<span class="w">           </span>/etc/crypttab:<span class="w"> </span>auto<span class="w"> </span>open<span class="w">           </span>│<span class="w">  </span>│<span class="w">            </span>SSH:<span class="w"> </span>ed25519<span class="w"> </span>preferred<span class="w">           </span>│<span class="w">   </span>│
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│<span class="w">   </span>│<span class="w">            </span>TPM2:<span class="w"> </span>key<span class="w"> </span>seal/unseal<span class="w">             </span>│<span class="w">  </span>│<span class="w">             </span>stunnel:<span class="w"> </span>TLS<span class="w"> </span>wrapper<span class="w">            </span>│<span class="w">   </span>│
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│<span class="w">   </span>│<span class="w">            </span>Clevis<span class="w"> </span>+<span class="w"> </span>Tang:<span class="w"> </span>network<span class="w">            </span>│<span class="w">  </span>│<span class="w">            </span>WireGuard:<span class="w"> </span>modern<span class="w"> </span>VPN<span class="w">            </span>│<span class="w">   </span>│
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│<span class="w">   </span>└──────────────────────────────────────────────┘<span class="w">  </span>└─────────────────────────────────────────────┘<span class="w">   </span>│
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│<span class="w">                                                                                                       </span>│
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│<span class="w">   </span>┌──────────────────────────────────────────────┐<span class="w">  </span>┌─────────────────────────────────────────────┐<span class="w">   </span>│
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│<span class="w">   </span>│<span class="w">           </span>File<span class="w"> </span>/<span class="w"> </span>Secret<span class="w"> </span>Encryption<span class="w">           </span>│<span class="w">  </span>│<span class="w">                </span>Key<span class="w"> </span>Management<span class="w">               </span>│<span class="w">   </span>│
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│<span class="w">   </span>│<span class="w">             </span>GPG:<span class="w"> </span>file<span class="w"> </span>encryption<span class="w">             </span>│<span class="w">  </span>│<span class="w">            </span>PKCS#11:<span class="w"> </span>HSM<span class="w"> </span>interface<span class="w">           </span>│<span class="w">   </span>│
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│<span class="w">   </span>│<span class="w">             </span>age:<span class="w"> </span>modern<span class="w"> </span>enc<span class="w"> </span>tool<span class="w">             </span>│<span class="w">  </span>│<span class="w">            </span>TPM2-tools:<span class="w"> </span>seal<span class="w"> </span>keys<span class="w">            </span>│<span class="w">   </span>│
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│<span class="w">   </span>│<span class="w">            </span>ansible-vault<span class="w"> </span>encrypt<span class="w">             </span>│<span class="w">  </span>│<span class="w">            </span>HashiCorp<span class="w"> </span>Vault<span class="w"> </span>agent<span class="w">            </span>│<span class="w">   </span>│
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│<span class="w">   </span>│<span class="w">            </span>/dev/urandom:<span class="w"> </span>entropy<span class="w">             </span>│<span class="w">  </span>│<span class="w">             </span>Clevis:<span class="w"> </span>auto-unseal<span class="w">             </span>│<span class="w">   </span>│
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│<span class="w">   </span>│<span class="w">             </span>shred:<span class="w"> </span>secure<span class="w"> </span>delete<span class="w">             </span>│<span class="w">  </span>│<span class="w">            </span>Tang:<span class="w"> </span>network<span class="w"> </span>key<span class="w"> </span>srv<span class="w">            </span>│<span class="w">   </span>│
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│<span class="w">   </span>└──────────────────────────────────────────────┘<span class="w">  </span>└─────────────────────────────────────────────┘<span class="w">   </span>│
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│<span class="w">                                                                                                       </span>│
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│<span class="w">  </span>Physical<span class="w"> </span>Infrastructure<span class="w"> </span><span class="o">(</span>the<span class="w"> </span>hardware<span class="w"> </span>everything<span class="w"> </span>above<span class="w"> </span>runs<span class="w"> </span>on<span class="o">)</span>:<span class="w">                                     </span>│
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│<span class="w">  </span>x86-64<span class="w"> </span>servers<span class="w"> </span>·<span class="w"> </span>TPM<span class="w"> </span><span class="m">2</span>.0<span class="w"> </span>chip<span class="w"> </span>·<span class="w"> </span>hardware<span class="w"> </span>HSM<span class="w"> </span>·<span class="w"> </span>encrypted<span class="w"> </span>SSDs<span class="w"> </span>·<span class="w"> </span>NIC<span class="w">                                  </span>│
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│<span class="w">                                                                                                       </span>│
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>│<span class="w">  </span>Key<span class="w"> </span>terms:<span class="w">                                                                                           </span>│
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>│<span class="w">                                                                                                       </span>│
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>│<span class="w">  </span><span class="nv">LUKS</span><span class="w">        </span><span class="o">=</span><span class="w"> </span>Linux<span class="w"> </span>Unified<span class="w"> </span>Key<span class="w"> </span>Setup<span class="p">;</span><span class="w"> </span>block<span class="w"> </span>device<span class="w"> </span>encryption<span class="w"> </span>standard<span class="w">                              </span>│
+<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>│<span class="w">  </span>dm-crypt<span class="w">    </span><span class="o">=</span><span class="w"> </span>Kernel<span class="w"> </span>device-mapper<span class="w"> </span>target<span class="w"> </span>providing<span class="w"> </span>transparent<span class="w"> </span>encryption<span class="w">                           </span>│
+<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>│<span class="w">  </span><span class="nv">cryptsetup</span><span class="w">  </span><span class="o">=</span><span class="w"> </span>CLI<span class="w"> </span><span class="k">for</span><span class="w"> </span>managing<span class="w"> </span>LUKS<span class="w"> </span>containers<span class="w"> </span>and<span class="w"> </span>dm-crypt<span class="w"> </span>mappings<span class="w">                                 </span>│
+<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>│<span class="w">  </span><span class="nv">TPM</span><span class="w">         </span><span class="o">=</span><span class="w"> </span>Trusted<span class="w"> </span>Platform<span class="w"> </span>Module<span class="p">;</span><span class="w"> </span>stores<span class="w"> </span>keys<span class="w"> </span><span class="k">in</span><span class="w"> </span>hardware,<span class="w"> </span>survives<span class="w"> </span>reboot<span class="w">                      </span>│
+<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>│<span class="w">  </span><span class="nv">Clevis</span><span class="w">      </span><span class="o">=</span><span class="w"> </span>Automated<span class="w"> </span>LUKS<span class="w"> </span>unlock<span class="w"> </span>framework<span class="w"> </span>supporting<span class="w"> </span>TPM<span class="w"> </span>and<span class="w"> </span>Tang<span class="w"> </span>backends<span class="w">                       </span>│
+<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>│<span class="w">  </span><span class="nv">Tang</span><span class="w">        </span><span class="o">=</span><span class="w"> </span>Network-bound<span class="w"> </span>disk<span class="w"> </span>encryption<span class="w"> </span>server<span class="p">;</span><span class="w"> </span>key<span class="w"> </span>released<span class="w"> </span>only<span class="w"> </span>on<span class="w"> </span>LAN<span class="w">                         </span>│
+<a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>│<span class="w">  </span><span class="nv">GPG</span><span class="w">         </span><span class="o">=</span><span class="w"> </span>GNU<span class="w"> </span>Privacy<span class="w"> </span>Guard<span class="p">;</span><span class="w"> </span>OpenPGP<span class="w"> </span><span class="k">for</span><span class="w"> </span>file/email<span class="w"> </span>encryption<span class="w"> </span>and<span class="w"> </span>signing<span class="w">                       </span>│
+<a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>│<span class="w">  </span><span class="nv">age</span><span class="w">         </span><span class="o">=</span><span class="w"> </span>Modern<span class="w"> </span>file<span class="w"> </span>encryption<span class="w"> </span>tool<span class="p">;</span><span class="w"> </span>simpler<span class="w"> </span>than<span class="w"> </span>GPG,<span class="w"> </span>X25519/SSH<span class="w"> </span>keys<span class="w">                         </span>│
+<a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a>│<span class="w">  </span><span class="nv">TLS</span><span class="w">         </span><span class="o">=</span><span class="w"> </span>Transport<span class="w"> </span>Layer<span class="w"> </span>Security<span class="p">;</span><span class="w"> </span>cryptographic<span class="w"> </span>protocol<span class="w"> </span><span class="k">for</span><span class="w"> </span>secure<span class="w"> </span>channels<span class="w">                   </span>│
+<a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>│<span class="w">  </span><span class="nv">WireGuard</span><span class="w">   </span><span class="o">=</span><span class="w"> </span>Modern<span class="w"> </span>VPN<span class="w"> </span>protocol<span class="p">;</span><span class="w"> </span>kernel<span class="w"> </span>module,<span class="w"> </span>fast,<span class="w"> </span>simple<span class="w"> </span>configuration<span class="w">                         </span>│
+<a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a>│<span class="w">  </span><span class="nv">HSM</span><span class="w">         </span><span class="o">=</span><span class="w"> </span>Hardware<span class="w"> </span>Security<span class="w"> </span>Module<span class="p">;</span><span class="w"> </span>tamper-resistant<span class="w"> </span>key<span class="w"> </span>storage<span class="w"> </span>device<span class="w">                          </span>│
+<a id="__codelineno-0-56" name="__codelineno-0-56" href="#__codelineno-0-56"></a>│<span class="w">  </span>PKCS#11<span class="w">     </span><span class="o">=</span><span class="w"> </span>Standard<span class="w"> </span>API<span class="w"> </span><span class="k">for</span><span class="w"> </span>interacting<span class="w"> </span>with<span class="w"> </span>HSMs<span class="w"> </span>and<span class="w"> </span>smart<span class="w"> </span>cards<span class="w">                                 </span>│
+<a id="__codelineno-0-57" name="__codelineno-0-57" href="#__codelineno-0-57"></a>│<span class="w">                                                                                                       </span>│
+<a id="__codelineno-0-58" name="__codelineno-0-58" href="#__codelineno-0-58"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌───────────────────────────────────────── Linux — Encryption ──────────────────────────────────────────┐
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  Encryption at rest (LUKS) and in transit (TLS/SSH) for Linux systems.                                │
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│                                                                                                       │
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │            Disk Encryption — LUKS            │  │            Transport — TLS / SSH            │   │
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │            cryptsetup luksFormat             │  │              OpenSSL: cert mgmt             │   │
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │            dm-crypt: kernel layer            │  │               TLS 1.2/1.3 only              │   │
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │           /etc/crypttab: auto open           │  │            SSH: ed25519 preferred           │   │
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │            TPM2: key seal/unseal             │  │             stunnel: TLS wrapper            │   │
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │            Clevis + Tang: network            │  │            WireGuard: modern VPN            │   │
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                                                                       │
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│   │           File / Secret Encryption           │  │                Key Management               │   │
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│   │             GPG: file encryption             │  │            PKCS#11: HSM interface           │   │
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   │             age: modern enc tool             │  │            TPM2-tools: seal keys            │   │
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │            ansible-vault encrypt             │  │            HashiCorp Vault agent            │   │
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │            /dev/urandom: entropy             │  │             Clevis: auto-unseal             │   │
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │             shred: secure delete             │  │            Tang: network key srv            │   │
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│                                                                                                       │
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│  x86-64 servers · TPM 2.0 chip · hardware HSM · encrypted SSDs · NIC                                  │
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│                                                                                                       │
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│                                                                                                       │
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  LUKS        = Linux Unified Key Setup; block device encryption standard                              │
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│  dm-crypt    = Kernel device-mapper target providing transparent encryption                           │
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  cryptsetup  = CLI for managing LUKS containers and dm-crypt mappings                                 │
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│  TPM         = Trusted Platform Module; stores keys in hardware, survives reboot                      │
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  Clevis      = Automated LUKS unlock framework supporting TPM and Tang backends                       │
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  Tang        = Network-bound disk encryption server; key released only on LAN                         │
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  GPG         = GNU Privacy Guard; OpenPGP for file/email encryption and signing                       │
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  age         = Modern file encryption tool; simpler than GPG, X25519/SSH keys                         │
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  TLS         = Transport Layer Security; cryptographic protocol for secure channels                   │
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  WireGuard   = Modern VPN protocol; kernel module, fast, simple configuration                         │
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  HSM         = Hardware Security Module; tamper-resistant key storage device                          │
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  PKCS#11     = Standard API for interacting with HSMs and smart cards                                 │
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│                                                                                                       │
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div></p>
 <h3 id="persistent-mount-via-etccrypttab-and-etcfstab">Persistent Mount via /etc/crypttab and /etc/fstab<a class="headerlink" href="#persistent-mount-via-etccrypttab-and-etcfstab" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Get the UUID of the LUKS device</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>blkid<span class="w"> </span>/dev/sdb
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Get the UUID of the LUKS device</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>blkid<span class="w"> </span>/dev/sdb
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># /etc/crypttab — maps the encrypted device to a name at boot</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># Format: name  device-or-UUID  key-file  options</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>secure-data<span class="w">  </span><span class="nv">UUID</span><span class="o">=</span>a1b2c3d4-e5f6-7890-abcd-ef1234567890<span class="w">  </span>none<span class="w">  </span>luks
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># If using a key file instead of interactive passphrase:</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>secure-data<span class="w">  </span><span class="nv">UUID</span><span class="o">=</span>a1b2c3d4-e5f6-7890-abcd-ef1234567890<span class="w">  </span>/root/keyfile<span class="w">  </span>luks
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># /etc/crypttab — maps the encrypted device to a name at boot</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Format: name  device-or-UUID  key-file  options</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>secure-data<span class="w">  </span><span class="nv">UUID</span><span class="o">=</span>a1b2c3d4-e5f6-7890-abcd-ef1234567890<span class="w">  </span>none<span class="w">  </span>luks
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># If using a key file instead of interactive passphrase:</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>secure-data<span class="w">  </span><span class="nv">UUID</span><span class="o">=</span>a1b2c3d4-e5f6-7890-abcd-ef1234567890<span class="w">  </span>/root/keyfile<span class="w">  </span>luks
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># /etc/fstab — mount the mapped device</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>/dev/mapper/secure-data<span class="w">  </span>/mnt/secure-data<span class="w">  </span>xfs<span class="w">  </span>defaults,_netdev<span class="w">  </span><span class="m">0</span><span class="w"> </span><span class="m">0</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># /etc/fstab — mount the mapped device</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>/dev/mapper/secure-data<span class="w">  </span>/mnt/secure-data<span class="w">  </span>xfs<span class="w">  </span>defaults,_netdev<span class="w">  </span><span class="m">0</span><span class="w"> </span><span class="m">0</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Test without rebooting</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>systemctl<span class="w"> </span>daemon-reload
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>systemctl<span class="w"> </span>start<span class="w"> </span>systemd-cryptsetup@secure-data
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>mount<span class="w"> </span>/mnt/secure-data
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Test without rebooting</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>systemctl<span class="w"> </span>daemon-reload
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>systemctl<span class="w"> </span>start<span class="w"> </span>systemd-cryptsetup@secure-data
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>mount<span class="w"> </span>/mnt/secure-data
 </code></pre></div>
 <h3 id="luks-header-backup">LUKS Header Backup<a class="headerlink" href="#luks-header-backup" title="Permanent link">&para;</a></h3>
 <p>The LUKS header is critical — if corrupted, the volume is permanently unreadable.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Backup header to a secure location</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>cryptsetup<span class="w"> </span>luksHeaderBackup<span class="w"> </span>/dev/sdb<span class="w"> </span>--header-backup-file<span class="w"> </span>/secure-backup/sdb-luks-header.bak
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Restore header if needed</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>cryptsetup<span class="w"> </span>luksHeaderRestore<span class="w"> </span>/dev/sdb<span class="w"> </span>--header-backup-file<span class="w"> </span>/secure-backup/sdb-luks-header.bak
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Backup header to a secure location</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>cryptsetup<span class="w"> </span>luksHeaderBackup<span class="w"> </span>/dev/sdb<span class="w"> </span>--header-backup-file<span class="w"> </span>/secure-backup/sdb-luks-header.bak
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Restore header if needed</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>cryptsetup<span class="w"> </span>luksHeaderRestore<span class="w"> </span>/dev/sdb<span class="w"> </span>--header-backup-file<span class="w"> </span>/secure-backup/sdb-luks-header.bak
 </code></pre></div>
 <h2 id="nbde-network-bound-disk-encryption">NBDE — Network Bound Disk Encryption<a class="headerlink" href="#nbde-network-bound-disk-encryption" title="Permanent link">&para;</a></h2>
 <p>NBDE (Network Bound Disk Encryption) allows encrypted systems to unlock automatically at boot when on the trusted network, without manual passphrase entry. This uses Tang (server) and Clevis (client).</p>
 <h3 id="tang-server-setup">Tang Server Setup<a class="headerlink" href="#tang-server-setup" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Install Tang on the key escrow server</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>dnf<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>tang
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Enable and start the Tang socket</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>tangd.socket
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Tang keys are auto-generated in /var/db/tang/</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>ls<span class="w"> </span>/var/db/tang/
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># Get the Tang server thumbprint (share with Clevis clients)</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>tang-show-keys<span class="w"> </span>/var/db/tang/
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Install Tang on the key escrow server</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>dnf<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>tang
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Enable and start the Tang socket</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>tangd.socket
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Tang keys are auto-generated in /var/db/tang/</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>ls<span class="w"> </span>/var/db/tang/
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Get the Tang server thumbprint (share with Clevis clients)</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>tang-show-keys<span class="w"> </span>/var/db/tang/
 </code></pre></div>
 <h3 id="clevis-client-setup">Clevis Client Setup<a class="headerlink" href="#clevis-client-setup" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Install Clevis on the server with the LUKS volume</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>dnf<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>clevis<span class="w"> </span>clevis-luks<span class="w"> </span>clevis-dracut
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Bind the LUKS device to a Tang server</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="c1"># Replace with your Tang server IP and thumbprint</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>clevis<span class="w"> </span>luks<span class="w"> </span><span class="nb">bind</span><span class="w"> </span>-d<span class="w"> </span>/dev/sdb<span class="w"> </span>tang<span class="w"> </span><span class="s1">&#39;{&quot;url&quot;:&quot;http://tang.example.local&quot;,&quot;thp&quot;:&quot;&lt;thumbprint&gt;&quot;}&#39;</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1"># Verify binding</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>clevis<span class="w"> </span>luks<span class="w"> </span>list<span class="w"> </span>-d<span class="w"> </span>/dev/sdb
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
-<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c1"># Rebuild initramfs so Clevis runs at boot</span>
-<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>dracut<span class="w"> </span>-f
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Install Clevis on the server with the LUKS volume</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>dnf<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>clevis<span class="w"> </span>clevis-luks<span class="w"> </span>clevis-dracut
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Bind the LUKS device to a Tang server</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Replace with your Tang server IP and thumbprint</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>clevis<span class="w"> </span>luks<span class="w"> </span><span class="nb">bind</span><span class="w"> </span>-d<span class="w"> </span>/dev/sdb<span class="w"> </span>tang<span class="w"> </span><span class="s1">&#39;{&quot;url&quot;:&quot;http://tang.example.local&quot;,&quot;thp&quot;:&quot;&lt;thumbprint&gt;&quot;}&#39;</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># Verify binding</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>clevis<span class="w"> </span>luks<span class="w"> </span>list<span class="w"> </span>-d<span class="w"> </span>/dev/sdb
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="c1"># Rebuild initramfs so Clevis runs at boot</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>dracut<span class="w"> </span>-f
 </code></pre></div>
 <h3 id="nbde-with-multiple-tang-servers-redundancy">NBDE with Multiple Tang Servers (Redundancy)<a class="headerlink" href="#nbde-with-multiple-tang-servers-redundancy" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Bind to two Tang servers — unlock if either is reachable (threshold: 1 of 2)</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>clevis<span class="w"> </span>luks<span class="w"> </span><span class="nb">bind</span><span class="w"> </span>-d<span class="w"> </span>/dev/sdb<span class="w"> </span>sss<span class="w"> </span><span class="s1">&#39;{&quot;t&quot;:1,&quot;pins&quot;:{&quot;tang&quot;:[{&quot;url&quot;:&quot;http://tang1.example.local&quot;,&quot;thp&quot;:&quot;&lt;thp1&gt;&quot;},{&quot;url&quot;:&quot;http://tang2.example.local&quot;,&quot;thp&quot;:&quot;&lt;thp2&gt;&quot;}]}}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Bind to two Tang servers — unlock if either is reachable (threshold: 1 of 2)</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>clevis<span class="w"> </span>luks<span class="w"> </span><span class="nb">bind</span><span class="w"> </span>-d<span class="w"> </span>/dev/sdb<span class="w"> </span>sss<span class="w"> </span><span class="s1">&#39;{&quot;t&quot;:1,&quot;pins&quot;:{&quot;tang&quot;:[{&quot;url&quot;:&quot;http://tang1.example.local&quot;,&quot;thp&quot;:&quot;&lt;thp1&gt;&quot;},{&quot;url&quot;:&quot;http://tang2.example.local&quot;,&quot;thp&quot;:&quot;&lt;thp2&gt;&quot;}]}}&#39;</span>
 </code></pre></div>
 <h3 id="test-nbde-unlock">Test NBDE Unlock<a class="headerlink" href="#test-nbde-unlock" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Manually test that Clevis can unlock the device</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>clevis<span class="w"> </span>luks<span class="w"> </span>unlock<span class="w"> </span>-d<span class="w"> </span>/dev/sdb
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Check that Tang is reachable</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>curl<span class="w"> </span>http://tang.example.local/adv
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Manually test that Clevis can unlock the device</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>clevis<span class="w"> </span>luks<span class="w"> </span>unlock<span class="w"> </span>-d<span class="w"> </span>/dev/sdb
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Check that Tang is reachable</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>curl<span class="w"> </span>http://tang.example.local/adv
 </code></pre></div>
 <h2 id="tls-for-system-services">TLS for System Services<a class="headerlink" href="#tls-for-system-services" title="Permanent link">&para;</a></h2>
 <h3 id="generating-a-certificate-with-openssl">Generating a Certificate with OpenSSL<a class="headerlink" href="#generating-a-certificate-with-openssl" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Generate a private key (RSA 4096 or ECDSA P-256)</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>openssl<span class="w"> </span>genrsa<span class="w"> </span>-out<span class="w"> </span>/etc/pki/tls/private/server.key<span class="w"> </span><span class="m">4096</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>/etc/pki/tls/private/server.key
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="c1"># Generate a CSR</span>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>openssl<span class="w"> </span>req<span class="w"> </span>-new<span class="w"> </span>-key<span class="w"> </span>/etc/pki/tls/private/server.key<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="w">  </span>-out<span class="w"> </span>/etc/pki/tls/misc/server.csr<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="w">  </span>-subj<span class="w"> </span><span class="s2">&quot;/CN=server01.example.local/O=Corp/C=GB&quot;</span>
-<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>
-<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="c1"># Self-signed certificate (for testing only)</span>
-<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>openssl<span class="w"> </span>req<span class="w"> </span>-x509<span class="w"> </span>-newkey<span class="w"> </span>rsa:4096<span class="w"> </span>-nodes<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="w">  </span>-keyout<span class="w"> </span>/etc/pki/tls/private/server.key<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="w">  </span>-out<span class="w"> </span>/etc/pki/tls/certs/server.crt<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a><span class="w">  </span>-days<span class="w"> </span><span class="m">365</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="w">  </span>-subj<span class="w"> </span><span class="s2">&quot;/CN=server01.example.local&quot;</span>
-<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>
-<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a><span class="c1"># Verify a certificate</span>
-<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-in<span class="w"> </span>/etc/pki/tls/certs/server.crt<span class="w"> </span>-text<span class="w"> </span>-noout<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Subject:|Issuer:|Not After&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Generate a private key (RSA 4096 or ECDSA P-256)</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>openssl<span class="w"> </span>genrsa<span class="w"> </span>-out<span class="w"> </span>/etc/pki/tls/private/server.key<span class="w"> </span><span class="m">4096</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>/etc/pki/tls/private/server.key
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># Generate a CSR</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>openssl<span class="w"> </span>req<span class="w"> </span>-new<span class="w"> </span>-key<span class="w"> </span>/etc/pki/tls/private/server.key<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">  </span>-out<span class="w"> </span>/etc/pki/tls/misc/server.csr<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">  </span>-subj<span class="w"> </span><span class="s2">&quot;/CN=server01.example.local/O=Corp/C=GB&quot;</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># Self-signed certificate (for testing only)</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>openssl<span class="w"> </span>req<span class="w"> </span>-x509<span class="w"> </span>-newkey<span class="w"> </span>rsa:4096<span class="w"> </span>-nodes<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="w">  </span>-keyout<span class="w"> </span>/etc/pki/tls/private/server.key<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="w">  </span>-out<span class="w"> </span>/etc/pki/tls/certs/server.crt<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="w">  </span>-days<span class="w"> </span><span class="m">365</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="w">  </span>-subj<span class="w"> </span><span class="s2">&quot;/CN=server01.example.local&quot;</span>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="c1"># Verify a certificate</span>
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-in<span class="w"> </span>/etc/pki/tls/certs/server.crt<span class="w"> </span>-text<span class="w"> </span>-noout<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Subject:|Issuer:|Not After&quot;</span>
 </code></pre></div>
 <h3 id="verify-tls-on-a-running-service">Verify TLS on a Running Service<a class="headerlink" href="#verify-tls-on-a-running-service" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Check certificate presented by a service</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>server01.example.local:443<span class="w"> </span>-servername<span class="w"> </span>server01.example.local<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-text<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Subject:|Not After&quot;</span>
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># Test with specific TLS version</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>server01.example.local:443<span class="w"> </span>-tls1_3
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
-<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># Check expiry date</span>
-<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>server01.example.local:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Check certificate presented by a service</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>server01.example.local:443<span class="w"> </span>-servername<span class="w"> </span>server01.example.local<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-text<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Subject:|Not After&quot;</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Test with specific TLS version</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>server01.example.local:443<span class="w"> </span>-tls1_3
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1"># Check expiry date</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="nb">echo</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>server01.example.local:443<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-dates
 </code></pre></div>
 <h3 id="nginx-tls-hardening">Nginx TLS Hardening<a class="headerlink" href="#nginx-tls-hardening" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># /etc/nginx/conf.d/ssl.conf</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="k">server</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">    </span><span class="kn">listen</span><span class="w"> </span><span class="mi">443</span><span class="w"> </span><span class="s">ssl</span><span class="p">;</span>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="w">    </span><span class="kn">server_name</span><span class="w"> </span><span class="s">server01.example.local</span><span class="p">;</span>
-<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>
-<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="w">    </span><span class="kn">ssl_certificate</span><span class="w">     </span><span class="s">/etc/pki/tls/certs/server.crt</span><span class="p">;</span>
-<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="w">    </span><span class="kn">ssl_certificate_key</span><span class="w"> </span><span class="s">/etc/pki/tls/private/server.key</span><span class="p">;</span>
-<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>
-<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="w">    </span><span class="c1"># TLS 1.2 minimum; 1.3 preferred</span>
-<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="w">    </span><span class="kn">ssl_protocols</span><span class="w"> </span><span class="s">TLSv1.2</span><span class="w"> </span><span class="s">TLSv1.3</span><span class="p">;</span>
-<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="w">    </span><span class="kn">ssl_ciphers</span><span class="w"> </span><span class="s">&#39;ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305&#39;</span><span class="p">;</span>
-<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a><span class="w">    </span><span class="kn">ssl_prefer_server_ciphers</span><span class="w"> </span><span class="no">on</span><span class="p">;</span>
-<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>
-<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a><span class="w">    </span><span class="c1"># HSTS — once enabled, browsers enforce HTTPS</span>
-<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a><span class="w">    </span><span class="kn">add_header</span><span class="w"> </span><span class="s">Strict-Transport-Security</span><span class="w"> </span><span class="s">&quot;max-age=63072000</span><span class="p">;</span><span class="w"> </span><span class="kn">includeSubDomains&quot;</span><span class="w"> </span><span class="s">always</span><span class="p">;</span>
-<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>
-<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a><span class="w">    </span><span class="c1"># Session resumption</span>
-<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a><span class="w">    </span><span class="kn">ssl_session_cache</span><span class="w"> </span><span class="s">shared:SSL:10m</span><span class="p">;</span>
-<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a><span class="w">    </span><span class="kn">ssl_session_timeout</span><span class="w"> </span><span class="s">1d</span><span class="p">;</span>
-<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a><span class="w">    </span><span class="kn">ssl_session_tickets</span><span class="w"> </span><span class="no">off</span><span class="p">;</span>
-<a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a>
-<a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a><span class="w">    </span><span class="c1"># OCSP stapling</span>
-<a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a><span class="w">    </span><span class="kn">ssl_stapling</span><span class="w"> </span><span class="no">on</span><span class="p">;</span>
-<a id="__codelineno-13-24" name="__codelineno-13-24" href="#__codelineno-13-24"></a><span class="w">    </span><span class="kn">ssl_stapling_verify</span><span class="w"> </span><span class="no">on</span><span class="p">;</span>
-<a id="__codelineno-13-25" name="__codelineno-13-25" href="#__codelineno-13-25"></a><span class="w">    </span><span class="kn">resolver</span><span class="w"> </span><span class="mi">8</span><span class="s">.8.8.8</span><span class="p">;</span>
-<a id="__codelineno-13-26" name="__codelineno-13-26" href="#__codelineno-13-26"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># /etc/nginx/conf.d/ssl.conf</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="k">server</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">    </span><span class="kn">listen</span><span class="w"> </span><span class="mi">443</span><span class="w"> </span><span class="s">ssl</span><span class="p">;</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">    </span><span class="kn">server_name</span><span class="w"> </span><span class="s">server01.example.local</span><span class="p">;</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">    </span><span class="kn">ssl_certificate</span><span class="w">     </span><span class="s">/etc/pki/tls/certs/server.crt</span><span class="p">;</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">    </span><span class="kn">ssl_certificate_key</span><span class="w"> </span><span class="s">/etc/pki/tls/private/server.key</span><span class="p">;</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="w">    </span><span class="c1"># TLS 1.2 minimum; 1.3 preferred</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="w">    </span><span class="kn">ssl_protocols</span><span class="w"> </span><span class="s">TLSv1.2</span><span class="w"> </span><span class="s">TLSv1.3</span><span class="p">;</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="w">    </span><span class="kn">ssl_ciphers</span><span class="w"> </span><span class="s">&#39;ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305&#39;</span><span class="p">;</span>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="w">    </span><span class="kn">ssl_prefer_server_ciphers</span><span class="w"> </span><span class="no">on</span><span class="p">;</span>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="w">    </span><span class="c1"># HSTS — once enabled, browsers enforce HTTPS</span>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="w">    </span><span class="kn">add_header</span><span class="w"> </span><span class="s">Strict-Transport-Security</span><span class="w"> </span><span class="s">&quot;max-age=63072000</span><span class="p">;</span><span class="w"> </span><span class="kn">includeSubDomains&quot;</span><span class="w"> </span><span class="s">always</span><span class="p">;</span>
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a><span class="w">    </span><span class="c1"># Session resumption</span>
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a><span class="w">    </span><span class="kn">ssl_session_cache</span><span class="w"> </span><span class="s">shared:SSL:10m</span><span class="p">;</span>
+<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a><span class="w">    </span><span class="kn">ssl_session_timeout</span><span class="w"> </span><span class="s">1d</span><span class="p">;</span>
+<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a><span class="w">    </span><span class="kn">ssl_session_tickets</span><span class="w"> </span><span class="no">off</span><span class="p">;</span>
+<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a>
+<a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a><span class="w">    </span><span class="c1"># OCSP stapling</span>
+<a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a><span class="w">    </span><span class="kn">ssl_stapling</span><span class="w"> </span><span class="no">on</span><span class="p">;</span>
+<a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a><span class="w">    </span><span class="kn">ssl_stapling_verify</span><span class="w"> </span><span class="no">on</span><span class="p">;</span>
+<a id="__codelineno-12-25" name="__codelineno-12-25" href="#__codelineno-12-25"></a><span class="w">    </span><span class="kn">resolver</span><span class="w"> </span><span class="mi">8</span><span class="s">.8.8.8</span><span class="p">;</span>
+<a id="__codelineno-12-26" name="__codelineno-12-26" href="#__codelineno-12-26"></a><span class="p">}</span>
 </code></pre></div>
 <h3 id="system-wide-crypto-policy-rhel">System-Wide Crypto Policy (RHEL)<a class="headerlink" href="#system-wide-crypto-policy-rhel" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># View current policy</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>update-crypto-policies<span class="w"> </span>--show
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c1"># Set to DEFAULT (TLS 1.2+, SHA-1 deprecated)</span>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>update-crypto-policies<span class="w"> </span>--set<span class="w"> </span>DEFAULT
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>
-<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="c1"># Stricter: FUTURE policy (TLS 1.3 only, 3072-bit RSA minimum)</span>
-<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>update-crypto-policies<span class="w"> </span>--set<span class="w"> </span>FUTURE
-<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>
-<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="c1"># Apply without reboot</span>
-<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>update-crypto-policies<span class="w"> </span>--set<span class="w"> </span>DEFAULT<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>sshd<span class="w"> </span>nginx
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># View current policy</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>update-crypto-policies<span class="w"> </span>--show
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Set to DEFAULT (TLS 1.2+, SHA-1 deprecated)</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>update-crypto-policies<span class="w"> </span>--set<span class="w"> </span>DEFAULT
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c1"># Stricter: FUTURE policy (TLS 1.3 only, 3072-bit RSA minimum)</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>update-crypto-policies<span class="w"> </span>--set<span class="w"> </span>FUTURE
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="c1"># Apply without reboot</span>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>update-crypto-policies<span class="w"> </span>--set<span class="w"> </span>DEFAULT<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>sshd<span class="w"> </span>nginx
 </code></pre></div>
 <h2 id="encrypted-swap">Encrypted Swap<a class="headerlink" href="#encrypted-swap" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Configure encrypted swap in /etc/crypttab</span>
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="c1"># Using random key — cleared on reboot, no data persistence needed</span>
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="c1"># /etc/crypttab:</span>
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>swap<span class="w">  </span>/dev/sda2<span class="w">  </span>/dev/urandom<span class="w">  </span>swap,cipher<span class="o">=</span>aes-xts-plain64,size<span class="o">=</span><span class="m">512</span>
-<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>
-<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="c1"># /etc/fstab:</span>
-<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>/dev/mapper/swap<span class="w">  </span>none<span class="w">  </span>swap<span class="w">  </span>sw<span class="w">  </span><span class="m">0</span><span class="w"> </span><span class="m">0</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Configure encrypted swap in /etc/crypttab</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="c1"># Using random key — cleared on reboot, no data persistence needed</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="c1"># /etc/crypttab:</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>swap<span class="w">  </span>/dev/sda2<span class="w">  </span>/dev/urandom<span class="w">  </span>swap,cipher<span class="o">=</span>aes-xts-plain64,size<span class="o">=</span><span class="m">512</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="c1"># /etc/fstab:</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>/dev/mapper/swap<span class="w">  </span>none<span class="w">  </span>swap<span class="w">  </span>sw<span class="w">  </span><span class="m">0</span><span class="w"> </span><span class="m">0</span>
 </code></pre></div>
 <h2 id="gnupg-file-and-data-encryption">GnuPG — File and Data Encryption<a class="headerlink" href="#gnupg-file-and-data-encryption" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Encrypt a file for a recipient (using their public key)</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>gpg<span class="w"> </span>--encrypt<span class="w"> </span>--recipient<span class="w"> </span>jsmith@corp.local<span class="w"> </span>--armor<span class="w"> </span>/path/to/sensitive.tar.gz
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># Decrypt</span>
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>gpg<span class="w"> </span>--decrypt<span class="w"> </span>sensitive.tar.gz.asc<span class="w"> </span>&gt;<span class="w"> </span>sensitive.tar.gz
-<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>
-<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="c1"># Symmetric encryption (passphrase only)</span>
-<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>gpg<span class="w"> </span>--symmetric<span class="w"> </span>--cipher-algo<span class="w"> </span>AES256<span class="w"> </span>sensitive.tar.gz
-<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>
-<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="c1"># Sign and encrypt</span>
-<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>gpg<span class="w"> </span>--sign<span class="w"> </span>--encrypt<span class="w"> </span>--recipient<span class="w"> </span>jsmith@corp.local<span class="w"> </span>document.pdf
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Encrypt a file for a recipient (using their public key)</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>gpg<span class="w"> </span>--encrypt<span class="w"> </span>--recipient<span class="w"> </span>jsmith@corp.local<span class="w"> </span>--armor<span class="w"> </span>/path/to/sensitive.tar.gz
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># Decrypt</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>gpg<span class="w"> </span>--decrypt<span class="w"> </span>sensitive.tar.gz.asc<span class="w"> </span>&gt;<span class="w"> </span>sensitive.tar.gz
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="c1"># Symmetric encryption (passphrase only)</span>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>gpg<span class="w"> </span>--symmetric<span class="w"> </span>--cipher-algo<span class="w"> </span>AES256<span class="w"> </span>sensitive.tar.gz
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="c1"># Sign and encrypt</span>
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>gpg<span class="w"> </span>--sign<span class="w"> </span>--encrypt<span class="w"> </span>--recipient<span class="w"> </span>jsmith@corp.local<span class="w"> </span>document.pdf
 </code></pre></div>
 <h2 id="key-management-best-practices">Key Management Best Practices<a class="headerlink" href="#key-management-best-practices" title="Permanent link">&para;</a></h2>
 <table>
@@ -3729,23 +3729,23 @@ LUKS/dm-crypt full-disk encryption, NBDE (Network Bound Disk Encryption), TLS fo
 </tbody>
 </table>
 <h2 id="audit-encryption-posture">Audit — Encryption Posture<a class="headerlink" href="#audit-encryption-posture" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Find unencrypted block devices (no LUKS signature)</span>
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>lsblk<span class="w"> </span>-o<span class="w"> </span>NAME,FSTYPE,MOUNTPOINT<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>crypto_LUKS
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
-<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c1"># Check all LUKS devices on the system</span>
-<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>blkid<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>LUKS
-<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>
-<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="c1"># Confirm TLS is used on sensitive ports</span>
-<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>ss<span class="w"> </span>-tlnp<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;:443|:8443|:636|:9200&#39;</span>
-<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>
-<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a><span class="c1"># Check SSH server for weak algorithms</span>
-<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>sshd<span class="w"> </span>-T<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;ciphers|macs|kexalgorithms&quot;</span>
-<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>
-<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a><span class="c1"># Check system crypto policy</span>
-<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>update-crypto-policies<span class="w"> </span>--show
-<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>
-<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a><span class="c1"># Find private key files readable by non-root</span>
-<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a>find<span class="w"> </span>/etc<span class="w"> </span>/home<span class="w"> </span>/opt<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*.key&quot;</span><span class="w"> </span>-o<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*.pem&quot;</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>ls<span class="w"> </span>-la<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;^-r.------&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Find unencrypted block devices (no LUKS signature)</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>lsblk<span class="w"> </span>-o<span class="w"> </span>NAME,FSTYPE,MOUNTPOINT<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>crypto_LUKS
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># Check all LUKS devices on the system</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>blkid<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>LUKS
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="c1"># Confirm TLS is used on sensitive ports</span>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>ss<span class="w"> </span>-tlnp<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;:443|:8443|:636|:9200&#39;</span>
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="c1"># Check SSH server for weak algorithms</span>
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>sshd<span class="w"> </span>-T<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;ciphers|macs|kexalgorithms&quot;</span>
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>
+<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a><span class="c1"># Check system crypto policy</span>
+<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>update-crypto-policies<span class="w"> </span>--show
+<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a>
+<a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a><span class="c1"># Find private key files readable by non-root</span>
+<a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a>find<span class="w"> </span>/etc<span class="w"> </span>/home<span class="w"> </span>/opt<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*.key&quot;</span><span class="w"> </span>-o<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*.pem&quot;</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>ls<span class="w"> </span>-la<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;^-r.------&quot;</span>
 </code></pre></div>
 <h2 id="quick-reference">Quick Reference<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
 <table>

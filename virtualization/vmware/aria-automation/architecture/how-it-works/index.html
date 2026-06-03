@@ -4663,7 +4663,7 @@ How It Works reference covering Overview, Deployment Models, Cluster Topology, C
 </tbody>
 </table>
 <h2 id="cluster-topology">Cluster Topology<a class="headerlink" href="#cluster-topology" title="Permanent link">&para;</a></h2>
-<p><pre class="mermaid"><code>graph TB
+<pre class="mermaid"><code>graph TB
   CAT["Service Catalog\n(consumer portal)"] --&gt; ORCH["Aria Automation Orchestrator\n(workflow engine)"]
   ORCH --&gt; IAAS["IaaS Service\n(compute engine)"]
   IAAS --&gt; VCTR["vCenter\n(VM provisioning)"]
@@ -4677,51 +4677,51 @@ How It Works reference covering Overview, Deployment Models, Cluster Topology, C
   class CAT,ORCH,IAAS ctrl
   class VCTR,NSX_T mgmt
   class ADMIN host
-  class CLOUDS cloud</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────────────── Aria Automation — How It Works ────────────────────────────────────┐
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Cloud-agnostic self-service automation via blueprints, cloud templates, and resource orchestration.  │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│                                                                                                       │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │       Service Portal (Consumer layer)        │  │            Designer / Admin layer           │   │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │     Self-service catalog of deployments      │  │       Cloud templates (YAML/drag-drop)      │   │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │      Request → approval → provisioning       │  │     Blueprints define topology + inputs     │   │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   │    Day-2 actions: resize/snapshot/delete     │  │       Policies: cost, network, storage      │   │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   │   Role: consumer sees only entitled items    │  │      Projects isolate teams and quotas      │   │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                                                                                                       │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  Approved requests flow to the orchestration engine which calls cloud account APIs.                   │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│                                                                                                       │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│                          ▼                                                 ▼                          │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│                                                                                                       │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │             Orchestration Engine             │  │          Cloud Accounts / Endpoints         │   │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │       Workflow runs: Aria Orchestrator       │  │      vSphere, AWS, Azure, GCP accounts      │   │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │       ABX extensibility actions (FaaS)       │  │        NSX-T for network provisioning       │   │
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   │       Resource lifecycle state machine       │  │       vCenter clusters and datastores       │   │
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   │        Event broker for async events         │  │        Terraform provider integration       │   │
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│                                                                                                       │
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  Linux VMs (vRA appliances) · vCenter hosts · DNS · LDAP/AD · NTP · TLS certificates                  │
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│                                                                                                       │
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│                                                                                                       │
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  Cloud template    = YAML descriptor defining resources, inputs, and conditions for a deployment      │
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│  Blueprint         = Older term for cloud template; still used in vRA 8.x UI and docs                 │
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  Project           = Tenant boundary in vRA; owns cloud accounts, members, and quotas                 │
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│  Catalog item      = Versioned cloud template published to the service catalog for consumers          │
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│  ABX action        = Action-Based Extensibility; serverless function triggered by vRA events          │
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│  Aria Orchestrator = Workflow engine embedded in vRA; executes complex multi-step automations         │
-<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│  Day-2 action      = Post-deployment operation (resize, snapshot, decommission) on a resource         │
-<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│  Cloud account     = vRA connection to an infrastructure endpoint (vCenter, AWS, Azure)               │
-<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│  Deployment        = Running instance of a provisioned cloud template with tracked lifecycle          │
-<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│  Approval policy   = Governance rule requiring human sign-off before provisioning proceeds            │
-<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│  Terraform config  = HCL workspace managed by vRA IaaC integration for Terraform providers            │
-<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│  Event subscription= vRA event broker rule mapping resource event to ABX action or workflow           │
-<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│                                                                                                       │
-<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div></p>
+  class CLOUDS cloud
+```text
+┌─────────────────────────────────── Aria Automation — How It Works ────────────────────────────────────┐
+│                                                                                                       │
+│  Cloud-agnostic self-service automation via blueprints, cloud templates, and resource orchestration.  │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │       Service Portal (Consumer layer)        │  │            Designer / Admin layer           │   │
+│   │     Self-service catalog of deployments      │  │       Cloud templates (YAML/drag-drop)      │   │
+│   │      Request → approval → provisioning       │  │     Blueprints define topology + inputs     │   │
+│   │    Day-2 actions: resize/snapshot/delete     │  │       Policies: cost, network, storage      │   │
+│   │   Role: consumer sees only entitled items    │  │      Projects isolate teams and quotas      │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Approved requests flow to the orchestration engine which calls cloud account APIs.                   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Orchestration Engine             │  │          Cloud Accounts / Endpoints         │   │
+│   │       Workflow runs: Aria Orchestrator       │  │      vSphere, AWS, Azure, GCP accounts      │   │
+│   │       ABX extensibility actions (FaaS)       │  │        NSX-T for network provisioning       │   │
+│   │       Resource lifecycle state machine       │  │       vCenter clusters and datastores       │   │
+│   │        Event broker for async events         │  │        Terraform provider integration       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Linux VMs (vRA appliances) · vCenter hosts · DNS · LDAP/AD · NTP · TLS certificates                  │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Cloud template    = YAML descriptor defining resources, inputs, and conditions for a deployment      │
+│  Blueprint         = Older term for cloud template; still used in vRA 8.x UI and docs                 │
+│  Project           = Tenant boundary in vRA; owns cloud accounts, members, and quotas                 │
+│  Catalog item      = Versioned cloud template published to the service catalog for consumers          │
+│  ABX action        = Action-Based Extensibility; serverless function triggered by vRA events          │
+│  Aria Orchestrator = Workflow engine embedded in vRA; executes complex multi-step automations         │
+│  Day-2 action      = Post-deployment operation (resize, snapshot, decommission) on a resource         │
+│  Cloud account     = vRA connection to an infrastructure endpoint (vCenter, AWS, Azure)               │
+│  Deployment        = Running instance of a provisioned cloud template with tracked lifecycle          │
+│  Approval policy   = Governance rule requiring human sign-off before provisioning proceeds            │
+│  Terraform config  = HCL workspace managed by vRA IaaC integration for Terraform providers            │
+│  Event subscription= vRA event broker rule mapping resource event to ABX action or workflow           │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</code></pre>
 <h2 id="cloud-account-types">Cloud Account Types<a class="headerlink" href="#cloud-account-types" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

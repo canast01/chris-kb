@@ -3518,17 +3518,49 @@ This page defines the escalation process for Confluence incidents: who handles w
 <h2 id="information-to-collect-before-escalating">Information to Collect Before Escalating<a class="headerlink" href="#information-to-collect-before-escalating" title="Permanent link">&para;</a></h2>
 <p>Collect all of the following <strong>before</strong> contacting L3 or Atlassian. Providing this upfront avoids back-and-forth and reduces time-to-resolution significantly.</p>
 <h3 id="required-for-all-escalations">Required for All Escalations<a class="headerlink" href="#required-for-all-escalations" title="Permanent link">&para;</a></h3>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>[ ] Confluence version (Admin &gt; System Information &gt; Confluence Version)
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>[ ] Deployment type: Server / Data Center / Cloud
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>[ ] Number of cluster nodes (DC)
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>[ ] Java version: java -version
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>[ ] OS and kernel: uname -a
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>[ ] Database type and version: psql --version
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>[ ] Time of first occurrence (with timezone — e.g. 2026-05-08 09:15 UTC+2)
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>[ ] Symptoms description: what the user sees, error message (exact text)
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>[ ] Steps to reproduce (if reproducible)
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>[ ] Recent changes: upgrade, plugin install, config change, DB maintenance
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>[ ] Whether the issue is intermittent or constant
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────── Confluence — Escalation Procedures ──────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │                                  Confluence Escalation Tiers                                  │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │              Tier 1: Ops team — restart, reindex, check logs, restore from backup             │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │           Tier 2: Senior engineer — JVM tuning, DB query analysis, plugin conflicts           │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │       Tier 3: Atlassian Support — open ticket with support-zip; attach thread/heap dump       │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │          Tier 4: Atlassian escalation — P1 production down; 24x7 critical support SLA         │   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│                                                                                                       │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│    Escalation criteria: T1 &gt; 30 min no resolution; T2 &gt; 2 hr; T3 &gt; 4 hr production down               │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                                                                                                       │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│                                                                                                       │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │             Escalation Criteria              │  │             Artifacts to Gather             │   │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │            Service down &gt; 30 min             │  │              support-zip bundle             │   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │             Data loss suspected              │  │               Thread dumps x3               │   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │              Security incident               │  │               Heap dump (OOM)               │   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │              Repeated OOM crash              │  │              catalina.out tail              │   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   │             Corruption suspected             │  │              DB slow query log              │   │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   │            Plugin breaks upgrade             │  │             Version + patch info            │   │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│                                                                                                       │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  Confluence VMs · PostgreSQL DB · monitoring/alerting · Atlassian Support portal                      │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│                                                                                                       │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│                                                                                                       │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  support-zip    = Admin &gt; Troubleshooting &gt; Create Support Zip; logs, config, thread dumps            │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│  Thread dump    = JVM thread snapshot; take 3 dumps 10 seconds apart for deadlock analysis            │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  Heap dump      = full JVM memory capture; large file; required for OOM analysis                      │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│  P1 incident    = production service down; page on-call immediately; escalate within 30 min           │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│  Atlassian Support = support.atlassian.com; requires valid license; submit with support-zip           │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│  Atlassian escalation = request via account team; for critical production outages                     │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│  DB slow query  = pg_stat_statements or log_min_duration_statement=1000ms in postgresql.conf          │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│  Plugin conflict = disable plugins one-by-one in safe mode to isolate culprit                         │
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│  Safe mode      = Confluence starts without any user-installed plugins for diagnostics                │
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│  Corruption     = DB or index inconsistency; run reindex; compare DB row counts                       │
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│  Data loss      = page versions allow recovery; check DB for deleted content                          │
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│  SLA            = Atlassian support SLA: P1 1hr response, P2 4hr, P3/P4 next business day             │
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│                                                                                                       │
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌───────────────────────────────── Confluence — Escalation Procedures ──────────────────────────────────┐
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │

@@ -3475,7 +3475,7 @@ Access Control reference covering Terraform RBAC and Backend Access Model, Least
 </div>
 
 <h2 id="terraform-rbac-and-backend-access-model">Terraform RBAC and Backend Access Model<a class="headerlink" href="#terraform-rbac-and-backend-access-model" title="Permanent link">&para;</a></h2>
-<p><pre class="mermaid"><code>graph TD
+<pre class="mermaid"><code>graph TD
     ciRunner["CI/CD Runner\n(GitHub Actions / GitLab)"]
     tfRole["IAM Role:\nterraform-automation\n(least privilege)"]
     s3State["S3 State Bucket\n(private + encrypted)"]
@@ -3490,39 +3490,39 @@ Access Control reference covering Terraform RBAC and Backend Access Model, Least
     tfRole --&gt;|provision| targetResources
     humanReview --&gt;|read-only| s3State
     tfRole --&gt; auditLog
-    humanReview --&gt; auditLog</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────────── Terraform — Access Control ──────────────────────────────────────┐
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   │   Terraform access control: who can plan/apply, state file access, provider credential scope  │   │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │   Separate IAM roles: read-only (plan) and read-write (apply); apply requires approval in CI  │   │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │ S3 state bucket: restrict GetObject/PutObject to Terraform IAM role only; block public access │   │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│                                                                                                       │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   │               IAM Role Design                │  │              CI Access Control              │   │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   │        tf-plan-role: read-only to AWS        │  │          Plan: any branch, auto-run         │   │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   │       tf-apply-role: write permissions       │  │           Apply: main branch only           │   │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   │         S3: GetObject/PutObject/List         │  │       Required reviewers before apply       │   │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│   │         DynamoDB: PutItem/DeleteItem         │  │        OIDC trust: repo+branch filter       │   │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│                                                                                                       │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │      OIDC trust  = AWS OIDC provider; trust policy sub: repo:org/repo:ref:refs/heads/main     │   │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │       Plan role   = read-only; cannot modify state or infrastructure; safe for PR checks      │   │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │             Apply role  = write; assumed only after PR approval and merge to main             │   │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div></p>
+    humanReview --&gt; auditLog
+```text
+┌───────────────────────────────────── Terraform — Access Control ──────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   Terraform access control: who can plan/apply, state file access, provider credential scope  │   │
+│   │   Separate IAM roles: read-only (plan) and read-write (apply); apply requires approval in CI  │   │
+│   │ S3 state bucket: restrict GetObject/PutObject to Terraform IAM role only; block public access │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               IAM Role Design                │  │              CI Access Control              │   │
+│   │        tf-plan-role: read-only to AWS        │  │          Plan: any branch, auto-run         │   │
+│   │       tf-apply-role: write permissions       │  │           Apply: main branch only           │   │
+│   │         S3: GetObject/PutObject/List         │  │       Required reviewers before apply       │   │
+│   │         DynamoDB: PutItem/DeleteItem         │  │        OIDC trust: repo+branch filter       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      OIDC trust  = AWS OIDC provider; trust policy sub: repo:org/repo:ref:refs/heads/main     │   │
+│   │       Plan role   = read-only; cannot modify state or infrastructure; safe for PR checks      │   │
+│   │             Apply role  = write; assumed only after PR approval and merge to main             │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</code></pre>
 <h2 id="workspace-and-environment-separation">Workspace and Environment Separation<a class="headerlink" href="#workspace-and-environment-separation" title="Permanent link">&para;</a></h2>
 <p>Use separate credentials and backends per environment to prevent a staging Terraform run from modifying production.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Use workspace-specific state paths</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="kr">backend</span><span class="w"> </span><span class="nv">&quot;s3&quot;</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span><span class="na">bucket</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;myorg-terraform-state&quot;</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="na">key</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;env/${terraform.workspace}/terraform.tfstate&quot;</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="na">region</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;eu-west-1&quot;</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">  </span><span class="p">}</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Use workspace-specific state paths</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="kr">backend</span><span class="w"> </span><span class="nv">&quot;s3&quot;</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="na">bucket</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;myorg-terraform-state&quot;</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="na">key</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;env/${terraform.workspace}/terraform.tfstate&quot;</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span><span class="na">region</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;eu-west-1&quot;</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="p">}</span>
 </code></pre></div>
 <h2 id="access-control-reference">Access Control Reference<a class="headerlink" href="#access-control-reference" title="Permanent link">&para;</a></h2>
 <table>

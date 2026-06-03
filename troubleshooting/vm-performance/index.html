@@ -3277,7 +3277,7 @@ VM Performance Troubleshooting reference covering Triage Flow — Quick Start, T
 </table>
 <hr />
 <h2 id="diagnostic-flowchart">Diagnostic Flowchart<a class="headerlink" href="#diagnostic-flowchart" title="Permanent link">&para;</a></h2>
-<p><pre class="mermaid"><code>flowchart TD
+<pre class="mermaid"><code>flowchart TD
     A[VM Performance Complaint] --&gt; B[Log into vSphere / SSH to ESXi host]
     B --&gt; C[Run esxtop — identify VM]
     C --&gt; D{%RDY &gt; 5%?}
@@ -3296,42 +3296,42 @@ VM Performance Troubleshooting reference covering Triage Flow — Quick Start, T
     N -- No --&gt; Q{%DRPTX or %DRPRX &gt; 0?}
     Q -- Yes --&gt; R[NIC saturation or vSwitch congestion\nCheck MbTX/s; check NIOC policy]
     Q -- No --&gt; S[Issue may be inside guest\nSSH into VM; check top/iostat/netstat]
-    S --&gt; T[Correlate with recent changes\nSnapshot? New workload? Config change?]</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────────────── VM Performance Troubleshooting ────────────────────────────────────┐
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │          Slow VM: check CPU ready, memory balloon/swap, disk DAVG, and network drops          │   │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │                 Use esxtop to triage all four resource domains simultaneously                 │   │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│                                                                                                       │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│                  ▼                                ▼                                ▼                  │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│                                                                                                       │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   │             CPU             │  │            Memory           │  │          Disk / Net         │   │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│   │        CPU ready &gt; 5%       │  │         Balloon &gt; 0         │  │         DAVG &gt; 10ms         │   │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   │         Co-stop high        │  │           Swap &gt; 0          │  │          Net drops          │   │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   │          Overcommit         │  │       Mem compression       │  │        IOPS saturate        │   │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │        CPU limit set        │  │       Reservation miss      │  │         Rx/Tx drops         │   │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │        NUMA mismatch        │  │          Guest leak         │  │       Snapshot present      │   │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│                                                                                                       │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │     Symptom      │    esxtop key    │     Threshold     │    Root cause    │       Fix        │   │
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   │     CPU slow     │     c → %RDY     │        &gt; 5%       │    Overcommit    │Reduce vCPU or DRS│   │
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│   │     Mem slow     │     m → MCTL     │       &gt; 0 MB      │    Overcommit    │ Add RAM/reserv.  │   │
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│   │    Disk slow     │     d → DAVG     │       &gt; 10ms      │  Array latency   │→ storage-latency │   │
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│   │    Net drops     │    n → Drp/s     │        &gt; 0        │   NIC saturate   │Increase vNIC/QoS │   │
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│                                                                                                       │
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│    Key terms:                                                                                         │
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│                                                                                                       │
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│    CPU ready  = vCPU waiting for physical CPU; reduce vCPU count or migrate VM to less loaded host    │
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│    Balloon    = VMware reclaiming guest RAM via balloon driver; guest must free its own memory        │
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│    Swap       = VMware swapping guest RAM to host swap file; causes severe performance impact         │
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│    NUMA miss  = vCPU accesses RAM from remote NUMA node; size VMs within physical NUMA boundary       │
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│                                                                                                       │
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div></p>
+    S --&gt; T[Correlate with recent changes\nSnapshot? New workload? Config change?]
+```text
+┌─────────────────────────────────── VM Performance Troubleshooting ────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │          Slow VM: check CPU ready, memory balloon/swap, disk DAVG, and network drops          │   │
+│   │                 Use esxtop to triage all four resource domains simultaneously                 │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │             CPU             │  │            Memory           │  │          Disk / Net         │   │
+│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
+│   │        CPU ready &gt; 5%       │  │         Balloon &gt; 0         │  │         DAVG &gt; 10ms         │   │
+│   │         Co-stop high        │  │           Swap &gt; 0          │  │          Net drops          │   │
+│   │          Overcommit         │  │       Mem compression       │  │        IOPS saturate        │   │
+│   │        CPU limit set        │  │       Reservation miss      │  │         Rx/Tx drops         │   │
+│   │        NUMA mismatch        │  │          Guest leak         │  │       Snapshot present      │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│   │     Symptom      │    esxtop key    │     Threshold     │    Root cause    │       Fix        │   │
+│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+│   │     CPU slow     │     c → %RDY     │        &gt; 5%       │    Overcommit    │Reduce vCPU or DRS│   │
+│   │     Mem slow     │     m → MCTL     │       &gt; 0 MB      │    Overcommit    │ Add RAM/reserv.  │   │
+│   │    Disk slow     │     d → DAVG     │       &gt; 10ms      │  Array latency   │→ storage-latency │   │
+│   │    Net drops     │    n → Drp/s     │        &gt; 0        │   NIC saturate   │Increase vNIC/QoS │   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    CPU ready  = vCPU waiting for physical CPU; reduce vCPU count or migrate VM to less loaded host    │
+│    Balloon    = VMware reclaiming guest RAM via balloon driver; guest must free its own memory        │
+│    Swap       = VMware swapping guest RAM to host swap file; causes severe performance impact         │
+│    NUMA miss  = vCPU accesses RAM from remote NUMA node; size VMs within physical NUMA boundary       │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</code></pre>
 <h3 id="memory-reclamation-states">Memory Reclamation States<a class="headerlink" href="#memory-reclamation-states" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -3371,44 +3371,44 @@ VM Performance Troubleshooting reference covering Triage Flow — Quick Start, T
 </table>
 <hr />
 <h2 id="storage-davg-latency-vm-level">Storage DAVG Latency — VM-Level<a class="headerlink" href="#storage-davg-latency-vm-level" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># esxtop storage device view — press &#39;u&#39; then &#39;e&#39;</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Identify the device (naa.xxx) used by the VM&#39;s VMDK</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># DAVG must be checked at device level, not just VM level</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># PowerCLI: get storage latency stats for specific VM</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Get-VM<span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;vm-prod-sql01&quot;</span><span class="w"> </span><span class="p">|</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span>Get-Stat<span class="w"> </span>-Stat<span class="w"> </span>disk.maxTotalLatency.latest<span class="w"> </span>-MaxSamples<span class="w"> </span><span class="m">20</span><span class="w"> </span>-Realtime<span class="w"> </span><span class="p">|</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">    </span>Select-Object<span class="w"> </span>Entity,<span class="w"> </span>Timestamp,<span class="w"> </span>Value<span class="w"> </span><span class="p">|</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span>Sort-Object<span class="w"> </span>Value<span class="w"> </span>-Descending<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select-Object<span class="w"> </span>-First<span class="w"> </span><span class="m">10</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Get all disk stats for a VM</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>Get-VM<span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;vm-prod-sql01&quot;</span><span class="w"> </span><span class="p">|</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">    </span>Get-Stat<span class="w"> </span>-Stat<span class="w"> </span>disk.*<span class="w"> </span>-MaxSamples<span class="w"> </span><span class="m">5</span><span class="w"> </span>-Realtime<span class="w"> </span><span class="p">|</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">    </span>Group-Object<span class="w"> </span>MetricId<span class="w"> </span><span class="p">|</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">    </span>Select-Object<span class="w"> </span>@<span class="o">{</span><span class="nv">N</span><span class="o">=</span><span class="s1">&#39;Metric&#39;</span><span class="p">;</span><span class="nv">E</span><span class="o">={</span><span class="nv">$_</span>.Name<span class="o">}}</span>,
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">                  </span>@<span class="o">{</span><span class="nv">N</span><span class="o">=</span><span class="s1">&#39;Avg&#39;</span><span class="p">;</span><span class="nv">E</span><span class="o">={(</span><span class="nv">$_</span>.Group<span class="w"> </span><span class="p">|</span><span class="w"> </span>Measure-Object<span class="w"> </span>Value<span class="w"> </span>-Average<span class="o">)</span>.Average<span class="o">}}</span><span class="w"> </span><span class="p">|</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">    </span>Sort-Object<span class="w"> </span>Avg<span class="w"> </span>-Descending
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># esxtop storage device view — press &#39;u&#39; then &#39;e&#39;</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># Identify the device (naa.xxx) used by the VM&#39;s VMDK</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c1"># DAVG must be checked at device level, not just VM level</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># PowerCLI: get storage latency stats for specific VM</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>Get-VM<span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;vm-prod-sql01&quot;</span><span class="w"> </span><span class="p">|</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">    </span>Get-Stat<span class="w"> </span>-Stat<span class="w"> </span>disk.maxTotalLatency.latest<span class="w"> </span>-MaxSamples<span class="w"> </span><span class="m">20</span><span class="w"> </span>-Realtime<span class="w"> </span><span class="p">|</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">    </span>Select-Object<span class="w"> </span>Entity,<span class="w"> </span>Timestamp,<span class="w"> </span>Value<span class="w"> </span><span class="p">|</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">    </span>Sort-Object<span class="w"> </span>Value<span class="w"> </span>-Descending<span class="w"> </span><span class="p">|</span><span class="w"> </span>Select-Object<span class="w"> </span>-First<span class="w"> </span><span class="m">10</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># Get all disk stats for a VM</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>Get-VM<span class="w"> </span>-Name<span class="w"> </span><span class="s2">&quot;vm-prod-sql01&quot;</span><span class="w"> </span><span class="p">|</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">    </span>Get-Stat<span class="w"> </span>-Stat<span class="w"> </span>disk.*<span class="w"> </span>-MaxSamples<span class="w"> </span><span class="m">5</span><span class="w"> </span>-Realtime<span class="w"> </span><span class="p">|</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">    </span>Group-Object<span class="w"> </span>MetricId<span class="w"> </span><span class="p">|</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">    </span>Select-Object<span class="w"> </span>@<span class="o">{</span><span class="nv">N</span><span class="o">=</span><span class="s1">&#39;Metric&#39;</span><span class="p">;</span><span class="nv">E</span><span class="o">={</span><span class="nv">$_</span>.Name<span class="o">}}</span>,
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">                  </span>@<span class="o">{</span><span class="nv">N</span><span class="o">=</span><span class="s1">&#39;Avg&#39;</span><span class="p">;</span><span class="nv">E</span><span class="o">={(</span><span class="nv">$_</span>.Group<span class="w"> </span><span class="p">|</span><span class="w"> </span>Measure-Object<span class="w"> </span>Value<span class="w"> </span>-Average<span class="o">)</span>.Average<span class="o">}}</span><span class="w"> </span><span class="p">|</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">    </span>Sort-Object<span class="w"> </span>Avg<span class="w"> </span>-Descending
 </code></pre></div>
 <hr />
 <h2 id="network-packet-drop-analysis">Network Packet Drop Analysis<a class="headerlink" href="#network-packet-drop-analysis" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># esxtop — press &#39;n&#39; for network view</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1"># Key columns:</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># %DRPTX — transmit drop percentage (VM cannot send fast enough)</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># %DRPRX — receive drop percentage (VM cannot consume packets fast enough)</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># MbTX/s — megabits transmitted per second</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1"># MbRX/s — megabits received per second</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># PKTTX/s — packets transmitted per second</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1"># PKTRX/s — packets received per second</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Inside Linux guest — check NIC errors</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>ethtool<span class="w"> </span>-S<span class="w"> </span>eth0<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;drop\|error\|miss&quot;</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>ip<span class="w"> </span>-s<span class="w"> </span>link<span class="w"> </span>show<span class="w"> </span>eth0
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1"># Check if NIC is saturated (10Gbps vmxnet3 ~ 9000 Mbps max)</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>ip<span class="w"> </span>-s<span class="w"> </span>link<span class="w"> </span>show<span class="w"> </span>eth0<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;RX|TX&quot;</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="c1"># If drops are occurring inside the vSwitch / dvSwitch:</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="c1"># vCenter → Networking → dvSwitch → Monitor → Port Statistics</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># esxtop — press &#39;n&#39; for network view</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Key columns:</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># %DRPTX — transmit drop percentage (VM cannot send fast enough)</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># %DRPRX — receive drop percentage (VM cannot consume packets fast enough)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># MbTX/s — megabits transmitted per second</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># MbRX/s — megabits received per second</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># PKTTX/s — packets transmitted per second</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># PKTRX/s — packets received per second</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Inside Linux guest — check NIC errors</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>ethtool<span class="w"> </span>-S<span class="w"> </span>eth0<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;drop\|error\|miss&quot;</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>ip<span class="w"> </span>-s<span class="w"> </span>link<span class="w"> </span>show<span class="w"> </span>eth0
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1"># Check if NIC is saturated (10Gbps vmxnet3 ~ 9000 Mbps max)</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>ip<span class="w"> </span>-s<span class="w"> </span>link<span class="w"> </span>show<span class="w"> </span>eth0<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;RX|TX&quot;</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="c1"># If drops are occurring inside the vSwitch / dvSwitch:</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="c1"># vCenter → Networking → dvSwitch → Monitor → Port Statistics</span>
 </code></pre></div>
 <h3 id="network-performance-fixes">Network Performance Fixes<a class="headerlink" href="#network-performance-fixes" title="Permanent link">&para;</a></h3>
 <table>
@@ -3444,67 +3444,67 @@ VM Performance Troubleshooting reference covering Triage Flow — Quick Start, T
 </table>
 <hr />
 <h2 id="vmware-drs-recommendation-review">VMware DRS Recommendation Review<a class="headerlink" href="#vmware-drs-recommendation-review" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># PowerCLI: check DRS recommendations for a cluster</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">$cluster</span> <span class="p">=</span> <span class="nb">Get-Cluster</span> <span class="n">-Name</span> <span class="s2">&quot;PROD-Cluster&quot;</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nv">$cluster</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">GetRecommendation</span><span class="p">()</span> <span class="p">|</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    <span class="nb">Select-Object</span> <span class="n">Reason</span><span class="p">,</span> <span class="n">Rating</span><span class="p">,</span> <span class="n">Target</span> <span class="p">|</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    <span class="nb">Format-Table</span> <span class="n">-AutoSize</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c"># Check current DRS score per VM</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s1">&#39;DRS_Score&#39;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Summary</span><span class="p">.</span><span class="n">Runtime</span><span class="p">.</span><span class="n">DasVmProtection</span><span class="p">}}</span> <span class="p">|</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>    <span class="nb">Sort-Object</span> <span class="n">DRS_Score</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c"># Check if DRS is in manual mode (recommendations not auto-applied)</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="nb">Get-Cluster</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">DrsEnabled</span><span class="p">,</span> <span class="n">DrsAutomationLevel</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="c"># DrsAutomationLevel: FullyAutomated / PartiallyAutomated / Manual</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># PowerCLI: check DRS recommendations for a cluster</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">$cluster</span> <span class="p">=</span> <span class="nb">Get-Cluster</span> <span class="n">-Name</span> <span class="s2">&quot;PROD-Cluster&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nv">$cluster</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">GetRecommendation</span><span class="p">()</span> <span class="p">|</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="nb">Select-Object</span> <span class="n">Reason</span><span class="p">,</span> <span class="n">Rating</span><span class="p">,</span> <span class="n">Target</span> <span class="p">|</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="nb">Format-Table</span> <span class="n">-AutoSize</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c"># Check current DRS score per VM</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s1">&#39;DRS_Score&#39;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Summary</span><span class="p">.</span><span class="n">Runtime</span><span class="p">.</span><span class="n">DasVmProtection</span><span class="p">}}</span> <span class="p">|</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>    <span class="nb">Sort-Object</span> <span class="n">DRS_Score</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c"># Check if DRS is in manual mode (recommendations not auto-applied)</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="nb">Get-Cluster</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">DrsEnabled</span><span class="p">,</span> <span class="n">DrsAutomationLevel</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c"># DrsAutomationLevel: FullyAutomated / PartiallyAutomated / Manual</span>
 </code></pre></div>
 <hr />
 <h2 id="vm-right-sizing-assessment">VM Right-Sizing Assessment<a class="headerlink" href="#vm-right-sizing-assessment" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Get average CPU and memory utilisation over last 7 days</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">$vm</span> <span class="p">=</span> <span class="nb">Get-VM</span> <span class="n">-Name</span> <span class="s2">&quot;vm-prod-app01&quot;</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nv">$end</span> <span class="p">=</span> <span class="nb">Get-Date</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="nv">$start</span> <span class="p">=</span> <span class="nv">$end</span><span class="p">.</span><span class="n">AddDays</span><span class="p">(-</span><span class="n">7</span><span class="p">)</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nv">$cpuStats</span> <span class="p">=</span> <span class="nb">Get-Stat</span> <span class="n">-Entity</span> <span class="nv">$vm</span> <span class="n">-Stat</span> <span class="n">cpu</span><span class="p">.</span><span class="n">usage</span><span class="p">.</span><span class="n">average</span> <span class="n">-Start</span> <span class="nv">$start</span> <span class="n">-Finish</span> <span class="nv">$end</span> <span class="n">-IntervalMins</span> <span class="n">30</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="nv">$memStats</span> <span class="p">=</span> <span class="nb">Get-Stat</span> <span class="n">-Entity</span> <span class="nv">$vm</span> <span class="n">-Stat</span> <span class="n">mem</span><span class="p">.</span><span class="n">usage</span><span class="p">.</span><span class="n">average</span> <span class="n">-Start</span> <span class="nv">$start</span> <span class="n">-Finish</span> <span class="nv">$end</span> <span class="n">-IntervalMins</span> <span class="n">30</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="nv">$avgCPU</span> <span class="p">=</span> <span class="p">(</span><span class="nv">$cpuStats</span> <span class="p">|</span> <span class="nb">Measure-Object</span> <span class="n">Value</span> <span class="n">-Average</span><span class="p">).</span><span class="n">Average</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="nv">$maxCPU</span> <span class="p">=</span> <span class="p">(</span><span class="nv">$cpuStats</span> <span class="p">|</span> <span class="nb">Measure-Object</span> <span class="n">Value</span> <span class="n">-Maximum</span><span class="p">).</span><span class="n">Maximum</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="nv">$avgMem</span> <span class="p">=</span> <span class="p">(</span><span class="nv">$memStats</span> <span class="p">|</span> <span class="nb">Measure-Object</span> <span class="n">Value</span> <span class="n">-Average</span><span class="p">).</span><span class="n">Average</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="nv">$maxMem</span> <span class="p">=</span> <span class="p">(</span><span class="nv">$memStats</span> <span class="p">|</span> <span class="nb">Measure-Object</span> <span class="n">Value</span> <span class="n">-Maximum</span><span class="p">).</span><span class="n">Maximum</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="no">[PSCustomObject]</span><span class="p">@{</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>    <span class="n">VM</span>          <span class="p">=</span> <span class="nv">$vm</span><span class="p">.</span><span class="n">Name</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>    <span class="n">vCPU</span>        <span class="p">=</span> <span class="nv">$vm</span><span class="p">.</span><span class="n">NumCpu</span>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>    <span class="n">vRAM_GB</span>     <span class="p">=</span> <span class="nv">$vm</span><span class="p">.</span><span class="n">MemoryGB</span>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>    <span class="n">AvgCPU_Pct</span>  <span class="p">=</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$avgCPU</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span>
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>    <span class="n">MaxCPU_Pct</span>  <span class="p">=</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$maxCPU</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span>
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>    <span class="n">AvgMem_Pct</span>  <span class="p">=</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$avgMem</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span>
-<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>    <span class="n">MaxMem_Pct</span>  <span class="p">=</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$maxMem</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span>
-<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>    <span class="n">Recommendation</span> <span class="p">=</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$maxCPU</span> <span class="o">-lt</span> <span class="n">25</span> <span class="o">-and</span> <span class="nv">$vm</span><span class="p">.</span><span class="n">NumCpu</span> <span class="o">-gt</span> <span class="n">2</span><span class="p">)</span> <span class="p">{</span><span class="s2">&quot;Reduce vCPU&quot;</span><span class="p">}</span> <span class="p">`</span>
-<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>                     <span class="k">elseif</span> <span class="p">(</span><span class="nv">$maxMem</span> <span class="o">-lt</span> <span class="n">30</span><span class="p">)</span> <span class="p">{</span><span class="s2">&quot;Reduce vRAM&quot;</span><span class="p">}</span> <span class="p">`</span>
-<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>                     <span class="k">else</span> <span class="p">{</span><span class="s2">&quot;Sized appropriately&quot;</span><span class="p">}</span>
-<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Get average CPU and memory utilisation over last 7 days</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">$vm</span> <span class="p">=</span> <span class="nb">Get-VM</span> <span class="n">-Name</span> <span class="s2">&quot;vm-prod-app01&quot;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nv">$end</span> <span class="p">=</span> <span class="nb">Get-Date</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="nv">$start</span> <span class="p">=</span> <span class="nv">$end</span><span class="p">.</span><span class="n">AddDays</span><span class="p">(-</span><span class="n">7</span><span class="p">)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="nv">$cpuStats</span> <span class="p">=</span> <span class="nb">Get-Stat</span> <span class="n">-Entity</span> <span class="nv">$vm</span> <span class="n">-Stat</span> <span class="n">cpu</span><span class="p">.</span><span class="n">usage</span><span class="p">.</span><span class="n">average</span> <span class="n">-Start</span> <span class="nv">$start</span> <span class="n">-Finish</span> <span class="nv">$end</span> <span class="n">-IntervalMins</span> <span class="n">30</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="nv">$memStats</span> <span class="p">=</span> <span class="nb">Get-Stat</span> <span class="n">-Entity</span> <span class="nv">$vm</span> <span class="n">-Stat</span> <span class="n">mem</span><span class="p">.</span><span class="n">usage</span><span class="p">.</span><span class="n">average</span> <span class="n">-Start</span> <span class="nv">$start</span> <span class="n">-Finish</span> <span class="nv">$end</span> <span class="n">-IntervalMins</span> <span class="n">30</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="nv">$avgCPU</span> <span class="p">=</span> <span class="p">(</span><span class="nv">$cpuStats</span> <span class="p">|</span> <span class="nb">Measure-Object</span> <span class="n">Value</span> <span class="n">-Average</span><span class="p">).</span><span class="n">Average</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="nv">$maxCPU</span> <span class="p">=</span> <span class="p">(</span><span class="nv">$cpuStats</span> <span class="p">|</span> <span class="nb">Measure-Object</span> <span class="n">Value</span> <span class="n">-Maximum</span><span class="p">).</span><span class="n">Maximum</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="nv">$avgMem</span> <span class="p">=</span> <span class="p">(</span><span class="nv">$memStats</span> <span class="p">|</span> <span class="nb">Measure-Object</span> <span class="n">Value</span> <span class="n">-Average</span><span class="p">).</span><span class="n">Average</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="nv">$maxMem</span> <span class="p">=</span> <span class="p">(</span><span class="nv">$memStats</span> <span class="p">|</span> <span class="nb">Measure-Object</span> <span class="n">Value</span> <span class="n">-Maximum</span><span class="p">).</span><span class="n">Maximum</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="no">[PSCustomObject]</span><span class="p">@{</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>    <span class="n">VM</span>          <span class="p">=</span> <span class="nv">$vm</span><span class="p">.</span><span class="n">Name</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>    <span class="n">vCPU</span>        <span class="p">=</span> <span class="nv">$vm</span><span class="p">.</span><span class="n">NumCpu</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>    <span class="n">vRAM_GB</span>     <span class="p">=</span> <span class="nv">$vm</span><span class="p">.</span><span class="n">MemoryGB</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>    <span class="n">AvgCPU_Pct</span>  <span class="p">=</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$avgCPU</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>    <span class="n">MaxCPU_Pct</span>  <span class="p">=</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$maxCPU</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>    <span class="n">AvgMem_Pct</span>  <span class="p">=</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$avgMem</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>    <span class="n">MaxMem_Pct</span>  <span class="p">=</span> <span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$maxMem</span><span class="p">,</span> <span class="n">1</span><span class="p">)</span>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>    <span class="n">Recommendation</span> <span class="p">=</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$maxCPU</span> <span class="o">-lt</span> <span class="n">25</span> <span class="o">-and</span> <span class="nv">$vm</span><span class="p">.</span><span class="n">NumCpu</span> <span class="o">-gt</span> <span class="n">2</span><span class="p">)</span> <span class="p">{</span><span class="s2">&quot;Reduce vCPU&quot;</span><span class="p">}</span> <span class="p">`</span>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>                     <span class="k">elseif</span> <span class="p">(</span><span class="nv">$maxMem</span> <span class="o">-lt</span> <span class="n">30</span><span class="p">)</span> <span class="p">{</span><span class="s2">&quot;Reduce vRAM&quot;</span><span class="p">}</span> <span class="p">`</span>
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>                     <span class="k">else</span> <span class="p">{</span><span class="s2">&quot;Sized appropriately&quot;</span><span class="p">}</span>
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a><span class="p">}</span>
 </code></pre></div>
 <hr />
 <h2 id="snapshot-impact-on-performance">Snapshot Impact on Performance<a class="headerlink" href="#snapshot-impact-on-performance" title="Permanent link">&para;</a></h2>
 <p>Active snapshots cause VMware to write to a delta VMDK chain, increasing write I/O and latency.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Find VMs with snapshots older than 7 days</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="p">|</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">Created</span> <span class="o">-lt</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddDays</span><span class="p">(-</span><span class="n">7</span><span class="p">)}</span> <span class="p">|</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="nb">Select-Object</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s1">&#39;VM&#39;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">VM</span><span class="p">.</span><span class="n">Name</span><span class="p">}},</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>                  <span class="n">Name</span><span class="p">,</span> <span class="n">Created</span><span class="p">,</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>                  <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s1">&#39;SizeGB&#39;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">SizeGB</span><span class="p">,</span> <span class="n">1</span><span class="p">)}},</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>                  <span class="n">Description</span> <span class="p">|</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>    <span class="nb">Sort-Object</span> <span class="n">Created</span> <span class="p">|</span> <span class="nb">Format-Table</span> <span class="n">-AutoSize</span>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c"># Remove a specific snapshot (consolidates delta into base disk)</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="nb">Get-VM</span> <span class="n">-Name</span> <span class="s2">&quot;vm-prod-app01&quot;</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="n">-Name</span> <span class="s2">&quot;Pre-patch&quot;</span> <span class="p">|</span> <span class="nb">Remove-Snapshot</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c"># Check if consolidation is needed (stale delta files exist without snapshot entry)</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Runtime</span><span class="p">.</span><span class="n">ConsolidationNeeded</span><span class="p">}</span> <span class="p">|</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>    <span class="nb">Select-Object</span> <span class="n">Name</span> <span class="p">|</span> <span class="nb">Format-Table</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Find VMs with snapshots older than 7 days</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="p">|</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">Created</span> <span class="o">-lt</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddDays</span><span class="p">(-</span><span class="n">7</span><span class="p">)}</span> <span class="p">|</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="nb">Select-Object</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s1">&#39;VM&#39;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">VM</span><span class="p">.</span><span class="n">Name</span><span class="p">}},</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>                  <span class="n">Name</span><span class="p">,</span> <span class="n">Created</span><span class="p">,</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>                  <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s1">&#39;SizeGB&#39;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">SizeGB</span><span class="p">,</span> <span class="n">1</span><span class="p">)}},</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>                  <span class="n">Description</span> <span class="p">|</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    <span class="nb">Sort-Object</span> <span class="n">Created</span> <span class="p">|</span> <span class="nb">Format-Table</span> <span class="n">-AutoSize</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c"># Remove a specific snapshot (consolidates delta into base disk)</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="nb">Get-VM</span> <span class="n">-Name</span> <span class="s2">&quot;vm-prod-app01&quot;</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="n">-Name</span> <span class="s2">&quot;Pre-patch&quot;</span> <span class="p">|</span> <span class="nb">Remove-Snapshot</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c"># Check if consolidation is needed (stale delta files exist without snapshot entry)</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">Runtime</span><span class="p">.</span><span class="n">ConsolidationNeeded</span><span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>    <span class="nb">Select-Object</span> <span class="n">Name</span> <span class="p">|</span> <span class="nb">Format-Table</span>
 </code></pre></div>
 <hr />
 <h2 id="vsphere-performance-counter-reference">vSphere Performance Counter Reference<a class="headerlink" href="#vsphere-performance-counter-reference" title="Permanent link">&para;</a></h2>

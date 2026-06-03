@@ -3625,70 +3625,70 @@ Procedures reference covering Branching, Branch Naming Conventions, Deleting Bra
 <p>Branch naming conventions, creating and deleting branches, tracking remotes, and merge vs rebase.</p>
 <h2 id="branch-naming-conventions">Branch Naming Conventions<a class="headerlink" href="#branch-naming-conventions" title="Permanent link">&para;</a></h2>
 <p>Consistent naming makes automation and review easier.</p>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Common prefixes</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Common prefixes</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>feature/<span class="w">  </span>—<span class="w"> </span>New<span class="w"> </span>functionality<span class="w"> </span><span class="o">(</span>feature/add-login-page<span class="o">)</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>fix/<span class="w">      </span>—<span class="w"> </span>Bug<span class="w"> </span>fixes<span class="w"> </span><span class="o">(</span>fix/null-pointer-on-startup<span class="o">)</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>chore/<span class="w">    </span>—<span class="w"> </span>Maintenance,<span class="w"> </span>deps,<span class="w"> </span>config<span class="w"> </span><span class="o">(</span>chore/upgrade-node-18<span class="o">)</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>docs/<span class="w">     </span>—<span class="w"> </span>Documentation<span class="w"> </span>changes<span class="w"> </span><span class="o">(</span>docs/update-api-reference<span class="o">)</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>hotfix/<span class="w">   </span>—<span class="w"> </span>Urgent<span class="w"> </span>production<span class="w"> </span>fixes<span class="w"> </span><span class="o">(</span>hotfix/payment-timeout<span class="o">)</span>
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>release/<span class="w">  </span>—<span class="w"> </span>Release<span class="w"> </span>preparation<span class="w"> </span><span class="o">(</span>release/v2.4.0<span class="o">)</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="sb">```</span>text
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>┌─────────────────────────────────────<span class="w"> </span>Git<span class="w"> </span>—<span class="w"> </span>Operations<span class="w"> </span>Procedures<span class="w"> </span>─────────────────────────────────────┐
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│<span class="w">                                                                                                       </span>│
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│<span class="w">  </span>Standard<span class="w"> </span>procedures:<span class="w"> </span>branch<span class="w"> </span>lifecycle,<span class="w"> </span>tagging<span class="w"> </span>releases,<span class="w"> </span>access<span class="w"> </span>management,<span class="w"> </span>and<span class="w"> </span>repo<span class="w"> </span>setup.<span class="w">          </span>│
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│<span class="w">                                                                                                       </span>│
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│<span class="w">   </span>┌──────────────────────────────────────────────┐<span class="w">  </span>┌─────────────────────────────────────────────┐<span class="w">   </span>│
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│<span class="w">   </span>│<span class="w">               </span>Branch<span class="w"> </span>Lifecycle<span class="w">               </span>│<span class="w">  </span>│<span class="w">               </span>Release<span class="w"> </span>Tagging<span class="w">               </span>│<span class="w">   </span>│
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│<span class="w">   </span>│<span class="w">      </span>Create<span class="w"> </span>from<span class="w"> </span>main:<span class="w"> </span>git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w">       </span>│<span class="w">  </span>│<span class="w">           </span>Tag<span class="w"> </span>on<span class="w"> </span>main<span class="w"> </span>after<span class="w"> </span>merge<span class="w">           </span>│<span class="w">   </span>│
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│<span class="w">   </span>│<span class="w">      </span>Push:<span class="w"> </span>git<span class="w"> </span>push<span class="w"> </span>-u<span class="w"> </span>origin<span class="w"> </span>&lt;branch&gt;<span class="w">       </span>│<span class="w">  </span>│<span class="w">       </span>Annotated:<span class="w"> </span>git<span class="w"> </span>tag<span class="w"> </span>-a<span class="w"> </span>v1.2.3<span class="w"> </span>-m<span class="w">       </span>│<span class="w">   </span>│
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│<span class="w">   </span>│<span class="w">      </span>Open<span class="w"> </span>PR:<span class="w"> </span>link<span class="w"> </span>issue,<span class="w"> </span>add<span class="w"> </span>reviewers<span class="w">      </span>│<span class="w">  </span>│<span class="w">       </span>Push<span class="w"> </span>tag:<span class="w"> </span>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>&lt;tag&gt;<span class="w">       </span>│<span class="w">   </span>│
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│<span class="w">   </span>│<span class="w">        </span>Delete<span class="w"> </span>after<span class="w"> </span>merge:<span class="w"> </span>branch<span class="w"> </span>-d<span class="w">         </span>│<span class="w">  </span>│<span class="w">        </span>Create<span class="w"> </span>GitHub<span class="w"> </span>Release<span class="w"> </span>from<span class="w"> </span>tag<span class="w">       </span>│<span class="w">   </span>│
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│<span class="w">   </span>└──────────────────────────────────────────────┘<span class="w">  </span>└─────────────────────────────────────────────┘<span class="w">   </span>│
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│<span class="w">                                                                                                       </span>│
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│<span class="w">    </span>Feature<span class="w"> </span>branches<span class="w"> </span>are<span class="w"> </span>short-lived<span class="p">;</span><span class="w"> </span>delete<span class="w"> </span>after<span class="w"> </span>merge<span class="w"> </span>to<span class="w"> </span>keep<span class="w"> </span>repo<span class="w"> </span>clean<span class="w">                            </span>│
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│<span class="w">                                                                                                       </span>│
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│<span class="w">                          </span>▼<span class="w">                                                 </span>▼<span class="w">                          </span>│
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│<span class="w">                                                                                                       </span>│
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│<span class="w">   </span>┌──────────────────────────────────────────────┐<span class="w">  </span>┌─────────────────────────────────────────────┐<span class="w">   </span>│
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│<span class="w">   </span>│<span class="w">              </span>Access<span class="w"> </span>Management<span class="w">               </span>│<span class="w">  </span>│<span class="w">             </span>New<span class="w"> </span>Repository<span class="w"> </span>Setup<span class="w">            </span>│<span class="w">   </span>│
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│<span class="w">   </span>│<span class="w">        </span>Add<span class="w"> </span>collaborator<span class="w"> </span>via<span class="w"> </span>GitHub<span class="w"> </span>UI<span class="w">        </span>│<span class="w">  </span>│<span class="w">             </span>git<span class="w"> </span>init<span class="w"> </span>/<span class="w"> </span>git<span class="w"> </span>clone<span class="w">            </span>│<span class="w">   </span>│
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│<span class="w">   </span>│<span class="w">           </span>Use<span class="w"> </span>teams<span class="w"> </span><span class="k">for</span><span class="w"> </span>org<span class="w"> </span>repos<span class="w">            </span>│<span class="w">  </span>│<span class="w">           </span>Add<span class="w"> </span>.gitignore<span class="w"> </span>+<span class="w"> </span>README<span class="w">           </span>│<span class="w">   </span>│
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│<span class="w">   </span>│<span class="w">        </span>Roles:<span class="w"> </span>Read/Triage/Write/Admin<span class="w">        </span>│<span class="w">  </span>│<span class="w">        </span>Set<span class="w"> </span>branch<span class="w"> </span>protection<span class="w"> </span>on<span class="w"> </span>main<span class="w">        </span>│<span class="w">   </span>│
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│<span class="w">   </span>│<span class="w">        </span>Audit<span class="w"> </span>log:<span class="w"> </span>org<span class="w"> </span>→<span class="w"> </span>Security<span class="w"> </span>tab<span class="w">         </span>│<span class="w">  </span>│<span class="w">         </span>Add<span class="w"> </span>CODEOWNERS<span class="w"> </span>+<span class="w"> </span>CI<span class="w"> </span>workflow<span class="w">        </span>│<span class="w">   </span>│
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│<span class="w">   </span>└──────────────────────────────────────────────┘<span class="w">  </span>└─────────────────────────────────────────────┘<span class="w">   </span>│
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│<span class="w">                                                                                                       </span>│
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│<span class="w">  </span>Physical<span class="w"> </span>Infrastructure<span class="w"> </span><span class="o">(</span>the<span class="w"> </span>hardware<span class="w"> </span>everything<span class="w"> </span>above<span class="w"> </span>runs<span class="w"> </span>on<span class="o">)</span>:<span class="w">                                     </span>│
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│<span class="w">  </span>GitHub/GitLab<span class="w"> </span>server<span class="w"> </span>·<span class="w"> </span>branch<span class="w"> </span>protection<span class="w"> </span>rules<span class="w"> </span>·<span class="w"> </span>CI<span class="w"> </span>pipeline<span class="w"> </span>·<span class="w"> </span>team<span class="w"> </span>permissions<span class="w">                      </span>│
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│<span class="w">                                                                                                       </span>│
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│<span class="w">  </span>Key<span class="w"> </span>terms:<span class="w">                                                                                           </span>│
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│<span class="w">                                                                                                       </span>│
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│<span class="w">  </span>git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </span><span class="o">=</span><span class="w"> </span>create<span class="w"> </span>and<span class="w"> </span>switch<span class="w"> </span>to<span class="w"> </span>new<span class="w"> </span>branch<span class="w"> </span><span class="k">in</span><span class="w"> </span>one<span class="w"> </span><span class="nb">command</span><span class="w">                                     </span>│
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│<span class="w">  </span>git<span class="w"> </span>push<span class="w"> </span>-u<span class="w">     </span><span class="o">=</span><span class="w"> </span>push<span class="w"> </span>and<span class="w"> </span><span class="nb">set</span><span class="w"> </span>upstream<span class="w"> </span>tracking<span class="w"> </span>reference<span class="w">                                           </span>│
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│<span class="w">  </span>Annotated<span class="w"> </span><span class="nv">tag</span><span class="w">   </span><span class="o">=</span><span class="w"> </span>tag<span class="w"> </span>object<span class="w"> </span>with<span class="w"> </span>tagger,<span class="w"> </span>date,<span class="w"> </span>message<span class="p">;</span><span class="w"> </span>preferred<span class="w"> </span><span class="k">for</span><span class="w"> </span>releases<span class="w">                      </span>│
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│<span class="w">  </span>GitHub<span class="w"> </span><span class="nv">Release</span><span class="w">  </span><span class="o">=</span><span class="w"> </span>web<span class="w"> </span>UI<span class="w"> </span>release<span class="w"> </span>tied<span class="w"> </span>to<span class="w"> </span>tag<span class="p">;</span><span class="w"> </span>includes<span class="w"> </span>changelog<span class="w"> </span>and<span class="w"> </span>assets<span class="w">                          </span>│
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│<span class="w">  </span><span class="nv">Collaborator</span><span class="w">    </span><span class="o">=</span><span class="w"> </span>individual<span class="w"> </span>user<span class="w"> </span>added<span class="w"> </span>to<span class="w"> </span>repo<span class="w"> </span>with<span class="w"> </span>explicit<span class="w"> </span>permission<span class="w"> </span>level<span class="w">                       </span>│
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>│<span class="w">  </span><span class="nv">Team</span><span class="w">            </span><span class="o">=</span><span class="w"> </span>GitHub/GitLab<span class="w"> </span>group<span class="p">;</span><span class="w"> </span>manage<span class="w"> </span>access<span class="w"> </span>at<span class="w"> </span>team<span class="w"> </span>level,<span class="w"> </span>not<span class="w"> </span>per-user<span class="w">                     </span>│
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>│<span class="w">  </span>Triage<span class="w"> </span><span class="nv">role</span><span class="w">     </span><span class="o">=</span><span class="w"> </span>can<span class="w"> </span>manage<span class="w"> </span>issues/PRs<span class="w"> </span>but<span class="w"> </span>not<span class="w"> </span>write<span class="w"> </span>code<span class="w">                                           </span>│
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>│<span class="w">  </span>Audit<span class="w"> </span><span class="nv">log</span><span class="w">       </span><span class="o">=</span><span class="w"> </span>org-level<span class="w"> </span>event<span class="w"> </span>log<span class="p">;</span><span class="w"> </span>tracks<span class="w"> </span>access<span class="w"> </span>changes<span class="w"> </span>and<span class="w"> </span>admin<span class="w"> </span>actions<span class="w">                       </span>│
+<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>│<span class="w">  </span><span class="nv">CODEOWNERS</span><span class="w">      </span><span class="o">=</span><span class="w"> </span>auto-assign<span class="w"> </span>reviewers<span class="w"> </span>to<span class="w"> </span>PRs<span class="w"> </span>touching<span class="w"> </span>specific<span class="w"> </span>paths<span class="w">                               </span>│
+<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>│<span class="w">  </span>Branch<span class="w"> </span>prot.<span class="w">    </span><span class="o">=</span><span class="w"> </span>rules<span class="w"> </span>enforcing<span class="w"> </span>CI,<span class="w"> </span>reviews,<span class="w"> </span>linear<span class="w"> </span><span class="nb">history</span><span class="w"> </span>on<span class="w"> </span>protected<span class="w"> </span>branches<span class="w">                  </span>│
+<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>│<span class="w">  </span>.gitignore<span class="w">      </span><span class="o">=</span><span class="w"> </span>lists<span class="w"> </span>patterns<span class="w"> </span><span class="k">for</span><span class="w"> </span>files<span class="w"> </span>Git<span class="w"> </span>should<span class="w"> </span>not<span class="w"> </span>track<span class="w">                                      </span>│
+<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>│<span class="w">  </span>Short-lived<span class="w">     </span><span class="o">=</span><span class="w"> </span>feature<span class="w"> </span>branches<span class="w"> </span>should<span class="w"> </span>be<span class="w"> </span>merged<span class="w"> </span>within<span class="w"> </span>days,<span class="w"> </span>not<span class="w"> </span>weeks<span class="w">                           </span>│
+<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>│<span class="w">                                                                                                       </span>│
+<a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌───────────────────────────────────── Git — Operations Procedures ─────────────────────────────────────┐
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  Standard procedures: branch lifecycle, tagging releases, access management, and repo setup.          │
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│                                                                                                       │
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │               Branch Lifecycle               │  │               Release Tagging               │   │
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │      Create from main: git checkout -b       │  │           Tag on main after merge           │   │
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │      Push: git push -u origin &lt;branch&gt;       │  │       Annotated: git tag -a v1.2.3 -m       │   │
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │      Open PR: link issue, add reviewers      │  │       Push tag: git push origin &lt;tag&gt;       │   │
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │        Delete after merge: branch -d         │  │        Create GitHub Release from tag       │   │
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│                                                                                                       │
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│    Feature branches are short-lived; delete after merge to keep repo clean                            │
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│                                                                                                       │
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                          ▼                                                 ▼                          │
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                                                                                                       │
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │              Access Management               │  │             New Repository Setup            │   │
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │        Add collaborator via GitHub UI        │  │             git init / git clone            │   │
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │           Use teams for org repos            │  │           Add .gitignore + README           │   │
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │        Roles: Read/Triage/Write/Admin        │  │        Set branch protection on main        │   │
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │        Audit log: org → Security tab         │  │         Add CODEOWNERS + CI workflow        │   │
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│                                                                                                       │
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  GitHub/GitLab server · branch protection rules · CI pipeline · team permissions                      │
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│                                                                                                       │
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  git checkout -b = create and switch to new branch in one command                                     │
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│  git push -u     = push and set upstream tracking reference                                           │
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  Annotated tag   = tag object with tagger, date, message; preferred for releases                      │
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  GitHub Release  = web UI release tied to tag; includes changelog and assets                          │
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  Collaborator    = individual user added to repo with explicit permission level                       │
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  Team            = GitHub/GitLab group; manage access at team level, not per-user                     │
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  Triage role     = can manage issues/PRs but not write code                                           │
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  Audit log       = org-level event log; tracks access changes and admin actions                       │
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  CODEOWNERS      = auto-assign reviewers to PRs touching specific paths                               │
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  Branch prot.    = rules enforcing CI, reviews, linear history on protected branches                  │
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  .gitignore      = lists patterns for files Git should not track                                      │
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  Short-lived     = feature branches should be merged within days, not weeks                           │
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│                                                                                                       │
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div></p>
 <h2 id="tracking-remote-branches">Tracking Remote Branches<a class="headerlink" href="#tracking-remote-branches" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Set upstream when pushing for the first time</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>git<span class="w"> </span>push<span class="w"> </span>-u<span class="w"> </span>origin<span class="w"> </span>feature/PLAT-42-s3-lifecycle
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Check tracking relationships</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>git<span class="w"> </span>branch<span class="w"> </span>-vv
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Change the upstream for an existing branch</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>git<span class="w"> </span>branch<span class="w"> </span>--set-upstream-to<span class="o">=</span>origin/main<span class="w"> </span>feature/PLAT-42-s3-lifecycle
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Push to a differently named remote branch</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>local-branch:remote-branch
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Set upstream when pushing for the first time</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>git<span class="w"> </span>push<span class="w"> </span>-u<span class="w"> </span>origin<span class="w"> </span>feature/PLAT-42-s3-lifecycle
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Check tracking relationships</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>git<span class="w"> </span>branch<span class="w"> </span>-vv
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Change the upstream for an existing branch</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>git<span class="w"> </span>branch<span class="w"> </span>--set-upstream-to<span class="o">=</span>origin/main<span class="w"> </span>feature/PLAT-42-s3-lifecycle
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># Push to a differently named remote branch</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>local-branch:remote-branch
 </code></pre></div>
 <h2 id="merge-vs-rebase">Merge vs Rebase<a class="headerlink" href="#merge-vs-rebase" title="Permanent link">&para;</a></h2>
 <table>
@@ -3727,63 +3727,63 @@ Procedures reference covering Branching, Branch Naming Conventions, Deleting Bra
 </tr>
 </tbody>
 </table>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Merge feature into main (creates merge commit)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>git<span class="w"> </span>switch<span class="w"> </span>main
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>git<span class="w"> </span>merge<span class="w"> </span>feature/PLAT-42-s3-lifecycle
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Rebase feature branch onto updated main</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>git<span class="w"> </span>switch<span class="w"> </span>feature/PLAT-42-s3-lifecycle
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>git<span class="w"> </span>rebase<span class="w"> </span>main
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Interactive rebase to squash last 3 commits</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>git<span class="w"> </span>rebase<span class="w"> </span>-i<span class="w"> </span>HEAD~3
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># Abort a rebase in progress</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>git<span class="w"> </span>rebase<span class="w"> </span>--abort
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Merge feature into main (creates merge commit)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>git<span class="w"> </span>switch<span class="w"> </span>main
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>git<span class="w"> </span>merge<span class="w"> </span>feature/PLAT-42-s3-lifecycle
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Rebase feature branch onto updated main</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>git<span class="w"> </span>switch<span class="w"> </span>feature/PLAT-42-s3-lifecycle
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>git<span class="w"> </span>rebase<span class="w"> </span>main
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># Interactive rebase to squash last 3 commits</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>git<span class="w"> </span>rebase<span class="w"> </span>-i<span class="w"> </span>HEAD~3
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Abort a rebase in progress</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>git<span class="w"> </span>rebase<span class="w"> </span>--abort
 </code></pre></div>
 <h2 id="stale-branch-cleanup">Stale Branch Cleanup<a class="headerlink" href="#stale-branch-cleanup" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Find branches with no commits ahead of main</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>git<span class="w"> </span>branch<span class="w"> </span>--merged<span class="w"> </span>main
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Find branches with no recent activity (older than 90 days)</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>git<span class="w"> </span><span class="k">for</span>-each-ref<span class="w"> </span>--sort<span class="o">=</span>committerdate<span class="w"> </span>refs/heads/<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span>--format<span class="o">=</span><span class="s1">&#39;%(committerdate:short) %(refname:short)&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;$1 &lt; &quot;&#39;</span><span class="k">$(</span>date<span class="w"> </span>-v-90d<span class="w"> </span>+%Y-%m-%d<span class="k">)</span><span class="s1">&#39;&quot;&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Find branches with no commits ahead of main</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>git<span class="w"> </span>branch<span class="w"> </span>--merged<span class="w"> </span>main
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Find branches with no recent activity (older than 90 days)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>git<span class="w"> </span><span class="k">for</span>-each-ref<span class="w"> </span>--sort<span class="o">=</span>committerdate<span class="w"> </span>refs/heads/<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>--format<span class="o">=</span><span class="s1">&#39;%(committerdate:short) %(refname:short)&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;$1 &lt; &quot;&#39;</span><span class="k">$(</span>date<span class="w"> </span>-v-90d<span class="w"> </span>+%Y-%m-%d<span class="k">)</span><span class="s1">&#39;&quot;&#39;</span>
 </code></pre></div>
 <hr />
 <h2 id="recovery">Recovery<a class="headerlink" href="#recovery" title="Permanent link">&para;</a></h2>
 <p>Using git reflog, reset, revert, and recovering deleted branches or lost commits.</p>
 <h2 id="git-reflog-your-safety-net">git reflog — Your Safety Net<a class="headerlink" href="#git-reflog-your-safety-net" title="Permanent link">&para;</a></h2>
 <p>The reflog records every movement of HEAD and branch pointers, including those that are not in the regular log.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># View full reflog</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>git<span class="w"> </span>reflog
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># View reflog for a specific branch</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>git<span class="w"> </span>reflog<span class="w"> </span>show<span class="w"> </span>feature/my-branch
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Reflog with timestamps</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>git<span class="w"> </span>reflog<span class="w"> </span>--date<span class="o">=</span>iso
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Find the commit hash before a bad reset</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>git<span class="w"> </span>reflog<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;before reset&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># View full reflog</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>git<span class="w"> </span>reflog
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># View reflog for a specific branch</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>git<span class="w"> </span>reflog<span class="w"> </span>show<span class="w"> </span>feature/my-branch
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Reflog with timestamps</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>git<span class="w"> </span>reflog<span class="w"> </span>--date<span class="o">=</span>iso
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Find the commit hash before a bad reset</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>git<span class="w"> </span>reflog<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;before reset&quot;</span>
 </code></pre></div>
 <p>The reflog retains entries for 90 days (default). Expired entries cannot be recovered.</p>
 <h2 id="git-reset">git reset<a class="headerlink" href="#git-reset" title="Permanent link">&para;</a></h2>
 <p><code>reset</code> moves the branch pointer and optionally modifies the index and working tree.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Soft reset — keep changes staged</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>git<span class="w"> </span>reset<span class="w"> </span>--soft<span class="w"> </span>HEAD~1
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Mixed reset (default) — keep changes unstaged</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>git<span class="w"> </span>reset<span class="w"> </span>HEAD~1
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Hard reset — discard all changes (destructive)</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>git<span class="w"> </span>reset<span class="w"> </span>--hard<span class="w"> </span>HEAD~1
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Reset to a specific commit hash</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>git<span class="w"> </span>reset<span class="w"> </span>--hard<span class="w"> </span>a1b2c3d4
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># Undo a reset using reflog</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>git<span class="w"> </span>reset<span class="w"> </span>--hard<span class="w"> </span>HEAD@<span class="o">{</span><span class="m">3</span><span class="o">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Soft reset — keep changes staged</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>git<span class="w"> </span>reset<span class="w"> </span>--soft<span class="w"> </span>HEAD~1
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Mixed reset (default) — keep changes unstaged</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>git<span class="w"> </span>reset<span class="w"> </span>HEAD~1
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Hard reset — discard all changes (destructive)</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>git<span class="w"> </span>reset<span class="w"> </span>--hard<span class="w"> </span>HEAD~1
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Reset to a specific commit hash</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>git<span class="w"> </span>reset<span class="w"> </span>--hard<span class="w"> </span>a1b2c3d4
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># Undo a reset using reflog</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>git<span class="w"> </span>reset<span class="w"> </span>--hard<span class="w"> </span>HEAD@<span class="o">{</span><span class="m">3</span><span class="o">}</span>
 </code></pre></div>
 <table>
 <thead>
@@ -3818,60 +3818,60 @@ Procedures reference covering Branching, Branch Naming Conventions, Deleting Bra
 <p>Never use <code>--hard</code> on shared branches without team coordination.</p>
 <h2 id="git-revert-safe-undo-for-shared-branches">git revert — Safe Undo for Shared Branches<a class="headerlink" href="#git-revert-safe-undo-for-shared-branches" title="Permanent link">&para;</a></h2>
 <p><code>revert</code> creates a new commit that undoes a previous one. Safe to use on main/production branches.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Revert the most recent commit</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>git<span class="w"> </span>revert<span class="w"> </span>HEAD
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Revert a specific commit</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>git<span class="w"> </span>revert<span class="w"> </span>a1b2c3d4
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Revert a range of commits (oldest first)</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>git<span class="w"> </span>revert<span class="w"> </span>a1b2c3d4..e5f6g7h8
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># Revert without auto-committing (batch multiple reverts)</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>git<span class="w"> </span>revert<span class="w"> </span>-n<span class="w"> </span>a1b2c3d4
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>git<span class="w"> </span>revert<span class="w"> </span>-n<span class="w"> </span>b2c3d4e5
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;revert: undo broken deployment commits&quot;</span>
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="c1"># Revert a merge commit (specify parent branch)</span>
-<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>git<span class="w"> </span>revert<span class="w"> </span>-m<span class="w"> </span><span class="m">1</span><span class="w"> </span>&lt;merge-commit-hash&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Revert the most recent commit</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>git<span class="w"> </span>revert<span class="w"> </span>HEAD
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Revert a specific commit</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>git<span class="w"> </span>revert<span class="w"> </span>a1b2c3d4
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Revert a range of commits (oldest first)</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>git<span class="w"> </span>revert<span class="w"> </span>a1b2c3d4..e5f6g7h8
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Revert without auto-committing (batch multiple reverts)</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>git<span class="w"> </span>revert<span class="w"> </span>-n<span class="w"> </span>a1b2c3d4
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>git<span class="w"> </span>revert<span class="w"> </span>-n<span class="w"> </span>b2c3d4e5
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;revert: undo broken deployment commits&quot;</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c1"># Revert a merge commit (specify parent branch)</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>git<span class="w"> </span>revert<span class="w"> </span>-m<span class="w"> </span><span class="m">1</span><span class="w"> </span>&lt;merge-commit-hash&gt;
 </code></pre></div>
 <h2 id="recovering-deleted-branches">Recovering Deleted Branches<a class="headerlink" href="#recovering-deleted-branches" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Step 1: find the tip commit of the deleted branch in reflog</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>git<span class="w"> </span>reflog<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;branch-name&quot;</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Step 2: recreate the branch at that commit</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>git<span class="w"> </span>switch<span class="w"> </span>-c<span class="w"> </span>recovered-branch<span class="w"> </span>a1b2c3d4
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Alternative: search all unreachable commits</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>git<span class="w"> </span>fsck<span class="w"> </span>--lost-found
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>ls<span class="w"> </span>.git/lost-found/commit/
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Step 1: find the tip commit of the deleted branch in reflog</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>git<span class="w"> </span>reflog<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;branch-name&quot;</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Step 2: recreate the branch at that commit</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>git<span class="w"> </span>switch<span class="w"> </span>-c<span class="w"> </span>recovered-branch<span class="w"> </span>a1b2c3d4
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Alternative: search all unreachable commits</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>git<span class="w"> </span>fsck<span class="w"> </span>--lost-found
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>ls<span class="w"> </span>.git/lost-found/commit/
 </code></pre></div>
 <h2 id="recovering-lost-commits">Recovering Lost Commits<a class="headerlink" href="#recovering-lost-commits" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Find dangling commits (not reachable from any ref)</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>git<span class="w"> </span>fsck<span class="w"> </span>--no-reflogs<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;dangling commit&quot;</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Inspect a dangling commit</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>git<span class="w"> </span>show<span class="w"> </span>&lt;dangling-commit-hash&gt;
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Recover by creating a branch</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>git<span class="w"> </span>switch<span class="w"> </span>-c<span class="w"> </span>recovery-branch<span class="w"> </span>&lt;dangling-commit-hash&gt;
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c1"># If you know the commit was recent, check reflog</span>
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>git<span class="w"> </span>reflog<span class="w"> </span>--all<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-30
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Find dangling commits (not reachable from any ref)</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>git<span class="w"> </span>fsck<span class="w"> </span>--no-reflogs<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;dangling commit&quot;</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Inspect a dangling commit</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>git<span class="w"> </span>show<span class="w"> </span>&lt;dangling-commit-hash&gt;
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Recover by creating a branch</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>git<span class="w"> </span>switch<span class="w"> </span>-c<span class="w"> </span>recovery-branch<span class="w"> </span>&lt;dangling-commit-hash&gt;
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># If you know the commit was recent, check reflog</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>git<span class="w"> </span>reflog<span class="w"> </span>--all<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-30
 </code></pre></div>
 <h2 id="recovering-stashed-changes">Recovering Stashed Changes<a class="headerlink" href="#recovering-stashed-changes" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># List all stashes</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>git<span class="w"> </span>stash<span class="w"> </span>list
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Apply a specific stash without removing it</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>git<span class="w"> </span>stash<span class="w"> </span>apply<span class="w"> </span>stash@<span class="o">{</span><span class="m">2</span><span class="o">}</span>
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Drop a stash after applying</span>
-<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>git<span class="w"> </span>stash<span class="w"> </span>drop<span class="w"> </span>stash@<span class="o">{</span><span class="m">2</span><span class="o">}</span>
-<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
-<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># Find stashes lost after git stash drop</span>
-<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>git<span class="w"> </span>fsck<span class="w"> </span>--no-reflogs<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;dangling commit&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $3}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="w">  </span>xargs<span class="w"> </span>-I<span class="o">{}</span><span class="w"> </span>git<span class="w"> </span>stash<span class="w"> </span>show<span class="w"> </span><span class="o">{}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># List all stashes</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>git<span class="w"> </span>stash<span class="w"> </span>list
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Apply a specific stash without removing it</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>git<span class="w"> </span>stash<span class="w"> </span>apply<span class="w"> </span>stash@<span class="o">{</span><span class="m">2</span><span class="o">}</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Drop a stash after applying</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>git<span class="w"> </span>stash<span class="w"> </span>drop<span class="w"> </span>stash@<span class="o">{</span><span class="m">2</span><span class="o">}</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c1"># Find stashes lost after git stash drop</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>git<span class="w"> </span>fsck<span class="w"> </span>--no-reflogs<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;dangling commit&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $3}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="w">  </span>xargs<span class="w"> </span>-I<span class="o">{}</span><span class="w"> </span>git<span class="w"> </span>stash<span class="w"> </span>show<span class="w"> </span><span class="o">{}</span>
 </code></pre></div>
 <table>
 <thead>

@@ -5061,7 +5061,7 @@ Install & Upgrade reference covering Version Support Matrix, Initial NSX Manager
 <p>Repeat for nodes 2 and 3. The first node deployed becomes the primary.</p>
 <h3 id="form-the-nsx-manager-cluster">Form the NSX Manager Cluster<a class="headerlink" href="#form-the-nsx-manager-cluster" title="Permanent link">&para;</a></h3>
 <p>After deploying all three nodes, join nodes 2 and 3 to the cluster:</p>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># SSH to node 2</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># SSH to node 2</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>nsxcli
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Join to the cluster (provide node 1&#39;s IP and certificate thumbprint)</span>
@@ -5069,53 +5069,53 @@ Install & Upgrade reference covering Version Support Matrix, Initial NSX Manager
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Get node 1&#39;s thumbprint from node 1 CLI:</span>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>get<span class="w"> </span>certificate<span class="w"> </span>api<span class="w"> </span>thumbprint
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="sb">```</span>text
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>┌──────────────────────────────────────<span class="w"> </span>NSX<span class="w"> </span>—<span class="w"> </span>Install<span class="w"> </span>and<span class="w"> </span>Upgrade<span class="w"> </span>──────────────────────────────────────┐
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│<span class="w">                                                                                                       </span>│
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│<span class="w">  </span>NSX<span class="w"> </span>Manager<span class="w"> </span>OVA<span class="w"> </span>deployment,<span class="w"> </span>transport<span class="w"> </span>node<span class="w"> </span>prep,<span class="w"> </span>and<span class="w"> </span><span class="k">in</span>-place<span class="w"> </span>upgrade<span class="w"> </span>flow.<span class="w">                          </span>│
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│<span class="w">                                                                                                       </span>│
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│<span class="w">   </span>┌──────────────────────────────────────────────┐<span class="w">  </span>┌─────────────────────────────────────────────┐<span class="w">   </span>│
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│<span class="w">   </span>│<span class="w">               </span>Fresh<span class="w"> </span>Deployment<span class="w">               </span>│<span class="w">  </span>│<span class="w">              </span>Upgrade<span class="w"> </span>Procedure<span class="w">              </span>│<span class="w">   </span>│
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│<span class="w">   </span>│<span class="w">            </span>Deploy<span class="w"> </span>Manager<span class="w"> </span>OVA<span class="w"> </span>x3<span class="w">             </span>│<span class="w">  </span>│<span class="w">           </span>Download<span class="w"> </span>upgrade<span class="w"> </span>bundle<span class="w">           </span>│<span class="w">   </span>│
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│<span class="w">   </span>│<span class="w">          </span>Form<span class="w"> </span>cluster<span class="w"> </span><span class="o">(</span>join<span class="w"> </span>nodes<span class="o">)</span><span class="w">           </span>│<span class="w">  </span>│<span class="w">            </span>Upload<span class="w"> </span>to<span class="w"> </span>NSX<span class="w"> </span>Manager<span class="w">            </span>│<span class="w">   </span>│
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│<span class="w">   </span>│<span class="w">           </span>Register<span class="w"> </span>compute<span class="w"> </span>manager<span class="w">           </span>│<span class="w">  </span>│<span class="w">           </span>Run<span class="w"> </span>pre-check<span class="w"> </span>validation<span class="w">          </span>│<span class="w">   </span>│
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│<span class="w">   </span>│<span class="w">         </span>Deploy<span class="w"> </span>edge<span class="w"> </span>transport<span class="w"> </span>nodes<span class="w">          </span>│<span class="w">  </span>│<span class="w">           </span>Upgrade<span class="w"> </span>MP<span class="w"> </span>→<span class="w"> </span>CCP<span class="w"> </span>→<span class="w"> </span>hosts<span class="w">          </span>│<span class="w">   </span>│
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│<span class="w">   </span>│<span class="w">          </span>Prepare<span class="w"> </span>ESXi<span class="w"> </span>hosts<span class="w"> </span><span class="o">(</span>N-VDS<span class="o">)</span><span class="w">          </span>│<span class="w">  </span>│<span class="w">         </span>Verify<span class="w"> </span>each<span class="w"> </span>tier<span class="w"> </span>before<span class="w"> </span>next<span class="w">        </span>│<span class="w">   </span>│
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│<span class="w">   </span>└──────────────────────────────────────────────┘<span class="w">  </span>└─────────────────────────────────────────────┘<span class="w">   </span>│
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│<span class="w">                                                                                                       </span>│
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│<span class="w">  </span>Deploy<span class="w"> </span>manager<span class="w"> </span>cluster<span class="w"> </span>→<span class="w"> </span>compute<span class="w"> </span>manager<span class="w"> </span>→<span class="w"> </span>edges<span class="w"> </span>→<span class="w"> </span>ESXi<span class="w"> </span>transport<span class="w"> </span>nodes.<span class="w">                             </span>│
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│<span class="w">                                                                                                       </span>│
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│<span class="w">                          </span>▼<span class="w">                                                 </span>▼<span class="w">                          </span>│
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│<span class="w">                                                                                                       </span>│
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│<span class="w">   </span>┌──────────────────────────────────────────────┐<span class="w">  </span>┌─────────────────────────────────────────────┐<span class="w">   </span>│
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│<span class="w">   </span>│<span class="w">                </span>Prerequisites<span class="w">                 </span>│<span class="w">  </span>│<span class="w">            </span>Version<span class="w"> </span>Compatibility<span class="w">            </span>│<span class="w">   </span>│
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│<span class="w">   </span>│<span class="w">           </span>vCenter<span class="w"> </span>registered<span class="w"> </span>first<span class="w">           </span>│<span class="w">  </span>│<span class="w">             </span>NSX<span class="w"> </span><span class="m">4</span>.x<span class="w"> </span>—<span class="w"> </span>current<span class="w"> </span>GA<span class="w">            </span>│<span class="w">   </span>│
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│<span class="w">   </span>│<span class="w">          </span>IP<span class="w"> </span>pool<span class="w"> </span><span class="k">for</span><span class="w"> </span>TEP<span class="w"> </span>addresses<span class="w">           </span>│<span class="w">  </span>│<span class="w">            </span>vCenter<span class="w"> </span><span class="m">7</span>.0+<span class="w"> </span>required<span class="w">            </span>│<span class="w">   </span>│
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│<span class="w">   </span>│<span class="w">         </span>Uplink/overlay<span class="w"> </span>profiles<span class="w"> </span><span class="nb">set</span><span class="w">          </span>│<span class="w">  </span>│<span class="w">            </span>ESXi<span class="w"> </span><span class="m">7</span>.0+<span class="w"> </span><span class="k">for</span><span class="w"> </span>N-VDS<span class="w"> </span><span class="m">2</span><span class="w">            </span>│<span class="w">   </span>│
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│<span class="w">   </span>│<span class="w">           </span>MTU<span class="w"> </span><span class="m">1600</span>+<span class="w"> </span>on<span class="w"> </span>fabric<span class="w"> </span>NICs<span class="w">           </span>│<span class="w">  </span>│<span class="w">             </span>Interop<span class="w"> </span>matrix<span class="w"> </span>check<span class="w">            </span>│<span class="w">   </span>│
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│<span class="w">   </span>│<span class="w">         </span>BGP<span class="w"> </span>ASN<span class="w"> </span>planned<span class="w"> </span>with<span class="w"> </span>NetEng<span class="w">          </span>│<span class="w">  </span>│<span class="w">            </span>VCF:<span class="w"> </span>use<span class="w"> </span>SDDC<span class="w"> </span>Mgr<span class="w"> </span>LCM<span class="w">            </span>│<span class="w">   </span>│
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│<span class="w">   </span>└──────────────────────────────────────────────┘<span class="w">  </span>└─────────────────────────────────────────────┘<span class="w">   </span>│
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│<span class="w">                                                                                                       </span>│
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│<span class="w">  </span>Physical<span class="w"> </span>Infrastructure<span class="w"> </span><span class="o">(</span>the<span class="w"> </span>hardware<span class="w"> </span>everything<span class="w"> </span>above<span class="w"> </span>runs<span class="w"> </span>on<span class="o">)</span>:<span class="w">                                     </span>│
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│<span class="w">  </span>ESXi<span class="w"> </span>hosts,<span class="w"> </span>vCenter,<span class="w"> </span>physical<span class="w"> </span>ToR<span class="w"> </span>with<span class="w"> </span>BGP,<span class="w"> </span>SFTP<span class="w"> </span>server,<span class="w"> </span>management<span class="w"> </span>network<span class="w">                          </span>│
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│<span class="w">                                                                                                       </span>│
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│<span class="w">  </span>Key<span class="w"> </span>terms:<span class="w">                                                                                           </span>│
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│<span class="w">                                                                                                       </span>│
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│<span class="w">  </span><span class="nv">OVA</span><span class="w">         </span><span class="o">=</span><span class="w"> </span>Open<span class="w"> </span>Virtualisation<span class="w"> </span>Appliance<span class="p">;</span><span class="w"> </span>NSX<span class="w"> </span>Manager<span class="w"> </span>deploy<span class="w"> </span>format<span class="w">                               </span>│
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│<span class="w">  </span>Compute<span class="w"> </span><span class="nv">Mgr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>vCenter<span class="w"> </span>registered<span class="w"> </span><span class="k">in</span><span class="w"> </span>NSX<span class="p">;</span><span class="w"> </span><span class="nb">source</span><span class="w"> </span>of<span class="w"> </span>host<span class="w"> </span>inventory<span class="w">                                    </span>│
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>│<span class="w">  </span>Transport<span class="w"> </span><span class="nv">node</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>ESXi<span class="w"> </span>or<span class="w"> </span>Edge<span class="w"> </span>with<span class="w"> </span>N-VDS<span class="w"> </span>installed<span class="w"> </span><span class="k">for</span><span class="w"> </span>overlay<span class="w">                                       </span>│
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>│<span class="w">  </span>N-VDS<span class="w">       </span><span class="o">=</span><span class="w"> </span>NSX<span class="w"> </span>managed<span class="w"> </span>vSwitch<span class="w"> </span>replacing<span class="w"> </span>dvSwitch<span class="w"> </span>on<span class="w"> </span>host<span class="w">                                         </span>│
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>│<span class="w">  </span><span class="nv">TEP</span><span class="w">         </span><span class="o">=</span><span class="w"> </span>Tunnel<span class="w"> </span>Endpoint<span class="p">;</span><span class="w"> </span><span class="nb">source</span><span class="w"> </span>IP<span class="w"> </span><span class="k">for</span><span class="w"> </span>GENEVE<span class="w"> </span>overlay<span class="w"> </span>traffic<span class="w">                                  </span>│
+<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>│<span class="w">  </span>Uplink<span class="w"> </span><span class="nv">profile</span><span class="o">=</span><span class="w"> </span>defines<span class="w"> </span>LAG,<span class="w"> </span>teaming,<span class="w"> </span>VLAN<span class="w"> </span><span class="k">for</span><span class="w"> </span>TEP<span class="w"> </span>traffic<span class="w">                                           </span>│
+<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>│<span class="w">  </span>IP<span class="w"> </span><span class="nv">pool</span><span class="w">     </span><span class="o">=</span><span class="w"> </span>range<span class="w"> </span>of<span class="w"> </span>IPs<span class="w"> </span>assigned<span class="w"> </span>to<span class="w"> </span>TEPs<span class="w"> </span>during<span class="w"> </span>host<span class="w"> </span>prep<span class="w">                                         </span>│
+<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>│<span class="w">  </span><span class="nv">MP</span><span class="w">          </span><span class="o">=</span><span class="w"> </span>Management<span class="w"> </span>Plane<span class="p">;</span><span class="w"> </span>upgraded<span class="w"> </span>first<span class="w"> </span><span class="k">in</span><span class="w"> </span>NSX<span class="w"> </span>upgrade<span class="w"> </span>sequence<span class="w">                               </span>│
+<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>│<span class="w">  </span><span class="nv">CCP</span><span class="w">         </span><span class="o">=</span><span class="w"> </span>Central<span class="w"> </span>Control<span class="w"> </span>Plane<span class="p">;</span><span class="w"> </span>upgraded<span class="w"> </span>second<span class="w"> </span>after<span class="w"> </span>MP<span class="w">                                        </span>│
+<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>│<span class="w">  </span>SDDC<span class="w"> </span><span class="nv">Mgr</span><span class="w">    </span><span class="o">=</span><span class="w"> </span>VCF<span class="w"> </span>lifecycle<span class="w"> </span>mgr<span class="p">;</span><span class="w"> </span>handles<span class="w"> </span>NSX<span class="w"> </span>upgrades<span class="w"> </span><span class="k">in</span><span class="w"> </span>VCF<span class="w"> </span>context<span class="w">                                 </span>│
+<a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>│<span class="w">  </span>Pre-check<span class="w">   </span><span class="o">=</span><span class="w"> </span>NSX<span class="w"> </span>upgrade<span class="w"> </span>validator<span class="p">;</span><span class="w"> </span>runs<span class="w"> </span>before<span class="w"> </span>bundle<span class="w"> </span>apply<span class="w">                                        </span>│
+<a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>│<span class="w">  </span><span class="nv">Interop</span><span class="w">     </span><span class="o">=</span><span class="w"> </span>VMware<span class="w"> </span>Product<span class="w"> </span>Interoperability<span class="w"> </span>Matrix<span class="w"> </span><span class="k">for</span><span class="w"> </span>version<span class="w"> </span>support<span class="w">                             </span>│
+<a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a>│<span class="w">                                                                                                       </span>│
+<a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌────────────────────────────────────── NSX — Install and Upgrade ──────────────────────────────────────┐
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  NSX Manager OVA deployment, transport node prep, and in-place upgrade flow.                          │
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│                                                                                                       │
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │               Fresh Deployment               │  │              Upgrade Procedure              │   │
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │            Deploy Manager OVA x3             │  │           Download upgrade bundle           │   │
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │          Form cluster (join nodes)           │  │            Upload to NSX Manager            │   │
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │           Register compute manager           │  │           Run pre-check validation          │   │
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │         Deploy edge transport nodes          │  │           Upgrade MP → CCP → hosts          │   │
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │          Prepare ESXi hosts (N-VDS)          │  │         Verify each tier before next        │   │
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                                                                       │
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│  Deploy manager cluster → compute manager → edges → ESXi transport nodes.                             │
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                                                                                                       │
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                          ▼                                                 ▼                          │
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│                                                                                                       │
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │                Prerequisites                 │  │            Version Compatibility            │   │
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │           vCenter registered first           │  │             NSX 4.x — current GA            │   │
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │          IP pool for TEP addresses           │  │            vCenter 7.0+ required            │   │
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │         Uplink/overlay profiles set          │  │            ESXi 7.0+ for N-VDS 2            │   │
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   │           MTU 1600+ on fabric NICs           │  │             Interop matrix check            │   │
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│   │         BGP ASN planned with NetEng          │  │            VCF: use SDDC Mgr LCM            │   │
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│                                                                                                       │
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  ESXi hosts, vCenter, physical ToR with BGP, SFTP server, management network                          │
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│                                                                                                       │
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  OVA         = Open Virtualisation Appliance; NSX Manager deploy format                               │
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  Compute Mgr = vCenter registered in NSX; source of host inventory                                    │
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  Transport node = ESXi or Edge with N-VDS installed for overlay                                       │
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  N-VDS       = NSX managed vSwitch replacing dvSwitch on host                                         │
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  TEP         = Tunnel Endpoint; source IP for GENEVE overlay traffic                                  │
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  Uplink profile= defines LAG, teaming, VLAN for TEP traffic                                           │
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  IP pool     = range of IPs assigned to TEPs during host prep                                         │
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  MP          = Management Plane; upgraded first in NSX upgrade sequence                               │
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  CCP         = Central Control Plane; upgraded second after MP                                        │
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  SDDC Mgr    = VCF lifecycle mgr; handles NSX upgrades in VCF context                                 │
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│  Pre-check   = NSX upgrade validator; runs before bundle apply                                        │
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  Interop     = VMware Product Interoperability Matrix for version support                             │
-<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│                                                                                                       │
-<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div></p>
 <p>DNS for the NSX Manager FQDN (e.g., <code>nsx-manager.example.local</code>) must point to this VIP.</p>
 <h3 id="register-vcenter-compute-manager">Register vCenter Compute Manager<a class="headerlink" href="#register-vcenter-compute-manager" title="Permanent link">&para;</a></h3>
 <p><strong>System → Fabric → Compute Managers → Add</strong></p>
@@ -5193,10 +5193,10 @@ Install & Upgrade reference covering Version Support Matrix, Initial NSX Manager
 <h3 id="create-tep-ip-pool">Create TEP IP Pool<a class="headerlink" href="#create-tep-ip-pool" title="Permanent link">&para;</a></h3>
 <p><strong>Networking → IP Management → IP Address Pools → Add</strong></p>
 <p>Configure one pool per subnet:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">Name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pool-tep-compute</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nt">Subnet</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">192.168.200.0/24</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nt">Gateway</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">192.168.200.1</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nt">IP Ranges</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">192.168.200.10–192.168.200.254</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">Name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pool-tep-compute</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nt">Subnet</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">192.168.200.0/24</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nt">Gateway</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">192.168.200.1</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="nt">IP Ranges</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">192.168.200.10–192.168.200.254</span>
 </code></pre></div>
 <h3 id="create-host-transport-node-profile">Create Host Transport Node Profile<a class="headerlink" href="#create-host-transport-node-profile" title="Permanent link">&para;</a></h3>
 <p><strong>System → Fabric → Profiles → Host Transport Node Profiles → Add</strong></p>
@@ -5208,11 +5208,11 @@ Install & Upgrade reference covering Version Support Matrix, Initial NSX Manager
 <h3 id="apply-profile-to-vsphere-cluster">Apply Profile to vSphere Cluster<a class="headerlink" href="#apply-profile-to-vsphere-cluster" title="Permanent link">&para;</a></h3>
 <p><strong>System → Fabric → Hosts → Configure NSX</strong></p>
 <p>Select the vCenter cluster and attach the Transport Node Profile. NSX prepares all hosts in the cluster. Monitor progress in the <strong>Configuration</strong> column — each host transitions through <code>In Progress</code> → <code>Success</code>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Verify from Manager CLI after preparation</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>nsxcli
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>get<span class="w"> </span>transport-nodes
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>get<span class="w"> </span>transport-node-status
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># All hosts should show &quot;UP&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Verify from Manager CLI after preparation</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>nsxcli
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>get<span class="w"> </span>transport-nodes
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>get<span class="w"> </span>transport-node-status
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># All hosts should show &quot;UP&quot;</span>
 </code></pre></div>
 <hr />
 <h2 id="nsx-manager-upgrade">NSX Manager Upgrade<a class="headerlink" href="#nsx-manager-upgrade" title="Permanent link">&para;</a></h2>
@@ -5235,20 +5235,20 @@ Install & Upgrade reference covering Version Support Matrix, Initial NSX Manager
 </ol>
 <h3 id="upgrade-order-critical">Upgrade Order (Critical)<a class="headerlink" href="#upgrade-order-critical" title="Permanent link">&para;</a></h3>
 <p>NSX components must be upgraded in this sequence:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>1. NSX Manager (all 3 nodes) — control plane first
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>2. Edge Nodes — north-south gateway impact; BGP reconverges
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>3. ESXi Transport Nodes (host-by-host) — data plane impact; rolling
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>1. NSX Manager (all 3 nodes) — control plane first
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>2. Edge Nodes — north-south gateway impact; BGP reconverges
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>3. ESXi Transport Nodes (host-by-host) — data plane impact; rolling
 </code></pre></div>
 <p><strong>Never upgrade Edge nodes before NSX Manager.</strong> The upgrade coordinator in the UI enforces this order.</p>
 <h3 id="upgrading-nsx-manager-nodes">Upgrading NSX Manager Nodes<a class="headerlink" href="#upgrading-nsx-manager-nodes" title="Permanent link">&para;</a></h3>
 <p>The upgrade coordinator upgrades one Manager node at a time. The cluster VIP migrates to an available node during each node's upgrade:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Upgrade node 1 → node 1 reboots (cluster VIP on node 2 or 3)
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Upgrade node 2 → node 2 reboots
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Upgrade node 3 → node 3 reboots
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Upgrade node 1 → node 1 reboots (cluster VIP on node 2 or 3)
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>Upgrade node 2 → node 2 reboots
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>Upgrade node 3 → node 3 reboots
 </code></pre></div>
 <p>Monitor via UI <strong>System → Upgrade → Upgrade Coordinator</strong> or via API:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/upgrade/status-summary&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/upgrade/status-summary&quot;</span>
 </code></pre></div>
 <h3 id="upgrading-edge-nodes">Upgrading Edge Nodes<a class="headerlink" href="#upgrading-edge-nodes" title="Permanent link">&para;</a></h3>
 <p>Edge node upgrade causes BGP reconvergence. For ACTIVE_STANDBY T0 gateways:</p>
@@ -5259,10 +5259,10 @@ Install & Upgrade reference covering Version Support Matrix, Initial NSX Manager
 <li>BGP reconverges (typically &lt; 30 seconds with BFD)</li>
 </ol>
 <p>Verify after Edge upgrade:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># On Edge node CLI</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>get<span class="w"> </span>version
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>get<span class="w"> </span>bgp<span class="w"> </span>neighbor<span class="w"> </span>summary
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># All peers should be Established</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># On Edge node CLI</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>get<span class="w"> </span>version
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>get<span class="w"> </span>bgp<span class="w"> </span>neighbor<span class="w"> </span>summary
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># All peers should be Established</span>
 </code></pre></div>
 <h3 id="upgrading-esxi-transport-nodes">Upgrading ESXi Transport Nodes<a class="headerlink" href="#upgrading-esxi-transport-nodes" title="Permanent link">&para;</a></h3>
 <p>ESXi transport node upgrade applies NSX VIB updates to each host. The host does not need to reboot for VIB updates in most patch releases, but major version upgrades require a reboot.</p>
@@ -5278,37 +5278,37 @@ Install & Upgrade reference covering Version Support Matrix, Initial NSX Manager
 <li>Edge and host VIBs may need manual rollback — contact VMware Support</li>
 </ol>
 <p>Backup restore procedure: <strong>System → Backup &amp; Restore → Restore</strong> — the restore wipes the current NSX Manager cluster and replaces it with the backup state.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Verify backup is restorable before the upgrade window</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1"># Check backup files are present on SFTP server</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># Confirm the passphrase is stored and accessible</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Verify backup is restorable before the upgrade window</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># Check backup files are present on SFTP server</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1"># Confirm the passphrase is stored and accessible</span>
 </code></pre></div>
 <hr />
 <h2 id="post-upgrade-validation">Post-Upgrade Validation<a class="headerlink" href="#post-upgrade-validation" title="Permanent link">&para;</a></h2>
 <p>Run these checks after each upgrade phase completes:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># NSX Manager cluster health</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>nsxcli
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>get<span class="w"> </span>cluster<span class="w"> </span>status
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>get<span class="w"> </span>managers
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>get<span class="w"> </span>services
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Transport node health</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/transport-nodes/status&quot;</span>
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c1"># Check: up_count equals total_count</span>
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>
-<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="c1"># Edge cluster health and BGP</span>
-<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="c1"># SSH to each Edge node</span>
-<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>get<span class="w"> </span>version<span class="w">                    </span><span class="c1"># Confirm new version</span>
-<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>get<span class="w"> </span>bgp<span class="w"> </span>neighbor<span class="w"> </span>summary<span class="w">        </span><span class="c1"># All peers Established</span>
-<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>get<span class="w"> </span>edge-cluster<span class="w"> </span>status<span class="w">         </span><span class="c1"># Active/Standby state confirmed</span>
-<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>
-<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a><span class="c1"># Open alarms</span>
-<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/alarms?status=OPEN&amp;severity=CRITICAL&quot;</span>
-<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a><span class="c1"># Should return result_count: 0</span>
-<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>
-<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a><span class="c1"># DFW rule push</span>
-<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a><span class="c1"># Verify a test VM can still communicate as expected after upgrade</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># NSX Manager cluster health</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>nsxcli
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>get<span class="w"> </span>cluster<span class="w"> </span>status
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>get<span class="w"> </span>managers
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>get<span class="w"> </span>services
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># Transport node health</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/transport-nodes/status&quot;</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Check: up_count equals total_count</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="c1"># Edge cluster health and BGP</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="c1"># SSH to each Edge node</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>get<span class="w"> </span>version<span class="w">                    </span><span class="c1"># Confirm new version</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>get<span class="w"> </span>bgp<span class="w"> </span>neighbor<span class="w"> </span>summary<span class="w">        </span><span class="c1"># All peers Established</span>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>get<span class="w"> </span>edge-cluster<span class="w"> </span>status<span class="w">         </span><span class="c1"># Active/Standby state confirmed</span>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="c1"># Open alarms</span>
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin:password&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/alarms?status=OPEN&amp;severity=CRITICAL&quot;</span>
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a><span class="c1"># Should return result_count: 0</span>
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a>
+<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a><span class="c1"># DFW rule push</span>
+<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a><span class="c1"># Verify a test VM can still communicate as expected after upgrade</span>
 </code></pre></div>
 
 

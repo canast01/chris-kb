@@ -3549,32 +3549,32 @@ Consistent standards reduce review friction, improve reliability, and make autom
 <hr />
 <h2 id="approved-verbs">Approved Verbs<a class="headerlink" href="#approved-verbs" title="Permanent link">&para;</a></h2>
 <p>PowerShell enforces a fixed set of approved verbs. Using unapproved verbs generates a warning on module import and breaks discoverability conventions.</p>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># List all approved verbs</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># List all approved verbs</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-Verb</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">Group</span><span class="p">,</span> <span class="n">Verb</span> <span class="p">|</span> <span class="nb">Format-Table</span> <span class="n">-AutoSize</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">```</span><span class="n">text</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="err">┌────────────────────────────────────</span> <span class="n">PowerShell</span> <span class="err">—</span> <span class="n">Design</span> <span class="n">Standards</span> <span class="err">────────────────────────────────────┐</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="err">│</span>   <span class="err">┌───────────────────────────────────────────────────────────────────────────────────────────────┐</span>   <span class="err">│</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="err">│</span>   <span class="err">│</span>    <span class="n">PowerShell</span> <span class="n">standards</span><span class="p">:</span> <span class="n">approved</span> <span class="n">verbs</span><span class="p">,</span> <span class="k">CmdletBinding</span><span class="p">,</span> <span class="n">proper</span> <span class="n">error</span> <span class="n">handling</span><span class="p">,</span> <span class="n">Pester</span> <span class="n">tests</span>   <span class="err">│</span>   <span class="err">│</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="err">│</span>   <span class="err">│</span> <span class="n">Use</span> <span class="n">PSScriptAnalyzer</span> <span class="k">in</span> <span class="n">CI</span><span class="p">;</span> <span class="n">pin</span> <span class="n">module</span> <span class="n">versions</span> <span class="n">with</span> <span class="c">#Requires or RequiredModules in manifest │   │</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="err">│</span>   <span class="err">│</span>         <span class="n">All</span> <span class="n">scripts</span> <span class="n">require</span> <span class="n">help</span> <span class="n">block</span><span class="p">:</span> <span class="p">.</span><span class="n">SYNOPSIS</span><span class="p">,</span> <span class="p">.</span><span class="n">DESCRIPTION</span><span class="p">,</span> <span class="p">.</span><span class="k">PARAMETER</span><span class="p">,</span> <span class="p">.</span><span class="n">EXAMPLE</span>         <span class="err">│</span>   <span class="err">│</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="err">│</span>   <span class="err">└───────────────────────────────────────────────────────────────────────────────────────────────┘</span>   <span class="err">│</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="err">│</span>                                                                                                       <span class="err">│</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="err">│</span>   <span class="err">┌──────────────────────────────────────────────┐</span>  <span class="err">┌─────────────────────────────────────────────┐</span>   <span class="err">│</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="err">│</span>   <span class="err">│</span>               <span class="n">Script</span> <span class="n">Structure</span>               <span class="err">│</span>  <span class="err">│</span>                <span class="n">Error</span> <span class="n">Handling</span>               <span class="err">│</span>   <span class="err">│</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="err">│</span>   <span class="err">│</span>    <span class="p">[</span><span class="k">CmdletBinding</span><span class="p">(</span><span class="n">SupportsShouldProcess</span><span class="p">)]</span>    <span class="err">│</span>  <span class="err">│</span>        <span class="nv">$ErrorActionPreference</span> <span class="p">=</span> <span class="n">Stop</span>        <span class="err">│</span>   <span class="err">│</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="err">│</span>   <span class="err">│</span>           <span class="k">param</span><span class="p">()</span> <span class="n">block</span> <span class="n">with</span> <span class="n">types</span>           <span class="err">│</span>  <span class="err">│</span>         <span class="k">try</span> <span class="p">{</span> <span class="p">}</span> <span class="k">catch</span> <span class="p">{</span> <span class="p">}</span> <span class="k">finally</span> <span class="p">{}</span>        <span class="err">│</span>   <span class="err">│</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="err">│</span>   <span class="err">│</span>           <span class="k">begin</span><span class="p">/</span><span class="k">process</span><span class="p">/</span><span class="k">end</span> <span class="n">blocks</span>           <span class="err">│</span>  <span class="err">│</span>           <span class="nb">Write-Error</span> <span class="n">-ErrorRecord</span>          <span class="err">│</span>   <span class="err">│</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="err">│</span>   <span class="err">│</span>           <span class="n">comment-based</span> <span class="n">help</span> <span class="n">block</span>           <span class="err">│</span>  <span class="err">│</span>         <span class="k">Throw</span> <span class="k">for</span> <span class="n">terminating</span> <span class="n">errors</span>        <span class="err">│</span>   <span class="err">│</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="err">│</span>   <span class="err">│</span>            <span class="c">#Requires -Version 7.0            │  │            Log with Write-Verbose           │   │</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="err">│</span>   <span class="err">└──────────────────────────────────────────────┘</span>  <span class="err">└─────────────────────────────────────────────┘</span>   <span class="err">│</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="err">│</span>                                                                                                       <span class="err">│</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="err">│</span>   <span class="err">┌───────────────────────────────────────────────────────────────────────────────────────────────┐</span>   <span class="err">│</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="err">│</span>   <span class="err">│</span>   <span class="n">SupportsShouldProcess</span> <span class="p">=</span> <span class="n">enables</span> <span class="n">-WhatIf</span> <span class="n">and</span> <span class="n">-Confirm</span><span class="p">;</span> <span class="n">use</span> <span class="nv">$PSCmdlet</span><span class="p">.</span><span class="n">ShouldProcess</span><span class="p">()</span> <span class="n">guard</span>   <span class="err">│</span>   <span class="err">│</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="err">│</span>   <span class="err">│</span> <span class="n">PSScriptAnalyzer</span>      <span class="p">=</span> <span class="n">static</span> <span class="n">analysis</span><span class="p">;</span> <span class="n">run</span> <span class="k">in</span> <span class="n">CI</span> <span class="n">with</span> <span class="nb">Invoke-ScriptAnalyzer</span> <span class="n">-Severity</span> <span class="n">Error</span> <span class="err">│</span>   <span class="err">│</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="err">│</span>   <span class="err">│</span>   <span class="n">Pester</span>                <span class="p">=</span> <span class="nb">PS </span><span class="n">testing</span> <span class="n">framework</span><span class="p">;</span> <span class="n">Describe</span><span class="p">/</span><span class="n">Context</span><span class="p">/</span><span class="n">It</span> <span class="n">blocks</span><span class="p">;</span> <span class="n">mock</span> <span class="n">with</span> <span class="n">Mock</span><span class="p">{}</span>  <span class="err">│</span>   <span class="err">│</span>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="err">│</span>   <span class="err">└───────────────────────────────────────────────────────────────────────────────────────────────┘</span>   <span class="err">│</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="err">└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌──────────────────────────────────── PowerShell — Design Standards ────────────────────────────────────┐
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   │    PowerShell standards: approved verbs, CmdletBinding, proper error handling, Pester tests   │   │
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │ Use PSScriptAnalyzer in CI; pin module versions with #Requires or RequiredModules in manifest │   │
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │         All scripts require help block: .SYNOPSIS, .DESCRIPTION, .PARAMETER, .EXAMPLE         │   │
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│                                                                                                       │
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │               Script Structure               │  │                Error Handling               │   │
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │    [CmdletBinding(SupportsShouldProcess)]    │  │        $ErrorActionPreference = Stop        │   │
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │           param() block with types           │  │         try { } catch { } finally {}        │   │
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   │           begin/process/end blocks           │  │           Write-Error -ErrorRecord          │   │
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│   │           comment-based help block           │  │         Throw for terminating errors        │   │
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│   │            #Requires -Version 7.0            │  │            Log with Write-Verbose           │   │
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                                                                                                       │
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │   SupportsShouldProcess = enables -WhatIf and -Confirm; use $PSCmdlet.ShouldProcess() guard   │   │
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │ PSScriptAnalyzer      = static analysis; run in CI with Invoke-ScriptAnalyzer -Severity Error │   │
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │   Pester                = PS testing framework; Describe/Context/It blocks; mock with Mock{}  │   │
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div></p>
 <p>Key attributes reference:</p>
 <table>
 <thead>
@@ -3625,194 +3625,194 @@ Consistent standards reduce review friction, improve reliability, and make autom
 <hr />
 <h2 id="error-handling">Error Handling<a class="headerlink" href="#error-handling" title="Permanent link">&para;</a></h2>
 <p>PowerShell has two error types: <strong>terminating</strong> (exceptions, thrown with <code>throw</code>) and <strong>non-terminating</strong> (reported with <code>Write-Error</code>). Use <code>$ErrorActionPreference = 'Stop'</code> or <code>-ErrorAction Stop</code> to promote non-terminating errors to terminating.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">function</span> <span class="nb">Invoke-WidgetDeploy</span> <span class="p">{</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="p">[</span><span class="k">CmdletBinding</span><span class="p">()]</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="k">param</span><span class="p">(</span><span class="no">[string]</span><span class="nv">$WidgetName</span><span class="p">)</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="c"># Promote all errors to terminating within this scope</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="nv">$ErrorActionPreference</span> <span class="p">=</span> <span class="s1">&#39;Stop&#39;</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    <span class="k">try</span> <span class="p">{</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>        <span class="nb">Write-Verbose</span> <span class="s2">&quot;Starting deployment of $WidgetName&quot;</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>        <span class="nv">$result</span> <span class="p">=</span> <span class="nb">Invoke-RestMethod</span> <span class="n">-Uri</span> <span class="s2">&quot;https://api.example.com/widgets/$WidgetName&quot;</span> <span class="p">`</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>                                    <span class="n">-Method</span> <span class="n">Post</span> <span class="p">`</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>                                    <span class="n">-ErrorAction</span> <span class="n">Stop</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>        <span class="nb">Write-Verbose</span> <span class="s2">&quot;Deployment response: </span><span class="p">$(</span><span class="nv">$result</span><span class="p">.</span><span class="n">status</span><span class="p">)</span><span class="s2">&quot;</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>        <span class="k">return</span> <span class="nv">$result</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>    <span class="p">}</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>    <span class="k">catch</span> <span class="no">[System.Net.WebException]</span> <span class="p">{</span>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>        <span class="c"># Specific exception type — handle network errors</span>
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>        <span class="nb">Write-Error</span> <span class="s2">&quot;Network error deploying $WidgetName`: $_&quot;</span> <span class="n">-ErrorAction</span> <span class="n">Stop</span>
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>    <span class="p">}</span>
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>    <span class="k">catch</span> <span class="no">[System.UnauthorizedAccessException]</span> <span class="p">{</span>
-<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>        <span class="nb">Write-Error</span> <span class="s2">&quot;Access denied for $WidgetName`: $_&quot;</span> <span class="n">-ErrorAction</span> <span class="n">Stop</span>
-<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>    <span class="p">}</span>
-<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>    <span class="k">catch</span> <span class="p">{</span>
-<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>        <span class="c"># Catch-all for unexpected errors</span>
-<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>        <span class="nb">Write-Error</span> <span class="s2">&quot;Unexpected error deploying $WidgetName`: </span><span class="p">$(</span><span class="nv">$_</span><span class="p">.</span><span class="n">Exception</span><span class="p">.</span><span class="n">Message</span><span class="p">)</span><span class="s2">&quot;</span>
-<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>        <span class="k">throw</span>  <span class="c"># Re-throw to preserve stack trace for caller</span>
-<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>    <span class="p">}</span>
-<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a>    <span class="k">finally</span> <span class="p">{</span>
-<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>        <span class="c"># Always runs — use for cleanup regardless of success/failure</span>
-<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>        <span class="nb">Write-Verbose</span> <span class="s2">&quot;Deployment attempt for $WidgetName complete&quot;</span>
-<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a>    <span class="p">}</span>
-<a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">function</span> <span class="nb">Invoke-WidgetDeploy</span> <span class="p">{</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="p">[</span><span class="k">CmdletBinding</span><span class="p">()]</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="k">param</span><span class="p">(</span><span class="no">[string]</span><span class="nv">$WidgetName</span><span class="p">)</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="c"># Promote all errors to terminating within this scope</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="nv">$ErrorActionPreference</span> <span class="p">=</span> <span class="s1">&#39;Stop&#39;</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    <span class="k">try</span> <span class="p">{</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>        <span class="nb">Write-Verbose</span> <span class="s2">&quot;Starting deployment of $WidgetName&quot;</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>        <span class="nv">$result</span> <span class="p">=</span> <span class="nb">Invoke-RestMethod</span> <span class="n">-Uri</span> <span class="s2">&quot;https://api.example.com/widgets/$WidgetName&quot;</span> <span class="p">`</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>                                    <span class="n">-Method</span> <span class="n">Post</span> <span class="p">`</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>                                    <span class="n">-ErrorAction</span> <span class="n">Stop</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>        <span class="nb">Write-Verbose</span> <span class="s2">&quot;Deployment response: </span><span class="p">$(</span><span class="nv">$result</span><span class="p">.</span><span class="n">status</span><span class="p">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>        <span class="k">return</span> <span class="nv">$result</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>    <span class="p">}</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>    <span class="k">catch</span> <span class="no">[System.Net.WebException]</span> <span class="p">{</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>        <span class="c"># Specific exception type — handle network errors</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>        <span class="nb">Write-Error</span> <span class="s2">&quot;Network error deploying $WidgetName`: $_&quot;</span> <span class="n">-ErrorAction</span> <span class="n">Stop</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>    <span class="p">}</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>    <span class="k">catch</span> <span class="no">[System.UnauthorizedAccessException]</span> <span class="p">{</span>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>        <span class="nb">Write-Error</span> <span class="s2">&quot;Access denied for $WidgetName`: $_&quot;</span> <span class="n">-ErrorAction</span> <span class="n">Stop</span>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>    <span class="p">}</span>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>    <span class="k">catch</span> <span class="p">{</span>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>        <span class="c"># Catch-all for unexpected errors</span>
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>        <span class="nb">Write-Error</span> <span class="s2">&quot;Unexpected error deploying $WidgetName`: </span><span class="p">$(</span><span class="nv">$_</span><span class="p">.</span><span class="n">Exception</span><span class="p">.</span><span class="n">Message</span><span class="p">)</span><span class="s2">&quot;</span>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>        <span class="k">throw</span>  <span class="c"># Re-throw to preserve stack trace for caller</span>
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>    <span class="p">}</span>
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>    <span class="k">finally</span> <span class="p">{</span>
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>        <span class="c"># Always runs — use for cleanup regardless of success/failure</span>
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>        <span class="nb">Write-Verbose</span> <span class="s2">&quot;Deployment attempt for $WidgetName complete&quot;</span>
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>    <span class="p">}</span>
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a><span class="p">}</span>
 </code></pre></div>
 <hr />
 <h2 id="logging-standards">Logging Standards<a class="headerlink" href="#logging-standards" title="Permanent link">&para;</a></h2>
 <h3 id="write-eventlog-windows-structured-system-log">Write-EventLog (Windows — Structured System Log)<a class="headerlink" href="#write-eventlog-windows-structured-system-log" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Register event source once (requires admin)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">New-EventLog</span> <span class="n">-LogName</span> <span class="n">Application</span> <span class="n">-Source</span> <span class="s1">&#39;WidgetAutomation&#39;</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="k">function</span> <span class="nb">Write-AutomationEvent</span> <span class="p">{</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    <span class="k">param</span><span class="p">(</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>        <span class="no">[string]</span><span class="nv">$Message</span><span class="p">,</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>        <span class="p">[</span><span class="k">ValidateSet</span><span class="p">(</span><span class="s1">&#39;Information&#39;</span><span class="p">,</span><span class="s1">&#39;Warning&#39;</span><span class="p">,</span><span class="s1">&#39;Error&#39;</span><span class="p">)]</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>        <span class="no">[string]</span><span class="nv">$EntryType</span> <span class="p">=</span> <span class="s1">&#39;Information&#39;</span><span class="p">,</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>        <span class="no">[int]</span><span class="nv">$EventId</span> <span class="p">=</span> <span class="n">1000</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>    <span class="p">)</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>    <span class="nb">Write-EventLog</span> <span class="n">-LogName</span> <span class="n">Application</span> <span class="p">`</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>                   <span class="n">-Source</span> <span class="s1">&#39;WidgetAutomation&#39;</span> <span class="p">`</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>                   <span class="n">-EntryType</span> <span class="nv">$EntryType</span> <span class="p">`</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>                   <span class="n">-EventId</span> <span class="nv">$EventId</span> <span class="p">`</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>                   <span class="n">-Message</span> <span class="nv">$Message</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Register event source once (requires admin)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">New-EventLog</span> <span class="n">-LogName</span> <span class="n">Application</span> <span class="n">-Source</span> <span class="s1">&#39;WidgetAutomation&#39;</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="k">function</span> <span class="nb">Write-AutomationEvent</span> <span class="p">{</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="k">param</span><span class="p">(</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>        <span class="no">[string]</span><span class="nv">$Message</span><span class="p">,</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>        <span class="p">[</span><span class="k">ValidateSet</span><span class="p">(</span><span class="s1">&#39;Information&#39;</span><span class="p">,</span><span class="s1">&#39;Warning&#39;</span><span class="p">,</span><span class="s1">&#39;Error&#39;</span><span class="p">)]</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>        <span class="no">[string]</span><span class="nv">$EntryType</span> <span class="p">=</span> <span class="s1">&#39;Information&#39;</span><span class="p">,</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>        <span class="no">[int]</span><span class="nv">$EventId</span> <span class="p">=</span> <span class="n">1000</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>    <span class="p">)</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>    <span class="nb">Write-EventLog</span> <span class="n">-LogName</span> <span class="n">Application</span> <span class="p">`</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>                   <span class="n">-Source</span> <span class="s1">&#39;WidgetAutomation&#39;</span> <span class="p">`</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>                   <span class="n">-EntryType</span> <span class="nv">$EntryType</span> <span class="p">`</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>                   <span class="n">-EventId</span> <span class="nv">$EventId</span> <span class="p">`</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>                   <span class="n">-Message</span> <span class="nv">$Message</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="p">}</span>
 </code></pre></div>
 <h3 id="structured-json-logging-cross-platform">Structured JSON Logging (cross-platform)<a class="headerlink" href="#structured-json-logging-cross-platform" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">function</span> <span class="nb">Write-StructuredLog</span> <span class="p">{</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="k">param</span><span class="p">(</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>        <span class="no">[string]</span><span class="nv">$Level</span><span class="p">,</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>        <span class="no">[string]</span><span class="nv">$Message</span><span class="p">,</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>        <span class="no">[hashtable]</span><span class="nv">$Properties</span> <span class="p">=</span> <span class="p">@{}</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    <span class="p">)</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    <span class="nv">$entry</span> <span class="p">=</span> <span class="no">[ordered]</span><span class="p">@{</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>        <span class="n">timestamp</span>   <span class="p">=</span> <span class="p">(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="s1">&#39;o&#39;</span><span class="p">)</span>   <span class="c"># ISO 8601</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>        <span class="n">level</span>       <span class="p">=</span> <span class="nv">$Level</span><span class="p">.</span><span class="n">ToUpper</span><span class="p">()</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>        <span class="n">message</span>     <span class="p">=</span> <span class="nv">$Message</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>        <span class="n">host</span>        <span class="p">=</span> <span class="nv">$env:COMPUTERNAME</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>        <span class="n">pid</span>         <span class="p">=</span> <span class="nv">$PID</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>        <span class="n">script</span>      <span class="p">=</span> <span class="nv">$PSCommandPath</span>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>    <span class="p">}</span> <span class="p">+</span> <span class="nv">$Properties</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>    <span class="nv">$entry</span> <span class="p">|</span> <span class="nb">ConvertTo-Json</span> <span class="n">-Compress</span> <span class="p">|</span> <span class="nb">Tee-Object</span> <span class="n">-FilePath</span> <span class="nv">$LogPath</span> <span class="n">-Append</span>
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="p">}</span>
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="c"># Usage</span>
-<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="nb">Write-StructuredLog</span> <span class="n">-Level</span> <span class="s1">&#39;INFO&#39;</span> <span class="n">-Message</span> <span class="s1">&#39;Widget deployed&#39;</span> <span class="n">-Properties</span> <span class="p">@{</span>
-<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>    <span class="n">widget</span> <span class="p">=</span> <span class="s1">&#39;widget-42&#39;</span>
-<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>    <span class="n">duration_ms</span> <span class="p">=</span> <span class="n">342</span>
-<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">function</span> <span class="nb">Write-StructuredLog</span> <span class="p">{</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    <span class="k">param</span><span class="p">(</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>        <span class="no">[string]</span><span class="nv">$Level</span><span class="p">,</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>        <span class="no">[string]</span><span class="nv">$Message</span><span class="p">,</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>        <span class="no">[hashtable]</span><span class="nv">$Properties</span> <span class="p">=</span> <span class="p">@{}</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="p">)</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    <span class="nv">$entry</span> <span class="p">=</span> <span class="no">[ordered]</span><span class="p">@{</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>        <span class="n">timestamp</span>   <span class="p">=</span> <span class="p">(</span><span class="nb">Get-Date</span> <span class="n">-Format</span> <span class="s1">&#39;o&#39;</span><span class="p">)</span>   <span class="c"># ISO 8601</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>        <span class="n">level</span>       <span class="p">=</span> <span class="nv">$Level</span><span class="p">.</span><span class="n">ToUpper</span><span class="p">()</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>        <span class="n">message</span>     <span class="p">=</span> <span class="nv">$Message</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>        <span class="n">host</span>        <span class="p">=</span> <span class="nv">$env:COMPUTERNAME</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>        <span class="n">pid</span>         <span class="p">=</span> <span class="nv">$PID</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>        <span class="n">script</span>      <span class="p">=</span> <span class="nv">$PSCommandPath</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>    <span class="p">}</span> <span class="p">+</span> <span class="nv">$Properties</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>    <span class="nv">$entry</span> <span class="p">|</span> <span class="nb">ConvertTo-Json</span> <span class="n">-Compress</span> <span class="p">|</span> <span class="nb">Tee-Object</span> <span class="n">-FilePath</span> <span class="nv">$LogPath</span> <span class="n">-Append</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="p">}</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="c"># Usage</span>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="nb">Write-StructuredLog</span> <span class="n">-Level</span> <span class="s1">&#39;INFO&#39;</span> <span class="n">-Message</span> <span class="s1">&#39;Widget deployed&#39;</span> <span class="n">-Properties</span> <span class="p">@{</span>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>    <span class="n">widget</span> <span class="p">=</span> <span class="s1">&#39;widget-42&#39;</span>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>    <span class="n">duration_ms</span> <span class="p">=</span> <span class="n">342</span>
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="p">}</span>
 </code></pre></div>
 <h3 id="psframework-logging-recommended-for-modules">PSFramework Logging (recommended for modules)<a class="headerlink" href="#psframework-logging-recommended-for-modules" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">Import-Module</span> <span class="n">PSFramework</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nb">Set-PSFLoggingProvider</span> <span class="n">-Name</span> <span class="n">FileSystem</span> <span class="n">-Enabled</span> <span class="nv">$true</span> <span class="p">`</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="n">-FilePath</span> <span class="s1">&#39;C:\Logs\widget-%Date%.log&#39;</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="nb">Write-PSFMessage</span> <span class="n">-Level</span> <span class="n">Important</span> <span class="n">-Message</span> <span class="s2">&quot;Widget $Name deployed successfully&quot;</span>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="nb">Write-PSFMessage</span> <span class="n">-Level</span> <span class="n">Warning</span>   <span class="n">-Message</span> <span class="s2">&quot;Widget $Name in degraded state&quot;</span> <span class="n">-Tag</span> <span class="s1">&#39;health&#39;</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="nb">Write-PSFMessage</span> <span class="n">-Level</span> <span class="n">Error</span>     <span class="n">-Message</span> <span class="s2">&quot;Widget deployment failed&quot;</span> <span class="n">-ErrorRecord</span> <span class="nv">$_</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">Import-Module</span> <span class="n">PSFramework</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nb">Set-PSFLoggingProvider</span> <span class="n">-Name</span> <span class="n">FileSystem</span> <span class="n">-Enabled</span> <span class="nv">$true</span> <span class="p">`</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="n">-FilePath</span> <span class="s1">&#39;C:\Logs\widget-%Date%.log&#39;</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nb">Write-PSFMessage</span> <span class="n">-Level</span> <span class="n">Important</span> <span class="n">-Message</span> <span class="s2">&quot;Widget $Name deployed successfully&quot;</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="nb">Write-PSFMessage</span> <span class="n">-Level</span> <span class="n">Warning</span>   <span class="n">-Message</span> <span class="s2">&quot;Widget $Name in degraded state&quot;</span> <span class="n">-Tag</span> <span class="s1">&#39;health&#39;</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="nb">Write-PSFMessage</span> <span class="n">-Level</span> <span class="n">Error</span>     <span class="n">-Message</span> <span class="s2">&quot;Widget deployment failed&quot;</span> <span class="n">-ErrorRecord</span> <span class="nv">$_</span>
 </code></pre></div>
 <hr />
 <h2 id="comment-based-help">Comment-Based Help<a class="headerlink" href="#comment-based-help" title="Permanent link">&para;</a></h2>
 <p>Every exported function must have comment-based help. This powers <code>Get-Help</code> and PlatyPS documentation generation.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">function</span> <span class="nb">Get-Widget</span> <span class="p">{</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>    <span class="cm">&lt;#</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="cm">    </span><span class="sd">.SYNOPSIS</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="cm">        Retrieves one or more widget objects from the widget service.</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="cm">    </span><span class="sd">.DESCRIPTION</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="cm">        Get-Widget queries the widget service API and returns widget objects</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="cm">        matching the specified criteria. Supports pipeline input and wildcards.</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="cm">    </span><span class="sd">.PARAMETER</span><span class="cm"> Name</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="cm">        The name of the widget to retrieve. Accepts wildcards.</span>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="cm">    </span><span class="sd">.PARAMETER</span><span class="cm"> State</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="cm">        Filter widgets by operational state. Valid values: Active, Inactive, Maintenance.</span>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="cm">    </span><span class="sd">.EXAMPLE</span>
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="cm">        Get-Widget -Name &#39;widget-*&#39;</span>
-<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="cm">        Returns all widgets whose name starts with &#39;widget-&#39;.</span>
-<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>
-<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="cm">    </span><span class="sd">.EXAMPLE</span>
-<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="cm">        Get-Widget -State Inactive | Remove-Widget</span>
-<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a><span class="cm">        Retrieves all inactive widgets and pipes them to removal.</span>
-<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>
-<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a><span class="cm">    </span><span class="sd">.INPUTS</span>
-<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a><span class="cm">        System.String. You can pipe widget names to Get-Widget.</span>
-<a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a>
-<a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a><span class="cm">    </span><span class="sd">.OUTPUTS</span>
-<a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a><span class="cm">        PSCustomObject. Returns widget objects with Name, State, and Priority properties.</span>
-<a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a>
-<a id="__codelineno-6-30" name="__codelineno-6-30" href="#__codelineno-6-30"></a><span class="cm">    </span><span class="sd">.NOTES</span>
-<a id="__codelineno-6-31" name="__codelineno-6-31" href="#__codelineno-6-31"></a><span class="cm">        Author:  Platform Automation Team</span>
-<a id="__codelineno-6-32" name="__codelineno-6-32" href="#__codelineno-6-32"></a><span class="cm">        Version: 1.2.0</span>
-<a id="__codelineno-6-33" name="__codelineno-6-33" href="#__codelineno-6-33"></a><span class="cm">        Requires API key in environment variable WIDGET_API_KEY.</span>
-<a id="__codelineno-6-34" name="__codelineno-6-34" href="#__codelineno-6-34"></a><span class="cm">    #&gt;</span>
-<a id="__codelineno-6-35" name="__codelineno-6-35" href="#__codelineno-6-35"></a>    <span class="p">[</span><span class="k">CmdletBinding</span><span class="p">()]</span>
-<a id="__codelineno-6-36" name="__codelineno-6-36" href="#__codelineno-6-36"></a>    <span class="k">param</span> <span class="p">(</span>
-<a id="__codelineno-6-37" name="__codelineno-6-37" href="#__codelineno-6-37"></a>        <span class="p">[</span><span class="k">Parameter</span><span class="p">(</span><span class="k">ValueFromPipeline</span><span class="p">)]</span>
-<a id="__codelineno-6-38" name="__codelineno-6-38" href="#__codelineno-6-38"></a>        <span class="no">[string]</span><span class="nv">$Name</span> <span class="p">=</span> <span class="s1">&#39;*&#39;</span><span class="p">,</span>
-<a id="__codelineno-6-39" name="__codelineno-6-39" href="#__codelineno-6-39"></a>
-<a id="__codelineno-6-40" name="__codelineno-6-40" href="#__codelineno-6-40"></a>        <span class="p">[</span><span class="k">ValidateSet</span><span class="p">(</span><span class="s1">&#39;Active&#39;</span><span class="p">,</span><span class="s1">&#39;Inactive&#39;</span><span class="p">,</span><span class="s1">&#39;Maintenance&#39;</span><span class="p">)]</span>
-<a id="__codelineno-6-41" name="__codelineno-6-41" href="#__codelineno-6-41"></a>        <span class="no">[string]</span><span class="nv">$State</span>
-<a id="__codelineno-6-42" name="__codelineno-6-42" href="#__codelineno-6-42"></a>    <span class="p">)</span>
-<a id="__codelineno-6-43" name="__codelineno-6-43" href="#__codelineno-6-43"></a>    <span class="k">process</span> <span class="p">{</span> <span class="cm">&lt;# implementation #&gt;</span> <span class="p">}</span>
-<a id="__codelineno-6-44" name="__codelineno-6-44" href="#__codelineno-6-44"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">function</span> <span class="nb">Get-Widget</span> <span class="p">{</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    <span class="cm">&lt;#</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="cm">    </span><span class="sd">.SYNOPSIS</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="cm">        Retrieves one or more widget objects from the widget service.</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="cm">    </span><span class="sd">.DESCRIPTION</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="cm">        Get-Widget queries the widget service API and returns widget objects</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="cm">        matching the specified criteria. Supports pipeline input and wildcards.</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="cm">    </span><span class="sd">.PARAMETER</span><span class="cm"> Name</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="cm">        The name of the widget to retrieve. Accepts wildcards.</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="cm">    </span><span class="sd">.PARAMETER</span><span class="cm"> State</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="cm">        Filter widgets by operational state. Valid values: Active, Inactive, Maintenance.</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="cm">    </span><span class="sd">.EXAMPLE</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="cm">        Get-Widget -Name &#39;widget-*&#39;</span>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="cm">        Returns all widgets whose name starts with &#39;widget-&#39;.</span>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="cm">    </span><span class="sd">.EXAMPLE</span>
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="cm">        Get-Widget -State Inactive | Remove-Widget</span>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="cm">        Retrieves all inactive widgets and pipes them to removal.</span>
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a><span class="cm">    </span><span class="sd">.INPUTS</span>
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a><span class="cm">        System.String. You can pipe widget names to Get-Widget.</span>
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a><span class="cm">    </span><span class="sd">.OUTPUTS</span>
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a><span class="cm">        PSCustomObject. Returns widget objects with Name, State, and Priority properties.</span>
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>
+<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a><span class="cm">    </span><span class="sd">.NOTES</span>
+<a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a><span class="cm">        Author:  Platform Automation Team</span>
+<a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a><span class="cm">        Version: 1.2.0</span>
+<a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a><span class="cm">        Requires API key in environment variable WIDGET_API_KEY.</span>
+<a id="__codelineno-5-34" name="__codelineno-5-34" href="#__codelineno-5-34"></a><span class="cm">    #&gt;</span>
+<a id="__codelineno-5-35" name="__codelineno-5-35" href="#__codelineno-5-35"></a>    <span class="p">[</span><span class="k">CmdletBinding</span><span class="p">()]</span>
+<a id="__codelineno-5-36" name="__codelineno-5-36" href="#__codelineno-5-36"></a>    <span class="k">param</span> <span class="p">(</span>
+<a id="__codelineno-5-37" name="__codelineno-5-37" href="#__codelineno-5-37"></a>        <span class="p">[</span><span class="k">Parameter</span><span class="p">(</span><span class="k">ValueFromPipeline</span><span class="p">)]</span>
+<a id="__codelineno-5-38" name="__codelineno-5-38" href="#__codelineno-5-38"></a>        <span class="no">[string]</span><span class="nv">$Name</span> <span class="p">=</span> <span class="s1">&#39;*&#39;</span><span class="p">,</span>
+<a id="__codelineno-5-39" name="__codelineno-5-39" href="#__codelineno-5-39"></a>
+<a id="__codelineno-5-40" name="__codelineno-5-40" href="#__codelineno-5-40"></a>        <span class="p">[</span><span class="k">ValidateSet</span><span class="p">(</span><span class="s1">&#39;Active&#39;</span><span class="p">,</span><span class="s1">&#39;Inactive&#39;</span><span class="p">,</span><span class="s1">&#39;Maintenance&#39;</span><span class="p">)]</span>
+<a id="__codelineno-5-41" name="__codelineno-5-41" href="#__codelineno-5-41"></a>        <span class="no">[string]</span><span class="nv">$State</span>
+<a id="__codelineno-5-42" name="__codelineno-5-42" href="#__codelineno-5-42"></a>    <span class="p">)</span>
+<a id="__codelineno-5-43" name="__codelineno-5-43" href="#__codelineno-5-43"></a>    <span class="k">process</span> <span class="p">{</span> <span class="cm">&lt;# implementation #&gt;</span> <span class="p">}</span>
+<a id="__codelineno-5-44" name="__codelineno-5-44" href="#__codelineno-5-44"></a><span class="p">}</span>
 </code></pre></div>
 <hr />
 <h2 id="testing-with-pester">Testing with Pester<a class="headerlink" href="#testing-with-pester" title="Permanent link">&para;</a></h2>
 <p>All exported functions require Pester tests. Target <strong>Pester 5.x</strong>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># Tests/Get-Widget.Tests.ps1</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="n">BeforeAll</span> <span class="p">{</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    <span class="nb">Import-Module</span> <span class="s2">&quot;$PSScriptRoot/../MyModule.psd1&quot;</span> <span class="n">-Force</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="p">}</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="n">Describe</span> <span class="s1">&#39;Get-Widget&#39;</span> <span class="p">{</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>    <span class="n">Context</span> <span class="s1">&#39;When the API returns results&#39;</span> <span class="p">{</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>        <span class="n">BeforeEach</span> <span class="p">{</span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>            <span class="n">Mock</span> <span class="nb">Invoke-RestMethod</span> <span class="p">{</span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>                <span class="k">return</span> <span class="no">[PSCustomObject]</span><span class="p">@{</span> <span class="n">Name</span> <span class="p">=</span> <span class="s1">&#39;widget-01&#39;</span><span class="p">;</span> <span class="n">State</span> <span class="p">=</span> <span class="s1">&#39;Active&#39;</span><span class="p">;</span> <span class="n">Priority</span> <span class="p">=</span> <span class="n">5</span> <span class="p">}</span>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>            <span class="p">}</span> <span class="n">-ModuleName</span> <span class="n">MyModule</span>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>        <span class="p">}</span>
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>        <span class="n">It</span> <span class="s1">&#39;Returns a widget object with expected properties&#39;</span> <span class="p">{</span>
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>            <span class="nv">$result</span> <span class="p">=</span> <span class="nb">Get-Widget</span> <span class="n">-Name</span> <span class="s1">&#39;widget-01&#39;</span>
-<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>            <span class="nv">$result</span><span class="p">.</span><span class="n">Name</span>     <span class="p">|</span> <span class="n">Should</span> <span class="n">-Be</span> <span class="s1">&#39;widget-01&#39;</span>
-<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>            <span class="nv">$result</span><span class="p">.</span><span class="n">State</span>    <span class="p">|</span> <span class="n">Should</span> <span class="n">-Be</span> <span class="s1">&#39;Active&#39;</span>
-<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>        <span class="p">}</span>
-<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>
-<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>        <span class="n">It</span> <span class="s1">&#39;Calls the API with the correct URI&#39;</span> <span class="p">{</span>
-<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>            <span class="nb">Get-Widget</span> <span class="n">-Name</span> <span class="s1">&#39;widget-01&#39;</span>
-<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>            <span class="n">Should</span> <span class="n">-Invoke</span> <span class="nb">Invoke-RestMethod</span> <span class="n">-Times</span> <span class="n">1</span> <span class="n">-ModuleName</span> <span class="n">MyModule</span> <span class="p">`</span>
-<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>                   <span class="n">-ParameterFilter</span> <span class="p">{</span> <span class="nv">$Uri</span> <span class="o">-like</span> <span class="s1">&#39;*widget-01*&#39;</span> <span class="p">}</span>
-<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>        <span class="p">}</span>
-<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>    <span class="p">}</span>
-<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>
-<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a>    <span class="n">Context</span> <span class="s1">&#39;When the API is unreachable&#39;</span> <span class="p">{</span>
-<a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a>        <span class="n">BeforeEach</span> <span class="p">{</span>
-<a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a>            <span class="n">Mock</span> <span class="nb">Invoke-RestMethod</span> <span class="p">{</span> <span class="k">throw</span> <span class="s1">&#39;Connection refused&#39;</span> <span class="p">}</span> <span class="n">-ModuleName</span> <span class="n">MyModule</span>
-<a id="__codelineno-7-30" name="__codelineno-7-30" href="#__codelineno-7-30"></a>        <span class="p">}</span>
-<a id="__codelineno-7-31" name="__codelineno-7-31" href="#__codelineno-7-31"></a>
-<a id="__codelineno-7-32" name="__codelineno-7-32" href="#__codelineno-7-32"></a>        <span class="n">It</span> <span class="s1">&#39;Throws a terminating error&#39;</span> <span class="p">{</span>
-<a id="__codelineno-7-33" name="__codelineno-7-33" href="#__codelineno-7-33"></a>            <span class="p">{</span> <span class="nb">Get-Widget</span> <span class="n">-Name</span> <span class="s1">&#39;widget-01&#39;</span> <span class="p">}</span> <span class="p">|</span> <span class="n">Should</span> <span class="n">-Throw</span>
-<a id="__codelineno-7-34" name="__codelineno-7-34" href="#__codelineno-7-34"></a>        <span class="p">}</span>
-<a id="__codelineno-7-35" name="__codelineno-7-35" href="#__codelineno-7-35"></a>    <span class="p">}</span>
-<a id="__codelineno-7-36" name="__codelineno-7-36" href="#__codelineno-7-36"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Tests/Get-Widget.Tests.ps1</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">BeforeAll</span> <span class="p">{</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    <span class="nb">Import-Module</span> <span class="s2">&quot;$PSScriptRoot/../MyModule.psd1&quot;</span> <span class="n">-Force</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="p">}</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="n">Describe</span> <span class="s1">&#39;Get-Widget&#39;</span> <span class="p">{</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>    <span class="n">Context</span> <span class="s1">&#39;When the API returns results&#39;</span> <span class="p">{</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>        <span class="n">BeforeEach</span> <span class="p">{</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>            <span class="n">Mock</span> <span class="nb">Invoke-RestMethod</span> <span class="p">{</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>                <span class="k">return</span> <span class="no">[PSCustomObject]</span><span class="p">@{</span> <span class="n">Name</span> <span class="p">=</span> <span class="s1">&#39;widget-01&#39;</span><span class="p">;</span> <span class="n">State</span> <span class="p">=</span> <span class="s1">&#39;Active&#39;</span><span class="p">;</span> <span class="n">Priority</span> <span class="p">=</span> <span class="n">5</span> <span class="p">}</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>            <span class="p">}</span> <span class="n">-ModuleName</span> <span class="n">MyModule</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>        <span class="p">}</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>        <span class="n">It</span> <span class="s1">&#39;Returns a widget object with expected properties&#39;</span> <span class="p">{</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>            <span class="nv">$result</span> <span class="p">=</span> <span class="nb">Get-Widget</span> <span class="n">-Name</span> <span class="s1">&#39;widget-01&#39;</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>            <span class="nv">$result</span><span class="p">.</span><span class="n">Name</span>     <span class="p">|</span> <span class="n">Should</span> <span class="n">-Be</span> <span class="s1">&#39;widget-01&#39;</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>            <span class="nv">$result</span><span class="p">.</span><span class="n">State</span>    <span class="p">|</span> <span class="n">Should</span> <span class="n">-Be</span> <span class="s1">&#39;Active&#39;</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>        <span class="p">}</span>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>        <span class="n">It</span> <span class="s1">&#39;Calls the API with the correct URI&#39;</span> <span class="p">{</span>
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>            <span class="nb">Get-Widget</span> <span class="n">-Name</span> <span class="s1">&#39;widget-01&#39;</span>
+<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>            <span class="n">Should</span> <span class="n">-Invoke</span> <span class="nb">Invoke-RestMethod</span> <span class="n">-Times</span> <span class="n">1</span> <span class="n">-ModuleName</span> <span class="n">MyModule</span> <span class="p">`</span>
+<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>                   <span class="n">-ParameterFilter</span> <span class="p">{</span> <span class="nv">$Uri</span> <span class="o">-like</span> <span class="s1">&#39;*widget-01*&#39;</span> <span class="p">}</span>
+<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a>        <span class="p">}</span>
+<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a>    <span class="p">}</span>
+<a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a>
+<a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a>    <span class="n">Context</span> <span class="s1">&#39;When the API is unreachable&#39;</span> <span class="p">{</span>
+<a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a>        <span class="n">BeforeEach</span> <span class="p">{</span>
+<a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a>            <span class="n">Mock</span> <span class="nb">Invoke-RestMethod</span> <span class="p">{</span> <span class="k">throw</span> <span class="s1">&#39;Connection refused&#39;</span> <span class="p">}</span> <span class="n">-ModuleName</span> <span class="n">MyModule</span>
+<a id="__codelineno-6-30" name="__codelineno-6-30" href="#__codelineno-6-30"></a>        <span class="p">}</span>
+<a id="__codelineno-6-31" name="__codelineno-6-31" href="#__codelineno-6-31"></a>
+<a id="__codelineno-6-32" name="__codelineno-6-32" href="#__codelineno-6-32"></a>        <span class="n">It</span> <span class="s1">&#39;Throws a terminating error&#39;</span> <span class="p">{</span>
+<a id="__codelineno-6-33" name="__codelineno-6-33" href="#__codelineno-6-33"></a>            <span class="p">{</span> <span class="nb">Get-Widget</span> <span class="n">-Name</span> <span class="s1">&#39;widget-01&#39;</span> <span class="p">}</span> <span class="p">|</span> <span class="n">Should</span> <span class="n">-Throw</span>
+<a id="__codelineno-6-34" name="__codelineno-6-34" href="#__codelineno-6-34"></a>        <span class="p">}</span>
+<a id="__codelineno-6-35" name="__codelineno-6-35" href="#__codelineno-6-35"></a>    <span class="p">}</span>
+<a id="__codelineno-6-36" name="__codelineno-6-36" href="#__codelineno-6-36"></a><span class="p">}</span>
 </code></pre></div>
 <p>Run tests:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c"># Run all tests with detailed output</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">Invoke-Pester</span> <span class="n">-Path</span> <span class="p">./</span><span class="n">Tests</span> <span class="n">-Output</span> <span class="n">Detailed</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c"># With code coverage</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="nb">Invoke-Pester</span> <span class="n">-Path</span> <span class="p">./</span><span class="n">Tests</span> <span class="n">-CodeCoverage</span> <span class="p">./</span><span class="n">Public</span><span class="p">/*.</span><span class="n">ps1</span> <span class="n">-CodeCoverageOutputFile</span> <span class="n">coverage</span><span class="p">.</span><span class="n">xml</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c"># CI — output NUnit XML for test reporting</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="nb">Invoke-Pester</span> <span class="n">-Path</span> <span class="p">./</span><span class="n">Tests</span> <span class="n">-OutputFormat</span> <span class="n">NUnitXml</span> <span class="n">-OutputFile</span> <span class="nb">test-results</span><span class="p">.</span><span class="n">xml</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># Run all tests with detailed output</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">Invoke-Pester</span> <span class="n">-Path</span> <span class="p">./</span><span class="n">Tests</span> <span class="n">-Output</span> <span class="n">Detailed</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c"># With code coverage</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="nb">Invoke-Pester</span> <span class="n">-Path</span> <span class="p">./</span><span class="n">Tests</span> <span class="n">-CodeCoverage</span> <span class="p">./</span><span class="n">Public</span><span class="p">/*.</span><span class="n">ps1</span> <span class="n">-CodeCoverageOutputFile</span> <span class="n">coverage</span><span class="p">.</span><span class="n">xml</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c"># CI — output NUnit XML for test reporting</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="nb">Invoke-Pester</span> <span class="n">-Path</span> <span class="p">./</span><span class="n">Tests</span> <span class="n">-OutputFormat</span> <span class="n">NUnitXml</span> <span class="n">-OutputFile</span> <span class="nb">test-results</span><span class="p">.</span><span class="n">xml</span>
 </code></pre></div>
 <hr />
 <h2 id="checklist-new-function-review">Checklist: New Function Review<a class="headerlink" href="#checklist-new-function-review" title="Permanent link">&para;</a></h2>
