@@ -1,14 +1,3 @@
-# InsightIQ CLI Reference
-
-
-<div class="kb-summary">
-InsightIQ is the Dell EMC analytics platform for PowerScale (Isilon) performance monitoring. It exposes a REST API and SSH access to the InsightIQ appliance for direct management. The API base URL is `https://<insightiq_fqdn>/api/json/v2`.
-</div>
-
----
-
-## Appliance Access
-
 ```bash
 # SSH to the InsightIQ appliance
 ssh administrator@<insightiq_fqdn>
@@ -24,6 +13,8 @@ tail -f /var/log/insightiq/insightiq.log
 
 # Check disk space (InsightIQ database can grow large)
 df -h /home/insightiq
+```
+
 ```text
 ┌────────────────────────────────────── InsightIQ — CLI Reference ──────────────────────────────────────┐
 │                                                                                                       │
@@ -56,11 +47,6 @@ df -h /home/insightiq
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
----
-
-## Capacity
-
 ```bash
 # Get capacity summary for a cluster
 curl -k -u "admin:<pass>"   "https://<insightiq_fqdn>/api/json/v2/clusters/<guid>/capacity"
@@ -68,11 +54,6 @@ curl -k -u "admin:<pass>"   "https://<insightiq_fqdn>/api/json/v2/clusters/<guid
 # Get per-node capacity
 curl -k -u "admin:<pass>"   "https://<insightiq_fqdn>/api/json/v2/clusters/<guid>/nodes/<node_id>/capacity"
 ```
-
----
-
-## Reports
-
 ```bash
 # List available reports
 curl -k -u "admin:<pass>"   https://<insightiq_fqdn>/api/json/v2/reports

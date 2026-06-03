@@ -1,11 +1,3 @@
-# Horizon — Health Checks
-
-
-<div class="kb-summary">
-Health Checks reference covering Desktop Pool Health, Active Session Count vs License, UAG Health Check, App Volumes Manager Health, DEM Share Accessibility and 3 more sections.
-</div>
-
-  Health Check Chain
 ```text
 ┌─────────────────────────────────── VMware Horizon — Health Checks ────────────────────────────────────┐
 │                                                                                                       │
@@ -100,8 +92,6 @@ Health Checks reference covering Desktop Pool Health, Active Session Count vs Li
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-         │
-         ▼
 ```text
 ```
 ```text
@@ -110,6 +100,8 @@ Health Checks reference covering Desktop Pool Health, Active Session Count vs Li
 │  (Available > 0,                                                                                      │
 │   Error = 0?)                                                                                         │
 └──────────────────┘
+```
+
 ```text
 ┌─────────────────────────────────── VMware Horizon — Health Checks ────────────────────────────────────┐
 │                                                                                                       │
@@ -157,13 +149,6 @@ Health Checks reference covering Desktop Pool Health, Active Session Count vs Li
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-Acceptable ratio: Available desktops should be ≥ 10% of pool size to handle burst demand.
-
----
-
-## Active Session Count vs License
-
 ```powershell
 ## Using VMware.Hv.Helper PowerShell module
 Connect-HVServer -Server horizon-cs01.example.local -Credential (Get-Credential)
@@ -175,11 +160,6 @@ Write-Host "Active sessions: $($sessions.Count)"
 ## Get licensed session count from License page
 ## Horizon Console → Settings → Product Licensing and Usage
 ```
-
----
-
-## UAG Health Check
-
 ```bash
 ## UAG exposes a health API endpoint
 curl -sk https://uag.example.local/favicon.ico  # should return 200
@@ -193,29 +173,16 @@ curl -sk https://uag.example.local:9443/rest/v1/monitor/health \
 nc -vz uag.example.local 8443
 nc -vz uag.example.local 4172
 ```
-
----
-
-## App Volumes Manager Health
-
 ```text
 App Volumes Manager UI → Activity → Current Activity
   No stuck attachments or detachments
 App Volumes Manager UI → Infrastructure → Managers
   All managers show Healthy
 ```
-
 ```bash
 ## Test App Volumes Manager API
 curl -sk https://appvol-mgr.example.local/cv_api/status
 ```
-
----
-
-## DEM Share Accessibility
-
-Dynamic Environment Manager reads GPO config from a UNC share. Verify accessibility:
-
 ```powershell
 ## On a desktop VM or Connection Server:
 Test-Path "\\fileserver.example.local\DEM-Config\General"
@@ -224,11 +191,6 @@ Test-Path "\\fileserver.example.local\DEM-Config\General"
 ## Check DEM Agent service in a desktop VM
 Get-Service -ComputerName <desktop-vm> -Name "User Environment Manager Agent"
 ```
-
----
-
-## Certificate Expiry
-
 ```bash
 ## Check Connection Server SSL certificate
 echo | openssl s_client -connect horizon-cs01.example.local:443 -servername horizon-cs01.example.local 2>/dev/null \
@@ -242,11 +204,6 @@ echo | openssl s_client -connect uag.example.local:443 -servername uag.example.l
 echo | openssl s_client -connect uag.example.local:8443 2>/dev/null \
   | openssl x509 -noout -dates
 ```
-
----
-
-## Check for Provisioning Errors
-
 ```powershell
 Connect-HVServer -Server horizon-cs01.example.local -Credential (Get-Credential)
 
@@ -259,13 +216,6 @@ Get-HVDesktop | Where-Object { $_.Base.BasicState -eq "ERROR" } |
 Get-HVDesktop | Where-Object { $_.Base.BasicState -eq "ERROR" } |
   Remove-HVDesktop -Confirm:$false
 ```
-
----
-
-## Verify External Access (Blast/PCoIP)
-
-From an external network (outside the corporate LAN):
-
 ```bash
 ## Blast Extreme — TCP 8443 to UAG
 nc -vz uag.public.corp.com 8443
@@ -276,5 +226,3 @@ nc -vz uag.public.corp.com 4172
 ## HTTPS Tunnel — TCP 443 to UAG
 nc -vz uag.public.corp.com 443
 ```
-
-If any port is blocked, check the perimeter firewall rules for UAG external interface.

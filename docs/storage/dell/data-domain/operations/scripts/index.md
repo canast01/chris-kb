@@ -1,14 +1,3 @@
-# Data Domain — Scripts
-
-
-<div class="kb-summary">
-Scripts reference covering Daily Health Check, Ansible Daily Check Playbook, DDBoost Client Check, Windows: Data Domain Health Check via Plink (CMD), Windows: Data Domain Health via REST API (PowerShell) and 5 more sections.
-</div>
-
-## Daily Health Check
-
-SSH to a Data Domain appliance and print a formatted health summary covering filesystem space, compression ratio, active alerts, replication state, and system uptime. Exits non-zero if any active alerts are found.
-
 ```bash
 #!/bin/bash
 # dd_health_check.sh — Daily health check for a Dell Data Domain appliance
@@ -69,6 +58,8 @@ else
   echo "STATUS: OK — No active alerts."
   exit 0
 fi
+```
+
 ```text
 ┌────────────────────────────────────── Dell Data Domain Scripts ───────────────────────────────────────┐
 │                                                                                                       │
@@ -143,17 +134,6 @@ fi
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-**What you should see**
-
-Ansible runs three tasks on each Data Domain host and prints the raw output of `filesys show space`, `alerts show current`, and `replication show`. If any alerts are detected the play fails with a message telling you to review the output above.
-
----
-
-## DDBoost Client Check
-
-Runs `ddboost show clients` and `ddboost status`, parses for disconnected clients, and prints a formatted table. Exits non-zero if any client is found in a disconnected or unknown state.
-
 ```bash
 #!/bin/bash
 # dd_ddboost_check.sh — Check DDBoost client connectivity on a Data Domain appliance
@@ -221,50 +201,11 @@ else
   exit 0
 fi
 ```
-
-### How to run this script — step by step
-
-**Before you start — what you need**
-- A Linux/macOS computer or Windows with Git Bash installed
-- SSH access to your Data Domain appliance
-- DDBoost must be licensed and enabled on the Data Domain
-
-**Step 1 — Save the file**
-
-1. Open **Notepad** or any text editor
-2. Copy the entire code block above
-3. Click **File → Save As**, change "Save as type" to **All Files**
-4. Name it `dd_ddboost_check.sh` and save it to your Desktop
-
-**Step 2 — Fill in your details**
-
-| Variable | What to put | How to find it |
-|---|---|---|
-| `DD_HOST` | IP address or hostname of your Data Domain | Ask your storage admin |
-| `DD_USER` | SSH username | Default is `sysadmin` |
-
-**Step 3 — Open a terminal**
-
-- **For .sh (Bash):** Install Git for Windows (gitforwindows.org) and open Git Bash.
-
-**Step 4 — Run the script**
-
 ```bash
 cd ~/Desktop
 chmod +x dd_ddboost_check.sh
 DD_HOST=192.168.10.50 DD_USER=sysadmin ./dd_ddboost_check.sh
 ```
-
-**What you should see**
-
-The DDBoost overall status followed by a table showing each backup client, its IP, and its connection state. Any disconnected client is flagged with `<<< DISCONNECTED`. The final line shows `STATUS: OK` or `STATUS: DEGRADED` with a count of disconnected clients.
-
----
-
-## Windows: Data Domain Health Check via Plink (CMD)
-
-Uses plink.exe (part of the free PuTTY package) to SSH into the Data Domain from a Windows machine and run the three most important health commands: system stats, active alerts, and filesystem space.
-
 ```batch
 @echo off
 REM dd_health_check.bat — Data Domain health check from Windows CMD
@@ -305,61 +246,13 @@ echo ========================================
 echo   Health check complete.
 echo ========================================
 ```
-
-### How to run this script — step by step
-
-**Before you start — what you need**
-- A Windows PC (Windows 10 or 11)
-- plink.exe from PuTTY — download the installer from https://www.putty.org (it is free)
-- SSH access to your Data Domain appliance (IP address and a username/password)
-
-**Step 1 — Save the file**
-
-1. Open **Notepad** (search for it in the Start menu)
-2. Copy the entire code block above
-3. Click **File → Save As**
-4. Change "Save as type" to **All Files**
-5. Name it `dd_health_check.bat` and save it to your Desktop
-
-**Step 2 — Fill in your details**
-
-Open the saved file and change these values near the top:
-
-| Variable | What to put | How to find it |
-|---|---|---|
-| `DD_HOST` | IP address of your Data Domain | Ask your storage admin, e.g. `192.168.10.50` |
-| `SSH_USER` | SSH username | Default is `sysadmin` |
-| `PLINK` | Full path to plink.exe if not in PATH | e.g. `C:\Program Files\PuTTY\plink.exe` |
-
-**Step 3 — Accept the host key (one-time setup)**
-
-The very first time you connect, plink needs you to trust the server's fingerprint. Open Command Prompt and run:
 ```text
 plink -ssh sysadmin@192.168.10.50
 ```
-Type `y` when asked, then press Ctrl+C to exit. You only need to do this once.
-
-**Step 4 — Open a terminal**
-
-- **For .bat (Command Prompt):** Open Command Prompt (Windows key → type `cmd`).
-
-**Step 5 — Run the script**
-
 ```bash
 cd C:\Users\YourName\Desktop
 dd_health_check.bat
 ```
-
-**What you should see**
-
-Three sections of output: system performance counters, a list of any active alerts (or "No active alerts"), and a breakdown of how much space the filesystem is using and how much is free.
-
----
-
-## Windows: Data Domain Health via REST API (PowerShell)
-
-Uses the Data Domain REST API to authenticate, pull system information, and check active alerts — all from a PowerShell window on your Windows PC. No SSH required.
-
 ```powershell
 # dd_health_rest.ps1 — Data Domain health check via REST API (Windows PowerShell)
 # Requires: PowerShell 5.1+ (built into Windows 10/11)
@@ -446,59 +339,13 @@ Write-Host "========================================"
 Write-Host "  Health check complete."
 Write-Host "========================================"
 ```
-
-### How to run this script — step by step
-
-**Before you start — what you need**
-- Windows 10 or 11 (PowerShell 5.1 is already installed — no downloads needed)
-- Network access to your Data Domain management interface (port 3009)
-- A Data Domain username and password with at least read access
-
-**Step 1 — Save the file**
-
-1. Open **Notepad**
-2. Copy the entire code block above
-3. Click **File → Save As**
-4. Change "Save as type" to **All Files**
-5. Name it `dd_health_rest.ps1` and save it to your Desktop
-
-**Step 2 — Fill in your details**
-
-Open the saved file and change these three lines near the top:
-
-| Variable | What to put | How to find it |
-|---|---|---|
-| `$DdHost` | IP address or hostname of your Data Domain | Ask your storage admin |
-| `$DdUser` | API username | Default is `sysadmin` |
-| `$DdPass` | Password for that user | Ask your storage admin |
-
-**Step 3 — Open a terminal**
-
-- **For .ps1 (PowerShell):** Press Windows key → type `PowerShell` → right-click → **Run as Administrator**
-
-**Step 4 — Allow scripts to run (one-time)**
-
 ```powershell
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 ```
-
-**Step 5 — Run the script**
-
 ```bash
 cd C:\Users\YourName\Desktop
 .\dd_health_rest.ps1
 ```
-
-**What you should see**
-
-First a confirmation that authentication succeeded, then a System Information block showing the Data Domain hostname, model, serial number, software version, and uptime. Then an Active Alerts block — either "No active alerts" or a list of alerts with their severity levels.
-
----
-
-## Daily Check Script
-
-SSHes to the Data Domain appliance and checks alerts, disk health, filesystem space (flagging above 80%), replication state, and compression ratio — printing PASS/FAIL for each check.
-
 ```bash
 #!/bin/bash
 # dd_daily_check.sh — Daily operations check for Dell Data Domain
@@ -575,13 +422,6 @@ echo "========================================"
 echo "  PASS: $PASS   FAIL: $FAIL"
 [[ "$FAIL" -eq 0 ]] && echo "  STATUS: OK" && exit 0 || echo "  STATUS: DEGRADED" && exit 1
 ```
-
----
-
-## Incident Triage Script
-
-Captures DD OS version, system stats, current alerts, disk state, filesystem space, compression ratios, and replication status to a timestamped file for support handoff.
-
 ```bash
 #!/bin/bash
 # dd_triage.sh — Incident triage data capture for Dell Data Domain
@@ -625,13 +465,6 @@ section "REPLICATION";      ddcmd "replication show all"      >> "$OUTFILE" 2>&1
 
 echo "Triage data written to: $OUTFILE"
 ```
-
----
-
-## Change Pre-Check Script
-
-Confirms no critical alerts are present, all disks are healthy, the filesystem is under 85% full, and all replication sessions are active — exits 2 on any failure.
-
 ```bash
 #!/bin/bash
 # dd_precheck.sh — Pre-change validation for Dell Data Domain
@@ -692,13 +525,6 @@ fi
 echo "  PRE-CHECK PASSED — Safe to proceed."
 exit 0
 ```
-
----
-
-## Post-Change Validation Script
-
-Runs the same checks as the pre-check after maintenance and additionally confirms the DD OS version matches an expected value and that replication has resumed.
-
 ```bash
 #!/bin/bash
 # dd_postcheck.sh — Post-change validation for Dell Data Domain
@@ -771,13 +597,6 @@ fi
 echo "  POST-CHECK PASSED — All checks healthy."
 exit 0
 ```
-
----
-
-## Health Check Script
-
-Cron-safe single script reporting system uptime, disk health, free space percentage, dedup ratio, and replication status — exits 0 for OK, 1 for WARN, 2 for CRIT.
-
 ```bash
 #!/bin/bash
 # dd_health.sh — Cron-safe health check for Dell Data Domain

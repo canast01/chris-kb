@@ -1,74 +1,3 @@
-# ServiceNow — Escalation
-
-
-<div class="kb-summary">
-This page defines the internal escalation matrix, ServiceNow support engagement procedures, SLA expectations for support cases, and the process for upgrade regression escalation.
-</div>
-
----
-
-## Internal Escalation Matrix
-
-| Severity | Issue Type | First Responder | Escalate To (L2) | Escalate To (L3) | Management Notify |
-|---|---|---|---|---|---|
-| P1 | Instance down / unavailable | Platform Engineer on-call | Platform Lead | ServiceNow Support (P1 case) | Director of IT within 15 min |
-| P1 | Data loss or corruption | Platform Lead | Platform Architect + DBA | ServiceNow Support (P1 case) | Director of IT + CISO within 15 min |
-| P2 | Severe performance degradation | Platform Engineer | Platform Lead | ServiceNow Support (P2 case) | Manager within 30 min |
-| P2 | Integration failure (production) | Platform Engineer | Integration Lead | ServiceNow Support if platform-related | Manager within 1 hour |
-| P2 | MID Server down (all) | Platform Engineer | Platform Lead | ServiceNow Support if instance-side | Manager within 1 hour |
-| P3 | Single process failure | Platform Engineer | Platform Lead as needed | — | — |
-| P4 | Cosmetic / low-impact | Service Desk | Platform Engineer | — | — |
-
-### On-Call Contact Details
-
-Maintain the on-call roster in your team's incident management system (PagerDuty / OpsGenie). The contacts below are role-based:
-
-| Role | Contact Method |
-|---|---|
-| Platform Engineer (on-call) | PagerDuty rotation: `servicenow-platform` |
-| Platform Lead | Direct mobile + PagerDuty escalation |
-| Platform Architect | Direct mobile (P1 only) |
-| ServiceNow Support | HI portal + phone (P1 only) |
-
----
-
-## ServiceNow Support Tiers
-
-| Support Tier | ServiceNow Name | Included In |
-|---|---|---|
-| Standard | General Support | All contracts |
-| Enhanced | Now Support Enhanced | Premier Success contracts |
-| Premier | Named CSM + TAM | Enterprise / Premier Success |
-
-Contact ServiceNow support via: `https://hi.service-now.com`
-
-### Support Case Priority Mapping
-
-| Your Business Priority | ServiceNow Case Priority | Expected Initial Response |
-|---|---|---|
-| P1 — Production down | P1 — Critical | 1 hour (24x7) |
-| P2 — Severe degradation | P2 — High | 4 hours (24x7 for prod) |
-| P3 — Moderate impact | P3 — Moderate | 8 business hours |
-| P4 — Low impact | P4 — Low | 2 business days |
-| Enhancement request | P5 | Best effort |
-
-### ServiceNow Support SLA Table
-
-| Priority | Initial Response | Update Frequency | Escalation Right |
-|---|---|---|---|
-| P1 | 1 hour | Every 2 hours | Request duty manager at 2 hours |
-| P2 | 4 hours | Every 4 hours | Request duty manager at 8 hours |
-| P3 | 8 business hours | Daily | — |
-| P4 | 2 business days | Weekly | — |
-
----
-
-## ServiceNow Support Ticket Template
-
-Use this template when raising a case on the HI portal. A well-structured ticket reduces initial back-and-forth by 60–80%.
-
-### P1 / P2 — Production Issue Template
-
 ```yaml
 SUBJECT: [PROD] [P1] Instance unavailable — login page not loading
 
@@ -106,6 +35,8 @@ DIAGNOSTICS ATTACHED:
 CONTACT:
 Primary: Chris Anastasiadis, platform-team@example.com, +44-xxx-xxx-xxxx
 Secondary: [Platform Lead name + contact]
+```
+
 ```text
 ┌──────────────────────────────────────── ServiceNow Escalation ────────────────────────────────────────┐
 │                                                                                                       │
@@ -151,28 +82,3 @@ Secondary: [Platform Lead name + contact]
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-### Rollback Request Criteria
-
-ServiceNow will consider rollback only when:
-
-1. The regression is production-affecting at P1/P2 severity
-2. The case is raised **within 72 hours** of the upgrade completing
-3. There is no viable workaround that restores business function
-4. The pre-upgrade snapshot has not been overwritten
-
-### Communication During Escalation
-
-- Update the internal incident every 30 minutes during active P1 escalation
-- Post status updates in the team communications channel (Slack/Teams): `#platform-incidents`
-- Maintain an incident timeline log for post-incident review
-- Notify stakeholders via the major incident notification process
-
-### Post-Escalation Actions
-
-Within 5 business days of resolution:
-
-- [ ] Root cause analysis completed
-- [ ] Upgrade Change Request closed with lessons learned documented
-- [ ] Preventive measures identified (e.g., additional ATF coverage, Upgrade Planner review improvements)
-- [ ] Knowledge article created if the issue is likely to recur or affect other teams

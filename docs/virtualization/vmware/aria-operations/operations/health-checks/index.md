@@ -1,11 +1,3 @@
-# Aria Operations — Health Checks
-
-
-<div class="kb-summary">
-Health Checks reference covering Cluster Node Health via API, Adapter Health, Disk and Storage Health, Service Health Commands, NTP and Time Sync and 3 more sections.
-</div>
-
-Aria Operations — Health Check Coverage Map
 ```text
 ┌──────────────────────────────────── Aria Operations Health Checks ────────────────────────────────────┐
 │                                                                                                       │
@@ -96,8 +88,6 @@ Aria Operations — Health Check Coverage Map
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-          │
-          ▼
 ```text
 ```
 ```text
@@ -106,6 +96,8 @@ Aria Operations — Health Check Coverage Map
 │  chronyc tracking (per node)                                                                          │
 │  chronyc makestep (force sync if drifted)                                                             │
 └─────────────────────────────────────────────────────┘
+```
+
 ```text
 ┌──────────────────────────────────── Aria Operations Health Checks ────────────────────────────────────┐
 │                                                                                                       │
@@ -151,15 +143,6 @@ Aria Operations — Health Check Coverage Map
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
----
-
-## Adapter Health
-
-1. Navigate to **Administration > Solutions > Cloud Accounts** (or **Adapters**)
-2. Confirm each adapter shows **Collection State: Collecting**
-3. Last collection time should be within 5 minutes
-
 ```bash
 ## List adapters with verbose collection state
 vracli adapter list --verbose
@@ -175,11 +158,6 @@ curl -sk -X POST -H "Authorization: vRealizeOpsToken $TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"collectorId": "<collector-id>", "resourceKindKey": "ADAPTER", "adapterKindKey": "VMWARE"}'
 ```
-
----
-
-## Disk and Storage Health
-
 ```bash
 ssh admin@vrops-prod-01.example.local
 
@@ -192,19 +170,6 @@ du -sh /storage/db/cassandra/data/*
 ## Check available inodes — can cause "disk full" errors even with space remaining
 df -i /storage/db
 ```
-
-Thresholds:
-
-| Mount Point | Warning | Critical | Action |
-|---|---|---|---|
-| `/storage/db` | 70% | 80% | Expand data disk or remove old metric data |
-| `/storage/log` | 75% | 85% | Archive or rotate logs |
-| `/storage/core` | 75% | 85% | Contact support — core partition should not grow |
-
----
-
-## Service Health Commands
-
 ```bash
 ## Check all vmware services on the primary node
 systemctl list-units 'vmware-*' --state=active
@@ -222,13 +187,6 @@ journalctl -u vmware-vcops-analytics --since "1 hour ago" | tail -100
 ## nginx                    — active (running)
 ## vmware-vcops-watchdog    — active (running)
 ```
-
----
-
-## NTP and Time Sync
-
-Time drift causes SSO token validation failures and certificate errors across all Aria Suite products. All cluster nodes must be synchronised.
-
 ```bash
 ## Check NTP sync on each cluster node
 for node in vrops-prod-01 vrops-prod-02 vrops-prod-03; do
@@ -242,15 +200,6 @@ chronyc makestep
 ## Verify NTP sources
 chronyc sources -v
 ```
-
-Acceptable drift: < 1 second within the cluster. LCM pre-checks fail if drift exceeds 5 seconds on the LCM appliance.
-
----
-
-## Alert Summary Health Check
-
-Regularly review the alert landscape to identify noise and catch real problems:
-
 ```bash
 ## Get all active alerts grouped by criticality via API
 curl -sk -H "Authorization: vRealizeOpsToken $TOKEN" \
@@ -262,51 +211,12 @@ curl -sk -H "Authorization: vRealizeOpsToken $TOKEN" \
   "https://vrops-prod-01.example.local/suite-api/api/alerts?activeOnly=true&criticality=CRITICAL" | \
   jq '.alerts[] | {alert: .type.name, object: .resourceName, since: .startTimeUTC}'
 ```
-
----
-
-## Pre-Upgrade Health Gate
-
-Run before any upgrade (via LCM or in-product):
-
-- [ ] All cluster nodes show **Online** in Administration → Cluster Management
-- [ ] All adapter instances show **Collecting** — no adapters in error or offline state
-- [ ] No active critical self-monitoring alerts: **Environment → vRealize Operations Health**
-- [ ] Disk usage on `/storage/db` < 70%
-- [ ] NTP delta < 1 second on all nodes: `chronyc tracking`
-- [ ] Backup completed successfully within last 24 hours
-- [ ] VM snapshots taken for all Aria Operations nodes
-- [ ] No running LCM requests that involve this product
-- [ ] Maintenance window communicated to users who rely on alerts from Aria Operations
-
----
-
-## Weekly Checks
-
-### Capacity Review
-
 ```bash
 ## Check cluster-level capacity summary via API
 curl -sk -H "Authorization: vRealizeOpsToken $TOKEN" \
   "https://vrops-prod-01.example.local/suite-api/api/resources?resourceKind=ClusterComputeResource" | \
   jq '.resourceList[] | {name: .resourceKey.name}'
 ```
-
-Via UI: **Optimize → Capacity Overview** — review which clusters or datastores are approaching capacity limits. Investigate any resource that shows a time remaining of less than 60 days.
-
-### Report Review
-
-- Run the **Rightsizing** report: **Optimize → Reclaim → Oversized VMs** — review and action top candidates
-- Run the **Idle VMs** report: **Optimize → Reclaim → Idle VMs** — validate with VM owners before powering off
-
-### Alert Policy Review
-
-Review alert policies monthly and tune noisy alert definitions:
-
 ```text
 Administration → Alert Settings → Alert Definitions
 ```
-
-- Sort by **Alert Count (Last 30 Days)** — investigate any alert firing more than 10 times per day with no action being taken
-- Add symptom wait cycles to reduce transient alerts (minimum 3 cycles before firing is recommended for non-critical alerts)
-- Suppress known-benign alerts using **Maintenance Schedules** rather than cancelling them manually

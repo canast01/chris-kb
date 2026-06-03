@@ -1,10 +1,3 @@
-# VxRail — Architecture
-
-<div class="kb-summary">
-HCI appliance built on Dell PowerEdge nodes running VMware vSphere and vSAN. Managed as a system through VxRail Manager — all firmware, vSphere, and vSAN upgrades go through the LCM workflow via Composite Bundle, never independently.
-</div>
-
-VxRail Node Anatomy + Cluster Connectivity
 ```text
 ┌──────────────────────────────────────────────────────────────┐
 │  VxRail Node (PowerEdge)                                                                              │
@@ -19,17 +12,6 @@ VxRail Node Anatomy + Cluster Connectivity
 │  └──────────┬───────────┘   └───────────────────────────────┘                                         │
 └─────────────┼────────────────────────────────────────────────┘
 ```
-              │
-   ┌──────────▼──────────────────────────────────┐
-   │  vSphere Distributed Switch (VDS)            │
-   │  vmk0: mgmt · vmk1: vMotion                 │
-   │  vmk2: vSAN  · vmk3: VxRail mgmt            │
-   └──────────┬──────────────────────────────────┘
-              │
-   ┌──────────▼──────────────────────────────────┐
-   │  Top-of-Rack / Aggregation Switch            │
-   │  MTU 9000 on vSAN and vMotion VLANs          │
-   └─────────────────────────────────────────────┘
 ```python
 
 ![VxRail Architecture](../../../assets/vxrail-architecture-overview.svg)
@@ -51,6 +33,8 @@ VxRail Node Anatomy + Cluster Connectivity
 | Stretched cluster | 2 data sites + 1 witness; requires stretched vSAN |
 
 ## HCI Node Cluster
+
+```
 
 ```mermaid
 graph TB

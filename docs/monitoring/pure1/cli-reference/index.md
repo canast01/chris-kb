@@ -1,16 +1,3 @@
-# Pure1 CLI Reference
-
-
-<div class="kb-summary">
-Pure1 provides a REST API authenticated via OAuth2 client credentials. The `pure1` CLI (if installed) wraps common API calls. All programmatic integrations should use the REST API directly. The API base URL is `https://api.pure1.purestorage.com/api/1.latest`.
-</div>
-
----
-
-## Authentication
-
-Pure1 uses a self-signed RSA private key and a registered application ID for API access. Register the application at `https://pure1.purestorage.com/api-registration`.
-
 ```bash
 # Generate RSA key pair for Pure1 API auth
 openssl genrsa -out pure1-private.pem 2048
@@ -26,6 +13,8 @@ print(token)
 
 # Exchange JWT for access token
 curl -X POST https://api.pure1.purestorage.com/oauth2/1.0/token   -d "grant_type=urn:ietf:params:oauth:grant-type:token-exchange&subject_token=<jwt>&subject_token_type=urn:ietf:params:oauth:token-type:jwt"
+```
+
 ```text
 ┌──────────────────────────────────── Pure1 — CLI and API Reference ────────────────────────────────────┐
 │                                                                                                       │
@@ -58,11 +47,6 @@ curl -X POST https://api.pure1.purestorage.com/oauth2/1.0/token   -d "grant_type
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
----
-
-## Capacity
-
 ```bash
 # Get capacity metrics for all arrays
 curl -X GET "https://api.pure1.purestorage.com/api/1.latest/arrays?fields=name,capacity,space"   -H "Authorization: Bearer <token>"
@@ -70,11 +54,6 @@ curl -X GET "https://api.pure1.purestorage.com/api/1.latest/arrays?fields=name,c
 # Get capacity for a specific array
 curl -X GET "https://api.pure1.purestorage.com/api/1.latest/arrays?filter=name%3D%27<array_name>%27&fields=name,capacity,space"   -H "Authorization: Bearer <token>"
 ```
-
----
-
-## Python SDK Example
-
 ```python
 from py_pure_client import PureOneClient
 

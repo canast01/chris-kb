@@ -1,23 +1,3 @@
-# Data Domain — Access Control
-
-
-<div class="kb-summary">
-Access Control reference covering RBAC — Role-Based Access Control, Audit Logging, Network Access Control, Security Incident Response.
-</div>
-
-## RBAC — Role-Based Access Control
-
-Data Domain has a built-in role model. Assign the minimum required role per user or group.
-
-| Role | Access Level | Use Case |
-|---|---|---|
-| `sysadmin` | Full system administration | Break-glass account only; never used for day-to-day |
-| `admin` | Full configuration access except security settings | Primary operational admin role |
-| `backup-operator` | Read access + DD Boost storage unit access | Service account for backup software (Veeam, NBU, CommVault) |
-| `user` | Read-only | Monitoring and reporting access |
-| `security-officer` | Manages retention lock and compliance settings | Required for compliance mode operations |
-| `auditor` | Read-only access to audit logs | Compliance review; SOC/audit team |
-
 ```bash
 # Create a user and assign a role
 user add <username> role backup-operator
@@ -27,6 +7,8 @@ authentication roles assign role backup-operator group <ldap-group-name>
 
 # List current users and roles
 user show
+```
+
 ```text
 ┌─────────────────────────────────── Dell Data Domain Access Control ───────────────────────────────────┐
 │                                                                                                       │
@@ -64,22 +46,3 @@ user show
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-Log entries include: user logins, configuration changes, retention lock events, filesystem operations, and administrative commands. The audit log should be forwarded to a SIEM that retains logs for at least 12 months.
-
-## Network Access Control
-
-- Isolate DD management traffic on a dedicated management VLAN
-- Restrict SSH and HTTPS access to the DD to admin jump hosts or bastion servers only
-- NFS and CIFS export access should be restricted to the backup server IP addresses — not open to all hosts
-- DD Boost traffic should use a dedicated backup network, not the production LAN
-- Do not expose the DD management interface to the internet under any circumstances
-
-## Security Incident Response
-
-| Event | Action |
-|---|---|
-| Suspected unauthorised login | `log view audit` — review login events; disable the account immediately; change all shared credentials |
-| Ransomware attempt on backup data | Check retention lock status on affected MTree — compliance-mode locked files cannot be encrypted by ransomware; isolate network access; open Dell support case |
-| DD Boost credential compromise | Immediately change the DD Boost user password; update backup software; review `ddboost show clients` for unexpected clients |
-| Disk failure (potential data exposure) | Dell replaces failed disks; D@RE ensures data on failed disks is unreadable without the encryption key |

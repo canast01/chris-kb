@@ -1,21 +1,3 @@
-# NetApp Keystone — Backup & Restore
-
-
-<div class="kb-summary">
-Backup & Restore reference covering Keystone Architecture Context, Keystone Collector Configuration Backup, SnapMirror Relationship Export, Restore Keystone Collector Configuration, Pre-Upgrade Checklist.
-</div>
-
-## Keystone Architecture Context
-
-Keystone is a storage-as-a-service subscription — backup/restore covers:
-- Keystone Collector configuration backup
-- ONTAP volume snapshot and SnapMirror policies (for underlying arrays)
-- Keystone portal subscription configuration export
-
-## Keystone Collector Configuration Backup
-
-The Keystone Collector is a VM deployed on-premises that harvests usage data. Back up its configuration before any upgrade.
-
 ```bash
 # SSH into Keystone Collector VM
 ssh admin@<keystone-collector-ip>
@@ -26,6 +8,8 @@ scp admin@<keystone-collector-ip>:/tmp/ks-config-$(date +%Y%m%d).tar.gz ./
 
 # Verify configuration is parseable
 tar -tzf ks-config-<date>.tar.gz
+```
+
 ```text
 ┌─────────────────────────── NetApp Keystone — Operations: Backup & Restore ────────────────────────────┐
 │                                                                                                       │
@@ -80,9 +64,6 @@ tar -tzf ks-config-<date>.tar.gz
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-## Restore Keystone Collector Configuration
-
 ```bash
 # On new or rebuilt Collector VM:
 scp ks-config-<date>.tar.gz admin@<new-collector-ip>:/tmp/
@@ -94,11 +75,3 @@ keystone-config import --input /tmp/ks-config-<date>.tar.gz
 keystone-config validate
 keystone-collector status
 ```
-
-## Pre-Upgrade Checklist
-
-- [ ] Export Keystone Collector config to secure location
-- [ ] Confirm all SnapMirror relationships are in healthy state
-- [ ] Note current Collector version: `keystone-collector version`
-- [ ] Download rollback image if upgrading Collector
-- [ ] Confirm Keystone portal shows all arrays as healthy before starting

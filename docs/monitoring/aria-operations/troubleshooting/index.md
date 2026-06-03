@@ -1,16 +1,3 @@
-# Aria Operations: Troubleshooting Common Issues
-
-
-<div class="kb-summary">
-This page covers frequent operational issues in VMware Aria Operations: adapter collection failures, login problems, data gaps, and performance degradation. Use these checks before raising a support case.
-</div>
-
-## Checking Adapter and Collector Status
-
-Most data problems originate from an adapter instance that has stopped collecting.
-
-Navigation: **Administration > Solutions > Cloud Accounts / Adapter Instances**
-
 ```bash
 # Check adapter instance status via API
 curl -sk -X GET \
@@ -23,6 +10,8 @@ curl -sk -X GET \
   "https://aria-ops.example.com/suite-api/api/adapterinstances/<adapterId>/monitoringstate" \
   -H "Authorization: vRealizeOpsToken <token>" \
   -H "Accept: application/json"
+```
+
 ```text
 ┌────────────────────────────────── Aria Operations — Troubleshooting ──────────────────────────────────┐
 │                                                                                                       │
@@ -69,16 +58,6 @@ curl -sk -X GET \
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-## Performance Degradation
-
-| Symptom | Likely Cause | Fix |
-|---|---|---|
-| UI very slow | Cassandra or Postgres overloaded | Check disk I/O, expand datastore |
-| Dashboards timeout | Too many widgets with long time ranges | Reduce widget count and range |
-| Alert processing delayed | High workload on analytics node | Check analytics service, consider scaling cluster |
-| High vApp CPU usage | Too many objects or metrics | Review object count; disable unused adapters |
-
 ```bash
 # Check Aria Ops cluster node resource usage
 ssh admin@aria-ops.example.com
@@ -88,13 +67,3 @@ top -b -n 1 | head -20
 # Check disk usage on key partitions
 df -h /storage/db /storage/log /storage/core
 ```
-
-## Common Issues Reference
-
-| Issue | First Check | Second Check |
-|---|---|---|
-| Objects missing from UI | Adapter instance status | Object collection group membership |
-| Metrics not updating | Last collection timestamp | Adapter credentials |
-| Alerts not firing | Alert definition policy assignment | Symptom threshold values |
-| Report emails not sending | Outbound SMTP settings | Email recipients field |
-| License warning banner | License key expiry date | Add new key in Administration > Licensing |

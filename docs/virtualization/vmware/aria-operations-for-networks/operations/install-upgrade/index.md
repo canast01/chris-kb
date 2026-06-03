@@ -1,69 +1,3 @@
-# Aria Operations for Networks — Install and Upgrade
-
-
-<div class="kb-summary">
-Install and Upgrade reference covering Prerequisites, Platform VM Deployment, Upgrade Process.
-</div>
-
-## Prerequisites
-
-### Infrastructure Requirements
-
-| Requirement | Minimum | Notes |
-|---|---|---|
-| vCenter Server | 7.0 U3 | 8.0 recommended; check interop matrix |
-| NSX-T Manager | 3.2 | 4.x supported in AON 6.13+ |
-| ESXi | 7.0 U3 | For hosting Platform and Collector VMs |
-| DNS | Forward + reverse resolution for all AON VMs | Mandatory — AON will fail to start without PTR records |
-| NTP | All AON VMs time-synced to same NTP source | Time drift causes flow correlation failures |
-| IP addressing | Static IPs for Platform VM and each Collector VM | DHCP not supported |
-
-### Version Compatibility Matrix
-
-| AON Version | NSX-T | vCenter | NSX-V | Notes |
-|---|---|---|---|---|
-| 6.11.x | 3.0, 3.1, 3.2 | 7.0 | 6.4 | EOL |
-| 6.12.x | 3.1, 3.2, 4.0 | 7.0, 8.0 | 6.4 | EOL |
-| 6.13.x | 3.2, 4.0, 4.1 | 7.0, 8.0 | Not supported | NSX-V dropped |
-| 6.14.x | 4.0, 4.1, 4.2 | 7.0 U3+, 8.0, 8.0 U2 | Not supported | Current GA |
-
-Always verify on the [VMware Interoperability Matrix](https://interopmatrix.vmware.com/) before deploying.
-
-### Required OVA Files
-
-| Component | OVA Name (example) |
-|---|---|
-| Platform VM | `VMware-Aria-Operations-for-Networks-6.14.0-Platform.ova` |
-| Collector VM | `VMware-Aria-Operations-for-Networks-6.14.0-Collector.ova` |
-
-OVAs are downloaded from [Broadcom Support Portal](https://support.broadcom.com/) under My Downloads → Aria Operations for Networks.
-
-## Platform VM Deployment
-
-### Deploy OVA via vCenter UI
-
-1. vCenter → Actions → Deploy OVF Template
-2. Select the Platform OVA file
-3. Set VM name (e.g., `aon-platform-01`) and target inventory location
-4. Select the target compute cluster and datastore
-5. Select the management network portgroup
-6. Configure OVF properties:
-
-| Property | Value |
-|---|---|
-| IP Address | `10.10.10.50` |
-| Subnet Mask | `255.255.255.0` |
-| Default Gateway | `10.10.10.1` |
-| DNS Server 1 | `10.10.0.1` |
-| DNS Server 2 | `10.10.0.2` |
-| Hostname (FQDN) | `aon-platform.example.local` |
-| NTP Server | `ntp.example.local` |
-| Admin Password | (set initial password) |
-
-7. Power on the VM. First boot takes 10–15 minutes for service initialization.
-
-### Verify Platform VM Is Ready
-
 ```bash
 # Check HTTPS is reachable
 curl -sk https://aon-platform.example.local -o /dev/null -w "HTTP %{http_code}\n"
@@ -72,6 +6,8 @@ curl -sk https://aon-platform.example.local -o /dev/null -w "HTTP %{http_code}\n
 # SSH to platform to verify services
 ssh ubuntu@aon-platform.example.local
 sudo systemctl status vrni-platform nginx cassandra
+```
+
 ```text
 ┌─────────────────────────────────────── vRNI Install & Upgrade ────────────────────────────────────────┐
 │                                                                                                       │
@@ -117,9 +53,6 @@ sudo systemctl status vrni-platform nginx cassandra
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-### Prepare for Upgrade
-
 ```bash
 # 1. Take config backup
 TOKEN=$(curl -sk -X POST "https://aon.example.local/api/ni/auth/token" \
@@ -139,17 +72,6 @@ Get-VM "aon-platform-01" | New-Snapshot -Name "Pre-Upgrade-6.14.0" -Description 
 curl -sk "https://aon.example.local/api/ni/system/version" \
   -H "Authorization: NetworkInsight ${TOKEN}" | python3 -m json.tool
 ```
-
-### Upgrade Platform VM
-
-**UI method:**
-
-Settings → Infrastructure → Upgrade → Browse → select Platform upgrade bundle → Install
-
-The upgrade bundle file is a `.pak` file downloaded from Broadcom.
-
-**CLI method (if UI upgrade fails):**
-
 ```bash
 ssh ubuntu@aon-platform.example.local
 
@@ -162,11 +84,6 @@ sudo /opt/vmware/bin/upgrade.sh /tmp/VMware-Aria-Operations-for-Networks-6.14.0-
 # Monitor upgrade progress
 sudo tail -f /var/log/vrni-platform/upgrade.log
 ```
-
-Platform will restart services during upgrade. Expect 15–30 minutes of downtime. The UI will be unavailable during this period.
-
-### Verify Platform After Upgrade
-
 ```bash
 # Check version
 curl -sk "https://aon.example.local/api/ni/system/version" \
@@ -185,21 +102,6 @@ for c in json.load(sys.stdin).get('results',[]):
     print(c.get('nickname',''), c.get('status',''))
 "
 ```
-
-### Upgrade Collector VMs
-
-Settings → Accounts and Data Sources → Collectors → Select Collector → Upgrade
-
-Alternatively, push upgrade from the Platform UI to all Collectors simultaneously:
-
-Settings → Infrastructure → Upgrade → Upgrade All Collectors
-
-Collectors will restart their services. Expect 5–10 minutes per Collector. Flow data ingestion will pause for each Collector during its upgrade.
-
-### Rollback
-
-If the upgrade fails or causes issues:
-
 ```bash
 # Revert Platform VM snapshot (this is a destructive operation — confirm before proceeding)
 Get-VM "aon-platform-01" | Get-Snapshot -Name "Pre-Upgrade-6.14.0" | Set-VM -SnapShot $_ -Confirm:$false
@@ -209,5 +111,3 @@ Get-VM "aon-platform-01" | Get-Snapshot -Name "Pre-Upgrade-6.14.0" | Set-VM -Sna
 ssh ubuntu@aon-collector-dc1.example.local
 sudo /home/ubuntu/support/pairing.sh
 ```
-
-Snapshot-based rollback restores flow data to the snapshot point. Config changes made between snapshot and upgrade are lost.

@@ -1,36 +1,3 @@
-# Capacity on Demand (COD) — CLI Reference
-
-
-<div class="kb-summary">
-> Part of the [COD](../index.md) reference.
-</div>
-
----
-
-Capacity on Demand is managed through **Solutions Enabler (SYMCLI)** and the **Unisphere REST API**. COD allows pre-installed but locked capacity on PowerMax/VMAX arrays to be unlocked via a license key without physical hardware installation. This page covers the commands used to inspect COD entitlement, activate capacity, and verify the result.
-
-> **Prerequisite**: Solutions Enabler (symcli) installed and the target array registered in the local symapi database (`symcfg discover`).  
-> **SID**: 12-digit SymmetrixID, e.g. `000297600123`. Find it with `symcfg list`.
-
----
-
-## Quick-Reference Command Table
-
-| Command | Purpose |
-|---|---|
-| `symcfg list` | List all locally-known arrays and their SIDs |
-| `symcfg list -v -sid <sid>` | Array overview: model, microcode, cache, capacity |
-| `symcfg show -v -sid <sid>` | Full array configuration dump |
-| `symcfg -sid <sid> list -license` | All installed license entitlements |
-| `symcfg -sid <sid> list -disk -thin` | Thin-provisioned disk (TDEV) pool capacity |
-| `symcfg -sid <sid> show -pool` | Storage Resource Pool (SRP) capacity and COD tiers |
-| `symconfigure -sid <sid> -f <cmd_file> commit` | Commit a SYMCLI configuration change (COD activation) |
-| `GET /univmax/restapi/100/system/symmetrix/{sid}/system_capacity` | Unisphere REST: licensed and used capacity |
-
----
-
-## SYMCLI — Discovering Arrays and Capacity
-
 ```bash
 # --- Discover all arrays reachable from this host ---
 symcfg discover
@@ -59,6 +26,8 @@ symcfg -sid <sid> list -disk
 
 # Show only thin/EFD disks with capacity summary
 symcfg -sid <sid> list -disk -thin
+```
+
 ```text
 ┌─────────────────────────────────────── Dell COD CLI Reference ────────────────────────────────────────┐
 │                                                                                                       │
@@ -99,13 +68,6 @@ symcfg -sid <sid> list -disk -thin
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
----
-
-## Unisphere REST API
-
-The Unisphere REST API provides JSON-format capacity data including COD status.
-
 ```bash
 UNISPHERE="https://<unisphere_host>:8443"
 SID="<sid>"
@@ -151,11 +113,6 @@ curl -s -k -u "${USER}:${PASS}" \
   "${UNISPHERE}/univmax/restapi/100/system/symmetrix/${SID}/disk_group" \
   | python3 -m json.tool
 ```
-
----
-
-## License Commands — Summary
-
 ```bash
 # List all licenses with status
 symcfg -sid <sid> list -license
@@ -175,14 +132,3 @@ symcfg -version
 # Verify Solutions Enabler can communicate with the array
 symcfg list -sid <sid> -v 2>&1 | head -5
 ```
-
-**COD-relevant license feature names (examples — exact names vary by model):**
-
-| Feature Name | Description |
-|---|---|
-| `PowerMax 2500 Base Capacity` | Baseline licensed capacity |
-| `PowerMax 2500 COD Capacity` | Locked-until-activated COD capacity |
-| `PowerMax All Flash Enclosure` | Additional enclosure COD |
-| `VMAX3 COD Base` | Legacy VMAX3 COD entitlement |
-| `Open Replicator` | Data migration feature license |
-| `TimeFinder/SnapVX` | Snapshot license (separate from capacity) |

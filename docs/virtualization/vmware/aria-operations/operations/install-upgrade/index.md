@@ -1,11 +1,3 @@
-# Aria Operations — Install & Upgrade
-
-
-<div class="kb-summary">
-Install & Upgrade reference covering Interoperability Matrix, EOL Tracking, Pre-Upgrade Checklist, Post-Upgrade Validation, Related Sections.
-</div>
-
-Aria Operations — Upgrade Paths
 ```text
 ┌────────────────────────────────── Aria Operations Install & Upgrade ──────────────────────────────────┐
 │                                                                                                       │
@@ -96,8 +88,6 @@ Aria Operations — Upgrade Paths
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-                           │
-                           ▼
 ```text
 ```
 ```text
@@ -110,6 +100,8 @@ Aria Operations — Upgrade Paths
 │  ✔ VM snapshots taken (revert window)                                                                 │
 │  ✔ Backup completed within last 24h                                                                   │
 └─────────────────────────────────────────────────────┘
+```
+
 ```text
 ┌────────────────────────────────── Aria Operations Install & Upgrade ──────────────────────────────────┐
 │                                                                                                       │
@@ -155,57 +147,3 @@ Aria Operations — Upgrade Paths
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
----
-
-## Interoperability Matrix
-
-| Aria Operations | vSphere / ESXi | NSX-T | vSAN |
-|-----------------|---------------|-------|------|
-| 8.18 | 7.0 U3+, 8.0+ | 4.x | 8.0+ |
-| 8.16 | 7.0 U2+, 8.0 | 4.x | 7.0+ |
-| 8.14 | 7.0 U1+, 8.0 | 3.x, 4.x | 7.0+ |
-
-> Always verify against the official interop matrix before upgrading.
-
----
-
-## EOL Tracking
-
-| Version | GA Date | EOL Date |
-|---------|---------|----------|
-| vROps 8.6.x | 2021-10 | Per Broadcom lifecycle policy |
-| vROps 8.10.x | 2022-10 | Per Broadcom lifecycle policy |
-| Aria Operations 8.14+ | 2023+ | Check Broadcom lifecycle page |
-
-Reference: [Broadcom Lifecycle Policy](https://support.broadcom.com/group/ecx/productlifecycle)
-
----
-
-## Pre-Upgrade Checklist
-
-- [ ] Current version and target version interoperability verified
-- [ ] Snapshot of all cluster VMs taken (revert window)
-- [ ] Cluster health shows all nodes **Online**
-- [ ] All adapter instances show **Collecting**
-- [ ] PAK file or LCM repository access confirmed
-- [ ] Maintenance window scheduled; alert notification sent
-- [ ] Backup of custom dashboards, alert definitions, and super metrics exported
-
----
-
-## Post-Upgrade Validation
-
-- [ ] Cluster management page shows all nodes **Online**
-- [ ] All adapters resume collecting (allow 15–30 min after upgrade)
-- [ ] UI version string matches target in Administration > About
-- [ ] Dashboards and alerts still present
-- [ ] Custom content (super metrics, views) intact
-
----
-
-## Related Sections
-
-- [Architecture](../../architecture/index.md) — node roles
-- [Operations](../index.md) — health checks
-- [Escalation](../../troubleshooting/escalation/index.md) — opening upgrade-related cases

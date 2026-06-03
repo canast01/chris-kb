@@ -1,27 +1,3 @@
-# FabricOS — Escalation
-
-
-<div class="kb-summary">
-> Part of the [Troubleshooting](../index.md) reference.
-</div>
-
----
-
-## Opening a Support Case
-
-Support portal: [support.broadcom.com](https://support.broadcom.com)
-
-1. Log in with the team account
-2. Create Service Request → select Brocade SAN Switching as the product area
-3. Enter the switch serial number to link the SR to the support contract
-4. Upload the `supportsave` bundle (see below) immediately — dramatically speeds up triage
-
----
-
-## Collecting supportsave (Diagnostic Bundle)
-
-Run `supportsave` on the affected switch before opening the case:
-
 ```bash
 # Configure FTP/SCP target first (if not already set)
 ssave --ftp <ftp-server-ip> <username> <password> <path>
@@ -37,6 +13,8 @@ supportsave
 # - Fabric database (zone, device, routing)
 # - Port statistics
 # - SNMP trap history
+```
+
 ```text
 ┌─────────────────────────── Brocade Fabric OS — Troubleshooting Escalation ────────────────────────────┐
 │                                                                                                       │

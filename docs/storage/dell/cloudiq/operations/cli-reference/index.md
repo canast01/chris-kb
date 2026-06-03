@@ -1,41 +1,3 @@
-# CloudIQ REST API Reference
-
-
-<div class="kb-summary">
-> Part of the [CloudIQ](../../index.md) reference.
-</div>
-
----
-
-CloudIQ has no local CLI. All programmatic interaction is via the **CloudIQ REST API** at `https://cloudiq.apis.dell.com`. Authentication uses the OAuth2 **client credentials** flow. API keys (client ID + secret) are generated in the CloudIQ web portal under **Settings → API Keys**.
-
-> **Base URL**: `https://cloudiq.apis.dell.com`  
-> **Token URL**: `https://cloudiq.apis.dell.com/auth/oauth/v2/token`  
-> **Docs**: https://developer.dell.com/apis/4588/versions/6.0/docs
-
----
-
-## Quick-Reference Command Table
-
-| Operation | Method + Path |
-|---|---|
-| Get OAuth2 token | `POST /auth/oauth/v2/token` |
-| List all systems | `GET /rest/v1/systems` |
-| Get system health | `GET /rest/v1/systems/{id}` |
-| List active alerts | `GET /rest/v1/alerts` |
-| Filter alerts by severity | `GET /rest/v1/alerts?severity=HIGH` |
-| Acknowledge an alert | `PATCH /rest/v1/alerts/{id}` |
-| Get capacity forecast | `GET /rest/v1/systems/{id}/capacity` |
-| Get performance metrics | `GET /rest/v1/systems/{id}/metrics` |
-| List tags | `GET /rest/v1/tags` |
-| Assign tag to system | `POST /rest/v1/systems/{id}/tags` |
-
----
-
-## Authentication
-
-CloudIQ uses OAuth2 client credentials. The access token is a Bearer JWT valid for 3600 seconds.
-
 ```bash
 CLIENT_ID="<your_client_id>"
 CLIENT_SECRET="<your_client_secret>"
@@ -54,6 +16,8 @@ echo "Token: ${TOKEN:0:40}..."   # Print first 40 chars to confirm success
 # --- Reusable header for all subsequent calls ---
 AUTH="Authorization: Bearer ${TOKEN}"
 BASE="https://cloudiq.apis.dell.com/rest/v1"
+```
+
 ```text
 ┌───────────────────────────────────── Dell CloudIQ CLI Reference ──────────────────────────────────────┐
 │                                                                                                       │
@@ -95,11 +59,6 @@ BASE="https://cloudiq.apis.dell.com/rest/v1"
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
----
-
-## Capacity API
-
 ```bash
 # --- Current capacity utilisation for a system ---
 curl -s -X GET "${BASE}/systems/${SYSTEM_ID}/capacity" \
@@ -121,11 +80,6 @@ curl -s -X GET "${BASE}/systems/${SYSTEM_ID}/capacity/forecast" \
 curl -s -X GET "${BASE}/systems/${SYSTEM_ID}/capacity/forecast?days=90" \
   -H "${AUTH}" | python3 -m json.tool
 ```
-
----
-
-## Performance API
-
 ```bash
 # --- Get available performance metric types for a system ---
 curl -s -X GET "${BASE}/systems/${SYSTEM_ID}/metrics/query" \
@@ -147,13 +101,6 @@ curl -s -X POST "${BASE}/systems/${SYSTEM_ID}/metrics/query" \
 curl -s -X GET "${BASE}/systems/${SYSTEM_ID}/metrics/last" \
   -H "${AUTH}" | python3 -m json.tool
 ```
-
----
-
-## Tags API
-
-Tags in CloudIQ allow grouping and filtering systems by environment, owner, location, or any custom label.
-
 ```bash
 # --- List all existing tags ---
 curl -s -X GET "${BASE}/tags" \

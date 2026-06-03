@@ -1,66 +1,3 @@
-# Cisco DCNM — Authentication
-
-
-<div class="kb-summary">
-> Part of the [Cisco DCNM](../../index.md) reference.
-</div>
-
----
-
-## Overview
-
-DCNM supports local accounts, LDAP/Active Directory, TACACS+, and RADIUS for user authentication. Production environments should use LDAP or TACACS+ for all named users, with local admin as break-glass only.
-
----
-
-## 1. Local Accounts
-
-Managed under **Administration > Security > Local User Management**.
-
-### Create a Local Account
-
-1. Navigate to **Administration > Security > Local User Management > Add User**.
-2. Enter username, password, and email.
-3. Assign a role (see [Access Control](../access-control/index.md)).
-4. Click **Save**.
-
-### Password Policy
-
-Configure under **Administration > Security > Password Policy**:
-
-| Setting | Recommended Value |
-|---|---|
-| Minimum length | 12 characters |
-| Uppercase required | Yes |
-| Lowercase required | Yes |
-| Numbers required | Yes |
-| Special characters required | Yes |
-| Maximum age | 90 days |
-| Password history | 10 |
-| Account lockout after | 5 failed attempts |
-| Lockout duration | 30 minutes |
-
----
-
-## 2. LDAP / Active Directory
-
-Configure under **Administration > Security > Authentication > LDAP**.
-
-### Configuration
-
-| Field | Value |
-|---|---|
-| Server | `ldap.corp.example.com` |
-| Port | 636 (LDAPS) |
-| Base DN | `DC=corp,DC=example,DC=com` |
-| Bind DN | `CN=dcnm-svc,OU=Service Accounts,DC=corp,DC=example,DC=com` |
-| Bind password | Service account password |
-| User attribute | `sAMAccountName` |
-| Group base DN | `OU=DCNM-Groups,DC=corp,DC=example,DC=com` |
-| Role attribute | `memberOf` |
-
-### Import CA Certificate (for LDAPS)
-
 ```bash
 ssh root@dcnm-dc1.corp.example.com
 
@@ -75,6 +12,8 @@ keytool -import -trustcacerts -alias corp-ldap-ca \
 
 # Restart DCNM to apply
 /usr/local/cisco/dcm/dcnm/sbin/dcnm-server restart
+```
+
 ```text
 ┌───────────────────────────────────── Cisco DCNM — Authentication ─────────────────────────────────────┐
 │                                                                                                       │
@@ -122,8 +61,3 @@ keytool -import -trustcacerts -alias corp-ldap-ca \
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
----
-
-## Related Reference
-
-- [Standard LDAP Integration](../../../../../security/ldap-integration/index.md) — field reference, service account standards, TLS requirements, and connectivity testing

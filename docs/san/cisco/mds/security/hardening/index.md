@@ -1,24 +1,3 @@
-# MDS — Hardening
-
-
-<div class="kb-summary">
-> Part of the [Cisco MDS](../../index.md) reference.
-</div>
-
----
-
-## Overview
-
-Hardening an MDS switch means eliminating unused attack surface, enforcing encrypted management protocols, configuring centralized authentication, restricting management access by source IP, and ensuring all configuration changes are logged with user identity. This page defines the baseline configuration standard for all production MDS switches.
-
-Apply this configuration as part of initial switch commissioning and validate it during periodic security reviews (quarterly recommended).
-
----
-
-## 1. Disable Unused Services
-
-The default NX-OS installation enables several services that should be disabled in production:
-
 ```bash
 # Disable Telnet — transmits credentials in cleartext
 no feature telnet
@@ -39,6 +18,8 @@ no cdp enable
 show feature | include telnet|http|tftp|ftp|snmp|ssh
 # Expected: telnet disabled, http-server disabled, tftp-server disabled
 #           https-server enabled, ssh enabled, snmp enabled
+```
+
 ```text
 ┌─────────────────────────────────── Cisco MDS — Security Hardening ────────────────────────────────────┐
 │                                                                                                       │
@@ -86,11 +67,6 @@ show feature | include telnet|http|tftp|ftp|snmp|ssh
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
----
-
-## 4. AAA and Authentication
-
 ```bash
 # TACACS+ server definitions (encrypted key)
 tacacs-server host 10.10.1.10 key 0 <key>
@@ -117,11 +93,6 @@ username admin password 0 <strong-password> role network-admin
 show aaa
 test aaa group TACACS-SERVERS <test-user> <test-password>
 ```
-
----
-
-## 5. Role-Based Access Control
-
 ```bash
 # Confirm built-in roles are appropriate
 show role
@@ -133,11 +104,6 @@ show role
 # Verify no accounts have unnecessary admin rights
 show user-account
 ```
-
----
-
-## 6. SNMPv3 — Disable v1/v2c
-
 ```bash
 # Remove default insecure community strings
 no snmp-server community public
@@ -161,13 +127,6 @@ show snmp host
 show snmp community
 # Expected: no v1/v2c community strings in output
 ```
-
----
-
-## 7. NTP Synchronization
-
-NTP is required for log correlation, certificate validity, and TACACS+ accounting timestamp accuracy.
-
 ```bash
 # Configure NTP servers
 ntp server 10.10.0.10 prefer
@@ -179,13 +138,6 @@ show ntp status
 
 show ntp peer-status
 ```
-
----
-
-## 8. Syslog Forwarding
-
-All log events must be forwarded to a SIEM or log aggregator for correlation and alerting.
-
 ```bash
 # Forward notifications and above to SIEM
 logging server 10.10.3.50 5 facility local7
@@ -198,11 +150,6 @@ logging logfile messages 6 size 4194304
 show logging server
 show logging
 ```
-
----
-
-## 9. VSAN Security
-
 ```bash
 # Confirm no production ports in VSAN 1 (insecure default)
 show vsan 1 membership
@@ -221,11 +168,6 @@ interface fc2/1
   switchport trunk allowed vsan 10,20,99
   no switchport trunk allowed vsan 1
 ```
-
----
-
-## 10. Login Banner
-
 ```bash
 banner motd #
 WARNING: This system is for authorized use only.
@@ -233,13 +175,6 @@ All connections are monitored and recorded.
 Unauthorized access or use is prohibited and may result in legal action.
 #
 ```
-
----
-
-## 11. CFS (Cisco Fabric Services) Security
-
-CFS distributes device alias and zone changes across the fabric. Restrict CFS to prevent unauthorized switches from joining CFS distribution.
-
 ```bash
 # Restrict CFS to specific IP addresses (MDS management IPs)
 cfs ipv4 distribute
@@ -252,63 +187,3 @@ cfs eth distribute   # or cfs ipv4 distribute — depending on transport
 show cfs status
 show cfs peers
 ```
-
----
-
-## Hardening Checklist
-
-### Network Services
-
-- [ ] Telnet disabled: `show feature | include telnet` = disabled
-- [ ] HTTP disabled; HTTPS enabled: `show feature | include http-server` = disabled
-- [ ] TFTP server disabled: `show feature | include tftp-server` = disabled
-- [ ] SSH v2 only: `show ssh server | include version` = v2
-- [ ] SSH RSA key generated (2048-bit minimum): `show crypto key mypubkey rsa`
-- [ ] VTY lines accept SSH only: `show running-config | include transport input`
-
-### Authentication and Authorization
-
-- [ ] TACACS+ configured with at least two servers and encrypted key
-- [ ] AAA authentication, authorization, and accounting all enabled and pointing to TACACS-SERVERS
-- [ ] Local break-glass admin exists; password in vault; used break-glass only
-- [ ] No other local accounts with admin roles
-- [ ] TACACS+ test passes: `test aaa group TACACS-SERVERS <user> <pass>`
-- [ ] NTP synchronized: `show ntp status` = synchronized
-
-### Access Restriction
-
-- [ ] Management interface (mgmt0) has inbound ACL restricting to management subnet
-- [ ] SNMP access restricted by ACL or SNMPv3 user scoping
-- [ ] Login banner configured
-
-### Encryption
-
-- [ ] SNMPv1/v2c community strings removed
-- [ ] SNMPv3 authPriv configured (SHA + AES-128 minimum)
-- [ ] HTTPS certificate is current
-
-### Data Plane
-
-- [ ] No production ports in VSAN 1: `show vsan 1 membership`
-- [ ] Enhanced zoning on all production VSANs: `show zone status vsan <id>`
-- [ ] Single-initiator zoning enforced: `show zone vsan <id>` — no multi-initiator zones
-- [ ] ISL trunks do not carry VSAN 1 on production links
-
-### Logging
-
-- [ ] Syslog forwarding to SIEM configured: `show logging server`
-- [ ] AAA accounting to TACACS+ enabled: `show accounting log`
-- [ ] Local logging buffer adequate: `show logging info`
-
----
-
-## Periodic Review Schedule
-
-| Review | Frequency | Owner |
-|---|---|---|
-| Full hardening checklist audit | Quarterly | SAN infrastructure team |
-| Local account password rotation | Quarterly | SAN infrastructure team + vault admin |
-| NX-OS version vs. Cisco recommended | Quarterly | SAN infrastructure team |
-| SmartNet / maintenance contract expiry | Semi-annually | Asset management |
-| SNMP community string review | Quarterly (if v2c in use) | SAN infrastructure team |
-| Syslog receiver health check | Monthly | SIEM / security team |

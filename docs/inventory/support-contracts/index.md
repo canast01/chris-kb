@@ -1,30 +1,3 @@
-# Support Contract Tracking
-
-
-<div class="kb-summary">
-Maintain visibility of vendor support agreements to ensure infrastructure components remain covered and renewals are actioned before expiry.
-</div>
-
-## Contract Register — Key Fields
-
-| Field | Description |
-|---|---|
-| Vendor | Company providing support |
-| Product / CI | Specific hardware or software covered |
-| Contract type | Hardware support / software maintenance / SaaS subscription |
-| Contract number | Vendor reference |
-| Start date | Coverage begins |
-| Expiry date | Coverage ends |
-| SLA tier | Standard / Premium / 24×7 / NBD |
-| Annual cost | For budget forecasting |
-| Renewal owner | Who must action renewal |
-| Vendor TAM / CSM | Technical Account Manager contact |
-| Support portal URL | Where to raise cases |
-
-## Expiry Monitoring
-
-### Contracts Expiring Within 90 Days
-
 ```bash
 # Query contract CSV for near-expiry items
 # Columns: Vendor,Product,ContractNumber,ExpiryDate,RenewalOwner,SLATier
@@ -35,6 +8,8 @@ awk -F',' 'NR>1 {
   if (days < 90 && days >= 0) printf "EXPIRING: %s | %s | %d days | Owner: %s\n", $1, $2, days, $5
   if (days < 0) printf "EXPIRED: %s | %s | %d days ago | Owner: %s\n", $1, $2, -days, $5
 }' support-contracts.csv
+```
+
 ```text
 ┌──────────────────────────────────── Inventory — Support Contracts ────────────────────────────────────┐
 │                                                                                                       │
@@ -72,9 +47,6 @@ awk -F',' 'NR>1 {
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-## Renewal Process
-
 ```text
 120 days out → Identify contracts expiring < 90 days; review scope (add/remove CIs)
 90 days out  → Request renewal quote from vendor; route to procurement
@@ -82,24 +54,3 @@ awk -F',' 'NR>1 {
 30 days out  → PO submitted to vendor; confirmation received
 Day 0        → New contract active; update contract register; confirm portal access
 ```
-
-## Support Contract Checklist
-
-- [ ] All production systems have active support coverage
-- [ ] No contracts expired without renewal
-- [ ] Contracts expiring within 90 days have renewal in progress
-- [ ] Vendor portal credentials are current (not tied to departed staff)
-- [ ] Hardware serial numbers match contract CIs (no uncovered devices)
-- [ ] Support tier is appropriate for each system's criticality
-- [ ] Budget line item confirmed for next renewal cycle
-
-## Escalation Contacts
-
-| Vendor | Escalation Path |
-|---|---|
-| Microsoft | Azure Unified Support: `aka.ms/supportrequest`; Premier escalation via TAM |
-| AWS | Support console → Severity A; Account Manager for major issues |
-| VMware (Broadcom) | My VMware portal → Support Request; TAM for severity 1 |
-| NetApp | NetApp Support Site; call 1-888-4-NETAPP for P1 |
-| Pure Storage | `support.purestorage.com`; call hotline for P1 |
-| Cisco | `tools.cisco.com/ServiceRequestTool`; TAC call for P1/P2 |

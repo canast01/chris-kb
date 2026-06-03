@@ -1,23 +1,3 @@
-# RASR — Hardening
-
-
-<div class="kb-summary">
-Hardening the RASR recovery environment: storage array management plane, iDRAC, recovery media, and the management hosts used to operate RASR.
-</div>
-
-## Hardening Scope
-
-RASR hardening covers four areas:
-
-1. **Dell EMC storage array management plane** — Unisphere, API access, and management network.
-2. **iDRAC (server management)** — Out-of-band access used during recovery boot sequences.
-3. **Recovery management hosts** — Linux or Windows servers used to run RASR CLI tools and scripts.
-4. **Recovery media** — USB drives, PXE images, ISO files used to boot recovery environments.
-
-## Storage Array Management Plane Hardening
-
-### Unisphere Hardening
-
 ```bash
 # Disable unused management interfaces
 # Only HTTPS (443) should be allowed for web management
@@ -45,6 +25,8 @@ uemcli /sys/setting set -loginBanner "Authorised access only. All sessions are l
 # View current security settings
 uemcli /sys/security show
 uemcli /sys/setting show
+```
+
 ```text
 ┌────────────────────────────────────────── RASR — Hardening ───────────────────────────────────────────┐
 │                                                                                                       │
@@ -87,11 +69,6 @@ uemcli /sys/setting show
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-## iDRAC Hardening
-
-### Baseline iDRAC Configuration
-
 ```bash
 # Disable unused management protocols
 racadm set iDRAC.IPMILan.Enable 0          # Disable IPMI over LAN (use iDRAC interface instead)
@@ -120,9 +97,6 @@ racadm set iDRAC.WebServer.LoginBanner "Authorised personnel only. All sessions 
 racadm get iDRAC.WebServer
 racadm get iDRAC.IPMILan
 ```
-
-### iDRAC Alert Configuration
-
 ```bash
 # Configure SNMP trap destination for iDRAC alerts
 racadm set iDRAC.SNMPTrapIPv4.Address 10.10.20.5   # SNMP trap receiver
@@ -136,9 +110,6 @@ racadm set iDRAC.RemoteHosts.SMTPServerIPAddress smtp.example.local
 # Enable alerts for hardware failures and power events
 racadm alertcfg -g system -s enabled
 ```
-
-### iDRAC Firmware
-
 ```bash
 # Check iDRAC firmware version
 racadm getversion
@@ -147,13 +118,6 @@ racadm getversion
 # Download firmware from Dell support; verify checksum before applying
 racadm update -f /tmp/iDRAC-firmware.EXE -u 1   # -u 1 = update after upload
 ```
-
-## Recovery Management Host Hardening
-
-The Linux or Windows hosts used to run RASR CLI tools and scripts are privileged systems and must be hardened equivalently to Tier-0 infrastructure.
-
-### Linux Management Host
-
 ```bash
 # Apply standard Linux hardening (see Linux Hardening page)
 # Additional RASR-specific controls:
@@ -181,9 +145,6 @@ augenrules --load
 chmod 600 /etc/rasr/credentials.conf
 chown root:dr-operators /etc/rasr/credentials.conf
 ```
-
-### Windows Management Host
-
 ```powershell
 # Enable PowerShell script block logging for RASR management host
 $path = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging"
@@ -208,11 +169,6 @@ New-NetFirewallRule -DisplayName "RDP - Jump Host Only" `
   -Direction Inbound -Protocol TCP -LocalPort 3389 `
   -RemoteAddress 10.10.20.1 -Action Allow
 ```
-
-## Recovery Media Hardening
-
-### USB Media Hardening
-
 ```bash
 # Verify recovery USB is created from a trusted source (SHA-256 check)
 sha256sum rasr-recovery-image.iso
@@ -224,9 +180,6 @@ clamscan --recursive /mnt/rasr-usb/
 # After use, securely wipe the staging area
 shred -vzn 3 /mnt/rasr-stage/*
 ```
-
-### PXE Boot Environment Hardening
-
 ```yaml
 PXE-based RASR recovery hardening:
 - DHCP option 67 (bootfile) served only to authorised MAC addresses
@@ -235,7 +188,6 @@ PXE-based RASR recovery hardening:
 - PXE recovery environment has no writable network shares outside of the recovery target
 - PXE boot triggers an alert to the DR team (iDRAC alert on next boot device = PXE)
 ```
-
 ```bash
 # Restrict TFTP to management VLAN (dnsmasq example)
 # /etc/dnsmasq.conf
@@ -249,11 +201,6 @@ in.tftpd: 10.10.20.
 # /etc/hosts.deny
 in.tftpd: ALL
 ```
-
-## Logging and Monitoring
-
-All RASR-related operations must generate immutable audit logs.
-
 ```bash
 # Forward array management logs to centralised SIEM
 # Unity — configure syslog forwarding
@@ -279,21 +226,6 @@ systemctl restart rsyslog
 logger -t rasr "Test log entry from management host"
 # Check SIEM for receipt
 ```
-
-### Monitoring Alerts
-
-| Event | Alert Trigger | Severity |
-|---|---|---|
-| Failed Unisphere login (5+ in 10 min) | SIEM correlation rule | High |
-| iDRAC login from unexpected IP | SIEM geo/IP rule | High |
-| RASR recovery initiated | All recovery initiations | Medium |
-| Recovery USB access (iDRAC virtual media mount) | iDRAC audit event | Medium |
-| Array firmware change | Unisphere configuration change event | High |
-| KMIP key server unreachable | Array health alert | Critical |
-| Replication lag > threshold | Unity performance alert | High |
-
-## Hardening Verification Checklist
-
 ```bash
 # Array management
 uemcli /sys/security show | grep -E "telnet|http|session"
@@ -317,18 +249,3 @@ uemcli /user show | grep -E "admin|root|default"
 # Verify encryption on array
 uemcli /sys/security/encryption show | grep "Encryption status"
 ```
-
-## Quick Reference
-
-| Topic | Command / Setting |
-|---|---|
-| Array session timeout | `uemcli /sys/setting set -sessionTimeout 900` |
-| Array syslog forwarding | `uemcli /sys/log/syslog create -address siem.example.local` |
-| Disable iDRAC IPMI | `racadm set iDRAC.IPMILan.Enable 0` |
-| iDRAC TLS minimum | `racadm set iDRAC.WebServer.TLSProtocol TLS1_2` |
-| iDRAC lockdown mode | `racadm set iDRAC.Lockdown.SystemLockdown Enabled` |
-| iDRAC syslog | `racadm set iDRAC.SysLog.SysLogEnable 1` |
-| Management host audit | `augenrules --load` after adding rules to `/etc/audit/rules.d/rasr.rules` |
-| PowerShell logging (Windows) | `EnableScriptBlockLogging = 1` in registry |
-| Recovery USB verification | `sha256sum <image>` before use |
-| PXE restriction | DHCP + TFTP restricted to management VLAN |

@@ -1,27 +1,3 @@
-# MDS — Health Checks
-
-
-<div class="kb-summary">
-> Part of the [Cisco MDS](../../index.md) reference.
-</div>
-
----
-
-## Daily Checks
-
-Run these checks at the start of each shift or as part of a morning SAN review. The goal is to catch degraded states (a port down, a missing FLOGI entry, a failed PSU) before they become incidents.
-
-| Check | Command | Expected Result |
-|---|---|---|
-| FC interface states | `show interface brief` | All connected ports in `up` state; no `errDisabled` or unexpected `down` |
-| FLOGI database | `show flogi database` | All expected host HBAs and storage target ports present |
-| Fabric topology | `show topology` | ISL links up; no unexpected topology changes |
-| Active zoneset | `show zoneset active vsan all` | Active zoneset name and member count match expected |
-| Recent syslog | `show logging last 50` | No `critical` or `error`-level entries in the last window |
-| Hardware health | `show environment` | PSUs, fans, and temperature sensors all reporting normal |
-| NX-OS version consistency | `show version` | All switches in the fabric on the same approved NX-OS release |
-| NDFC / DCNM alarms | NDFC dashboard | No active fabric alarms or topology anomalies |
-
 ```bash
 # Full daily health sweep — run on each MDS switch
 show interface brief
@@ -31,6 +7,8 @@ show zoneset active vsan all
 show logging last 50
 show environment
 show version
+```
+
 ```text
 ┌─────────────────────────────────── Cisco MDS 9000 — Health Checks ────────────────────────────────────┐
 │                                                                                                       │
@@ -78,11 +56,6 @@ show version
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-Compare the list against the expected device register (CMDB or SAN design spreadsheet). A host HBA or storage target missing from this output is a fault condition.
-
-### show environment
-
 ```text
 show environment
 
@@ -102,22 +75,6 @@ Power Supply:
    1   DS-CAC-3000W          OK             OK              Ok
    2   DS-CAC-3000W          OK             OK              Ok
 ```
-
-Any `Failed`, `Absent`, or `Minor/Major` temperature alerts require immediate investigation.
-
----
-
-## Weekly Checks
-
-In addition to daily checks, perform these weekly:
-
-- [ ] **Port error counters**: `show interface fc<x/y> counters errors` on all active ports — flag any non-zero CRC, link-failure, or loss-of-sync counters since last clear
-- [ ] **VSAN membership audit**: `show vsan membership` — confirm no ports in unexpected VSANs
-- [ ] **Device alias consistency**: `show device-alias database` — confirm all aliases are current and match CMDB
-- [ ] **Zone database diff**: compare `show zone vsan <id>` output against change tickets to ensure only authorised zones exist
-- [ ] **ISL utilisation**: review NDFC performance graphs for ISL bandwidth — flag any ISL at > 70% sustained utilisation
-- [ ] **Trunk allowed VSANs**: `show trunk` — confirm only intended VSANs are allowed on each ISL trunk
-
 ```bash
 # Weekly additions to daily sweep
 show interface fc1/1 counters errors   # repeat per port
@@ -127,24 +84,6 @@ show zone vsan 10
 show trunk
 show port-channel summary
 ```
-
----
-
-## Monthly Checks
-
-- [ ] **NX-OS version vs. Cisco recommended**: cross-reference `show version` against Cisco's current recommended MDS NX-OS release for the platform
-- [ ] **SmartNet / maintenance contract expiry**: verify switches are covered in contract management system
-- [ ] **EPLD version**: `show version module all` — confirm EPLD versions are current for the NX-OS release in use
-- [ ] **AAA / TACACS+ reachability**: `test aaa group tacacs+ <test-user> <test-pass>` — confirm AAA is functioning
-- [ ] **SNMP trap receiver**: confirm trap receiver in NDFC / NMS is receiving traps from all MDS switches
-- [ ] **Configuration backup**: verify automated backup job ran successfully for the previous 30 days; spot-check at least two backup files
-
----
-
-## Health Check Script (Quick Reference)
-
-The following command sequence captures all key health state in a single SSH session. Redirect to a file for archival.
-
 ```bash
 show version
 show module
@@ -161,30 +100,6 @@ show logging last 50
 show system resources
 show fcdomain domain-list vsan 10
 ```
-
-For automated health checks, see the [Scripts](../scripts/index.md) page for the `mds_fabric_health.sh` and `mds_daily_check.sh` scripts.
-
----
-
-## Alarm Thresholds
-
-Use these thresholds to determine severity when evaluating check results:
-
-| Metric | Warning | Critical |
-|---|---|---|
-| FC interfaces down | 1 or more | 5 or more |
-| FLOGI entries below baseline | > 5% fewer than expected | > 20% fewer |
-| ISL utilisation | > 70% sustained | > 90% sustained |
-| CPU utilisation | > 60% | > 80% |
-| Environmental alerts | Minor threshold | Major threshold or fan/PSU failure |
-| Log error rate | 1–5 errors in window | > 5 errors or any `critical`-level entry |
-
----
-
-## Pre-Change Baseline
-
-Before any change (zoning update, firmware upgrade, port move), capture a full baseline:
-
 ```bash
 show version
 show running-config
@@ -194,5 +109,3 @@ show zoneset active vsan all
 show environment
 show logging last 50
 ```
-
-Save this output to the change ticket. It becomes the reference for post-change validation and rollback evidence.

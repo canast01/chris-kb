@@ -1,23 +1,3 @@
-# Key Management
-
-
-<div class="kb-summary">
-Cryptographic key lifecycle management — generation, storage, distribution, rotation, and revocation.
-</div>
-
-## Key Types and Storage
-
-| Key Type | Storage | Rotation |
-|---|---|---|
-| Root CA private key | Air-gapped HSM | On CA renewal (~10 years) |
-| Issuing CA private key | HSM (networked) | On CA renewal (~5 years) |
-| TLS/server certificates | Venafi / cert store | Annually |
-| Symmetric data encryption keys | KMS (AWS/Azure) | Annually or on incident |
-| Backup encryption keys | Offline + KMS | Annually |
-| Service account API keys | CyberArk / Secrets Manager | 90 days |
-
-## AWS KMS Key Lifecycle
-
 ```bash
 # Create a key
 aws kms create-key --description "prod-data-key" --key-usage ENCRYPT_DECRYPT
@@ -33,6 +13,8 @@ aws kms schedule-key-deletion --key-id <key-id> --pending-window-in-days 30
 
 # Cancel deletion
 aws kms cancel-key-deletion --key-id <key-id>
+```
+
 ```text
 ┌────────────────────────────────── Data Protection — Key Management ───────────────────────────────────┐
 │                                                                                                       │
@@ -67,9 +49,6 @@ aws kms cancel-key-deletion --key-id <key-id>
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-## ONTAP Key Manager
-
 ```bash
 # Check key manager status
 security key-manager show
@@ -80,12 +59,3 @@ security key-manager key query
 # Check volume encryption state
 volume show -fields encryption-state
 ```
-
-## Key Management Checklist
-
-- [ ] All production keys stored in approved KMS/HSM — no plaintext keys in config files
-- [ ] Rotation schedule confirmed for all key types
-- [ ] Key backup tested and verifiable
-- [ ] Access to key management restricted to named administrators
-- [ ] Audit log for key operations forwarded to SIEM
-- [ ] Key inventory reviewed quarterly

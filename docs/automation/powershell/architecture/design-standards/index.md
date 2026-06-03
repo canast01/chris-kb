@@ -1,19 +1,8 @@
-# PowerShell — Coding Standards
-
-
-<div class="kb-summary">
-Consistent standards reduce review friction, improve reliability, and make automation maintainable by the whole team — not just the original author.
-</div>
-
----
-
-## Approved Verbs
-
-PowerShell enforces a fixed set of approved verbs. Using unapproved verbs generates a warning on module import and breaks discoverability conventions.
-
 ```powershell
 # List all approved verbs
 Get-Verb | Sort-Object Group, Verb | Format-Table -AutoSize
+```
+
 ```text
 ┌──────────────────────────────────── PowerShell — Design Standards ────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -38,27 +27,6 @@ Get-Verb | Sort-Object Group, Verb | Format-Table -AutoSize
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-Key attributes reference:
-
-| Attribute | Purpose |
-|---|---|
-| `[Parameter(Mandatory)]` | Force caller to supply a value |
-| `[Parameter(ValueFromPipeline)]` | Accept pipeline input by value |
-| `[Parameter(ValueFromPipelineByPropertyName)]` | Accept pipeline input by property name |
-| `[ValidateNotNullOrEmpty()]` | Reject null or empty string |
-| `[ValidateSet(...)]` | Restrict to enumerated values |
-| `[ValidateRange(min,max)]` | Numeric range enforcement |
-| `[ValidatePattern(regex)]` | Regex format validation |
-| `[ValidateScript({...})]` | Arbitrary validation logic |
-| `[Alias('n')]` | Alternative parameter name |
-
----
-
-## Error Handling
-
-PowerShell has two error types: **terminating** (exceptions, thrown with `throw`) and **non-terminating** (reported with `Write-Error`). Use `$ErrorActionPreference = 'Stop'` or `-ErrorAction Stop` to promote non-terminating errors to terminating.
-
 ```powershell
 function Invoke-WidgetDeploy {
     [CmdletBinding()]
@@ -95,13 +63,6 @@ function Invoke-WidgetDeploy {
     }
 }
 ```
-
----
-
-## Logging Standards
-
-### Write-EventLog (Windows — Structured System Log)
-
 ```powershell
 # Register event source once (requires admin)
 New-EventLog -LogName Application -Source 'WidgetAutomation' -ErrorAction SilentlyContinue
@@ -120,9 +81,6 @@ function Write-AutomationEvent {
                    -Message $Message
 }
 ```
-
-### Structured JSON Logging (cross-platform)
-
 ```powershell
 function Write-StructuredLog {
     param(
@@ -149,9 +107,6 @@ Write-StructuredLog -Level 'INFO' -Message 'Widget deployed' -Properties @{
     duration_ms = 342
 }
 ```
-
-### PSFramework Logging (recommended for modules)
-
 ```powershell
 Import-Module PSFramework
 
@@ -162,13 +117,6 @@ Write-PSFMessage -Level Important -Message "Widget $Name deployed successfully"
 Write-PSFMessage -Level Warning   -Message "Widget $Name in degraded state" -Tag 'health'
 Write-PSFMessage -Level Error     -Message "Widget deployment failed" -ErrorRecord $_
 ```
-
----
-
-## Comment-Based Help
-
-Every exported function must have comment-based help. This powers `Get-Help` and PlatyPS documentation generation.
-
 ```powershell
 function Get-Widget {
     <#
@@ -215,13 +163,6 @@ function Get-Widget {
     process { <# implementation #> }
 }
 ```
-
----
-
-## Testing with Pester
-
-All exported functions require Pester tests. Target **Pester 5.x**.
-
 ```powershell
 # Tests/Get-Widget.Tests.ps1
 BeforeAll {
@@ -260,9 +201,6 @@ Describe 'Get-Widget' {
     }
 }
 ```
-
-Run tests:
-
 ```powershell
 # Run all tests with detailed output
 Invoke-Pester -Path ./Tests -Output Detailed
@@ -273,18 +211,3 @@ Invoke-Pester -Path ./Tests -CodeCoverage ./Public/*.ps1 -CodeCoverageOutputFile
 # CI — output NUnit XML for test reporting
 Invoke-Pester -Path ./Tests -OutputFormat NUnitXml -OutputFile test-results.xml
 ```
-
----
-
-## Checklist: New Function Review
-
-- [ ] Approved verb used
-- [ ] `[CmdletBinding()]` present
-- [ ] All parameters validated with attributes
-- [ ] `SupportsShouldProcess` added for state-changing operations
-- [ ] `try/catch/finally` wraps all external calls
-- [ ] `$ErrorActionPreference = 'Stop'` set where appropriate
-- [ ] Comment-based help complete (Synopsis, Description, all Parameters, at least 2 Examples)
-- [ ] Pester tests written (happy path + at least one error path)
-- [ ] No hardcoded credentials or paths
-- [ ] `Write-Verbose` present for key decision points

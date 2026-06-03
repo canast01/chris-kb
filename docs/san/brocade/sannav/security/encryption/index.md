@@ -1,26 +1,3 @@
-# SANnav — Encryption
-
-
-<div class="kb-summary">
-> Part of the [SANnav](../../index.md) reference.
-</div>
-
----
-
-## Overview
-
-SANnav encrypts data in transit using TLS and encrypts sensitive stored data (switch credentials, LDAP bind passwords) at rest using AES encryption. This page covers the configuration and verification of both.
-
----
-
-## Data in Transit
-
-### Web UI and REST API (HTTPS)
-
-All browser access and REST API calls use HTTPS (TLS 1.2 minimum; TLS 1.3 preferred). The NGINX front-end handles TLS termination.
-
-#### Replace the Default Self-Signed Certificate
-
 ```bash
 ssh admin@sannav-dc1.corp.example.com
 
@@ -45,6 +22,8 @@ sudo systemctl reload nginx
 # Verify the new certificate is served
 openssl s_client -connect sannav-dc1.corp.example.com:443 -servername sannav-dc1.corp.example.com \
   </dev/null 2>/dev/null | openssl x509 -noout -subject -issuer -dates
+```
+
 ```text
 ┌───────────────────────────────────── Brocade SANnav — Encryption ─────────────────────────────────────┐
 │                                                                                                       │
@@ -92,19 +71,3 @@ openssl s_client -connect sannav-dc1.corp.example.com:443 -servername sannav-dc1
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-Renew the SANnav certificate at least 30 days before expiry. A Nagios/Icinga check on port 443 with `--certificate` flag provides automated alerting.
-
----
-
-## Encryption Summary
-
-| Data Category | Encryption | Standard |
-|---|---|---|
-| Web UI / REST API traffic | TLS 1.2/1.3 | HTTPS on port 443 |
-| Switch management traffic | TLS (HTTPS) | FOS REST API |
-| LDAP authentication traffic | TLS (LDAPS) | Port 636 |
-| SNMP traffic | AES-128 (authPriv) | SNMPv3 |
-| Stored credentials (DB) | AES-256 | SANnav internal keystore |
-| Backup archives | AES-256 | Passphrase from vault |
-| SANnav OS disk | VM encryption (hypervisor layer) | vSphere or LUKS |

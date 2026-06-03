@@ -1,34 +1,3 @@
-# AWS — Hardening
-
-
-<div class="kb-summary">
-Hardening reference covering Account Hardening Checklist, Root Account Protection, CloudTrail — Multi-Region with CloudWatch, GuardDuty — Enable All Features, Security Hub — Enable and Standards and 4 more sections.
-</div>
-
----
-
-## Account Hardening Checklist
-
-| Control | CLI Verification | Priority |
-|---|---|---|
-| Root account — no access keys | `aws iam get-account-summary` → AccountAccessKeysPresent = 0 | Critical |
-| Root account — MFA enabled | Console only; check credential report | Critical |
-| IMDSv2 required on all EC2 | `aws ec2 describe-instance-metadata-options` | Critical |
-| S3 Block Public Access (account level) | `aws s3control get-public-access-block --account-id <id>` | Critical |
-| CloudTrail — all regions, S3 + CloudWatch | `aws cloudtrail describe-trails` | Critical |
-| GuardDuty enabled | `aws guardduty list-detectors` | High |
-| Security Hub enabled | `aws securityhub describe-hub` | High |
-| AWS Config enabled | `aws configservice describe-configuration-recorders` | High |
-| No users with AdministratorAccess (use roles) | `aws iam list-entities-for-policy --policy-arn ...AdministratorAccess` | High |
-| Access key rotation ≤ 90 days | Credential report | High |
-| Password policy — length ≥ 14, complexity, rotation | `aws iam get-account-password-policy` | High |
-| VPC Flow Logs enabled | `aws ec2 describe-flow-logs` | Medium |
-| Default VPC deleted or unused | `aws ec2 describe-vpcs --filters Name=isDefault,Values=true` | Medium |
-
----
-
-## Root Account Protection
-
 ```bash
 # Check root account has no access keys
 aws iam get-account-summary \
@@ -36,6 +5,8 @@ aws iam get-account-summary \
 # Expected: AccountAccessKeysPresent=0, AccountMFAEnabled=1
 
 # MFA for root must be enabled via Console — cannot be set via CLI
+```
+
 ```text
 ┌──────────────────────────────── AWS Security Hardening — CIS Baseline ────────────────────────────────┐
 │                                                                                                       │
@@ -83,11 +54,6 @@ aws iam get-account-summary \
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
----
-
-## GuardDuty — Enable All Features
-
 ```bash
 # Enable GuardDuty
 DETECTOR_ID=$(aws guardduty create-detector \
@@ -111,11 +77,6 @@ aws guardduty create-publishing-destination \
   --destination-properties \
     DestinationArn=arn:aws:s3:::my-security-findings,KmsKeyArn=arn:aws:kms:eu-west-1:<account>:alias/guardduty-cmk
 ```
-
----
-
-## Security Hub — Enable and Standards
-
 ```bash
 # Enable Security Hub
 aws securityhub enable-security-hub \
@@ -137,11 +98,6 @@ aws securityhub get-findings \
   --query 'Findings[*].[Title,SeverityLabel,ProductName]' \
   --output table
 ```
-
----
-
-## AWS Config — Enable Recording
-
 ```bash
 # Create Config recorder
 aws configservice put-configuration-recorder \
@@ -166,11 +122,6 @@ aws configservice put-delivery-channel \
 
 aws configservice start-configuration-recorder --configuration-recorder-name default
 ```
-
----
-
-## S3 — Block Public Access (Account Level)
-
 ```bash
 aws s3control put-public-access-block \
   --account-id $(aws sts get-caller-identity --query Account --output text) \
@@ -181,11 +132,6 @@ aws s3control put-public-access-block \
 aws s3control get-public-access-block \
   --account-id $(aws sts get-caller-identity --query Account --output text)
 ```
-
----
-
-## VPC — Security Controls
-
 ```bash
 # Delete default VPC (if not in use — irreversible)
 DEFAULT_VPC=$(aws ec2 describe-vpcs \
@@ -208,11 +154,6 @@ aws ec2 create-flow-logs \
   --log-group-name /aws/vpc/flowlogs \
   --deliver-logs-permission-arn arn:aws:iam::<account>:role/VPCFlowLogsRole
 ```
-
----
-
-## Restrict Region Usage (SCP)
-
 ```json
 {
   "Version": "2012-10-17",
@@ -241,5 +182,3 @@ aws ec2 create-flow-logs \
   ]
 }
 ```
-
-Apply this SCP via AWS Organizations to restrict which regions accounts can operate in.

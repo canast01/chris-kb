@@ -1,20 +1,3 @@
-# Jira — Encryption
-
-
-<div class="kb-summary">
-Jira encryption spans transport security (TLS), at-rest storage, attachment handling, and database encryption. The approach differs between Data Center (self-managed) and Cloud deployments.
-</div>
-
----
-
-## Transport Encryption (TLS)
-
-### Jira Data Center — TLS Configuration
-
-Jira Data Center runs on Apache Tomcat. TLS is typically terminated at a load balancer or reverse proxy (nginx, Apache HTTP Server, or F5). Do not configure TLS directly on Tomcat in production.
-
-#### nginx Reverse Proxy (Recommended)
-
 ```nginx
 # /etc/nginx/sites-available/jira
 server {
@@ -55,6 +38,8 @@ server {
         client_max_body_size 100m;  # Match Jira attachment limit
     }
 }
+```
+
 ```text
 ┌────────────────────────────────────────── Jira — Encryption ──────────────────────────────────────────┐
 │                                                                                                       │
@@ -100,11 +85,6 @@ server {
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-### LDAPS for Directory Connectivity
-
-All LDAP connections must use LDAPS (port 636) or StartTLS.
-
 ```bash
 # Import LDAP CA certificate into Jira's JVM truststore
 $JAVA_HOME/bin/keytool -import \
@@ -126,17 +106,6 @@ ldapsearch -H ldaps://dc.corp.example.com:636 \
   -b "DC=corp,DC=example,DC=com" \
   "(sAMAccountName=testuser)" cn mail
 ```
-
----
-
-## Database Encryption
-
-### At-Rest Encryption (Data Center)
-
-Jira stores all data (issues, comments, field values, attachments metadata) in a relational database. Encrypt the database volume and enable database-native TDE where supported.
-
-**PostgreSQL with TDE (pgcrypto for column encryption):**
-
 ```sql
 -- Enable pgcrypto extension
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
@@ -148,9 +117,6 @@ CREATE EXTENSION IF NOT EXISTS pgcrypto;
 -- Verify encrypted tablespace (Linux dm-crypt/LUKS)
 -- The database data directory should reside on an encrypted volume
 ```
-
-**LUKS encryption for PostgreSQL data directory:**
-
 ```bash
 # Verify PostgreSQL data directory is on encrypted volume
 df /var/lib/postgresql/14/main
@@ -159,9 +125,6 @@ lsblk -o NAME,FSTYPE,MOUNTPOINT,SIZE | grep dm-
 # Check LUKS status
 cryptsetup status /dev/mapper/pgdata
 ```
-
-**MS SQL Server TDE:**
-
 ```sql
 -- Enable TDE on Jira database (SQL Server)
 USE master;
@@ -183,15 +146,6 @@ FROM sys.databases db
 LEFT JOIN sys.dm_database_encryption_keys dm ON db.database_id = dm.database_id
 WHERE db.name = 'jiradb';
 ```
-
----
-
-## Attachment Storage Encryption
-
-### Data Center — Local Attachment Storage
-
-Attachments are stored in the Jira home directory (`/var/atlassian/application-data/jira/data/attachments/`). Encrypt this volume.
-
 ```bash
 # Check current attachment home
 grep "attachments" /var/atlassian/application-data/jira/dbconfig.xml
@@ -204,9 +158,6 @@ lsblk -o NAME,FSTYPE,MOUNTPOINT | grep $(df /var/atlassian/application-data/jira
 chown -R jira:jira /var/atlassian/application-data/jira/data/attachments/
 chmod 750 /var/atlassian/application-data/jira/data/attachments/
 ```
-
-### Data Center — S3-Compatible Object Storage (v9+)
-
 ```properties
 # jira-config.properties — S3 attachment storage
 jira.attachment.storage.type=s3
@@ -214,9 +165,6 @@ jira.s3.bucket=jira-attachments-prod
 jira.s3.region=eu-west-1
 # Use IAM role — no access keys in config
 ```
-
-**S3 Bucket Policy — Enforce Encryption:**
-
 ```json
 {
   "Version": "2012-10-17",
@@ -249,32 +197,6 @@ jira.s3.region=eu-west-1
   ]
 }
 ```
-
----
-
-## Jira Cloud Encryption
-
-Jira Cloud (Atlassian) handles encryption transparently:
-
-| Layer | Mechanism |
-|---|---|
-| Data at rest | AES-256 (AWS EBS/S3 with KMS) |
-| Database | Encrypted RDS with KMS CMK |
-| Attachments | S3 with server-side encryption (SSE-S3 or SSE-KMS) |
-| Transport | TLS 1.2+ (enforced, TLS 1.0/1.1 disabled) |
-| Backup | Encrypted with Atlassian-managed keys |
-
-**Customer-managed encryption keys (Atlassian Access Premium):**
-
-Available via Atlassian's BYOK programme — contact Atlassian for configuration. Once enabled:
-
-- Atlassian cannot read customer data without the customer's key.
-- Key revocation immediately prevents Atlassian access.
-
----
-
-## Email Notifications Encryption
-
 ```properties
 # jira-config.properties — SMTP with TLS
 jira.mail.smtp.host=mail.corp.example.com
@@ -283,34 +205,3 @@ jira.mail.smtp.ssl=false
 jira.mail.smtp.starttls=true
 jira.mail.smtp.auth=true
 ```
-
-Administration → System → Mail → Outgoing Mail:
-
-- Always use STARTTLS (port 587) or SMTPS (port 465)
-- Authenticate with a dedicated service account
-- Verify the mail server certificate
-
----
-
-## Encryption Checklist
-
-| Control | Data Center | Cloud |
-|---|---|---|
-| TLS 1.2+ on all endpoints | Configure at proxy | Managed by Atlassian |
-| TLS 1.0/1.1 disabled | Configure at proxy | Done |
-| HSTS header configured | Configure at proxy | Done |
-| Database volume encrypted | Configure on host | Managed by Atlassian |
-| Attachment volume encrypted | Configure on host | Managed by Atlassian |
-| LDAP uses LDAPS/StartTLS | Configure in Jira | N/A (Cloud IdP) |
-| SMTP uses STARTTLS/SMTPS | Configure in Jira | Configure in Jira |
-| S3 bucket encryption enforced | Configure in AWS | Managed by Atlassian |
-| Backups encrypted | Configure on host | Managed by Atlassian |
-| Certificate expiry monitoring | Configure alerting | Managed by Atlassian |
-
----
-
-## Related Pages
-
-- [Jira — Authentication](../authentication/index.md)
-- [Jira — Access Control](../access-control/index.md)
-- [Jira — Hardening](../hardening/index.md)

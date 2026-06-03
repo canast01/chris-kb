@@ -1,14 +1,3 @@
-# COD — Diagnostics
-
-
-<div class="kb-summary">
-> Part of the [COD](../../index.md) reference.
-</div>
-
----
-
-## Diagnostic Commands
-
 ```bash
 # Check current license status for the array
 symlicense -sid <SID> list
@@ -33,6 +22,8 @@ symcfg -sid <SID> discover
 
 # Review SYMCLI audit log for COD activations
 symaudit -sid <SID> list -action "license"
+```
+
 ```text
 ┌──────────────────────────────────────── Dell COD Diagnostics ─────────────────────────────────────────┐
 │                                                                                                       │
@@ -68,31 +59,15 @@ symaudit -sid <SID> list -action "license"
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-3. Check current license state:
-
 ```bash
 symlicense -sid <SID> list
 ```
-
-4. Attempt license installation:
-
 ```bash
 symlicense -sid <SID> install -file cod-license.xml
 ```
-
-5. If installation fails, capture the full error:
-
 ```bash
 symlicense -sid <SID> install -file cod-license.xml 2>&1 | tee /tmp/cod-install-error.txt
 ```
-
-6. Open a Dell Support case with the error output and the license file (do not share the license file publicly).
-
-## Capacity Not Available After Activation
-
-After license activation, new drives may take several minutes to be enumerated and available.
-
 ```bash
 # Step 1 — trigger device discovery
 symcfg -sid <SID> discover
@@ -108,11 +83,6 @@ symcfg -sid <SID> -pool -dp list
 # Or via SYMCLI:
 symconfigure -sid <SID> -cmd "add drives to pool <pool-name> type thin;" commit
 ```
-
-## Audit Trail Recovery
-
-If a COD activation was performed without a proper change ticket, reconstruct the audit trail from SYMCLI logs before closing the gap.
-
 ```bash
 # Review SYMCLI operations log for the activation date
 symaudit -sid <SID> list -start_time <date> -end_time <date>
@@ -122,5 +92,3 @@ curl -sk -u <user>:<pass> \
   "https://<unisphere-host>:8443/univmax/restapi/103/system/audit?startTime=<epoch>" \
   -H "Content-Type: application/json" | jq .
 ```
-
-Document the findings and retroactively create the change record to maintain compliance.

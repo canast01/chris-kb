@@ -1,59 +1,3 @@
-# NSX — Hardening
-
-
-<div class="kb-summary">
-Hardening reference covering Hardening Baseline, NSX Manager Hardening Checklist, DFW Hardening Configuration, Edge Node Hardening, Transport Node Security and 1 more sections.
-</div>
-
-## Hardening Baseline
-
-Follow the **VMware NSX Security Configuration Guide** published by Broadcom. The SCG maps NSX controls to CIS Benchmarks and DISA STIG requirements. Download from the Broadcom Knowledge Base for the specific NSX version in use.
-
----
-
-## NSX Manager Hardening Checklist
-
-### Network Access Controls
-
-- [ ] NSX Manager VIP accessible only from admin jump hosts (port 443)
-- [ ] SSH (port 22) to NSX Manager nodes restricted to admin jump hosts only
-- [ ] Geneve UDP 6081 allowed only on TEP VLANs — not reachable from VM subnets
-- [ ] BGP port 179 on Edge uplinks restricted to known physical router IPs
-- [ ] NSX Manager management network on a dedicated VLAN, not shared with VM workloads
-
-### Authentication and Access
-
-- [ ] LDAP/AD identity source configured — no shared local admin account for day-to-day use
-- [ ] Role assignments match the least-privilege matrix (see Access Control page)
-- [ ] `admin` password rotated from default; stored in secrets vault
-- [ ] `audit` password set; stored in secrets vault
-- [ ] No unused principal identities or stale role bindings
-- [ ] Password policy enforced: 20+ characters, 90-day maximum, 5-attempt lockout
-
-### API Security
-
-- [ ] TLS 1.2 minimum enforced — verify with `openssl s_client`
-- [ ] API certificate is CA-signed (not default self-signed)
-- [ ] API certificate expiry monitored — alert at 60 days
-- [ ] Automation uses certificate-based principal identities (not shared admin password)
-- [ ] API access logged and forwarded to SIEM
-
-### Audit and Monitoring
-
-- [ ] Syslog configured on all Manager nodes (TLS, port 6514)
-- [ ] Syslog configured on all Edge nodes
-- [ ] ESXi DFW logs forwarded via host syslog
-- [ ] NSX Manager backup configured, tested, and verified on SFTP
-- [ ] SIEM alerts defined for authentication failures and role changes
-
----
-
-## DFW Hardening Configuration
-
-### Default Deny Rule
-
-The built-in default rule (rule 65535) must be `any-any-drop`. Verify it has not been changed:
-
 ```bash
 curl -sk -u 'admin:password' \
   "https://<nsx-manager>/policy/api/v1/infra/domains/default/security-policies/default-layer3-section/rules" | \
@@ -65,6 +9,8 @@ for r in d.get('results', []):
         print(f'Rule 65535: action={r.get(\"action\")}')
 "
 # Expected: action=DROP
+```
+
 ```text
 ┌─────────────────────────────────────────── NSX — Hardening ───────────────────────────────────────────┐
 │                                                                                                       │
@@ -112,15 +58,6 @@ for r in d.get('results', []):
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
----
-
-## Edge Node Hardening
-
-### Remove Unused Services
-
-Edge nodes run multiple services. Disable any not in use:
-
 ```bash
 # SSH to Edge node — list services
 get services
@@ -133,11 +70,6 @@ set service load-balancer stop
 # Services that may be stopped if unused:
 #   load-balancer, dhcp, dns
 ```
-
-### Edge Node HA — Verify Failover Works
-
-Test failover in a maintenance window at least every 6 months:
-
 ```bash
 # SSH to Active Edge
 set edge-cluster failover
@@ -151,11 +83,6 @@ get bgp neighbor summary
 vrf <tier0-vrf>
 get route
 ```
-
-### BGP Authentication
-
-All BGP sessions must use MD5 authentication:
-
 ```bash
 # Confirm BGP neighbor has password set
 curl -sk -u 'admin:password' \
@@ -168,42 +95,14 @@ for n in d.get('results', []):
     print(f'{n.get(\"display_name\",\"?\")}  {n.get(\"neighbor_address\",\"?\")}  password={has_pwd}')
 "
 ```
-
----
-
-## Transport Node Security
-
-### Verify NSX VIB Acceptance Level on ESXi Hosts
-
-NSX VIBs should be VMwareAccepted or VMwareCertified:
-
 ```bash
 # On ESXi host
 esxcli software vib list | grep -i nsx | awk '{print $1, $4}'
 # The acceptance level column should show VMwareCertified or VMwareAccepted
 ```
-
-### Confirm DFW is Enforcing on Every Host
-
 ```bash
 # On each ESXi host — confirm DFW filters exist
 summarize-dvfilter | grep -c "vmware-sfw"
 # Count should equal the number of powered-on VM vNICs on this host
 # A count of 0 means DFW is not applying to VMs — escalate immediately
 ```
-
----
-
-## Hardening Quick Reference
-
-| Control | Verification Command | Expected State |
-|---|---|---|
-| TLS 1.2 minimum | `openssl s_client -connect <nsxmgr>:443 -tls1` | Connection refused |
-| API cert CA-signed | `openssl s_client -connect <nsxmgr>:443` → check issuer | CA Issuer: internal CA |
-| DFW default deny | `get firewall default-rule` via nsxcli | Action: Drop |
-| BGP MD5 auth | Check neighbor config via Policy API | `password` field present |
-| Syslog configured | `get service syslog exporters` on Manager and Edge | Shows SIEM target |
-| Backup current | `GET /api/v1/cluster/backups/history` | Last backup < 25 hours ago |
-| Admin password vault | Manual check | Password stored in vault |
-| No stale role bindings | `GET /api/v1/aaa/role-bindings` | No former employee accounts |
-| DFW filters on ESXi | `summarize-dvfilter` | Count > 0 per host |

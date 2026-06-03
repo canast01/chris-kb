@@ -1,31 +1,3 @@
-# Failure Testing
-
-
-<div class="kb-summary">
-Failure testing (chaos engineering) validates that systems fail gracefully, recover within expected RTO, and trigger correct alerting under controlled fault conditions.
-</div>
-
-## Test Categories
-
-| Category | Examples |
-|---|---|
-| Compute | VM/host shutdown, process kill, CPU saturation |
-| Storage | Disk failure simulation, volume unmount, I/O saturation |
-| Network | Interface down, packet loss injection, link saturation |
-| Application | Process crash, OOM, dependency unavailable |
-| Dependency | Database failure, auth service down, DNS failure |
-
-## Pre-Test Checklist
-
-- [ ] Change window approved
-- [ ] Stakeholders notified (service owners, on-call)
-- [ ] Rollback plan documented and tested
-- [ ] Monitoring dashboards open and verified working
-- [ ] Alert routing confirmed (on-call will receive alerts)
-- [ ] Test scope documented (what will break, what must not break)
-
-## Linux — Failure Injection
-
 ```bash
 # Kill a process (simulate crash)
 kill -9 $(pgrep nginx)
@@ -43,6 +15,8 @@ fio --name=fill --ioengine=posixaio --rw=randwrite --size=1G --numjobs=4 --runti
 tc qdisc add dev eth0 root netem loss 20%
 # Remove after test
 tc qdisc del dev eth0 root
+```
+
 ```text
 ┌──────────────────────────────────── Performance — Failure Testing ────────────────────────────────────┐
 │                                                                                                       │
@@ -74,9 +48,6 @@ tc qdisc del dev eth0 root
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-## Application Resilience Tests
-
 ```bash
 # Test graceful shutdown
 systemctl stop nginx
@@ -92,17 +63,6 @@ iptables -I OUTPUT -p tcp --dport 5432 -j DROP
 # Cleanup:
 iptables -D OUTPUT -p tcp --dport 5432 -j DROP
 ```
-
-## Observability During Tests
-
-Confirm the following fire correctly during each test:
-- [ ] Monitoring alert triggers within expected threshold
-- [ ] Alert routes to on-call channel
-- [ ] Dashboard shows the fault clearly
-- [ ] Logs contain meaningful error messages (not just generic "connection failed")
-
-## Test Results Documentation
-
 ```markdown
 Test:           Storage path failure — multipath failover
 Date:           2026-05-06

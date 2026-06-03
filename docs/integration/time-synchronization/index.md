@@ -1,12 +1,3 @@
-# Time Synchronization
-
-
-<div class="kb-summary">
-Ensure consistent, accurate time across all infrastructure systems. Time drift causes Kerberos authentication failures, TLS errors, log correlation issues, and replication problems.
-</div>
-
-## chrony (Recommended — RHEL 7+, Ubuntu 18.04+)
-
 ```bash
 # Status overview
 chronyc tracking
@@ -24,6 +15,8 @@ chronyc makestep
 
 # Show recent drift history
 chronyc tracking | grep -E "offset|frequency|drift"
+```
+
 ```text
 ┌────────────────────────────── Integration — Time Synchronization (NTP) ───────────────────────────────┐
 │                                                                                                       │
@@ -56,9 +49,6 @@ chronyc tracking | grep -E "offset|frequency|drift"
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-## ntpd (Legacy)
-
 ```bash
 # Status
 ntpq -p          # show peers and offsets
@@ -71,9 +61,6 @@ ntpdate -u pool.ntp.org
 # Restart ntpd
 systemctl restart ntpd
 ```
-
-## systemd-timesyncd (Lightweight — Ubuntu default)
-
 ```bash
 # Status
 timedatectl status
@@ -91,9 +78,6 @@ PollIntervalMaxSec=2048
 systemctl restart systemd-timesyncd
 timedatectl set-ntp true
 ```
-
-## Windows Time Service (w32tm)
-
 ```powershell
 # Check sync status
 w32tm /query /status
@@ -110,9 +94,6 @@ net stop w32tm && net start w32tm
 # Diagnose
 w32tm /stripchart /computer:<ntp-server> /dataonly /samples:5
 ```
-
-## Monitoring Time Drift
-
 ```bash
 # Prometheus node_exporter exposes:
 # node_timex_offset_seconds — current NTP offset (alert if > 1s)
@@ -128,9 +109,6 @@ for h in web-01 web-02 db-01; do
   echo -n "$h: "; ssh $h "chronyc tracking | grep 'System time'"
 done
 ```
-
-## NTP Hierarchy for On-Premises
-
 ```text
 Internet NTP (pool.ntp.org, time.cloudflare.com)
         ↓
@@ -138,13 +116,6 @@ Internet NTP (pool.ntp.org, time.cloudflare.com)
         ↓
   All servers, VMs, network devices
 ```
-
-- Domain Controllers should be configured as authoritative time sources for Windows AD environments
-- Linux hosts should point at internal NTP relays (not public NTP directly, to avoid firewall issues)
-- Network devices (switches, routers) should sync from same internal NTP sources
-
-## Time Zone Management
-
 ```bash
 # Set system timezone (Linux)
 timedatectl set-timezone Europe/London
@@ -158,14 +129,3 @@ timedatectl status
 Set-TimeZone -Id "GMT Standard Time"
 Get-TimeZone
 ```
-
-## Troubleshooting
-
-| Symptom | Check | Action |
-|---|---|---|
-| Kerberos auth failing | Time drift > 5 min from DC | `chronyc makestep`; check NTP sources |
-| chronyc shows no sources | Firewall blocking UDP 123? | Allow UDP 123 to NTP servers; restart chronyd |
-| Large offset but not correcting | `makestep` not in chrony.conf | Add `makestep 1.0 3`; restart chronyd |
-| w32tm shows no sync | NTP service not running? Firewall? | `net start w32tm`; check `w32tm /query /peers` |
-| Log timestamps inconsistent across hosts | Multiple NTP sources / drift | Standardise to same NTP hierarchy; force sync |
-| `timedatectl` shows `NTP service: inactive` | systemd-timesyncd disabled | `timedatectl set-ntp true` |

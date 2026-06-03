@@ -1,20 +1,3 @@
-# Cisco DCNM — Scripts
-
-
-<div class="kb-summary">
-> Part of the [Cisco DCNM](../../index.md) reference.
-</div>
-
----
-
-## Overview
-
-Automation scripts for DCNM via the REST API. All scripts use `curl` and Python 3 standard library. Adapt `DCNM_HOST`, `DCNM_USER`, and `DCNM_PASS` for your environment. Pass `DCNM_PASS` via environment variable, never hard-code it.
-
----
-
-## Authentication Helper
-
 ```bash
 #!/usr/bin/env bash
 # dcnm-auth.sh — obtain a DCNM session cookie
@@ -47,6 +30,8 @@ cleanup() {
 }
 trap cleanup EXIT
 echo "Authenticated to ${DCNM_HOST}"
+```
+
 ```text
 ┌─────────────────────────────────── Cisco DCNM — Operations Scripts ───────────────────────────────────┐
 │                                                                                                       │
@@ -94,13 +79,6 @@ echo "Authenticated to ${DCNM_HOST}"
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
----
-
-## Zone Database Export (All Fabrics)
-
-Nightly cron job to export zone sets for all fabrics:
-
 ```bash
 #!/usr/bin/env bash
 # dcnm-zone-export.sh
@@ -136,13 +114,6 @@ done
 find "${EXPORT_DIR}" -name "*-zones-*.json" -mtime +90 -delete
 echo "Zone export complete: $(date)"
 ```
-
----
-
-## Firmware Compliance Check
-
-Checks all switches against minimum firmware version per model:
-
 ```python
 #!/usr/bin/env python3
 # dcnm-firmware-check.py

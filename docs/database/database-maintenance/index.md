@@ -1,12 +1,3 @@
-# Database Maintenance Procedure
-
-
-<div class="kb-summary">
-Routine maintenance tasks to keep databases healthy: index optimisation, statistics refresh, log cleanup, and integrity checks.
-</div>
-
-## PostgreSQL Maintenance
-
 ```sql
 -- Update statistics (safe at any time)
 ANALYZE;
@@ -33,6 +24,8 @@ REINDEX TABLE CONCURRENTLY <schema>.<table>;
 SELECT indexname, pg_size_pretty(pg_relation_size(indexname::regclass)) AS index_size,
        idx_scan AS scans
 FROM pg_stat_user_indexes ORDER BY pg_relation_size(indexname::regclass) DESC LIMIT 20;
+```
+
 ```text
 ┌────────────────────────────────── Database — Maintenance Procedures ──────────────────────────────────┐
 │                                                                                                       │
@@ -65,19 +58,11 @@ FROM pg_stat_user_indexes ORDER BY pg_relation_size(indexname::regclass) DESC LI
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
--- Check table status
-SHOW TABLE STATUS FROM <database>;
-
--- Purge old binary logs (retain 7 days)
-PURGE BINARY LOGS BEFORE DATE_SUB(NOW(), INTERVAL 7 DAY);
-
--- Update InnoDB statistics
-mysql -u root -e "CALL sys.ps_setup_enable_consumer('events_statements_history_long');"
-ANALYZE TABLE <table>;
 ```text
 
 ## SQL Server Maintenance
+
+```
 
 ```sql
 -- Rebuild fragmented indexes (> 30% fragmentation)
@@ -105,9 +90,6 @@ USE <dbname>;
 BACKUP LOG <dbname> TO DISK = '/backup/mssql/<dbname>_log.bak';
 DBCC SHRINKFILE (<dbname>_log, 256);  -- shrink to 256 MB
 ```
-
-### SQL Server — Integrity Check
-
 ```sql
 -- DBCC CHECKDB — run weekly on non-peak window; can take hours on large DBs
 DBCC CHECKDB ('<dbname>') WITH NO_INFOMSGS, ALL_ERRORMSGS;
@@ -115,32 +97,3 @@ DBCC CHECKDB ('<dbname>') WITH NO_INFOMSGS, ALL_ERRORMSGS;
 -- Faster: check allocation structures only
 DBCC CHECKDB ('<dbname>') WITH PHYSICAL_ONLY, NO_INFOMSGS;
 ```
-
-## Maintenance Schedule
-
-| Task | PostgreSQL | MySQL | SQL Server | Frequency |
-|---|---|---|---|---|
-| Update statistics | `ANALYZE` | `ANALYZE TABLE` | `UPDATE STATISTICS` | Daily (autovacuum/auto-stats) |
-| Index maintenance | `REINDEX CONCURRENTLY` | `OPTIMIZE TABLE` | `REORGANIZE` / `REBUILD` | Weekly |
-| Log / WAL cleanup | Auto + check pg_wal | `PURGE BINARY LOGS` | Log backup + shrink | Weekly |
-| Integrity check | `VACUUM FULL` (if needed) | `mysqlcheck --check` | `DBCC CHECKDB` | Weekly |
-| Dead tuple cleanup | `VACUUM ANALYZE` | N/A (InnoDB purge) | N/A | Daily (autovacuum) |
-
-## Maintenance Checklist
-
-- [ ] Autovacuum / auto-stats are enabled and not falling behind
-- [ ] Index fragmentation reviewed — heavily fragmented indexes rebuilt
-- [ ] Statistics are current (check last update date)
-- [ ] Old logs / WAL / binary logs purged per retention policy
-- [ ] Integrity check (`DBCC CHECKDB` / `VACUUM`) completed without errors
-- [ ] Maintenance task duration logged (flag if significantly longer than baseline)
-- [ ] No blocking during maintenance tasks (schedule during low-traffic window)
-
-## Troubleshooting
-
-| Symptom | Check | Action |
-|---|---|---|
-| VACUUM FULL blocking production | Long-running transaction holding lock | Identify and terminate blocker: `SELECT pid, query FROM pg_stat_activity WHERE state='idle in transaction';` |
-| OPTIMIZE TABLE takes too long | Large table / high traffic | Run during maintenance window; consider `pt-online-schema-change` |
-| DBCC CHECKDB reports corruption | Disk error? | Restore from last known-good backup; run `DBCC CHECKDB WITH REPAIR_ALLOW_DATA_LOSS` as last resort |
-| Autovacuum not running | `autovacuum=off`? | Check `SHOW autovacuum;`; enable if off |

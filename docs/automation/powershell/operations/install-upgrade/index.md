@@ -1,12 +1,3 @@
-# PowerShell — Install & Upgrade
-
-
-<div class="kb-summary">
-Install & Upgrade reference covering Install PowerShell 7+ (Windows), Upgrade PowerCLI, Update All Installed Modules, Version Reference.
-</div>
-
-## Install PowerShell 7+ (Windows)
-
 ```powershell
 # Using winget (Windows 10/11)
 winget install --id Microsoft.PowerShell --source winget
@@ -14,6 +5,8 @@ winget install --id Microsoft.PowerShell --source winget
 # Or via MSI — download from github.com/PowerShell/PowerShell/releases
 # After install, verify:
 pwsh --version
+```
+
 ```text
 ┌─────────────────────────────────── PowerShell — Install & Upgrade ────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -37,9 +30,6 @@ pwsh --version
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-## Update All Installed Modules
-
 ```powershell
 # Update all user-scope modules
 Get-Module -ListAvailable | Where-Object { $_.RepositorySourceLocation } |
@@ -53,11 +43,3 @@ Get-Module -ListAvailable | Where-Object { $_.RepositorySourceLocation } |
         }
     }
 ```
-
-## Version Reference
-
-| Component | Min Recommended | Check Command |
-|---|---|---|
-| PowerShell | 7.2+ | `$PSVersionTable.PSVersion` |
-| VMware.PowerCLI | 13.x+ | `Get-Module VMware.PowerCLI -ListAvailable` |
-| .NET | 6.0+ | `dotnet --version` |

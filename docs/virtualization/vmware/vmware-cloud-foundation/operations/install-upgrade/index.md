@@ -1,11 +1,3 @@
-# VCF Operations — Install & Upgrade
-
-
-<div class="kb-summary">
-Install & Upgrade reference covering Async Patches, Upgrade Readiness, Bring-Up.
-</div>
-
-VCF Upgrade Flow — SDDC Manager Orchestration
 ```text
 ┌───────────────────────────── VMware Cloud Foundation — Install & Upgrade ─────────────────────────────┐
 │                                                                                                       │
@@ -100,8 +92,6 @@ VCF Upgrade Flow — SDDC Manager Orchestration
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-                           │ all checks pass
-                           ▼
 ```text
 ┌─────────────────────────────────────────────────────┐
 │  Step 3: Upgrade Sequence (BOM order, no skipping)                                                    │
@@ -121,8 +111,6 @@ VCF Upgrade Flow — SDDC Manager Orchestration
 │  ⑤ vSAN firmware/driver (HCL-validated)                                                               │
 └──────────────────────────┬──────────────────────────┘
 ```
-                           │
-                           ▼
 ```text
 ```
 ```text
@@ -130,6 +118,8 @@ VCF Upgrade Flow — SDDC Manager Orchestration
 │  Step 4: Post-Upgrade Validation                                                                      │
 │  All domains green · services healthy · no alarms                                                     │
 └─────────────────────────────────────────────────────┘
+```
+
 ```text
 ┌───────────────────────────── VMware Cloud Foundation — Install & Upgrade ─────────────────────────────┐
 │                                                                                                       │
@@ -177,9 +167,6 @@ VCF Upgrade Flow — SDDC Manager Orchestration
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-### SDDC Manager Pre-Check Execution
-
 ```bash
 ## Run pre-check for a workload domain upgrade
 curl -sk -X POST -u admin:<password> \
@@ -200,18 +187,6 @@ curl -sk -u admin:<password> \
 ## Check SDDC Manager logs for pre-check detail
 tail -200 /var/log/vmware/vcf/sddc-manager/vcf-sddc-manager.log | grep -i "precheck"
 ```
-
-### Compatibility Matrix Verification
-
-VCF BOM (Bill of Materials) defines the exact component versions per VCF release:
-
-| VCF Version | vCenter | ESXi | NSX | SDDC Manager |
-|---|---|---|---|---|
-| 5.2 | 8.0 U3 | 8.0 U3 | 4.1.2 | 5.2 |
-| 5.1 | 8.0 U2 | 8.0 U2 | 4.1.1 | 5.1 |
-| 4.5.2 | 7.0 U3p | 7.0 U3p | 3.2.3 | 4.5.2 |
-| 4.4 | 7.0 U3f | 7.0 U3f | 3.2.1 | 4.4 |
-
 ```bash
 ## Check current component versions in SDDC Manager
 curl -sk -u admin:<password> \
@@ -223,9 +198,6 @@ curl -sk -u admin:<password> \
   https://localhost/v1/nsxt-clusters \
   | python3 -m json.tool | grep -E "version|id"
 ```
-
-### Snapshot and Backup Verification
-
 ```bash
 ## Verify SDDC Manager backup is current
 curl -sk -u admin:<password> \
@@ -243,19 +215,6 @@ curl -sk -u admin:<password> \
   https://localhost/v1/system/inventory/snapshots \
   | python3 -m json.tool
 ```
-
-### Network and Firewall Pre-Checks
-
-Required network connectivity for VCF upgrade operations:
-
-| Source | Destination | Port | Purpose |
-|---|---|---|---|
-| SDDC Manager | depot.vmware.com | 443 | Bundle download |
-| SDDC Manager | All ESXi hosts | 443, 22 | Upgrade orchestration |
-| SDDC Manager | vCenter | 443 | vSphere operations |
-| SDDC Manager | NSX Manager | 443 | NSX upgrade |
-| All ESXi hosts | NFS mount | 2049 | Bundle staging |
-
 ```bash
 ## Test connectivity from SDDC Manager to VMware depot
 curl -sk -o /dev/null -w "%{http_code}" https://depot.vmware.com
@@ -266,54 +225,6 @@ curl -sk -o /dev/null -w "%{http_code}" https://<vcenter-fqdn>/sdk
 ## Test NSX Manager reachability
 curl -sk -o /dev/null -w "%{http_code}" https://<nsx-manager-fqdn>/api/v1/node
 ```
-
----
-
-## Bring-Up
-
-VCF bring-up planning, prerequisites, validation, and early lifecycle notes.
-
-### Daily Checks
-
-| Check | Command | Notes |
-|---|---|---|
-| Review active alarms. |  |  |
-| Check recent failed tasks. |  |  |
-| Confirm service health. |  |  |
-| Confirm capacity and performance are normal. |  |  |
-| Check recent changes. |  |  |
-
-### Health Commands
-
 ```bash
 ## Add environment-specific commands here
 ```
-
-### Common Issues
-
-- Failed or stuck tasks.
-- Certificate, DNS, or authentication issues.
-- Capacity pressure.
-- Service health warnings.
-- Version mismatch after maintenance.
-- Monitoring gaps.
-
-### Operational Tasks
-
-| Task | Command |
-|---|---|
-| Review alarms and events. |  |
-| Confirm ownership and support notes. |  |
-| Validate dependencies. |  |
-| Document changes. |  |
-| Confirm monitoring coverage. |  |
-
-### Best Practices
-
-| Recommendation | Detail |
-|---|---|
-| Keep naming consistent. | Keep naming consistent. |
-| Keep versions aligned. | Keep versions aligned. |
-| Avoid unsupported version combinations. | Avoid unsupported version combinations. |
-| Document exceptions. | Document exceptions. |
-| Validate after every change. | Validate after every change. |

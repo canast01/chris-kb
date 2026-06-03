@@ -1,11 +1,3 @@
-# ESXi Escalation
-
-
-<div class="kb-summary">
-ESXi Escalation reference covering SLA Tiers, Escalation.
-</div>
-
-ESXi Escalation Path — Broadcom Support
 ```text
 ┌────────────────────────────────────────── ESXi — Escalation ──────────────────────────────────────────┐
 │                                                                                                       │
@@ -110,6 +102,8 @@ ESXi Escalation Path — Broadcom Support
 │  Portal: https://support.broadcom.com                                                                 │
 │  HCL check: https://compatibilityguide.broadcom.com                                                   │
 └─────────────────────────────────────────────────────────┘
+```
+
 ```text
 ┌────────────────────────────────────────── ESXi — Escalation ──────────────────────────────────────────┐
 │                                                                                                       │
@@ -157,22 +151,3 @@ ESXi Escalation Path — Broadcom Support
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-## SLA Tiers
-
-| Support Tier | P1 Response | P2 Response | Coverage |
-|---|---|---|---|
-| Production Support | 30 minutes | 4 hours | 24x7 |
-| Business Critical Support | 15 minutes | 2 hours | 24x7 |
-
-Business Critical Support also includes a designated Technical Account Manager (TAM) and proactive guidance. Response times are for initial contact; resolution timelines depend on issue complexity.
-
-## Escalation
-
-**TAM (Technical Account Manager):** Available with Business Critical Support. Engage the TAM for high-impact incidents, planned major upgrades, or architectural reviews. The TAM can escalate internally to engineering when standard support is not progressing.
-
-**Executive Escalation:** For P1 incidents not progressing, request escalation to Broadcom's Escalation Management team through the support portal or via your TAM.
-
-**VCPP Partner Support:** If licenced through a VCPP partner, the partner provides first-level support and escalates to Broadcom on your behalf. Ensure your partner has the correct support tier for your SLA requirements.
-
-**VMware HCL (Hardware Compatibility List):** Before raising a case for hardware-related issues, verify the host is on the HCL at https://compatibilityguide.broadcom.com. Support may request HCL verification as an early step.

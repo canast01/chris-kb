@@ -1,10 +1,3 @@
-# Horizon — Common Issues
-
-
-<div class="kb-summary">
-Common Issues reference covering Desktop Stuck in "Provisioning", "No Desktop Sources Available", Black Screen After Login, Slow Login, UAG Shows Disconnected from Connection Server and 1 more sections.
-</div>
-
 ```text
 ┌─────────────────────────────────── VMware Horizon — Common Issues ────────────────────────────────────┐
 │                                                                                                       │
@@ -52,36 +45,6 @@ Common Issues reference covering Desktop Stuck in "Provisioning", "No Desktop So
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
----
-
-## Desktop Stuck in "Provisioning"
-
-**Symptoms:** Desktop pool shows desktops in "Provisioning" state for >10 minutes without progressing
-
-**Causes and resolution:**
-
-1. **Parent VM snapshot issue:** Snapshot taken while VMware Tools not current, or VM was not properly sealed (sysprep not run / customization spec missing)
-   ```text
-   Horizon Console → Inventory → Desktops → [pool] → Edit
-   Verify: Customization Spec is assigned and valid (test it in vCenter)
-   vCenter → right-click golden image → Guest OS → Customize... → test
-   ```
-
-2. **vCenter permission issue:**
-   ```powershell
-   # Check Connection Server event log for permission errors:
-   Get-WinEvent -LogName "VMwareVDMDS" | Where-Object { $_.LevelDisplayName -eq "Error" } | 
-     Select-Object -First 20 TimeCreated, Message
-   ```
-   Fix: verify Horizon service account has required vCenter permissions
-
-3. **Datastore full:** Desktop VM cannot be provisioned
-   ```text
-   vCenter → Datastore → check free space > 10% minimum
-   ```
-
-4. **Customization spec fails:** Check vCenter Tasks and Events for the provisioning VM
 ```text
    vCenter → Monitor → Tasks — filter by the stuck desktop VM name
    ```
@@ -141,21 +104,29 @@ Common Issues reference covering Desktop Stuck in "Provisioning", "No Desktop So
 **Symptoms:** Login takes >60 seconds; users report slow desktop loading
 
 1. **DEM profile migration:** First-time migration of legacy profile to DEM can take minutes — expected behavior
+```
+
 ```text
    DEM Management Console → Monitor → check profile migration queue
    ```
 
 2. **AppStack mount failure (App Volumes):** AppStack VMDK attachment is slow or failing
+```
+
 ```text
    App Volumes Manager → Activity → check for stuck attach operations
    ```
 
 3. **Antivirus scanning user profile on login:** AV exclusions needed
+```
+
 ```sql
    Exclude from scanning: %APPDATA%, %USERPROFILE%, DEM config share (\\server\dem-config)
    ```
 
 4. **Network drive mapping slow:** Group Policy login script timing out on drive mapping
+```
+
 ```text
    Enable asynchronous user Group Policy processing to prevent blocking login
    ```
@@ -185,6 +156,8 @@ Common Issues reference covering Desktop Stuck in "Provisioning", "No Desktop So
 **Symptoms:** User logs in but application is not available; App Volumes Manager shows failed attachment
 
 1. **App Volumes Manager unreachable from desktop VM:**
+```
+
 ```powershell
    # From desktop VM:
    Test-NetConnection appvol-mgr.example.local -Port 443
@@ -192,6 +165,8 @@ Common Issues reference covering Desktop Stuck in "Provisioning", "No Desktop So
    ```
 
 2. **VMDK attachment failure in vCenter:** AppStack VMDK is already attached to another VM (from a previous failed detach)
+```
+
 ```sql
    App Volumes Manager → AppStacks → [stack] → Assignments → check for stale attachments
    OR: vCenter → locate AppStack VMDK → detach from any VM it's currently attached to

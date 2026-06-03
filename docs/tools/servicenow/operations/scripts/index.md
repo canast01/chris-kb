@@ -1,15 +1,10 @@
-# ServiceNow — Operational Scripts
-
-
-<div class="kb-summary">
-Ready-to-use scripts for common ServiceNow operational tasks. All scripts use environment variables for credentials — never hardcode passwords.
-</div>
-
 ```bash
 # Set environment variables before running any script
 export SN_INSTANCE="https://mycompany.service-now.com"
 export SN_USER="api_svc_account"
 export SN_PASS="your-password"
+```
+
 ```text
 ┌─────────────────────────────────── ServiceNow — Operations Scripts ───────────────────────────────────┐
 │                                                                                                       │
@@ -55,21 +50,11 @@ export SN_PASS="your-password"
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-**Expected CSV format:**
-
 ```csv
 username,first_name,last_name,email,title,department,roles
 jdoe,John,Doe,jdoe@example.com,Senior Engineer,Infrastructure,itil|catalog
 asmith,Alice,Smith,asmith@example.com,Manager,Operations,itil|change_manager
 ```
-
----
-
-## 3. CI Import via Import Sets
-
-Pushes server CI data from an external source into ServiceNow CMDB via the Import Set API.
-
 ```python
 #!/usr/bin/env python3
 # sn_import_cis.py
@@ -133,13 +118,6 @@ if __name__ == "__main__":
         sys.exit(1)
     main(sys.argv[1])
 ```
-
----
-
-## 4. Scheduled Report Export
-
-Exports a ServiceNow report to CSV and uploads to a shared location.
-
 ```bash
 #!/bin/bash
 # sn_export_report.sh
@@ -174,13 +152,6 @@ else
   exit 1
 fi
 ```
-
----
-
-## 5. Incident Bulk Update via API
-
-Closes a set of incidents matching a query (e.g., bulk-close stale P4 incidents older than 90 days).
-
 ```python
 #!/usr/bin/env python3
 # sn_bulk_close_incidents.py
@@ -262,13 +233,6 @@ def main() -> None:
 if __name__ == "__main__":
     main()
 ```
-
----
-
-## 6. MID Server Status Check
-
-Queries all MID Server records and reports any that are not Up or not validated.
-
 ```bash
 #!/bin/bash
 # sn_mid_status.sh
@@ -318,9 +282,6 @@ print(f'Total MID Servers: {len(mids)} | Issues: {issues}')
 sys.exit(1 if issues > 0 else 0)
 "
 ```
-
-**Example output:**
-
 ```text
 MID Server Status Report — 2026-05-08 08:00 UTC
 ================================================================
@@ -330,16 +291,3 @@ MID Server Status Report — 2026-05-08 08:00 UTC
 
 Total MID Servers: 3 | Issues: 1
 ```
-
----
-
-## Script Execution Notes
-
-- All scripts require the service account to have at minimum the `rest_service` and `itil` roles; user provisioning scripts require `user_admin`
-- Use a dedicated integration service account — do not use personal admin credentials
-- Log script output to a file with timestamps for audit trails:
-  ```bash
-  ./sn_health_check.sh 2>&1 | tee -a /var/log/sn_health_$(date +%Y%m%d).log
-  ```
-- Schedule scripts via cron or a CI/CD scheduler (Jenkins, GitLab CI, GitHub Actions)
-- Store credentials in a secrets manager (HashiCorp Vault, AWS Secrets Manager) — never in script files or version control

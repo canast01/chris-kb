@@ -1,35 +1,3 @@
-# SANnav — Common Issues
-
-
-<div class="kb-summary">
-> Part of the [SANnav](../../index.md) reference.
-</div>
-
----
-
-## Switch Shows as Unreachable
-
-**Symptom:** A switch in the SANnav inventory shows **Unreachable** or **Unknown** connectivity state.
-
-**Causes and resolution:**
-
-| Cause | Check | Fix |
-|---|---|---|
-| Switch management IP unreachable | `ping <switch-ip>` from SANnav appliance | Fix routing / firewall between SANnav and switch mgmt VRF |
-| HTTPS credentials changed on switch | Test connection in SANnav **Discovery > Switches** | Update credentials in SANnav |
-| HTTPS service disabled on switch | `firmwareshow` / check switch web access | Enable: `httpscfg --set -protocol https` on switch |
-| SANnav discovery engine hung | Check `/opt/sannav/logs/discovery.log` for stuck threads | `sannav restart` |
-| IP address changed on switch | Switch responds on new IP, old IP unreachable | Edit switch IP in **Discovery > Switches** |
-| Certificate mismatch | HTTPS connect fails with TLS error in discovery log | Accept or re-trust the switch certificate in SANnav |
-
----
-
-## SNMP Traps Not Being Received
-
-**Symptom:** Events appear delayed or absent; SANnav does not react to link events in real time.
-
-**Resolution:**
-
 ```bash
 # Step 1: Confirm SANnav IP is the trap destination on the switch (FOS CLI)
 snmpconfig --show trapdest
@@ -47,6 +15,8 @@ tail -f /opt/sannav/logs/event-engine.log | grep "trap\|SNMP"
 
 # Step 4: If traps arrive but are discarded, check community/credential mismatch
 # Ensure SNMPv3 credentials on switch match what SANnav has configured
+```
+
 ```text
 ┌─────────────────────────── Brocade SANnav — Troubleshooting Common Issues ────────────────────────────┐
 │                                                                                                       │
@@ -94,17 +64,6 @@ tail -f /opt/sannav/logs/event-engine.log | grep "trap\|SNMP"
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-If disk is > 85% full: purge old performance data. Navigate to **Administration > System > Data Retention** and reduce the retention period for historical data.
-
----
-
-## LDAP Authentication Fails
-
-**Symptom:** Users cannot log in with AD credentials; login page shows "Invalid credentials" or "LDAP error."
-
-**Resolution:**
-
 ```bash
 # Test LDAP connectivity from SANnav appliance
 openssl s_client -connect ldap.corp.example.com:636 -brief
@@ -118,27 +77,6 @@ ldapsearch -H ldaps://ldap.corp.example.com \
   "(sAMAccountName=testuser)" sAMAccountName mail
 # Expected: returns the test user's attributes
 ```
-
-Common LDAP issues:
-
-| Error | Cause | Fix |
-|---|---|---|
-| `LDAP: error code 49` | Wrong bind password | Update bind DN password in SANnav LDAP settings |
-| `LDAP: error code 32` | User not found in search base | Verify user OU matches search base configuration |
-| SSL handshake failure | CA cert not trusted | Import CA certificate into SANnav JRE truststore |
-| Connection timeout | Firewall blocking port 636 | Open port 636 from SANnav to LDAP server |
-
----
-
-## Firmware Upgrade Stuck or Failed
-
-**Symptom:** A firmware upgrade initiated from SANnav shows **In Progress** for more than 30 minutes, or shows **Failed**.
-
-**Resolution:**
-
-1. Navigate to **Image Management > Upgrade Status** and note the error message.
-2. SSH to the switch and check FOS firmware download status:
-
 ```bash
 # On the switch (FOS CLI)
 firmwareshow
@@ -150,32 +88,11 @@ firmwaredownload --status
 # If upgrade is stuck, check system logs on the switch
 errdump
 ```
-
-3. If the switch rebooted and SANnav shows it as failed, the switch may be on the new firmware and healthy:
-
 ```bash
 # Verify switch firmware from SANnav after reconnect
 # Inventory > Switches > [Switch] > Details
 # If firmware matches target, mark the upgrade as complete in SANnav
 ```
-
-4. Common failure causes:
-
-| Cause | Fix |
-|---|---|
-| Insufficient disk space on switch | Clean up `/var` on switch: `firmwareshow -s` to check |
-| Network interruption during download | Retry the upgrade; SANnav will resume from the checkpoint |
-| Incompatible firmware for hardware | Verify hardware generation support matrix |
-| Switch in ISL-only mode | Upgrade from FOS CLI directly: `firmwaredownload` |
-
----
-
-## Backup Failing to Remote Target
-
-**Symptom:** Scheduled or manual backups fail with a remote transfer error.
-
-**Resolution:**
-
 ```bash
 # Test SCP connectivity from SANnav to backup server
 ssh admin@sannav-dc1.corp.example.com
@@ -188,8 +105,6 @@ scp /tmp/testfile.txt sannav-bkp@backup-server.corp.example.com:/backups/sannav/
 # Check SANnav backup logs
 grep -i "backup\|transfer\|ERROR" /opt/sannav/logs/server.log | tail -50
 ```
-
-If remote transfer is configured via NFS, verify NFS mount is active:
 ```bash
 df -h | grep backup
 # If not mounted: sudo mount -a

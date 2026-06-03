@@ -1,10 +1,3 @@
-# Backup Jobs
-
-
-<div class="kb-summary">
-Azure Backup jobs represent discrete backup, restore, and configuration operations.
-</div>
-
 ```text
   Trigger
      │
@@ -29,17 +22,13 @@ Azure Backup jobs represent discrete backup, restore, and configuration operatio
 │               └─────────────┘   │  (email / webhook)│                                                 │
 │                                 └───────────────────┘                                                 │
 └────────────────────────────────────────────────────────┘
+```
+
 ```text
      │
      ▼
   az backup job list --status Failed
 ```
-Monitoring job status is essential for confirming scheduled backups ran successfully and for diagnosing failures.
-
----
-
-## Listing and Filtering Jobs
-
 ```bash
 ## List all backup jobs in a vault
 az backup job list \
@@ -69,19 +58,6 @@ az backup job list \
   --end-date 2026-05-07T23:59:59 \
   --output table
 ```
-
-| Job Status | Meaning |
-|---|---|
-| Completed | Job finished successfully |
-| CompletedWithWarnings | Job succeeded but had non-fatal issues |
-| Failed | Job did not complete — action required |
-| InProgress | Job is currently running |
-| Cancelled | Job was manually cancelled |
-
----
-
-## Inspecting a Specific Job
-
 ```bash
 ## Show full details for a job (job ID from list output)
 az backup job show \
@@ -97,13 +73,6 @@ az backup job show \
   --query "{Status:properties.status, Error:properties.errorDetails[0].errorMessage}" \
   --output table
 ```
-
----
-
-## Waiting for a Job to Complete
-
-Use `az backup job wait` in automation pipelines to block until a job finishes before proceeding.
-
 ```bash
 ## Wait for a specific job to complete (polls every 30 seconds)
 az backup job wait \
@@ -126,11 +95,6 @@ az backup job wait \
   --vault-name <vault-name> \
   --name "$JOB_ID"
 ```
-
----
-
-## Failed Job Remediation
-
 ```bash
 ## List all failed jobs with error messages
 az backup job list \
@@ -149,21 +113,6 @@ az backup protection backup-now \
   --backup-management-type AzureIaasVM \
   --retain-until 2026-06-30
 ```
-
-Common failure causes and remediation:
-
-| Error | Likely Cause | Remediation |
-|---|---|---|
-| `UserErrorVmNotInDesirableState` | VM is in a stopped/deallocated state | Start the VM before the backup window |
-| `GuestAgentSnapshotTaskStatusError` | VM agent not running or outdated | Update/reinstall the Azure VM agent |
-| `ExtensionSnapshotFailedNoNetwork` | DNS or outbound connectivity issue | Check NSG rules, allow backup service tags |
-| `BackupOperationFailedV2` | Transient failure | Retry; escalate if persistent |
-| `UserErrorRpNotFound` | Recovery point expired or deleted | Adjust retention policy |
-
----
-
-## Cancelling a Running Job
-
 ```bash
 ## Cancel a job that is currently in progress
 az backup job stop \
@@ -171,11 +120,6 @@ az backup job stop \
   --vault-name <vault-name> \
   --name <job-id>
 ```
-
----
-
-## Job Monitoring via Azure Monitor
-
 ```bash
 ## Query backup job alerts in Azure Monitor (requires diagnostic settings enabled)
 az monitor log-analytics query \

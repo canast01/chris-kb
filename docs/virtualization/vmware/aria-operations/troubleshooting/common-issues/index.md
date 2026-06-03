@@ -1,14 +1,3 @@
-# Aria Operations — Common Issues
-
-
-<div class="kb-summary">
-Common Issues reference covering Adapter Collection Failures, Cluster Node Offline or Degraded, Dashboard Shows Stale or No Data, Capacity Data Not Updating, LDAP Authentication Failure and 2 more sections.
-</div>
-
-## Adapter Collection Failures
-
-Symptoms: adapter shows **Not Collecting** in Administration → Solutions; metric data for the monitored system stops updating; dashboards show stale data.
-
 ```bash
 # SSH to primary node and inspect adapter state
 ssh admin@vrops-prod-01.example.local
@@ -23,6 +12,8 @@ tail -200 /data/vcops/log/adapters/VMwareAdapter/adapter.log | grep -i "error\|a
 
 # Restart the watchdog (restarts failed services automatically)
 service vmware-vcops-watchdog restart
+```
+
 ```text
 ┌──────────────────────────────────── Aria Operations Common Issues ────────────────────────────────────┐
 │                                                                                                       │
@@ -68,19 +59,6 @@ service vmware-vcops-watchdog restart
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-If the node is running but not joining the cluster:
-1. Check NTP — time drift > 1 second between nodes prevents cluster consensus
-2. Check ports 9543, 10010 between nodes (firewall rules between cluster nodes)
-3. Restart the watchdog service on the degraded node: `service vmware-vcops-watchdog restart`
-4. If the node still does not join, check the analytics log for cluster election errors
-
----
-
-## Dashboard Shows Stale or No Data
-
-Symptoms: a dashboard widget shows "No data" or data is many hours old despite the adapter showing Collecting.
-
 ```bash
 # Check analytics processing — if analytics queue is backed up, processing is delayed
 tail -200 /data/vcops/log/analytics.log | grep -i "queue\|backlog\|warn\|error"
@@ -93,20 +71,6 @@ curl -sk -H "Authorization: vRealizeOpsToken $TOKEN" \
   "https://vrops-prod-01.example.local/suite-api/api/adapterkinds/VMWARE/resourcekinds/VirtualMachine/resources?pageSize=5" | \
   jq '.resourceList[] | {name: .resourceKey.name, lastCollected: .identifier}'
 ```
-
-If a dashboard widget shows "No data" for a specific metric on a specific object:
-- Verify the object is not in a maintenance schedule (alerts and metrics may be suppressed)
-- Check that the metric is available for the object type: **Environment → Object Browser → select object → Metrics tab**
-- Check if the metric collection interval was recently changed in the policy assigned to this object
-
----
-
-## Capacity Data Not Updating
-
-Symptoms: the capacity dashboard shows old projections; rightsizing recommendations have not refreshed.
-
-Capacity analytics runs as a background job. By default it recalculates every 5 minutes for real-time data and once per day for long-term projections.
-
 ```bash
 # Force a capacity recalculation
 curl -sk -X POST -H "Authorization: vRealizeOpsToken $TOKEN" \
@@ -119,13 +83,6 @@ curl -sk -H "Authorization: vRealizeOpsToken $TOKEN" \
   "https://vrops-prod-01.example.local/suite-api/api/analytics" | \
   jq '.[] | select(.name == "CapacityAnalytics") | {status: .status, lastRun: .lastRunTime}'
 ```
-
----
-
-## LDAP Authentication Failure
-
-Symptoms: AD users cannot log in; the login page returns "authentication failed" even with correct credentials.
-
 ```bash
 # Test LDAP connectivity from the Aria Operations appliance
 ssh admin@vrops-prod-01.example.local
@@ -138,19 +95,6 @@ ldapsearch -H ldaps://dc01.example.local:636 \
   -b "DC=corp,DC=local" \
   "(sAMAccountName=testuser)" sAMAccountName | head -10
 ```
-
-Common causes:
-- Bind account password expired — reset in AD and update in Administration → Authentication Sources
-- Domain CA certificate expired — re-import the root CA into Administration → Certificates
-- Domain controller FQDN changed or unreachable — update the LDAP source with the new DC address
-- Group sync not run — force a sync: Administration → Authentication Sources → select source → Sync
-
----
-
-## Alert Notification Not Delivered
-
-Symptoms: an alert fires in Aria Operations but no email or webhook notification is received.
-
 ```bash
 # Verify SMTP configuration
 curl -sk -H "Authorization: vRealizeOpsToken $TOKEN" \
@@ -166,20 +110,6 @@ ssh admin@vrops-prod-01.example.local
 curl -v smtp://smtp.example.local:25 --mail-from aria-ops@corp.local \
   --mail-rcpt test@corp.local 2>&1 | head -30
 ```
-
-| Issue | Check |
-|---|---|
-| SMTP not configured | Administration → Outbound Settings — confirm SMTP plugin exists |
-| Notification rule disabled | Alerts → Notifications → check Active column |
-| Alert criticality filter mismatch | Notification rule only fires for specific criticalities — verify the alert matches |
-| Alert cancelled before notification fired | If alert resolved within one collection cycle, notification may not fire |
-
----
-
-## UI Performance Degraded (Slow Loading)
-
-Symptoms: the Aria Operations web UI is slow to load; dashboard queries time out.
-
 ```bash
 # Check CPU and memory pressure on the primary node
 ssh admin@vrops-prod-01.example.local
@@ -195,8 +125,3 @@ nodetool compactionstats
 # Check for very large queries — long-running queries appear in the analytics log
 tail -200 /data/vcops/log/analytics.log | grep -i "slow\|timeout\|duration"
 ```
-
-If performance is consistently poor:
-- Consider adding a data node to distribute metric storage: **Administration → Cluster Management → Add Node**
-- Reduce the number of metrics collected per object via policy tuning — disable metrics that are not used in dashboards or alerts
-- Archive old metric data if the Cassandra data directory is >70% full

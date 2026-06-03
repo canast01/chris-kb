@@ -1,14 +1,3 @@
-# Dell AIOps: Troubleshooting False Positives, Missing Data, and Integration Failures
-
-
-<div class="kb-summary">
-This page covers common operational problems with Dell AIOps: AI alert false positives, data gaps in the analytics pipeline, and failures in the integration between AIOps and connected systems.
-</div>
-
-## Diagnosing False Positive AI Alerts
-
-False positives occur when the model fires an alert for a normal but unusual event (scheduled backup, bulk migration, test run).
-
 ```bash
 # List recent AI alerts with confidence scores
 curl -sk -X GET \
@@ -22,6 +11,8 @@ curl -sk -X POST \
   -H "Authorization: Bearer <access_token>" \
   -H "Content-Type: application/json" \
   -d '{"reason": "FALSE_POSITIVE", "comment": "Weekly backup job 22:00–02:00, expected anomaly"}'
+```
+
 ```text
 ┌──────────────────────────────────── Dell AIOps — Troubleshooting ─────────────────────────────────────┐
 │                                                                                                       │
@@ -54,13 +45,3 @@ curl -sk -X POST \
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-## Common Troubleshooting Reference
-
-| Problem | First Check | Second Check |
-|---|---|---|
-| AIOps alert flood | confidence scores of firing alerts | Scheduled jobs overlapping baseline window |
-| Predictions disappeared | System connectivity status | Data collection gap > 48 hours |
-| Recommendation not generating | Days since system registered | System type support matrix |
-| Alert correlation groups wrong | Systems in same site group | Regroup systems in CloudIQ topology settings |
-| API returns 429 Too Many Requests | Rate limit exceeded | Implement exponential backoff; reduce polling frequency |

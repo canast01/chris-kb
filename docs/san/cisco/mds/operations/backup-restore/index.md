@@ -1,16 +1,3 @@
-# MDS — Backup & Restore
-
-
-<div class="kb-summary">
-> Part of the [Cisco MDS](../../index.md) reference.
-</div>
-
----
-
-## Backup Configuration
-
-Save running configuration to startup and copy off-switch before any change.
-
 ```bash
 # Save running to startup config
 copy running-config startup-config
@@ -23,6 +10,8 @@ copy running-config tftp://<server>/<filename>
 
 # Display full running config (for manual capture)
 show running-config
+```
+
 ```text
 ┌───────────────────────────────── Cisco MDS 9000 — Backup and Restore ─────────────────────────────────┐
 │                                                                                                       │
@@ -70,15 +59,3 @@ show running-config
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-> After restoring, always verify: `show interface brief`, `show flogi database`, and `show zoneset active vsan all`.
-
----
-
-## Post-Restore Validation
-
-- [ ] All FC interfaces back in connected/up state: `show interface brief`
-- [ ] FLOGI database complete — all expected hosts and storage logged in: `show flogi database`
-- [ ] Active zoneset matches expected: `show zoneset active vsan all`
-- [ ] No error entries in recent syslog: `show logging last 50`
-- [ ] Save restored config to startup: `copy running-config startup-config`

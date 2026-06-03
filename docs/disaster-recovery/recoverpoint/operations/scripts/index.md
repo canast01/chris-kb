@@ -1,16 +1,3 @@
-# RecoverPoint — Scripts
-
-
-<div class="kb-summary">
-> Part of the [RecoverPoint](../../index.md) > [Operations](../index.md) reference.
-</div>
-
----
-
-## Consistency Group Health Monitor (Python)
-
-Query the RecoverPoint REST API to report the replication state, lag, and RPO compliance for every consistency group.
-
 ```python
 #!/usr/bin/env python3
 # rp-cg-health.py
@@ -119,6 +106,8 @@ if non_active:
 else:
     print("RESULT: ALL CGs ACTIVE")
     sys.exit(0)
+```
+
 ```text
 ┌─────────────────────────────────────── RecoverPoint — Scripts ────────────────────────────────────────┐
 │                                                                                                       │
@@ -203,17 +192,6 @@ else:
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-**What you should see**
-
-Timestamped log lines showing each step: locating the CG, getting the remote copy ID, enabling image access, and polling until the link state changes to `ImageAccess`. At the end it lists the accessible volumes (name and WWN). A log file is written to `/var/log/`.
-
----
-
-## RPO Compliance Report (Python)
-
-Query all RecoverPoint consistency groups, compare current lag to configured RPO, and flag any CG whose lag exceeds 2x the RPO.
-
 ```python
 #!/usr/bin/env python3
 # rp-rpo-compliance.py
@@ -338,49 +316,9 @@ else:
 
 sys.exit(exit_code)
 ```
-
-### How to run this script — step by step
-
-**Before you start — what you need**
-- Python 3.7 or later installed
-- The `requests` library: `pip install requests`
-- Network access to the RecoverPoint Appliance management IP
-- RecoverPoint admin credentials
-
-**Step 1 — Save the file**
-
-1. Open a text editor
-2. Copy the entire code block above
-3. Save it as `rp-rpo-compliance.py`
-
-**Step 2 — Fill in your details**
-
-| Variable | What to put here | How to find it |
-|---|---|---|
-| `RP_HOST` | RecoverPoint Appliance IP | RPA management IP |
-| `RP_USER` | Admin username | Usually `admin` |
-| `RP_PASS` | Admin password | Your RecoverPoint password |
-
-**Step 3 — Open a terminal**
-
-- **For .py:** Open Terminal (Linux/Mac) or Command Prompt / Git Bash (Windows). Install Python from python.org. Install packages: `pip install requests`
-
-**Step 4 — Run the script**
-
 ```text
 RP_HOST=192.168.1.100 RP_USER=admin RP_PASS=MyPassword python3 rp-rpo-compliance.py
 ```
-
-**What you should see**
-
-A table listing every CG with its configured RPO, current lag, compliance status (OK / OVER RPO / NO RPO SET), and maximum lag recorded in the last 24 hours. CGs where lag exceeds twice the RPO are flagged with `*** LAG > 2x RPO ***`. The summary at the bottom shows any violations or confirms all CGs are within RPO.
-
----
-
-## Windows: RecoverPoint CG Status via REST API (PowerShell)
-
-Query the RecoverPoint REST API from a Windows PC to report cluster health, RPA node status, and the state of every consistency group — highlighting any CG not in Active state.
-
 ```powershell
 # rp-cg-status-windows.ps1
 # Usage: .\rp-cg-status-windows.ps1 -RpaHost <IP> -RpUser <user> -RpPass <pass>
@@ -502,59 +440,13 @@ try {
     exit 1
 }
 ```
-
-### How to run this script — step by step
-
-**Before you start — what you need**
-- Windows 10 or 11 with PowerShell (already installed)
-- Network access to the RecoverPoint Appliance management IP from your Windows PC
-- RecoverPoint admin credentials
-
-**Step 1 — Save the file**
-
-1. Open **Notepad** (Windows key → search Notepad)
-2. Copy the entire code block above
-3. Click **File → Save As**
-4. Change "Save as type" to **All Files**
-5. Save it as `rp-cg-status-windows.ps1` on your Desktop
-
-**Step 2 — Fill in your details**
-
-You pass all values on the command line:
-
-| Variable | What to put here | How to find it |
-|---|---|---|
-| `$RpaHost` | IP address of the RecoverPoint Appliance | RPA management IP — ask your DR admin |
-| `$RpUser` | Admin username | Usually `admin` |
-| `$RpPass` | Admin password | Your RecoverPoint admin password |
-
-**Step 3 — Open a terminal**
-
-Windows key → search `PowerShell` → right-click → **Run as Administrator**
-
-**Step 4 — Allow scripts to run**
-
 ```powershell
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 ```
-
-**Step 5 — Run the script**
-
 ```bash
 cd C:\Users\YourName\Desktop
 .\rp-cg-status-windows.ps1 -RpaHost 192.168.1.100 -RpUser admin -RpPass MyPassword
 ```
-
-**What you should see**
-
-Cluster name and RPA node health (green = OK, red = fault), followed by a table of all consistency groups showing their state, transfer state, and current lag. Any CG not in Active state is highlighted in red. The final line shows the overall result.
-
----
-
-## Windows: RecoverPoint CG Health via Plink (CMD)
-
-Use plink.exe to SSH to the RecoverPoint Management IP and run CLI status commands to quickly check system and group health from a Windows PC.
-
 ```batch
 @echo off
 REM rp-cg-health.bat — RecoverPoint CG health check via SSH (plink)
@@ -599,62 +491,13 @@ echo ----------------------------------------
 echo.
 echo Done.
 ```
-
-### How to run this script — step by step
-
-**Before you start — what you need**
-- PuTTY installed on Windows — download from https://www.putty.org
-- `plink.exe` available (installed with PuTTY, usually at `C:\Program Files\PuTTY\plink.exe`)
-- SSH access to the RecoverPoint Appliance management IP
-- RecoverPoint admin credentials (`admin` user)
-
-**Step 1 — Save the file**
-
-1. Open **Notepad** (Windows key → search Notepad)
-2. Copy the entire code block above
-3. Click **File → Save As**
-4. Change "Save as type" to **All Files**
-5. Save it as `rp-cg-health.bat` on your Desktop
-
-**Step 2 — Fill in your details**
-
-Open the saved file and change these lines:
-
-| Variable | What to put here | How to find it |
-|---|---|---|
-| `RPA_HOST` | IP address of the RecoverPoint Appliance | RPA management IP — ask your DR admin |
-| `SSH_USER` | SSH username | Usually `admin` |
-| `PLINK` | Path to plink.exe | Default `plink.exe` if in PATH, or `C:\Program Files\PuTTY\plink.exe` |
-
-**Step 3 — Accept the SSH fingerprint first (one-time step)**
-
-Open Command Prompt and run:
 ```text
 plink.exe -ssh admin@192.168.1.100
 ```
-Type `y` when asked to accept the fingerprint, then Ctrl+C. Do this once per RPA.
-
-**Step 4 — Open a terminal**
-
-Open **Command Prompt**: Windows key → search `cmd` → press Enter
-
-**Step 5 — Run the script**
-
 ```bash
 cd C:\Users\YourName\Desktop
 rp-cg-health.bat
 ```
-
-**What you should see**
-
-Three sections of output: overall system status (RPA health, replication state), groups status showing every consistency group and its current state, and RPA nodes information. Any degraded groups or node faults will be visible in the output text.
-
----
-
-## Daily Check Script
-
-Check RPA system status via SSH and CG health via REST API. Flags any CGs not in ACTIVE state and any RPO exceeding 15 minutes.
-
 ```bash
 #!/bin/bash
 # rp_daily_check.sh
@@ -701,13 +544,6 @@ echo ""
 echo "Daily check: $FAIL failure(s)"
 [ "$FAIL" -gt 0 ] && exit 2 || exit 0
 ```
-
----
-
-## Incident Triage Script
-
-Capture a full diagnostic snapshot via SSH and REST API to a timestamped file.
-
 ```bash
 #!/bin/bash
 # rp_triage.sh
@@ -746,13 +582,6 @@ api_get()  { curl -sk -u "$RPA_USER:$RPA_PASS" -H "Accept: application/json" "ht
 
 echo "Triage data saved to: $OUTFILE"
 ```
-
----
-
-## Change Pre-Check Script
-
-Validate RecoverPoint state before storage or host maintenance. Exits 2 on any failure.
-
 ```bash
 #!/bin/bash
 # rp_precheck.sh
@@ -799,13 +628,6 @@ echo ""
 echo "Pre-check: $FAIL failure(s)"
 [ "$FAIL" -gt 0 ] && exit 2 || exit 0
 ```
-
----
-
-## Post-Change Validation Script
-
-Confirm all CGs have returned to ACTIVE state after maintenance and verify image access is not left enabled.
-
 ```bash
 #!/bin/bash
 # rp_postcheck.sh
@@ -851,13 +673,6 @@ echo ""
 echo "Post-change validation: $FAIL failure(s)"
 [ "$FAIL" -gt 0 ] && exit 2 || exit 0
 ```
-
----
-
-## Health Check Script
-
-Cron-safe summary: RPA count, CG count, active vs not-active CGs, and max RPO. Exits 0 (OK), 1 (WARNING), or 2 (CRITICAL).
-
 ```bash
 #!/bin/bash
 # rp_health_check.sh

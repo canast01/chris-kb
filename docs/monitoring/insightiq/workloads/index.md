@@ -1,29 +1,3 @@
-# InsightIQ: Workload Classification, Top Talkers, and Client Analysis
-
-
-<div class="kb-summary">
-InsightIQ provides client-level visibility into who is consuming PowerScale cluster resources. This page covers workload classification, identifying top-consuming clients, and using client analysis data for capacity and performance planning.
-</div>
-
-## Workload and Client Visibility Overview
-
-InsightIQ collects per-client statistics from the OneFS platform statistics API, allowing visibility into which hosts and protocols are driving the most load.
-
-Navigation: **InsightIQ > Reports > Clients**
-
-Data available per client:
-
-| Metric | Description |
-|---|---|
-| Read Throughput (MB/s) | Bytes read per second from the cluster |
-| Write Throughput (MB/s) | Bytes written per second to the cluster |
-| Operations/s | Total NFS, SMB, or HDFS operations per second |
-| Average Latency (ms) | Round-trip time experienced by the client |
-| Protocol | NFS, SMB, HDFS, or S3 |
-| Node Affinity | Which PowerScale node the client is pinned to |
-
-## Identifying Top-Consuming Clients
-
 ```bash
 # On PowerScale OneFS — real-time top clients by total throughput
 ssh admin@powerscale.example.com
@@ -52,6 +26,8 @@ isi statistics client list \
   --sort=latency \
   --limit=10 \
   --format table
+```
+
 ```text
 ┌──────────────────────────────────── InsightIQ — Workload Analysis ────────────────────────────────────┐
 │                                                                                                       │
@@ -84,13 +60,3 @@ isi statistics client list \
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-## Common Workload Analysis Issues
-
-| Issue | Likely Cause | Fix |
-|---|---|---|
-| Client not appearing in statistics | Client uses UDP NFS (rare) | Switch client to TCP NFS mount |
-| Latency high for single client | Network path issue or slow client disk | Traceroute from client; check client storage |
-| Throughput cap at ~1 GB/s per client | Single 10G NIC on client | Add second NIC or enable LACP bonding |
-| Node hotspot (one node carrying all load) | SmartConnect imbalance | Rebalance using `isi network pools modify` or change SmartConnect policy |
-| InsightIQ client report empty | Protocol statistics not enabled | Enable on PowerScale: `isi statistics settings modify --enable-protocols true` |

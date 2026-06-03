@@ -1,21 +1,3 @@
-# Windows Server — Access Control
-
-
-<div class="kb-summary">
-AD group design, GPO user rights, Just Enough Administration (JEA), LAPS, and built-in group review.
-</div>
-
-## Active Directory Group Design
-
-Structure groups using the AGDLP (Accounts → Global → Domain Local → Permissions) model to maintain role-based access control.
-
-| Layer | Type | Purpose |
-|---|---|---|
-| A — Accounts | User/computer objects | Individual identities |
-| G — Global Group | Global security group | Collect users by role/department |
-| DL — Domain Local Group | Domain local security group | Assigned to resources in one domain |
-| P — Permissions | ACL entry | Access to file share, GPO, object |
-
 ```powershell
 # Create a Global group for a role
 New-ADGroup -Name "GG-ServerAdmins" -GroupScope Global -GroupCategory Security `
@@ -33,6 +15,8 @@ Add-ADGroupMember -Identity "GG-ServerAdmins" -Members "jsmith"
 
 # View group members
 Get-ADGroupMember -Identity "GG-ServerAdmins" | Select-Object Name, SamAccountName, objectClass
+```
+
 ```text
 ┌─────────────────────────────────── Windows Server — Access Control ───────────────────────────────────┐
 │                                                                                                       │
@@ -81,18 +65,10 @@ Get-ADGroupMember -Identity "GG-ServerAdmins" | Select-Object Name, SamAccountNa
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-## Just Enough Administration (JEA)
-
-JEA limits what administrators can do in remote PowerShell sessions to only the commands and parameters they need.
-
-### Create a Role Capability File
-
 ```powershell
 # Generate the role capability template
 New-PSRoleCapabilityFile -Path "C:\JEA\RoleCapabilities\WebAdmins.psrc"
 ```
-
 ```powershell
 # C:\JEA\RoleCapabilities\WebAdmins.psrc
 @{
@@ -110,9 +86,6 @@ New-PSRoleCapabilityFile -Path "C:\JEA\RoleCapabilities\WebAdmins.psrc"
     VisibleProviders        = @()
 }
 ```
-
-### Create a Session Configuration File
-
 ```powershell
 New-PSSessionConfigurationFile -Path "C:\JEA\WebAdmins.pssc" `
   -SessionType RestrictedRemoteServer `
@@ -129,9 +102,6 @@ Restart-Service WinRM
 # Verify
 Get-PSSessionConfiguration -Name "WebAdmins"
 ```
-
-### Connect via JEA
-
 ```powershell
 # User connects to the JEA endpoint — only sees permitted commands
 Enter-PSSession -ComputerName webserver01 -ConfigurationName WebAdmins
@@ -139,11 +109,6 @@ Enter-PSSession -ComputerName webserver01 -ConfigurationName WebAdmins
 # Test what a user can do in the session
 Test-PSSessionConfigurationFile -Path "C:\JEA\WebAdmins.pssc"
 ```
-
-## Built-in Group Review
-
-Built-in privileged groups should contain only required accounts. Review regularly.
-
 ```powershell
 # Audit Domain Admins
 Get-ADGroupMember "Domain Admins" -Recursive | Select-Object Name, SamAccountName, objectClass
@@ -163,7 +128,6 @@ Get-ADGroupMember "Server Operators" | Select-Object Name, SamAccountName
 # Audit Backup Operators (can bypass ACLs)
 Get-ADGroupMember "Backup Operators" | Select-Object Name, SamAccountName
 ```
-
 ```powershell
 # Comprehensive privileged group report
 $privilegedGroups = @("Domain Admins","Enterprise Admins","Schema Admins",
@@ -177,11 +141,6 @@ foreach ($group in $privilegedGroups) {
     }
 }
 ```
-
-## File and Share Permissions
-
-### NTFS Permissions
-
 ```powershell
 # View NTFS permissions on a folder
 (Get-Acl "C:\Data\Finance").Access | Format-Table IdentityReference, FileSystemRights, AccessControlType, IsInherited
@@ -198,9 +157,6 @@ $acl = Get-Acl "C:\Data\Sensitive"
 $acl.SetAccessRuleProtection($true, $false)   # isProtected=true, preserveInheritance=false
 Set-Acl "C:\Data\Sensitive" $acl
 ```
-
-### Share Permissions
-
 ```powershell
 # Create a share with restricted access
 New-SmbShare -Name "Finance" -Path "C:\Data\Finance" `
@@ -216,9 +172,6 @@ Revoke-SmbShareAccess -Name "Finance" -AccountName "Everyone" -Force
 
 # Best practice: Share = Full Control to Authenticated Users, restrict at NTFS level
 ```
-
-## Local Administrator Control
-
 ```powershell
 # Disable the built-in Administrator account (use LAPS-managed account instead)
 Disable-LocalUser -Name "Administrator"
@@ -236,9 +189,6 @@ Get-LocalGroupMember -Group "Administrators"
 # Remove domain user from local Administrators (clean up)
 Remove-LocalGroupMember -Group "Administrators" -Member "CORP\jsmith"
 ```
-
-## Delegation in Active Directory
-
 ```powershell
 # Grant a helpdesk group permission to reset passwords in an OU
 # Use the Delegation of Control Wizard in ADUC, or via dsacls:
@@ -253,9 +203,6 @@ dsacls "OU=Users,DC=corp,DC=local"
   Where-Object {$_.IdentityReference -like "*Helpdesk*"} |
   Select-Object IdentityReference, ActiveDirectoryRights
 ```
-
-## Access Control Audit
-
 ```powershell
 # Find all accounts with AdminCount=1 (ever been in a protected group)
 Get-ADUser -Filter {AdminCount -eq 1} -Properties AdminCount |
@@ -276,17 +223,3 @@ Get-ADUser -Filter {PasswordNeverExpires -eq $true -and Enabled -eq $true} `
   -Properties PasswordNeverExpires, Description |
   Select-Object Name, SamAccountName, Description
 ```
-
-## Quick Reference
-
-| Topic | Tool / Command |
-|---|---|
-| Group membership | `Get-ADGroupMember -Identity "Group" -Recursive` |
-| User rights export | `secedit /export /cfg policy.cfg` |
-| GPO result | `gpresult /H report.html /F` |
-| JEA session register | `Register-PSSessionConfiguration` |
-| NTFS ACL view | `(Get-Acl path).Access` |
-| Share permissions | `Get-SmbShareAccess -Name "ShareName"` |
-| Local admins | `Get-LocalGroupMember -Group "Administrators"` |
-| AdminCount=1 accounts | `Get-ADUser -Filter {AdminCount -eq 1}` |
-| Delegation audit | `dsacls "OU=...,DC=corp,DC=local"` |

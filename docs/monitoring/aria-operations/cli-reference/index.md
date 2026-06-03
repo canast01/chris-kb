@@ -1,14 +1,3 @@
-# Aria Operations CLI Reference
-
-
-<div class="kb-summary">
-Aria Operations (formerly vRealize Operations) is managed via the REST API and the `vracli` tool on the vApp node. The REST API base URL is `https://<ariaops_fqdn>/suite-api/api`. SSH to the analytics node as root for appliance-level operations.
-</div>
-
----
-
-## Appliance Status
-
 ```bash
 # SSH to Aria Operations node
 ssh root@<ariaops_fqdn>
@@ -22,6 +11,8 @@ vracli services
 # View logs
 tail -f /data/vcops/log/analytics.log
 tail -f /data/vcops/log/collector.log
+```
+
 ```text
 ┌─────────────────────────────────── Aria Operations — CLI Reference ───────────────────────────────────┐
 │                                                                                                       │
@@ -66,11 +57,6 @@ tail -f /data/vcops/log/collector.log
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
----
-
-## Metrics
-
 ```bash
 # Get metrics for a resource
 curl -k -X GET "https://<ariaops_fqdn>/suite-api/api/resources/<resource_id>/statkeys"   -H "Authorization: OpsToken <token>"
@@ -78,11 +64,6 @@ curl -k -X GET "https://<ariaops_fqdn>/suite-api/api/resources/<resource_id>/sta
 # Query metric values
 curl -k -X POST "https://<ariaops_fqdn>/suite-api/api/resources/stats/query"   -H "Authorization: OpsToken <token>"   -H "Content-Type: application/json"   -d '{"resourceId":["<resource_id>"],"statKey":["cpu|usage_average"]}'
 ```
-
----
-
-## Adapter & Collector Health
-
 ```bash
 # List adapter instances
 curl -k -X GET "https://<ariaops_fqdn>/suite-api/api/adapters"   -H "Authorization: OpsToken <token>"

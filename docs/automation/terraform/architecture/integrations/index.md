@@ -1,14 +1,3 @@
-# Terraform — Integrations
-
-
-<div class="kb-summary">
-Terraform integrates with cloud providers, secrets management, source control, and CI/CD systems. This page covers the major integrations used in enterprise environments.
-</div>
-
----
-
-## AWS Provider
-
 ```hcl
 terraform {
   required_providers {
@@ -27,6 +16,8 @@ provider "aws" {
   # 3. AWS_ACCESS_KEY_ID + AWS_SECRET_ACCESS_KEY env vars
   # Never: hardcoded credentials in .tf files
 }
+```
+
 ```text
 ┌────────────────────────────────────── Terraform — Integrations ───────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -50,11 +41,6 @@ provider "aws" {
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
----
-
-## GCP Provider (`google`)
-
 ```hcl
 provider "google" {
   project = var.gcp_project_id
@@ -67,7 +53,6 @@ provider "google-beta" {
   region  = var.gcp_region
 }
 ```
-
 ```bash
 # Workload Identity Federation
 gcloud iam workload-identity-pools create "github-pool" \
@@ -81,11 +66,6 @@ gcloud iam workload-identity-pools providers create-oidc "github-provider" \
   --issuer-uri="https://token.actions.githubusercontent.com" \
   --attribute-mapping="google.subject=assertion.sub,attribute.repository=assertion.repository"
 ```
-
----
-
-## VMware vSphere Provider
-
 ```hcl
 terraform {
   required_providers {
@@ -150,13 +130,6 @@ resource "vsphere_virtual_machine" "app" {
   }
 }
 ```
-
----
-
-## HashiCorp Vault Integration
-
-Retrieve dynamic credentials and secrets at plan/apply time without storing them in state.
-
 ```hcl
 terraform {
   required_providers {
@@ -195,15 +168,6 @@ data "vault_aws_access_credentials" "ci" {
   type    = "sts"
 }
 ```
-
-> Secrets fetched via `data` sources are stored in Terraform state. Ensure state is encrypted at rest and access is restricted.
-
----
-
-## GitHub Provider
-
-Manage repositories, teams, and branch protection as code.
-
 ```hcl
 terraform {
   required_providers {
@@ -263,13 +227,6 @@ resource "github_team_repository" "platform_infra" {
   permission = "maintain"
 }
 ```
-
----
-
-## CI/CD Integration
-
-### GitHub Actions
-
 ```yaml
 # .github/workflows/terraform.yml
 name: Terraform
@@ -335,9 +292,6 @@ jobs:
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: terraform apply tfplan
 ```
-
-### GitLab CI
-
 ```yaml
 # .gitlab-ci.yml
 variables:
@@ -381,13 +335,6 @@ apply:
   when: manual
   only: [main]
 ```
-
----
-
-## Atlantis (Pull Request Automation)
-
-Atlantis runs `terraform plan` on PR open/update and `terraform apply` on PR merge approval. It provides an audit trail in PR comments.
-
 ```yaml
 # atlantis.yaml — repository configuration
 version: 3
@@ -416,19 +363,6 @@ projects:
       - approved
       - mergeable
 ```
-
-PR workflow with Atlantis:
-
-1. Open PR → Atlantis runs `terraform plan` → posts plan output as comment
-2. Team reviews plan in PR
-3. Reviewer approves: `atlantis apply` comment triggers apply
-4. Apply output posted as PR comment
-5. PR merged
-
----
-
-## Terraform Cloud / Enterprise API
-
 ```bash
 # Trigger a run via API (CI pipeline integration)
 curl -s \
@@ -451,7 +385,6 @@ curl -s \
   }' \
   "https://app.terraform.io/api/v2/runs"
 ```
-
 ```hcl
 # Terraform Cloud backend
 terraform {

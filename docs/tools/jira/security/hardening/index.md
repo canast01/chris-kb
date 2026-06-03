@@ -1,16 +1,3 @@
-# Jira — Hardening
-
-
-<div class="kb-summary">
-Hardening Jira reduces the attack surface of the instance by disabling unnecessary features, tightening configuration, enforcing auditability, and controlling plugin exposure.
-</div>
-
----
-
-## Admin Account Hardening
-
-### Principle of Least Admin
-
 ```bash
 # Audit current Jira administrators
 curl -u "admin:TOKEN" \
@@ -21,6 +8,8 @@ curl -u "admin:TOKEN" \
 curl -u "user@corp.example.com:API_TOKEN" \
   "https://your-org.atlassian.net/rest/api/3/group/member?groupname=jira-administrators" \
   | jq -r '.values[] | "\(.displayName) - \(.emailAddress)"'
+```
+
 ```text
 ┌────────────────────────────────────────── Jira — Hardening ───────────────────────────────────────────┐
 │                                                                                                       │
@@ -66,17 +55,6 @@ curl -u "user@corp.example.com:API_TOKEN" \
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-**WebSudo** forces administrators to re-enter credentials before accessing admin areas — always leave enabled.
-
----
-
-## Plugin and Marketplace Hardening
-
-Marketplace plugins run with the same JVM privileges as Jira itself. Uncontrolled plugins are a major attack vector.
-
-### Plugin Audit
-
 ```bash
 # List all installed plugins
 curl -u "admin:TOKEN" \
@@ -88,17 +66,6 @@ curl -u "admin:TOKEN" \
   "https://jira.corp.example.com/rest/plugins/1.0/" \
   | jq '.plugins[] | select(.vendor.name != "Atlassian") | {name: .name, vendor: .vendor.name}'
 ```
-
-### Plugin Controls
-
-| Control | Action |
-|---|---|
-| Only approved plugins installed | Maintain approved plugin list in CMDB |
-| Plugins reviewed before installation | Security review required |
-| Universal Plugin Manager locked | Disable UPM on prod — deploy via change mgmt |
-| Plugin updates tested in staging | Test in staging before prod |
-| Unused plugins disabled | Disable or uninstall |
-
 ```bash
 # Disable a plugin
 curl -u "admin:TOKEN" \
@@ -107,25 +74,6 @@ curl -u "admin:TOKEN" \
   -H "Content-Type: application/vnd.atl.plugins+json" \
   -d '{"enabled": false}'
 ```
-
----
-
-## Audit Logging
-
-### Enabling Audit Log (Data Center)
-
-Administration → System → Audit Log
-
-| Event Category | Recommendation |
-|---|---|
-| User management | Enabled |
-| Group management | Enabled |
-| Project management | Enabled |
-| Permission scheme changes | Enabled |
-| Global configuration changes | Enabled |
-| Plugin management | Enabled |
-| Login/logout | Enabled |
-
 ```bash
 # Export audit log entries via API
 curl -u "admin:TOKEN" \
@@ -136,9 +84,6 @@ curl -u "admin:TOKEN" \
 curl -u "admin:TOKEN" \
   "https://jira.corp.example.com/rest/api/2/auditing/record?category=USER_MANAGEMENT&limit=500"
 ```
-
-### Audit Log Retention and SIEM Integration
-
 ```bash
 # Forward Jira audit logs to SIEM (example: syslog export)
 # Jira Data Center: catalina.out + audit logs in /var/atlassian/application-data/jira/log/
@@ -157,22 +102,6 @@ EOF
 
 systemctl restart rsyslog
 ```
-
-**Retention requirements:**
-
-| Log Type | Minimum Retention |
-|---|---|
-| Audit logs | 1 year |
-| Access logs (nginx/proxy) | 90 days |
-| Application logs | 30 days |
-| Security incident logs | 3 years |
-
----
-
-## Network Hardening
-
-### Firewall Rules (Data Center)
-
 ```bash
 # Allow only required ports
 # Inbound to Jira server
@@ -190,11 +119,6 @@ iptables -A OUTPUT -p tcp --dport 587 -d 10.10.2.50 -j ACCEPT
 # Deny all other outbound
 iptables -A OUTPUT -j DROP
 ```
-
-### Disable Unused Jira Features
-
-Administration → Issues → Issue Features:
-
 ```bash
 # Disable issue votes if not used
 curl -u "admin:TOKEN" \
@@ -203,11 +127,6 @@ curl -u "admin:TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"votingEnabled": false, "watchingEnabled": false}'
 ```
-
----
-
-## JVM and Tomcat Hardening
-
 ```bash
 # /opt/atlassian/jira/bin/setenv.sh — JVM hardening options
 JAVA_OPTS="$JAVA_OPTS -Djava.awt.headless=true"
@@ -217,7 +136,6 @@ JAVA_OPTS="$JAVA_OPTS -Dfile.encoding=UTF-8"
 # Disable HTTP TRACE method
 JAVA_OPTS="$JAVA_OPTS -Dorg.apache.tomcat.util.http.HeaderParser=false"
 ```
-
 ```xml
 <!-- server.xml — remove or secure connectors -->
 <!-- Remove AJP connector (CVE-2020-1938 Ghostcat) -->
@@ -228,38 +146,6 @@ JAVA_OPTS="$JAVA_OPTS -Dorg.apache.tomcat.util.http.HeaderParser=false"
        showReport="false"
        showServerInfo="false"/>
 ```
-
----
-
-## Hardening Checklist
-
-| Control | Priority | Status |
-|---|---|---|
-| Public signup disabled | Critical | Check |
-| WebSudo enabled | Critical | Check |
-| Admin count ≤ 5 | Critical | Check |
-| All admins have MFA | Critical | Check |
-| LDAPS configured (not LDAP) | Critical | Check |
-| TLS 1.2+ enforced at proxy | Critical | Check |
-| HSTS header enabled | High | Check |
-| Audit log enabled for all categories | High | Check |
-| Audit logs shipped to SIEM | High | Check |
-| Plugin install restricted | High | Check |
-| Unused plugins disabled | High | Check |
-| AJP connector disabled | High | Check |
-| Default admin password changed | Critical | Check |
-| User email addresses hidden | Medium | Check |
-| X-Frame-Options SAMEORIGIN set | Medium | Check |
-| CSP header configured | Medium | Check |
-| Application link inventory current | Medium | Check |
-| Attachment directory permissions | Medium | Check |
-| Quarterly admin access review | High | Schedule |
-| Penetration test annually | High | Schedule |
-
----
-
-## Security Patching
-
 ```bash
 # Check current Jira version
 curl -u "admin:TOKEN" \
@@ -273,22 +159,3 @@ curl -u "admin:TOKEN" \
 # Check for known CVEs against installed version
 # Reference: https://jira.atlassian.com/browse/JRASERVER (Data Center)
 ```
-
-**Patch policy:**
-
-| Severity | Maximum Time to Patch |
-|---|---|
-| Critical (CVSS 9+) | 72 hours |
-| High (CVSS 7–8.9) | 7 days |
-| Medium (CVSS 4–6.9) | 30 days |
-| Low (CVSS < 4) | Next maintenance window |
-
-Notable historical CVEs requiring immediate patching: CVE-2021-26084 (OGNL injection), CVE-2022-26134 (OGNL injection RCE), CVE-2023-22515 (broken access control — Confluence but indicative of Atlassian risk).
-
----
-
-## Related Pages
-
-- [Jira — Authentication](../authentication/index.md)
-- [Jira — Access Control](../access-control/index.md)
-- [Jira — Encryption](../encryption/index.md)

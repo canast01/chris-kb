@@ -1,26 +1,3 @@
-# Nexus Dashboard — CLI Reference
-
-
-<div class="kb-summary">
-> Part of the [Nexus Dashboard](../../index.md) reference.
-</div>
-
----
-
-## Overview
-
-Nexus Dashboard provides two CLI interfaces:
-1. **ndadmin CLI** — SSH-based access to the ND cluster via the `acs` command suite. Used for cluster administration, backup, upgrade, and diagnostics.
-2. **REST API** — the primary interface for automation. Platform-level API plus app-specific APIs for NDFC and NDI.
-
----
-
-## ndadmin CLI (SSH)
-
-Connect: `ssh ndadmin@nd-dc1.corp.example.com`
-
-### Cluster Management
-
 ```bash
 # Show cluster health summary
 acs health
@@ -33,6 +10,8 @@ acs cluster info
 
 # Show platform version
 acs version
+```
+
 ```text
 ┌────────────────────────── Cisco Nexus Dashboard — Operations CLI Reference ───────────────────────────┐
 │                                                                                                       │
@@ -80,9 +59,6 @@ acs version
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-### Upgrade
-
 ```bash
 # Upload an upgrade image
 acs upgrade upload /tmp/aci-nd-dk9.3.1.1.ova
@@ -99,9 +75,6 @@ acs upgrade status
 # Show upgrade history
 acs upgrade history
 ```
-
-### Networking
-
 ```bash
 # Show node network configuration
 acs network show
@@ -115,9 +88,6 @@ acs system dns show
 # Test connectivity to a host
 acs network test --host 10.20.1.5 --port 22
 ```
-
-### Certificate Management
-
 ```bash
 # Show current TLS certificate details
 acs certificates show
@@ -131,9 +101,6 @@ acs certificates import \
 # Set the imported certificate as active
 acs certificates activate --name nd-dc1-cert
 ```
-
-### Kubernetes (Low-Level Diagnostics)
-
 ```bash
 # Show all pod status (run as ndadmin — kubectl is available)
 kubectl get pods --all-namespaces
@@ -151,9 +118,6 @@ kubectl describe pod -n ndfc <pod-name>
 kubectl get pv
 kubectl get pvc --all-namespaces
 ```
-
-### System Diagnostics
-
 ```bash
 # Show system resource usage per node
 acs system resources
@@ -167,13 +131,6 @@ acs techsupport --output /tmp/nd-support-$(date +%Y%m%d).tar.gz
 # Collect support bundle and transfer to your workstation
 scp ndadmin@nd-dc1.corp.example.com:/tmp/nd-support-*.tar.gz ./
 ```
-
----
-
-## REST API Reference
-
-### Platform Authentication
-
 ```bash
 # Authenticate — returns a bearer token
 TOKEN=$(curl -sk -X POST https://nd-dc1.corp.example.com/login \
@@ -195,9 +152,6 @@ TOKEN=$(curl -sk -X POST https://nd-dc1.corp.example.com/login/refresh \
 curl -sk -X POST https://nd-dc1.corp.example.com/logout \
   -H "Authorization: Bearer ${TOKEN}"
 ```
-
-### Platform API — Sites and Nodes
-
 ```bash
 ND="https://nd-dc1.corp.example.com"
 
@@ -217,9 +171,6 @@ curl -sk "${ND}/nexus/api/v1/apps" \
 curl -sk "${ND}/nexus/api/v1/users" \
   -H "Authorization: Bearer ${TOKEN}" | python3 -m json.tool
 ```
-
-### NDFC API — Fabric and SAN Operations
-
 ```bash
 NDFC_BASE="${ND}/appcenter/cisco/ndfc/api/v1"
 
@@ -251,9 +202,6 @@ curl -sk "${NDFC_BASE}/alarms/activealarms" \
 curl -sk "${NDFC_BASE}/fm/image" \
   -H "Authorization: Bearer ${TOKEN}" | python3 -m json.tool
 ```
-
-### NDI API — Anomalies and Insights
-
 ```bash
 NDI_BASE="${ND}/appcenter/cisco/ndinsight/api/v1"
 
@@ -269,11 +217,6 @@ curl -sk "${NDI_BASE}/anomalies/<anomaly-id>" \
 curl -sk "${NDI_BASE}/san/flows?fabricName=DC1-SAN&timeRange=LAST_HOUR" \
   -H "Authorization: Bearer ${TOKEN}" | python3 -m json.tool
 ```
-
----
-
-## Useful One-Liners
-
 ```bash
 # Count switches by management state
 curl -sk "${NDFC_BASE}/inventory/switches" \

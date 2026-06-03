@@ -1,18 +1,3 @@
-# Git — Hardening
-
-
-<div class="kb-summary">
-Hardening Git and its hosting platform closes the attack surface around the version control system — the most critical asset in software development pipelines.
-</div>
-
----
-
-## Pre-Commit Hooks
-
-Pre-commit hooks run before each commit is created. They are the first line of defence against secrets, bad code, and policy violations.
-
-### Installing pre-commit Framework
-
 ```bash
 # Install pre-commit
 pip install pre-commit
@@ -26,6 +11,8 @@ pre-commit install
 # Also install for commit-msg and push hooks
 pre-commit install --hook-type commit-msg
 pre-commit install --hook-type pre-push
+```
+
 ```text
 ┌─────────────────────────────────────────── Git — Hardening ───────────────────────────────────────────┐
 │                                                                                                       │
@@ -71,13 +58,6 @@ pre-commit install --hook-type pre-push
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
----
-
-## Secret Scanning
-
-### Repository-Level Scanning
-
 ```bash
 # Scan full history with gitleaks
 gitleaks detect \
@@ -96,14 +76,6 @@ trufflehog git file://. --only-verified --json
 detect-secrets scan > .secrets.baseline
 detect-secrets audit .secrets.baseline
 ```
-
-### GitHub Advanced Security — Secret Scanning
-
-Enabled at the organisation level:
-
-1. Organisation Settings → Code security and analysis → Secret scanning → Enable all
-2. Enable **Push protection** to block commits containing detected secrets
-
 ```bash
 # Check if secret scanning is enabled on a repo
 gh api /repos/{org}/{repo} --jq '.security_and_analysis.secret_scanning.status'
@@ -116,11 +88,6 @@ gh api --method PATCH /repos/{org}/{repo} \
 gh api /repos/{org}/{repo}/secret-scanning/alerts \
   --jq '.[] | [.secret_type, .state, .html_url] | @tsv'
 ```
-
----
-
-## `.gitattributes` Security Controls
-
 ```gitattributes
 # .gitattributes
 
@@ -146,11 +113,6 @@ config/prod*.yaml  filter=git-crypt diff=git-crypt
 tests/             export-ignore
 Makefile           export-ignore
 ```
-
----
-
-## `.gitignore` Hardening
-
 ```gitignore
 # .gitignore — security-critical entries
 
@@ -190,13 +152,6 @@ Thumbs.db
 *.dump
 core.*
 ```
-
----
-
-## CI/CD Pipeline Security
-
-### GitHub Actions Hardening
-
 ```yaml
 # .github/workflows/build.yml
 name: Build
@@ -237,7 +192,6 @@ jobs:
           set +x
           echo "Build step"
 ```
-
 ```bash
 # Audit GitHub Actions workflow permissions
 gh api /repos/{org}/{repo}/actions/permissions/workflow \
@@ -249,9 +203,6 @@ grep -r "uses:" .github/workflows/ | awk '{print $2}' | sort -u
 # Identify actions not pinned to a commit SHA
 grep -r "uses:" .github/workflows/ | grep -v "@[0-9a-f]\{40\}"
 ```
-
-### Secrets Management in Pipelines
-
 ```bash
 # Store a secret in GitHub Actions
 gh secret set DATABASE_PASSWORD --body "$(cat /dev/stdin)" <<< "$SECRET_VALUE"
@@ -265,22 +216,6 @@ gh secret delete DATABASE_PASSWORD
 # Environment-scoped secret (only available in specific environments)
 gh secret set PROD_API_KEY --env production --body "$SECRET_VALUE"
 ```
-
-**Rules:**
-- Never echo or print secrets in workflow logs.
-- Use `::add-mask::` to mask dynamic values:
-  ```bash
-  echo "::add-mask::$DYNAMIC_SECRET"
-  ```
-- Use environment-scoped secrets for production credentials.
-- Rotate secrets immediately when a pipeline is compromised.
-
----
-
-## Repository Hygiene
-
-### Audit Repository Settings
-
 ```bash
 #!/bin/bash
 ORG="your-org"
@@ -302,9 +237,6 @@ for repo in $(gh api /orgs/$ORG/repos --paginate --jq '.[].name'); do
   gh api --method PUT /repos/$ORG/$repo/automated-security-fixes
 done
 ```
-
-### Dependency Security (Dependabot)
-
 ```yaml
 # .github/dependabot.yml
 version: 2
@@ -324,33 +256,6 @@ updates:
       interval: "weekly"
     open-pull-requests-limit: 5
 ```
-
----
-
-## Hardening Checklist
-
-| Control | Scope | Status |
-|---|---|---|
-| Branch protection on main/release/* | Repository | Check |
-| Require signed commits | Repository | Check |
-| Require PR reviews (min 2) | Repository | Check |
-| CODEOWNERS file in place | Repository | Check |
-| pre-commit hooks installed | Developer | Check |
-| Secret scanning + push protection | Organisation | Check |
-| Actions pinned to commit SHAs | Workflows | Check |
-| Default workflow permissions: read | Organisation | Check |
-| Dependabot enabled | Repository | Check |
-| Force-push disabled | Repository | Check |
-| Outside collaborators audited quarterly | Organisation | Check |
-| Deploy keys rotated annually | Repository | Check |
-| 2FA required for all members | Organisation | Check |
-| Repo visibility audit (no accidental public) | Organisation | Check |
-| `.gitignore` covers secrets and config | Repository | Check |
-
----
-
-## Incident Response — Exposed Secret
-
 ```bash
 # Step 1: Immediately revoke the exposed credential
 # (GitHub PAT, AWS key, etc.) — do this BEFORE anything else
@@ -374,11 +279,3 @@ git push --force-with-lease origin --all
 echo "path/to/secret-file" >> .gitignore
 git add .gitignore && git commit -m "Prevent re-commit of secret file"
 ```
-
----
-
-## Related Pages
-
-- [Git — Authentication](../authentication/index.md)
-- [Git — Access Control](../access-control/index.md)
-- [Git — Encryption](../encryption/index.md)

@@ -1,38 +1,3 @@
-# Data Domain — Escalation
-
-
-<div class="kb-summary">
-Escalation reference covering Support Portal, SLA Tiers, Information to Collect Before Opening a Case, Remote Support, Escalation Path and 2 more sections.
-</div>
-
-## Support Portal
-
-**URL:** [https://www.dell.com/support](https://www.dell.com/support)
-
-Log in with your Dell account linked to your organisation's support entitlement. The support portal provides:
-
-- Case creation and management
-- Knowledge base and documentation
-- Software downloads (DDOS upgrades, DD Boost plug-ins, MIB files)
-- Hardware dispatch tracking
-- ProSupport Plus health dashboard
-
-## SLA Tiers
-
-| Support Tier | P1 (Critical) | P2 (High) | P3 (Medium) | P4 (Low) |
-|---|---|---|---|---|
-| ProSupport Plus | 2-hour response | 4-hour response | Next business day | Next business day |
-| ProSupport | 4-hour response | 4-hour response | Next business day | Next business day |
-| Basic | Next business day | Next business day | Next business day | Next business day |
-
-**P1 definition:** Production backup environment completely unavailable; data loss risk; no workaround available.
-
-ProSupport Plus includes proactive monitoring via CloudIQ and automated case creation on hardware failure. This requires an active SCG registration for the DD.
-
-## Information to Collect Before Opening a Case
-
-Gather the following before calling or opening a case online — providing this upfront significantly reduces resolution time.
-
 ```bash
 # 1. System identification
 system show  # DDOS version, serial number, model
@@ -62,6 +27,8 @@ autosupport send <case-number>
 # 8. Manually generate a support bundle (if AutoSupport is not working)
 support bundle generate
 # Bundle is saved to /ddr/var/support/ — download via SCP or SFTP
+```
+
 ```text
 ┌───────────────────────────────────── Dell Data Domain Escalation ─────────────────────────────────────┐
 │                                                                                                       │
@@ -90,28 +57,3 @@ support bundle generate
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-1. **Online case** — open via [https://www.dell.com/support](https://www.dell.com/support) for non-urgent issues
-2. **Phone (P1/P2)** — call Dell support directly; reference the case number opened online
-3. **Account team escalation** — contact your Dell account manager or technical account manager for SLA breaches or cases not progressing
-4. **Executive escalation** — if the account team escalation does not resolve within the agreed timeframe, request an executive sponsor escalation via the account manager
-
-## Useful Support Links
-
-| Resource | URL |
-|---|---|
-| Dell Support Portal | https://www.dell.com/support |
-| Data Domain Documentation | https://www.dell.com/support → Product Documentation → PowerProtect DD |
-| DDOS Downloads | Dell Support → Drivers & Downloads → PowerProtect DD series |
-| Compatibility Matrix | Search "Data Domain Compatibility Guide" in Dell Support |
-| NIST CMVP (FIPS) | https://csrc.nist.gov/projects/cryptographic-module-validation-program |
-
-## Common Support Scenarios
-
-| Scenario | What to Provide |
-|---|---|
-| Disk failure (hardware replacement) | Serial number, `disk show state` output, service tag from the DD chassis |
-| DDOS upgrade issue | DDOS version before and after, error message from upgrade log, `system show` output |
-| Replication failure | `replication show errors` output, both source and target DD serial numbers, DDOS versions on both |
-| DD Boost connectivity failure | `ddboost show clients`, `ddboost status`, backup software version and OS version |
-| Dedup ratio concern | `filesys show compression`, MTree names involved, data type description, time the ratio changed |

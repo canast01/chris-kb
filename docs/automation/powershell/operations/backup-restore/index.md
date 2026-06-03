@@ -1,12 +1,3 @@
-# PowerShell — Backup & Restore
-
-
-<div class="kb-summary">
-Backup & Restore reference covering Profile and Configuration Backup, Restore Checklist.
-</div>
-
-## Profile and Configuration Backup
-
 ```powershell
 # Locate and back up PowerShell profiles
 $ProfilePaths = @(
@@ -23,6 +14,8 @@ foreach ($p in $ProfilePaths) {
         Write-Host "Backed up: $p"
     }
 }
+```
+
 ```text
 ┌──────────────────────────────────── PowerShell — Backup & Restore ────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -47,11 +40,3 @@ foreach ($p in $ProfilePaths) {
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-## Restore Checklist
-
-1. Install PowerShell 7+ on the new system
-2. Install PowerCLI: `Install-Module VMware.PowerCLI -Scope CurrentUser`
-3. Restore profile: `Copy-Item .\Microsoft.PowerShell_profile.ps1 $PROFILE -Force`
-4. Reinstall modules from exported CSV
-5. Verify: `$PSVersionTable` and `Get-Module -ListAvailable`

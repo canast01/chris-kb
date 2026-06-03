@@ -1,26 +1,3 @@
-# RASR — Diagnostics
-
-
-<div class="kb-summary">
-> Part of the [RASR Troubleshooting](../index.md) reference.
-</div>
-
----
-
-## Log Locations
-
-| Log | Path | When to check |
-|---|---|---|
-| RASR application log | `C:\Logs\RASR\rasrutil_<date>.log` | All backup and restore failures |
-| RASR agent log | `C:\Logs\RASR\rasragent_<date>.log` | Agent start failures, scheduler issues |
-| Windows Application Event Log | Event Viewer → Application (Source: `Dell RASR`) | Agent crashes, VSS errors, service errors |
-| Windows System Event Log | Event Viewer → System | Service control errors, disk errors |
-| Windows Setup Event Log | `C:\Windows\Panther\setupact.log` | WinPE driver and ADK failures during media creation |
-| iDRAC Lifecycle Controller log | iDRAC web UI → Maintenance → Lifecycle Log | Boot failures, hardware events during recovery |
-| WinPE session log | `X:\Windows\Panther\setupact.log` | WinPE environment errors during recovery |
-
-### Collecting RASR logs
-
 ```powershell
 # View most recent RASR logs
 $logDir = "C:\Logs\RASR"
@@ -33,6 +10,8 @@ Get-Content "C:\Logs\RASR\rasrutil_$(Get-Date -Format 'yyyyMMdd').log" -Wait -Ta
 Get-WinEvent -FilterHashtable @{LogName='Application'; ProviderName='DellRASR'} -MaxEvents 100 |
     Select-Object TimeCreated, Id, LevelDisplayName, Message |
     Export-Csv "C:\Temp\RASR-AppEvents.csv" -NoTypeInformation
+```
+
 ```text
 ┌───────────────────────────────────────── RASR — Diagnostics ──────────────────────────────────────────┐
 │                                                                                                       │
@@ -74,13 +53,6 @@ Get-WinEvent -FilterHashtable @{LogName='Application'; ProviderName='DellRASR'} 
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
----
-
-## VSS Diagnostics
-
-RASR uses Windows Volume Shadow Copy Service (VSS) for consistent image capture. VSS failures cause backup aborts.
-
 ```powershell
 # Check all VSS writer states — all should show "Stable"
 vssadmin list writers | Select-String -Pattern "Writer name:|State:|Last error:"
@@ -101,11 +73,6 @@ Restart-Service -Name wbengine     # Windows Backup VSS writer
 # Re-check writers after restart
 vssadmin list writers | Select-String -Pattern "Writer name:|State:|Last error:"
 ```
-
----
-
-## Scheduled Task Diagnostics
-
 ```powershell
 # Find RASR scheduled tasks
 Get-ScheduledTask | Where-Object { $_.TaskName -match "RASR" }
@@ -126,13 +93,6 @@ Get-WinEvent -FilterHashtable @{LogName='Microsoft-Windows-TaskScheduler/Operati
     Where-Object { $_.Message -match "RASR" } |
     Select-Object TimeCreated, Id, Message
 ```
-
----
-
-## WinPE Recovery Environment Diagnostics
-
-Run these commands from the WinPE command prompt during a recovery session.
-
 ```cmd
 :: Confirm network adapter is up and has an IP
 ipconfig /all
@@ -153,9 +113,6 @@ exit
 :: If no disks visible — load PERC/storage driver
 drvload D:\drivers\perc\percsas3i.inf
 ```
-
-After a restore completes but the OS does not boot:
-
 ```cmd
 :: Repair boot configuration data from WinPE
 bootrec /fixmbr
@@ -163,11 +120,6 @@ bootrec /fixboot
 bootrec /scanos
 bootrec /rebuildbcd
 ```
-
----
-
-## iDRAC Diagnostics for Recovery Boot Failures
-
 ```bash
 # Export Lifecycle Controller log via racadm (from management host)
 racadm -r <idrac-ip> -u root -p <password> lclog export -f lclog.xml -t XML
@@ -182,13 +134,6 @@ racadm -r <idrac-ip> -u root -p <password> getsysinfo
 racadm -r <idrac-ip> -u root -p <password> remoteimage -c -l "\\fileserver\iso\rasr_winpe.iso"
 racadm -r <idrac-ip> -u root -p <password> remoteimage -s
 ```
-
-Or from the iDRAC web UI: **Maintenance** → **Virtual Media** → connect ISO, then **Power** → **Boot to Virtual CD**.
-
----
-
-## System Information Collection
-
 ```powershell
 # Collect system and RASR version info for support cases
 $info = @{

@@ -1,14 +1,3 @@
-# GitHub Actions — Integrations
-
-
-<div class="kb-summary">
-> Part of the [GitHub Actions Architecture](../index.md) reference.
-</div>
-
-## Cloud Providers
-
-### AWS — OIDC (Keyless)
-
 ```yaml
 permissions:
   id-token: write
@@ -22,6 +11,8 @@ steps:
 
   - name: Deploy to ECS
     run: aws ecs update-service --cluster prod --service app --force-new-deployment
+```
+
 ```text
 ┌──────────────────────────────────── GitHub Actions — Integrations ────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -45,9 +36,6 @@ steps:
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-## Kubernetes
-
 ```yaml
 # Deploy via kubectl
 - uses: azure/setup-kubectl@v4
@@ -70,9 +58,6 @@ steps:
       --set image.tag=${{ github.sha }} \
       --wait --timeout 5m
 ```
-
-## Slack Notifications
-
 ```yaml
 - name: Notify on failure
   if: failure()
@@ -87,9 +72,6 @@ steps:
   env:
     SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
 ```
-
-## HashiCorp Vault
-
 ```yaml
 - uses: hashicorp/vault-action@v3
   with:
@@ -107,9 +89,6 @@ steps:
     DB_PASSWORD: ${{ steps.vault.outputs.DB_PASSWORD }}
     API_TOKEN: ${{ steps.vault.outputs.API_TOKEN }}
 ```
-
-## Ansible
-
 ```yaml
 - name: Run Ansible playbook
   uses: dawidd6/action-ansible-playbook@v2
@@ -125,9 +104,6 @@ steps:
       --extra-vars "version=${{ github.sha }}"
       --vault-password-file /tmp/vault_pass
 ```
-
-## Terraform
-
 ```yaml
 - uses: hashicorp/setup-terraform@v3
   with:
@@ -145,9 +121,6 @@ steps:
   if: github.ref == 'refs/heads/main'
   run: terraform apply plan.tfplan
 ```
-
-## Jira / GitHub Issue Integration
-
 ```yaml
 # Create Jira ticket on failure
 - name: Create Jira issue on failure
@@ -163,18 +136,3 @@ steps:
     JIRA_USER_EMAIL: ${{ secrets.JIRA_USER_EMAIL }}
     JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
 ```
-
-## Integration Summary
-
-| Platform | Action | Auth Method |
-|---|---|---|
-| AWS | `aws-actions/configure-aws-credentials` | OIDC (keyless) |
-| Azure | `azure/login` | OIDC (keyless) |
-| GCP | `google-github-actions/auth` | Workload Identity Federation |
-| Docker Hub | `docker/login-action` | Username + Access Token |
-| GHCR | `docker/login-action` | `GITHUB_TOKEN` |
-| HashiCorp Vault | `hashicorp/vault-action` | JWT / AppRole |
-| Slack | `slackapi/slack-github-action` | Bot Token |
-| Terraform | `hashicorp/setup-terraform` | Cloud OIDC |
-| Ansible | `dawidd6/action-ansible-playbook` | SSH key secret |
-| Jira | `atlassian/gajira-*` | API Token |

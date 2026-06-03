@@ -1,13 +1,3 @@
-# Pure1 — Scripts
-
-<div class="kb-summary">
-Pure1 Scripts reference covering Authentication, Active Alert Export, Pure1 Meta Anomaly Query, Exponential Backoff for Rate Limiting, Script Inventory.
-</div>
-
-## Authentication
-
-Pure1 REST API v1 uses RSA JWT authentication. The private key is stored in the secrets manager and loaded at runtime. Never store the private key in the repository or in plain text configuration files.
-
 ```python
 import jwt, time, uuid, requests
 from cryptography.hazmat.primitives import serialization
@@ -44,6 +34,8 @@ def pure1_get(path: str, token: str, params: dict = None) -> dict:
     resp = requests.get(f"{PURE1_API}{path}", headers=headers, params=params)
     resp.raise_for_status()
     return resp.json()
+```
+
 ```text
 ┌────────────────────────────────────── Pure1 — Scripts Reference ──────────────────────────────────────┐
 │                                                                                                       │
@@ -76,9 +68,6 @@ def pure1_get(path: str, token: str, params: dict = None) -> dict:
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-## Pure1 Meta Anomaly Query
-
 ```python
 def query_anomalies(token: str) -> list:
     """Return active workload anomalies from Pure1 Meta."""
@@ -94,9 +83,6 @@ def query_anomalies(token: str) -> list:
         for w in data.get("items", [])
     ]
 ```
-
-## Exponential Backoff for Rate Limiting
-
 ```python
 import time, random
 
@@ -115,15 +101,3 @@ def pure1_get_with_retry(path: str, token: str, max_retries: int = 5) -> dict:
         return resp.json()
     raise RuntimeError(f"Max retries exceeded for {path}")
 ```
-
-## Script Inventory
-
-| Script | Purpose | Schedule |
-|---|---|---|
-| `pure1_fleet_health.py` | Query all arrays for health status and export summary | Daily |
-| `pure1_capacity_report.py` | Capacity trend report across all arrays | Weekly |
-| `pure1_alert_export.py` | Export active alerts to CSV for incident review | Daily |
-| `pure1_anomaly_query.py` | Query Pure1 Meta for active workload anomaly detections | Weekly |
-| `pure1_tag_compliance.py` | Report arrays missing mandatory tags (Site, Environment, Owner) | Weekly |
-
-Scripts are stored in `scripts/pure1/`. Load `client_id`, `key_id`, and `private_key_pem` from the secrets manager at runtime. Implement exponential backoff for HTTP 429 responses.

@@ -1,11 +1,3 @@
-# Fibre Channel
-
-
-<div class="kb-summary">
-High-speed serial protocol for Storage Area Network (SAN) connectivity between hosts and storage arrays.
-</div>
-
-        FC END-TO-END PATH
 ```text
 ┌────────┐    ┌─────┐    ┌──────────────┐    ┌─────┐    ┌─────────┐    ┌─────┐
 │  Host  │    │ HBA │    │  FC Switch A │    │ ISL │    │FC Switch│    │Array                           │
@@ -13,9 +5,6 @@ High-speed serial protocol for Storage Area Network (SAN) connectivity between h
 │        │    │WWPN │    │   (F_port)   │    │     │    │(F_port) │    │                                │
 └────────┘    └─────┘    └──────────────┘    └─────┘    └─────────┘    └─────┘
 ```
-   FLOGI ──────────────────────►  FC_ID assigned
-   PLOGI ──────────────────────────────────────────────────────────►
-   PRLI  ──────────────────────────────────────────────────────────►  SCSI session
 ```xml
 
 
@@ -66,6 +55,8 @@ High-speed serial protocol for Storage Area Network (SAN) connectivity between h
 
 ## Health Checks — Cisco MDS
 
+```
+
 ```bash
 ## Port status
 show interface fc brief
@@ -85,9 +76,6 @@ show interface fc1/1 counters errors
 ## Port utilisation
 show interface fc1/1 counters brief
 ```
-
-## Health Checks — Brocade
-
 ```bash
 ## Switch and port status
 switchshow
@@ -105,10 +93,6 @@ cfgactvshow
 ## Per-port stats
 portshow <port-number>
 ```
-
-## Zoning Operations
-
-**Cisco MDS — add initiator to zone:**
 ```bash
 conf t
 zone name <zone-name> vsan <vsan-id>
@@ -116,20 +100,8 @@ zone name <zone-name> vsan <vsan-id>
   member pwwn <storage-wwpn>
 zoneset activate name <zoneset-name> vsan <vsan-id>
 ```
-
-**Brocade — add member to zone:**
 ```bash
 zoneadd "<zone-name>", "<wwpn>"
 cfgsave
 cfgenable "<zoneset-name>"
 ```
-
-## Troubleshooting
-
-| Symptom | Check | Action |
-|---|---|---|
-| Host can't see storage | FLOGI, FCNS, zone | Verify FLOGI registered; confirm both WWPNs in same zone |
-| High port error counters | `porterrshow` / `counters errors` | Check SFP, cable, speed negotiation; replace SFP if CRC errors persist |
-| ISL down | `show interface` / `switchshow` | Check physical cable and SFP on both ends |
-| Slow I/O / high latency | Buffer credit | Check `show interface fc <x> counters` for BB_credit_0 (credit starvation) |
-| VSAN mismatch | `show vsan` (MDS) | Confirm both switch ports are in the same VSAN |

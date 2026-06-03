@@ -1,40 +1,3 @@
-# ServiceNow — Hardening
-
-
-<div class="kb-summary">
-Hardening ServiceNow reduces the risk of privilege escalation, data exfiltration, and integration abuse. The platform's flexibility (scripting, integrations, low-code) makes hardening essential to prevent misconfiguration from becoming a security incident.
-</div>
-
----
-
-## Instance Hardening Properties
-
-Critical system properties for security. Navigate to: System Properties → Security.
-
-### Authentication and Session
-
-| Property | Recommended Value | Description |
-|---|---|---|
-| `glide.authenticate.sso.required` | `true` | Force SAML SSO — disable local login |
-| `glide.ui.session_timeout` | `480` | Session timeout in minutes (8 hours) |
-| `glide.ui.session.idle_timeout` | `30` | Idle timeout in minutes |
-| `glide.cookies.secure` | `true` | Cookies sent over HTTPS only |
-| `glide.cookies.httponly` | `true` | Prevent JavaScript cookie access |
-| `glide.cookies.samesite` | `Strict` | CSRF protection via SameSite |
-| `glide.authenticate.multisession` | `false` | Prevent concurrent sessions per user |
-| `glide.login.show_password` | `false` | Hide show-password toggle |
-
-### Network and Access
-
-| Property | Recommended Value | Description |
-|---|---|---|
-| `glide.http.ssl_check_cert` | `true` | Enforce TLS cert validation outbound |
-| `glide.basicauth.required` | `false` | Disable basic auth (use OAuth/SAML) |
-| `glide.http.outbound.max_redirects` | `3` | Limit redirect chains (SSRF mitigation) |
-| `com.snc.apps.enable_store` | `false` | Disable ServiceNow Store app installs |
-| `glide.ui.escape_text` | `true` | HTML escape output (XSS prevention) |
-| `glide.ui.escape_all_script` | `true` | Escape script content |
-
 ```javascript
 // Bulk verify critical properties via Script Editor
 var criticalProps = {
@@ -51,6 +14,8 @@ Object.keys(criticalProps).forEach(function(prop) {
   var status = (actual === expected) ? 'OK' : 'FAIL';
   gs.info('[' + status + '] ' + prop + ': expected=' + expected + ' actual=' + actual);
 });
+```
+
 ```text
 ┌──────────────────────────────────────── ServiceNow Hardening ─────────────────────────────────────────┐
 │                                                                                                       │
@@ -104,15 +69,6 @@ Object.keys(criticalProps).forEach(function(prop) {
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
----
-
-## Plugin and Update Set Control
-
-Uncontrolled plugins and update sets are a major attack vector in ServiceNow.
-
-### Restricting Plugin Installation
-
 ```javascript
 // Verify that ServiceNow Store installs are disabled
 gs.getProperty('com.snc.apps.enable_store')  // Should be 'false' for prod
@@ -125,16 +81,6 @@ while (plugins.next()) {
     gs.info('Plugin: ' + plugins.name + ' | ID: ' + plugins.id + ' | Version: ' + plugins.version);
 }
 ```
-
-### Update Set Governance
-
-| Stage | Control |
-|---|---|
-| Development | Developers create update sets; peer review required |
-| Testing | Update set deployed to test instance; QA sign-off |
-| Production | Change ticket required; CAB approval for significant changes |
-| Post-deployment | Audit log review; rollback plan documented |
-
 ```javascript
 // Audit update sets deployed to production in last 30 days
 var us = new GlideRecord('sys_update_set');
@@ -146,15 +92,6 @@ while (us.next()) {
     gs.info('Update Set: ' + us.name + ' | By: ' + us.sys_updated_by + ' | On: ' + us.sys_updated_on);
 }
 ```
-
----
-
-## Script Security
-
-ServiceNow allows server-side JavaScript in Business Rules, Script Includes, Workflow Activities, and Scheduled Jobs. These must be hardened.
-
-### Input Validation in Scripts
-
 ```javascript
 // BAD — vulnerable to GlideRecord injection
 var query = "active=true^name=" + request.getParameter('name');
@@ -169,9 +106,6 @@ if (name && /^[a-zA-Z0-9 \-\.]{1,100}$/.test(name)) {
     gr.query();
 }
 ```
-
-### Dangerous API Restrictions
-
 ```javascript
 // These APIs should be restricted in production — flag in code review:
 // GlideRecord.deleteRecord() — destructive
@@ -183,36 +117,6 @@ if (name && /^[a-zA-Z0-9 \-\.]{1,100}$/.test(name)) {
 // ACL: write sys_script — role: admin
 // ACL: write sys_script_include — role: admin
 ```
-
-### Code Review Checklist for ServiceNow Scripts
-
-- [ ] No direct string concatenation in GlideRecord queries
-- [ ] User input validated with regex before use
-- [ ] No hardcoded credentials (use Credential Store)
-- [ ] Outbound HTTP calls use approved endpoints only
-- [ ] `deleteRecord()` calls have confirmation logic
-- [ ] Logs do not contain sensitive field values
-- [ ] Script runs with minimum necessary user context (`gs.setUser()` not used to impersonate)
-
----
-
-## Audit Logging
-
-### Security Audit Log Configuration
-
-Navigate to: System Log → Security Audit Log
-
-| Event | Logged By Default |
-|---|---|
-| Login success | Yes |
-| Login failure | Yes |
-| ACL access denial | Yes |
-| Role assignment change | Yes |
-| ACL modification | Yes |
-| System property change | Yes |
-| Update Set apply | Yes |
-| Script execution (debug mode) | No — enable for investigations |
-
 ```javascript
 // Create a custom security audit entry
 gs.securityAudit(
@@ -233,9 +137,6 @@ while (auditRec.next()) {
     gs.info(auditRec.sys_created_on + ' | ' + auditRec.user_name + ' | ' + auditRec.message);
 }
 ```
-
-### SIEM Integration
-
 ```javascript
 // Forward audit events to SIEM via outbound webhook
 // Business Rule on syslog_transaction (after insert)
@@ -258,15 +159,6 @@ while (auditRec.next()) {
     }
 })(current, previous);
 ```
-
----
-
-## Integration Security Hardening
-
-### IP Allowlisting for Inbound Integrations
-
-Navigate to: System Security → IP Address Restrictions
-
 ```javascript
 // Add IP restriction for an integration endpoint
 var ipRestrict = new GlideRecord('sys_ip_range');
@@ -277,9 +169,6 @@ ipRestrict.ip_address_end = '10.10.5.50';
 ipRestrict.active = true;
 ipRestrict.insert();
 ```
-
-### Disabling Basic Authentication
-
 ```javascript
 // Verify basic auth is disabled for REST APIs
 gs.getProperty('glide.basicauth.required')  // Should be 'false'
@@ -288,9 +177,6 @@ gs.getProperty('glide.basicauth.required')  // Should be 'false'
 // System Web Services → Inbound → REST APIs
 // Authentication: OAuth 2.0 required (not Basic)
 ```
-
-### MID Server Hardening
-
 ```bash
 # Run MID Server as a non-root service account
 useradd -r -s /bin/false snow-mid
@@ -308,37 +194,3 @@ iptables -A OUTPUT -j DROP
 # Verify MID Server version is current
 cat /opt/servicenow/mid/agent/glide-agent.properties | grep "build"
 ```
-
----
-
-## Hardening Checklist
-
-| Control | Priority | Status |
-|---|---|---|
-| SSO enforced (`glide.authenticate.sso.required=true`) | Critical | Check |
-| Basic auth disabled | Critical | Check |
-| MFA enforced for all users via IdP | Critical | Check |
-| Admin count ≤ 5 | Critical | Check |
-| Break-glass account configured and tested | Critical | Check |
-| Session timeout ≤ 8 hours | High | Check |
-| Secure + HttpOnly + SameSite cookies | High | Check |
-| SSL cert verification enabled outbound | High | Check |
-| Field encryption on credential fields | High | Check |
-| Plugin installs blocked (prod) | High | Check |
-| Update set change control enforced | High | Check |
-| Security audit log shipped to SIEM | High | Check |
-| IP allowlisting on inbound integrations | Medium | Check |
-| MID Server runs as non-root account | High | Check |
-| MID Server firewall restricts outbound | High | Check |
-| XSS escaping properties enabled | High | Check |
-| Quarterly role and group access review | High | Schedule |
-| Annual penetration test of instance | High | Schedule |
-| Critical CVE patching within 72 hours | Critical | Policy |
-
----
-
-## Related Pages
-
-- [ServiceNow — Authentication](../authentication/index.md)
-- [ServiceNow — Access Control](../access-control/index.md)
-- [ServiceNow — Encryption](../encryption/index.md)

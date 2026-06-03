@@ -1,18 +1,3 @@
-# Git — CLI Reference
-
-
-<div class="kb-summary">
-Git is the standard distributed version control system. Every developer has a full copy of the repository history — commits, branches, and tags. Changes are staged before committing, and synced with remote repositories via push/pull.
-</div>
-
-> Install: `brew install git` (macOS), `apt install git` (Debian/Ubuntu), or download from git-scm.com. Configure once with `git config --global user.name` and `git config --global user.email`.
-
----
-
-## Setup, Config & Remotes
-
-One-time configuration for Git identity and editor preferences. Remotes are named pointers to other copies of the repository (typically `origin` = the server you cloned from).
-
 ```bash
 # Identity (required — used in every commit you make)
 git config --global user.name "Your Name"
@@ -34,6 +19,8 @@ git remote -v
 git remote add origin <url>
 git remote remove <name>
 git remote set-url origin <new_url>
+```
+
 ```text
 ┌───────────────────────────────────────── Git — CLI Reference ─────────────────────────────────────────┐
 │                                                                                                       │
@@ -79,13 +66,6 @@ git remote set-url origin <new_url>
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
----
-
-## Branches
-
-Branches are cheap and fast in Git — create them freely to isolate work. The modern `git switch` command is cleaner than `git checkout` for branch operations.
-
 ```bash
 # List
 git branch
@@ -109,13 +89,6 @@ git push origin --delete <name> # delete the remote branch
 # Set upstream (track remote branch)
 git branch --set-upstream-to=origin/<name>
 ```
-
----
-
-## Merge & Rebase
-
-Merge integrates changes from another branch. Rebase replays your commits on top of another branch — it creates a linear history but rewrites commits (never rebase shared/pushed commits).
-
 ```bash
 # Merge
 git merge <branch>
@@ -130,13 +103,6 @@ git rebase --continue           # after resolving conflicts
 git rebase --abort
 git rebase --skip
 ```
-
----
-
-## Fetch, Pull & Push
-
-Fetch downloads changes from the remote without applying them. Pull downloads and merges (or rebases) them. Push uploads your commits to the remote.
-
 ```bash
 git fetch
 git fetch --all                 # fetch all remotes
@@ -152,13 +118,6 @@ git push --force-with-lease     # safe force push — fails if remote has change
 git push --tags                 # push all tags
 git push origin :<branch>       # delete a remote branch (older syntax)
 ```
-
----
-
-## Stash
-
-Stash saves your uncommitted changes temporarily so you can switch context. It's a stack — you can have multiple stashes, each identified by `stash@{n}`.
-
 ```bash
 git stash
 git stash push -m "description"  # stash with a label
@@ -169,13 +128,6 @@ git stash drop stash@{0}         # remove a specific stash
 git stash clear                  # remove all stashes
 git stash show -p stash@{0}      # view the diff of a stash
 ```
-
----
-
-## Tags
-
-Tags mark specific commits — typically used for release versions. Annotated tags include a message and are the standard for releases. Lightweight tags are just a pointer to a commit.
-
 ```bash
 git tag                          # list all tags
 git tag <name>                   # create lightweight tag at HEAD
@@ -186,13 +138,6 @@ git push --tags                  # push all tags
 git tag -d <name>                # delete local tag
 git push origin --delete <tag>   # delete remote tag
 ```
-
----
-
-## Reset & Restore
-
-Undo staged changes, discard working directory edits, or move the branch pointer back to an earlier commit. `--hard` discards everything — use with care.
-
 ```bash
 # Unstage a file (keep the changes in working directory)
 git restore --staged <file>
@@ -208,28 +153,12 @@ git reset --hard HEAD~1          # move pointer back, discard all changes
 # Reset to match the remote branch exactly
 git fetch && git reset --hard origin/<branch>
 ```
-
----
-
-## Advanced (Cherry-pick, Bisect, Submodules)
-
-Specialized tools for precise commit selection, binary-search debugging, and managing repositories-within-repositories.
-
-### Cherry-pick
-
-Apply a specific commit from another branch onto the current branch — useful when you want one fix without merging an entire feature branch.
-
 ```bash
 git cherry-pick <commit>
 git cherry-pick <commit1>..<commit2>   # range (exclusive start)
 git cherry-pick --no-commit <commit>   # apply changes without committing
 git cherry-pick --abort
 ```
-
-### Bisect
-
-Binary-search through commit history to find which commit introduced a bug. Git checks out the midpoint, you test and mark good/bad, and it narrows down automatically.
-
 ```bash
 git bisect start
 git bisect bad                   # mark current commit as broken
@@ -238,19 +167,11 @@ git bisect good <commit>         # mark last known working commit
 git bisect good                  # or: git bisect bad
 git bisect reset                 # end bisect session
 ```
-
-### Submodules
-
-Embed another Git repository inside your repo. Useful for vendored dependencies or shared libraries managed separately.
-
 ```bash
 git submodule add <url> <path>
 git submodule update --init --recursive   # after cloning a repo with submodules
 git submodule foreach git pull            # update all submodules to latest
 ```
-
-### Useful Aliases
-
 ```bash
 git config --global alias.lg "log --oneline --graph --all --decorate"
 git config --global alias.undo "reset --soft HEAD~1"

@@ -1,22 +1,3 @@
-# Aria Ops for Logs — Diagnostics
-
-
-<div class="kb-summary">
-Diagnostics reference covering Log File Locations, Generating a Support Bundle, Diagnosing Ingestion Issues, Diagnosing Query Performance Issues, Verifying Agent Connectivity and 1 more sections.
-</div>
-
-## Log File Locations
-
-| Log | Path | Purpose |
-|---|---|---|
-| Runtime / application | `/var/log/loginsight/runtime.log` | Main application events, cluster, and service status |
-| Ingestion | `/var/log/loginsight/ingestion.log` | Log receiving, parsing, and indexing events |
-| Query | `/var/log/loginsight/query.log` | Interactive analytics query execution |
-| Cassandra | `/var/log/loginsight/cassandra/system.log` | Storage backend health and compaction |
-| LI Agent (receiver) | `/var/log/loginsight/agent/agentd.log` | cfapi agent connections |
-| Nginx | `/var/log/nginx/access.log` | HTTP requests to the UI and API |
-| System | `/var/log/messages` | OS-level events, NFS, networking |
-
 ```bash
 # Watch main application log in real time
 tail -f /var/log/loginsight/runtime.log
@@ -25,6 +6,8 @@ tail -f /var/log/loginsight/runtime.log
 grep -i "error\|exception\|fail" /var/log/loginsight/runtime.log | tail -100
 grep -i "error\|drop"           /var/log/loginsight/ingestion.log | tail -50
 grep -i "error\|warn"           /var/log/loginsight/cassandra/system.log | tail -50
+```
+
 ```text
 ┌─────────────────────────────── Aria Operations for Logs — Diagnostics ────────────────────────────────┐
 │                                                                                                       │
@@ -70,17 +53,6 @@ grep -i "error\|warn"           /var/log/loginsight/cassandra/system.log | tail 
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-Via UI: **Administration → Cluster → Support Bundle → Generate and Download**.
-
-The support bundle contains: application logs, Cassandra logs, system metrics, configuration (no passwords), and cluster topology.
-
----
-
-## Diagnosing Ingestion Issues
-
-When log events stop arriving or ingestion rate drops to zero:
-
 ```bash
 # Check ingestion stats
 curl -sk -u 'admin:<password>' \
@@ -98,13 +70,6 @@ logger -n vrli-prod-01.example.local -P 514 -d "test message from diagnostic"
 # Check for ingestion errors (parse failures, dropped events)
 grep -i "drop\|parse error\|overflow" /var/log/loginsight/ingestion.log | tail -50
 ```
-
----
-
-## Diagnosing Query Performance Issues
-
-If interactive analytics queries are slow or time out:
-
 ```bash
 # Check Cassandra compaction status — long compaction can cause query slowness
 ssh admin@vrli-prod-01.example.local
@@ -116,13 +81,6 @@ nodetool info | grep -i "heap"
 # Check current query load
 tail -50 /var/log/loginsight/query.log | grep -i "slow\|timeout\|error"
 ```
-
----
-
-## Verifying Agent Connectivity
-
-When an agent is not delivering logs:
-
 ```bash
 # On the agent host — check agent service
 systemctl status liagentd
@@ -137,13 +95,6 @@ nc -zv vrli-prod-01.example.local 9543
 # Verify agent configuration
 grep -v "^#\|^$" /var/lib/loginsight-agent/liagent.ini
 ```
-
----
-
-## NTP Diagnostics
-
-Certificate operations and log timestamp alignment fail when NTP is not synchronised:
-
 ```bash
 # Check NTP on the Aria Ops for Logs appliance
 chronyc tracking

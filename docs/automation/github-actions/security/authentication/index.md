@@ -1,16 +1,3 @@
-# GitHub Actions — Authentication
-
-
-<div class="kb-summary">
-> Part of the [GitHub Actions Security](../index.md) reference.
-</div>
-
----
-
-## GITHUB_TOKEN
-
-Every workflow run is automatically granted a `GITHUB_TOKEN` — a short-lived token scoped to the repository and the run.
-
 ```yaml
 # Default token usage
 jobs:
@@ -25,6 +12,8 @@ jobs:
         run: |
           curl -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
                https://api.github.com/repos/${{ github.repository }}
+```
+
 ```text
 ┌─────────────────────────────────── GitHub Actions — Authentication ───────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -48,11 +37,6 @@ jobs:
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-## Personal Access Tokens (PAT)
-
-PATs are used when `GITHUB_TOKEN` lacks sufficient scope (e.g., cross-repository operations).
-
 ```bash
 # Create a fine-grained PAT at:
 # GitHub → Settings → Developer settings → Personal access tokens → Fine-grained tokens
@@ -64,16 +48,6 @@ PATs are used when `GITHUB_TOKEN` lacks sufficient scope (e.g., cross-repository
     repository: myorg/other-repo
     token: ${{ secrets.PAT_TOKEN }}
 ```
-
-## Authentication Reference
-
-| Method | Scope | Lifetime | Best for |
-|---|---|---|---|
-| `GITHUB_TOKEN` | Current repo | Single run | Default — most operations |
-| OIDC | Cloud provider | Token per request | AWS, GCP, Azure — no stored secrets |
-| Fine-grained PAT | Selected repos | Days to years | Cross-repo, admin operations |
-| Classic PAT | All repos | Set by user | Legacy — avoid where possible |
-
 ```mermaid
 flowchart LR
     githubToken["GITHUB_TOKEN\nAuto-generated per run\nScoped to repo"]

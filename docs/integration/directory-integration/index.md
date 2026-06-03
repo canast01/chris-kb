@@ -1,14 +1,3 @@
-# Directory Integration
-
-
-<div class="kb-summary">
-Connect Linux and Windows systems to Active Directory or LDAP for centralised authentication, group-based access control, and identity management.
-</div>
-
-## Linux → Active Directory (SSSD)
-
-### Join Domain
-
 ```bash
 # Install required packages (RHEL/Rocky)
 dnf install -y realmd sssd adcli samba-common-tools krb5-workstation
@@ -25,6 +14,8 @@ realm join -U administrator corp.example.com
 # Verify join
 realm list
 id administrator@corp.example.com
+```
+
 ```text
 ┌──────────────────── Integration — Directory Integration (LDAP / Active Directory) ────────────────────┐
 │                                                                                                       │
@@ -57,9 +48,6 @@ id administrator@corp.example.com
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-### Restrict Login to AD Groups
-
 ```bash
 # Allow only members of 'linux-admins' AD group to log in
 realm permit -g linux-admins@corp.example.com
@@ -67,9 +55,6 @@ realm permit -g linux-admins@corp.example.com
 # access_provider = simple
 # simple_allow_groups = linux-admins@corp.example.com
 ```
-
-## Linux → Active Directory (Winbind)
-
 ```bash
 # smb.conf excerpt for AD membership
 [global]
@@ -93,9 +78,6 @@ wbinfo -u        # list domain users
 wbinfo -g        # list domain groups
 wbinfo -i <user> # get user info
 ```
-
-## Linux → LDAP (OpenLDAP / non-AD)
-
 ```bash
 # SSSD with LDAP provider
 # /etc/sssd/sssd.conf
@@ -109,16 +91,12 @@ ldap_default_authtok = <bind-password>
 ldap_tls_reqcert = demand
 ldap_tls_cacert = /etc/ssl/certs/internal-ca.crt
 ```
-
 ```bash
 # Test LDAP query
 ldapsearch -x -H ldaps://ldap.example.com \
   -D "cn=readonly,dc=example,dc=com" -w <password> \
   -b "dc=example,dc=com" "(uid=testuser)" cn mail
 ```
-
-## Windows — Domain Join
-
 ```powershell
 # Join to domain
 Add-Computer -DomainName "corp.example.com" -Credential (Get-Credential) -Restart
@@ -127,9 +105,6 @@ Add-Computer -DomainName "corp.example.com" -Credential (Get-Credential) -Restar
 (Get-WmiObject Win32_ComputerSystem).Domain
 nltest /dsgetdc:corp.example.com
 ```
-
-## Health Checks
-
 ```bash
 # SSSD health
 systemctl status sssd
@@ -147,14 +122,3 @@ sssctl cache-remove -y && systemctl restart sssd
 wbinfo --ping-dc                         # check DC reachable
 net ads testjoin                         # verify machine account still valid
 ```
-
-## Troubleshooting
-
-| Symptom | Check | Action |
-|---|---|---|
-| `id user` returns nothing | SSSD running? DC reachable? | `systemctl status sssd`; `sssctl domain-status` |
-| Authentication failing | Kerberos time drift? | Check `timedatectl`; ensure < 5min skew from DC |
-| Group membership stale | Cache not refreshed | `sssctl cache-expire -u <user>`; or `sssctl cache-remove -y` |
-| `realm join` fails | Firewall blocking Kerberos (88/tcp,udp)? | Open port 88, 389, 636 to DC |
-| Machine account expired | `net ads testjoin` fails | Rejoin: `realm leave` then `realm join` |
-| sudoers / PAM not applying AD groups | SSSD `access_provider` misconfigured | Verify `simple_allow_groups` or `ad_access_filter` |

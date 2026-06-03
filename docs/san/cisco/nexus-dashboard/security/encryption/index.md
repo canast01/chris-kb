@@ -1,26 +1,3 @@
-# Nexus Dashboard — Encryption
-
-
-<div class="kb-summary">
-> Part of the [Nexus Dashboard](../../index.md) reference.
-</div>
-
----
-
-## Overview
-
-Nexus Dashboard encrypts all management traffic in transit using TLS. Sensitive configuration data (credentials, LDAP bind passwords) is encrypted at rest. This page covers TLS configuration, credential storage, backup encryption, and certificate management.
-
----
-
-## Data in Transit
-
-### Web UI and REST API (HTTPS)
-
-All browser and API access uses HTTPS (TLS 1.2 minimum, TLS 1.3 preferred). The ND Nginx ingress handles TLS termination.
-
-#### Verify TLS Version and Ciphers
-
 ```bash
 # Check TLS version accepted
 openssl s_client -tls1 -connect nd-dc1.corp.example.com:443 </dev/null 2>&1 | grep "alert\|Cipher"
@@ -32,6 +9,8 @@ openssl s_client -tls1_3 -connect nd-dc1.corp.example.com:443 </dev/null 2>&1 | 
 # Enumerate ciphers (requires nmap)
 nmap --script ssl-enum-ciphers -p 443 nd-dc1.corp.example.com
 # Acceptable: ECDHE+AESGCM, ECDHE+CHACHA20; No RC4, DES, 3DES, NULL
+```
+
 ```text
 ┌───────────────────────────── Cisco Nexus Dashboard — Security Encryption ─────────────────────────────┐
 │                                                                                                       │
@@ -79,33 +58,10 @@ nmap --script ssl-enum-ciphers -p 443 nd-dc1.corp.example.com
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-### Backup Encryption
-
-ND backups are encrypted with a passphrase using AES-256 when encryption is enabled. Configure under **Admin Console > Operations > Backup > Settings > Enable Encryption**:
-
-1. Set a strong encryption passphrase (20+ characters, stored in vault).
-2. Click **Save**.
-
-**Critical:** The passphrase is required at restore time. Without it, the backup cannot be decrypted. Store the passphrase in vault immediately after setting it.
-
 ```bash
 # The passphrase can also be set via CLI
 acs backup settings --encryption-passphrase-file /home/ndadmin/.nd-backup-pass
 ```
-
-### VM-Level Disk Encryption
-
-The ND nodes' local storage is not encrypted at the OS level by default. Add encryption at the hypervisor layer:
-- **VMware**: enable vSphere VM Encryption on the ND VM datastore. This encrypts all VM disks including the ND data volumes.
-- **Physical appliance**: the Cisco UCS C220 M6 appliance supports self-encrypting drives (SED) with Cisco SafeStore.
-
----
-
-## Certificate Expiry Monitoring
-
-Track the ND UI certificate expiry to ensure renewal well before expiry:
-
 ```bash
 # Check certificate expiry
 openssl s_client -connect nd-dc1.corp.example.com:443 \
@@ -126,20 +82,3 @@ print(f'Certificate expires in {(exp - datetime.utcnow()).days} days ({exp.date(
 "
 # Alert when < 60 days remaining; renew by < 30 days
 ```
-
-Add this check to the weekly health check procedure and configure monitoring alerts for certificate expiry.
-
----
-
-## Encryption Summary
-
-| Data Category | Encryption | Standard |
-|---|---|---|
-| Web UI / REST API traffic | TLS 1.2/1.3 (HTTPS port 443) | Nginx ingress |
-| Switch management (NDFC) | SSH v2 | RSA 2048+ |
-| LDAP authentication traffic | TLS (LDAPS port 636) | |
-| SNMP polling traffic | AES-128 (SNMPv3 authPriv) | |
-| Cluster inter-node traffic | mTLS (mutual TLS) | Kubernetes / etcd |
-| Stored credentials (DB) | AES-GCM (Kubernetes Secrets + etcd encryption) | ND internal key mgmt |
-| Backup archives | AES-256 (passphrase-based) | ND backup encryption |
-| VM disks | vSphere VM Encryption or SED | Hypervisor / hardware |

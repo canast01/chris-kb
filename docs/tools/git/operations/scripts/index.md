@@ -1,16 +1,3 @@
-# Git — Operational Scripts
-
-
-<div class="kb-summary">
-Production-ready shell scripts for common Git platform administration tasks. All scripts are designed to run safely in CI/CD pipelines or as scheduled cron jobs.
-</div>
-
----
-
-## Mass Repository Cloner
-
-Clone or update all repositories in a GitHub Organisation or GitLab Group.
-
 ```bash
 #!/usr/bin/env bash
 # clone-org-repos.sh
@@ -73,6 +60,8 @@ elif [[ "$PLATFORM" == "gitlab" ]]; then
 fi
 
 echo "Done. Repositories in: $DEST_DIR"
+```
+
 ```text
 ┌────────────────────────────────────── Git — Operations Scripts ───────────────────────────────────────┐
 │                                                                                                       │
@@ -118,13 +107,6 @@ echo "Done. Repositories in: $DEST_DIR"
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
----
-
-## Org-Wide Secret Scanner
-
-Scans all repositories in a directory for accidentally committed secrets using pattern matching. Complements tools like `truffleHog` and `gitleaks` with a lightweight local option.
-
 ```bash
 #!/usr/bin/env bash
 # scan-secrets.sh
@@ -196,15 +178,6 @@ echo "Report written to: $REPORT_FILE"
 
 [[ $FINDINGS -gt 0 ]] && exit 1 || exit 0
 ```
-
-**Note:** For production use, replace or augment with [`gitleaks`](https://github.com/gitleaks/gitleaks) or [`truffleHog`](https://github.com/trufflesecurity/trufflehog) for more accurate pattern matching and lower false-positive rates.
-
----
-
-## Webhook Health Checker
-
-Verifies that all configured webhooks on a GitLab group or GitHub org are reachable and returning expected HTTP responses.
-
 ```bash
 #!/usr/bin/env bash
 # webhook-health.sh
@@ -283,13 +256,6 @@ echo ""
 echo "Webhook health check: $TOTAL total, $FAILURES failures"
 [[ $FAILURES -gt 0 ]] && exit 1 || exit 0
 ```
-
----
-
-## LFS Storage Audit
-
-Reports LFS object sizes, identifies large objects, and checks for orphaned LFS pointers.
-
 ```bash
 #!/usr/bin/env bash
 # lfs-audit.sh
@@ -353,18 +319,3 @@ else
   echo ".gitattributes not found"
 fi
 ```
-
----
-
-## Script Reference Summary
-
-| Script | Purpose | Key Inputs | Safe to Run in Prod |
-|--------|---------|------------|---------------------|
-| `clone-org-repos.sh` | Clone/update all org repos | `PLATFORM`, `ORG/GROUP_ID`, token | Yes |
-| `clean-stale-branches.sh` | Find/delete inactive branches | `REPO_PATH`, `STALE_DAYS` | Yes (DRY_RUN=true default) |
-| `commit-activity-report.sh` | Per-author commit stats | `REPO_PATH`, `SINCE` | Yes (read-only) |
-| `scan-secrets.sh` | Pattern-match secrets in history | `REPOS_DIR`, `SINCE` | Yes (read-only) |
-| `webhook-health.sh` | Check webhook endpoint reachability | `PLATFORM`, `ORG/GROUP_ID`, token | Yes (read-only) |
-| `lfs-audit.sh` | LFS object sizes and health | `REPO_PATH` | Yes (read-only) |
-
-> All scripts respect `set -euo pipefail`. Set `DRY_RUN=true` on destructive operations before production use.

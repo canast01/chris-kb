@@ -1,28 +1,3 @@
-# SANnav — CLI Reference
-
-
-<div class="kb-summary">
-> Part of the [SANnav](../../index.md) reference.
-</div>
-
----
-
-## Overview
-
-SANnav provides two CLI interfaces:
-1. **SANnav appliance CLI** — accessed via SSH to the SANnav VM. Used for appliance administration, service management, backup, and upgrade.
-2. **REST API** — the primary interface for automation and integration. Covers all operations available in the GUI.
-
-This page documents the appliance CLI commands and the most commonly used REST API calls.
-
----
-
-## Appliance CLI (SSH)
-
-Connect via SSH: `ssh admin@sannav-dc1.corp.example.com`
-
-### Service Management
-
 ```bash
 # Show status of all SANnav services
 sannav status
@@ -41,6 +16,8 @@ sannav version
 
 # Show license summary
 sannav license
+```
+
 ```text
 ┌─────────────────────────────────── Brocade SANnav — CLI Reference ────────────────────────────────────┐
 │                                                                                                       │
@@ -88,9 +65,6 @@ sannav license
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-### Network Configuration
-
 ```bash
 # Show current IP configuration
 ip addr show eth0
@@ -110,9 +84,6 @@ ldapsearch -H ldaps://ldap.corp.example.com \
   -D "CN=sannav-svc,OU=Service Accounts,DC=corp,DC=example,DC=com" \
   -w <password> -b "DC=corp,DC=example,DC=com" "(sAMAccountName=testuser)"
 ```
-
-### Log Access
-
 ```bash
 # Main application log
 tail -f /opt/sannav/logs/server.log
@@ -132,9 +103,6 @@ grep -i "ERROR\|FATAL\|Exception" /opt/sannav/logs/server.log | tail -100
 # Show system journal (OS-level)
 journalctl -u sannav -n 100 --no-pager
 ```
-
-### Disk and System
-
 ```bash
 # Disk usage
 df -h
@@ -152,13 +120,6 @@ free -h
 # CPU load
 uptime
 ```
-
----
-
-## REST API Quick Reference
-
-### Authentication
-
 ```bash
 # Login — obtain token
 TOKEN=$(curl -sk -X POST https://sannav-dc1.corp.example.com/rest/login \
@@ -172,9 +133,6 @@ echo "Token: $TOKEN"
 curl -sk -X DELETE https://sannav-dc1.corp.example.com/rest/logout \
   -H "Authorization: Bearer $TOKEN"
 ```
-
-### Fabric and Switch Queries
-
 ```bash
 # List all resource groups (fabrics)
 curl -sk https://sannav-dc1.corp.example.com/rest/resourcegroups \
@@ -193,9 +151,6 @@ curl -sk https://sannav-dc1.corp.example.com/rest/resourcegroups/all/ports \
   -H "Authorization: Bearer $TOKEN" \
   | python3 -m json.tool | grep -E '"portState"|"portType"|"portWwn"'
 ```
-
-### Events and Alerts
-
 ```bash
 # Get active alerts (last 100)
 curl -sk "https://sannav-dc1.corp.example.com/rest/resourcegroups/all/events?limit=100&filter=acknowledged:false" \
@@ -205,9 +160,6 @@ curl -sk "https://sannav-dc1.corp.example.com/rest/resourcegroups/all/events?lim
 curl -sk "https://sannav-dc1.corp.example.com/rest/resourcegroups/all/events?switchId=<switchId>" \
   -H "Authorization: Bearer $TOKEN" | python3 -m json.tool
 ```
-
-### Zoning
-
 ```bash
 # Get defined zone set for a fabric
 curl -sk "https://sannav-dc1.corp.example.com/rest/resourcegroups/<fabricId>/zonedb" \
@@ -217,9 +169,6 @@ curl -sk "https://sannav-dc1.corp.example.com/rest/resourcegroups/<fabricId>/zon
 curl -sk "https://sannav-dc1.corp.example.com/rest/resourcegroups/<fabricId>/zones/active" \
   -H "Authorization: Bearer $TOKEN" | python3 -m json.tool
 ```
-
-### Inventory Export
-
 ```bash
 # Export all switches to CSV (use Accept header for CSV format)
 curl -sk https://sannav-dc1.corp.example.com/rest/resourcegroups/all/switches \
@@ -228,9 +177,6 @@ curl -sk https://sannav-dc1.corp.example.com/rest/resourcegroups/all/switches \
 
 echo "Exported to switches-$(date +%Y%m%d).csv"
 ```
-
-### Firmware
-
 ```bash
 # List available firmware images
 curl -sk https://sannav-dc1.corp.example.com/rest/firmware/images \
@@ -246,11 +192,6 @@ curl -sk -X POST "https://sannav-dc1.corp.example.com/rest/firmware/upgrade" \
     "activationMode": "AUTO"
   }' | python3 -m json.tool
 ```
-
----
-
-## Useful One-Liners
-
 ```bash
 # Count managed switches by connectivity state
 curl -sk https://sannav-dc1.corp.example.com/rest/resourcegroups/all/switches \

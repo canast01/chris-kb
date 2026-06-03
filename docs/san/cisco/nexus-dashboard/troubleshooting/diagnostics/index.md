@@ -1,22 +1,3 @@
-# Nexus Dashboard — Diagnostics
-
-
-<div class="kb-summary">
-> Part of the [Nexus Dashboard](../../index.md) reference.
-</div>
-
----
-
-## Overview
-
-This page covers diagnostic procedures and log collection steps for investigating Nexus Dashboard platform issues, NDFC fabric management problems, and NDI telemetry issues. It also covers how to collect the support bundle for Cisco TAC escalation.
-
----
-
-## Log Locations
-
-### Platform Logs (ndadmin CLI)
-
 ```bash
 ssh ndadmin@nd-dc1-1.corp.example.com
 
@@ -30,6 +11,8 @@ acs system logs --component security --tail 100
 
 # Show audit log entries (user activity)
 acs system logs --component audit --tail 50
+```
+
 ```text
 ┌───────────────────────── Cisco Nexus Dashboard — Troubleshooting Diagnostics ─────────────────────────┐
 │                                                                                                       │
@@ -77,13 +60,6 @@ acs system logs --component audit --tail 50
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
----
-
-## Cluster Diagnostics
-
-### Node Resource State
-
 ```bash
 # CPU and memory usage per node
 acs system resources
@@ -100,9 +76,6 @@ kubectl get nodes -o wide
 df -h
 du -sh /data/
 ```
-
-### Kubernetes Events
-
 ```bash
 # Recent cluster events (shows pod failures, scheduling issues, etc.)
 kubectl get events --all-namespaces --sort-by='.lastTimestamp' | tail -50
@@ -110,9 +83,6 @@ kubectl get events --all-namespaces --sort-by='.lastTimestamp' | tail -50
 # Events in a specific namespace
 kubectl get events -n ndfc --sort-by='.lastTimestamp' | tail -20
 ```
-
-### etcd Health
-
 ```bash
 # Check etcd cluster health
 ETCDCTL_API=3 etcdctl \
@@ -132,13 +102,6 @@ ETCDCTL_API=3 etcdctl \
 
 # Expected: one LEADER, two followers for a 3-node cluster
 ```
-
----
-
-## NDFC Diagnostics
-
-### Discovery Issues
-
 ```bash
 # Check discovery manager logs for a specific switch
 kubectl logs -n ndfc deployment/ndfc-discovery-manager --tail=500 \
@@ -164,9 +127,6 @@ curl -sk -X POST \
   -H "Content-Type: application/json" \
   -d '{"fabricName":"DC1-FABRIC-A","rediscoverAll":false,"switchSerialNumbers":["<serial>"]}'
 ```
-
-### Zoning Issues
-
 ```bash
 # Check NDFC zone manager logs
 kubectl logs -n ndfc deployment/ndfc-zone-manager --tail=200 \
@@ -178,9 +138,6 @@ show zoneset active vsan <vsan-id>
 show zone status vsan <vsan-id>
 show zone merge-failure vsan <vsan-id>
 ```
-
-### Database Diagnostics
-
 ```bash
 # Connect to NDFC database (PostgreSQL)
 kubectl exec -n ndfc deployment/ndfc-server -- \
@@ -199,13 +156,6 @@ FROM pg_catalog.pg_statio_user_tables
 ORDER BY pg_relation_size(relid) DESC
 LIMIT 10;"
 ```
-
----
-
-## NDI Diagnostics
-
-### Telemetry Collection
-
 ```bash
 # Check NDI flow collector pod
 kubectl get pods -n ndi | grep collector
@@ -221,9 +171,6 @@ kubectl exec -n ndi deployment/ndi-elasticsearch -- \
   curl -sk http://localhost:9200/_cat/allocation?v
 # If disk.percent > 85%: Elasticsearch watermark triggered, stops accepting writes
 ```
-
-### NDI Anomaly Engine
-
 ```bash
 # Check anomaly engine logs
 kubectl logs -n ndi deployment/ndi-anomaly-engine --tail=200 | grep -i "error\|fail"
@@ -232,11 +179,6 @@ kubectl logs -n ndi deployment/ndi-anomaly-engine --tail=200 | grep -i "error\|f
 kubectl exec -n ndi deployment/ndi-anomaly-engine -- \
   curl -sk http://nd-license-service/api/v1/licenses | python3 -m json.tool | grep -i "ndi\|insights"
 ```
-
----
-
-## Network Diagnostics
-
 ```bash
 ssh ndadmin@nd-dc1-1.corp.example.com
 
@@ -253,11 +195,6 @@ kubectl exec -n ndfc deployment/ndfc-discovery-manager -- \
 kubectl exec -n ndfc deployment/ndfc-server -- \
   timeout 30 tcpdump -i eth0 -n udp port 162 -c 10
 ```
-
----
-
-## Performance Diagnostics
-
 ```bash
 # ND cluster resource snapshot
 acs system resources
@@ -278,13 +215,6 @@ time curl -sk \
   -H "Authorization: Bearer ${TOKEN}" > /dev/null
 # Expected: < 5 seconds for < 200 switches
 ```
-
----
-
-## Increasing Log Verbosity (Temporary)
-
-For active troubleshooting, temporarily increase log verbosity on NDFC:
-
 ```bash
 # Patch NDFC server log level to DEBUG
 kubectl set env deployment/ndfc-server -n ndfc LOG_LEVEL=DEBUG
@@ -297,5 +227,3 @@ kubectl set env deployment/ndfc-server -n ndfc LOG_LEVEL=INFO
 kubectl rollout restart deployment/ndfc-server -n ndfc
 kubectl rollout status deployment/ndfc-server -n ndfc
 ```
-
-DEBUG logging generates large volumes and may impact performance. Revert to INFO as soon as the issue is reproduced and logs collected.

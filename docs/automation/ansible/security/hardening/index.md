@@ -1,14 +1,3 @@
-# Ansible — Hardening
-
-
-<div class="kb-summary">
-> Part of the [Ansible Security](../index.md) reference.
-</div>
-
-## Control Node Hardening
-
-### OS Baseline
-
 ```bash
 # Dedicated control node — no shared use
 # RHEL/Rocky 9 minimal install
@@ -37,6 +26,8 @@ X11Forwarding no
 AllowAgentForwarding no
 EOF
 systemctl reload sshd
+```
+
 ```text
 ┌───────────────────────────────────────── Ansible — Hardening ─────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -62,11 +53,6 @@ systemctl reload sshd
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-## AWX / AAP Hardening
-
-### Network Exposure
-
 ```bash
 # Restrict AWX ingress — only allow from known CIDRs
 # Kubernetes NetworkPolicy example
@@ -91,9 +77,6 @@ spec:
           port: 8052
 EOF
 ```
-
-### TLS Configuration
-
 ```bash
 # Force TLS 1.2+ on AWX web service
 # /etc/tower/conf.d/tls.py
@@ -103,9 +86,6 @@ CSRF_COOKIE_SECURE = True
 SECURE_HSTS_SECONDS = 63072000
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 ```
-
-### Session and Token Security
-
 ```yaml
 # AWX Settings → System
 AWX_PROOT_ENABLED: true           # job isolation
@@ -120,11 +100,6 @@ OAUTH2_PROVIDER:
   ACCESS_TOKEN_EXPIRE_SECONDS: 31536000
   REFRESH_TOKEN_EXPIRE_SECONDS: 2628000
 ```
-
-### Execution Environment Isolation
-
-Execution Environments (EEs) run Ansible inside containers, preventing control node filesystem access from job runs:
-
 ```yaml
 # AWX job template — always assign an EE
 execution_environment: "Default EE"   # or custom validated EE
@@ -147,11 +122,6 @@ additional_build_steps:
   append_final:
     - RUN pip install --no-cache-dir hvac  # HashiCorp Vault client
 ```
-
-## Managed Node Hardening
-
-### Sudoers Lockdown
-
 ```bash
 # /etc/sudoers.d/ansible — restrict to required commands only
 ansible ALL=(root) NOPASSWD: \
@@ -165,17 +135,11 @@ ansible ALL=(root) NOPASSWD: \
 # Disable requiretty for ansible (needed for pipelining)
 Defaults:ansible !requiretty
 ```
-
-### SSH Restrictions for ansible Account
-
 ```bash
 # Restrict by source IP using authorized_keys options
 # /home/ansible/.ssh/authorized_keys
 from="10.0.50.10",no-agent-forwarding,no-X11-forwarding,no-port-forwarding ssh-ed25519 AAAA... ansible-control@prod
 ```
-
-## Secrets Management Hardening
-
 ```yaml
 # Enforce no_log on all credential-touching tasks
 - name: Configure application secrets
@@ -196,9 +160,6 @@ from="10.0.50.10",no-agent-forwarding,no-X11-forwarding,no-port-forwarding ssh-e
   failed_when: secret_scan.rc == 0
   changed_when: false
 ```
-
-## Compliance Scanning
-
 ```yaml
 # Run OpenSCAP scan as part of Ansible playbook
 - name: Run CIS benchmark scan
@@ -219,18 +180,3 @@ from="10.0.50.10",no-agent-forwarding,no-X11-forwarding,no-port-forwarding ssh-e
     dest: "reports/{{ inventory_hostname }}-cis-{{ ansible_date_time.date }}.html"
     flat: true
 ```
-
-## Hardening Checklist
-
-| Item | Control | Check |
-|---|---|---|
-| Control node dedicated | No shared use | `last` — only ansible/admins |
-| SSH key auth only | `PasswordAuthentication no` | `sshd -T | grep password` |
-| StrictHostKeyChecking on | `host_key_checking = True` | ansible.cfg |
-| No plaintext secrets in repo | All in Vault | `git grep -i password` |
-| no_log on sensitive tasks | Present on all cred tasks | Code review |
-| AWX TLS enforced | HTTPS only | curl -I http:// returns 301 |
-| EE isolation enabled | Job template EE assigned | AWX UI |
-| Audit logging active | log_path set | ansible.cfg |
-| sudo scoped by command | sudoers file reviewed | `visudo -c` |
-| Regular vault password rotation | Scheduled quarterly | Runbook |

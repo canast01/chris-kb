@@ -1,15 +1,3 @@
-# SRDF-A — Scripts
-
-
-<div class="kb-summary">
-> Part of the [SRDF/A](../../index.md) reference.
-</div>
-
----
-## SRDF/A Cycle Time Monitor (Bash)
-
-Use SYMCLI to query SRDF/A cycle time and delta set processing time for a given RDF group, compare against configurable thresholds, and print the last 10 samples for trend visibility.
-
 ```bash
 #!/usr/bin/env bash
 # srdf-cycle-time-monitor.sh
@@ -83,6 +71,8 @@ fi
 
 echo ""
 exit ${EXIT_CODE}
+```
+
 ```text
 ┌────────────────────────────────────────── SRDF/A — Scripts ───────────────────────────────────────────┐
 │                                                                                                       │
@@ -165,17 +155,6 @@ exit ${EXIT_CODE}
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-**What you should see**
-
-Timestamped log lines for each step: verifying Synchronized state, suspending, waiting for Suspended confirmation, splitting, and checking R2 device states. After completion, instructions are printed for the host team. A log file is written to `/var/log/`.
-
----
-
-## SRDF Resync After DR Test (Bash)
-
-Re-establish and resynchronize SRDF relationships back to production after a DR test, once the host team confirms they have unmounted R2 copies.
-
 ```bash
 #!/usr/bin/env bash
 # srdf-resync-after-dr-test.sh
@@ -273,49 +252,10 @@ log "=== RESYNC COMPLETE ==="
 log "Production SRDF replication is restored."
 log "Log: ${LOGFILE}"
 ```
-
-### How to run this script — step by step
-
-**Before you start — what you need**
-- A Linux server with SYMCLI installed and connectivity to the PowerMax array
-- Confirmation from the DR/host team that all applications have been stopped and R2 LUNs unmounted on the DR site servers
-- The SID, RDF group number, and Consistency Group name
-
-**Step 1 — Save the file**
-
-1. Open a text editor on the SYMCLI Linux management server
-2. Copy the entire code block above
-3. Save it as `srdf-resync-after-dr-test.sh`
-
-**Step 2 — Fill in your details**
-
-| Variable | What to put here | How to find it |
-|---|---|---|
-| `SID` | Symmetrix array serial number | `symcfg list` |
-| `RDF_GROUP` | RDF group number | `symrdf list -sid <SID>` |
-| `CG_NAME` | Consistency group name | `symcg list -sid <SID>` |
-
-**Step 3 — Open a terminal**
-
-- **For .sh:** Log into the SYMCLI Linux management server and open a terminal
-
-**Step 4 — Make the script executable and run it**
-
 ```bash
 chmod +x srdf-resync-after-dr-test.sh
 SID=000123456789 RDF_GROUP=1 CG_NAME=MyAppCG ./srdf-resync-after-dr-test.sh
 ```
-
-**What you should see**
-
-A prompt asking you to confirm that DR hosts have stopped I/O and unmounted R2 LUNs — type `yes` to continue. Then timestamped log lines showing the establish command, followed by progress polling every 30 seconds (e.g. `5/50 Synchronized, 45 still Syncing...`). When complete: `RESYNC COMPLETE — Production SRDF replication is restored.`
-
----
-
-## Windows: SRDF/A State Check via Unisphere REST API (PowerShell)
-
-Query the Unisphere for PowerMax REST API from a Windows PC to list all SRDF/A pairs, their replication state, and flag any volume not in Consistent or Synchronized state.
-
 ```powershell
 # srdf-a-state-check-windows.ps1
 # Usage: .\srdf-a-state-check-windows.ps1 -UnisphereHost <IP> -UnisphereUser <user> -UnispherePass <pass> -SID <array_serial> -RdfGroup <group_num>
@@ -433,60 +373,13 @@ try {
     exit 1
 }
 ```
-
-### How to run this script — step by step
-
-**Before you start — what you need**
-- Windows 10 or 11 with PowerShell (already installed)
-- Network access to the Unisphere for PowerMax server on port 8443 from your Windows PC
-- Unisphere credentials (not the array credentials — the Unisphere management server credentials)
-- The PowerMax / VMAX array serial number (SID) and the RDF group number
-
-**Step 1 — Save the file**
-
-1. Open **Notepad** (Windows key → search Notepad)
-2. Copy the entire code block above
-3. Click **File → Save As**
-4. Change "Save as type" to **All Files**
-5. Save it as `srdf-a-state-check-windows.ps1` on your Desktop
-
-**Step 2 — Fill in your details**
-
-| Variable | What to put here | How to find it |
-|---|---|---|
-| `$UnisphereHost` | Unisphere for PowerMax server IP or hostname | Ask your storage admin — this is the management server, not the array |
-| `$UnisphereUser` | Unisphere username | Usually `smc` or your storage admin user |
-| `$UnispherePass` | Unisphere password | Your Unisphere login password |
-| `$SID` | PowerMax array serial number | Shown on the Unisphere dashboard, e.g. `000123456789` |
-| `$RdfGroup` | RDF group number for your SRDF/A pair | Shown in Unisphere under Replication > SRDF Groups |
-
-**Step 3 — Open a terminal**
-
-Windows key → search `PowerShell` → right-click → **Run as Administrator**
-
-**Step 4 — Allow scripts to run**
-
 ```powershell
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 ```
-
-**Step 5 — Run the script**
-
 ```bash
 cd C:\Users\YourName\Desktop
 .\srdf-a-state-check-windows.ps1 -UnisphereHost 192.168.1.200 -UnisphereUser smc -UnispherePass MyPassword -SID 000123456789 -RdfGroup 1
 ```
-
-**What you should see**
-
-Confirmation that the RDF group exists on the array, then a table listing every volume in the group with its R1 state, R2 state, mode (SRDF/A), and delta mark value. Volumes in Consistent or Synchronized state are shown in green. Any volume in any other state (Suspended, Split, etc.) is shown in red. The final line gives the overall result.
-
----
-
-## Windows: SRDF/A Cycle Time Check via Plink (CMD)
-
-Use plink.exe to SSH to the SYMCLI Linux management server and run SYMCLI commands to check SRDF/A pair states and verify replication — without needing SYMCLI installed on your Windows PC.
-
 ```batch
 @echo off
 REM srdf-a-cycle-check.bat — SRDF/A state check via SSH to SYMCLI host (plink)
@@ -539,64 +432,13 @@ echo ----------------------------------------
 echo.
 echo Done.
 ```
-
-### How to run this script — step by step
-
-**Before you start — what you need**
-- PuTTY installed on Windows — download from https://www.putty.org
-- A Linux management server with Dell EMC SYMCLI (Solutions Enabler) installed — this is where the script sends its commands
-- SSH access from your Windows PC to that Linux SYMCLI server
-- The PowerMax array serial number (SID) and the RDF group number
-
-**Step 1 — Save the file**
-
-1. Open **Notepad** (Windows key → search Notepad)
-2. Copy the entire code block above
-3. Click **File → Save As**
-4. Change "Save as type" to **All Files**
-5. Save it as `srdf-a-cycle-check.bat` on your Desktop
-
-**Step 2 — Fill in your details**
-
-Open the saved file and change these lines near the top:
-
-| Variable | What to put here | How to find it |
-|---|---|---|
-| `SYMCLI_HOST` | IP address of the Linux SYMCLI management server | Ask your storage admin — this is NOT the array IP |
-| `SSH_USER` | SSH username on the SYMCLI server | Usually a dedicated symcli user, e.g. `symadmin` |
-| `SID` | PowerMax array serial number | Run `symcfg list` on the SYMCLI server, or ask your storage admin |
-| `RDF_GROUP` | RDF group number | Run `symrdf list -sid <SID>` on the SYMCLI server |
-| `PLINK` | Path to plink.exe | Default `plink.exe` if PuTTY is in PATH, or full path like `C:\Program Files\PuTTY\plink.exe` |
-
-**Step 3 — Accept the SSH fingerprint first (one-time step)**
-
-Open Command Prompt and run:
 ```text
 plink.exe -ssh symadmin@192.168.1.50
 ```
-Type `y` when asked, then Ctrl+C. Do this once per SYMCLI host.
-
-**Step 4 — Open a terminal**
-
-Open **Command Prompt**: Windows key → search `cmd` → press Enter
-
-**Step 5 — Run the script**
-
 ```bash
 cd C:\Users\YourName\Desktop
 srdf-a-cycle-check.bat
 ```
-
-**What you should see**
-
-Three sections: SRDF/A pair list showing all device pairs and their current state (Consistent/Synchronized/etc.), a pair state verification output confirming pairs are in the expected state, and a detailed cycle time query showing current SRDF/A cycle time and delta set processing time. Any pairs not in a healthy state will be clearly visible in the output.
-
----
-
-## Daily Check Script
-
-SSH to the SYMCLI management host and check SRDF/A pair states. Flags any pairs not in Consistent or Synchronized state and detects Transmit_Idle, Split, or Mixed conditions.
-
 ```bash
 #!/bin/bash
 # srdf_daily_check.sh
@@ -636,13 +478,6 @@ echo ""
 echo "Daily check: $FAIL failure(s)"
 [ "$FAIL" -gt 0 ] && exit 2 || exit 0
 ```
-
----
-
-## Incident Triage Script
-
-Capture a full SRDF/A diagnostic snapshot to a timestamped file via SSH to the SYMCLI host.
-
 ```bash
 #!/bin/bash
 # srdf_triage.sh
@@ -676,13 +511,6 @@ ssh_cmd() { ssh $SSH_OPTS "$SSH_USER@$SYMCLI_HOST" "$1" 2>/dev/null; }
 
 echo "Triage data saved to: $OUTFILE"
 ```
-
----
-
-## Change Pre-Check Script
-
-Validate SRDF/A pair state before R1 or R2 storage maintenance. Exits 2 on any failure.
-
 ```bash
 #!/bin/bash
 # srdf_precheck.sh
@@ -731,13 +559,6 @@ echo ""
 echo "Pre-check: $FAIL failure(s)"
 [ "$FAIL" -gt 0 ] && exit 2 || exit 0
 ```
-
----
-
-## Post-Change Validation Script
-
-Confirm all SRDF/A pairs have returned to Consistent state after maintenance and RPO is within SLA.
-
 ```bash
 #!/bin/bash
 # srdf_postcheck.sh
@@ -778,13 +599,6 @@ echo ""
 echo "Post-change validation: $FAIL failure(s)"
 [ "$FAIL" -gt 0 ] && exit 2 || exit 0
 ```
-
----
-
-## Health Check Script
-
-Cron-safe summary: total pairs, pairs Consistent, pairs degraded, delta mark count, and link utilization. Exits 0 (OK), 1 (WARNING), or 2 (CRITICAL).
-
 ```bash
 #!/bin/bash
 # srdf_health_check.sh

@@ -1,18 +1,3 @@
-# Aria Operations for Networks — Common Issues
-
-
-<div class="kb-summary">
-Common Issues reference covering Collector Shows Disconnected, vCenter Sync Failing, NSX Topology Not Visible, No Flows Visible, Flow Data Is Stale and 2 more sections.
-</div>
-
----
-
-## Collector Shows Disconnected
-
-**Symptoms:** Collector listed in Settings → Infrastructure → Collectors as "Disconnected" or "Not Reachable"
-
-**Diagnosis steps:**
-
 ```bash
 # From Collector VM — test connectivity to Platform VM
 curl -sk https://<platform-vm-ip>/api/ni/auth/token
@@ -26,6 +11,8 @@ sudo systemctl start hms   # restart if stopped
 # Check Collector disk usage (stops uploading when >85% full)
 df -h
 sudo journalctl --vacuum-size=1G   # free journal space
+```
+
 ```text
 ┌───────────────────────────────────────── vRNI Common Issues ──────────────────────────────────────────┐
 │                                                                                                       │
@@ -71,5 +58,3 @@ sudo journalctl --vacuum-size=1G   # free journal space
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-After entering new key, verify data source collection resumes (check last-sync timestamps in Settings → Data Sources).

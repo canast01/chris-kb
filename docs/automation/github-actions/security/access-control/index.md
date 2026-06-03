@@ -1,12 +1,3 @@
-# GitHub Actions — Access Control
-
-
-<div class="kb-summary">
-> Part of the [GitHub Actions Security](../index.md) reference.
-</div>
-
-## Secrets Management
-
 ```mermaid
 flowchart TD
     wfTrigger(["Workflow triggered"])
@@ -24,7 +15,6 @@ flowchart TD
     orgSecret --> secretCtx
     secretCtx --> step
 ```
-
 ```text
 ┌─────────────────────────────────── GitHub Actions — Access Control ───────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -48,25 +38,11 @@ flowchart TD
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-permissions:
-  id-token: write
-  contents: read
-
-steps:
-  - uses: aws-actions/configure-aws-credentials@v4
-    with:
-      role-to-assume: arn:aws:iam::123456789012:role/github-actions-role
-      aws-region: eu-west-1
-
-  - uses: azure/login@v2
-    with:
-      client-id: ${{ secrets.AZURE_CLIENT_ID }}
-      tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-      subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 ```text
 
 ## Workflow Permissions
+
+```
 
 ```yaml
 ## Minimal permissions — default deny, grant explicitly
@@ -78,12 +54,6 @@ permissions:
 ## Never use:
 ## permissions: write-all
 ```
-
-!!! warning "Fork PRs and secrets"
-    Workflows triggered by pull requests from forks do NOT have access to secrets by default. Only use `pull_request_target` (with extreme care) if secrets are needed from fork PRs. Prefer `pull_request` without secrets for untrusted code.
-
-## Environment Protection Rules
-
 ```yaml
 ## Workflow — reference environment to trigger protection
 jobs:
@@ -95,18 +65,6 @@ jobs:
         env:
           DB_PASSWORD: ${{ secrets.PROD_DB_PASSWORD }}
 ```
-
-Configure in **Repo Settings → Environments → production**:
-
-| Setting | Value |
-|---|---|
-| Required reviewers | 1–6 people who must approve |
-| Wait timer | Minutes to wait before deployment starts |
-| Allowed branches | `main` only (prevent deploy from feature branches) |
-| Prevent self-review | Deployer cannot be their own approver |
-
-## `GITHUB_TOKEN` Permissions
-
 ```yaml
 ## Restrict GITHUB_TOKEN to read-only by default (org or repo setting)
 ## Then grant write only where needed
@@ -117,16 +75,12 @@ permissions:
   issues: write         # only for issue management workflows
   packages: write       # only for container image publish
 ```
-
 ```bash
 ## Set default token permissions at org level
 gh api --method PATCH orgs/ORG \
   -f members_can_create_repositories=false \
   --field default_workflow_permissions=read
 ```
-
-## Self-Hosted Runner Security
-
 ```yaml
 ## Restrict which workflows can use self-hosted runners
 ## Settings → Actions → Runner groups → Restrict to selected repositories
@@ -136,10 +90,6 @@ runs-on:
   group: prod-runners          # named runner group
   labels: [self-hosted, linux]
 ```
-
-!!! warning "Self-hosted runner risks"
-    Self-hosted runners in public repositories are a high-risk attack surface. Malicious PRs can execute arbitrary code on the runner host. Restrict self-hosted runners to private repositories or trusted workflow triggers only.
-
 ```yaml
 ## Safe pattern — only run privileged jobs on self-hosted for protected branches
 jobs:
@@ -147,9 +97,6 @@ jobs:
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     runs-on: [self-hosted, linux, prod]
 ```
-
-### Runner Hardening
-
 ```bash
 ## Run runner as a dedicated non-root user
 useradd -r -s /sbin/nologin -m -d /home/github-runner github-runner
@@ -161,9 +108,6 @@ useradd -r -s /sbin/nologin -m -d /home/github-runner github-runner
 ## Restrict runner network access (only allow required endpoints)
 ## github.com, api.github.com, objects.githubusercontent.com, *.actions.githubusercontent.com
 ```
-
-## Secret Scanning
-
 ```bash
 ## Enable secret scanning and push protection via API
 gh api --method PATCH repos/ORG/REPO \
@@ -173,9 +117,6 @@ gh api --method PATCH repos/ORG/REPO \
 ## List alerts
 gh api repos/ORG/REPO/secret-scanning/alerts | jq '.[] | {state, secret_type, html_url}'
 ```
-
-## Audit Log
-
 ```bash
 ## Org audit log — all Actions-related events
 gh api orgs/ORG/audit-log \
@@ -189,9 +130,6 @@ gh api orgs/ORG/audit-log \
   -f phrase="action:org.actions_secret" \
   | jq '.[] | {action, actor, name: .config.secret_name}'
 ```
-
-## Preventing Secret Leaks
-
 ```yaml
 ## Mask a dynamically generated value
 - name: Generate and mask token

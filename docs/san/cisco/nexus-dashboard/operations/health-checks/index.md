@@ -1,29 +1,3 @@
-# Nexus Dashboard — Health Checks
-
-
-<div class="kb-summary">
-> Part of the [Nexus Dashboard](../../index.md) reference.
-</div>
-
----
-
-## Overview
-
-Run these checks on a scheduled basis — daily for active SAN environments, weekly minimum for all production ND clusters. Checks are performed via the Nexus Dashboard UI, CLI (`ndadmin`), and REST API.
-
----
-
-## 1. ND Cluster Node Health
-
-### UI
-
-Navigate to **Admin Console > Infrastructure > Cluster Configuration** or **Admin Console > System > Nodes**:
-- All nodes should show **Healthy** status (green)
-- No node should be in **Unknown**, **Unavailable**, or **Degraded** state
-- CPU and memory usage per node should be below 80%
-
-### CLI (ndadmin)
-
 ```bash
 # SSH to any cluster node
 ssh ndadmin@nd-dc1-1.corp.example.com
@@ -42,6 +16,8 @@ acs apps status
 # Show any failing Kubernetes pods
 kubectl get pods --all-namespaces | grep -Ev "Running|Completed"
 # Zero output = all pods healthy; any output needs investigation
+```
+
 ```text
 ┌────────────────────────── Cisco Nexus Dashboard — Operations Health Checks ───────────────────────────┐
 │                                                                                                       │
@@ -89,44 +65,6 @@ kubectl get pods --all-namespaces | grep -Ev "Running|Completed"
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
----
-
-## 6. ISL Utilization Review (NDFC)
-
-Navigate to **NDFC > Fabrics > [Fabric] > ISLs**:
-- All ISLs should be in **Up** state
-- Review utilization columns — any ISL consistently above 70% requires capacity review
-
-For historical trending:
-- Navigate to **NDFC > Monitor > Performance > ISLs**
-- Set time range to **Last 7 Days**
-- Identify peak utilization periods and whether they are growing
-
----
-
-## 7. Active Alarms (NDFC)
-
-Navigate to **NDFC > Monitor > Alarms > Active Alarms**:
-
-| Severity | Action |
-|---|---|
-| Critical | Immediate investigation |
-| Major | Investigate within 4 hours |
-| Minor | Review daily |
-
-Acknowledge alarms that are actively being investigated. Clear alarms where the underlying condition has been resolved. Unacknowledged alarms accumulate and mask new events.
-
----
-
-## 8. Backup Status
-
-Navigate to **Admin Console > Operations > Backup & Restore**:
-- Confirm the last scheduled backup completed successfully
-- Backup age should be within the configured frequency window (weekly = should be ≤ 8 days old)
-- Remote backup destination should be configured (not local-only)
-
-From CLI:
 ```bash
 ssh ndadmin@nd-dc1-1.corp.example.com
 
@@ -136,11 +74,6 @@ acs backup list
 # Check backup destination
 acs backup remote show
 ```
-
----
-
-## 9. Certificate Expiry Check
-
 ```bash
 # Check ND UI certificate expiry
 openssl s_client -connect nd-dc1.corp.example.com:443 \
@@ -160,11 +93,6 @@ print(f'Expires in {(exp - datetime.utcnow()).days} days ({exp.date()})')
 "
 # Alert if < 60 days remaining
 ```
-
----
-
-## 10. NTP Synchronization
-
 ```bash
 ssh ndadmin@nd-dc1-1.corp.example.com
 
@@ -181,21 +109,3 @@ for n in nodes:
 "
 # All nodes should show times within 1 second of each other
 ```
-
----
-
-## Weekly Health Check Summary
-
-| Check | Pass Criterion | Location |
-|---|---|---|
-| All ND nodes healthy | All: Healthy | Admin Console > Nodes |
-| All NDFC app pods Running | 0 non-Running pods | kubectl / Admin Console |
-| All switches manageable | 0 Unmanageable | NDFC > Fabrics |
-| All VSANs active | 0 Isolated VSANs | NDFC > VSANs |
-| All ISLs up | 0 ISL down | NDFC > ISLs |
-| ISL utilization | No ISL > 70% sustained | NDFC > Performance |
-| NDI anomalies reviewed | 0 unacknowledged Critical | NDI > Anomalies |
-| No unacknowledged NDFC critical alarms | 0 | NDFC > Alarms |
-| Backup successful | ≤ 8 days old | Admin Console > Backup |
-| NTP synchronized | Yes, < 50ms offset | ndadmin CLI |
-| TLS certificate | > 60 days remaining | openssl CLI |

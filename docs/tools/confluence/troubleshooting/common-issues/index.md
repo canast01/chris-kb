@@ -1,47 +1,3 @@
-# Confluence — Common Issues
-
-
-<div class="kb-summary">
-Reference table of the most frequent Confluence operational problems, with root causes and resolution steps. Each issue includes the exact commands or UI steps needed to resolve it.
-</div>
-
----
-
-## Issue Index
-
-| # | Issue | Primary Symptom |
-|---|---|---|
-| 1 | [Out of Memory (OOM)](#1-out-of-memory) | `OutOfMemoryError` in logs; service crash |
-| 2 | [Slow Page Performance](#2-slow-page-performance) | Pages take > 5 s to load |
-| 3 | [Search Index Failure](#3-search-index-failure) | Search returns no results or stale results |
-| 4 | [LDAP Sync Issues](#4-ldap-sync-issues) | Users cannot log in; directory sync fails |
-| 5 | [Plugin Conflicts](#5-plugin-conflicts) | Plugin throws errors; breaks pages |
-| 6 | [Login Failures](#6-login-failures) | Users cannot authenticate |
-| 7 | [Attachment Upload Failures](#7-attachment-upload-failures) | Upload errors; files not accessible |
-| 8 | [Database Connection Exhaustion](#8-database-connection-exhaustion) | Errors acquiring DB connection |
-| 9 | [Cluster Split-Brain (DC)](#9-cluster-split-brain-data-center) | Nodes out of sync; conflicting caches |
-| 10 | [Mail Notification Failures](#10-mail-notification-failures) | Users not receiving email alerts |
-
----
-
-## 1. Out of Memory
-
-**Symptoms**
-
-- `java.lang.OutOfMemoryError: Java heap space` in `atlassian-confluence.log`
-- `java.lang.OutOfMemoryError: GC overhead limit exceeded`
-- Confluence becomes unresponsive; Tomcat auto-restarts (if configured)
-- JVM heap dump written to disk if `-XX:+HeapDumpOnOutOfMemoryError` is set
-
-**Root Causes**
-
-- Heap (`-Xmx`) sized too small for the current load or content volume
-- Memory leak in a Marketplace plugin
-- Excessive concurrent users or large page exports triggering bulk object allocation
-- Large attachments or office document conversions exhausting memory
-
-**Diagnosis**
-
 ```bash
 # Check heap size in setenv.sh
 grep -E "(Xmx|Xms)" /opt/atlassian/confluence/bin/setenv.sh
@@ -56,6 +12,8 @@ ls -lh /var/atlassian/application-data/confluence/dumps/*.hprof 2>/dev/null
 CONF_PID=$(pgrep -f confluence | head -1)
 jstat -gcutil "$CONF_PID" 5000 5   # 5 samples, 5-second interval
 # "O" column = Old generation %. Alert if > 90% consistently
+```
+
 ```text
 ┌───────────────────────────────────── Confluence — Common Issues ──────────────────────────────────────┐
 │                                                                                                       │
@@ -101,29 +59,6 @@ jstat -gcutil "$CONF_PID" 5000 5   # 5 samples, 5-second interval
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
----
-
-## 2. Slow Page Performance
-
-**Symptoms**
-
-- Pages take > 5 seconds to load; `pageload` timer in browser > 5 000 ms
-- PostgreSQL slow query log shows queries > 1 s on Confluence tables
-- JVM GC log shows frequent GC pauses (> 500 ms)
-- High CPU on Confluence host during page renders
-
-**Common Root Causes**
-
-| Cause | Check |
-|---|---|
-| Missing DB index on a Confluence table | `pg_stat_activity` slow queries; `EXPLAIN ANALYZE` |
-| JQL macro fetching large result sets | Edit page → inspect Jira Issues macros; reduce row limit |
-| JVM heap too small → GC pressure | GC log pause frequency; increase `-Xmx` in `setenv.sh` |
-| Macro performance warning suppressed | Enable `com.atlassian.confluence.macro = WARN` in logging |
-
-**Fix**
-
 ```bash
 # 1. Run VACUUM ANALYZE on the Confluence database
 psql -h "$DB_HOST" -U "$DB_USER" -d "$DB_NAME" \
@@ -139,26 +74,6 @@ psql -h "$DB_HOST" -U "$DB_USER" -d "$DB_NAME" \
 # Admin > General Configuration > Logging > 
 #   com.atlassian.confluence.macro = WARN
 ```
-
----
-
-## 3. Search Index Failure
-
-**Symptoms**
-
-- Search returns "No results found" for known content
-- `lucene` or `IndexException` errors in logs
-- Admin > Content Indexing shows stuck queue or error state
-
-**Root Causes**
-
-- Index corruption (power loss, NFS interruption, abrupt JVM kill)
-- Insufficient disk space on the shared home
-- Index rebuild interrupted mid-run
-- Shared home NFS mount timeout causing incomplete writes
-
-**Diagnosis**
-
 ```bash
 # Check index errors
 grep -E "(IndexException|LuceneIndex|index corrupt|Lucene)" \
@@ -170,9 +85,6 @@ ls -lh /mnt/confluence-shared/index/
 # Check available disk space
 df -h /mnt/confluence-shared
 ```
-
-**Fix**
-
 ```bash
 # Option A: Partial re-index (faster; recovers without full rebuild)
 # Admin > General Configuration > Content Indexing > Re-index
@@ -189,26 +101,6 @@ mv /mnt/confluence-shared/index /mnt/confluence-shared/index_corrupt_$(date +%Y%
 curl -s -H "Authorization: Bearer $CF_TOKEN" \
   "${CF_URL}/rest/api/search/index" | jq '{status, progress}'
 ```
-
----
-
-## 4. LDAP Sync Issues
-
-**Symptoms**
-
-- New AD users cannot log in to Confluence
-- Directory sync shows errors in Admin > User Directories
-- `CrowdException` or `AuthenticationException` in logs
-
-**Root Causes**
-
-- Bind service account password expired or changed
-- AD group membership filter too restrictive
-- Network timeout reaching domain controller
-- Nested group depth limit exceeded
-
-**Diagnosis**
-
 ```bash
 # Enable LDAP debug logging
 # Admin > Logging and Profiling:
@@ -227,9 +119,6 @@ ldapsearch -H ldaps://dc01.example.com:636 \
 grep "CrowdException\|LDAPException\|directory.*error" \
   /var/atlassian/application-data/confluence/logs/atlassian-confluence.log | tail -20
 ```
-
-**Fix**
-
 ```bash
 # 1. Update bind account password in Confluence:
 # Admin > User Management > User Directories > [Directory] > Edit
@@ -247,25 +136,6 @@ grep "CrowdException\|LDAPException\|directory.*error" \
 openssl s_client -connect dc01.example.com:636 -showcerts 2>/dev/null \
   | openssl x509 -noout -dates
 ```
-
----
-
-## 5. Plugin Conflicts
-
-**Symptoms**
-
-- Pages with a specific macro fail to render (white page or macro error placeholder)
-- `PluginException` or `OSGi bundle` errors in logs
-- Admin > Manage Apps shows plugin in `Disabled` or `Error` state
-
-**Root Causes**
-
-- Plugin version incompatible with current Confluence version
-- Two plugins exporting conflicting OSGi packages
-- Plugin upgrade left orphaned resources
-
-**Diagnosis**
-
 ```bash
 # Find plugin errors in the log
 grep -E "(PluginException|BundleException|OSGi)" \
@@ -279,9 +149,6 @@ curl -s -H "Authorization: Bearer $CF_TOKEN" \
   "${CF_URL}/rest/api/plugins/1.0/plugins/com.example.problematic-plugin" \
   | jq '{key, version, enabled, state}'
 ```
-
-**Fix**
-
 ```bash
 # Disable the conflicting plugin via REST
 curl -s -X PUT \
@@ -297,26 +164,6 @@ rm -rf /mnt/confluence-shared/plugins-osgi-cache/*
 
 # Update plugin to latest compatible version via Admin > Manage Apps
 ```
-
----
-
-## 6. Login Failures
-
-**Symptoms**
-
-- Users receive "Invalid username or password"
-- Admin account locked out
-- Confluence shows login page in a redirect loop
-
-**Root Causes**
-
-- Incorrect password or account locked in LDAP/Crowd
-- Session cookie mismatch after restart (stale `JSESSIONID`)
-- Internal user directory password cache stale
-- Reverse proxy stripping `X-Forwarded-For` or mangling cookies
-
-**Diagnosis**
-
 ```bash
 # Check security log for failed auth events
 tail -50 /var/atlassian/application-data/confluence/logs/atlassian-confluence-security.log
@@ -328,9 +175,6 @@ tail -50 /var/atlassian/application-data/confluence/logs/atlassian-confluence-se
 grep -E "(sessionCookieName|sessionCookiePath|secure)" \
   /opt/atlassian/confluence/conf/server.xml
 ```
-
-**Fix**
-
 ```bash
 # Reset admin password via database (emergency access)
 # 1. Generate a bcrypt hash of the new password
@@ -354,26 +198,6 @@ psql -h "$DB_HOST" -U "$DB_USER" -d "$DB_NAME" \
 # X-Forwarded-Host: confluence.example.com
 # And server.xml has: proxyName="confluence.example.com" proxyPort="443" scheme="https"
 ```
-
----
-
-## 7. Attachment Upload Failures
-
-**Symptoms**
-
-- "Could not save attachment" error when uploading files
-- Upload appears to succeed but file is not accessible
-- Error: "The file size exceeds the allowed limit"
-
-**Root Causes**
-
-- Attachment size limit exceeded (default 100 MB)
-- Shared home NFS mount is read-only or disconnected
-- Disk full on shared home
-- Reverse proxy request body size limit (nginx `client_max_body_size`)
-
-**Diagnosis**
-
 ```bash
 # Check NFS mount status
 mount | grep confluence
@@ -387,9 +211,6 @@ touch /mnt/confluence-shared/attachments/test_write_$(date +%s) && \
 curl -s -H "Authorization: Bearer $CF_TOKEN" \
   "${CF_URL}/rest/api/settings/attachmentSettings" | jq '.'
 ```
-
-**Fix**
-
 ```bash
 # 1. Increase attachment size limit
 # Admin > General Configuration > Further Configuration > Attachment Size
@@ -408,26 +229,6 @@ curl -s -X PUT -H "Authorization: Bearer $CF_TOKEN" \
 umount /mnt/confluence-shared
 mount -t nfs nfs-server:/confluence-shared /mnt/confluence-shared
 ```
-
----
-
-## 8. Database Connection Exhaustion
-
-**Symptoms**
-
-- `Unable to acquire JDBC Connection` in logs
-- Confluence responds slowly or returns 503
-- `pg_stat_activity` shows connections at `max_connections`
-
-**Root Causes**
-
-- JDBC connection pool too small for peak load
-- Long-running queries holding connections open
-- Connection leak in a plugin
-- `max_connections` on PostgreSQL too low
-
-**Diagnosis**
-
 ```bash
 # Current connection count vs maximum
 psql -h "$DB_HOST" -U "$DB_USER" -d "$DB_NAME" \
@@ -443,9 +244,6 @@ psql -h "$DB_HOST" -U "$DB_USER" -d "$DB_NAME" \
       AND query_start < now() - interval '30 seconds'
       ORDER BY duration DESC;"
 ```
-
-**Fix**
-
 ```bash
 # 1. Kill long-running/stuck queries
 psql -h "$DB_HOST" -U "$DB_USER" -d "$DB_NAME" \
@@ -464,25 +262,6 @@ psql -h "$DB_HOST" -U postgres \
   -c "ALTER SYSTEM SET max_connections = 300;"
 # Then restart PostgreSQL
 ```
-
----
-
-## 9. Cluster Split-Brain (Data Center)
-
-**Symptoms**
-
-- Users on different nodes see different content
-- Admin > Clustering shows fewer nodes than expected
-- `HazelcastException` or `ClusterException` in logs
-
-**Root Causes**
-
-- Hazelcast port 5801 blocked between nodes (firewall rule change)
-- NFS shared home mount unavailable on one node
-- Node isolation during a network partition
-
-**Diagnosis**
-
 ```bash
 # Check cluster membership on each node
 curl -s -H "Authorization: Bearer $CF_TOKEN" \
@@ -495,9 +274,6 @@ nc -zv 10.0.1.12 5801 && echo "OK" || echo "BLOCKED"
 grep -E "(Hazelcast|ClusterService|MemberLeft|MemberJoined)" \
   /var/atlassian/application-data/confluence/logs/atlassian-confluence.log | tail -20
 ```
-
-**Fix**
-
 ```bash
 # 1. Confirm firewall rules allow TCP 5801 between all cluster node IPs
 iptables -L -n | grep 5801
@@ -514,26 +290,6 @@ umount -l /mnt/confluence-shared && mount /mnt/confluence-shared
 # 4. After node rejoin, verify cluster in Admin > Clustering
 # 5. Flush caches: Admin > Cache Management > Flush All Caches
 ```
-
----
-
-## 10. Mail Notification Failures
-
-**Symptoms**
-
-- Users not receiving comment/page/mention notifications
-- Admin > Mail > Mail Error Queue contains failed messages
-- `MailException` or `SMTPException` in logs
-
-**Root Causes**
-
-- SMTP credentials expired or incorrect
-- SMTP server rejecting connections (IP allowlist, TLS cert)
-- Confluence mail queue paused (can happen after upgrades)
-- Invalid recipient addresses (e.g., deactivated user still subscribed)
-
-**Diagnosis**
-
 ```bash
 # Check mail queue and error queue
 curl -s -H "Authorization: Bearer $CF_TOKEN" \
@@ -553,9 +309,6 @@ print('SMTP login OK')
 s.quit()
 "
 ```
-
-**Fix**
-
 ```bash
 # 1. Flush the error queue
 # Admin > Mail > Mail Error Queue > Resend All

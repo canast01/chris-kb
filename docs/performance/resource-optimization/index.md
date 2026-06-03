@@ -1,13 +1,3 @@
-# Resource Optimization
-
-
-<div class="kb-summary">
-Identifying and right-sizing underutilised compute, storage, and cloud resources to reduce cost and improve efficiency.
-</div>
-
-## Identify Underutilised Resources
-
-**Linux — CPU and memory:**
 ```bash
 # List processes consuming > 1% CPU
 ps aux --sort=-%cpu | awk 'NR>1 && $3>1 {print $1, $3"%", $4"%", $11}'
@@ -17,6 +7,8 @@ sar -u -f /var/log/sa/sa$(date +%d) | awk '/Average/ {print $3}'
 
 # Memory available
 free -h | awk '/Mem/ {print "Available:", $7}'
+```
+
 ```text
 ┌───────────────────────────────── Performance — Resource Optimisation ─────────────────────────────────┐
 │                                                                                                       │
@@ -48,9 +40,6 @@ free -h | awk '/Mem/ {print "Available:", $7}'
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-## Azure — Cost Optimization
-
 ```bash
 # Unattached managed disks
 az disk list \
@@ -61,9 +50,6 @@ az advisor recommendation list \
   --category Cost \
   --query '[*].{Impact:impact,Resource:resourceMetadata.resourceId,Recommendation:shortDescription.solution}' -o table
 ```
-
-## Storage Optimization
-
 ```bash
 # ONTAP — volumes with > 50% free space
 volume show -percent-used <50 -fields volume,size,used,percent-used
@@ -71,14 +57,3 @@ volume show -percent-used <50 -fields volume,size,used,percent-used
 # Large files older than 90 days
 find /data -type f -size +1G -mtime +90 -ls | sort -k7 -rn | head -20
 ```
-
-## Optimization Actions Reference
-
-| Finding | Action |
-|---|---|
-| VM CPU avg <10%, memory <30% | Downsize VM (1 or 2 tiers smaller) |
-| Unattached EBS/disk | Delete after confirming not needed; snapshot first |
-| Storage volume >50% free, static | Reduce allocation; reclaim to pool |
-| Old cloud snapshots >90 days | Review retention; delete if beyond policy |
-| Idle cloud instances (nights/weekends) | Schedule auto-stop for dev/test instances |
-| Reserved instance opportunity (AWS/Azure) | Purchase 1-year RI/reservation for steady-state workloads |

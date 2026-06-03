@@ -1,20 +1,3 @@
-# Windows Server — Hardening
-
-
-<div class="kb-summary">
-CIS benchmark GPO controls, Windows Defender configuration, audit policy, GPO hardening baseline, and Security Compliance Manager (SCM).
-</div>
-
-## CIS Benchmark and Security Baselines
-
-Microsoft and the Center for Internet Security publish security baselines for Windows Server that map to GPO settings.
-
-### Tools
-
-- **Microsoft Security Compliance Toolkit (SCT)** — downloadable GPO templates from Microsoft, aligned to CIS/STIG.
-- **CIS Benchmarks** — prescriptive guidance at [cisecurity.org](https://www.cisecurity.org).
-- **Policy Analyzer** — part of SCT; compares a machine's effective policy against a baseline.
-
 ```powershell
 # Import Microsoft Security Baseline GPO backup
 # 1. Download SCT from Microsoft Download Center
@@ -27,6 +10,8 @@ Import-GPO -BackupGpoName "MSFT Windows Server 2022 - Domain Security" `
 
 # Run Policy Analyzer (GUI tool) — compare live settings vs. baseline
 # PolicyAnalyzer.exe from SCT
+```
+
 ```text
 ┌───────────────────────────────────── Windows Server — Hardening ──────────────────────────────────────┐
 │                                                                                                       │
@@ -75,18 +60,12 @@ Import-GPO -BackupGpoName "MSFT Windows Server 2022 - Domain Security" `
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-### Security Event Log Size
-
 ```powershell
 # Set Security log maximum size to 512 MB and retain via circular wrapping
 wevtutil sl Security /ms:524288000 /rt:false /ab:false
 # Equivalent in GPO: Computer Configuration > Windows Settings > Security Settings >
 #                   Event Log > Maximum security log size = 524288 KB
 ```
-
-## Windows Defender Antivirus
-
 ```powershell
 # Verify Windows Defender is running and definitions are current
 Get-MpComputerStatus | Select-Object AMRunningMode, AMProductVersion,
@@ -113,9 +92,6 @@ Add-MpPreference -ExclusionExtension ".mdf", ".ldf"
 (Get-MpPreference).ExclusionPath
 (Get-MpPreference).ExclusionProcess
 ```
-
-### Attack Surface Reduction Rules
-
 ```powershell
 # Enable ASR rules in block mode (audit mode = 2, block mode = 1)
 # Block Office applications from creating child processes
@@ -134,47 +110,6 @@ Add-MpPreference -AttackSurfaceReductionRules_Ids 5BEB7EFE-FD9A-4556-801D-275E5F
 (Get-MpPreference).AttackSurfaceReductionRules_Ids |
   ForEach-Object { "$_ : $((Get-MpPreference).AttackSurfaceReductionRules_Actions)" }
 ```
-
-## GPO Hardening Baseline
-
-### Account Policy (Default Domain Policy)
-
-GPO path: Computer Configuration > Windows Settings > Security Settings > Account Policies
-
-| Setting | Value |
-|---|---|
-| Minimum password length | 14 characters |
-| Password complexity | Enabled |
-| Maximum password age | 90 days |
-| Minimum password age | 1 day |
-| Enforce password history | 24 passwords |
-| Account lockout threshold | 5 invalid attempts |
-| Account lockout duration | 15 minutes |
-| Reset account lockout counter | 15 minutes |
-
-### Security Options — Key Settings
-
-GPO path: Computer Configuration > Windows Settings > Security Settings > Local Policies > Security Options
-
-| Setting | Value |
-|---|---|
-| Accounts: Guest account status | Disabled |
-| Accounts: Limit local account use of blank passwords to console logon only | Enabled |
-| Audit: Shut down system immediately if unable to log security audits | Disabled (review — can cause outage) |
-| Interactive logon: Do not display last user name | Enabled |
-| Interactive logon: Machine inactivity limit | 900 seconds |
-| Interactive logon: Message text for logon | (Set legal banner) |
-| Network access: Do not allow anonymous enumeration of SAM accounts | Enabled |
-| Network access: Do not allow anonymous enumeration of SAM accounts and shares | Enabled |
-| Network access: Restrict anonymous access to Named Pipes and Shares | Enabled |
-| Network security: LAN Manager authentication level | Send NTLMv2 response only. Refuse LM & NTLM |
-| Network security: Minimum session security for NTLM SSP | Require NTLMv2, Require 128-bit |
-| System objects: Require case insensitivity for non-Windows subsystems | Enabled |
-| User Account Control: Admin Approval Mode for the built-in Administrator | Enabled |
-| User Account Control: Behavior of the elevation prompt for admins | Prompt for credentials |
-
-### Windows Firewall
-
 ```powershell
 # Enable firewall on all profiles
 Set-NetFirewallProfile -Profile Domain,Private,Public -Enabled True
@@ -202,9 +137,6 @@ New-NetFirewallRule -DisplayName "Block SMB Public" `
 Get-NetFirewallRule | Where-Object {$_.Enabled -eq "True"} |
   Export-Csv C:\temp\firewall-rules.csv -NoTypeInformation
 ```
-
-## PowerShell Security
-
 ```powershell
 # Set PowerShell execution policy — RemoteSigned minimum
 Set-ExecutionPolicy RemoteSigned -Scope LocalMachine -Force
@@ -226,9 +158,6 @@ Set-ItemProperty -Path $transcriptPath -Name "EnableInvocationHeader" -Value 1
 # Verify current mode
 $ExecutionContext.SessionState.LanguageMode
 ```
-
-## Remote Desktop Hardening
-
 ```powershell
 # Require NLA (Network Level Authentication) for RDP
 Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" `
@@ -245,9 +174,6 @@ Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\W
 Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server" `
   -Name "fDenyTSConnections" -Value 1
 ```
-
-## Credential Protection
-
 ```powershell
 # Disable storing of LAN Manager hash (empty string policy ensures no LM hash stored)
 Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa" `
@@ -263,9 +189,6 @@ Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa" -Name "RunAsPPL"
 # Value should be 1
 Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa" -Name "RunAsPPL" -Value 1
 ```
-
-## CIS Benchmark Quick Checks
-
 ```powershell
 # Quick hardening verification script
 $checks = @{
@@ -290,18 +213,3 @@ foreach ($check in $checks.GetEnumerator()) {
     Write-Host "$status : $($check.Key)" -ForegroundColor $(if ($result) { "Green" } else { "Red" })
 }
 ```
-
-## Quick Reference
-
-| Topic | Tool / Location |
-|---|---|
-| Security baseline import | Security Compliance Toolkit (SCT) + GPMC |
-| Audit policy | `auditpol /get /category:*` |
-| Defender status | `Get-MpComputerStatus` |
-| Defender update | `Update-MpSignature` |
-| Firewall policy | `Get-NetFirewallProfile`, `Set-NetFirewallProfile` |
-| NLA for RDP | `UserAuthentication = 1` in Terminal Server registry |
-| LM hash disabled | `HKLM:\...\Lsa\NoLMHash = 1` |
-| PowerShell logging | `HKLM:\...\PowerShell\ScriptBlockLogging\EnableScriptBlockLogging = 1` |
-| GPO result | `gpresult /H report.html /F` |
-| Policy analysis | Policy Analyzer (SCT tool) |

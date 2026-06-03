@@ -1,21 +1,3 @@
-# Pure1 Troubleshooting
-
-<div class="kb-summary">
-Pure1 Troubleshooting reference covering Diagnostic Approach, Common Issues, Escalation to Pure Storage Support.
-</div>
-
-## Diagnostic Approach
-
-1. Check the array's last-seen timestamp in Pure1 — this determines how stale the data is.
-2. If last-seen is > 30 minutes ago, the problem is almost always connectivity from the array to Pure1.
-3. Verify outbound HTTPS from the array before investigating further.
-
-## Common Issues
-
-### Array Not Reporting in Pure1
-
-**Symptoms**: Array is missing from Pure1 Assets, or shows as "Disconnected".
-
 ```bash
 # Step 1: Check array connectivity from Purity CLI
 purearray list --connection
@@ -37,6 +19,8 @@ purearray set --proxy https://<proxy-host>:<port>
 # Step 5: Check firewall rules
 # Array management IP must have outbound TCP 443 to pure1.purestorage.com
 # Verify with network team if connectivity test fails
+```
+
 ```text
 ┌─────────────────────────────────────── Pure1 — Troubleshooting ───────────────────────────────────────┐
 │                                                                                                       │
@@ -69,11 +53,6 @@ purearray set --proxy https://<proxy-host>:<port>
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-### Alert Notifications Not Delivered
-
-**Symptoms**: A CRITICAL alert fired in Pure1 but no PagerDuty/email notification was received.
-
 ```text
 1. Pure1 > Administration > Notifications > [Rule]
    - Verify the rule is enabled
@@ -90,11 +69,6 @@ purearray set --proxy https://<proxy-host>:<port>
 5. Check Pure1 notification delivery log:
    Administration > Notifications > Delivery Log
 ```
-
-### Authentication Failure (Pure1 API — HTTP 401)
-
-**Symptoms**: Scripts return HTTP 401 Unauthorized.
-
 ```text
 1. Confirm the API token has not been rotated without updating the secrets manager
 2. Verify the service account is not disabled:
@@ -104,9 +78,3 @@ purearray set --proxy https://<proxy-host>:<port>
    Administration > API Registration > [Account] > Rotate Key
 5. Update the secrets manager with the new key
 ```
-
-## Escalation to Pure Storage Support
-
-- Portal: support.purestorage.com
-- Include: array serial number (from `purearray list`), the last-seen timestamp from Pure1, and a description of the symptom
-- For array connectivity issues: Pure support can initiate a diagnostic from the array side

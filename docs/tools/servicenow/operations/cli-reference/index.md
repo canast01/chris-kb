@@ -1,16 +1,9 @@
-# ServiceNow — CLI & API Reference
-
-
-<div class="kb-summary">
-ServiceNow's primary programmatic interface is its REST API. This reference covers the Table API, Aggregate API, Import Set API, Scripted REST APIs, and the ServiceNow CLI tool with practical examples for each.
-</div>
-
-All examples use `$INSTANCE`, `$USER`, and `$PASS` environment variables:
-
 ```bash
 export INSTANCE="https://mycompany.service-now.com"
 export USER="api_user"
 export PASS="your-password"
+```
+
 ```text
 ┌───────────────────────────────────── ServiceNow — CLI Reference ──────────────────────────────────────┐
 │                                                                                                       │
@@ -56,21 +49,6 @@ export PASS="your-password"
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-**Common `sysparm_` parameters:**
-
-| Parameter | Description | Example |
-|---|---|---|
-| `sysparm_query` | Encoded query string | `priority=1^active=true` |
-| `sysparm_limit` | Max records returned | `100` |
-| `sysparm_offset` | Pagination offset | `100` |
-| `sysparm_fields` | Comma-separated field list | `number,sys_id,state` |
-| `sysparm_display_value` | Return display values | `true` / `false` / `all` |
-| `sysparm_exclude_reference_link` | Suppress reference links | `true` |
-| `sysparm_view` | View name for field selection | `mobile` |
-
-## POST — Create Record
-
 ```bash
 # Create an incident
 curl -s -u "$USER:$PASS" \
@@ -87,9 +65,6 @@ curl -s -u "$USER:$PASS" \
     "caller_id": "john.doe@example.com"
   }' | jq '.result | {sys_id, number}'
 ```
-
-### PATCH — Update Record
-
 ```bash
 # Assign an incident to a user and update state to In Progress
 curl -s -u "$USER:$PASS" \
@@ -103,9 +78,6 @@ curl -s -u "$USER:$PASS" \
     "work_notes": "Investigating database logs"
   }' | jq '.result.number'
 ```
-
-### DELETE — Remove Record
-
 ```bash
 # Delete a record (use with caution; prefer closing/cancelling)
 curl -s -u "$USER:$PASS" \
@@ -114,37 +86,18 @@ curl -s -u "$USER:$PASS" \
   -o /dev/null -w "%{http_code}"
 # Expected: 204
 ```
-
----
-
-## Aggregate API
-
-Returns aggregate data (count, sum, avg, min, max) without returning individual records.
-
-Base URL: `$INSTANCE/api/now/stats/{tableName}`
-
 ```bash
 # Count open incidents by priority
 curl -s -u "$USER:$PASS" \
   "$INSTANCE/api/now/stats/incident?sysparm_query=active=true&sysparm_count=true&sysparm_group_by=priority" \
   -H "Accept: application/json" | jq '.result.stats'
 ```
-
 ```bash
 # Average resolution time for P1 incidents closed this month
 curl -s -u "$USER:$PASS" \
   "$INSTANCE/api/now/stats/incident?sysparm_query=priority=1^resolved_atONThis month@javascript:gs.beginningOfThisMonth()@javascript:gs.endOfThisMonth()&sysparm_avg_fields=resolve_time" \
   -H "Accept: application/json" | jq .
 ```
-
----
-
-## Import Set API
-
-Used to push bulk data into ServiceNow for processing via Transform Maps. Preferred for integrations that need field transformation and deduplication logic.
-
-Base URL: `$INSTANCE/api/now/import/{stagingTable}`
-
 ```bash
 # Push a CI record to the import set staging table
 curl -s -u "$USER:$PASS" \
@@ -160,15 +113,6 @@ curl -s -u "$USER:$PASS" \
     "u_support_group": "Linux Operations"
   }' | jq '.result | {status, sys_id}'
 ```
-
-The response includes a `sys_import_set` reference and `transform_result` once processing completes.
-
----
-
-## Python Examples
-
-### Reusable Session Helper
-
 ```python
 import requests
 from requests.auth import HTTPBasicAuth
@@ -182,9 +126,6 @@ session = requests.Session()
 session.auth = AUTH
 session.headers.update(HEADERS)
 ```
-
-### Query Incidents
-
 ```python
 def get_open_p1_incidents():
     url = f"{INSTANCE}/api/now/table/incident"
@@ -201,9 +142,6 @@ def get_open_p1_incidents():
 for inc in get_open_p1_incidents():
     print(f"{inc['number']}: {inc['short_description']} — {inc['assigned_to']['display_value']}")
 ```
-
-### Create a Change Request
-
 ```python
 def create_change_request(short_desc: str, description: str, assignment_group: str) -> dict:
     url = f"{INSTANCE}/api/now/table/change_request"
@@ -222,9 +160,6 @@ def create_change_request(short_desc: str, description: str, assignment_group: s
     print(f"Created: {result['number']} ({result['sys_id']})")
     return result
 ```
-
-### Paginate Large Result Sets
-
 ```python
 def get_all_records(table: str, query: str, fields: str) -> list:
     url = f"{INSTANCE}/api/now/table/{table}"
@@ -250,16 +185,6 @@ def get_all_records(table: str, query: str, fields: str) -> list:
 
     return all_records
 ```
-
----
-
-## Scripted REST API
-
-ServiceNow allows defining custom REST endpoints. These appear at:
-`$INSTANCE/api/{namespace}/{api_name}/{resource}`
-
-Scripted REST APIs are written as server-side JavaScript and accessed via the same authentication mechanisms as the Table API.
-
 ```javascript
 // Example: custom endpoint that returns MID Server health
 // GET /api/mycompany/operations/mid_health
@@ -283,32 +208,17 @@ Scripted REST APIs are written as server-side JavaScript and accessed via the sa
     response.setBody({ mid_servers: midServers, count: midServers.length });
 })(request, response);
 ```
-
-Calling the custom endpoint:
-
 ```bash
 curl -s -u "$USER:$PASS" \
   "$INSTANCE/api/mycompany/operations/mid_health" \
   -H "Accept: application/json" | jq .
 ```
-
----
-
-## ServiceNow CLI Tool (`snc`)
-
-The ServiceNow CLI (`snc`) is the official command-line tool for deployment, configuration management, and scripted interactions.
-
-### Installation
-
 ```bash
 # macOS via Homebrew
 brew install servicenow-cli
 
 # Or download from developer.servicenow.com/dev.do#!/downloads
 ```
-
-### Authentication Configuration
-
 ```bash
 snc configure profile set \
   --profile production \
@@ -318,9 +228,6 @@ snc configure profile set \
 
 snc configure profile activate --profile production
 ```
-
-### Common Commands
-
 ```bash
 # Verify connectivity
 snc instance info
@@ -346,9 +253,6 @@ snc script run --file ./scripts/bulk_close_incidents.js
 # ATF test suite execution
 snc atf run --suite "ITSM Regression Suite"
 ```
-
-### CI/CD Pipeline Example (GitHub Actions)
-
 ```yaml
 - name: Deploy Update Set to UAT
   run: |
@@ -362,13 +266,6 @@ snc atf run --suite "ITSM Regression Suite"
       --profile uat \
       --preview-only false
 ```
-
----
-
-## OAuth 2.0 Authentication
-
-Prefer OAuth over Basic Auth for production integrations.
-
 ```bash
 # Obtain token
 TOKEN=$(curl -s -X POST \
@@ -385,5 +282,3 @@ curl -s \
   -H "Accept: application/json" \
   "$INSTANCE/api/now/table/incident?sysparm_limit=5" | jq '.result[].number'
 ```
-
-OAuth application registry: **System OAuth > Application Registry**.

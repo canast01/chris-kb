@@ -1,13 +1,3 @@
-# CloudIQ — Monitoring Scripts
-
-<div class="kb-summary">
-CloudIQ Scripts reference covering Authentication, Capacity Trend Query, Create ServiceNow Incident on CRITICAL Alert (Event-Driven), Script Inventory, Rate Limiting.
-</div>
-
-## Authentication
-
-CloudIQ REST API uses OAuth2 client credentials. All scripts load `client_id` and `client_secret` from the secrets manager at runtime.
-
 ```python
 import requests
 
@@ -28,6 +18,8 @@ def api_get(path: str, token: str, params: dict = None) -> dict:
     resp = requests.get(f"{API_BASE}{path}", headers=headers, params=params)
     resp.raise_for_status()
     return resp.json()
+```
+
 ```text
 ┌───────────────────────────────────── CloudIQ — Scripts Reference ─────────────────────────────────────┐
 │                                                                                                       │
@@ -60,9 +52,6 @@ def api_get(path: str, token: str, params: dict = None) -> dict:
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-## Create ServiceNow Incident on CRITICAL Alert (Event-Driven)
-
 ```python
 import os
 
@@ -85,23 +74,6 @@ def create_snow_incident(alert: dict):
     resp.raise_for_status()
     return resp.json()["result"]["number"]
 ```
-
-## Script Inventory
-
-| Script | Purpose | Schedule |
-|---|---|---|
-| `cloudiq_fleet_health.py` | Query all systems for health scores and export summary | Daily |
-| `cloudiq_alert_export.py` | Export active alerts to CSV | Daily |
-| `cloudiq_capacity_report.py` | Capacity trend report for all systems | Weekly |
-| `cloudiq_health_history.py` | Health score history query for trend analysis | Weekly |
-| `cloudiq_critical_to_snow.py` | Auto-create ServiceNow ticket on CRITICAL alert | Event-driven |
-
-Scripts are stored in `scripts/cloudiq/` in the team repository. A `config.json.template` is provided — populate `client_id` and `client_secret` from the secrets manager at runtime. Never commit secrets to the repository.
-
-## Rate Limiting
-
-CloudIQ REST API enforces rate limits. Implement retry with exponential backoff for HTTP 429 responses:
-
 ```python
 import time
 

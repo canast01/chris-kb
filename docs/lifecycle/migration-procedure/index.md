@@ -1,24 +1,3 @@
-# System Migration Procedure
-
-
-<div class="kb-summary">
-Structured procedure for migrating workloads between platforms, hypervisors, data centres, or cloud environments — covering planning through post-migration validation and cleanup.
-</div>
-
-## Migration Types
-
-| Type | Examples | Downtime |
-|---|---|---|
-| Cold migration | VM moved while powered off | Yes — minutes to hours |
-| Live migration (vMotion) | VM moved between ESXi hosts | None |
-| Storage migration (svMotion) | VM disks moved between datastores | None |
-| P2V | Physical server → VM | Hours — OS conversion required |
-| V2V | VMware → Hyper-V or KVM | Hours — driver conversion |
-| Data migration | Storage array replication cutover | Minimal — flash cutover |
-| Lift and shift | On-premises → cloud | Hours — varies by size |
-
-## Phase 1 — Planning
-
 ```yaml
 Migration Plan — <HOSTNAME> / <WORKLOAD>
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -33,6 +12,8 @@ Rollback window:  <how long can we roll back>
 Dependencies:     <external services / integrations>
 Data volume:      <GB / TB>
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
 ```text
 ┌───────────────────────────────────────── Migration Procedure ─────────────────────────────────────────┐
 │                                                                                                       │
@@ -71,11 +52,6 @@ Data volume:      <GB / TB>
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-## Phase 3 — Data Synchronisation
-
-### VMware vMotion / svMotion
-
 ```powershell
 # Live migration — no downtime
 Move-VM -VM "HOSTNAME" -Destination (Get-VMHost "esxi02.example.com") -Confirm:$false
@@ -92,9 +68,6 @@ Move-VM -VM "HOSTNAME" \
 # Monitor progress
 Get-Task | Where-Object {$_.Name -eq "RelocateVM_Task"} | Select-Object PercentComplete, State
 ```
-
-### rsync-Based File Migration
-
 ```bash
 # Initial sync (run multiple times to reduce delta)
 rsync -avz --progress --delete \
@@ -106,17 +79,11 @@ find /data/source/ -type f | wc -l
 ssh <destination> "find /data/destination/ -type f | wc -l"
 du -sh /data/source/ && ssh <destination> "du -sh /data/destination/"
 ```
-
-### Storage Array Cutover (NetApp SnapMirror)
-
 ```bash
 # Quiesce and break SnapMirror relationship for cutover
 snapmirror quiesce -destination-path <svm>:<vol-dest>
 snapmirror break -destination-path <svm>:<vol-dest>
 ```
-
-## Phase 4 — Cutover
-
 ```mermaid
 sequenceDiagram
     participant App as Application Team
@@ -134,7 +101,6 @@ sequenceDiagram
     App->>Ops: Application confirmed OK
     Ops->>Source: Power off source
 ```
-
 ```bash
 # 1. Quiesce application
 systemctl stop myapp
@@ -157,9 +123,6 @@ EOF
 # Verify propagation
 dig +short <hostname>.example.com @dns.example.com
 ```
-
-## Phase 5 — Post-Migration Validation
-
 ```bash
 # Platform health on destination
 uptime; systemctl --failed
@@ -175,9 +138,6 @@ curl -s "http://prometheus:9090/api/v1/query?query=up{instance='<new-ip>:9100'}"
 # Add to backup job at destination and run first backup
 Start-VBRJob -Job "Production VMs"
 ```
-
-## Phase 6 — Cleanup
-
 ```bash
 # Remove pre-migration snapshot (after 48h stability)
 Get-VM -Name "HOSTNAME" | Get-Snapshot -Name "pre-migration-*" | Remove-Snapshot -Confirm:$false
@@ -192,25 +152,3 @@ EOF
 # Decommission source (follow decommission procedure)
 # Update CMDB — new host, IP, location, platform
 ```
-
-## Migration Checklist
-
-| Phase | Step | Status |
-|---|---|---|
-| Planning | Requirements documented | ☐ |
-| Planning | Dependencies mapped | ☐ |
-| Planning | Change approved | ☐ |
-| Pre-migration | Backup taken | ☐ |
-| Pre-migration | Snapshot taken | ☐ |
-| Pre-migration | Destination ready | ☐ |
-| Pre-migration | DNS TTL reduced | ☐ |
-| Cutover | Application quiesced | ☐ |
-| Cutover | Final sync complete | ☐ |
-| Cutover | DNS updated | ☐ |
-| Validation | Application health confirmed | ☐ |
-| Validation | Monitoring shows new host | ☐ |
-| Validation | Dependent systems confirmed OK | ☐ |
-| Cleanup | Snapshot removed | ☐ |
-| Cleanup | Source decommissioned | ☐ |
-| Cleanup | CMDB updated | ☐ |
-| Cleanup | Change ticket closed | ☐ |

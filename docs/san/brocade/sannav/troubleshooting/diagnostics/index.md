@@ -1,45 +1,3 @@
-# SANnav — Diagnostics
-
-
-<div class="kb-summary">
-> Part of the [SANnav](../../index.md) reference.
-</div>
-
----
-
-## Overview
-
-This page covers the diagnostic procedures and log collection steps to use when investigating SANnav application issues, performance problems, or escalating to Broadcom support.
-
----
-
-## Log File Locations
-
-| Log File | Content |
-|---|---|
-| `/opt/sannav/logs/server.log` | Main application log — startup, API requests, errors |
-| `/opt/sannav/logs/discovery.log` | Switch discovery and polling events |
-| `/opt/sannav/logs/event-engine.log` | SNMP trap reception and event processing |
-| `/opt/sannav/logs/upgrade.log` | Appliance upgrade history |
-| `/opt/sannav/logs/restore.log` | Restore operation details |
-| `/opt/sannav/logs/backup.log` | Backup operation details |
-| `/var/log/nginx/access.log` | HTTP/HTTPS access log (browser and API requests) |
-| `/var/log/nginx/error.log` | NGINX errors (TLS failures, upstream connect failures) |
-| `journalctl -u sannav` | SANnav systemd service journal |
-
----
-
-## Increasing Log Verbosity
-
-For active troubleshooting, enable DEBUG logging temporarily:
-
-1. Navigate to **Administration > System > Logging**.
-2. Set log level to **DEBUG** for the affected component (Discovery, Event Engine, etc.).
-3. Reproduce the issue.
-4. Collect logs.
-5. Return log level to **INFO** — DEBUG generates large volumes and impacts performance.
-
-Via CLI:
 ```bash
 # Temporarily set log level (resets on restart)
 sudo sed -i 's/level="INFO"/level="DEBUG"/' /opt/sannav/conf/log4j2.xml
@@ -47,6 +5,8 @@ sannav restart
 # ... reproduce issue, collect logs ...
 sudo sed -i 's/level="DEBUG"/level="INFO"/' /opt/sannav/conf/log4j2.xml
 sannav restart
+```
+
 ```text
 ┌──────────────────────────────────── Brocade SANnav — Diagnostics ─────────────────────────────────────┐
 │                                                                                                       │
@@ -94,9 +54,6 @@ sannav restart
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-### Check InfluxDB Health (SAN Analytics)
-
 ```bash
 # Check InfluxDB is responding
 curl -sk http://localhost:8086/health
@@ -109,13 +66,6 @@ du -sh /opt/sannav/data/influxdb/
 # Navigate to Administration > System > Data Retention
 # Set SAN Analytics retention to 14 days (from default 30)
 ```
-
----
-
-## Discovery Diagnostics
-
-When a switch is not being discovered correctly:
-
 ```bash
 # Check discovery log for a specific switch IP
 grep "10.20.1.5" /opt/sannav/logs/discovery.log | tail -50
@@ -133,13 +83,6 @@ curl -sk -X POST https://10.20.1.5/rest/login \
 # Expected: { "authToken": "..." }
 # If credentials error: update credentials on switch or in SANnav
 ```
-
----
-
-## Performance Diagnostics
-
-### SANnav Appliance Resource Usage
-
 ```bash
 # CPU: identify top processes
 top -b -n 3 -d 1 | grep -v "^$\|^top\|^Tasks\|^%\|^KiB\|^MiB" | head -30
@@ -157,9 +100,6 @@ iostat -x 2 5
 ip -s link show eth0
 # RX/TX errors or drops indicate a network problem, not SANnav
 ```
-
-### Identify Slow API Responses
-
 ```bash
 # Measure REST API response time
 time curl -sk -X POST https://sannav-dc1.corp.example.com/rest/login \
@@ -169,13 +109,6 @@ time curl -sk -X POST https://sannav-dc1.corp.example.com/rest/login \
 # Expected: < 2 seconds
 # If > 5 seconds: SANnav server is under load or PostgreSQL is slow
 ```
-
----
-
-## Event Engine Diagnostics
-
-If events are not appearing in the SANnav console despite SNMP traps being sent:
-
 ```bash
 # Confirm traps are arriving at UDP 162
 sudo tcpdump -i eth0 -n udp port 162 -c 20

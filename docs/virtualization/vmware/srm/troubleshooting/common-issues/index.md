@@ -1,10 +1,3 @@
-# SRM — Common Issues
-
-
-<div class="kb-summary">
-Common Issues reference covering Site Pairing Fails / Shows Disconnected, SRA Not Found / Discovery Fails, Recovery Plan Stuck in "Running", Protection Group Shows Error, Test Failover: VMs Fail to Power On and 1 more sections.
-</div>
-
 ```text
 ┌───────────────────────────────────── VMware SRM — Common Issues ──────────────────────────────────────┐
 │                                                                                                       │
@@ -52,47 +45,6 @@ Common Issues reference covering Site Pairing Fails / Shows Disconnected, SRA No
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
----
-
-## Site Pairing Fails / Shows Disconnected
-
-**Symptoms:** Site Recovery Summary shows remote site as "Not Connected"
-
-1. **Certificate thumbprint mismatch** (cert replaced without updating pairing):
-   ```bash
-   # Get current remote SRM cert thumbprint:
-   echo | openssl s_client -connect srm-recovery.example.local:9086 2>/dev/null \
-     | openssl x509 -fingerprint -sha1 -noout
-   # Compare to thumbprint stored in site pair
-   # Site Recovery → Site Pair → Edit → update thumbprint
-   ```
-
-2. **Network / firewall**: TCP 9086 blocked between SRM Servers
-   ```bash
-   nc -vz srm-recovery.example.local 9086
-   # If connection refused or timeout: firewall rule missing
-   ```
-
-3. **SRM service stopped on remote site**:
-   ```powershell
-   Get-Service -ComputerName srm-recovery.example.local -Name "VMware vCenter Site Recovery Manager"
-   Start-Service -ComputerName srm-recovery.example.local -Name "VMware vCenter Site Recovery Manager"
-   ```
-
----
-
-## SRA Not Found / Discovery Fails
-
-**Symptoms:** "No Storage Replication Adapters found" or discovery returns empty
-
-1. **SRA service stopped on SRM Server**:
-   ```powershell
-   Get-Service -ComputerName srm-protected.example.local -Name "*SRA*"
-   # Restart if stopped
-   ```
-
-2. **Wrong array credentials**:
 ```python
    Site Recovery → Storage → Array Pairs → [pair] → Configure Adapter
    Test credentials against array directly:
@@ -101,6 +53,8 @@ Common Issues reference covering Site Pairing Fails / Shows Disconnected, SRA No
    ```
 
 3. **Network connectivity from SRM Server to array management IP**:
+```
+
 ```powershell
    Test-NetConnection <flasharray-ip> -Port 443
    ```
@@ -136,6 +90,8 @@ Common Issues reference covering Site Pairing Fails / Shows Disconnected, SRA No
 **Symptoms:** Protection Group status is "Error" or "Warning"
 
 1. **RPO lag exceeds configured RPO**: Replication is not keeping up
+```
+
 ```text
    Site Recovery → Replication → vSphere Replication
    Find the VMs in the PG → check "Lag" column
@@ -143,6 +99,8 @@ Common Issues reference covering Site Pairing Fails / Shows Disconnected, SRA No
    ```
 
 2. **VM snapshot inconsistency** (for ABR protection groups):
+```
+
 ```text
    Check storage array — verify snapshot exists for the replication group
    SRA may need to re-discover: Site Recovery → Storage → Array Pairs → Discover Devices
@@ -168,12 +126,16 @@ Common Issues reference covering Site Pairing Fails / Shows Disconnected, SRA No
    ```
 
 2. **Placeholder VM stale**: Placeholder VM at recovery site has incorrect config
+```
+
 ```sql
    # Delete placeholder VM from recovery site vCenter
    # Site Recovery → Protection → [PG] → Configure → adds placeholder VMs back automatically
    ```
 
 3. **Resource pool or datastore insufficient at recovery site**:
+```
+
 ```text
    Check recovery site CPU/RAM/storage capacity before running test
    Verify resource mappings in Site Recovery → Site Pair → Inventory Mappings
@@ -193,6 +155,8 @@ Common Issues reference covering Site Pairing Fails / Shows Disconnected, SRA No
    ```
 
 2. **Protected site not fully restored**: Protected site vCenter or SRM not running
+```
+
 ```bash
    Verify: vCenter at protected site is operational
    Verify: SRM service running at protected site

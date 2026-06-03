@@ -1,11 +1,3 @@
-# Aria Operations — Backup & Restore
-
-
-<div class="kb-summary">
-Backup & Restore reference covering Manual Backup via CLI, Backup via REST API, What Is and Is Not Backed Up, Restore Procedure, VM-Level Backup (Disaster Recovery).
-</div>
-
-Aria Operations — Backup Architecture
 ```text
 ┌────────────────────────────────── Aria Operations Backup & Restore ───────────────────────────────────┐
 │                                                                                                       │
@@ -96,8 +88,6 @@ Aria Operations — Backup Architecture
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-                       │ restore
-                       ▼
 ```text
 ```
 ```text
@@ -111,6 +101,8 @@ Aria Operations — Backup Architecture
 │  VM-level backup (Veeam/Commvault) of all nodes                                                       │
 │  + Cassandra repair after restore                                                                     │
 └─────────────────────────────────────────────────────┘
+```
+
 ```text
 ┌────────────────────────────────── Aria Operations Backup & Restore ───────────────────────────────────┐
 │                                                                                                       │
@@ -156,16 +148,6 @@ Aria Operations — Backup Architecture
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-Recommended settings:
-- Frequency: Daily
-- Retention: 14 copies
-- Notification: enable email alert on backup failure (requires SMTP configured under **Administration → SMTP Settings**)
-
----
-
-## Manual Backup via CLI
-
 ```bash
 ssh admin@vrops-prod-01.example.local
 
@@ -179,11 +161,6 @@ vracli backup list-locations
 ## Check backup status
 vracli backup status
 ```
-
----
-
-## Backup via REST API
-
 ```bash
 ## Authenticate
 TOKEN=$(curl -sk -X POST "https://vrops-prod-01.example.local/suite-api/api/auth/token/acquire" \
@@ -200,73 +177,16 @@ curl -sk -X POST -H "Authorization: vRealizeOpsToken $TOKEN" \
   "https://vrops-prod-01.example.local/suite-api/api/backups/<backup-config-id>/actions/backup" | \
   jq '.'
 ```
-
----
-
-## What Is and Is Not Backed Up
-
-| Data | Backed Up | Notes |
-|---|---|---|
-| Alert definitions and symptoms | Yes | All custom and policy-based alerts |
-| Dashboard definitions | Yes | All custom dashboards and views |
-| User accounts and roles | Yes | Local accounts and LDAP group mappings |
-| Adapter/cloud account configurations | Yes | Credentials are **not** included — must be re-entered after restore |
-| Policies and compliance packs | Yes | Custom and built-in policy assignments |
-| Report schedules | Yes | Scheduled report definitions |
-| Metric time-series data | **No** | Historical metrics are not restorable from backup |
-| Alert history | **No** | Existing alert history is lost after restore |
-| Log data (if integrated with Aria Ops for Logs) | **No** | Logs are stored in Aria Ops for Logs, not here |
-
----
-
-## Restore Procedure
-
-Restore replaces the current cluster configuration with the backup. This is a destructive operation — all configuration changes made after the backup point are lost.
-
-**Prerequisites:**
-- Aria Operations cluster is running and accessible
-- Backup file is accessible from the configured NFS/SFTP location
-- All adapter credentials are documented (they must be re-entered after restore)
-
-**Via UI:**
-
 ```text
 Administration → Backup/Restore → Restore → select backup → Restore
 ```
-
-The UI shows a list of available backups by timestamp. Select the desired restore point and confirm. The cluster restarts services during restore — expect 10–20 minutes of unavailability.
-
-**Via CLI:**
-
 ```bash
 ssh admin@vrops-prod-01.example.local
 vracli restore --backup-id <backup-timestamp-id>
 ```
-
-**Post-restore validation:**
-
-1. Log into the Aria Operations UI — confirm the login works
-2. Navigate to **Administration → Solutions** — confirm all adapters are listed
-3. Re-enter credentials for all cloud accounts and adapters:
-
 ```text
 Administration → Solutions → select adapter → Edit Instance → update credentials → Test Connection
 ```
-
-4. Confirm collection is running: **Administration → Cluster Management** — all nodes Online, adapter instances Collecting
-5. Review dashboards — confirm custom dashboards are present
-6. Send a test alert to confirm alerting pipeline (email/SNMP) is functional
-
----
-
-## VM-Level Backup (Disaster Recovery)
-
-For full disaster recovery (including metric data), use a VM-level backup of all Aria Operations nodes:
-
-- Use VADP-compatible backup (Veeam, Commvault) with quiesce enabled
-- Back up all nodes: Primary, Replica, and Data nodes — they must be backed up from the same crash-consistent snapshot point
-- Recovery from VM backup restores metric history but may require Cassandra consistency repair:
-
 ```bash
 ## After restoring all nodes from VM backup, run Cassandra repair on the primary node
 ssh admin@vrops-prod-01.example.local

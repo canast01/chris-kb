@@ -1,16 +1,3 @@
-# ServiceNow — Procedures
-
-
-<div class="kb-summary">
-Procedures reference covering Incidents, Incident Lifecycle, Priority Matrix, SLA Targets, Assignment Rules and 21 more sections.
-</div>
-
-## Incidents
-
-Incident lifecycle, SLA management, assignment rules, and escalation procedures.
-
-## Incident Lifecycle
-
 ```yaml
 New → In Progress → On Hold → Resolved → Closed
 
@@ -19,6 +6,8 @@ In Progress: Assignee is actively working the issue
 On Hold:     Waiting for external input (vendor, customer info)
 Resolved:    Fix applied; awaiting confirmation from caller
 Closed:      Caller confirmed resolution or auto-closed after N days
+```
+
 ```text
 ┌───────────────────────────────── ServiceNow — Operations Procedures ──────────────────────────────────┐
 │                                                                                                       │
@@ -64,21 +53,6 @@ Closed:      Caller confirmed resolution or auto-closed after N days
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-| Priority | Response SLA | Resolution SLA |
-|----------|-------------|---------------|
-| P1 | 15 minutes | 4 hours |
-| P2 | 30 minutes | 8 hours |
-| P3 | 2 hours | 3 business days |
-| P4 | 8 hours | 7 business days |
-
-## Assignment Rules
-
-Incidents are auto-assigned based on:
-- **Category** (Application, Network, Database, Security)
-- **CI** (the affected configuration item routes to its owning group)
-- **Keywords** in the short description
-
 ```bash
 # Manually reassign an incident
 curl -u user:token -X PATCH \
@@ -96,9 +70,6 @@ curl -u user:token -G \
   --data-urlencode 'sysparm_query=priority<=2^assigned_to=NULL^active=true' \
   --data-urlencode 'sysparm_fields=number,short_description,priority,opened_at'
 ```
-
-## Escalation Procedures
-
 ```bash
 # Flag an incident for escalation
 curl -u user:token -X PATCH \
@@ -109,17 +80,6 @@ curl -u user:token -X PATCH \
     "work_notes": "Escalating — no progress after 2 hours. Notified manager."
   }'
 ```
-
-Escalation checklist for P1:
-- [ ] On-call manager notified within 15 minutes
-- [ ] Bridge/war room opened
-- [ ] Status page updated (if customer-facing)
-- [ ] Executive stakeholders notified at 30-minute mark
-- [ ] Vendor engaged if internal resolution is blocked
-- [ ] Incident commander assigned for P1 outages > 1 hour
-
-## Resolving and Closing
-
 ```bash
 # Resolve an incident
 curl -u user:token -X PATCH \
@@ -132,25 +92,6 @@ curl -u user:token -X PATCH \
     "resolved_by": "jsmith"
   }'
 ```
-
----
-
-## Changes
-
-Change request workflow, change types (normal, standard, emergency), and CAB process.
-
-## Change Types
-
-| Type | Risk | Approval Required | Pre-approved | Examples |
-|------|------|------------------|-------------|---------|
-| Standard | Low | No (pre-approved) | Yes | Routine patching, password resets |
-| Normal | Medium–High | Yes (CAB) | No | Infrastructure changes, deployments |
-| Emergency | High | Emergency CAB | No | Production outage fixes |
-
-## Change Request Fields
-
-Key fields to populate when raising a change:
-
 ```yaml
 Category:         Infrastructure / Application / Network / Security
 Risk:             Low / Medium / High / Critical
@@ -161,7 +102,6 @@ Planned end:      Date and time (UTC)
 Short description: <Component>: <what is changing>
 Description:      Full details including scope and method
 ```
-
 ```bash
 # Create a change request via REST API
 curl -u user:token -X POST \
@@ -183,9 +123,6 @@ curl -u user:token -X POST \
 curl -u user:token \
   "https://your-instance.service-now.com/api/now/table/change_request?number=CHG0012345"
 ```
-
-## Normal Change Workflow
-
 ```yaml
 Draft → Assess → Authorize → Scheduled → Implement → Review → Closed
 
@@ -197,7 +134,6 @@ Implement:  Work is performed; work notes updated in real time
 Review:     Post-implementation review; confirm success or document issues
 Closed:     Change closed as Successful / Unsuccessful / Cancelled
 ```
-
 ```bash
 # Move a change to a new state
 curl -u user:token -X PATCH \
@@ -205,11 +141,6 @@ curl -u user:token -X PATCH \
   -H "Content-Type: application/json" \
   -d '{"state": "-1"}'   # -1 = Authorize, 0 = Scheduled, 1 = Implement
 ```
-
-## Emergency Change Process
-
-Emergency changes skip the standard CAB approval but require retrospective review.
-
 ```bash
 # Create an emergency change
 curl -u user:token -X POST \
@@ -222,15 +153,6 @@ curl -u user:token -X POST \
     "justification": "Production outage since 14:32 UTC. Revert to last known good config."
   }'
 ```
-
-Emergency CAB checklist:
-- [ ] Incident ticket linked to the change
-- [ ] On-call manager verbally approves before work starts
-- [ ] Change notes updated with start time
-- [ ] Post-implementation review scheduled within 48 hours
-
-## CAB Preparation
-
 ```bash
 # Query upcoming normal changes pending CAB review
 curl -u user:token -G \
@@ -245,25 +167,6 @@ curl -s -u user:token -G \
   --data-urlencode 'sysparm_fields=number,short_description,risk,start_date' \
   | jq -r '.result[] | [.number, .short_description, .risk, .start_date] | @csv'
 ```
-
-| CAB Role | Responsibility |
-|---------|---------------|
-| Change Manager | Chairs meeting, final approval authority |
-| Technical Lead | Assesses technical risk |
-| Business Rep | Assesses business impact |
-| Security Team | Reviews security-sensitive changes |
-| Requester | Presents and answers questions |
-
----
-
-## Requests
-
-Service catalog, request items, approval workflows, and fulfillment tracking.
-
-## Service Catalog Overview
-
-The Service Catalog is the self-service portal where users submit requests for IT services.
-
 ```text
 Structure:
   Service Catalog
@@ -274,7 +177,6 @@ Structure:
                   └── Approval records
                   └── Tasks (sc_task) — fulfillment steps
 ```
-
 ```bash
 # Query open requests for a user
 curl -u user:token -G \
@@ -288,11 +190,6 @@ curl -u user:token -G \
   --data-urlencode 'sysparm_query=request.number=REQ0001234' \
   --data-urlencode 'sysparm_fields=number,cat_item,state,approval'
 ```
-
-## Catalog Item Variables
-
-Request items carry variables (the form fields the user filled in).
-
 ```bash
 # Get variables for a request item
 curl -u user:token -G \
@@ -313,9 +210,6 @@ curl -u user:token -X POST \
     }
   }'
 ```
-
-## Approval Workflow
-
 ```bash
 # Query pending approvals for a request
 curl -u user:token -G \
@@ -335,17 +229,6 @@ curl -u user:token -X PATCH \
   -H "Content-Type: application/json" \
   -d '{"state": "rejected", "comments": "Budget approval required first"}'
 ```
-
-| Approval State | Meaning |
-|---------------|---------|
-| `requested` | Awaiting approver action |
-| `approved` | Approver said yes |
-| `rejected` | Approver said no — request cancelled |
-| `not_required` | Auto-approved (below threshold) |
-| `cancelled` | Request was cancelled before approval |
-
-## Fulfillment Tasks
-
 ```bash
 # List fulfillment tasks for a request item
 curl -u user:token -G \
@@ -368,9 +251,6 @@ curl -u user:token -X PATCH \
   -H "Content-Type: application/json" \
   -d '{"state": "3", "work_notes": "Confirmed by requester — closing task"}'
 ```
-
-## Request SLAs and Monitoring
-
 ```bash
 # Find overdue request items
 curl -u user:token -G \
@@ -378,35 +258,6 @@ curl -u user:token -G \
   --data-urlencode 'sysparm_query=due_date<javascript:gs.now()^active=true^state!=3' \
   --data-urlencode 'sysparm_fields=number,cat_item,due_date,assigned_to,state'
 ```
-
-| Request State | Numeric | Description |
-|--------------|---------|-------------|
-| Open | 1 | Not started |
-| Work In Progress | 2 | Fulfillment underway |
-| Closed Complete | 3 | Delivered successfully |
-| Closed Incomplete | 4 | Could not fulfill |
-| Closed Skipped | 7 | Skipped due to approval rejection |
-
----
-
-## Work Notes
-
-Work notes vs comments, resolution notes, audit trail, and best practices.
-
-## Work Notes vs Comments (Additional Comments)
-
-ServiceNow has two note fields on every ticket. Understanding the difference prevents accidental information disclosure.
-
-| Field | Visible To | Triggers Notification | Use For |
-|-------|-----------|----------------------|---------|
-| Work Notes | Internal team only | Assignee group | Technical investigation, internal updates |
-| Additional Comments | Requester / caller | Requester + team | Customer-facing communication |
-| Resolution Notes | Requester | Yes (on resolve) | Summary of fix for the end user |
-
-Never put credentials, internal IP addresses, or sensitive system details in Additional Comments.
-
-## Adding Work Notes via API
-
 ```bash
 # Add a work note to an incident
 curl -u user:token -X PATCH \
@@ -426,11 +277,6 @@ curl -u user:token -X PATCH \
   -H "Content-Type: application/json" \
   -d '{"work_notes": "Step 1 complete: database backup verified. Proceeding to step 2."}'
 ```
-
-## Work Note Best Practices
-
-Good work notes make handoffs seamless and post-incident reviews accurate.
-
 ```bash
 # Good work note format
 [14:35 UTC] Checked nginx access logs — confirmed 503s starting 14:28 UTC
@@ -438,18 +284,6 @@ Good work notes make handoffs seamless and post-incident reviews accurate.
 [14:42 UTC] Rolled back to previous image. Error rate dropping.
 [14:50 UTC] Error rate back to baseline 0.1%. Monitoring for 30 min before closing.
 ```
-
-Work note checklist:
-- Include timestamps in UTC
-- Note who performed each action
-- Record what was checked, not just what was done
-- Log any commands run and their output if relevant
-- Note what was ruled out (helps future investigators)
-
-## Resolution Notes
-
-Resolution notes are shown to the end user when a ticket is resolved. They should be jargon-free.
-
 ```bash
 # Set resolution notes when closing an incident
 curl -u user:token -X PATCH \
@@ -461,11 +295,6 @@ curl -u user:token -X PATCH \
     "close_notes": "A misconfigured deployment caused the service to run out of memory. We have rolled back to the previous version and applied a fix. The service has been stable since 15:00 UTC. We will deploy the corrected version during the next maintenance window."
   }'
 ```
-
-## Reading the Audit Trail
-
-The audit trail records every field change with the old value, new value, and who made the change.
-
 ```bash
 # Get audit history for a record
 curl -u user:token -G \
@@ -481,9 +310,6 @@ curl -u user:token -G \
   --data-urlencode 'sysparm_fields=name,element,value,sys_created_by,sys_created_on' \
   | jq '.result | sort_by(.sys_created_on)[] | {type: .element, author: .sys_created_by, time: .sys_created_on, note: .value}'
 ```
-
-## Bulk Note Operations
-
 ```bash
 # Add the same work note to multiple incidents (e.g., all P1s during a major outage)
 INCIDENTS="INC0001 INC0002 INC0003"
@@ -500,9 +326,3 @@ for INC in $INCIDENTS; do
     -d "{\"work_notes\": \"${NOTE}\"}"
 done
 ```
-
-| Journal Type | `element` Value | Visibility |
-|-------------|----------------|-----------|
-| Work notes | `work_notes` | Internal only |
-| Additional comments | `comments` | Customer-visible |
-| Resolution notes | `close_notes` | Customer (on resolve) |

@@ -1,14 +1,3 @@
-# Linux — Access Control
-
-
-<div class="kb-summary">
-DAC (chmod/ACL), MAC (SELinux/AppArmor), sudoers policy, and login access restrictions.
-</div>
-
-## Discretionary Access Control (DAC)
-
-### Traditional Unix Permissions
-
 ```bash
 # View permissions
 ls -l /path/to/file
@@ -29,6 +18,8 @@ chmod 1775 /opt/shared
 
 # SGID on a directory — new files inherit group
 chmod 2775 /opt/projects
+```
+
 ```text
 ┌─────────────────────────────────────── Linux — Access Control ────────────────────────────────────────┐
 │                                                                                                       │
@@ -72,13 +63,6 @@ chmod 2775 /opt/projects
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-## Mandatory Access Control — SELinux (RHEL)
-
-SELinux enforces mandatory policies on top of DAC. Even root is constrained by SELinux policy.
-
-### SELinux MAC Decision Flow
-
 ```mermaid
 flowchart TD
     subject["Subject\nProcess with SELinux label\ne.g. httpd_t"]
@@ -95,9 +79,6 @@ flowchart TD
     selinuxCheck -- No --> audit --> dacDeny
     selinuxCheck -- Yes --> allow --> object
 ```
-
-### SELinux Modes
-
 ```bash
 # Check current mode
 getenforce        # Enforcing / Permissive / Disabled
@@ -110,9 +91,6 @@ setenforce 0
 # SELINUX=enforcing   (enforcing | permissive | disabled)
 # Requires reboot to take effect when changing disabled <-> enforcing
 ```
-
-### Context Management
-
 ```bash
 # View file context
 ls -Z /var/www/html/
@@ -132,9 +110,6 @@ restorecon -Rv /opt/webapp/public/
 semanage fcontext -a -t httpd_sys_content_t "/opt/webapp/public(/.*)?"
 restorecon -Rv /opt/webapp/public/
 ```
-
-### Boolean Switches
-
 ```bash
 # List all booleans
 getsebool -a
@@ -149,9 +124,6 @@ setsebool -P use_nfs_home_dirs on
 # Allow SSSD to use LDAP
 setsebool -P sssd_use_ldap on
 ```
-
-### Troubleshooting Denials
-
 ```bash
 # View recent AVC denials
 ausearch -m avc --start recent | audit2why
@@ -166,11 +138,6 @@ journalctl | grep "SELinux is preventing"
 # sealert (setroubleshoot-server package) — human-readable denial explanations
 sealert -a /var/log/audit/audit.log
 ```
-
-## Mandatory Access Control — AppArmor (Ubuntu/Debian)
-
-### AppArmor MAC Decision Flow
-
 ```mermaid
 flowchart TD
     proc["Process\ne.g. nginx"]
@@ -190,7 +157,6 @@ flowchart TD
     policyCheck -- Match --> allowed
     policyCheck -- No match (enforce) --> denied
 ```
-
 ```bash
 # Check status
 aa-status
@@ -211,9 +177,6 @@ apparmor_parser -r /etc/apparmor.d/usr.sbin.nginx
 journalctl | grep "apparmor" | grep "DENIED" | tail -20
 dmesg | grep "apparmor=\"DENIED\""
 ```
-
-### AppArmor Profile Structure
-
 ```bash
 # /etc/apparmor.d/usr.local.bin.myapp
 /usr/local/bin/myapp {
@@ -228,17 +191,9 @@ dmesg | grep "apparmor=\"DENIED\""
   # Deny everything else implicitly
 }
 ```
-
-## sudo Access Control
-
-See also: [Authentication — sudo configuration](../authentication/index.md#sudo-configuration)
-
-### Principle of Least Privilege in Sudoers
-
 ```bash
 visudo   # Always use visudo — validates syntax on save
 ```
-
 ```bash
 # Separate duty: backup operator — only rsync and tar
 %backupops  ALL=(root) /usr/bin/rsync, /usr/bin/tar
@@ -252,7 +207,6 @@ visudo   # Always use visudo — validates syntax on save
 # Deny a specific command even within a permitted group
 jsmith  ALL=(ALL) ALL, !/bin/su, !/usr/bin/passwd root
 ```
-
 ```bash
 # Audit who has sudo access
 grep -E "^[^#]" /etc/sudoers /etc/sudoers.d/* | grep -v "^Defaults"
@@ -260,11 +214,6 @@ grep -E "^[^#]" /etc/sudoers /etc/sudoers.d/* | grep -v "^Defaults"
 # Check a specific user's sudo permissions
 sudo -l -U jsmith
 ```
-
-## /etc/security/access.conf
-
-Restricts which users or groups can log in from which origins. Processed by `pam_access.so`.
-
 ```bash
 # /etc/security/access.conf format:
 # permission : users/groups : origins
@@ -284,16 +233,10 @@ Restricts which users or groups can log in from which origins. Processed by `pam
 # Deny all others
 - : ALL : ALL
 ```
-
 ```bash
 # /etc/pam.d/system-auth — enable pam_access
 account     required      pam_access.so
 ```
-
-## File Attributes (chattr)
-
-Immutable flag prevents modification even by root — useful for protecting log files or configuration.
-
 ```bash
 # Make a file immutable
 chattr +i /etc/resolv.conf
@@ -308,11 +251,6 @@ chattr +a /var/log/secure
 lsattr /etc/resolv.conf
 lsattr /var/log/
 ```
-
-## Capabilities
-
-Capabilities allow processes to have specific elevated privileges without full root.
-
 ```bash
 # View capabilities on a binary
 getcap /usr/bin/ping
@@ -331,9 +269,6 @@ find / -xdev -type f -exec getcap {} \; 2>/dev/null
 cat /proc/<pid>/status | grep Cap
 capsh --decode=<hex-value>
 ```
-
-## Access Control Audit
-
 ```bash
 # Find world-writable files outside /tmp (should be none)
 find / -xdev -type f -perm -0002 -not -path "/tmp/*" -not -path "/proc/*" 2>/dev/null
@@ -353,16 +288,3 @@ awk -F: '$3 == 0 { print $1 }' /etc/passwd
 # Check for accounts with empty passwords
 awk -F: '$2 == "" { print $1 }' /etc/shadow
 ```
-
-## Quick Reference
-
-| Control type | Mechanism | Scope |
-|---|---|---|
-| Traditional permissions | `chmod`, `chown` | Owner / Group / Other |
-| Extended permissions | `setfacl` / `getfacl` | Per-user / per-group |
-| Mandatory policy (RHEL) | SELinux (`setenforce`, `chcon`) | All processes and files |
-| Mandatory policy (Ubuntu) | AppArmor (`aa-enforce`) | Per-application profiles |
-| Privileged command access | `sudoers`, `/etc/sudoers.d/` | Per-user / per-group |
-| Login origin restriction | `/etc/security/access.conf` | User + source IP/host |
-| File immutability | `chattr +i` | Specific files |
-| Process privileges | `setcap` / `getcap` | Specific binaries |

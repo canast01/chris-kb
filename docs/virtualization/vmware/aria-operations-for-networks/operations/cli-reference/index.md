@@ -1,14 +1,3 @@
-# Aria Operations for Networks — CLI Reference
-
-
-<div class="kb-summary">
-CLI Reference reference covering SSH Access, Platform VM CLI Commands, Collector VM CLI Commands, REST API Usage, Useful Log Paths.
-</div>
-
-## SSH Access
-
-**Platform VM** default OS user is `ubuntu`. There is no direct root login via SSH by default.
-
 ```bash
 ssh ubuntu@aon-platform.example.local
 
@@ -17,6 +6,8 @@ sudo -i
 
 # Or use sudo for individual commands
 sudo systemctl status vrni-platform
+```
+
 ```text
 ┌───────────────────────────────────────── vRNI CLI Reference ──────────────────────────────────────────┐
 │                                                                                                       │
@@ -62,17 +53,12 @@ sudo systemctl status vrni-platform
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-Output format:
 ```yaml
 Product: VMware Aria Operations for Networks
 Version: 6.14.0
 Build: 23456789
 Release Date: 2024-09-15
 ```
-
-### Service Status
-
 ```bash
 # Check all platform services at once
 sudo systemctl status vrni-platform nginx cassandra kafka elasticsearch postgres
@@ -89,9 +75,6 @@ sudo systemctl status postgres           # Config database
 sudo systemctl restart vrni-platform
 sudo systemctl restart nginx
 ```
-
-### List Collectors
-
 ```bash
 # From the Platform VM, show connected collectors and their status
 curl -sk -X GET "https://localhost/api/ni/collectors" \
@@ -101,9 +84,6 @@ curl -sk -X GET "https://localhost/api/ni/collectors" \
 # Or use the support script (if available on your version)
 sudo /home/ubuntu/support/list-collectors.sh
 ```
-
-### Disk Usage
-
 ```bash
 # Overall disk usage
 df -hT
@@ -117,9 +97,6 @@ df -h /var/log
 du -sh /var/lib/cassandra/*
 du -sh /var/lib/elasticsearch/*
 ```
-
-### Network Diagnostics from Platform VM
-
 ```bash
 # Test connectivity to a Collector
 nc -zv 10.10.10.51 443
@@ -131,11 +108,6 @@ dig aon-collector.example.local
 # Check listening ports
 ss -tlnp | grep -E '443|8080|9042|2181|9200'
 ```
-
-## Collector VM CLI Commands
-
-### Collector Service Status
-
 ```bash
 ssh ubuntu@aon-collector.example.local
 sudo systemctl status ni-collector
@@ -144,9 +116,6 @@ sudo systemctl status ni-collector
 sudo journalctl -u ni-collector -f --since "1 hour ago"
 sudo journalctl -u ni-collector -n 200
 ```
-
-### Re-Pair Collector
-
 ```bash
 # Trigger re-pairing to Platform VM
 sudo /home/ubuntu/support/pairing.sh
@@ -154,9 +123,6 @@ sudo /home/ubuntu/support/pairing.sh
 #   Platform FQDN: aon-platform.example.local
 #   Pairing key:   <paste key from UI>
 ```
-
-### Test NetFlow Receipt on Collector
-
 ```bash
 # Verify UDP 2055 is being received from switches
 sudo tcpdump -i eth0 -n udp port 2055 -c 50
@@ -165,9 +131,6 @@ sudo tcpdump -i eth0 -n udp port 2055 -c 50
 sudo tcpdump -i eth0 -n udp port 2055 --immediate-mode -q 2>/dev/null | \
   awk 'BEGIN{c=0; t=systime()} {c++; if(systime()-t>=5){print c/5 " pps"; c=0; t=systime()}}'
 ```
-
-### Test Connectivity from Collector to Data Sources
-
 ```bash
 # Test vCenter API
 curl -sk https://vcenter.example.local/rest/com/vmware/cis/session \
@@ -180,11 +143,6 @@ curl -sk https://nsxmgr.example.local/api/v1/cluster \
 # Test TCP reachability to Platform
 nc -zv aon-platform.example.local 443
 ```
-
-## REST API Usage
-
-### Authentication — Obtain Token
-
 ```bash
 PLATFORM="https://aon.example.local"
 
@@ -196,26 +154,15 @@ TOKEN=$(curl -sk -X POST "${PLATFORM}/api/ni/auth/token" \
 echo "Token: $TOKEN"
 # Token is valid for 24 hours by default
 ```
-
-Save token for subsequent calls:
-
 ```bash
 export AON_TOKEN="$TOKEN"
 export AON_URL="https://aon.example.local"
 ```
-
-### List Data Sources
-
 ```bash
 curl -sk -X GET "${AON_URL}/api/ni/datasources" \
   -H "Authorization: NetworkInsight ${AON_TOKEN}" \
   | python3 -m json.tool
 ```
-
-Sample output fields: `entity_id`, `nickname`, `credentials.ip`, `datasource_type`, `enabled`, `enabled_at`.
-
-### Get Data Source Sync Status
-
 ```bash
 # Get all data sources with last sync timestamps
 curl -sk -X GET "${AON_URL}/api/ni/datasources" \
@@ -226,11 +173,6 @@ ds = json.load(sys.stdin)
 for d in ds.get('results', []):
     print(f\"{d.get('nickname',''):<30} {d.get('datasource_type',''):<20} {d.get('enabled','')}\")"
 ```
-
-### Query Flows (Search API)
-
-AON's search API accepts the same query syntax as the UI search bar:
-
 ```bash
 # Get flows from a specific VM in the last hour
 curl -sk -X POST "${AON_URL}/api/ni/search" \
@@ -252,9 +194,6 @@ curl -sk -X POST "${AON_URL}/api/ni/search" \
   }' \
   | python3 -m json.tool
 ```
-
-### Get Open Problems
-
 ```bash
 curl -sk -X GET "${AON_URL}/api/ni/problems?status=OPEN" \
   -H "Authorization: NetworkInsight ${AON_TOKEN}" \
@@ -264,9 +203,6 @@ data = json.load(sys.stdin)
 for p in data.get('results', []):
     print(f\"{p.get('severity',''):<10} {p.get('name',''):<60} {p.get('entity_id','')}\")"
 ```
-
-### Get Security Group Recommendations
-
 ```bash
 # List all applications
 curl -sk -X GET "${AON_URL}/api/ni/groups/applications" \
@@ -279,9 +215,6 @@ curl -sk -X GET "${AON_URL}/api/ni/applications/${APP_ID}/security-groups" \
   -H "Authorization: NetworkInsight ${AON_TOKEN}" \
   | python3 -m json.tool
 ```
-
-### Get Application Details
-
 ```bash
 # List all defined applications
 curl -sk -X GET "${AON_URL}/api/ni/groups/applications" \
@@ -298,9 +231,6 @@ curl -sk -X GET "${AON_URL}/api/ni/groups/applications/${APP_ID}" \
   -H "Authorization: NetworkInsight ${AON_TOKEN}" \
   | python3 -m json.tool
 ```
-
-### Manage Alerts (Pinned Alerts)
-
 ```bash
 # List all alerts
 curl -sk -X GET "${AON_URL}/api/ni/alerts" \
@@ -315,9 +245,6 @@ curl -sk -X PUT "${AON_URL}/api/ni/alerts/${ALERT_ID}/acknowledge" \
   -d '{"comment": "Acknowledged by ops team"}' \
   | python3 -m json.tool
 ```
-
-### Export Security Recommendations to NSX
-
 ```bash
 # Trigger push of recommendations to NSX-T for a given application
 APP_ID="application-12345"
@@ -329,9 +256,6 @@ curl -sk -X POST "${AON_URL}/api/ni/applications/${APP_ID}/security-groups/expor
   -d "{\"nsx_manager_id\": \"${NSX_DS_ID}\"}" \
   | python3 -m json.tool
 ```
-
-### Check Collector Health via API
-
 ```bash
 curl -sk -X GET "${AON_URL}/api/ni/collectors" \
   -H "Authorization: NetworkInsight ${AON_TOKEN}" \
@@ -341,9 +265,6 @@ data = json.load(sys.stdin)
 for c in data.get('results', []):
     print(f\"{c.get('nickname',''):<30} {c.get('status',''):<15} {c.get('ip_address','')}\")"
 ```
-
-### API Token Management (API Keys)
-
 ```bash
 # Create a new API token (for service accounts / scripts)
 curl -sk -X POST "${AON_URL}/api/ni/auth/token" \
@@ -355,20 +276,3 @@ curl -sk -X POST "${AON_URL}/api/ni/auth/token" \
 curl -sk -X DELETE "${AON_URL}/api/ni/auth/token" \
   -H "Authorization: NetworkInsight ${AON_TOKEN}"
 ```
-
-## Useful Log Paths
-
-| Log | Path on Platform VM |
-|---|---|
-| Platform application log | `/var/log/vrni-platform/platform.log` |
-| Nginx access log | `/var/log/nginx/access.log` |
-| Nginx error log | `/var/log/nginx/error.log` |
-| Cassandra log | `/var/log/cassandra/system.log` |
-| Kafka log | `/var/log/kafka/server.log` |
-| Elasticsearch log | `/var/log/elasticsearch/*.log` |
-| Auth/audit log | `/var/log/vrni-platform/audit.log` |
-
-| Log | Path on Collector VM |
-|---|---|
-| Collector service log | `journalctl -u ni-collector` |
-| Collector application log | `/var/log/ni-collector/collector.log` |

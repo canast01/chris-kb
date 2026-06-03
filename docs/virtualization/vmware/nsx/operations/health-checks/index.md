@@ -1,30 +1,3 @@
-# NSX — Health Checks
-
-
-<div class="kb-summary">
-Health Checks reference covering Daily Checks, Health Check Commands, Weekly Checks, Change Readiness Checklist.
-</div>
-
-## Daily Checks
-
-| Check | Command / Location | Expected State |
-|---|---|---|
-| [ ] NSX Manager system health | UI → System → Overview | All green |
-| [ ] Management cluster status | `GET /api/v1/cluster/status` | `STABLE` |
-| [ ] Transport node status | `GET /api/v1/transport-nodes/status` | All UP (down_count = 0) |
-| [ ] Edge cluster health | `GET /api/v1/edge-clusters` | All Edge nodes reachable |
-| [ ] Open alarms | `GET /api/v1/alarms?status=OPEN` | Zero CRITICAL or HIGH |
-| [ ] BGP neighbours | UI → Networking → T0 Gateways → BGP Neighbors | All peers `Established` |
-| [ ] DFW rule count | UI → Security → Distributed Firewall | Not approaching platform limits |
-| [ ] NSX Manager backup | UI → System → Backup & Restore | Last backup < 25 hours ago |
-| [ ] Geneve tunnel health | `get tunnel status` on Manager CLI | All TEP pairs UP |
-
----
-
-## Health Check Commands
-
-### NSX Manager Cluster
-
 ```bash
 # SSH to any NSX Manager node
 nsxcli
@@ -41,6 +14,8 @@ get corfu-cluster status
 # All services running
 get services | grep -v " running"
 # The above grep shows any service NOT in running state — output should be empty
+```
+
 ```text
 ┌───────────────────────────────────────── NSX — Health Checks ─────────────────────────────────────────┐
 │                                                                                                       │
@@ -88,9 +63,6 @@ get services | grep -v " running"
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-### BGP Neighbor Health (Edge CLI)
-
 ```bash
 # SSH to each Edge node
 vrf <tier0-vrf-id>
@@ -102,9 +74,6 @@ get bgp neighbor summary
 # Specific peer detail
 get bgp neighbor <peer-ip>
 ```
-
-### Open Alarms
-
 ```bash
 # Critical alarms (action required immediately)
 curl -sk -u 'admin:password' \
@@ -125,35 +94,6 @@ d = json.load(sys.stdin)
 print(f'MEDIUM alarms open: {d.get(\"result_count\",0)}')
 "
 ```
-
-### DFW Platform Limits
-
-NSX-T has platform limits on DFW objects. Monitor these to avoid hitting limits that would prevent policy changes:
-
-| Object | Limit (per cluster) | Check |
-|---|---|---|
-| Security policies | 10,000 | UI → Security → Distributed Firewall → count |
-| Rules per policy | 1,000 | API: list rules per policy |
-| Total DFW rules | 100,000 | `GET /api/v1/firewall/sections` total rule count |
-| Security groups | 10,000 | `GET /policy/api/v1/infra/domains/default/groups` |
-| IP sets | 10,000 | — |
-
-Alert when usage exceeds 70% of any limit.
-
----
-
-## Weekly Checks
-
-| Check | How | Expected State |
-|---|---|---|
-| [ ] Certificate expiry | `GET /api/v1/trust-management/certificates?details=true` | All certs > 60 days remaining |
-| [ ] Backup verification | Verify SFTP has backup file from last 7 days | File present and non-zero |
-| [ ] IP pool utilisation | `GET /api/v1/pools/ip-pools/<id>` | TEP pool has > 10 free IPs |
-| [ ] Edge cluster HA test | Review HA state; test failover in lab | Active/Standby correctly assigned |
-| [ ] vSphere cluster size changes | Any hosts added/removed from TNP scope? | All new hosts prepared as transport nodes |
-
-### Certificate Check Script
-
 ```bash
 curl -sk -u 'admin:password' \
   "https://<nsx-manager>/api/v1/trust-management/certificates?details=true" | \
@@ -172,9 +112,6 @@ for c in d.get('results', []):
         print(f'  {name:<40}  expires={exp[:10]}  days={days}{flag}')
 "
 ```
-
-### IP Pool Utilisation
-
 ```bash
 curl -sk -u 'admin:password' \
   "https://<nsx-manager>/api/v1/pools/ip-pools" | python3 -c "
@@ -197,40 +134,6 @@ for s in d.get('subnets', []):
     print(f'  {s.get(\"cidr\",\"?\")}  total={t}  free={f}  used={pct}%')
 "
 ```
-
----
-
-## Change Readiness Checklist
-
-Complete before any NSX configuration change, DFW policy modification, upgrade, or maintenance:
-
-### Cluster Health
-
-- [ ] NSX Manager cluster status: STABLE (`get cluster status`)
-- [ ] All Manager nodes connected (`get managers` — all CONNECTED)
-- [ ] No CRITICAL alarms open (`GET /api/v1/alarms?status=OPEN&severity=CRITICAL` — result_count = 0)
-
-### Transport and Overlay Health
-
-- [ ] All transport nodes UP (`GET /api/v1/transport-nodes/status` — down_count = 0)
-- [ ] All Geneve tunnels UP (`get tunnel status` — no DOWN tunnels)
-- [ ] Edge cluster healthy — all Edge nodes UP and reachable
-
-### Routing Health
-
-- [ ] All BGP sessions Established (verify from each Edge node)
-- [ ] Routing table intact (`vrf <id>` → `get route` — expected prefixes present)
-
-### Backup and Rollback
-
-- [ ] NSX Manager backup current and verified on SFTP (< 24 hours old)
-- [ ] Rollback plan documented for the specific change
-- [ ] Change window approved and communicated to networking and compute teams
-
-### Post-Change Validation
-
-After every NSX configuration change:
-
 ```bash
 # 1. Check for new alarms
 curl -sk -u 'admin:password' \

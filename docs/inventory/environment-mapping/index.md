@@ -1,24 +1,3 @@
-# Environment Mapping
-
-
-<div class="kb-summary">
-Document relationships between systems, applications, and services so that change impact, failure blast radius, and dependency chains are understood.
-</div>
-
-## Environment Tiers
-
-| Tier | Purpose | Change Risk | SLA |
-|---|---|---|---|
-| Production | Live user-facing workload | Highest | Full SLA applies |
-| Staging / Pre-prod | Final validation before production | High | Best effort |
-| UAT | User acceptance testing | Medium | Business hours |
-| Development | Active development | Low | No SLA |
-| DR | Standby for production failover | High (when activated) | RTO/RPO as per DR plan |
-
-## Dependency Map Template
-
-For each application, document:
-
 ```markdown
 ## Application: Payments API
 
@@ -51,6 +30,8 @@ For each application, document:
 - DNS: api.payments.example.com → alb-pay-prod CNAME
 - TLS cert: *.payments.example.com — expires 2027-03-01
 - Secrets: vault path `secret/payments/db_password`, `secret/payments/fraud_api_key`
+```
+
 ```text
 ┌─────────────────────────────────── Inventory — Environment Mapping ───────────────────────────────────┐
 │                                                                                                       │
@@ -82,25 +63,6 @@ For each application, document:
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-## Change Impact Assessment
-
-Before any change, use the dependency map to answer:
-
-1. Which services call the component being changed?
-2. What does the component depend on that might be affected?
-3. If this change fails, what is the blast radius?
-4. Which monitoring alerts should be watched during the window?
-5. Who are the downstream service owners to notify?
-
-## Mapping Maintenance
-
-- Update dependency maps when: new service deployed, existing service retired, integration added or removed
-- Review environment maps quarterly or after major incidents
-- Keep maps in version-controlled docs alongside infrastructure code
-
-## Discovery Tools
-
 ```bash
 # netstat — find connections on a host
 ss -tnp    # established TCP connections and owning process

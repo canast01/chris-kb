@@ -1,11 +1,3 @@
-# Horizon — Encryption
-
-
-<div class="kb-summary">
-Encryption reference covering Connection Server Certificate, UAG Certificate, Clipboard Encryption and Control, USB Redirection Encryption, Persistent Disk Encryption and 2 more sections.
-</div>
-
-  TLS Encryption Path: Client to Desktop
 ```text
 ┌───────────────────────────────────── VMware Horizon — Encryption ─────────────────────────────────────┐
 │                                                                                                       │
@@ -106,6 +98,8 @@ Encryption reference covering Connection Server Certificate, UAG Certificate, Cl
 │  Client      │  8443/TCP   │  Blast GW │  8443 proxy  │  Desktop VM                                   │
 │  (Blast)     │             └───────────┘              │  (Blast agent)                                │
 └──────────────┘                                        └──────────────────┘
+```
+
 ```text
 ┌───────────────────────────────────── VMware Horizon — Encryption ─────────────────────────────────────┐
 │                                                                                                       │
@@ -153,13 +147,6 @@ Encryption reference covering Connection Server Certificate, UAG Certificate, Cl
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
----
-
-## UAG Certificate
-
-UAG serves the HTTPS termination point for external connections. Replace the self-signed cert:
-
 ```bash
 ## Option 1: Via UAG Admin UI (port 9443) → SSL Server Certificate → Upload
 ## Upload PKCS12 (.pfx) or PEM (cert + key)
@@ -170,17 +157,6 @@ curl -sk -X PUT "https://uag.example.local:9443/rest/v1/config/certs/ssl" \
   -F "file=@/path/to/uag.pfx" \
   -F "password=pfxpassword"
 ```
-
-UAG requires separate certificates for:
-- HTTPS admin interface (port 9443)
-- Blast Extreme gateway (port 8443) — can share with HTTPS cert or be separate
-
----
-
-## Clipboard Encryption and Control
-
-Clipboard direction can be restricted via GPO to prevent data exfiltration:
-
 ```yaml
 Group Policy → Computer Configuration → Policies → VMware Blast
   Clipboard Redirection:
@@ -189,38 +165,12 @@ Group Policy → Computer Configuration → Policies → VMware Blast
     - Agent to Client only: paste from desktop → client, not reverse
     - Enabled (bidirectional): default — not recommended for sensitive data
 ```
-
-For high-security environments: set to "Client to Agent only" — users can copy instructions into the desktop but cannot exfiltrate data by copying out.
-
----
-
-## USB Redirection Encryption
-
-USB traffic is tunneled through the Blast or PCoIP protocol connection (encrypted). Restrict USB device types via policy:
-
 ```text
 Group Policy → User Configuration → VMware Horizon Client Configuration → USB
   Allow USB Redirection: Enabled
   Exclude Device Family: Storage (block USB mass storage to prevent data exfiltration)
   Allow specific VID/PID: <CAC reader VID:PID> (allow smart card readers only)
 ```
-
----
-
-## Persistent Disk Encryption
-
-Persistent disks (Full Clone pool dedicated disks or App Volumes writable volumes) should use storage-layer encryption:
-
-- **vSAN encryption**: apply encrypted storage policy to the pool datastore
-- **vSphere VM Encryption**: encrypt the VM including its disks
-- **BitLocker in guest**: requires TPM 2.0 or virtual TPM in VM — adds complexity for VDI
-
-App Volumes writable volumes (VHD/VMDK files on a datastore) are not encrypted by default — protect via vSAN or datastore encryption.
-
----
-
-## TLS Version Enforcement on Connection Server
-
 ```powershell
 ## Restrict TLS on Connection Server to 1.2 and 1.3 only
 ## Edit locked.properties file:
@@ -232,13 +182,6 @@ Add-Content $lockedProps "enabledCipherSuites=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA
 ## Restart Connection Server service
 Restart-Service "VMware Horizon View Connection Server"
 ```
-
----
-
-## Drive Mapping Encryption
-
-Drive redirection (mapping client drives in the desktop) goes through the encrypted display protocol tunnel. To disable drive mapping entirely for compliance:
-
 ```text
 Group Policy → Computer Configuration → VMware Horizon Agent
   Drive Redirection: Disabled

@@ -1,32 +1,3 @@
-# Python Automation — Backup & Restore
-
-
-<div class="kb-summary">
-Automation infrastructure must itself be protected. Loss of virtual environments, configuration, or secrets can halt all automated operations. This page covers what to back up, how, and how to restore quickly.
-</div>
-
----
-
-## What to Back Up
-
-| Artifact | Backup method | Priority |
-|---|---|---|
-| Source code | Git repository | Critical — primary source of truth |
-| `requirements.txt` / `poetry.lock` | Committed to Git | Critical — enables venv rebuild |
-| Configuration files (non-secret) | Git repository | Critical |
-| Secrets and credentials | Secrets manager (Vault, AWS SSM) | Critical — never in Git |
-| Virtual environments | Do NOT back up — rebuild from lock file | N/A |
-| Output data / reports | Object storage (S3, Azure Blob) or NAS | High |
-| Scheduled task / cron definitions | Committed to Git or ITSM | High |
-
-> Virtual environments are **not** backed up. They are ephemeral build artifacts. The lock file is the backup — the venv is always rebuilt from it.
-
----
-
-## Source Code Backup
-
-All automation code lives in Git. The Git repository is the authoritative backup.
-
 ```bash
 # Verify all scripts are tracked
 git status
@@ -37,6 +8,8 @@ git ls-files --others --exclude-standard
 # Tag a release before major changes
 git tag -a v1.4.2 -m "Pre-maintenance snapshot $(date -I)"
 git push origin v1.4.2
+```
+
 ```text
 ┌────────────────────────────────────── Python — Backup & Restore ──────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -61,9 +34,6 @@ git push origin v1.4.2
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-### Offline package cache (air-gapped environments)
-
 ```bash
 # Download all packages for offline use
 pip download -r requirements.txt -d /opt/pip-cache/
@@ -71,15 +41,6 @@ pip download -r requirements.txt -d /opt/pip-cache/
 # Install from offline cache
 pip install --no-index --find-links /opt/pip-cache/ -r requirements.txt
 ```
-
----
-
-## Secrets Backup
-
-**Never hardcode secrets in scripts or configuration files.** Secrets must live in a dedicated secrets manager.
-
-### HashiCorp Vault
-
 ```bash
 # Write a secret
 vault kv put secret/automation/widget-api \
@@ -92,7 +53,6 @@ export WIDGET_API_KEY=$(vault kv get -field=api_key secret/automation/widget-api
 # List all secrets (to verify backup completeness)
 vault kv list secret/automation/
 ```
-
 ```python
 # Reading secrets from Vault in Python
 import hvac
@@ -106,9 +66,6 @@ secret = client.secrets.kv.v2.read_secret_version(
 )
 api_key = secret["data"]["data"]["api_key"]
 ```
-
-### AWS Systems Manager Parameter Store
-
 ```python
 import boto3
 
@@ -120,21 +77,6 @@ def get_secret(name: str) -> str:
 
 api_key = get_secret("/automation/widget/api_key")
 ```
-
-### Secrets rotation checklist
-
-- [ ] All secrets have an expiry date set in the secrets manager
-- [ ] Rotation procedure documented in runbook
-- [ ] Scripts use environment variables or secrets manager — no hardcoded values
-- [ ] `.env` files excluded via `.gitignore`
-- [ ] `git log --all -p | grep -i 'password\|secret\|api_key\|token'` returns no matches
-
----
-
-## Configuration Backup
-
-Non-secret configuration is committed to Git alongside code.
-
 ```python
 # config.py — load from environment with pydantic-settings
 from pydantic import Field
@@ -151,7 +93,6 @@ class Settings(BaseSettings):
 
 settings = Settings()
 ```
-
 ```ini
 # config/production.ini — committed to Git (no secrets)
 [api]
@@ -167,15 +108,6 @@ format = json
 directory = /opt/automation/output
 retention_days = 90
 ```
-
----
-
-## Restore Procedure
-
-### Full Automation Infrastructure Restore
-
-Use this procedure when restoring to a new host or recovering from complete failure.
-
 ```bash
 # Step 1: Install Python (use pyenv for version control)
 curl https://pyenv.run | bash
@@ -219,24 +151,6 @@ crontab deploy/crontab/automation.crontab
 python -m pytest tests/ -x -q             # Run test suite
 python -m widget_automation --check        # Application health check
 ```
-
-### Restore Validation Checklist
-
-- [ ] Python version matches expected (`python --version`)
-- [ ] All packages install without errors (`pip install -r requirements.txt`)
-- [ ] No dependency conflicts (`pip check`)
-- [ ] Test suite passes (`pytest`)
-- [ ] Secrets are accessible (spot-check one secret retrieval)
-- [ ] Scheduled tasks are registered and enabled
-- [ ] First scheduled run completes successfully (check logs)
-- [ ] Output directory writable and correctly mounted
-
----
-
-## Scheduled Job Recovery
-
-When a scheduled automation job fails mid-run, follow this procedure:
-
 ```bash
 # 1. Identify what ran and what failed
 journalctl -u widget-sync.service --since "1 hour ago"
@@ -261,11 +175,6 @@ python -m widget_automation sync \
 # 5. Verify output completeness
 python -m widget_automation verify --date 2026-05-07
 ```
-
-### Idempotency requirement
-
-All production automation scripts must be idempotent. Running the same script twice must produce the same result without duplication or corruption.
-
 ```python
 def sync_widget(name: str) -> None:
     """Idempotent widget sync — safe to re-run."""

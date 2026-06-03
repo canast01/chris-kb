@@ -1,18 +1,3 @@
-# Git — Standards
-
-
-<div class="kb-summary">
-Standards reference covering Commit Standards, Commit Message Conventions, Squashing Commits, Cherry-Picking, Viewing Commit History and 6 more sections.
-</div>
-
-## Commit Standards
-
-Commit message conventions, amending commits, squashing, and cherry-picking.
-
-## Commit Message Conventions
-
-Good commit messages make the log scannable and power automated changelogs.
-
 ```bash
 # Conventional Commits format
 <type>(<scope>): <short summary>
@@ -27,6 +12,8 @@ fix(api): handle null response from billing service
 chore(deps): upgrade boto3 to 1.34.0
 docs(runbook): add k8s drain procedure
 refactor(cache): replace in-memory store with Redis
+```
+
 ```text
 ┌─────────────────────────────────────── Git — Design Standards ────────────────────────────────────────┐
 │                                                                                                       │
@@ -72,11 +59,6 @@ refactor(cache): replace in-memory store with Redis
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-## Cherry-Picking
-
-Apply a specific commit from another branch without merging the whole branch.
-
 ```bash
 # Cherry-pick a single commit by hash
 git cherry-pick a1b2c3d4
@@ -93,16 +75,6 @@ git cherry-pick -m 1 a1b2c3d4
 # Abort a cherry-pick in progress
 git cherry-pick --abort
 ```
-
-| Scenario | Command |
-|----------|---------|
-| Backport a fix to release branch | `git cherry-pick <commit>` |
-| Apply multiple commits from hotfix | `git cherry-pick <sha1>^..<sha2>` |
-| Try a commit without staging it | `git cherry-pick -n <commit>` |
-| Resolve conflict and continue | `git cherry-pick --continue` |
-
-## Viewing Commit History
-
 ```bash
 # Oneline log
 git log --oneline -20
@@ -122,20 +94,6 @@ git log --author="Chris" --oneline --since="2 weeks ago"
 # Show the full diff of a specific commit
 git show a1b2c3d4
 ```
-
----
-
-## Tagging Standards
-
-Annotated vs lightweight tags, GPG signing, pushing tags, and release tag workflows.
-
-## Annotated vs Lightweight Tags
-
-| Type | Stores Author/Date | Message | GPG Signable | Use For |
-|------|--------------------|---------|-------------|---------|
-| Annotated | Yes | Yes | Yes | Releases, milestones |
-| Lightweight | No | No | No | Local markers, temp refs |
-
 ```bash
 # Create a lightweight tag
 git tag v2.3.0
@@ -155,9 +113,6 @@ git tag -l "v2.*"
 # Show tag details (annotated)
 git show v2.3.0
 ```
-
-## Signing Tags with GPG
-
 ```bash
 # Sign a tag with your default GPG key
 git tag -s v2.3.0 -m "Signed release v2.3.0"
@@ -172,11 +127,6 @@ git tag -v v2.3.0
 git config --global user.signingkey YOUR_GPG_KEY_ID
 git config --global tag.gpgsign true
 ```
-
-## Pushing Tags
-
-Tags are not pushed automatically — you must push them explicitly.
-
 ```bash
 # Push a single tag
 git push origin v2.3.0
@@ -194,11 +144,6 @@ git push origin :refs/tags/v2.3.0   # equivalent
 # Delete a local tag
 git tag -d v2.3.0
 ```
-
-## Release Tag Workflow
-
-A standard release workflow using annotated, signed tags:
-
 ```bash
 # 1. Ensure you're on main and up to date
 git switch main
@@ -224,9 +169,6 @@ gh release create v2.4.0 \
   --title "v2.4.0" \
   --notes "See CHANGELOG.md for details"
 ```
-
-## Semantic Versioning with Tags
-
 ```bash
 # Find the latest release tag
 git describe --tags --abbrev=0
@@ -240,10 +182,3 @@ git describe --exact-match --tags HEAD 2>/dev/null || echo "not a tagged commit"
 # List tags sorted by semver
 git tag -l "v*" | sort -V
 ```
-
-| Tag Pattern | Example | Meaning |
-|-------------|---------|---------|
-| `vMAJOR.MINOR.PATCH` | `v2.4.0` | Full release |
-| `vMAJOR.MINOR.PATCH-rc.N` | `v2.4.0-rc.1` | Release candidate |
-| `vMAJOR.MINOR.PATCH-beta.N` | `v2.4.0-beta.1` | Beta build |
-| `vMAJOR.MINOR.PATCH-hotfix` | `v2.3.1` | Emergency patch |

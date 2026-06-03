@@ -1,16 +1,3 @@
-# RASR — Common Issues
-
-
-<div class="kb-summary">
-> Part of the [RASR Troubleshooting](../index.md) reference.
-</div>
-
----
-
-## Backup Failures
-
-### Agent service not starting
-
 ```powershell
 # Check service status
 Get-Service RASRAgent
@@ -22,6 +9,8 @@ Get-WinEvent -LogName System -MaxEvents 50 |
 # Common fix: dependencies not started (Workstation service, TCP/IP NetBIOS Helper)
 Get-Service -Name LanmanWorkstation, lmhosts | Start-Service
 Start-Service RASRAgent
+```
+
 ```text
 ┌──────────────────────────────────────── RASR — Common Issues ─────────────────────────────────────────┐
 │                                                                                                       │
@@ -61,11 +50,6 @@ Start-Service RASRAgent
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-### WinPE cannot see local disks
-
-**Symptom:** RASR shows no disks or RAID array not visible during restore target selection.
-
 ```cmd
 :: In WinPE: check if disks visible to diskpart
 diskpart
@@ -76,13 +60,6 @@ exit
 :: Load PERC driver from USB or share:
 drvload D:\drivers\perc\percsas3i.inf
 ```
-
-If the disk is still not visible, the RASR media may predate the server generation — rebuild using the correct driver pack.
-
-### Restore completes but OS won't boot
-
-**Symptom:** Image restored successfully, server reboots, but hangs at boot screen or fails with `BOOTMGR is missing`.
-
 ```cmd
 :: From WinPE: repair boot record manually
 bootrec /fixmbr
@@ -92,28 +69,10 @@ bootrec /rebuildbcd
 :: If BitLocker was enabled, recovery key required at this point
 manage-bde -unlock C: -RecoveryPassword <48-digit-key>
 ```
-
-If the server hardware changed (new PERC controller generation), the restored OS may lack the storage driver. Inject it before rebooting:
-
 ```powershell
 # Inject missing PERC driver into offline restored OS
 dism /Image:C:\ /Add-Driver /Driver:D:\drivers\perc\percsas3i.inf /ForceUnsigned
 ```
-
-### Restore takes much longer than expected
-
-| Cause | Diagnosis | Fix |
-|---|---|---|
-| Single network path (no multipath) | Check NIC teaming in WinPE — only one adapter active | Manually configure NIC teaming in WinPE if supported |
-| Share on spinning disk with high latency | Check NAS I/O during restore | No fix in-flight; schedule future restores during off-peak |
-| Image fragmented on share | Image file has high fragmentation | Defragment the share after migration; store new images sequentially |
-
----
-
-## Agent and Schedule Issues
-
-### Scheduled backup not running
-
 ```powershell
 # Verify RASR schedule is configured
 Get-ScheduledTask | Where-Object { $_.TaskName -match "RASR" }
@@ -125,13 +84,9 @@ Get-ScheduledTaskInfo -TaskName "RASR_DailyBackup"
 $task = Get-ScheduledTask -TaskName "RASR_DailyBackup"
 $task.Settings | Select-Object RunOnlyIfNetworkAvailable, RunOnlyIfIdle, WakeToRun
 ```
-
-### Backup log shows VSS errors
-
 ```text
 Error: VSS writer reported failure — Microsoft Hyper-V VSS Writer / SQL Server VSS Writer
 ```
-
 ```powershell
 # Check VSS writer status
 vssadmin list writers | Select-String -Pattern "State:|Writer name:"
@@ -141,16 +96,3 @@ Restart-Service -Name VSS, vds
 # For SQL VSS writer:
 Restart-Service -Name SQLWriter
 ```
-
----
-
-## Common Issue Summary
-
-| Symptom | Most likely cause | First action |
-|---|---|---|
-| Backup fails nightly | Share credential expired or account locked | Reset RASR service account password; unlock account |
-| WinPE shows no network | Wrong driver pack for server generation | Rebuild media using correct Dell driver pack |
-| WinPE shows no disks | PERC driver missing from media | Load PERC driver from USB; rebuild media |
-| Restore completes, OS won't boot | BCD corruption or driver mismatch | Run `bootrec /rebuildbcd`; inject missing storage driver |
-| Image file is 0 bytes | Agent crashed mid-capture | Check VSS writers; restart agent; re-run capture |
-| Agent service crashes on start | Corrupted installation | Reinstall RASR agent from Dell OpenManage package |

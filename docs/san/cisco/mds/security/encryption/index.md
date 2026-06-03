@@ -1,27 +1,3 @@
-# MDS — Encryption
-
-
-<div class="kb-summary">
-> Part of the [Cisco MDS](../../index.md) reference.
-</div>
-
----
-
-## Overview
-
-Encryption on the MDS platform operates at multiple layers:
-
-- **Management plane**: SSH and HTTPS for all CLI and API access; SNMP traffic encrypted via SNMPv3 authPriv
-- **Control plane**: TACACS+ key encryption; FC-SP DHCHAP for fabric authentication
-- **Data plane**: MACsec or FC-SP for in-flight FC frame encryption (MDS 9700 series hardware required for FC encryption)
-- **Long-distance FC**: FCIP with IPSec for encrypted Fibre Channel over IP tunnels
-
----
-
-## SSH (Management Access Encryption)
-
-SSH is the only permitted remote management protocol. Telnet transmits credentials in cleartext and must be disabled.
-
 ```bash
 # Verify SSH is enabled
 show feature | include ssh
@@ -44,6 +20,8 @@ ssh version 2
 # View active SSH sessions
 show ssh server
 show users
+```
+
 ```text
 ┌─────────────────────────────────── Cisco MDS — Security Encryption ───────────────────────────────────┐
 │                                                                                                       │
@@ -91,11 +69,6 @@ show users
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-### HTTPS Certificate Management
-
-NX-OS uses a self-signed certificate by default. For enterprise environments, replace with a CA-signed certificate.
-
 ```bash
 # Generate a new self-signed certificate
 crypto ca trustpoint LOCAL-CA
@@ -113,15 +86,6 @@ show crypto ca certificates
 copy tftp://<server>/mds-sw01.pem bootflash:mds-sw01.pem
 crypto ca import LOCAL-CA certificate
 ```
-
----
-
-## SNMPv3 (Encrypted SNMP)
-
-SNMPv1 and v2c transmit community strings and OID data in cleartext. SNMPv3 with `authPriv` security level provides both authentication (SHA) and privacy encryption (AES).
-
-### Disable SNMPv1/v2c
-
 ```bash
 # Remove default community strings
 no snmp-server community public
@@ -132,9 +96,6 @@ no snmp-server community private
 #   permit udp 10.10.2.5/32 any eq 161
 # snmp-server community <string> group network-operator use-acl SNMP-LEGACY-NMS
 ```
-
-### Configure SNMPv3 Users
-
 ```bash
 # Create an SNMPv3 user with authPriv (SHA auth, AES-128 privacy)
 snmp-server user nms_monitor network-operator v3 auth sha <auth-password> priv aes-128 <priv-password>
@@ -151,9 +112,6 @@ show snmp host
 # Test SNMP from the monitoring server (Linux)
 # snmpwalk -v3 -u nms_monitor -l authPriv -a SHA -A <auth-pass> -x AES -X <priv-pass> <switch-ip> sysDescr
 ```
-
-### SNMP Trap Configuration
-
 ```bash
 # Enable specific trap categories
 snmp-server enable traps link
@@ -167,13 +125,6 @@ show snmp trap
 # Check that traps are being sent (look for SNMP events in log)
 show logging | grep -i snmp
 ```
-
----
-
-## TACACS+ Key Encryption
-
-TACACS+ shared keys must be stored encrypted in the NX-OS configuration. NX-OS uses type-7 (Vigenere-based) obfuscation for `key 7` stored values.
-
 ```bash
 # Enter key as plaintext (NX-OS encrypts automatically in running-config)
 tacacs-server host 10.10.1.10 key 0 <plaintext-key>
@@ -187,15 +138,6 @@ no tacacs-server host 10.10.1.10 key
 tacacs-server host 10.10.1.10 key 0 <new-plaintext-key>
 copy running-config startup-config
 ```
-
-Note: NX-OS type-7 keys are obfuscated, not cryptographically secure. The security relies on the confidentiality of the configuration file itself. Store configuration backups in an access-controlled, encrypted repository.
-
----
-
-## FC-SP / DHCHAP (Fabric Authentication Encryption)
-
-FC-SP uses DHCHAP (Diffie-Hellman Challenge Handshake Authentication Protocol) to authenticate FC devices before permitting fabric login. The DHCHAP exchange is cryptographically signed — it does not encrypt FC frames but prevents unauthenticated devices from logging in.
-
 ```bash
 # Enable FC-SP
 feature fcsp
@@ -213,17 +155,6 @@ fcsp dhchap devicename-password pwwn 21:00:00:24:ff:a1:b2:c3 password 0 <secret>
 show fcsp interface fc1/1
 show fcsp dhchap vsan 10
 ```
-
----
-
-## FCIP with IPSec (FC over IP Encryption)
-
-FCIP (Fibre Channel over IP) tunnels FC frames over IP networks for long-distance replication and campus extension. Without IPSec, FCIP traffic is transmitted in cleartext. Add IPSec to encrypt the IP tunnel.
-
-### FCIP with IPSec — Overview
-
-FCIP is typically deployed on MDS 9700-series switches with the Storage Services Module (SSM) or IPS modules. The configuration defines a tunnel interface that maps an FC VSAN to an IP tunnel endpoint.
-
 ```bash
 # Enable FCIP feature
 feature fcip
@@ -241,9 +172,6 @@ fcip profile 1
 # Enable IPSec on the FCIP interface
 # (Requires IKE and IPSec policy configuration — see below)
 ```
-
-### IPSec Policy for FCIP
-
 ```bash
 # Define IKE proposal
 crypto ike proposal FCIP-IKE-PROP
@@ -273,32 +201,3 @@ show crypto ike sa
 show crypto ipsec sa
 show interface fcip 1
 ```
-
----
-
-## Encryption Standards Summary
-
-| Layer | Protocol | Standard |
-|---|---|---|
-| Management CLI | SSH v2 | RSA 2048-bit; SSH v1 disabled |
-| Management Web/API | HTTPS TLS 1.2+ | CA-signed certificate preferred |
-| SNMP | SNMPv3 authPriv | SHA auth; AES-128 minimum |
-| TACACS+ key | Type-7 stored | Config backup stored encrypted |
-| Fabric device auth | FC-SP DHCHAP | Enabled on F_Ports in high-security VSANs |
-| FCIP tunnel | IPSec | AES-256; SHA-256; IKEv2 |
-| FC frame encryption | MACsec / FC-SP | MDS 9700 with hardware encryption module |
-
----
-
-## Encryption Checklist
-
-- [ ] Telnet disabled: `show feature | include telnet` returns `disabled`
-- [ ] SSH enabled; RSA key generated: `show crypto key mypubkey rsa`
-- [ ] SSH version 2 enforced: `show ssh server | include version`
-- [ ] HTTP disabled; HTTPS enabled: `show feature | include http`
-- [ ] HTTPS certificate current and from a trusted CA (or self-signed documented in CMDB)
-- [ ] SNMPv1/v2c community strings removed: `show snmp community` returns none
-- [ ] SNMPv3 authPriv configured with SHA + AES-128: `show snmp user`
-- [ ] TACACS+ keys stored encrypted in config; config backup stored in encrypted, access-controlled repository
-- [ ] FC-SP DHCHAP enabled on F_Ports in high-security VSANs: `show fcsp interface`
-- [ ] FCIP tunnels using IPSec if traversing untrusted networks: `show crypto ipsec sa`

@@ -1,14 +1,3 @@
-# Confluence — Scripts
-
-
-<div class="kb-summary">
-Production-ready scripts for Confluence administration. All scripts assume a Data Center deployment with PostgreSQL. Set environment variables before running.
-</div>
-
----
-
-## Environment Setup
-
 ```bash
 # Common variables — set these in your shell or CI/CD environment
 export CF_URL="https://confluence.example.com"
@@ -20,6 +9,8 @@ export DB_USER="confluence"
 export PGPASSWORD="<db-password>"
 export SHARED_HOME="/mnt/confluence-shared"
 export BACKUP_DIR="/backup/confluence"
+```
+
 ```text
 ┌─────────────────────────────────── Confluence — Operations Scripts ───────────────────────────────────┐
 │                                                                                                       │
@@ -51,13 +42,6 @@ export BACKUP_DIR="/backup/confluence"
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
----
-
-## 3. Stale Page Cleanup
-
-Identifies and optionally trashes pages not modified in N days. Outputs a report; requires `--execute` flag to actually trash.
-
 ```bash
 #!/bin/bash
 # stale-page-cleanup.sh
@@ -102,13 +86,6 @@ done
 echo "Report: $REPORT"
 [ "$EXECUTE" == "false" ] && echo "DRY RUN — use --execute to trash pages"
 ```
-
----
-
-## 4. Audit Log Export
-
-Exports the Confluence audit log to CSV for compliance or SIEM ingestion.
-
 ```bash
 #!/bin/bash
 # audit-log-export.sh
@@ -144,13 +121,6 @@ done
 
 echo "Audit log exported: $OUTPUT ($(wc -l < "$OUTPUT") records)"
 ```
-
----
-
-## 5. Disk Usage Report
-
-Breaks down shared home disk usage by category and alerts if any exceeds threshold.
-
 ```bash
 #!/bin/bash
 # disk-usage-report.sh
@@ -187,13 +157,6 @@ OUTPUT="disk_report_$(date +%Y%m%d).txt"
 
 echo "Report saved: $OUTPUT"
 ```
-
----
-
-## 6. REST API Token Rotation
-
-Rotates Confluence Personal Access Tokens for service accounts. Requires the v2 API (Confluence 8.x+).
-
 ```python
 #!/usr/bin/env python3
 # token-rotation.py
@@ -278,13 +241,6 @@ for t in tokens:
 
 print("Token rotation complete")
 ```
-
----
-
-## 7. Space Permission Audit
-
-Reports all space-level permissions across all spaces — useful for quarterly access reviews.
-
 ```bash
 #!/bin/bash
 # space-permission-audit.sh

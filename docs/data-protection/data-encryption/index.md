@@ -1,22 +1,3 @@
-# Data Encryption
-
-
-<div class="kb-summary">
-Encryption protects data at rest, in transit, and during processing against unauthorised access.
-</div>
-
-## Encryption Requirements by Classification
-
-| Level | At Rest | In Transit | Key Management |
-|---|---|---|---|
-| Restricted | AES-256 mandatory | TLS 1.2+ mandatory | HSM or enterprise KMS |
-| Confidential | AES-256 mandatory | TLS 1.2+ mandatory | Enterprise KMS |
-| Internal | Recommended | Recommended | Standard key store |
-| Public | Optional | Optional | N/A |
-
-## Encryption at Rest
-
-**Linux — LUKS:**
 ```bash
 # Check if encrypted
 cryptsetup isLuks /dev/sdb && echo "LUKS" || echo "Not encrypted"
@@ -26,6 +7,8 @@ dmsetup ls --target crypt
 
 # Dump LUKS header info
 cryptsetup luksDump /dev/sdb
+```
+
 ```text
 ┌────────────────────────────────── Data Protection — Data Encryption ──────────────────────────────────┐
 │                                                                                                       │
@@ -60,17 +43,11 @@ cryptsetup luksDump /dev/sdb
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-**Disable weak protocols (nginx):**
 ```nginx
 ssl_protocols TLSv1.2 TLSv1.3;
 ssl_prefer_server_ciphers on;
 ssl_ciphers 'ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384';
 ```
-
-## Database Encryption
-
-**MSSQL — TDE:**
 ```sql
 CREATE DATABASE ENCRYPTION KEY WITH ALGORITHM = AES_256
 ENCRYPTION BY SERVER CERTIFICATE <cert-name>;
@@ -79,20 +56,3 @@ ALTER DATABASE <dbname> SET ENCRYPTION ON;
 SELECT db_name(database_id), encryption_state, percent_complete
 FROM sys.dm_database_encryption_keys;
 ```
-
-## Key Rotation Schedule
-
-| Key Type | Frequency |
-|---|---|
-| TLS/SSL certificates | Annual (external); 2-year (internal) |
-| AWS KMS CMK | Annual (automatic) |
-| Azure Key Vault keys | 90 days (rotation policy) |
-| Database encryption keys | Annual or on personnel change |
-
-## Verification Checklist
-
-- [ ] All production volumes confirmed encrypted at rest
-- [ ] All external services confirmed TLS 1.2+ only
-- [ ] Certificate expiry monitoring in place
-- [ ] Key management system operational (HSM/KMS health checked)
-- [ ] Encryption key backup confirmed and tested

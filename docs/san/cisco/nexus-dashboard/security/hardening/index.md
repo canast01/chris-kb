@@ -1,20 +1,3 @@
-# Nexus Dashboard — Hardening
-
-
-<div class="kb-summary">
-> Part of the [Nexus Dashboard](../../index.md) reference.
-</div>
-
----
-
-## Overview
-
-Hardening the Nexus Dashboard cluster reduces the attack surface of the management plane. Apply this baseline during initial deployment and validate quarterly. ND runs on a Kubernetes-based Linux platform — hardening applies to both the ND application configuration and the underlying platform.
-
----
-
-## 1. Change Default Credentials
-
 ```bash
 # SSH to the ND cluster
 ssh ndadmin@nd-dc1-1.corp.example.com
@@ -24,6 +7,8 @@ ssh ndadmin@nd-dc1-1.corp.example.com
 passwd ndadmin
 # Use a password meeting corporate complexity policy (20+ characters)
 # Store in vault; treat as break-glass
+```
+
 ```text
 ┌───────────────────────────── Cisco Nexus Dashboard — Security Hardening ──────────────────────────────┐
 │                                                                                                       │
@@ -71,46 +56,6 @@ passwd ndadmin
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
----
-
-## 4. Configure External Authentication
-
-Do not run production with local accounts only. Configure LDAP, TACACS+, or SAML:
-
-1. Navigate to **Admin Console > Security > Authentication**.
-2. Configure LDAP or TACACS+ as described in [Authentication](../authentication/index.md).
-3. Test authentication with an AD account before retiring local accounts.
-4. Retain exactly one local admin account as break-glass.
-
-### Disable Local Login for Non-Break-Glass Accounts
-
-After LDAP/SAML is confirmed working:
-1. Navigate to **Admin Console > Security > Local Users**.
-2. Delete all local accounts except the break-glass `admin`.
-3. Document the break-glass account location in the runbook.
-
----
-
-## 5. Session Security
-
-Configure under **Admin Console > Security > Security Settings**:
-
-| Setting | Recommended Value |
-|---|---|
-| Session idle timeout | 15 minutes |
-| Maximum session lifetime | 8 hours |
-| Concurrent sessions per user | 3 |
-| Failed login lockout | 5 attempts / 30 minutes |
-
----
-
-## 6. Login Banner
-
-Configure a legal warning banner on the ND login page:
-
-1. Navigate to **Admin Console > Security > Security Settings > Login Banner**.
-2. Enter:
 ```text
    WARNING: This system is for authorized use only.
    All connections are monitored and recorded.
@@ -154,6 +99,8 @@ Ensure audit logging is enabled and forwarded to the SIEM:
 
 ND's Kubernetes control plane has several security defaults that should be verified:
 
+```
+
 ```bash
 ssh ndadmin@nd-dc1-1.corp.example.com
 
@@ -177,13 +124,6 @@ for item in data['items']:
 kubectl get networkpolicies --all-namespaces | grep -c "NetworkPolicy"
 # Should be non-zero
 ```
-
----
-
-## 10. NTP Synchronization
-
-Correct time is essential for certificate validation, log correlation, and Kerberos authentication:
-
 ```bash
 ssh ndadmin@nd-dc1-1.corp.example.com
 
@@ -198,59 +138,3 @@ acs system ntp add --server 10.10.0.11
 acs system ntp show
 # Expected: server reachable, stratum ≤ 3, offset < 100ms
 ```
-
----
-
-## Hardening Checklist
-
-### Access and Authentication
-
-- [ ] Default admin password changed; stored in vault
-- [ ] LDAP or SAML configured and tested
-- [ ] Local accounts limited to break-glass admin only
-- [ ] Password policy enforced (12+ chars, complexity, 90-day rotation, lockout)
-- [ ] Session idle timeout: 15 minutes
-- [ ] RBAC roles assigned per least-privilege principle
-- [ ] Site scoping applied for multi-site environments
-
-### Network and Transport
-
-- [ ] TLS certificate from corporate CA (not self-signed)
-- [ ] TLS 1.0 and 1.1 disabled (verify with openssl s_client -tls1)
-- [ ] Management access restricted to authorised subnets
-- [ ] SSH restricted to jump host / management subnet
-- [ ] Switch management traffic on dedicated data VLAN
-
-### Data Protection
-
-- [ ] Backup encryption enabled; passphrase in vault
-- [ ] VM disk encryption enabled (vSphere VM Encryption or SED)
-- [ ] Backup restore tested (annually)
-
-### Monitoring and Visibility
-
-- [ ] Login banner configured on ND UI
-- [ ] Syslog forwarding to SIEM active
-- [ ] SIEM alerts for failed logins and admin activity configured
-- [ ] Audit log reviewed quarterly
-
-### Operational
-
-- [ ] NTP synchronized on all nodes (< 100ms offset)
-- [ ] TLS certificate expiry monitored (< 60 days = alert)
-- [ ] ND platform and app versions current
-- [ ] Quarterly hardening review scheduled
-
----
-
-## Periodic Review Schedule
-
-| Review | Frequency |
-|---|---|
-| Full hardening checklist | Quarterly |
-| Break-glass password rotation | Quarterly |
-| User access review | Quarterly |
-| TLS certificate expiry check | Monthly |
-| ND platform upgrade | Align with Cisco release cadence |
-| Backup restore test | Annually |
-| Audit log review | Monthly |

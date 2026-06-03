@@ -1,25 +1,3 @@
-# NetApp Keystone CLI Reference
-
-
-<div class="kb-summary">
-> Part of the [Keystone](../index.md) reference.
-</div>
-
----
-
-## Overview
-
-NetApp Keystone is a subscription-based STaaS offering managed through BlueXP and the ActiveIQ / Keystone REST API. There is no standalone CLI binary; interaction is via REST API (curl/Python) or the BlueXP web UI. ONTAP CLI is used for raw capacity checking on the underlying volumes and aggregates.
-
----
-
-## Keystone REST API
-
-Base URL: `https://api.activeiq.netapp.com`  
-Authentication: OAuth2 Bearer token obtained from the NetApp identity service.
-
-### Authenticate (OAuth2)
-
 ```bash
 # Exchange client credentials for a bearer token
 TOKEN=$(curl -s -X POST "https://netapp-cloud-account.auth0.com/oauth/token" \
@@ -32,6 +10,8 @@ TOKEN=$(curl -s -X POST "https://netapp-cloud-account.auth0.com/oauth/token" \
   }' | python3 -c "import sys,json; print(json.load(sys.stdin)['access_token'])")
 
 echo "Token acquired"
+```
+
 ```text
 ┌─────────────────────────────────── NetApp Keystone — CLI Reference ───────────────────────────────────┐
 │                                                                                                       │
@@ -86,21 +66,11 @@ echo "Token acquired"
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-### Service Level Listing
-
 ```bash
 # List service levels (tiers) available under a subscription
 curl -s "https://api.activeiq.netapp.com/v1/keystone/subscriptions/${SUBSCRIPTION_ID}/service-levels" \
   -H "Authorization: Bearer $TOKEN" | python3 -m json.tool
 ```
-
----
-
-## Burst Usage Alerting
-
-Keystone subscriptions have a committed tier and a burst tier. Consuming above the committed level incurs burst charges.
-
 ```bash
 # Check if any tier is in burst (consumed > committed)
 curl -s "https://api.activeiq.netapp.com/v1/keystone/subscriptions/${SUBSCRIPTION_ID}/usage" \
@@ -119,13 +89,6 @@ for tier in data.get('usageDetails', []):
 sys.exit(1 if alert else 0)
 "
 ```
-
----
-
-## ONTAP CLI — Capacity Tracking
-
-Use these commands on the underlying ONTAP cluster to cross-check capacity data reported to Keystone.
-
 ```bash
 # All volumes: size, used, available
 volume show -fields size,used,available,percent-used
@@ -146,9 +109,6 @@ qos workload show -fields workload-name,volume,policy-group
 # Check volume space guarantee (impacts Keystone committed capacity)
 volume show -fields space-guarantee,size,used
 ```
-
-### Thin vs Thick Provisioning Check
-
 ```bash
 # Volumes with thick guarantee (count against committed immediately)
 volume show -space-guarantee volume -fields size,used,space-guarantee
@@ -156,13 +116,6 @@ volume show -space-guarantee volume -fields size,used,space-guarantee
 # Volumes with thin/none guarantee (count against committed as written)
 volume show -space-guarantee none -fields size,used,space-guarantee
 ```
-
----
-
-## BlueXP Digital Wallet (UI-equivalent API)
-
-Keystone subscription wallet data is also exposed through BlueXP Digital Wallet:
-
 ```bash
 BLUEXP_TOKEN="<bluexp_bearer_token>"
 

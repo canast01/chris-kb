@@ -1,13 +1,3 @@
-# InsightIQ — Scripts
-
-<div class="kb-summary">
-InsightIQ Scripts reference covering Authentication, Threshold Alert Forwarding (SNMP), Automated Weekly Report Generation, Script Inventory, OneFS Performance Query (Direct API).
-</div>
-
-## Authentication
-
-Scripts authenticate to the InsightIQ REST API using basic authentication with the admin service account. Credentials are loaded from the secrets manager at runtime.
-
 ```python
 import requests
 from requests.auth import HTTPBasicAuth
@@ -20,6 +10,8 @@ def iiq_get(path: str, params: dict = None) -> dict:
                         auth=AUTH, params=params, verify=True)
     resp.raise_for_status()
     return resp.json()
+```
+
 ```text
 ┌──────────────────────────────────── InsightIQ — Scripts Reference ────────────────────────────────────┐
 │                                                                                                       │
@@ -52,9 +44,6 @@ def iiq_get(path: str, params: dict = None) -> dict:
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-## Automated Weekly Report Generation
-
 ```python
 import smtplib
 from email.mime.multipart import MIMEMultipart
@@ -77,22 +66,6 @@ def email_report(report_bytes: bytes, filename: str, recipients: list):
         smtp.starttls()
         smtp.send_message(msg)
 ```
-
-## Script Inventory
-
-| Script | Purpose | Schedule |
-|---|---|---|
-| `export_performance.py` | Export throughput and latency data for a date range | On demand |
-| `generate_report.py` | Automate weekly utilisation report generation and email | Weekly |
-| `threshold_alert.py` | Compare latest metrics to thresholds; send SNMP trap on breach | Every 5 minutes (cron) |
-| `cluster_health_check.py` | Check all cluster connection statuses; alert on disconnected clusters | Daily |
-
-Scripts are stored in `scripts/insightiq/`. Load credentials from the secrets manager at runtime using an environment variable or vault client. Use the `verify=True` SSL flag to enforce certificate validation.
-
-## OneFS Performance Query (Direct API)
-
-For direct OneFS performance queries (bypass InsightIQ):
-
 ```bash
 # Query OneFS statistics API directly
 curl -sk -u svc-insightiq https://<cluster-ip>:8080/platform/1/statistics/summary/drive | jq .

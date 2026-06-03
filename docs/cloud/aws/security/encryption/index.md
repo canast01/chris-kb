@@ -1,28 +1,3 @@
-# AWS — Encryption
-
-
-<div class="kb-summary">
-Encryption reference covering Encryption Coverage Overview, KMS — Customer Managed Key (CMK), EBS — Encrypted Volume, RDS — Encryption at Rest, RDS — Enforce TLS and 4 more sections.
-</div>
-
----
-
-## Encryption Coverage Overview
-
-| Service | At Rest | In Transit |
-|---|---|---|
-| S3 | SSE-S3 (default), SSE-KMS (recommended), SSE-C | TLS 1.2+ enforced via bucket policy |
-| EBS | KMS-managed CMK or AWS-managed key | N/A (within AWS fabric) |
-| RDS | KMS at instance creation | TLS enforced via parameter group |
-| Secrets Manager | KMS (CMK or AWS-managed) | TLS always |
-| EKS secrets (etcd) | KMS envelope encryption | TLS (in-cluster) |
-| DynamoDB | AWS-owned key (default), CMK optional | TLS always |
-| SQS/SNS | SSE-SQS or CMK | TLS always |
-
----
-
-## KMS — Customer Managed Key (CMK)
-
 ```bash
 # Create a CMK with key rotation enabled
 aws kms create-key \
@@ -42,6 +17,8 @@ aws kms create-alias \
 
 # Verify rotation is enabled
 aws kms get-key-rotation-status --key-id $KEY_ID
+```
+
 ```text
 ┌──────────────────────────────── AWS Encryption — At Rest & In Transit ────────────────────────────────┐
 │                                                                                                       │
@@ -89,11 +66,6 @@ aws kms get-key-rotation-status --key-id $KEY_ID
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
----
-
-## RDS — Encryption at Rest
-
 ```bash
 # Encryption must be enabled at creation (cannot enable on existing instance)
 aws rds create-db-instance \
@@ -119,11 +91,6 @@ aws rds copy-db-snapshot \
   --kms-key-id arn:aws:kms:eu-west-1:<account>:alias/prod-rds-cmk
 # Then restore from encrypted snapshot
 ```
-
----
-
-## RDS — Enforce TLS
-
 ```bash
 # For MySQL/MariaDB — create parameter group with require_secure_transport=1
 aws rds create-db-parameter-group \
@@ -140,11 +107,6 @@ aws rds modify-db-instance \
   --db-parameter-group-name prod-mysql-tls \
   --apply-immediately
 ```
-
----
-
-## EKS — Secrets Encryption at Rest
-
 ```bash
 # Enable envelope encryption of Kubernetes secrets with CMK
 aws eks associate-encryption-config \
@@ -160,11 +122,6 @@ aws eks associate-encryption-config \
 aws eks describe-cluster --name my-cluster \
   --query 'cluster.encryptionConfig'
 ```
-
----
-
-## Secrets Manager — CMK
-
 ```bash
 # Create secret with CMK
 aws secretsmanager create-secret \
@@ -183,11 +140,6 @@ aws secretsmanager rotate-secret \
   --rotation-lambda-arn arn:aws:lambda:eu-west-1:<account>:function:RotateRDSPassword \
   --rotation-rules AutomaticallyAfterDays=30
 ```
-
----
-
-## ACM — TLS Certificate
-
 ```bash
 # Request a public ACM certificate (DNS validation)
 aws acm request-certificate \
@@ -209,11 +161,6 @@ aws acm import-certificate \
   --certificate-chain fileb://chain.pem \
   --region eu-west-1
 ```
-
----
-
-## Audit — Unencrypted Resources
-
 ```bash
 # S3 buckets without default encryption
 aws s3api list-buckets --query 'Buckets[*].Name' --output text | \

@@ -1,11 +1,3 @@
-# FlashBlade — Integrations
-
-
-<div class="kb-summary">
-Integrations reference covering VMware Integration, Backup Integration, Pure1 Monitoring, Authentication, REST API.
-</div>
-
-FlashBlade Integration Map
 ```text
 ┌──────────────────────────────────────────────────────────┐
 │                       FlashBlade                                                                      │
@@ -15,14 +7,6 @@ FlashBlade Integration Map
 │  └────┬─────┘  └────┬─────┘  └────┬─────┘                                                             │
 └───────┼─────────────┼─────────────┼──────────────────────┘
 ```
-        │             │             │
-        ▼             ▼             ├──► Pure1 (phone-home)
-  ESXi NFS DS    Veeam repo         ├──► Pure1 REST API
-  Linux AI/ML    Analytics          ├──► SNMP NMS
-  Windows SMB    Backup target      └──► SIEM (TLS syslog)
-                                    │
-                                    └──► Remote FlashBlade
-                                         (ActiveDR async repl)
 ```sql
 
 > Part of the [FlashBlade Architecture](../index.md) reference.
@@ -98,38 +82,11 @@ FlashBlade phones home to Pure1 automatically over HTTPS once registered.
 
 **Verify phone-home status:**
 
+```
+
 ```bash
 purefb array list --phonehome
 ```
-
-## Authentication
-
-**Active Directory (AD):**
-
-- Required for SMB share access and optional for NFS Kerberos authentication
-- Join FlashBlade to AD: `purefb directoryservice create --base-dn <base_dn> --bind-user <user> --bind-password <pwd> --domain <domain> --uri ldaps://<dc_ip>`
-- AD integration also enables LDAP-based admin authentication — map AD groups to FlashBlade admin roles
-- Test AD join before creating SMB shares: `purefb directoryservice test`
-
-**LDAP for NFS UID/GID mapping:**
-
-- Configure LDAP for NFS user and group ID mapping when Linux clients use LDAP-backed UIDs
-- FlashBlade uses the LDAP directory to resolve NFS UIDs to user names for export policy enforcement
-
-**SAML SSO (admin authentication):**
-
-- Purity//FB 4.x supports SAML SSO for the management GUI
-- Configure the FlashBlade as a SAML Service Provider in your IdP (Okta, Azure AD, ADFS)
-- Recommended over local admin accounts — enforces MFA and centralises access revocation
-
-## REST API
-
-**Base URL:** `https://<flashblade_management_ip>/api/<version>/`
-
-Current API version: `2.x` (Purity//FB 4.x)
-
-**Authentication:**
-
 ```bash
 ## Log in and obtain a session token
 curl -s -k -X POST "https://<fb_ip>/api/login" \
@@ -145,16 +102,10 @@ curl -s -k -X GET "https://<fb_ip>/api/2.x/arrays" \
 curl -s -k -X GET "https://<fb_ip>/api/2.x/arrays" \
   -H "x-auth-token: <api_token>" | jq .
 ```
-
-**Generate an API token:**
-
 ```bash
 ## On the array CLI
 purefb admin apitoken create <username>
 ```
-
-**Common API calls:**
-
 ```bash
 ## Get array status and version
 GET /api/2.x/arrays
@@ -174,5 +125,3 @@ GET /api/2.x/buckets
 ## List replication relationships
 GET /api/2.x/array-connections
 ```
-
-Full API reference: [Pure Storage FlashBlade REST API documentation](https://support.purestorage.com/bundle/m_fb_rest_api)

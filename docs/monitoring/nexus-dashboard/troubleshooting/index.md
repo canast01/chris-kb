@@ -1,12 +1,3 @@
-# Nexus Dashboard: Troubleshooting Connectivity, Service Failures, and Upgrade Issues
-
-
-<div class="kb-summary">
-This page covers common Nexus Dashboard operational problems: node connectivity failures, service application crashes, and issues encountered during software upgrades.
-</div>
-
-## Checking Nexus Dashboard Cluster Health
-
 ```bash
 # SSH to the Nexus Dashboard primary node
 ssh rescue-user@nexus-dashboard.example.com
@@ -22,6 +13,8 @@ acs logs --type alert
 
 # Check ND cluster node connectivity
 acs nodes
+```
+
 ```text
 ┌────────────────────────────────── Nexus Dashboard — Troubleshooting ──────────────────────────────────┐
 │                                                                                                       │
@@ -54,19 +47,6 @@ acs nodes
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-Common upgrade failure points:
-
-| Failure | Likely Cause | Fix |
-|---|---|---|
-| Pre-check fails: disk space | Less than 20 GB free | Clean logs, remove old app images |
-| Pre-check fails: quorum lost | Node offline before upgrade | Bring node online before upgrading |
-| Service app incompatible | App version not certified for new ND | Upgrade or downgrade app to compatible version first |
-| Node stuck in "Upgrading" | Network interruption during image pull | Retry upgrade after verifying connectivity |
-| Post-upgrade service offline | Service pod failed to restart | Check `kubectl get pods` and pod logs |
-
-## Collecting a Support Bundle
-
 ```bash
 # Generate a support bundle from the ND CLI
 ssh rescue-user@nexus-dashboard.example.com
@@ -75,13 +55,3 @@ acs techsupport --node all
 # Download the bundle (bundle saved to /data/techsupport/)
 scp rescue-user@nexus-dashboard.example.com:/data/techsupport/nd-tech-support-*.tar.gz ./
 ```
-
-## Common Troubleshooting Reference
-
-| Problem | First Check | Second Check |
-|---|---|---|
-| ND UI not loading | `acs health` on node | Check load balancer VIP and port 443 |
-| Fabric health score stuck | NDI service status | APIC API credentials valid |
-| Alerts not generating | NDI telemetry receiving | Switch-level telemetry streaming enabled |
-| NDO sync not completing | APIC version compatibility | Review NDO-APIC version compatibility matrix |
-| Node offline after reboot | Management interface config | Verify CIMC/IPMI access and re-seat if physical |

@@ -1,18 +1,3 @@
-# RASR — Procedures
-
-
-<div class="kb-summary">
-> Part of the [RASR Operations](../index.md) reference.
-</div>
-
----
-
-## Procedure 1: Capture System Image
-
-**When:** After OS changes, patch events, or on schedule. Run from within the running Windows OS.
-
-**Time required:** 20–60 minutes depending on OS volume size.
-
 ```powershell
 # Step 1: Verify agent is running
 Get-Service RASRAgent   # must be Running
@@ -33,6 +18,8 @@ Get-Content "C:\Program Files\Dell\RASR\Logs\RASRAgent.log" -Tail 20 -Wait
 
 # Step 5: Verify image created
 Get-ChildItem $share | Sort-Object LastWriteTime -Descending | Select-Object -First 1
+```
+
 ```text
 ┌────────────────────────────────────────── RASR — Procedures ──────────────────────────────────────────┐
 │                                                                                                       │
@@ -74,13 +61,6 @@ Get-ChildItem $share | Sort-Object LastWriteTime -Descending | Select-Object -Fi
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
----
-
-## Procedure 4: Create / Update Recovery Media
-
-**When:** New server generation added; RASR agent updated; media hasn't been rebuilt in 6 months.
-
 ```text
 RASR Console → Media → Create New Media
   → Select output: ISO file
@@ -92,13 +72,6 @@ After creation:
   2. Confirm network driver loads and share is reachable.
   3. Replace old ISO reference in documentation and iDRAC pre-mapped media.
 ```
-
----
-
-## Procedure 5: Retention Cleanup
-
-**When:** Monthly, or when recovery share free space drops below 30%.
-
 ```powershell
 $share     = "\\nas01\rasr-images\prod"
 $keepDaily = 7    # days

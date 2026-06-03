@@ -1,11 +1,3 @@
-# vSphere Replication — Procedures
-
-
-<div class="kb-summary">
-Procedures reference covering Configure Replication on a VM, Change RPO for a Replicated VM, Add VM to SRM Protection Group After VR Configured, Pause and Resume Replication, Recover a VM (Standalone VR) and 5 more sections.
-</div>
-
-  Key Operational Procedures
 ```text
 ┌──────────────────────────────────────────────────────────────┐
 │  Configure Replication           Monitor + Manage                                                     │
@@ -26,11 +18,6 @@ Procedures reference covering Configure Replication on a VM, Change RPO for a Re
 │  └──────────────────────┘        └──────────────────────┘                                             │
 └──────────────────────────────────────────────────────────────┘
 ```
-
----
-
-## Configure Replication on a VM
-
 ```yaml
 vCenter → [VM] → right-click → vSphere Replication → Configure
 
@@ -54,28 +41,11 @@ vCenter → [VM] → right-click → vSphere Replication → Configure
 
   → Finish
 ```
-
-Initial sync begins immediately. Monitor in Site Recovery → Replications.
-
----
-
-## Change RPO for a Replicated VM
-
 ```text
 vCenter → Site Recovery → Replications → [VM] → right-click → Edit
   RPO: change to new value
   → OK → effective immediately
 ```
-
----
-
-## Add VM to SRM Protection Group After VR Configured
-
-For vSphere Replication-based SRM protection:
-
-1. Configure VR replication on the VM (see above)
-2. Wait for initial sync to complete (status: OK)
-3. Then:
 ```sql
    SRM → Protection → Protection Groups → [VR-based group] → Add VMs
    Select: the newly replicated VM
@@ -87,22 +57,15 @@ For vSphere Replication-based SRM protection:
 
 Pause replication temporarily (e.g., during storage maintenance):
 
+```
+
 ```text
 vCenter → Site Recovery → Replications → [VM] → right-click → Pause
 ```
-
-Resume:
 ```bash
 vCenter → Site Recovery → Replications → [VM] → right-click → Resume
 # VM resumes from last sync point — only delta changes replicated after resume
 ```
-
----
-
-## Recover a VM (Standalone VR)
-
-For recovery without SRM — manual process:
-
 ```text
 vCenter (Target Site) → Site Recovery → Replications → [VM]
   → Recover
@@ -114,71 +77,25 @@ vCenter (Target Site) → Site Recovery → Replications → [VM]
 OR for testing (non-destructive):
     Recovery type: Test (creates a copy in an isolated network)
 ```
-
-After recovery, the replication relationship is terminated. Re-configure replication if you want to replicate back (reverse protection).
-
----
-
-## Change Replication Target Datastore
-
-Move replica files to a different datastore at the target site:
-
 ```text
 vCenter → Site Recovery → Replications → [VM] → right-click → Edit
   Target Location: change to new datastore
   → OK
 ```
-
-VR migrates the replica files to the new datastore during the next sync cycle. No replication interruption.
-
----
-
-## Remove Replication from a VM
-
 ```text
 vCenter → Site Recovery → Replications → [VM] → right-click → Remove Replication
   Remove replica files: Yes (clean up .vrepl/.hbr files from target) — recommended
   OR: No (keep files — useful if you plan to use them as a seed for re-configuration)
 ```
-
-After removing, the replica VMDK files on the target datastore are deleted (if "Yes" selected).
-
----
-
-## Force Sync (Initial Sync for Large VMs)
-
-For VMs with large disks, the initial full sync can take many hours. Schedule during off-peak:
-
 ```text
 vCenter → Site Recovery → Replications → [VM] → Sync Now
 ```
-
-This triggers an out-of-schedule sync. The VM must not be powered off during sync unless quiescing.
-
----
-
-## Add a VRS to Distribute Load
-
-When a VRA is handling >400 VMs:
-
 ```text
 vCenter → Site Recovery → vSphere Replication → Replication Servers → Deploy VRS
 
 After deploying VRS, reassign VMs to VRS:
   Replications → [VM] → Edit → VRS: select specific VRS or Auto
 ```
-
-Auto-assignment spreads new replications across all available VRS instances.
-
----
-
-## Decommission a VRA
-
-Before decommissioning a site or replacing a VRA appliance:
-
-1. Migrate all VM replications to a different VRA/VRS (Edit → change VRS assignment)
-2. Verify zero replications remain on the VRA
-3. Unregister from vCenter:
 ```text
    VRA VAMI → Configuration → vCenter Server → Unregister
    ```

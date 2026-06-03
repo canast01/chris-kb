@@ -1,14 +1,3 @@
-# Aria Ops for Logs — Scripts
-
-
-<div class="kb-summary">
-Scripts for Aria Operations for Logs target four use cases: cluster health monitoring, log source coverage auditing, alert definition management, and log queries via the REST API. The API base URL is `https://<vrli-fqdn>/api/v2` with HTTP Basic authentication.
-</div>
-
----
-
-## Cluster Health Check
-
 ```bash
 #!/usr/bin/env bash
 # Usage: ./vrli-health.sh <vrli-fqdn> <username> <password>
@@ -29,6 +18,8 @@ echo ""
 echo "=== Active Alerts (Critical) ==="
 curl -sk -u "$USER:$PASS" "https://$VRLI/api/v2/alerts?severity=critical&status=active" | \
   jq -r '.alerts[] | "\(.name)\t\(.timestamp)"' | column -t
+```
+
 ```text
 ┌──────────────────────────── Aria Operations for Logs — Scripts Reference ─────────────────────────────┐
 │                                                                                                       │
@@ -74,13 +65,6 @@ curl -sk -u "$USER:$PASS" "https://$VRLI/api/v2/alerts?severity=critical&status=
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
----
-
-## Bulk Alert Definition Export
-
-Export all alert definitions to JSON for version control or migration to another cluster.
-
 ```bash
 #!/usr/bin/env bash
 VRLI=$1; USER=$2; PASS=$3
@@ -89,13 +73,6 @@ OUTPUT="vrli-alerts-$(date +%Y%m%d).json"
 curl -sk -u "$USER:$PASS" "https://$VRLI/api/v2/alerts" | jq '.' > "$OUTPUT"
 echo "Exported $(jq '.alerts | length' "$OUTPUT") alert definitions to $OUTPUT"
 ```
-
----
-
-## Disk Usage Monitor with Warning
-
-Sends a warning if any cluster node disk usage exceeds a threshold.
-
 ```bash
 #!/usr/bin/env bash
 VRLI=$1; USER=$2; PASS=$3; WARN_PCT=${4:-75}
@@ -111,13 +88,6 @@ else
   echo "OK: Disk usage within threshold"
 fi
 ```
-
----
-
-## Notification Channel Test
-
-Test all configured notification channels and report pass/fail.
-
 ```bash
 #!/usr/bin/env bash
 VRLI=$1; USER=$2; PASS=$3
@@ -136,11 +106,6 @@ curl -sk -u "$USER:$PASS" "https://$VRLI/api/v2/notification" | \
     echo "Channel $id: $RESULT"
   done
 ```
-
----
-
-## ESXi Syslog Configuration (Bulk PowerCLI)
-
 ```powershell
 # Configure all ESXi hosts to forward syslog to Aria Ops for Logs
 $vrliTarget = "udp://vrli-prod-01.example.local:514"

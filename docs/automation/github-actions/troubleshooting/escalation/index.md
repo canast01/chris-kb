@@ -1,22 +1,11 @@
-# GitHub Actions — Escalation
-
-
-<div class="kb-summary">
-> Part of the [GitHub Actions Troubleshooting](../index.md) reference.
-</div>
-
----
-
-## GitHub Status and Known Issues
-
-Before escalating, check whether the issue is a platform-wide incident.
-
 ```bash
 # Check GitHub's status page
 open https://githubstatus.com
 
 # Subscribe to status notifications via the GitHub Status API
 curl https://www.githubstatus.com/api/v2/status.json | jq '.status'
+```
+
 ```text
 ┌───────────────────────────────────── GitHub Actions — Escalation ─────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

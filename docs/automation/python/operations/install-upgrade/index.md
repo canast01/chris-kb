@@ -1,18 +1,3 @@
-# Python Automation — Install & Upgrade
-
-
-<div class="kb-summary">
-Managing Python versions correctly is critical. A mishandled upgrade can silently break automation running in production. This page covers installation, version management, and safe upgrade procedures.
-</div>
-
----
-
-## Python Installation
-
-### `pyenv` (recommended — version control without root)
-
-`pyenv` installs Python versions to `~/.pyenv` and switches between them per-project or globally without touching system Python.
-
 ```bash
 # Install pyenv (Linux/macOS)
 curl https://pyenv.run | bash
@@ -45,6 +30,8 @@ pyenv local 3.12.3
 # Verify
 python --version
 which python   # Should point to ~/.pyenv/shims/python
+```
+
 ```text
 ┌───────────────────────────────────── Python — Install & Upgrade ──────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -69,15 +56,6 @@ which python   # Should point to ~/.pyenv/shims/python
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
----
-
-## Upgrading Python Without Breaking Automation
-
-### Pre-upgrade assessment
-
-Before upgrading Python on any host running production automation:
-
 ```bash
 # 1. Inventory all automation using Python on this host
 find /opt /home -name "*.py" -not -path "*/.venv/*" -not -path "*/__pycache__/*" 2>/dev/null
@@ -100,9 +78,6 @@ source /tmp/test-venv-312/bin/activate
 pip install -r requirements.txt
 pytest tests/
 ```
-
-### Safe upgrade procedure
-
 ```bash
 # Step 1: Install new Python version (alongside existing)
 pyenv install 3.12.3  # Does NOT replace existing
@@ -138,13 +113,6 @@ grep -r 'python\|\.venv' /etc/systemd/system/my-automation.service
 sudo systemctl restart my-automation.service
 journalctl -u my-automation.service -f   # Watch logs
 ```
-
----
-
-## Dependency Upgrade Procedure
-
-### Audit for vulnerabilities first
-
 ```bash
 # pip-audit — checks PyPI advisory database
 pip install pip-audit
@@ -161,9 +129,6 @@ safety check -r requirements.txt
 # | requests  | 2.28.0       | CVE-2023-32681 | Unintended leak via Proxy |
 # +===========+==============+==============+============================+
 ```
-
-### Upgrade dependencies safely
-
 ```bash
 # Check outdated packages
 pip list --outdated
@@ -182,9 +147,6 @@ pip freeze > requirements.txt
 # Review the diff carefully before committing
 git diff requirements.txt
 ```
-
-### `poetry` dependency upgrades
-
 ```bash
 # Show outdated dependencies
 poetry show --outdated
@@ -207,11 +169,6 @@ pytest tests/
 git add poetry.lock pyproject.toml
 git commit -m "chore: upgrade dependencies May 2026"
 ```
-
----
-
-## `pip-audit` and `safety` in CI
-
 ```yaml
 # .github/workflows/security.yml
 name: Security Audit
@@ -236,15 +193,6 @@ jobs:
           name: audit-results
           path: audit-results.json
 ```
-
----
-
-## Python 2 to Python 3 Migration Notes
-
-If maintaining legacy Python 2 code that must be migrated:
-
-### Assessment tools
-
 ```bash
 # 2to3 — automated syntax conversion (built-in)
 2to3 --list-fixes                        # Show available fixers
@@ -259,23 +207,6 @@ pylint --py3k legacy_script.py
 pip install pyupgrade
 pyupgrade --py311-plus script.py
 ```
-
-### Common migration issues
-
-| Python 2 | Python 3 equivalent | Notes |
-|---|---|---|
-| `print "hello"` | `print("hello")` | `2to3` handles this |
-| `unicode`, `basestring` | `str` | Remove unicode prefixes |
-| `dict.iteritems()` | `dict.items()` | Returns view not list |
-| `range()` returns list | `range()` returns iterator | Wrap in `list()` if needed |
-| `/ integer division` | Use `//` for floor division | `/` now returns float |
-| `except Exception, e` | `except Exception as e` | Old syntax syntax error |
-| `urllib2` | `urllib.request` / `requests` | Use `requests` instead |
-| `ConfigParser` | `configparser` | Module renamed |
-| `raw_input()` | `input()` | Python 2 `input()` was `eval(input())` |
-
-### Six library (compatibility shim — remove after migration)
-
 ```python
 # six provided Python 2/3 compatibility — remove after full migration to Python 3
 import six
@@ -289,13 +220,6 @@ else:
 # After (Python 3 only)
 string_types = (str,)
 ```
-
----
-
-## Venv Recreation After Python Upgrade
-
-Virtual environments are tied to the Python binary they were created with. After upgrading Python, always recreate venvs from the lock file — never upgrade in-place.
-
 ```bash
 # WRONG — do not upgrade Python inside an existing venv
 # The venv still links to old Python
@@ -326,16 +250,3 @@ grep -r '/.venv/bin/python' /etc/systemd/system/
 sudo systemctl daemon-reload
 sudo systemctl restart my-automation.service
 ```
-
-### Version compatibility matrix
-
-| Python version | EOL date | Status |
-|---|---|---|
-| 3.8 | October 2024 | EOL — migrate immediately |
-| 3.9 | October 2025 | EOL — migrate immediately |
-| 3.10 | October 2026 | Approaching EOL |
-| 3.11 | October 2027 | Supported — current LTS |
-| 3.12 | October 2028 | Recommended for new projects |
-| 3.13 | October 2029 | Latest — test before adopting |
-
-> Maintain all production automation on a supported Python version. Schedule upgrades before the EOL date — not after.

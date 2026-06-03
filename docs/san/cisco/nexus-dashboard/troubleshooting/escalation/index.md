@@ -1,70 +1,3 @@
-# Nexus Dashboard — Escalation
-
-
-<div class="kb-summary">
-> Part of the [Nexus Dashboard](../../index.md) reference.
-</div>
-
----
-
-## Overview
-
-This page covers when and how to escalate Nexus Dashboard issues to Cisco TAC, what information to collect before opening a case, and how to engage effectively across the ND platform, NDFC, and NDI application layers.
-
----
-
-## Escalation Decision Matrix
-
-| Condition | Internal Action First | Escalate to Cisco TAC |
-|---|---|---|
-| Node unhealthy — VM resource exhaustion | Increase VM RAM/CPU | No (unless ND cluster OOM with correct sizing) |
-| Node unhealthy — all resources normal, cluster cannot form | Collect support bundle | Yes |
-| NDFC switches unmanageable — SSH/SNMP confirmed broken | Fix switch credentials or ACL | No |
-| NDFC switches unmanageable — connectivity fine, NDFC bug suspected | Collect NDFC logs | Yes |
-| Zone activation fails — merge conflict | Resolve on switch CLI | No |
-| Zone activation fails — NDFC API error, no clear cause | Collect logs | Yes |
-| NDI not receiving telemetry — license invalid | Apply license | No |
-| NDI not receiving telemetry — license valid, flows configured | Collect NDI logs | Yes |
-| ND upgrade fails — cluster non-functional | Restore from snapshot | Yes with support bundle |
-| etcd data corruption | Restore from backup | Yes before attempting restore |
-| ND cluster cannot form quorum (2+ nodes down) | Restore missing nodes | Yes if nodes cannot be recovered |
-| Security incident (unauthorized access) | Follow security IR process | Yes + internal security team |
-
----
-
-## Cisco TAC Access
-
-Open a support case at the Cisco Support Portal:
-
-- Primary URL: `https://mycase.cisco.com`
-- Product: **Cisco Nexus Dashboard** (platform) and/or **Nexus Dashboard Fabric Controller** (NDFC) or **Nexus Dashboard Insights** (NDI)
-- Navigate to: **Open New Case > Software**
-
-Requirements:
-- Valid Cisco support contract (SNTC or equivalent)
-- ND platform version and installed app versions
-- Serial number of the ND physical appliance (if applicable) or VM UUIDs
-
----
-
-## Severity Levels
-
-| Severity | Definition | Cisco Response SLA |
-|---|---|---|
-| S1 — Critical | ND cluster is completely unavailable; active impact to DC operations | 2 hours (24x7) |
-| S2 — Severe | Major functionality broken; fabric management or insights significantly impaired | 4 hours (24x7) |
-| S3 — Moderate | Non-critical issue; workaround available | Next business day |
-| S4 — Minor | Cosmetic, documentation, or how-to question | 3–5 business days |
-
-For S1/S2, call Cisco TAC immediately after submitting the case online:
-- Global phone numbers: `https://www.cisco.com/c/en/us/support/web/tsd-cisco-worldwide-contacts.html`
-
----
-
-## Information to Collect Before Escalating
-
-### Always Include
-
 ```bash
 ssh ndadmin@nd-dc1-1.corp.example.com
 
@@ -88,6 +21,8 @@ acs system resources
 
 # 6. Kubernetes event log
 kubectl get events --all-namespaces --sort-by='.lastTimestamp' > /tmp/k8s-events-$(date +%Y%m%d).txt
+```
+
 ```text
 ┌───────────────────────── Cisco Nexus Dashboard — Troubleshooting Escalation ──────────────────────────┐
 │                                                                                                       │
@@ -135,9 +70,6 @@ kubectl get events --all-namespaces --sort-by='.lastTimestamp' > /tmp/k8s-events
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-### For Cluster Formation or etcd Issues
-
 ```bash
 # etcd health (collect from each node)
 for node in nd-dc1-1 nd-dc1-2 nd-dc1-3; do
@@ -149,9 +81,6 @@ for node in nd-dc1-1 nd-dc1-2 nd-dc1-3; do
      endpoint status --write-out=table" > /tmp/etcd-${node}.txt 2>&1
 done
 ```
-
-### For Upgrade Failures
-
 ```bash
 # Upgrade log
 acs upgrade history > /tmp/upgrade-history.txt
@@ -160,11 +89,6 @@ acs system logs --component upgrade --tail 200 > /tmp/upgrade-log.txt
 # Include: source ND version, target version, app versions pre-upgrade
 # Include: exact error message shown during upgrade
 ```
-
----
-
-## Support Case Description Template
-
 ```yaml
 Product: Cisco Nexus Dashboard
 Platform version: 3.x.x (acs version output)
@@ -197,23 +121,3 @@ Attachments:
 - k8s-events-20260508.txt
 - [any screenshots of error messages]
 ```
-
----
-
-## Escalation Path Within Cisco TAC
-
-1. **Open the case online** with full context and attach the support bundle before calling — TAC engineers spend less time when the problem is clearly described upfront.
-2. If the assigned TAC engineer is not responding within the SLA window, request escalation to the **TAC Duty Manager** — state this on the case notes or via phone.
-3. If the issue is a software bug, ask the engineer to file a **Bug report (CSCxxxxxx)**. Reference this bug ID in future cases about the same issue.
-4. For production-critical situations (S1/S2) that are not resolving: engage your Cisco Account Manager or Cisco Partner — they can escalate to Cisco engineering.
-5. Cisco offers 24x7 critical situation support for S1 cases — the TAC engineer managing your S1 case should proactively provide updates every 2-4 hours.
-
----
-
-## Cisco Nexus Dashboard Bug Resources
-
-- Cisco Bug Search Tool: `https://bst.cisco.com/bugsearch/`
-  - Search by product: Nexus Dashboard, NDFC, or NDI
-  - Filter by version and status (Open / Fixed)
-- Cisco ND Release Notes: always review before upgrading for known issues and workarounds
-- Cisco ND Compatibility Matrix: `https://www.cisco.com/c/en/us/support/cloud-systems-management/nexus-dashboard/series.html`

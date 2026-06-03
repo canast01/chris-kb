@@ -1,30 +1,7 @@
-# RASR — Integrations
-
-
-<div class="kb-summary">
-Integrations reference covering Integration Overview, Dell OpenManage Integration, Backup Software Integration, Network Storage Integration, Integration Dependency Map.
-</div>
-
-## Integration Overview
-
-RASR does not operate in isolation. In a production environment it integrates with server management platforms, directory services, network storage, and backup software. Understanding these integration points is essential for both building a reliable recovery workflow and for post-restore remediation.
-
----
-
-## Dell OpenManage Integration
-
-RASR ships as part of the **Dell OpenManage Systems Management** bundle. The RASR Agent registers itself with OpenManage Server Administrator (OMSA), enabling:
-
-- **Status reporting** — image creation success/failure visible in OMSA dashboard.
-- **Event generation** — RASR events forwarded to OpenManage Essentials or OpenManage Enterprise via SNMP or WMI.
-- **Centralized scheduling** — backup schedules configurable from OpenManage Enterprise (OME) in environments with OME 4.x+.
-
-**RASR Agent service name:** `Dell RASR Service`
-
-**Verify RASR Agent status via PowerShell:**
-
 ```powershell
 Get-Service -Name "DellRASR" | Select-Object Status, StartType
+```
+
 ```text
 ┌────────────────────────────────── RASR — Architecture Integrations ───────────────────────────────────┐
 │                                                                                                       │
@@ -68,63 +45,16 @@ Get-Service -Name "DellRASR" | Select-Object Status, StartType
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-**Option 3 — Reset computer account from DC (run on a domain controller):**
-
 ```powershell
 Reset-ComputerMachinePassword -Server "dc01.corp.example.com" `
                               -Credential (Get-Credential)
 ```
-
-### GPO Re-application
-
-After domain rejoin, force Group Policy application:
-
 ```cmd
 gpupdate /force
 ```
-
-Verify:
-
 ```cmd
 gpresult /r /scope computer
 ```
-
----
-
-## Backup Software Integration
-
-RASR is a standalone bare-metal recovery tool and does not natively integrate at the API level with enterprise backup products. Integration is achieved operationally:
-
-| Backup Product | Integration Method | Notes |
-|---|---|---|
-| Commvault | None — parallel protection | Commvault protects file/app data; RASR protects OS image |
-| Veeam | None — parallel protection | Veeam instant VM recovery for VMs; RASR for physical |
-| NetBackup | RASR image on NBU-protected share | NBU backs up the RASR image files on the network share |
-| Windows Server Backup | Complementary | WSB for file-level; RASR for complete BMR |
-
-**Best practice:** Store RASR images on a network share that is itself protected by your enterprise backup solution. This ensures the recovery images survive storage failures.
-
----
-
-## Network Storage Integration
-
-RASR images are stored on SMB (CIFS) network shares. The WinPE recovery environment must be able to reach this share to perform recovery.
-
-### Share Requirements
-
-| Requirement | Detail |
-|---|---|
-| Protocol | SMB 2.0 or 3.0 (SMB 1.0 not recommended) |
-| Authentication | Domain service account or local share account |
-| Minimum bandwidth | 1 Gbps recommended for acceptable restore times |
-| Firewall | TCP 445 open between WinPE environment and NAS |
-| Share permissions | Read/Write for backup service account; Read for recovery |
-
-### Mapping a Share in WinPE
-
-The WinPE environment does not automatically connect to network shares. During recovery, map the share manually in the WinPE shell before launching the RASR wizard:
-
 ```cmd
 :: Map network share in WinPE
 net use Z: \\nas01.example.com\rasr-images /user:DOMAIN\svc-rasr P@ssw0rd!
@@ -132,9 +62,6 @@ net use Z: \\nas01.example.com\rasr-images /user:DOMAIN\svc-rasr P@ssw0rd!
 :: Verify connectivity
 dir Z:\
 ```
-
-### Recommended Share Structure
-
 ```text
 \\nas01\rasr-images\
   ├── SERVER01\
@@ -146,13 +73,6 @@ dir Z:\
         ├── RASR_WinSrv2019.iso
         └── RASR_WinSrv2022.iso
 ```
-
-Separate directories per server simplify image selection during recovery and enable per-server retention policies.
-
----
-
-## Integration Dependency Map
-
 ```mermaid
 flowchart LR
     subgraph Server["Protected Server"]

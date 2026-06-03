@@ -1,13 +1,3 @@
-# Dell AIOps — Scripts
-
-<div class="kb-summary">
-Dell AIOps Scripts reference covering Authentication, Forward Critical Recommendations to ServiceNow, Weekly Health Score Report, Script Inventory.
-</div>
-
-## Authentication
-
-Dell AIOps is accessed via the CloudIQ REST API using OAuth2 client credentials. All scripts load credentials from the secrets manager at runtime.
-
 ```python
 import requests, os
 
@@ -28,6 +18,8 @@ def api_get(path: str, token: str, params: dict = None) -> dict:
     resp = requests.get(f"{API_BASE}{path}", headers=headers, params=params)
     resp.raise_for_status()
     return resp.json()
+```
+
 ```text
 ┌─────────────────────────────────── Dell AIOps — Scripts Reference ────────────────────────────────────┐
 │                                                                                                       │
@@ -60,9 +52,6 @@ def api_get(path: str, token: str, params: dict = None) -> dict:
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-## Weekly Health Score Report
-
 ```python
 def health_score_report(token: str, threshold: int = 80) -> list:
     """Return systems with health score below threshold."""
@@ -75,14 +64,3 @@ def health_score_report(token: str, threshold: int = 80) -> list:
     below_threshold.sort(key=lambda x: x["health_score"])
     return below_threshold
 ```
-
-## Script Inventory
-
-| Script | Purpose | Schedule |
-|---|---|---|
-| `export_recommendations.py` | Export all active AIOps recommendations to CSV | Daily |
-| `anomaly_trend.py` | Anomaly frequency by system — rolling 30-day window | Weekly |
-| `recommendation_to_itsm.py` | Forward Critical/High recommendations to ServiceNow | Event-driven |
-| `health_score_report.py` | Weekly health score report — flag systems below threshold | Weekly |
-
-Scripts are stored in `scripts/dell-aiops/`. Load `client_id` and `client_secret` from the secrets manager — never commit credentials to the repository.

@@ -1,30 +1,3 @@
-# Git — Diagnostics
-
-
-<div class="kb-summary">
-Systematic diagnostic techniques for troubleshooting Git client, server, and network issues. Covers debug environment variables, SSH tracing, reflog recovery, and a structured diagnostic flowchart.
-</div>
-
----
-
-## Git Debug Environment Variables
-
-Git exposes granular tracing through environment variables. Set them before the `git` command; they write to stderr by default.
-
-| Variable | What it traces |
-|----------|---------------|
-| `GIT_TRACE` | General Git operations, alias expansion, external command execution |
-| `GIT_TRACE_PACK_ACCESS` | Pack file access patterns |
-| `GIT_TRACE_PACKET` | Packet-level protocol communication with remotes |
-| `GIT_TRACE_PERFORMANCE` | Timing of internal Git operations |
-| `GIT_TRACE_SETUP` | Environment and config resolution |
-| `GIT_TRACE_CURL` | Full HTTP request/response headers and body |
-| `GIT_CURL_VERBOSE` | Same as `GIT_TRACE_CURL=1` (legacy) |
-| `GIT_SSH_COMMAND` | Override SSH binary (useful for debugging) |
-| `GIT_TRACE_REFS` | Reference resolution and update operations |
-
-### Setting Trace Levels
-
 ```bash
 # Output to stderr (default)
 GIT_TRACE=1 git fetch origin
@@ -38,6 +11,8 @@ GIT_TRACE=1 GIT_TRACE_PERFORMANCE=1 GIT_TRACE_SETUP=1 git status
 
 # Performance profiling — identify slow operations
 GIT_TRACE_PERFORMANCE=1 git log --oneline -100 2>&1 | grep "performance"
+```
+
 ```text
 ┌────────────────────────────────────────── Git — Diagnostics ──────────────────────────────────────────┐
 │                                                                                                       │
@@ -83,20 +58,10 @@ GIT_TRACE_PERFORMANCE=1 git log --oneline -100 2>&1 | grep "performance"
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-### Stripping Sensitive Data from Trace Logs
-
 ```bash
 # Git redacts most secrets in traces, but verify before sharing
 GIT_TRACE_CURL=1 git fetch 2>&1 | sed 's/Authorization: Basic .*/Authorization: Basic <REDACTED>/'
 ```
-
----
-
-## `git remote -v` and `git config --list` Checks
-
-### Remote Configuration
-
 ```bash
 # Show all remotes with fetch and push URLs
 git remote -v
@@ -115,9 +80,6 @@ git ls-remote origin
 git ls-remote origin refs/heads/main
 git ls-remote origin refs/tags/v1.0.0
 ```
-
-### Configuration Inspection
-
 ```bash
 # List all effective config (merged: system → global → local → worktree)
 git config --list
@@ -145,18 +107,10 @@ git config http.sslVerify
 git config credential.helper
 git config core.sshCommand
 ```
-
-### Effective Config Dump for Support
-
 ```bash
 # Safe config dump — redact secrets before sharing
 git config --list --show-origin | grep -v -i "password\|secret\|token\|key"
 ```
-
----
-
-## SSH Debugging with `ssh -vvv`
-
 ```bash
 # Basic verbose SSH test to GitHub
 ssh -vT git@github.com
@@ -170,9 +124,6 @@ ssh -vvvT git@gitlab.example.com
 # Test to GitLab on a non-standard port
 ssh -vvvT -p 2222 git@gitlab.example.com
 ```
-
-### What to Look for in SSH Debug Output
-
 ```yaml
 # Key being offered
 debug1: Offering public key: /Users/user/.ssh/id_ed25519 ED25519
@@ -188,9 +139,6 @@ debug1: Authentication succeeded (publickey).
 # "Connection refused" — wrong host/port or firewall block
 # "Connection timed out" — firewall or network routing issue
 ```
-
-### SSH Configuration Diagnostics
-
 ```bash
 # Check the SSH config being applied
 ssh -G git@github.com | grep -E "^(hostname|user|port|identityfile|identitiesonly)"
@@ -213,9 +161,6 @@ ssh-keygen -F gitlab.example.com
 ssh-keygen -R github.com
 ssh-keyscan -H github.com >> ~/.ssh/known_hosts
 ```
-
-### Override SSH Command for Debugging
-
 ```bash
 # Use custom SSH flags for a single git command
 GIT_SSH_COMMAND="ssh -vvv -i ~/.ssh/id_ed25519" git fetch origin
@@ -225,13 +170,6 @@ git config core.sshCommand "ssh -vvv -i ~/.ssh/id_ed25519"
 # Remember to unset when done
 git config --unset core.sshCommand
 ```
-
----
-
-## Reflog Recovery
-
-The reflog records every position HEAD and branch tips have pointed to for the past 90 days (default). It is the first tool to reach for when work appears to be lost.
-
 ```bash
 # Show HEAD reflog (most recent first)
 git reflog
@@ -245,11 +183,6 @@ git reflog --format='%C(auto)%h %gd %gs %cr%Creset' | head -30
 # Show reflog entries as a graph
 git log -g --oneline --graph
 ```
-
-### Recovery Scenarios
-
-#### Recover a Dropped Commit (`git reset --hard`)
-
 ```bash
 # See what HEAD was before the reset
 git reflog | head -10
@@ -261,9 +194,6 @@ git cherry-pick def5678
 # or create a branch at that point
 git branch recover/lost-commit def5678
 ```
-
-#### Recover a Deleted Branch
-
 ```bash
 # Find the commit the branch pointed to
 git reflog | grep "checkout: moving from deleted-branch"
@@ -274,9 +204,6 @@ git reflog --all | grep deleted-branch | head -5
 git branch recovered-branch <sha-from-reflog>
 git switch recovered-branch
 ```
-
-#### Recover Dropped Stash
-
 ```bash
 # List all stash entries (including dropped)
 git fsck --unreachable | grep commit | awk '{print $3}' | \
@@ -285,9 +212,6 @@ git fsck --unreachable | grep commit | awk '{print $3}' | \
 # Apply a recovered stash by SHA
 git stash apply <sha>
 ```
-
-#### Recover from Accidental `git checkout -- <file>` (Working Tree Loss)
-
 ```bash
 # Unfortunately, git checkout -- <file> discards working tree changes with no reflog entry
 # Check if your editor has a local backup (e.g., Vim .swp files, VS Code local history)
@@ -296,11 +220,6 @@ git stash apply <sha>
 git fsck --lost-found
 ls .git/lost-found/other/   # blobs that were staged but not committed
 ```
-
----
-
-## Diagnostic Flowchart
-
 ```mermaid
 flowchart TD
     START([Git command fails]) --> TYPE{Error type?}
@@ -347,13 +266,6 @@ flowchart TD
     REMOTE --> DONE
     CONFLICT --> DONE
 ```
-
----
-
-## Data to Collect Before Escalating
-
-When opening a support ticket with GitHub/GitLab or escalating internally, collect:
-
 ```bash
 #!/usr/bin/env bash
 # collect-git-diagnostics.sh — run from within the affected repository

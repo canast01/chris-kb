@@ -1,18 +1,3 @@
-# Git — Procedures
-
-
-<div class="kb-summary">
-Procedures reference covering Branching, Branch Naming Conventions, Deleting Branches, Tracking Remote Branches, Merge vs Rebase and 8 more sections.
-</div>
-
-## Branching
-
-Branch naming conventions, creating and deleting branches, tracking remotes, and merge vs rebase.
-
-## Branch Naming Conventions
-
-Consistent naming makes automation and review easier.
-
 ```bash
 # Common prefixes
 feature/  — New functionality (feature/add-login-page)
@@ -21,6 +6,8 @@ chore/    — Maintenance, deps, config (chore/upgrade-node-18)
 docs/     — Documentation changes (docs/update-api-reference)
 hotfix/   — Urgent production fixes (hotfix/payment-timeout)
 release/  — Release preparation (release/v2.4.0)
+```
+
 ```text
 ┌───────────────────────────────────── Git — Operations Procedures ─────────────────────────────────────┐
 │                                                                                                       │
@@ -66,9 +53,6 @@ release/  — Release preparation (release/v2.4.0)
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-## Tracking Remote Branches
-
 ```bash
 # Set upstream when pushing for the first time
 git push -u origin feature/PLAT-42-s3-lifecycle
@@ -82,16 +66,6 @@ git branch --set-upstream-to=origin/main feature/PLAT-42-s3-lifecycle
 # Push to a differently named remote branch
 git push origin local-branch:remote-branch
 ```
-
-## Merge vs Rebase
-
-| Strategy | Creates Merge Commit | Preserves History | Best For |
-|----------|---------------------|------------------|----------|
-| `git merge` | Yes | Linear + merge commits | Long-lived branches, teams |
-| `git merge --squash` | No (one commit) | Squashed | Small features into main |
-| `git rebase` | No | Rewrites commits | Local cleanup before PR |
-| `git rebase -i` | No | Interactive rewrite | Squash, reorder, edit messages |
-
 ```bash
 # Merge feature into main (creates merge commit)
 git switch main
@@ -107,9 +81,6 @@ git rebase -i HEAD~3
 # Abort a rebase in progress
 git rebase --abort
 ```
-
-## Stale Branch Cleanup
-
 ```bash
 # Find branches with no commits ahead of main
 git branch --merged main
@@ -119,17 +90,6 @@ git for-each-ref --sort=committerdate refs/heads/ \
   --format='%(committerdate:short) %(refname:short)' \
   | awk '$1 < "'$(date -v-90d +%Y-%m-%d)'"'
 ```
-
----
-
-## Recovery
-
-Using git reflog, reset, revert, and recovering deleted branches or lost commits.
-
-## git reflog — Your Safety Net
-
-The reflog records every movement of HEAD and branch pointers, including those that are not in the regular log.
-
 ```bash
 # View full reflog
 git reflog
@@ -143,13 +103,6 @@ git reflog --date=iso
 # Find the commit hash before a bad reset
 git reflog | grep "before reset"
 ```
-
-The reflog retains entries for 90 days (default). Expired entries cannot be recovered.
-
-## git reset
-
-`reset` moves the branch pointer and optionally modifies the index and working tree.
-
 ```bash
 # Soft reset — keep changes staged
 git reset --soft HEAD~1
@@ -166,19 +119,6 @@ git reset --hard a1b2c3d4
 # Undo a reset using reflog
 git reset --hard HEAD@{3}
 ```
-
-| Mode | Branch Pointer | Index | Working Tree |
-|------|---------------|-------|-------------|
-| `--soft` | Moved | Unchanged | Unchanged |
-| `--mixed` | Moved | Reset | Unchanged |
-| `--hard` | Moved | Reset | Reset (destructive) |
-
-Never use `--hard` on shared branches without team coordination.
-
-## git revert — Safe Undo for Shared Branches
-
-`revert` creates a new commit that undoes a previous one. Safe to use on main/production branches.
-
 ```bash
 # Revert the most recent commit
 git revert HEAD
@@ -197,9 +137,6 @@ git commit -m "revert: undo broken deployment commits"
 # Revert a merge commit (specify parent branch)
 git revert -m 1 <merge-commit-hash>
 ```
-
-## Recovering Deleted Branches
-
 ```bash
 # Step 1: find the tip commit of the deleted branch in reflog
 git reflog | grep "branch-name"
@@ -211,9 +148,6 @@ git switch -c recovered-branch a1b2c3d4
 git fsck --lost-found
 ls .git/lost-found/commit/
 ```
-
-## Recovering Lost Commits
-
 ```bash
 # Find dangling commits (not reachable from any ref)
 git fsck --no-reflogs | grep "dangling commit"
@@ -227,9 +161,6 @@ git switch -c recovery-branch <dangling-commit-hash>
 # If you know the commit was recent, check reflog
 git reflog --all | head -30
 ```
-
-## Recovering Stashed Changes
-
 ```bash
 # List all stashes
 git stash list
@@ -244,11 +175,3 @@ git stash drop stash@{2}
 git fsck --no-reflogs | grep "dangling commit" | awk '{print $3}' | \
   xargs -I{} git stash show {}
 ```
-
-| Problem | Recovery Command |
-|---------|----------------|
-| Deleted branch | `git switch -c name <hash from reflog>` |
-| Bad `reset --hard` | `git reset --hard HEAD@{N}` from reflog |
-| Committed to wrong branch | `git cherry-pick` onto correct branch |
-| Lost stash | `git fsck --no-reflogs` + inspect dangling |
-| Accidentally amended | `git reset --soft ORIG_HEAD` |

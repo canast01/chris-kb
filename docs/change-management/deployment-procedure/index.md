@@ -1,23 +1,3 @@
-# Deployment Procedure
-
-
-<div class="kb-summary">
-Standard procedure for deploying infrastructure or application changes safely within an approved change window.
-</div>
-
-## Pre-Deployment Checklist
-
-- [ ] Change ticket approved and in "Implementation" state
-- [ ] Backup completed and verified within last 24h
-- [ ] Maintenance window confirmed and stakeholders notified
-- [ ] Rollback procedure documented and tested in non-prod
-- [ ] Monitoring dashboards open
-- [ ] On-call team aware and available
-- [ ] Test environment deployment succeeded (for application changes)
-- [ ] Deployment runbook reviewed by implementer
-
-## Phase 1 — Preparation (before window)
-
 ```bash
 # Snapshot / backup before change (example: VM snapshot)
 # Azure
@@ -32,6 +12,8 @@ tar czf /root/pre-change-config-$(date +%Y%m%d).tar.gz /etc/<service>/
 # Verify service is healthy before starting
 systemctl status <service>
 curl -sf http://localhost:<port>/health
+```
+
 ```text
 ┌──────────────────────────────────────── Deployment Procedure ─────────────────────────────────────────┐
 │                                                                                                       │
@@ -68,25 +50,12 @@ curl -sf http://localhost:<port>/health
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-## Phase 4 — Monitoring Soak
-
-- Watch dashboards for **30 minutes minimum** after deployment
-- Confirm no P1/P2 alerts firing
-- Check error rate, latency, and saturation metrics against pre-change baseline
-- Get confirmation from service owner before closing window
-
-## Phase 5 — Close
-
 ```bash
 # Remove temporary files and pre-change backups (after soak period)
 rm /etc/<service>.conf.pre-<date>   # only after validation passes
 
 # Update ITSM ticket: outcome, duration, any deviations
 ```
-
-## Rollback Decision Tree
-
 ```text
 Validation fails?
   ├─ Immediate: service down / error rate > 3×baseline
@@ -96,9 +65,6 @@ Validation fails?
               ├─ Improving → continue soak
               └─ Not improving → roll back
 ```
-
-## Rollback Steps
-
 ```bash
 # Restore config from backup
 cp /etc/<service>.conf.pre-<date> /etc/<service>.conf
@@ -112,9 +78,6 @@ psql -U <user> -d <db> -f migration_XXXX_down.sql
 
 # Re-validate after rollback (same checks as Phase 3)
 ```
-
-## Deployment Log Template
-
 ```markdown
 Change:        ITSM-XXXX
 Date/Time:     2026-05-06 22:00 UTC

@@ -1,17 +1,8 @@
-# Ansible — Integrations
-
-
-<div class="kb-summary">
-> Part of the [Ansible Architecture](../index.md) reference.
-</div>
-
-## VMware vSphere
-
-The `community.vmware` collection automates vSphere, ESXi, vCenter, vSAN, and NSX-T.
-
 ```bash
 ansible-galaxy collection install community.vmware
 pip install PyVmomi vsphere-automation-sdk-python
+```
+
 ```text
 ┌─────────────────────────────────────── Ansible — Integrations ────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -36,25 +27,15 @@ pip install PyVmomi vsphere-automation-sdk-python
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-## HashiCorp Vault
-
 ```bash
 ansible-galaxy collection install community.hashi_vault
 pip install hvac
 ```
-
 ```yaml
 vars:
   db_password: "{{ lookup('community.hashi_vault.hashi_vault', 'secret/data/prod/db:password') }}"
   api_token:   "{{ lookup('community.hashi_vault.hashi_vault', 'secret/data/api:token') }}"
 ```
-
-!!! tip "Prefer Vault over Ansible Vault for enterprise"
-    HashiCorp Vault provides dynamic secrets, audit logs, lease expiry, and fine-grained policies. For production environments with many teams, it scales better than static Ansible Vault files.
-
-## GitHub Actions / Jenkins
-
 ```yaml
 # .github/workflows/deploy.yml
 - name: Run Ansible playbook
@@ -65,20 +46,15 @@ vars:
     ANSIBLE_HOST_KEY_CHECKING: "False"
     ANSIBLE_VAULT_PASSWORD_FILE: ~/.vault_pass
 ```
-
 ```groovy
 // Jenkins Pipeline
 withCredentials([sshUserPrivateKey(credentialsId: 'ansible-key', keyFileVariable: 'KEY')]) {
   sh "ansible-playbook -i inventory/prod/ site.yml --private-key $KEY"
 }
 ```
-
-## ServiceNow ITSM
-
 ```bash
 ansible-galaxy collection install servicenow.itsm
 ```
-
 ```yaml
 - name: Open change request
   servicenow.itsm.change_request:
@@ -103,9 +79,6 @@ ansible-galaxy collection install servicenow.itsm
     close_code: successful
     close_notes: "Completed successfully"
 ```
-
-## Network Devices — Cisco / Arista / Juniper
-
 ```ini
 # inventory
 [ios_routers]
@@ -114,7 +87,6 @@ router01 ansible_host=10.0.0.1 ansible_network_os=cisco.ios.ios ansible_connecti
 [eos_switches]
 switch01 ansible_host=10.0.1.1 ansible_network_os=arista.eos.eos ansible_connection=httpapi ansible_httpapi_use_ssl=true
 ```
-
 ```yaml
 - name: Backup IOS running config
   cisco.ios.ios_config:
@@ -123,9 +95,6 @@ switch01 ansible_host=10.0.1.1 ansible_network_os=arista.eos.eos ansible_connect
       dir_path: /srv/ansible/network-backups/
       filename: "{{ inventory_hostname }}-{{ ansible_date_time.date }}.cfg"
 ```
-
-## Windows Active Directory
-
 ```yaml
 - name: Create AD computer object
   community.windows.win_domain_computer:
@@ -142,9 +111,6 @@ switch01 ansible_host=10.0.1.1 ansible_network_os=arista.eos.eos ansible_connect
     PASSWD: "{{ ad_join_password }}"
   no_log: true
 ```
-
-## Monitoring — Prometheus / Nagios
-
 ```yaml
 - name: Schedule Nagios downtime before maintenance
   community.general.nagios:
@@ -156,17 +122,3 @@ switch01 ansible_host=10.0.1.1 ansible_network_os=arista.eos.eos ansible_connect
     author: ansible
     comment: "Automated maintenance window"
 ```
-
-## Integration Matrix
-
-| Platform | Collection | Auth Method |
-|---|---|---|
-| VMware vSphere | `community.vmware` | Username/password or session token |
-| AWS | `amazon.aws` | IAM role / access keys |
-| Azure | `azure.azcollection` | Service principal / managed identity |
-| HashiCorp Vault | `community.hashi_vault` | AppRole / Kubernetes / LDAP |
-| ServiceNow | `servicenow.itsm` | Basic auth / OAuth |
-| Cisco IOS | `cisco.ios` | SSH / enable password |
-| Arista EOS | `arista.eos` | HTTPS API |
-| Juniper JunOS | `junipernetworks.junos` | SSH / NETCONF |
-| Windows AD | `community.windows` | WinRM / Kerberos |

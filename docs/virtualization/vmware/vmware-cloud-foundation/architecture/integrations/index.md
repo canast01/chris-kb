@@ -1,11 +1,3 @@
-# VCF — Integrations
-
-
-<div class="kb-summary">
-Integrations reference covering NSX Federation (Multi-Site VCF), Backup Integration, SIEM and Syslog Integration.
-</div>
-
-VCF Integration Topology
 ```text
 ┌─────────────────────────────── VMware Cloud Foundation — Integrations ────────────────────────────────┐
 │                                                                                                       │
@@ -100,8 +92,6 @@ VCF Integration Topology
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-NSX Federation (multi-site)
 ```text
 ```
 ```text
@@ -116,6 +106,8 @@ NSX Federation (multi-site)
 │   │ (data plane)     │  │ (data plane)     │                                                          │
 │   └──────────────────┘  └──────────────────┘                                                          │
 └──────────────────────────────────────────────────────┘
+```
+
 ```text
 ┌─────────────────────────────── VMware Cloud Foundation — Integrations ────────────────────────────────┐
 │                                                                                                       │
@@ -163,63 +155,18 @@ NSX Federation (multi-site)
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-**Test AD connectivity from SDDC Manager appliance:**
-
 ```bash
 ldapsearch -H ldaps://<dc-ip>:636 -x -D "<bind-account-dn>" -W \
   -b "dc=domain,dc=com" "(sAMAccountName=<test-user>)"
 ```
-
----
-
-## NSX Federation (Multi-Site VCF)
-
-NSX Federation allows a single NSX policy plane to span multiple VCF instances across sites via a Global Manager (GM).
-
-**Key design points:**
-
-- The Global Manager is deployed outside VCF LCM — it is not upgraded via SDDC Manager.
-- Local NSX Managers in each VCF instance handle data-plane operations.
-- Stretched segments, global gateway policies, and security policies are defined at the GM level.
-- GM upgrade is planned separately from each VCF site's NSX upgrade cycle.
-
----
-
-## Backup Integration
-
-VCF does not provide a native VM backup solution. VM backup is handled at the vCenter layer per workload domain.
-
-**Veeam B&R:**
-
-1. Add each workload domain vCenter as a Managed Server in Veeam.
-2. VMs appear in Veeam inventory as standard vSphere VMs.
-3. Ensure backup proxies have access to vSAN datastores in each domain.
-
-**SDDC Manager configuration backup** (separate from VM data backup):
-
 ```text
 SDDC Manager → Administration → Backup → Configure
 → Set SFTP target → schedule daily → retain 7+ restore points
 ```
-
----
-
-## SIEM and Syslog Integration
-
 ```text
 SDDC Manager → Administration → Syslog → Add Syslog Server
 → Protocol: TLS (recommended) or UDP/TCP → Port: 6514 or 514
 ```
-
-**Verify forwarding is working:**
-
-1. Perform a test action in SDDC Manager (e.g., browse a domain, rotate a password).
-2. Confirm the event appears in the SIEM within a few minutes.
-3. Check that the SIEM source IP matches the SDDC Manager appliance IP.
-
-**vCenter syslog per workload domain (PowerCLI):**
-
 ```powershell
 ## Configure syslog forwarding on all ESXi hosts in a cluster
 Get-Cluster "ClusterName" | Get-VMHost | ForEach-Object {

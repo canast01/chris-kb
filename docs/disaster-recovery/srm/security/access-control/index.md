@@ -1,14 +1,3 @@
-# SRM Security — Access Control
-
-
-<div class="kb-summary">
-Access Control reference covering vCenter RBAC for DR Operators.
-</div>
-
-## vCenter RBAC for DR Operators
-
-Define a dedicated `DR-Operator` role in vCenter with only the privileges required for SRM operations:
-
 ```yaml
 Privileges to include:
   Site Recovery Manager:
@@ -21,6 +10,8 @@ Privileges to include:
     - Network.Assign (for network customisation)
   Virtual Machine:
     - Virtual Machine.Provisioning.* (for recovery)
+```
+
 ```text
 ┌──────────────────────────────────────── SRM — Access Control ─────────────────────────────────────────┐
 │                                                                                                       │
@@ -60,7 +51,3 @@ Privileges to include:
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-### Exporting Recovery History for Compliance
-
-In the SRM UI: **Recovery Plans** → select plan → **History** → **Export** — produces a CSV with plan name, start time, end time, result, and initiating user. Retain exports for audit evidence per your retention policy (typically 1–3 years for DR events).

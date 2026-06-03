@@ -1,16 +1,3 @@
-# Linux — Backup & Restore
-
-
-<div class="kb-summary">
-Veeam Agent for Linux backup jobs, restore procedures, and validation steps.
-</div>
-
-## Veeam Agent for Linux
-
-Veeam Agent for Linux provides image-level and file-level backup for Linux physical and virtual machines.
-
-### Installation
-
 ```bash
 # Add Veeam repository (RHEL/CentOS)
 curl -o /etc/yum.repos.d/veeam.repo https://repository.veeam.com/backup/linux/rhel/x86_64/veeam.repo
@@ -24,6 +11,8 @@ apt update && apt install -y veeam
 # Verify installation
 veeam --version
 veeamconfig ui   # Opens text-based configuration UI
+```
+
 ```text
 ┌────────────────────────────────────── Linux — Backup & Restore ───────────────────────────────────────┐
 │                                                                                                       │
@@ -68,9 +57,6 @@ veeamconfig ui   # Opens text-based configuration UI
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-### Run a Backup Job Manually
-
 ```bash
 # Start a backup job immediately
 veeamconfig job start --name "SERVER01-Daily"
@@ -88,9 +74,6 @@ while [[ $(veeamconfig session info --id <session-id> | grep "State:" | awk '{pr
 done
 echo "Backup complete"
 ```
-
-### Backup Job Status
-
 ```bash
 # List recent backup sessions
 veeamconfig session list
@@ -101,11 +84,6 @@ veeamconfig restorepoint list --jobName "SERVER01-Daily"
 # Show session result (Success / Warning / Failed)
 veeamconfig session info --id <session-id> | grep "Result:"
 ```
-
-## Restore Procedures
-
-### File-Level Restore
-
 ```bash
 # List available restore points
 veeamconfig restorepoint list --jobName "SERVER01-Daily"
@@ -122,11 +100,6 @@ cp -a /tmp/veeam/<uuid>/var/www/html/config.php /var/www/html/config.php.restore
 # Unmount when done
 veeamconfig recoverypoints umount --restorePointId <restore-point-id>
 ```
-
-### Bare Metal Restore
-
-For full system recovery, boot from the Veeam Recovery Media ISO.
-
 ```bash
 # Create Veeam Recovery Media (run on a working system)
 # Requires veeam-nosnap package
@@ -142,20 +115,12 @@ dd if=/tmp/veeam-recovery.iso of=/dev/sdX bs=4M status=progress
 # 5. Map to target disk(s)
 # 6. Restore and reboot
 ```
-
-### Volume-Level Restore to Alternate Location
-
 ```bash
 # Mount the restore point and export to an image
 veeamconfig recoverypoints export \
   --restorePointId <restore-point-id> \
   --targetDir /mnt/restore-output
 ```
-
-## rsync-Based Backup (File Sync)
-
-For file-level incremental backup without Veeam:
-
 ```bash
 # Incremental backup to a remote host using rsync
 rsync -avz --delete --link-dest=/backup/last \
@@ -173,11 +138,6 @@ rsync -avz --delete \
 # Dry run first (shows what would be transferred)
 rsync -avzn /data/ backupserver:/backup/data/
 ```
-
-## Backup Validation
-
-### Verify Backup Integrity
-
 ```bash
 # Veeam — verify a restore point (checksum validation)
 veeamconfig recoverypoints verify --id <restore-point-id>
@@ -190,9 +150,6 @@ find /backup/data -type f -exec md5sum {} \; | sort > /tmp/backup-checksums.txt
 # Compare
 diff /tmp/source-checksums.txt /tmp/backup-checksums.txt
 ```
-
-### Test Restore (Monthly)
-
 ```bash
 # Mount the restore point and compare a sample of files
 veeamconfig recoverypoints mount --restorePointId <restore-point-id>
@@ -207,9 +164,6 @@ echo "DB restore test: $?"
 # Unmount
 veeamconfig recoverypoints umount --restorePointId <restore-point-id>
 ```
-
-## Backup Monitoring
-
 ```bash
 # Check Veeam Agent service status
 systemctl status veeamservice veeamsnap
@@ -224,30 +178,3 @@ if [ "$FAILED" -gt 0 ]; then
     echo "WARNING: $FAILED Veeam backup session(s) failed" | mail -s "Backup Alert" alerts@corp.local
 fi
 ```
-
-## Backup Best Practices
-
-| Practice | Detail |
-|---|---|
-| 3-2-1 rule | 3 copies, 2 different media, 1 offsite |
-| Retention | Minimum 14 daily, 4 weekly, 3 monthly |
-| Test restores | Perform file-level restore test monthly |
-| Bare metal test | Test full BMR annually in DR exercise |
-| Immutable backups | Enable immutability on repository to protect against ransomware |
-| Encryption at rest | Enable Veeam backup encryption or use encrypted repository |
-| Monitor alerts | Alert on failed jobs within the backup window |
-| Log retention | Keep Veeam session logs for 90 days |
-
-## Quick Reference
-
-| Task | Command |
-|---|---|
-| List jobs | `veeamconfig job list` |
-| Start job | `veeamconfig job start --name "JobName"` |
-| List sessions | `veeamconfig session list` |
-| List restore points | `veeamconfig restorepoint list --jobName "JobName"` |
-| Mount restore point | `veeamconfig recoverypoints mount --restorePointId <id>` |
-| Unmount restore point | `veeamconfig recoverypoints umount --restorePointId <id>` |
-| Verify restore point | `veeamconfig recoverypoints verify --id <id>` |
-| Veeam service status | `systemctl status veeamservice` |
-| Veeam logs | `journalctl -u veeamservice` |

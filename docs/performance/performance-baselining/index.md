@@ -1,33 +1,3 @@
-# Performance Baselining
-
-
-<div class="kb-summary">
-A documented performance baseline defines normal system behaviour, enabling accurate anomaly detection and meaningful alert thresholds. > See also: [Metrics Baseline](../../monitoring/metrics-baseline/index.md) — similar coverage from the monitoring perspective.
-</div>
-
-A documented performance baseline defines normal system behaviour, enabling accurate anomaly detection and meaningful alert thresholds.
-
-> See also: [Metrics Baseline](../../monitoring/metrics-baseline/index.md) — similar coverage from the monitoring perspective.
-
-## What to Baseline
-
-| Resource | Metrics to Capture |
-|---|---|
-| CPU | Avg utilisation (business hours vs off-hours), peak, standard deviation |
-| Memory | Avg used, peak, swap usage |
-| Disk I/O | Read/write IOPS, throughput (MB/s), avg latency (ms), peak |
-| Network | Interface avg utilisation, peak throughput |
-| Application | Request rate, response time (P50/P95/P99), error rate |
-| Database | QPS, avg query latency, connection count |
-
-## Collection Period
-
-- Minimum: **2 weeks** (covers Mon–Fri patterns and weekend)
-- Recommended: **30 days** (captures month-end peaks)
-- For seasonal systems: **90 days** minimum
-
-## Linux — Baseline Collection
-
 ```bash
 # CPU — 30 days from sar
 # For each day's summary:
@@ -43,6 +13,8 @@ iostat -x 5 12 > /tmp/iostat-baseline.txt
 # Memory
 free -m
 vmstat -S M 5 12
+```
+
 ```text
 ┌────────────────────────────────────── Performance — Baselining ───────────────────────────────────────┐
 │                                                                                                       │
@@ -74,9 +46,6 @@ vmstat -S M 5 12
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-## Documenting the Baseline
-
 ```yaml
 System:         web-prod-01
 Date:           2026-05-06
@@ -93,19 +62,3 @@ App requests:   avg 340 req/min | peak 1,200
 Response (P95): avg 85ms | peak 340ms
 Error rate:     avg 0.02%
 ```
-
-## Setting Thresholds from Baseline
-
-| Metric | Warning | Critical |
-|---|---|---|
-| CPU | avg + 2σ or >75% sustained | >90% sustained |
-| Memory | >85% | >95% |
-| Disk latency | >3× baseline avg | >10× baseline avg |
-| Response time P95 | >2× baseline | >5× baseline |
-
-## Baseline Review Triggers
-
-- After hardware refresh or VM resize
-- After major application upgrade
-- After sustained alert activity (anomaly or stale baseline?)
-- Quarterly routine review

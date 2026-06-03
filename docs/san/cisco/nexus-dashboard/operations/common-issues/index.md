@@ -1,24 +1,3 @@
-# Nexus Dashboard — Known Issues
-
-
-<div class="kb-summary">
-> Part of the [Nexus Dashboard](../../index.md) reference. For deeper diagnosis, see [Troubleshooting > Common Issues](../../troubleshooting/common-issues/index.md).
-</div>
-
----
-
-## Overview
-
-Quick reference for operational issues encountered during Nexus Dashboard and NDFC day-to-day management.
-
----
-
-## ND Cluster Node Shows Unhealthy
-
-**Symptom:** One or more nodes in **Admin Console > Infrastructure > Nodes** shows **Degraded**, **Unavailable**, or **Unknown**.
-
-**Diagnosis:**
-
 ```bash
 ssh ndadmin@nd-dc1-1.corp.example.com
 
@@ -34,6 +13,8 @@ kubectl get nodes
 
 # Check failing pods on the affected node
 kubectl get pods --all-namespaces --field-selector spec.nodeName=<node-hostname> | grep -v Running
+```
+
 ```text
 ┌────────────────────────── Cisco Nexus Dashboard — Operations Common Issues ───────────────────────────┐
 │                                                                                                       │
@@ -81,17 +62,6 @@ kubectl get pods --all-namespaces --field-selector spec.nodeName=<node-hostname>
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-Maintain copies of the ND certificate key and signed certificate on a secure file share or vault. They are needed after every major ND upgrade if the cert is not preserved.
-
----
-
-## ND Backup Failing
-
-**Symptom:** Scheduled backup does not complete; backup history shows errors.
-
-**Resolution:**
-
 ```bash
 ssh ndadmin@nd-dc1-1.corp.example.com
 
@@ -104,34 +74,3 @@ acs backup status
 # Check backup logs
 acs system logs --component backup --tail 50
 ```
-
-Common causes:
-
-| Cause | Fix |
-|---|---|
-| SSH key authentication to backup server expired | Rotate SSH key; update in backup configuration |
-| Remote backup path does not exist | Create the path on the backup server |
-| Remote backup disk full | Free space on the backup server or reduce ND retention count |
-| ND data volume full | `kubectl exec` into a pod to check `/data` usage; purge NDI telemetry |
-
----
-
-## LDAP Users Cannot Log In
-
-**Symptom:** Users get "Invalid credentials" with AD accounts; local accounts work.
-
-**Resolution:**
-
-1. Navigate to **Admin Console > Security > Authentication > Login Domains > [LDAP domain] > Test**.
-2. Enter an AD username and password to test.
-3. Review the test output for the specific error.
-
-Common errors:
-
-| Error | Cause | Fix |
-|---|---|---|
-| Connection refused / timeout | Port 636 blocked | Open firewall from ND mgmt to LDAP server |
-| Invalid bind credentials | Bind DN password changed | Update in ND LDAP configuration |
-| User not found | Wrong search base or filter | Verify OU and user attribute setting |
-| SSL handshake failed | CA cert not imported | Import CA cert into ND via `acs certificates` or Admin Console |
-| Group not mapped | AD group not in role mapping table | Add group under **Security > Roles** |

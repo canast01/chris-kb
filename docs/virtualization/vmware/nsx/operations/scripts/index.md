@@ -1,16 +1,3 @@
-# NSX — Scripts
-
-
-<div class="kb-summary">
-Scripts reference covering NSX-T System Health Check (Python), Transport Node Status Monitor (Python), DFW Rule Audit (Bash), Segment and Gateway Health Check (Python), Ansible NSX-T Operational Playbook and 2 more sections.
-</div>
-
----
-
-## NSX-T System Health Check (Python)
-
-Query key NSX-T REST API endpoints to assess cluster, transport node, and edge cluster health, and report any open alarms.
-
 ```python
 #!/usr/bin/env python3
 """
@@ -107,6 +94,8 @@ except Exception as e:
 
 print(f"\nOverall: {'PASS' if overall == 0 else 'WARNING' if overall == 1 else 'CRITICAL'}")
 sys.exit(overall)
+```
+
 ```text
 ┌──────────────────────────────────────────── NSX — Scripts ────────────────────────────────────────────┐
 │                                                                                                       │
@@ -201,9 +190,6 @@ sys.exit(overall)
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-**What you should see**
-
 ```text
 === NSX-T Transport Node Status Monitor: 192.168.1.200 ===
 Transport nodes found: 8
@@ -217,15 +203,6 @@ esxi-02.company.local                    ESXi       in_sync    3            1   
 ISSUES (1):
   esxi-02.company.local  [ESXi]  conn=in_sync  tunnels=3  down=1
 ```
-
-The script exits with code 1 if any issues are found.
-
----
-
-## DFW Rule Audit (Bash)
-
-Authenticate to the NSX-T Policy API and retrieve all DFW security policies and rules, flagging overly permissive allow-any rules.
-
 ```bash
 #!/bin/bash
 # nsxt_dfw_audit.sh
@@ -297,46 +274,12 @@ done <<< "$policy_ids"
 
 echo "Audit complete."
 ```
-
-### How to run this script — step by step
-
-**Before you start — what you need**
-- A bash shell — use Git Bash (https://git-scm.com) or WSL (Ubuntu from the Microsoft Store)
-- Python 3 must be available in the shell (`python3 --version` to check)
-- `curl` must be available — it is included in Git Bash and WSL
-- Network access to your NSX Manager on port 443
-- NSX Manager admin credentials
-
-**Step 1 — Save the file**
-
-1. In WSL or Git Bash, create the file:
-   `nano ~/nsxt_dfw_audit.sh`
-2. Paste the entire code block above
-3. Press `Ctrl+X`, then `Y`, then `Enter` to save
-
-**Step 2 — No edits needed in the file**
-
-All variables are passed as environment variables when you run it (see Step 5).
-
-**Step 3 — Open a terminal**
-
-- **WSL:** Windows key → type `Ubuntu` → press Enter
-- **Git Bash:** right-click Desktop → "Git Bash Here"
-
-**Step 4 — Make the script executable**
-
 ```bash
 chmod +x ~/nsxt_dfw_audit.sh
 ```
-
-**Step 5 — Run it**
-
 ```bash
 NSX_HOST="192.168.1.200" NSX_USER="admin" NSX_PASS="YourPassword" ~/nsxt_dfw_audit.sh
 ```
-
-**What you should see**
-
 ```text
 === NSX-T DFW Rule Audit ===
 Manager: 192.168.1.200
@@ -351,15 +294,6 @@ Policy: Default Layer3 Section (default-layer3-section)
 
 Audit complete.
 ```
-
-Rules flagged as ALLOW ANY->ANY are marked `*** OVERLY_PERMISSIVE`.
-
----
-
-## Segment and Gateway Health Check (Python)
-
-Query NSX-T Policy API for all segments, Tier-0/Tier-1 gateways, and BGP neighbor state, and report connectivity health.
-
 ```python
 #!/usr/bin/env python3
 """
@@ -457,47 +391,10 @@ except Exception as e:
 print(f"\nOverall: {'PASS' if overall == 0 else 'WARNING' if overall == 1 else 'CRITICAL'}")
 sys.exit(overall)
 ```
-
-### How to run this script — step by step
-
-**Before you start — what you need**
-- Python 3.8 or newer installed from python.org — during install, tick "Add Python to PATH"
-- The `requests` library — install it once by running in Command Prompt:
-  `pip install requests`
-- Network access to your NSX-T Manager on port 443
-- NSX Manager admin credentials
-
-**Step 1 — Save the file**
-
-1. Open **Notepad** on your Windows PC
-2. Copy the entire code block above
-3. Click **File → Save As**
-4. Set "Save as type" to **All Files**
-5. Name it `nsxt_gateway_health.py` and save it to your Desktop
-
-**Step 2 — Fill in your details**
-
-Open the file in Notepad and update these lines near the top:
-
-| Variable | What to enter | How to find it |
-|---|---|---|
-| `NSX_HOST` | NSX Manager IP or FQDN | Your NSX Manager address |
-| `NSX_USER` | NSX Manager username | Your NSX Manager login |
-| `NSX_PASS` | NSX Manager password | Your NSX Manager password |
-
-**Step 3 — Open Command Prompt**
-
-Windows key → type `cmd` → press Enter
-
-**Step 4 — Run it**
-
 ```bash
 cd C:\Users\YourName\Desktop
 python nsxt_gateway_health.py
 ```
-
-**What you should see**
-
 ```text
 === NSX-T Segment and Gateway Health: 192.168.1.200 ===
 
@@ -515,15 +412,6 @@ python nsxt_gateway_health.py
 
 Overall: PASS
 ```
-
-Any down BGP neighbor appears in red. The script exits with code 2 on critical failures.
-
----
-
-## Ansible NSX-T Operational Playbook
-
-Check NSX-T cluster, transport node, and edge health using the `uri` module, and assert no open critical alarms.
-
 ```yaml
 ---
 # nsxt_operational.yml
@@ -626,64 +514,19 @@ Check NSX-T cluster, transport node, and edge health using the `uri` module, and
           - "Transport nodes up: {{ tn_status.json.up_count }}/{{ tn_status.json.total_count }}"
           - "Critical alarms: {{ critical_alarms.json.result_count }}"
 ```
-
-### How to run this script — step by step
-
-**Before you start — what you need**
-- Ansible — easiest on Windows via WSL. Open Microsoft Store, install Ubuntu, then in the Ubuntu terminal:
-  `sudo apt update && sudo apt install -y ansible`
-- Network access to your NSX-T Manager on port 443
-- NSX Manager admin credentials
-
-**Step 1 — Save the file**
-
-In your WSL terminal:
-
 ```bash
 nano ~/nsxt_operational.yml
 ```
-
-Paste the entire code block, then press `Ctrl+X`, then `Y`, then `Enter` to save.
-
-**Step 2 — Fill in your details**
-
-Open the file and update the `vars:` section:
-
-| Variable | What to enter | How to find it |
-|---|---|---|
-| `nsx_host` | NSX Manager IP or FQDN | Your NSX Manager address |
-| `nsx_user` | NSX Manager username (or set via env var `NSX_USER`) | Your NSX Manager login |
-| `nsx_pass` | NSX Manager password (or set via env var `NSX_PASS`) | Your NSX Manager password |
-
-**Step 3 — Set credentials as environment variables**
-
 ```bash
 export NSX_USER="admin"
 export NSX_PASS="YourPassword"
 ```
-
-**Step 4 — Create a minimal inventory file**
-
 ```bash
 echo "localhost ansible_connection=local" > ~/inventory
 ```
-
-**Step 5 — Run it**
-
 ```bash
 ansible-playbook -i ~/inventory ~/nsxt_operational.yml
 ```
-
-**What you should see**
-
-Each task prints `ok` (assertion passed) or `fatal` (assertion failed). A non-STABLE cluster or any transport node that is down causes a hard failure with the detail shown. The final debug task prints a summary of the overall health status.
-
----
-
-## Windows: NSX-T Manager Health via REST API (PowerShell)
-
-Use the NSX-T REST API with built-in PowerShell to check cluster status, transport node health, and active alarms — no extra modules needed.
-
 ```powershell
 # nsxt_rest_health.ps1
 # Uses the NSX-T REST API — no extra modules required.
@@ -813,51 +656,13 @@ Write-Host "Overall: " -NoNewline
 Write-Host $overallText -ForegroundColor $overallColour
 exit $overallExit
 ```
-
-### How to run this script — step by step
-
-**Before you start — what you need**
-- Windows 10 or Windows 11 — PowerShell 5.1 is already installed, no extra modules needed
-- Network access to your NSX-T Manager on port 443
-- NSX Manager admin credentials
-
-**Step 1 — Save the file**
-
-1. Open **Notepad** on your Windows PC
-2. Copy the entire code block above
-3. Click **File → Save As**
-4. Set "Save as type" to **All Files**
-5. Name it `nsxt_rest_health.ps1` and save it to your Desktop
-
-**Step 2 — Fill in your details**
-
-Open the file in Notepad and update the `param(` block:
-
-| Variable | What to enter | How to find it |
-|---|---|---|
-| `$NsxManager` | NSX Manager IP or FQDN e.g. `"192.168.1.200"` | Your NSX Manager address |
-| `$NsxUser` | NSX Manager username e.g. `"admin"` | Your NSX Manager login |
-| `$NsxPass` | NSX Manager password | Your NSX Manager password |
-
-**Step 3 — Open PowerShell as Administrator**
-
-Windows key → type `PowerShell` → right-click → **Run as Administrator**
-
-**Step 4 — Allow scripts to run (one-time per session)**
-
 ```powershell
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 ```
-
-**Step 5 — Run it**
-
 ```bash
 cd C:\Users\YourName\Desktop
 .\nsxt_rest_health.ps1
 ```
-
-**What you should see**
-
 ```yaml
 === NSX-T Manager Health Check: 192.168.1.200 ===
 (2026-05-06 14:30:22)
@@ -878,15 +683,6 @@ cd C:\Users\YourName\Desktop
 
 Overall: PASS
 ```
-
-Any cluster instability or transport nodes that are down appear in red. MEDIUM alarms appear in yellow.
-
----
-
-## Windows: NSX-T Transport Node Check via Plink (CMD)
-
-Connect to NSX Manager via SSH using plink (from PuTTY) and run NSX-specific CLI commands to check cluster and transport node health.
-
 ```batch
 @echo off
 REM nsxt_plink_check.bat — NSX-T Manager health check via SSH (plink)
@@ -930,40 +726,9 @@ echo --- Active Alarms ---
 echo.
 echo === NSX-T check complete ===
 ```
-
-### How to run this script — step by step
-
-**Before you start — what you need**
-- PuTTY installed on your Windows PC — download from https://www.putty.org (get the 64-bit installer)
-- Network access to your NSX Manager on port 22 (SSH)
-- The NSX Manager admin password
-
-**Step 1 — Accept the SSH fingerprint (one-time setup)**
-
 ```text
 "C:\Program Files\PuTTY\plink.exe" -ssh admin@192.168.1.200
 ```
-
-When asked "Store key in cache?", type `y` and press Enter. Once connected, press `Ctrl+C`.
-
-**Step 2 — Save the file**
-
-1. Open **Notepad** on your Windows PC
-2. Copy the entire code block above
-3. Click **File → Save As**
-4. Set "Save as type" to **All Files**
-5. Name it `nsxt_plink_check.bat` and save it to your Desktop
-
-**Step 3 — Fill in your details**
-
-| Variable | What to enter | How to find it |
-|---|---|---|
-| `NSX_HOST` | NSX Manager IP address e.g. `192.168.1.200` | Your NSX Manager address |
-| `SSH_USER` | NSX Manager SSH username — usually `admin` | Your NSX Manager login |
-| `PLINK` | Path to plink.exe | Default is `C:\Program Files\PuTTY\plink.exe` |
-
-**Step 4 — Run it**
-
 ```bash
 cd C:\Users\YourName\Desktop
 nsxt_plink_check.bat

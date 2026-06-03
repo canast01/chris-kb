@@ -1,14 +1,3 @@
-# NetApp Keystone — CLI Reference
-
-
-<div class="kb-summary">
-CLI Reference reference covering Keystone Collector CLI, NetApp ONTAP REST API (Keystone Collector Bootstrap), Keystone Portal API, Quick Reference.
-</div>
-
-## Keystone Collector CLI
-
-The Keystone Collector is managed via SSH and a dedicated CLI on the collector VM.
-
 ```bash
 # Show Collector status and version
 keystone-collector status
@@ -29,6 +18,8 @@ keystone-collector list-arrays
 # Update Collector software
 keystone-collector upgrade --check     # dry-run
 keystone-collector upgrade --apply
+```
+
 ```text
 ┌───────────────────────────── NetApp Keystone — Operations: CLI Reference ─────────────────────────────┐
 │                                                                                                       │
@@ -83,11 +74,6 @@ keystone-collector upgrade --apply
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-## Keystone Portal API
-
-NetApp exposes Keystone subscription data via API for reporting and integration.
-
 ```python
 import requests
 
@@ -100,15 +86,3 @@ resp = requests.get(f"{PORTAL}/subscriptions", headers=HDR)
 for sub in resp.json().get("subscriptions", []):
     print(f"{sub['subscriptionNumber']}  committed={sub['committedCapacity']} consumed={sub['consumedCapacity']}")
 ```
-
-## Quick Reference
-
-| Task | Command |
-|---|---|
-| Check Collector status | `keystone-collector status` |
-| Force usage collection | `keystone-collector collect --force` |
-| List managed arrays | `keystone-collector list-arrays` |
-| Validate config | `keystone-config validate` |
-| ONTAP volume list | `volume show -vserver <svm>` |
-| ONTAP SnapMirror status | `snapmirror show` |
-| Test ONTAP API | `curl -u admin:pass https://<ip>/api/cluster` |

@@ -1,18 +1,3 @@
-# RASR — Health Checks
-
-
-<div class="kb-summary">
-> Part of the [RASR Operations](../index.md) reference.
-</div>
-
----
-
-Regular health checks verify that RASR is ready to perform a recovery — before an incident occurs. Run these on a monthly cadence and after any change to protected servers.
-
-## Quick Health Check (5 minutes)
-
-Run on each RASR-protected server:
-
 ```powershell
 # Collect all key indicators in one pass
 $rasrKey = "HKLM:\SOFTWARE\Dell\RASR"
@@ -29,6 +14,8 @@ $share   = "\\nas01\rasr-images\prod\$(hostname)"
     LatestImage     = (Get-ChildItem $share -Filter "*.wim" -ErrorAction SilentlyContinue |
                        Sort-Object LastWriteTime -Descending | Select-Object -First 1).Name
 } | Format-List
+```
+
 ```text
 ┌──────────────────────────────────────── RASR — Health Checks ─────────────────────────────────────────┐
 │                                                                                                       │
@@ -68,9 +55,6 @@ $share   = "\\nas01\rasr-images\prod\$(hostname)"
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-### 4. VSS Writer Health
-
 ```powershell
 # Check VSS writers are in stable state
 $writers = vssadmin list writers 2>&1
@@ -82,28 +66,17 @@ if ($failed) {
     Write-Host "PASS: All VSS writers stable"
 }
 ```
-
-### 5. iDRAC Media Mapping Test
-
-Test via iDRAC web UI (cannot be scripted without Redfish):
-
 ```text
 iDRAC → Configuration → Virtual Media → Verify ISO is mapped
 iDRAC → Overview → Boot → Boot Next = Virtual Optical Drive
 (Optional: perform test boot in next maintenance window)
 ```
-
 ```bash
 # Via Redfish API
 curl -sk -u root:<password> \
   https://<idrac-ip>/redfish/v1/Managers/iDRAC.Embedded.1/VirtualMedia \
   | python3 -m json.tool
 ```
-
-## Fleet-Wide Health Check
-
-Run monthly across all RASR-protected servers:
-
 ```powershell
 $servers = @("app01", "app02", "db01", "web01")   # update per environment
 
@@ -133,11 +106,6 @@ $report = foreach ($server in $servers) {
 
 $report | Sort-Object Status -Descending | Format-Table
 ```
-
-## Health Check Sign-Off
-
-Document results monthly in the DR register:
-
 ```text
 Date: ___________  Performed by: ___________
 Servers checked: ___ / ___

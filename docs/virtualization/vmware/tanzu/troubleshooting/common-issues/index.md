@@ -1,9 +1,3 @@
-# Tanzu — Common Issues
-
-
-<div class="kb-summary">
-Common Issues reference covering Supervisor Stuck in Configuring State, TKG Cluster Create Fails, Pod Stuck in Pending, ImagePullBackOff, Service Type LoadBalancer Pending and 1 more sections.
-</div>
 ```text
 ┌───────────────────────────── Virtualization Vmware Tanzu — Common Issues ─────────────────────────────┐
 │                                                                                                       │
@@ -56,31 +50,14 @@ Common Issues reference covering Supervisor Stuck in Configuring State, TKG Clus
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-
----
-
-## Supervisor Stuck in Configuring State
-
-**Symptoms:** vCenter → Workload Management shows Supervisor as "Configuring" for >30 minutes
-
-**Causes:**
-
-1. **DNS resolution failure**: Supervisor control plane VMs cannot resolve their own FQDN
-   ```bash
-   # From vCenter shell or ESXi host, test DNS:
-   nslookup supervisor.example.local <dns-server>
-   # Must resolve to the Supervisor API VIP IP
-   ```
-   Fix: add A record for Supervisor API VIP in DNS
-
-2. **NTP skew**: Control plane VMs time differs from vCenter by >5 seconds
 ```text
    vCenter → Workload Management → Supervisor → Control Plane VMs
    SSH to a control plane VM → check timedatectl
    ```
 
 3. **NSX-T or AVI misconfiguration**: Load balancer not assigning VIP to Supervisor
+```
+
 ```text
    NSX-T → Load Balancing → Virtual Servers → check if VIP created for Supervisor
    ```
@@ -175,6 +152,8 @@ Common Issues reference covering Supervisor Stuck in Configuring State, TKG Clus
 
 **Symptoms:** Service shows `EXTERNAL-IP: <pending>` for >2 minutes
 
+```
+
 ```bash
 kubectl describe svc <service-name> -n <namespace>
 # Events section will show: "no IPs available in NSX IP pool" or similar
@@ -183,15 +162,6 @@ kubectl describe svc <service-name> -n <namespace>
 # NSX-T → Networking → Load Balancing → Virtual Servers → check IP usage
 # AVI: AVI Controller → Cloud → SE Group → check IP pool capacity
 ```
-
-Fix: expand the IP pool in NSX-T or AVI, or release unused load balancer IPs.
-
----
-
-## Ingress Not Routing
-
-**Symptoms:** HTTPProxy or Ingress created but traffic doesn't reach pods
-
 ```bash
 # Check Contour pods are running:
 kubectl get pods -n projectcontour

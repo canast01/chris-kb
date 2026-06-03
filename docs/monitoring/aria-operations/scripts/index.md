@@ -1,13 +1,3 @@
-# Aria Operations — Monitoring Scripts
-
-<div class="kb-summary">
-Aria Operations Scripts reference covering Authentication, Push Custom Metric, Script Inventory, Token Refresh.
-</div>
-
-## Authentication
-
-All scripts authenticate via the Aria Operations REST API token endpoint. The session token is passed in the `Authorization: vRealizeOpsToken` header for subsequent requests.
-
 ```python
 import requests, json
 
@@ -18,6 +8,8 @@ def get_token(host, username, password):
     resp = requests.post(url, json=payload, headers=headers, verify=True)
     resp.raise_for_status()
     return resp.json()["token"]
+```
+
 ```text
 ┌───────────────────────────────── Aria Operations — Scripts Reference ─────────────────────────────────┐
 │                                                                                                       │
@@ -63,23 +55,6 @@ def get_token(host, username, password):
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-## Script Inventory
-
-| Script | Purpose | Schedule |
-|---|---|---|
-| `export_active_alerts.py` | Export all active alerts to CSV with severity, object, and timestamp | Daily |
-| `capacity_report.py` | Generate cluster-level capacity utilisation report (CPU, memory, storage) | Weekly |
-| `top_n_vms.py` | Report top-N VMs by CPU contention and memory usage over a time range | Weekly |
-| `push_custom_metric.py` | Push custom metrics to Aria Operations via the REST ingest API | On demand |
-| `generate_report.py` | Trigger and download a scheduled report programmatically | On demand |
-
-Scripts are stored in the team repository under `scripts/aria-operations/`. A `config.json` template with required fields (`aria_host`, `username`, `password`) is provided — populate from the secrets manager at runtime.
-
-## Token Refresh
-
-Tokens expire after 30 minutes (default). For long-running scripts, re-acquire the token before expiry or catch HTTP 401 responses and re-authenticate:
-
 ```python
 from datetime import datetime, timedelta
 

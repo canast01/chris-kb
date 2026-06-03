@@ -1,16 +1,3 @@
-# MDS — Common Issues
-
-
-<div class="kb-summary">
-> Part of the [Cisco MDS](../../index.md) reference.
-</div>
-
----
-
-## Triage Checklist
-
-When investigating a SAN fault, capture state in this order to build a complete picture before making any changes.
-
 ```bash
 # 1. Identify down or errDisabled interfaces
 show interface brief
@@ -34,6 +21,8 @@ show port-channel summary
 
 # 7. Check domain IDs for conflict
 show fcdomain domain-list vsan 10
+```
+
 ```text
 ┌────────────────────────────── Cisco MDS — Troubleshooting Common Issues ──────────────────────────────┐
 │                                                                                                       │
@@ -81,7 +70,6 @@ show fcdomain domain-list vsan 10
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
 ```bash
 # Check reason
 show interface fc1/4
@@ -90,19 +78,6 @@ show interface fc1/4
 # Check log for the triggering event
 show logging last 200 | grep -i "err\|disabled\|fc1/4"
 ```
-
-**Never re-enable an errDisabled port without first resolving the root cause.** The port will immediately errDisable again.
-
-| errDisabled Reason | Cause | Action |
-|---|---|---|
-| `fcot-not-present` | SFP missing or not seated | Reseat or replace SFP |
-| `link-failure-count-exceeded` | Repeated link flaps | Replace cable/SFP; investigate flapping cause |
-| `isolation` | VSAN merge conflict | Resolve VSAN conflict; check trunk allowed VSANs |
-| `rcf-failure` | Domain ID conflict in fabric | Resolve domain ID conflict (see below) |
-| `cfg-invalid` | Configuration error | Fix VSAN assignment or port mode config |
-
-**Recovery after resolving root cause:**
-
 ```bash
 interface fc1/4
   shutdown
@@ -111,15 +86,6 @@ interface fc1/4
 show interface fc1/4
 # Confirm state returns to 'up'
 ```
-
----
-
-## Host Cannot See Storage
-
-**Symptom:** A host reports no FC storage paths. A newly connected server cannot discover any LUNs. Multipath shows one fewer path than expected.
-
-**Structured triage:**
-
 ```bash
 # 1. Is the host HBA logged into the fabric?
 show flogi database vsan 10 | grep <host-pwwn>
@@ -137,9 +103,6 @@ show zoneset active vsan 10
 show vsan membership interface fc<host-port>
 show vsan membership interface fc<storage-port>
 ```
-
-**Decision tree:**
-
 ```mermaid
 flowchart TD
   A["Host cannot see storage"] --> B{"Host pWWN in\nshow flogi database?"}
@@ -158,13 +121,6 @@ flowchart TD
   class B,C,D,E,F decision
   class B1,C1,D1,E1,F1 fix
 ```
-
----
-
-## Zoning: Zone Set Not Activating
-
-**Symptom:** `zoneset activate` fails or does not propagate across the fabric.
-
 ```bash
 # Check zone status
 show zone status vsan 10
@@ -175,23 +131,6 @@ zone commit vsan 10
 # Retry activate
 zoneset activate name <zoneset-name> vsan 10
 ```
-
-**Common blockers:**
-
-| Issue | Check | Fix |
-|---|---|---|
-| Enhanced zoning — uncommitted changes | `show zone status vsan <id>` shows pending | `zone commit vsan <id>` before activating |
-| Device alias not committed | `show device-alias status` shows pending | `device-alias commit` |
-| Zone member has invalid PWWN format | `show zone vsan <id>` shows error markers | Remove and re-add with correct WWPN |
-| CFS distribution failure | `show cfs lock` | Clear lock: `clear cfs session`; investigate CFS conflict |
-| Zone set name mismatch | Activating wrong zone set | `show zoneset vsan <id>` — list all zone sets to confirm name |
-
----
-
-## ISL Down or Isolated
-
-**Symptom:** `show topology` shows a missing ISL link between switches, or a VSAN shows as `isolated` on the ISL port.
-
 ```bash
 # Check ISL port state
 show interface fc2/1
@@ -207,43 +146,10 @@ show port-channel summary
 show vsan
 show vsan <id>
 ```
-
-**Isolation causes and fixes:**
-
-| Cause | Diagnostic | Fix |
-|---|---|---|
-| VSAN not allowed on trunk | `show trunk` — VSAN missing from allowed list | `switchport trunk allowed vsan add <id>` |
-| VSAN suspended on one switch | `show vsan <id>` — state `suspended` | `no vsan <id> suspend` in `vsan database` |
-| Domain ID conflict after merge | `show fcdomain domain-list vsan <id>` — duplicate IDs | Assign unique static domain ID before connecting ISL |
-| Speed/mode mismatch | Both ends not `TE` or speed differs | Force same speed and `switchport mode TE` on both ends |
-
----
-
-## Domain ID Conflict
-
-**Symptom:** After connecting a new MDS switch or recovering from a network partition, a VSAN goes isolated. `show fcdomain` shows a conflict.
-
 ```bash
 show fcdomain vsan 10
 show fcdomain domain-list vsan 10
 ```
-
-**Resolution:**
-
-1. Shut the ISL connecting the two switches: `interface fc2/1` → `shutdown`
-2. On the new or conflicting switch, assign a unique static domain ID:
-   ```bash
-   fcdomain domain 4 static vsan 10
-   ```
-3. Bring the ISL back up: `no shutdown`
-4. Verify: `show fcdomain domain-list vsan 10` — each switch should have a unique ID
-
----
-
-## FLOGI Instability / Port Flapping
-
-**Symptom:** `show logging` contains repeated `link down`/`link up` or `FLOGI accepted`/`rejected` events on the same port. This degrades fabric stability and can cause I/O disruptions on dependent zones.
-
 ```bash
 # Identify flapping port
 show logging last 200 | grep "link down\|link up\|flogi" | head -40
@@ -254,21 +160,6 @@ show interface fc1/6 counters errors
 # Check optical power levels
 show interface fc1/6 transceiver
 ```
-
-**Resolution:**
-
-1. Shut the flapping port to stop the instability: `interface fc1/6` → `shutdown`
-2. Replace the SFP — optical degradation is the most common cause
-3. If SFP replacement does not help, replace the fibre cable
-4. If both are replaced and problem persists, check the HBA or storage array port on the connected device
-5. Re-enable the port once root cause is confirmed resolved
-
----
-
-## High CPU / Slow CLI
-
-**Symptom:** CLI responses are slow; `show system resources` shows CPU > 80%.
-
 ```bash
 # Check overall CPU and memory
 show system resources
@@ -279,17 +170,6 @@ show processes cpu sort | head -20
 # Check if caused by port flap storm (many FLOGI events)
 show logging last 200 | grep -ci "link down"
 ```
-
-If the high CPU is caused by FLOGI storms (many link events in the log), shut the offending port. If CPU is high without an obvious cause, collect `show tech-support` and open a TAC case.
-
----
-
-## Configuration Lost After Reload
-
-**Symptom:** Changes made before a reload (zone updates, VSAN changes, new device aliases) are missing after the switch comes back up.
-
-**Cause:** `copy running-config startup-config` was not run after the changes.
-
 ```bash
 # Always run this after every configuration change
 copy running-config startup-config
@@ -297,20 +177,7 @@ copy running-config startup-config
 # Verify startup config was updated
 show startup-config | grep <changed-item>
 ```
-
-For large changes, also take a checkpoint:
-
 ```bash
 checkpoint post-change
 show checkpoint summary
 ```
-
----
-
-## Known Issues Reference
-
-Add site-specific known issues below as they are discovered and resolved. Include: date, symptom, root cause, and resolution.
-
-| Date | Switch | Symptom | Root Cause | Resolution |
-|---|---|---|---|---|
-| — | — | — | — | — |

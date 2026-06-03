@@ -1,12 +1,3 @@
-# Database Health Check
-
-
-<div class="kb-summary">
-Verify database availability, connectivity, replication status, and resource utilization across common platforms.
-</div>
-
-## Quick Status — All Platforms
-
 ```bash
 # PostgreSQL
 systemctl status postgresql
@@ -22,6 +13,8 @@ mysql -u root -e "SHOW STATUS LIKE 'Threads_connected';"
 systemctl status mssql-server   # Linux
 # Windows:
 Get-Service -Name MSSQLSERVER
+```
+
 ```text
 ┌──────────────────────────────────── Database — Daily Health Check ────────────────────────────────────┐
 │                                                                                                       │
@@ -54,9 +47,6 @@ Get-Service -Name MSSQLSERVER
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-## SQL Server Health Checks
-
 ```sql
 -- Instance uptime
 SELECT sqlserver_start_time FROM sys.dm_os_sys_info;
@@ -80,9 +70,6 @@ FROM sys.dm_hadr_availability_replica_states rs
 JOIN sys.availability_replicas ar ON rs.replica_id = ar.replica_id
 JOIN sys.availability_groups ag ON ar.group_id = ag.group_id;
 ```
-
-## Connectivity Test
-
 ```bash
 # PostgreSQL
 psql -h <host> -U <user> -d <dbname> -c "SELECT 1 AS alive;"
@@ -98,32 +85,3 @@ nc -zv <db-host> 5432    # PostgreSQL
 nc -zv <db-host> 3306    # MySQL
 nc -zv <db-host> 1433    # SQL Server
 ```
-
-## Health Check Thresholds
-
-| Metric | Warning | Critical |
-|---|---|---|
-| Active connections | > 80% of max_connections | > 90% of max_connections |
-| Replication lag | > 30 seconds | > 5 minutes |
-| Long-running queries | > 5 minutes | > 30 minutes |
-| Dead tuple ratio (PG) | > 20% | > 50% (vacuum required) |
-| Buffer pool hit ratio | < 99% | < 95% |
-
-## Log Locations
-
-| Platform | Log Path |
-|---|---|
-| PostgreSQL | `/var/log/postgresql/` or `pg_lsclusters` |
-| MySQL | `/var/log/mysql/error.log` |
-| MariaDB | `/var/log/mariadb/mariadb.log` |
-| SQL Server (Linux) | `/var/opt/mssql/log/errorlog` |
-
-## Troubleshooting
-
-| Symptom | Check | Action |
-|---|---|---|
-| Cannot connect | Port reachable? Service running? | `nc -zv`; `systemctl status` |
-| High connection count | Application connection pool leak? | Check app logs; restart connection pool |
-| Replication stopped | I/O or SQL thread stopped | `SHOW SLAVE STATUS\G`; check relay log errors |
-| Slow queries | Missing indexes? Locking? | Run explain plan; check `pg_stat_activity` / `dm_exec_requests` |
-| High dead tuples (PG) | Autovacuum falling behind | Run `VACUUM ANALYZE <table>` manually |

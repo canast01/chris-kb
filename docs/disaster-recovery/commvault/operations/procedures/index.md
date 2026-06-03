@@ -1,14 +1,3 @@
-# Commvault — Procedures
-
-
-<div class="kb-summary">
-Operational procedures for change readiness, maintenance windows, and recurring operational tasks.
-</div>
-
-## Change Readiness Check
-
-Before making configuration changes or running maintenance, verify the environment is ready:
-
 ```bash
 # Check client connectivity readiness
 qoperation execscript -sn QS_CheckReadiness
@@ -18,6 +7,8 @@ qlist jobs
 
 # Check CommServe services status
 qlist services
+```
+
 ```text
 ┌───────────────────────────── Commvault Operational Procedures — Runbooks ─────────────────────────────┐
 │                                                                                                       │
@@ -70,5 +61,3 @@ qlist services
 │  Mount Path     = File system path on MediaAgent where disk library chunks are stored                 │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-Alternatively: Command Center → Storage → System Backup → Run Now. Verify the backup completes before proceeding with any change.

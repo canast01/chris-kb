@@ -1,29 +1,3 @@
-# AWS — Procedures
-
-
-<div class="kb-summary">
-> Part of the [Operations](../index.md) section.
-</div>
-
----
-
-## RDS
-
-AWS Relational Database Service — managed database instances, Multi-AZ, snapshots, and performance.
-
-### Supported Engines
-
-| Engine | Use Case |
-|---|---|
-| MySQL | General-purpose relational |
-| PostgreSQL | Advanced SQL, JSON support |
-| MariaDB | MySQL-compatible |
-| Oracle | Enterprise legacy workloads |
-| SQL Server | Windows ecosystem |
-| Aurora MySQL / PostgreSQL | High performance, serverless option |
-
-### Common CLI Commands
-
 ```bash
 # List RDS instances
 aws rds describe-db-instances \
@@ -56,6 +30,8 @@ aws rds modify-db-instance \
 # Start / stop instance (for dev/test)
 aws rds stop-db-instance --db-instance-identifier <db-id>
 aws rds start-db-instance --db-instance-identifier <db-id>
+```
+
 ```text
 ┌─────────────────────────────── AWS Operations — Procedures & Runbooks ────────────────────────────────┐
 │                                                                                                       │
@@ -103,13 +79,3 @@ aws rds start-db-instance --db-instance-identifier <db-id>
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-### Troubleshooting
-
-| Symptom | Check | Action |
-|---|---|---|
-| Connection refused | Security group / subnet group | Verify SG allows inbound on DB port from app subnet |
-| High CPU | Slow query log | Enable `slow_query_log`; analyze with EXPLAIN |
-| Storage full | `FreeStorageSpace` metric | Modify instance to increase `AllocatedStorage` |
-| Multi-AZ failover delay | Event log | Expected: 60–120s for failover; update app retry logic |
-| Read replica lagging | `ReplicaLag` metric | Check source instance I/O; consider read replica promotion |

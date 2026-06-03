@@ -1,12 +1,3 @@
-# Database Replication Check
-
-
-<div class="kb-summary">
-Verify replication health, lag, and data consistency across primary and replica nodes.
-</div>
-
-## PostgreSQL Streaming Replication
-
 ```sql
 -- On PRIMARY: show connected replicas and lag
 SELECT client_addr, application_name, state,
@@ -23,6 +14,8 @@ SELECT pg_last_wal_receive_lsn(), pg_last_wal_replay_lsn();
 -- Replication slots — check for inactive slots holding WAL
 SELECT slot_name, active, restart_lsn, pg_wal_lsn_diff(pg_current_wal_lsn(), restart_lsn) AS lag_bytes
 FROM pg_replication_slots;
+```
+
 ```text
 ┌──────────────────────────────────── Database — Replication Check ─────────────────────────────────────┐
 │                                                                                                       │
@@ -55,14 +48,10 @@ FROM pg_replication_slots;
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
 ```bash
 # Quick one-liner — show lag and thread status
 mysql -u root -e "SHOW SLAVE STATUS\G" | grep -E "Slave_(IO|SQL)_Running|Seconds_Behind|Last_(IO|SQL)_Error"
 ```
-
-### MySQL GTID Replication
-
 ```sql
 -- Check GTID position on replica vs primary
 SHOW VARIABLES LIKE 'gtid_mode';
@@ -70,9 +59,6 @@ SELECT @@GLOBAL.gtid_executed;
 SELECT @@GLOBAL.gtid_purged;
 -- Compare GTID sets between primary and replica to calculate drift
 ```
-
-## SQL Server Always On
-
 ```sql
 -- Replica synchronization health
 SELECT ag.name AS ag_name,
@@ -93,9 +79,6 @@ SELECT drs.database_id, DB_NAME(drs.database_id) AS db_name,
        drs.last_commit_time
 FROM sys.dm_hadr_database_replica_states drs;
 ```
-
-## Data Consistency Check
-
 ```bash
 # PostgreSQL — compare row counts between primary and replica
 psql -h <primary-host> -U postgres -c "SELECT relname, n_live_tup FROM pg_stat_user_tables ORDER BY relname;" > /tmp/primary-counts.txt
@@ -107,21 +90,6 @@ pt-table-checksum --host=<primary> --user=root --password=<pass> --databases=<db
 # Then on replica:
 pt-table-sync --sync-to-master h=<replica>,u=root,p=<pass> --print  # --execute to fix
 ```
-
-## Replication Lag Thresholds
-
-| Lag | Status | Action |
-|---|---|---|
-| 0–10 seconds | Normal | No action |
-| 10–60 seconds | Warning | Investigate — high load? network? |
-| 1–5 minutes | Alert | Escalate; check disk I/O and replication threads |
-| > 5 minutes | Critical | Notify DBA lead; assess failover risk |
-| Replication stopped | Critical | Immediate investigation and repair |
-
-## Replication Repair
-
-### MySQL — Fix stopped replication
-
 ```sql
 -- Check error
 SHOW SLAVE STATUS\G
@@ -131,21 +99,9 @@ SET GLOBAL sql_slave_skip_counter = 1;
 START SLAVE;
 SHOW SLAVE STATUS\G
 ```
-
-### PostgreSQL — Replica fallen too far behind
-
 ```bash
 # If replay lag is huge and WAL is no longer available on primary,
 # rebuild the replica from a fresh base backup
 pg_basebackup -h <primary-host> -U replication -D /var/lib/postgresql/data-new -P -R
 # -R writes recovery.conf / standby.signal automatically
 ```
-
-## Replication Check Checklist
-
-- [ ] All replicas showing `Slave_IO_Running: Yes` / `Slave_SQL_Running: Yes` (MySQL)
-- [ ] Standby `pg_is_in_recovery()` = true; replay lag < 10s (PostgreSQL)
-- [ ] AG replicas in SYNCHRONIZED state (SQL Server)
-- [ ] No replication errors (Last_IO_Error / Last_SQL_Error empty)
-- [ ] Inactive replication slots reviewed (PostgreSQL)
-- [ ] WAL archiving current (last_archived_time < 15 min ago)

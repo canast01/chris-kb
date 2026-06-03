@@ -1,59 +1,3 @@
----
-title: SANnav — Backup & Restore
----
-
-# SANnav — Backup & Restore
-
-
-<div class="kb-summary">
-> Part of the [SANnav](../../index.md) reference.
-</div>
-
----
-
-## Overview
-
-SANnav backup captures the full appliance configuration and data, including:
-- Switch inventory and credentials
-- Zone configurations
-- Alert policies and MAPS monitoring configuration
-- User accounts and LDAP settings
-- Historical events and performance data (optional)
-- License information
-
-Backups are essential for appliance recovery after hardware failure and as a pre-change snapshot before upgrades or major configuration changes.
-
----
-
-## Backup Configuration
-
-### Schedule and Destination
-
-Configure under **Administration > Backup > Settings**:
-
-| Setting | Recommended Value |
-|---|---|
-| Schedule | Weekly, Sunday 02:00 local time |
-| Backup type | Full |
-| Include performance data | No (large; restore not typically needed) |
-| Remote destination | SCP or SFTP to backup server |
-| Remote path | `/backups/sannav/dc1/` |
-| Remote username | `sannav-bkp` (read-write on target directory) |
-| Encryption | Enabled (AES-256) |
-| Retention count | 4 (keep last 4 weekly backups) |
-
-Test the remote destination connection before relying on it. SANnav UI provides a **Test Connection** button in the backup settings.
-
-### Manual Backup (GUI)
-
-1. Navigate to **Administration > Backup**.
-2. Click **Backup Now**.
-3. Select backup type: **Full**.
-4. Click **Start**. The backup job runs in the background.
-5. Monitor status under **Administration > Backup > History**.
-
-### Manual Backup (CLI)
-
 ```bash
 ssh admin@sannav-dc1.corp.example.com
 
@@ -69,6 +13,8 @@ ls -lh /opt/sannav/backups/
 # Copy backup to remote server (if not using SANnav's built-in remote transfer)
 scp /opt/sannav/backups/sannav-backup-20260506.tar.gz \
     bkp-user@backup-server.corp.example.com:/backups/sannav/dc1/
+```
+
 ```text
 ┌───────────────────────────────── Brocade SANnav — Backup and Restore ─────────────────────────────────┐
 │                                                                                                       │
@@ -116,16 +62,3 @@ scp /opt/sannav/backups/sannav-backup-20260506.tar.gz \
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
----
-
-## Backup Retention Policy
-
-| Backup Type | Frequency | Retention | Storage Location |
-|---|---|---|---|
-| Full appliance backup | Weekly | 4 weeks | Remote backup server |
-| Pre-upgrade backup | Before each upgrade | Indefinite | Remote backup server |
-| Zone export | Before each zone change | 90 days | Change management system |
-| VM snapshot | Before each upgrade | Delete within 48h | vCenter datastore |
-
-Do not rely on VM snapshots as the primary backup — they are a safety net for upgrades only. Snapshots held long-term degrade VM I/O performance significantly.

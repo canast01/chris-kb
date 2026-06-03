@@ -1,11 +1,3 @@
-# Aria Operations — Procedures
-
-
-<div class="kb-summary">
-Procedures reference covering Maintenance Windows, Capacity Reclamation Workflow, Common Maintenance Tasks, Creating a Custom Dashboard, Creating an Alert Definition and 2 more sections.
-</div>
-
-Aria Operations — Alert Lifecycle
 ```text
 ┌───────────────────────────────────── Aria Operations Procedures ──────────────────────────────────────┐
 │                                                                                                       │
@@ -96,8 +88,6 @@ Aria Operations — Alert Lifecycle
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-                       │
-                       ▼
 ```text
 ┌─────────────────────────────────────────────────────┐
 │  Ops Team Triage                                                                                      │
@@ -106,10 +96,6 @@ Aria Operations — Alert Lifecycle
 │  → review metric history                                                                              │
 └──────────────────────┬──────────────────────────────┘
 ```
-                       │ root cause found?
-                ┌──────┴──────┐
-                │ Yes         │ No
-                ▼             ▼
 ```text
 ┌───────────────────┐  ┌─────────────────────────────┐
 │ Acknowledge alert │  │ Escalate · add notes                                                           │
@@ -118,8 +104,6 @@ Aria Operations — Alert Lifecycle
 │ after full fix                                                                                        │
 └───────────────────┘
 ```
-          │
-          ▼
 ```text
 ```
 ```text
@@ -128,6 +112,8 @@ Aria Operations — Alert Lifecycle
 │  Admin → Maintenance Schedules → Add Schedule                                                         │
 │  select objects + time window → alerts suppressed                                                     │
 └─────────────────────────────────────────────────────┘
+```
+
 ```text
 ┌───────────────────────────────────── Aria Operations Procedures ──────────────────────────────────────┐
 │                                                                                                       │
@@ -173,27 +159,6 @@ Aria Operations — Alert Lifecycle
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-- Name: `ESXi-03 Maintenance 2026-05-10`
-- Objects: select specific hosts, clusters, or datastores
-- Duration: start time + estimated duration
-- Recurrence: once (or recurring for weekly maintenance)
-
-Alerts triggered during a maintenance window are suppressed and logged separately. Verify the schedule is active before the maintenance window starts.
-
----
-
-## Capacity Reclamation Workflow
-
-Aria Operations identifies idle and oversized VMs through its capacity analytics engine.
-
-1. Navigate to **Optimize → Reclaim → Idle VMs**
-2. Review the list — VMs with CPU and memory utilisation below threshold for >30 days
-3. Export the report: **Export → CSV** — send to VM owners for confirmation
-4. After owner sign-off, power down or delete the VM from vCenter
-5. Navigate to **Optimize → Reclaim → Oversized VMs** — repeat for right-sizing candidates
-6. After reclamation, run **Capacity → Recalculate** to update baselines
-
 ```bash
 ## Query idle VMs via API
 curl -sk -H "Authorization: vRealizeOpsToken $TOKEN" \
@@ -210,77 +175,15 @@ curl -sk -H "Authorization: vRealizeOpsToken $TOKEN" \
     }
   }' | jq '.resourceList[] | {name: .resourceKey.name, cpuAvg: .properties["cpu|usage_average"]}'
 ```
-
----
-
-## Common Maintenance Tasks
-
-| Task | Steps |
-|---|---|
-| Restart an adapter | **Administration → Solutions → select adapter → Restart Instance** |
-| Restart all cluster services | `vracli cluster restart` (causes brief unavailability — use with care) |
-| Clear stale objects | **Environment → Object Browser → Deleted Objects → Purge** |
-| Update certificate | **Administration → Certificates → Replace Certificate** |
-| Add a data node | **Administration → Cluster Management → Add Node** — provide IP and credentials |
-| Remove a data node | **Administration → Cluster Management → select node → Remove** — data rebalances automatically |
-| Force adapter collection | **Administration → Solutions → select adapter → Test Connection → Collect Now** |
-
----
-
-## Creating a Custom Dashboard
-
-1. **Visualize → Dashboards → Create Dashboard**
-2. Add widgets from the left panel (Metric Chart, Scoreboard, Alert List, Resource List)
-3. For each widget, configure:
-   - **Subject**: select an object type (VirtualMachine, ClusterComputeResource)
-   - **Metrics**: add specific metrics (e.g., `cpu|usage_average`, `mem|usage_average`)
-   - **Time range**: last 7 days / last 30 days
-4. Connect widgets so that clicking an object in a Resource List widget populates the Metric Chart below it (**Widget Interactions** → Configure)
-5. Save and share: set visibility to **Shared** to make it available to all users with appropriate roles
-
----
-
-## Creating an Alert Definition
-
-Custom alert definitions trigger when specific metric thresholds are breached.
-
 ```text
 Administration → Alert Settings → Alert Definitions → Add
 ```
-
-1. Set alert name, description, and base object type (e.g., `VirtualMachine`)
-2. Add symptoms:
-   - Symptom type: **Metric/Property**
-   - Metric: `cpu|usage_average`
-   - Operator: `>` 90%
-   - Threshold: 90
-   - Wait cycle: 3 (alert fires only after 3 consecutive collection cycles above threshold)
-3. Add a recommendation (remediation suggestion shown in the alert detail)
-4. Set criticality: Warning / Immediate / Critical
-5. Assign to an alert policy
-
-Apply the alert policy to an object group:
-
 ```text
 Administration → Alert Settings → Alert Policies → select policy → Apply to Groups
 ```
-
----
-
-## Configuring Notification Rules
-
-Alert notifications route to email, ServiceNow, or webhook:
-
 ```text
 Alerts → Notifications → Add Notification Rule
 ```
-
-1. Filter: apply to alerts with Criticality = Critical targeting the `Production VMs` object group
-2. Action: select the outbound plugin (SMTP, ServiceNow, REST webhook)
-3. Set notification frequency: alert triggers once (not on every collection cycle)
-
-Test the notification rule by manually triggering a test alert:
-
 ```bash
 ## Trigger a test notification
 curl -sk -X POST -H "Authorization: vRealizeOpsToken $TOKEN" \
@@ -288,11 +191,6 @@ curl -sk -X POST -H "Authorization: vRealizeOpsToken $TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"notificationRuleId":"<rule-id>"}'
 ```
-
----
-
-## Support Bundle Generation
-
 ```bash
 ## Via UI: Administration → Support → Generate Support Bundle
 ## Bundle is downloaded directly from the UI
@@ -306,5 +204,3 @@ ls -lh /storage/log/support-bundle/
 ## Download to local machine
 scp admin@vrops-prod-01.example.local:/storage/log/support-bundle/*.zip .
 ```
-
-The support bundle includes: cluster configuration, application logs, adapter logs, alert history, and system diagnostics. Required when opening a Broadcom SR.

@@ -1,15 +1,3 @@
-# CloudIQ — Scripts
-
-
-<div class="kb-summary">
-> Part of the [CloudIQ](../../index.md) reference.
-</div>
-
----
-## Alert Poller
-
-Polls the CloudIQ REST API for all active alerts across the storage estate and prints a formatted report grouped by severity. Exits non-zero if any CRITICAL alerts are found. Designed for cron or monitoring integration.
-
 ```python
 #!/usr/bin/env python3
 # cloudiq_alert_poller.py — Poll CloudIQ for active alerts across all systems
@@ -111,6 +99,8 @@ def main():
 
 if __name__ == "__main__":
     main()
+```
+
 ```text
 ┌──────────────────────────────────────── Dell CloudIQ Scripts ─────────────────────────────────────────┐
 │                                                                                                       │
@@ -185,17 +175,6 @@ if __name__ == "__main__":
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-**What you should see**
-
-Ansible connects to CloudIQ, prints the list of active alerts and storage system names, then fails the play if any CRITICAL alerts are found.
-
----
-
-## Windows: CloudIQ Alert Summary via REST API (PowerShell)
-
-Authenticates to CloudIQ using OAuth2 and prints a count of CRITICAL, WARNING, and INFO alerts — all from a PowerShell window on your Windows PC.
-
 ```powershell
 # cloudiq_alert_summary.ps1 — CloudIQ active alert summary (Windows PowerShell)
 # Requires: PowerShell 5.1+ (built into Windows 10/11)
@@ -266,55 +245,13 @@ if ($Critical -gt 0) {
     exit 0
 }
 ```
-
-### How to run this script — step by step
-
-**Before you start — what you need**
-- Windows 10 or 11 (PowerShell 5.1 is already installed)
-- Internet access to cloudiq.dell.com
-- A CloudIQ API client ID and secret (see Step 2 for where to find them)
-
-**Step 1 — Save the file**
-
-1. Open **Notepad**
-2. Copy the entire code block above
-3. Click **File → Save As**, change "Save as type" to **All Files**
-4. Name it `cloudiq_alert_summary.ps1` and save it to your Desktop
-
-**Step 2 — Fill in your details**
-
-| Variable | What to put | How to find it |
-|---|---|---|
-| `$ClientId` | Your CloudIQ API client ID | Log into cloudiq.dell.com → Settings → API Access → Create API credentials |
-| `$ClientSecret` | Your CloudIQ API client secret | Shown once when you create the credentials — copy it then |
-
-**Step 3 — Open a terminal**
-
-- **For .ps1 (PowerShell):** Press Windows key → type `PowerShell` → right-click → **Run as Administrator**
-
-**Step 4 — Allow scripts to run (one-time)**
-
 ```powershell
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 ```
-
-**Step 5 — Run the script**
-
 ```bash
 cd C:\Users\YourName\Desktop
 .\cloudiq_alert_summary.ps1
 ```
-
-**What you should see**
-
-A summary box showing counts for CRITICAL, WARNING, and INFO alerts, plus a total. The final STATUS line tells you the overall health. If there are critical alerts it exits with a non-zero code, which can be used for automated monitoring.
-
----
-
-## Windows: CloudIQ System Health Summary (PowerShell)
-
-Uses the same CloudIQ OAuth2 token to list all managed storage systems and highlight any with a health score below 80.
-
 ```powershell
 # cloudiq_system_health.ps1 — CloudIQ system health summary (Windows PowerShell)
 # Requires: PowerShell 5.1+ (built into Windows 10/11)
@@ -391,55 +328,13 @@ if ($Degraded -gt 0) {
     exit 0
 }
 ```
-
-### How to run this script — step by step
-
-**Before you start — what you need**
-- Windows 10 or 11 with PowerShell 5.1 (built in — no download needed)
-- Internet access to cloudiq.dell.com
-- A CloudIQ API client ID and secret
-
-**Step 1 — Save the file**
-
-1. Open **Notepad**
-2. Copy the entire code block above
-3. Click **File → Save As**, change "Save as type" to **All Files**
-4. Name it `cloudiq_system_health.ps1` and save it to your Desktop
-
-**Step 2 — Fill in your details**
-
-| Variable | What to put | How to find it |
-|---|---|---|
-| `$ClientId` | Your CloudIQ API client ID | cloudiq.dell.com → Settings → API Access |
-| `$ClientSecret` | Your CloudIQ API client secret | Shown once when credentials are created |
-
-**Step 3 — Open a terminal**
-
-- **For .ps1 (PowerShell):** Press Windows key → type `PowerShell` → right-click → **Run as Administrator**
-
-**Step 4 — Allow scripts to run (one-time)**
-
 ```powershell
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 ```
-
-**Step 5 — Run the script**
-
 ```bash
 cd C:\Users\YourName\Desktop
 .\cloudiq_system_health.ps1
 ```
-
-**What you should see**
-
-For each storage system: its name, type, health score (0-100), and any health issues reported by CloudIQ. Any system with a score below 80 is flagged with `<<< HEALTH SCORE LOW`. The summary at the bottom shows how many systems are degraded.
-
----
-
-## Daily Check Script
-
-Gets an OAuth2 token, counts systems reporting, counts CRITICAL/ERROR/WARNING alerts, flags any system with health_score below 80, and flags any system with fewer than 30 days to capacity threshold — printing PASS/FAIL per check.
-
 ```bash
 #!/bin/bash
 # cloudiq_daily_check.sh — Daily operations check for Dell CloudIQ
@@ -526,13 +421,6 @@ echo "========================================"
 echo "  PASS: $PASS   FAIL: $FAIL"
 [[ "$FAIL" -eq 0 ]] && echo "  STATUS: OK" && exit 0 || echo "  STATUS: DEGRADED" && exit 1
 ```
-
----
-
-## Incident Triage Script
-
-Fetches all active alerts, all system health scores, and capacity forecasts from CloudIQ to a timestamped JSON/text file for sharing with support.
-
 ```bash
 #!/bin/bash
 # cloudiq_triage.sh — Incident triage data capture for Dell CloudIQ
@@ -590,13 +478,6 @@ done < <(echo "$SYSTEMS" | jq -c '.results[]')
 
 echo "Triage data written to: $OUTFILE"
 ```
-
----
-
-## Change Pre-Check Script
-
-Confirms zero CRITICAL alerts for the target system, health_score above 75, system is actively reporting, and no capacity forecasts below 14 days — exits 2 on any failure.
-
 ```bash
 #!/bin/bash
 # cloudiq_precheck.sh — Pre-change validation for Dell CloudIQ
@@ -686,13 +567,6 @@ fi
 echo "  PRE-CHECK PASSED — Safe to proceed."
 exit 0
 ```
-
----
-
-## Post-Change Validation Script
-
-Runs the same checks as the pre-check and additionally verifies that the system's health_score has not dropped compared to the baseline recorded before the change.
-
 ```bash
 #!/bin/bash
 # cloudiq_postcheck.sh — Post-change validation for Dell CloudIQ
@@ -790,13 +664,6 @@ fi
 echo "  POST-CHECK PASSED — All checks healthy."
 exit 0
 ```
-
----
-
-## Health Check Script
-
-Cron-safe summary reporting total systems, critical alert count, warning count, and systems below health_score 80 — exits 0 if clean, 1 if warnings, 2 if critical.
-
 ```bash
 #!/bin/bash
 # cloudiq_health.sh — Cron-safe health check for Dell CloudIQ

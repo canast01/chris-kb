@@ -1,14 +1,3 @@
-# NetBackup — Authentication
-
-
-<div class="kb-summary">
-Authentication reference covering NetBackup Certificate Authority, NetBackup Web UI Authentication, External CA Support, Service Account Security, Related Reference.
-</div>
-
-## NetBackup Certificate Authority
-
-All clients authenticate to the master server via certificates issued by the NetBackup CA:
-
 ```bash
 # List all certificates in the NetBackup CA
 nbcertcmd -listCACertDetails
@@ -18,6 +7,8 @@ nbcertcmd -getCertificate -server <master_server> -force
 
 # Check certificate expiry across all clients
 nbcertcmd -listCerts | grep -E "Host|Expiry"
+```
+
 ```text
 ┌───────────────────────────────────── NetBackup — Authentication ──────────────────────────────────────┐
 │                                                                                                       │
@@ -59,43 +50,6 @@ nbcertcmd -listCerts | grep -E "Host|Expiry"
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-### Token Expiry and Best Practices
-
-| Setting | Recommendation | Notes |
-|---|---|---|
-| Default session token | 24 hours | Login tokens for interactive use |
-| Named API tokens | 30–90 days max | Used for automation/CI; rotate on schedule |
-| Service account tokens | 90 days | Store in secrets manager; revoke on rotation |
-
----
-
-## NetBackup Web UI Authentication
-
-The Web UI (port 1556 HTTPS) issues JWT session tokens upon successful login.
-
-| Parameter | Default | Tuning Location |
-|---|---|---|
-| Session timeout | 30 minutes idle | `nbsetconfig -add WEB_SERVER_SESSION_TIMEOUT_MINUTES <n>` |
-| Concurrent sessions per user | Unlimited (default) | Controlled via RBAC role configuration |
-| JWT signing key rotation | On upgrade | Invalidates all active sessions; plan maintenance windows accordingly |
-
-Authentication flow: browser → NetBackup Web Server → Auth broker → LDAP/AD or local OS → JWT issued. For SSO, configure a SAML 2.0 identity provider in **Security** → **Identity Provider**.
-
----
-
-## External CA Support
-
-By default NetBackup uses its built-in CA. External CA is supported when your security policy mandates certificates from a corporate PKI.
-
-### When to Use External CA
-
-- Organization prohibits self-signed or non-corporate CAs
-- Certificate lifecycle managed centrally (e.g., Microsoft ADCS, Vault PKI)
-- Audit requirement for CA chain visibility
-
-### Configure External CA
-
 ```bash
 # On each NetBackup host — generate a CSR
 nbcertcmd -createCSR -cn <hostname> -out /tmp/<hostname>.csr
@@ -110,32 +64,3 @@ nbcertcmd -enrollCertificate \
 # Verify external cert is in use
 nbcertcmd -listCerts -CAType EXTERNAL
 ```
-
-Once external CA is configured, the NetBackup built-in CA is not used for new enrollments. Existing built-in certificates must be revoked and replaced during the transition.
-
----
-
-## Service Account Security
-
-NetBackup daemons run under specific OS accounts with minimum required permissions.
-
-| Daemon | Default Account | Minimum OS Permissions |
-|---|---|---|
-| `bprd` (request daemon) | `root` (UNIX) / `SYSTEM` (Windows) | Must bind to privileged ports; cannot be reduced below root/SYSTEM |
-| `bpdbm` (database manager) | `root` (UNIX) / `SYSTEM` (Windows) | Full access to catalog directories; restrict filesystem ACLs externally |
-| `nbwmc` (web management) | `nbwebsvc` (dedicated account) | Read access to NetBackup binaries; write to log directories only |
-| `nbsl` (security service) | `nbwebsvc` | Read/write to `/usr/openv/netbackup/var/global/` |
-| `bpjava-msvc` (Java GUI) | `root`/`SYSTEM` | Avoid — use Web UI instead; disable if not needed |
-
-### Hardening Recommendations
-
-- Restrict `nbwebsvc` home directory to `700` and owned by `nbwebsvc`
-- Do not allow interactive login for `nbwebsvc` — set shell to `/sbin/nologin`
-- Audit `/usr/openv/netbackup/db/` ACLs — only `root` and `bpdbm` should write
-- Run `bpps -a` periodically to verify daemon process ownership has not drifted
----
-
-## Related Reference
-
-- [Standard LDAP Integration](../../../../security/ldap-integration/index.md) — field reference, service account standards, TLS requirements, and connectivity testing
-- [Standard SAML Configuration](../../../../security/saml-configuration/index.md) — SP/IdP setup, Azure AD and Okta steps, attribute mapping, and security requirements

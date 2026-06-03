@@ -1,11 +1,3 @@
-# VCF — Encryption
-
-
-<div class="kb-summary">
-Encryption reference covering vSAN Encryption.
-</div>
-
-VCF Encryption — Certificate and Data Flow
 ```text
 ┌──────────────────────────────── VMware Cloud Foundation — Encryption ─────────────────────────────────┐
 │                                                                                                       │
@@ -111,6 +103,8 @@ VCF Encryption — Certificate and Data Flow
 │  Key rotation: live operation (no downtime)                                                           │
 │  KMS HA is critical — loss = datastore inaccessible                                                   │
 └─────────────────────────────────────────────────────┘
+```
+
 ```text
 ┌──────────────────────────────── VMware Cloud Foundation — Encryption ─────────────────────────────────┐
 │                                                                                                       │
@@ -158,22 +152,3 @@ VCF Encryption — Certificate and Data Flow
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-**Lead times:**
-
-| Timeline | Action |
-|---|---|
-| 60 days | Plan renewal — raise change ticket |
-| 30 days | Schedule maintenance window |
-| 7 days | Treat as P2 — renew immediately |
-
-## vSAN Encryption
-
-For workload domains handling sensitive data:
-
-1. Deploy and configure a KMS (Key Management Server)
-2. In vCenter: Cluster → Configure → vSAN → Services → Data-at-Rest Encryption → Enable
-3. Define a key rotation schedule (annual minimum or per policy)
-4. Ensure the KMS is highly available — KMS loss makes the vSAN datastore inaccessible
-
-Key rotation: vCenter → vSAN → Key Management → Rotate Keys (live operation, no downtime required).

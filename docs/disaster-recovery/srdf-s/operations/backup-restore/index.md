@@ -1,31 +1,3 @@
-# SRDF/S — Backup & Restore
-
-
-<div class="kb-summary">
-Backup & Restore reference covering SRDF/S Overview, SYMCLI Command Reference, Unplanned Failover Procedure, Link Suspension and Recovery, symrdf restore — After R1 Site Recovery and 3 more sections.
-</div>
-
-## SRDF/S Overview
-
-**SRDF/S (Synchronous)** provides zero-data-loss replication between two VMAX/PowerMax arrays. Every host write is mirrored to the remote array before the I/O is acknowledged to the host. This guarantees write-order consistency and ensures R1 and R2 are always at the same recovery point.
-
-| Property | SRDF/S |
-|---|---|
-| Mode | Synchronous |
-| RPO | Zero (no data loss on planned failover) |
-| RTO | Minutes (depends on failover procedure and application restart) |
-| Impact on host I/O | Write latency includes round-trip to R2 |
-| Distance constraint | Typically <200 km (latency sensitive — <5 ms RTT recommended) |
-| Use case | Metro DR, financial systems, zero-RPO requirement |
-
----
-
-## SYMCLI Command Reference
-
-All operations use `symrdf` from SYMCLI. The `-sg` flag (Storage Group level) is preferred in VMAX3 and PowerMax environments over the older device-group `-g` flag.
-
-### Query RDF State
-
 ```bash
 # Query SRDF state for a storage group
 symrdf -sg PROD_SG query
@@ -35,6 +7,8 @@ symrdf -sg PROD_SG query -detail
 
 # Query by RDF group number
 symrdf list -rdfg <rdf_group_number> -detail
+```
+
 ```text
 ┌────────────────────────────────────── SRDF/S — Backup & Restore ──────────────────────────────────────┐
 │                                                                                                       │
@@ -78,17 +52,6 @@ symrdf list -rdfg <rdf_group_number> -detail
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-**Caution:** In a synchronous pair, forced failover during an outage is effectively zero-data-loss if the link was synchronized before the failure. If the link had suspended writes (e.g., network drop was not immediate), up to the in-flight writes may be lost.
-
----
-
-## Link Suspension and Recovery
-
-Link suspension halts replication without breaking the SRDF pair. This is used for planned maintenance on the link or array, or as an intermediate step before failover.
-
-### Suspend Replication
-
 ```bash
 # Suspend SRDF replication (I/O continues on R1, no longer replicated)
 symrdf -sg PROD_SG suspend
@@ -97,9 +60,6 @@ symrdf -sg PROD_SG suspend
 symrdf -sg PROD_SG query
 # R1 St = WD, Link = Suspended
 ```
-
-### Resume Replication
-
 ```bash
 # Resume SRDF — re-syncs changed tracks from R1 to R2
 symrdf -sg PROD_SG resume
@@ -107,15 +67,6 @@ symrdf -sg PROD_SG resume
 # Monitor sync progress — watch Tracks/% fields
 symrdf -sg PROD_SG query -detail
 ```
-
-During suspension, host I/O continues on R1 with no added latency. Invalid tracks accumulate. On resume, only delta tracks are resynced — not a full copy.
-
----
-
-## symrdf restore — After R1 Site Recovery
-
-After the primary site is recovered and R1 is back online, restore re-establishes R1 as the source using R2 as the authoritative copy. Use this when R1 volumes are stale relative to R2 (i.e., production has been running on R2 during outage).
-
 ```bash
 # 1. Verify R1 array and volumes are accessible
 symdev list -sid <R1_SID> | grep <device_range>
@@ -137,63 +88,7 @@ symrdf -sg PROD_SG failover
 
 # 6. Start production workloads on R1
 ```
-
-### Alternative: Establish (Reverse Sync — R2 to R1)
-
 ```bash
 # establish syncs from the current "source" (post-failover this is R2) to R1
 symrdf -sg PROD_SG establish -force
 ```
-
-`restore` and `establish` differ in that `restore` explicitly reverses R1/R2 roles before syncing; `establish` syncs in the current direction. After a failover where R2 is active, `restore` is the correct command to recover R1.
-
----
-
-## Validation Checklist
-
-| # | Check | Command |
-|---|---|---|
-| 1 | R2 devices in RW state post-failover | `symrdf -sg PROD_SG query` |
-| 2 | No outstanding invalid tracks | `symrdf -sg PROD_SG query -detail \| grep Tracks` |
-| 3 | Volumes accessible on DR hosts | `lsblk` / disk manager |
-| 4 | File systems mounted and consistent | `mount` / `df -h` / `chkdsk` |
-| 5 | Applications healthy on DR | Application health check |
-| 6 | SRDF link status during outage documented | Query output saved |
-| 7 | R1 restore progress monitored to 100% | `symrdf query -detail` |
-| 8 | Sync verified before production failback | `symrdf verify -consistent` |
-| 9 | Replication direction restored to R1→R2 | `symrdf query` shows normal direction |
-| 10 | Backup jobs re-pointed to correct volumes | Backup policy review |
-| 11 | DR test / incident documented | DR report / ITSM record |
-
----
-
-## SRDF/S vs SRDF/A Decision Reference
-
-| Scenario | Recommended Mode |
-|---|---|
-| Metro site < 100 km, <5 ms RTT | SRDF/S (zero RPO) |
-| Regional DR > 100 km, WAN constrained | SRDF/A |
-| Financial systems — zero data loss required | SRDF/S |
-| Batch workloads tolerating minutes of RPO | SRDF/A |
-| Application requires synchronous write confirmation | SRDF/S |
-| Write-latency sensitive application (OLTP) | Evaluate SRDF/A or SRDF/Metro |
-
-**SRDF/Metro** (not covered here) provides an Active-Active variant of SRDF/S, where both R1 and R2 accept writes simultaneously — used for workload distribution and non-disruptive planned failover.
-
----
-
-## Common SYMCLI Commands Summary
-
-| Operation | Command |
-|---|---|
-| Query SG state | `symrdf -sg <sg> query` |
-| Query with detail | `symrdf -sg <sg> query -detail` |
-| Planned failover | `symrdf -sg <sg> failover` |
-| Forced failover | `symrdf -sg <sg> failover -force` |
-| Suspend link | `symrdf -sg <sg> suspend` |
-| Resume link | `symrdf -sg <sg> resume` |
-| Restore R1 from R2 | `symrdf -sg <sg> restore -force` |
-| Establish replication | `symrdf -sg <sg> establish -force` |
-| Verify consistency | `symrdf -sg <sg> verify -consistent` |
-| List RDF groups | `symcfg list -rdfg all` |
-| Check director status | `symcfg list -rdfdir all` |

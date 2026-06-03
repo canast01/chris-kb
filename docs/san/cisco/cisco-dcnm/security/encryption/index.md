@@ -1,26 +1,3 @@
-# Cisco DCNM — Encryption
-
-
-<div class="kb-summary">
-> Part of the [Cisco DCNM](../../index.md) reference.
-</div>
-
----
-
-## Overview
-
-DCNM encrypts management traffic using TLS and stores sensitive credentials encrypted in the PostgreSQL database. This page covers configuration, verification, and certificate management.
-
----
-
-## Data in Transit
-
-### Web UI and REST API (HTTPS)
-
-DCNM serves its web UI and REST API over HTTPS (port 443). TLS termination is handled by a Tomcat/Apache connector.
-
-#### Replace the Self-Signed Certificate
-
 ```bash
 ssh root@dcnm-dc1.corp.example.com
 
@@ -54,6 +31,8 @@ keytool -importkeystore \
 openssl s_client -connect dcnm-dc1.corp.example.com:443 \
   -servername dcnm-dc1.corp.example.com </dev/null 2>/dev/null \
   | openssl x509 -noout -subject -issuer -enddate
+```
+
 ```text
 ┌─────────────────────────────────────── Cisco DCNM — Encryption ───────────────────────────────────────┐
 │                                                                                                       │
@@ -101,40 +80,6 @@ openssl s_client -connect dcnm-dc1.corp.example.com:443 \
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-### DCNM to LDAP (LDAPS)
-
-Use port 636 (LDAPS). Configure as described in [Authentication](../authentication/index.md). Plain LDAP on port 389 transmits bind credentials in cleartext — never use in production.
-
-### SNMP
-
-Configure SNMPv3 with `authPriv` (SHA authentication, AES-128 privacy) on all managed switches. See [Design Standards](../../architecture/design-standards/index.md) for full switch-side SNMP configuration.
-
----
-
-## Data at Rest
-
-### Stored Credentials
-
-DCNM stores the following in PostgreSQL, encrypted at the application layer:
-- Switch SSH usernames and passwords
-- SNMPv3 auth and priv passwords
-- LDAP/TACACS+ service account passwords
-- SMTP credentials
-
-The encryption key is embedded in the DCNM application and is specific to the appliance instance. Backup archives contain the encrypted credential data; without the matching DCNM instance, the credentials cannot be decrypted.
-
-### Database Encryption
-
-The PostgreSQL database itself does not use column-level encryption (credentials are encrypted at the application layer). Full-disk encryption at the VM level is recommended:
-
-- VMware: enable VM Encryption on the DCNM datastore
-- KVM: use LUKS-encrypted volumes for the DCNM database disk
-
-### Backup Encryption
-
-DCNM database backups (SQL dumps) are not encrypted by default. Encrypt using GPG before sending to a remote backup server:
-
 ```bash
 # Encrypt backup with GPG
 pg_dumpall -U postgres | gzip | \
@@ -150,11 +95,6 @@ scp /var/backup/dcnm/dcnm-db-$(date +%Y%m%d).sql.gz.gpg \
 gpg --batch --passphrase-file /root/.dcnm-backup-pass \
   --decrypt dcnm-db-20260506.sql.gz.gpg | gunzip | psql -U postgres
 ```
-
----
-
-## Certificate Expiry Monitoring
-
 ```bash
 # Check DCNM certificate expiry
 openssl s_client -connect dcnm-dc1.corp.example.com:443 \
@@ -176,17 +116,3 @@ exp = datetime.strptime(d, '%b %d %H:%M:%S %Y %Z')
 print(f'Expires in {(exp-datetime.utcnow()).days} days: {exp.date()}')
 "
 ```
-
----
-
-## Encryption Summary
-
-| Data Category | Encryption | Standard |
-|---|---|---|
-| Web UI / REST API | TLS 1.2/1.3 (HTTPS port 443) | JSSE / Tomcat |
-| Switch management | SSH v2 | RSA 2048+ |
-| LDAP traffic | TLS (LDAPS port 636) | |
-| SNMP traffic | AES-128 (SNMPv3 authPriv) | |
-| Stored credentials | Application-layer AES | DCNM internal |
-| Database backups | GPG AES-256 (manual) | Op procedure |
-| VM disk | vSphere VM Encryption or LUKS | Hypervisor |

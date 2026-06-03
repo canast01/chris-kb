@@ -1,12 +1,3 @@
-# Terraform — Install & Upgrade
-
-
-<div class="kb-summary">
-Install & Upgrade reference covering Install Terraform (Linux), Version Management with tfenv, Upgrade Terraform In-Place, Upgrade Providers, Required Version Constraints and 1 more sections.
-</div>
-
-## Install Terraform (Linux)
-
 ```bash
 # Ubuntu / Debian — via HashiCorp apt repo
 sudo apt-get update && sudo apt-get install -y gnupg software-properties-common curl
@@ -17,6 +8,8 @@ sudo apt-get update && sudo apt-get install terraform
 
 # Verify
 terraform version
+```
+
 ```text
 ┌──────────────────────────────────── Terraform — Install & Upgrade ────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -41,9 +34,6 @@ terraform version
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-## Upgrade Terraform In-Place
-
 ```bash
 # Check current version
 terraform version
@@ -57,9 +47,6 @@ brew upgrade hashicorp/tap/terraform
 # After upgrade — re-init existing workspaces
 terraform init -upgrade
 ```
-
-## Upgrade Providers
-
 ```bash
 # Upgrade all providers to latest allowed by version constraints
 terraform init -upgrade
@@ -67,11 +54,6 @@ terraform init -upgrade
 # Check what changed
 terraform providers
 ```
-
-## Required Version Constraints
-
-Pin versions in `terraform` block to prevent unexpected upgrades.
-
 ```hcl
 terraform {
   required_version = ">= 1.6, < 2.0"
@@ -88,12 +70,3 @@ terraform {
   }
 }
 ```
-
-## Version Reference
-
-| Release | Status | Notes |
-|---|---|---|
-| 1.9.x | Current stable | Recommended for new projects |
-| 1.8.x | Supported | |
-| 1.6.x | Supported | Min for test assertions |
-| < 1.5 | EOL | Upgrade recommended |

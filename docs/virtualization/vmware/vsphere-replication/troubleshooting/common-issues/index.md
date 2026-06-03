@@ -1,11 +1,3 @@
-# vSphere Replication — Common Issues
-
-
-<div class="kb-summary">
-Common Issues reference covering VM Stuck in RPO Violation, Initial Sync Taking Too Long, Replication Fails with "Connection Refused" / "Connection Timeout", VRA Shows Disconnected / Site Pair Broken, "No Compatible Datastore" Error When Configuring Replication and 1 more sections.
-</div>
-
-  VR Triage Decision Tree
 ```text
 ┌─────────────────────────────────────────────────────────────────┐
 │  Symptom                  Check                  Fix                                                  │
@@ -30,53 +22,6 @@ Common Issues reference covering VM Stuck in RPO Violation, Initial Sync Taking 
 │  └─────────────────┘      └──────────────────┘                                                        │
 └─────────────────────────────────────────────────────────────────┘
 ```
-
----
-
-## VM Stuck in RPO Violation
-
-**Symptoms:** VM shows amber or red in vCenter → Site Recovery → Replications; replication lag exceeds RPO
-
-1. **Insufficient network bandwidth**: Check WAN link utilization
-   ```bash
-   # On ESXi source host — check replication traffic
-   esxtop → n (network) → filter for vmkernel adapter carrying replication traffic
-   # Or monitor from network device: check utilization on WAN link
-   ```
-   Fix: increase RPO to reduce required bandwidth, or prioritize replication traffic via QoS
-
-2. **Source datastore I/O saturation**: High I/O on source datastore causes CBT tracking to slow down
-   ```text
-   vCenter → [VM datastore] → Monitor → Performance → check IOPS and latency
-   ```
-
-3. **Source ESXi host CPU saturation**:
-   ```text
-   vCenter → [ESXi host] → Monitor → Performance → CPU ready %
-   # If >5%, ESXi is CPU-constrained — replication competes for CPU
-   ```
-
-4. **VRA disk full at target site**:
-   ```bash
-   ssh admin@vra-amsterdam.example.local
-   df -h  # Check /opt and /tmp
-   ```
-
----
-
-## Initial Sync Taking Too Long
-
-**Symptoms:** Newly configured replication stuck in "Syncing" state for days
-
-Initial sync is a full copy of all VM disks — large VMs (1+ TB) naturally take a long time.
-
-1. **Check if sync is actually progressing** (not stalled):
-   ```text
-   Site Recovery → Replications → [VM] → check "Transferred" bytes — should increase over time
-   ```
-   If bytes transferred is not increasing for >1 hour → stalled
-
-2. **Use a seed** (pre-copy VM disks to target site via another method, then configure VR pointing to the seed):
 ```text
    Configure Replication → Step 4: Seeds → Use existing data
    ```
@@ -89,6 +34,8 @@ Initial sync is a full copy of all VM disks — large VMs (1+ TB) naturally take
 
 **Symptoms:** Replication status error: network connectivity to target VRA
 
+```
+
 ```bash
 # From source ESXi host shell:
 nc -vz vra-amsterdam.example.local 31031
@@ -98,57 +45,6 @@ nc -vz vra-amsterdam.example.local 31031
 # Verify from ESXi:
 vmkping -I vmk0 <target-VRA-IP>
 ```
-
-Fix: open TCP 31031 from source ESXi management IPs to target VRA IP in firewall.
-
----
-
-## VRA Shows Disconnected / Site Pair Broken
-
-**Symptoms:** Site Recovery → Sites shows "Not Connected"; replications may still be running but management plane is broken
-
-1. **VRA certificate expired or replaced**:
-   ```bash
-   echo | openssl s_client -connect vra-amsterdam.example.local:443 2>/dev/null \
-     | openssl x509 -noout -dates -subject
-   # If expired: deploy new VRA OVA with same IP, re-register
-   ```
-
-2. **VRA service stopped**:
-   ```bash
-   ssh admin@vra-amsterdam.example.local
-   systemctl status hms vrms
-   systemctl start hms vrms
-   ```
-
-3. **Network interruption between VRAs** (TCP 44046):
-   ```bash
-   nc -vz vra-amsterdam.example.local 44046
-   ```
-
-4. **Site pair thumbprint mismatch** (cert was replaced):
-   ```text
-   Site Recovery → Sites → [pair] → Edit → Refresh Thumbprints
-   ```
-
----
-
-## "No Compatible Datastore" Error When Configuring Replication
-
-**Symptoms:** Configure Replication wizard shows no available datastores at target site
-
-1. **Target datastore not accessible from target host**: VRA's associated vCenter must see the datastore
-2. **Insufficient space**: Target datastore does not meet minimum space requirement for replica
-3. **Unsupported datastore type**: VR does not support tape or CDROM-backed datastores
-
-Fix: verify target datastore is mounted and accessible at target vCenter, and has adequate free space.
-
----
-
-## VRA Running Out of Disk Space
-
-**Symptoms:** VRA VAMI shows disk warning; replications may start failing
-
 ```bash
 ssh admin@vra-london.example.local
 df -h
@@ -158,8 +54,6 @@ df -h
 sudo find /opt/vmware/logs -name "*.log" -mtime +30 -delete
 sudo journalctl --vacuum-size=500M
 ```
-
-VRA appliance disk should be on a thin-provisioned VMDK — expand via vCenter if needed:
 ```bash
 vCenter → [VRA VM] → Edit Settings → Disk → increase size
 Then expand filesystem inside VRA:

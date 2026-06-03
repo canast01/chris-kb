@@ -1,18 +1,3 @@
-# Git — Health Checks
-
-
-<div class="kb-summary">
-This page covers repository integrity checks, platform-level health monitoring, disk usage analysis, and replication lag verification for GitLab Geo environments.
-</div>
-
----
-
-## Repository Integrity Checks
-
-### `git fsck` — Object Database Verification
-
-`git fsck` (File System ChecK) verifies the integrity of the Git object database by walking the entire object graph.
-
 ```bash
 # Basic integrity check
 git fsck
@@ -28,6 +13,8 @@ git -C /backup/repo.git fsck --full
 # "dangling blob <sha>"      — orphaned blob, usually from git add then reset
 # "missing blob <sha>"       — CORRUPTION — object referenced but missing from disk
 # "broken link from tree"    — CORRUPTION — tree references a missing object
+```
+
 ```text
 ┌───────────────────────────────────────── Git — Health Checks ─────────────────────────────────────────┐
 │                                                                                                       │
@@ -73,9 +60,6 @@ git -C /backup/repo.git fsck --full
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-GC configuration tuning:
-
 ```bash
 # Set auto-gc thresholds in repo config
 git config gc.auto 6700             # loose object threshold (0 = disable auto-gc)
@@ -83,13 +67,6 @@ git config gc.autoPackLimit 50      # number of packs before repacking
 git config gc.pruneExpire "14 days" # how old objects must be before pruning
 git config pack.compression 9       # max compression
 ```
-
----
-
-## GitHub / GitLab Instance Health Endpoints
-
-### GitLab Health Endpoints
-
 ```bash
 BASE="https://gitlab.example.com"
 
@@ -108,9 +85,6 @@ curl -sf "$BASE/-/readiness?all=1" | jq '.db_check'
 # Gitaly connectivity check
 curl -sf "$BASE/-/readiness?all=1" | jq '.gitaly_check'
 ```
-
-Example readiness response:
-
 ```json
 {
   "master_check": [{"status": "ok"}],
@@ -120,7 +94,6 @@ Example readiness response:
   "queues_check": [{"status": "ok"}]
 }
 ```
-
 ```bash
 # GitLab component status via gitlab-ctl
 sudo gitlab-ctl status
@@ -135,9 +108,6 @@ sudo gitlab-ctl tail postgresql
 /opt/gitlab/embedded/bin/grpc_health_probe \
   -addr=unix:///var/opt/gitlab/gitaly/gitaly.socket
 ```
-
-### GitHub Enterprise Health Endpoints
-
 ```bash
 GHES="github.example.com"
 
@@ -154,13 +124,6 @@ ssh -p 122 admin@$GHES "ghe-repl-status"     # HA replication status
 curl -sf "https://$GHES:8443/setup/api/check-disk-usage" \
   -u "api_key:$MANAGEMENT_CONSOLE_PASSWORD"
 ```
-
----
-
-## Disk Usage Monitoring
-
-### Repository-Level Disk Usage
-
 ```bash
 # Size of a single repository
 du -sh /var/opt/gitlab/git-data/repositories/group/project.git
@@ -183,9 +146,6 @@ git rev-list --objects --all | \
 # LFS objects disk usage
 git lfs ls-files --size | sort -k2 -rh | head -20
 ```
-
-### Platform-Level Disk Monitoring
-
 ```bash
 # GitLab disk usage summary
 sudo gitlab-rake gitlab:storage:list_hashed 2>/dev/null | tail -5
@@ -204,24 +164,6 @@ df -h /var/opt/gitlab/git-data
 # Warning:  >75% of git-data partition
 # Critical: >90% of git-data partition
 ```
-
-### Prometheus Metrics (GitLab)
-
-Key metrics to monitor:
-
-| Metric | Description | Alert Threshold |
-|--------|-------------|-----------------|
-| `node_filesystem_avail_bytes` | Free bytes on git-data FS | < 20% free |
-| `gitaly_connections_total` | Total Gitaly connections | Rate spike > 2x baseline |
-| `gitlab_transaction_duration_seconds` | Rails request duration | p99 > 5s |
-| `sidekiq_queue_size` | Jobs queued in Sidekiq | > 10,000 sustained |
-| `pg_stat_activity_count` | Active DB connections | > 400 (tune per pool) |
-| `redis_connected_clients` | Redis client count | > 1000 |
-
----
-
-## GitLab Geo Replication Lag Checks
-
 ```bash
 # On the Geo Primary — check replication status
 sudo gitlab-rake geo:status
@@ -247,30 +189,6 @@ SELECT
 
 # Geo replication lag alert: > 5 minutes is warning, > 15 minutes is critical
 ```
-
----
-
-## Daily Health Check Runbook
-
-Run this checklist daily for production Git platforms.
-
-| # | Check | Command / Location | Pass Criteria |
-|---|-------|--------------------|---------------|
-| 1 | GitLab services running | `sudo gitlab-ctl status` | All services `run` |
-| 2 | Disk usage — git-data | `df -h /var/opt/gitlab/git-data` | < 75% used |
-| 3 | Disk usage — root | `df -h /` | < 80% used |
-| 4 | Readiness endpoint | `curl /-/readiness?all=1` | All checks `ok` |
-| 5 | Sidekiq queue depth | Grafana / `sidekiq_queue_size` | < 500 |
-| 6 | DB replication lag | `pg_last_xact_replay_timestamp()` | < 30 seconds |
-| 7 | Geo sync percentage | `gitlab-rake geo:status` | > 99% synced |
-| 8 | Gitaly error rate | Prometheus / Grafana | < 0.1% errors |
-| 9 | Failed CI jobs spike | GitLab UI / API | No unusual increase |
-| 10 | Certificate expiry | `echo \| openssl s_client -connect gitlab.example.com:443 2>/dev/null \| openssl x509 -noout -enddate` | > 30 days remaining |
-| 11 | Backup completed | Check `/var/log/gitlab-backup.log` | Last run successful, < 24h ago |
-| 12 | Security patches | `sudo apt list --upgradable 2>/dev/null \| grep gitlab` | No critical CVEs pending |
-
-### Automated Daily Health Check Script
-
 ```bash
 #!/usr/bin/env bash
 # gitlab-health-check.sh

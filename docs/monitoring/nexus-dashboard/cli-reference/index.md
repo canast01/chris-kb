@@ -1,14 +1,3 @@
-# Nexus Dashboard CLI Reference
-
-
-<div class="kb-summary">
-Nexus Dashboard is managed via its REST API and the `nd` CLI available on the appliance via SSH. The REST API base URL is `https://<nd_fqdn>/login`. SSH as `rescue-user` for appliance-level operations.
-</div>
-
----
-
-## Appliance Access
-
 ```bash
 # SSH to Nexus Dashboard
 ssh rescue-user@<nd_fqdn>
@@ -24,6 +13,8 @@ cat /var/lib/nd/version.txt
 
 # View logs
 kubectl logs -n nd-base <pod_name>
+```
+
 ```text
 ┌─────────────────────────────────── Nexus Dashboard — CLI Reference ───────────────────────────────────┐
 │                                                                                                       │
@@ -56,11 +47,6 @@ kubectl logs -n nd-base <pod_name>
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
----
-
-## Nodes & Inventory
-
 ```bash
 # List all nodes across managed fabrics
 curl -k -X GET https://<nd_fqdn>/nexus/infra/api/api/v1/nodes   -H "Authorization: <token>"
@@ -71,11 +57,6 @@ curl -k -X GET https://<nd_fqdn>/nexus/infra/api/api/v1/nodes/<node_id>   -H "Au
 # Check software versions
 curl -k -X GET https://<nd_fqdn>/nexus/infra/api/api/v1/software-upgrades/compatibility   -H "Authorization: <token>"
 ```
-
----
-
-## Services (Insights / Orchestrator)
-
 ```bash
 # List installed ND services
 curl -k -X GET https://<nd_fqdn>/nexus/infra/api/api/v1/services   -H "Authorization: <token>"

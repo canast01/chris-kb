@@ -1,16 +1,3 @@
-# Git — Install & Upgrade
-
-
-<div class="kb-summary">
-This page covers Git client installation and upgrades across operating systems, GitLab server upgrade procedures (Omnibus and Docker), GitHub Enterprise Server upgrades, pre-upgrade checklists, and rollback steps.
-</div>
-
----
-
-## Git Client Installation and Upgrade
-
-### Linux (Debian / Ubuntu)
-
 ```bash
 # Install from distro repo
 sudo apt-get update && sudo apt-get install -y git
@@ -25,6 +12,8 @@ sudo apt-get install -y git
 
 # Upgrade only
 sudo apt-get install --only-upgrade git
+```
+
 ```text
 ┌────────────────────────────────────── Git — Install and Upgrade ──────────────────────────────────────┐
 │                                                                                                       │
@@ -70,16 +59,6 @@ sudo apt-get install --only-upgrade git
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-### Windows
-
-| Method | Command | Notes |
-|--------|---------|-------|
-| **Git for Windows** (recommended) | Download from git-scm.com | Includes bash, credential manager |
-| **winget** | `winget install --id Git.Git -e` | Silent install |
-| **Chocolatey** | `choco install git` / `choco upgrade git` | CI-friendly |
-| **Scoop** | `scoop install git` / `scoop update git` | User-level, no admin |
-
 ```powershell
 # Upgrade via winget
 winget upgrade --id Git.Git -e --include-unknown
@@ -87,30 +66,6 @@ winget upgrade --id Git.Git -e --include-unknown
 # Check version
 git --version
 ```
-
----
-
-## Pre-Upgrade Checklist (Any Platform)
-
-Complete **all** items before beginning any upgrade.
-
-- [ ] **Read the release notes** — check for breaking changes, deprecations, and required configuration changes
-- [ ] **Check compatibility matrix** — confirm OS version, PostgreSQL, Redis, and Gitaly versions are supported
-- [ ] **Notify users** — send maintenance window notification (recommend 15–30 min advance notice for minor, 2h for major)
-- [ ] **Create full backup** — `gitlab-backup create` / `ghe-backup` and verify it completes successfully
-- [ ] **Backup configuration** — `/etc/gitlab/gitlab.rb` and `gitlab-secrets.json`
-- [ ] **Check disk space** — upgrade packages and new Gitaly version require headroom; ensure > 20% free
-- [ ] **Review migration steps** — GitLab major versions require sequential upgrade path (e.g., 15.x → 16.0 → 16.11 → 17.x)
-- [ ] **Test rollback procedure** — confirm snapshot or restore path is available
-- [ ] **Check CI pipeline queue** — drain or pause runners to avoid failed jobs during restart
-- [ ] **Verify current version is healthy** — run `gitlab-rake gitlab:check` before upgrade
-
----
-
-## GitLab Upgrade — Omnibus Package
-
-### Minor / Patch Upgrade (e.g., 17.0.1 → 17.0.3)
-
 ```bash
 # 1. Back up
 sudo gitlab-backup create CRON=1
@@ -131,17 +86,9 @@ sudo gitlab-rake gitlab:check SANITIZE=true
 sudo gitlab-rake db:migrate:status | tail -5
 curl -sf https://gitlab.example.com/-/readiness?all=1 | jq .
 ```
-
-### Major Version Upgrade (Sequential Path Required)
-
-GitLab requires upgrading through specific stop versions. Check the [GitLab upgrade paths](https://docs.gitlab.com/ee/update/index.html#upgrade-paths) documentation.
-
-Example: 15.4 → 17.1 requires:
-
 ```text
 15.4 → 15.11.x → 16.0.x → 16.3.x → 16.11.x → 17.1.x
 ```
-
 ```bash
 # Stop at each required version, run migrations, verify, then continue
 
@@ -159,9 +106,6 @@ sudo gitlab-rails runner "Gitlab::Database::BackgroundMigration::BatchedMigratio
 sudo apt-get install -y gitlab-ee=16.0.9-ee.0
 # ... repeat for each stop version
 ```
-
-### Check Running Migrations
-
 ```bash
 # Check for in-progress background migrations (must be 0 before major upgrade)
 sudo gitlab-rails runner "
@@ -173,13 +117,6 @@ sudo gitlab-rails runner "
 # Force-run pending migrations (if needed)
 sudo gitlab-rake db:migrate
 ```
-
----
-
-## GitLab Upgrade — Docker / Kubernetes
-
-### Docker Compose
-
 ```yaml
 # docker-compose.yml (excerpt)
 services:
@@ -187,7 +124,6 @@ services:
     image: gitlab/gitlab-ee:17.0.3-ee.0   # pin the version
     ...
 ```
-
 ```bash
 # Pull new image
 docker compose pull gitlab
@@ -202,9 +138,6 @@ docker compose logs -f gitlab
 # Verify
 docker exec -it gitlab gitlab-rake gitlab:check SANITIZE=true
 ```
-
-### Helm (GitLab on Kubernetes)
-
 ```bash
 # Add / update GitLab Helm repo
 helm repo add gitlab https://charts.gitlab.io
@@ -230,15 +163,6 @@ helm upgrade gitlab gitlab/gitlab \
 kubectl rollout status deployment/gitlab-webservice -n gitlab
 kubectl rollout status deployment/gitlab-sidekiq-all-in-1-v2 -n gitlab
 ```
-
----
-
-## GitHub Enterprise Server Upgrade
-
-GHES upgrades are applied as `.pkg` upgrade packages via the Management Console or the admin SSH interface.
-
-### Pre-Upgrade Steps (GHES)
-
 ```bash
 # 1. Enable maintenance mode
 curl -X POST \
@@ -253,9 +177,6 @@ curl -s "https://github.example.com/api/v3/maintenance" \
 # 3. Take snapshot backup
 /opt/github-backup-utils/bin/ghe-backup
 ```
-
-### Apply Upgrade Package
-
 ```bash
 # Upload upgrade package to appliance
 scp -P 122 ghes-3.13.0.pkg admin@github.example.com:
@@ -277,11 +198,6 @@ curl -X POST \
 curl -s "https://github.example.com/api/v3/meta" \
   -H "Authorization: Bearer $GHES_TOKEN" | jq .installed_version
 ```
-
-### GHES HA Upgrade Sequence
-
-For High-Availability pairs, upgrade the replica first, then promote/fail over:
-
 ```bash
 # 1. Upgrade replica
 ssh -p 122 admin@github-replica.example.com "ghe-upgrade /home/admin/ghes-3.13.0.pkg"
@@ -299,15 +215,6 @@ ssh -p 122 admin@github-primary.example.com "ghe-repl-start"
 # 5. Verify replication
 ssh -p 122 admin@github-primary.example.com "ghe-repl-status"
 ```
-
----
-
-## Rollback Steps
-
-### GitLab Rollback (Omnibus)
-
-GitLab does not support automatic downgrade. Rollback requires restoring from backup.
-
 ```bash
 # 1. Stop GitLab
 sudo gitlab-ctl stop
@@ -329,9 +236,6 @@ sudo gitlab-ctl restart
 # 6. Verify
 sudo gitlab-rake gitlab:check SANITIZE=true
 ```
-
-### GHES Rollback
-
 ```bash
 # GHES supports rollback to previous upgrade package if within the same minor version
 ssh -p 122 admin@github.example.com "ghe-upgrade --allow-downgrade /home/admin/ghes-3.12.5.pkg"
@@ -339,9 +243,6 @@ ssh -p 122 admin@github.example.com "ghe-upgrade --allow-downgrade /home/admin/g
 # For major version rollback — restore from backup-utils snapshot
 /opt/github-backup-utils/bin/ghe-restore -s /backup/ghes/<snapshot-dir> github-restored.example.com
 ```
-
-### Rollback Decision Matrix
-
 ```mermaid
 flowchart TD
     START([Post-Upgrade Failure Detected]) --> ASSESS{Severity?}
@@ -355,19 +256,3 @@ flowchart TD
     VERIFY -->|Pass| DONE([Service Restored])
     VERIFY -->|Fail| ESCALATE([Escalate to Vendor Support])
 ```
-
----
-
-## Version Support Matrix
-
-| GitLab Version | Support End | PostgreSQL | Ruby |
-|----------------|-------------|------------|------|
-| 17.x | ~2025-05 | 14, 15, 16 | 3.2 |
-| 16.x | ~2024-09 | 13, 14, 15 | 3.1 |
-| 15.x | EOL | 12, 13, 14 | 2.7 |
-
-| GHES Version | Support End | Notes |
-|--------------|-------------|-------|
-| 3.13 | ~2025-06 | Current |
-| 3.12 | ~2025-03 | Active |
-| 3.11 | ~2024-12 | EOL soon |

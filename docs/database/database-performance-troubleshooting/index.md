@@ -1,18 +1,11 @@
-# Database Performance Troubleshooting
-
-
-<div class="kb-summary">
-Systematic approach to identifying and resolving database performance bottlenecks — from slow queries to I/O saturation and locking.
-</div>
-
-## Triage — Identify the Bottleneck
-
 ```bash
 # OS resource view
 top -b -n 1 | head -20
 vmstat 1 5        # check wa (I/O wait) column
 iostat -xz 1 5    # %util, await, r/s, w/s on DB disk
 free -h           # check swap usage — DB paging = critical
+```
+
 ```text
 ┌─────────────────────────────── Database — Performance Troubleshooting ────────────────────────────────┐
 │                                                                                                       │
@@ -52,9 +45,6 @@ free -h           # check swap usage — DB paging = critical
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-## SQL Server — Slow Query Analysis
-
 ```sql
 -- Currently executing requests sorted by CPU
 SELECT r.session_id, r.status, r.cpu_time, r.total_elapsed_time/1000 AS elapsed_sec,
@@ -85,9 +75,6 @@ ORDER BY migs.avg_user_impact DESC;
 SELECT blocking_session_id, session_id, wait_type, wait_time/1000 AS wait_sec
 FROM sys.dm_exec_requests WHERE blocking_session_id != 0;
 ```
-
-## Buffer Pool / Cache Efficiency
-
 ```sql
 -- PostgreSQL: cache hit ratio (target > 99%)
 SELECT sum(heap_blks_hit) / NULLIF(sum(heap_blks_hit) + sum(heap_blks_read), 0) * 100 AS cache_hit_pct
@@ -102,9 +89,6 @@ SELECT object_name, counter_name, cntr_value
 FROM sys.dm_os_performance_counters
 WHERE counter_name = 'Page life expectancy';
 ```
-
-## Connection Pool Issues
-
 ```bash
 # Too many connections exhausting max_connections (PostgreSQL)
 psql -c "SELECT count(*), state FROM pg_stat_activity GROUP BY state;"
@@ -114,9 +98,6 @@ psql -c "SHOW max_connections;"
 mysql -e "SHOW STATUS LIKE 'Threads_connected';"
 mysql -e "SHOW VARIABLES LIKE 'max_connections';"
 ```
-
-## Troubleshooting Decision Tree
-
 ```text
 Query slow?
   ├─ EXPLAIN shows Seq Scan on large table → add index
@@ -125,13 +106,3 @@ Query slow?
   ├─ High I/O wait → buffer pool too small → increase shared_buffers / innodb_buffer_pool_size
   └─ CPU spiking → too many connections or parallel queries → check pool; tune work_mem
 ```
-
-## Immediate Remediation
-
-| Problem | Action |
-|---|---|
-| Long-running query blocking others | `pg_terminate_backend(pid)` / `KILL QUERY` |
-| Missing index causing full scan | `CREATE INDEX CONCURRENTLY` (PG) / `CREATE INDEX` (MySQL/MSSQL) |
-| Stale statistics | `ANALYZE` (PG) / `UPDATE STATISTICS` (MSSQL) |
-| Buffer pool too small | Increase `shared_buffers` (PG) / `innodb_buffer_pool_size` (MySQL) |
-| Connection pool exhausted | Restart app pool; lower `max_connections` per app |

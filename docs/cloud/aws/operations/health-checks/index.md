@@ -1,14 +1,3 @@
-# AWS — Health Checks
-
-
-<div class="kb-summary">
-Health Checks reference covering Quick Account Health Overview, RDS Health, EKS Cluster Health, Load Balancer Health, CloudWatch Alarms in ALARM State and 5 more sections.
-</div>
-
----
-
-## Quick Account Health Overview
-
 ```bash
 # Check AWS Health for active issues affecting your account
 aws health describe-events \
@@ -18,6 +7,8 @@ aws health describe-events \
 
 # Current caller identity (confirm correct account/role)
 aws sts get-caller-identity
+```
+
 ```text
 ┌─────────────────────────────────── AWS Operations — Health Checks ────────────────────────────────────┐
 │                                                                                                       │
@@ -65,11 +56,6 @@ aws sts get-caller-identity
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
----
-
-## EKS Cluster Health
-
 ```bash
 # Cluster status
 aws eks describe-cluster --name my-cluster \
@@ -87,11 +73,6 @@ aws eks update-kubeconfig --name my-cluster --region eu-west-1
 kubectl get nodes -o wide
 kubectl get pods -A | grep -v Running | grep -v Completed
 ```
-
----
-
-## Load Balancer Health
-
 ```bash
 # ALB / NLB target group health
 aws elbv2 describe-target-health \
@@ -104,22 +85,12 @@ aws elbv2 describe-load-balancers \
   --query 'LoadBalancers[*].[LoadBalancerName,State.Code,Type,DNSName]' \
   --output table
 ```
-
----
-
-## CloudWatch Alarms in ALARM State
-
 ```bash
 aws cloudwatch describe-alarms \
   --state-value ALARM \
   --query 'MetricAlarms[*].[AlarmName,StateReason,Namespace,MetricName]' \
   --output table
 ```
-
----
-
-## S3 Health
-
 ```bash
 # Verify bucket versioning and replication status
 aws s3api get-bucket-versioning --bucket my-prod-bucket
@@ -131,11 +102,6 @@ aws s3api get-bucket-replication --bucket my-prod-bucket \
 aws s3api get-bucket-lifecycle-configuration --bucket my-prod-bucket \
   --query 'Rules[*].[ID,Status,Expiration]'
 ```
-
----
-
-## Certificate Manager (ACM)
-
 ```bash
 # List certificates and expiry
 aws acm list-certificates \
@@ -147,11 +113,6 @@ aws acm describe-certificate \
   --certificate-arn arn:aws:acm:eu-west-1:<account>:certificate/<id> \
   --query 'Certificate.[DomainName,NotAfter,Status,RenewalSummary.RenewalStatus]'
 ```
-
----
-
-## IAM Credential Report
-
 ```bash
 # Generate credential report (takes ~10s)
 aws iam generate-credential-report
@@ -162,11 +123,6 @@ aws iam get-credential-report \
   column -t -s','
 # Shows: user, arn, mfa_active, access_key_1_active, password_last_used, etc.
 ```
-
----
-
-## Security Hub Summary
-
 ```bash
 # Active findings count by severity
 aws securityhub get-findings \
@@ -186,11 +142,6 @@ aws securityhub get-findings \
   --query 'Findings[*].[Title,SeverityLabel,ProductName,UpdatedAt]' \
   --output table
 ```
-
----
-
-## Daily Health Check Script
-
 ```bash
 #!/bin/bash
 # Quick daily AWS health summary

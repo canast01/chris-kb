@@ -1,79 +1,3 @@
-# SANnav — Authentication
-
-
-<div class="kb-summary">
-> Part of the [SANnav](../../index.md) reference.
-</div>
-
----
-
-## Overview
-
-SANnav supports three authentication methods: local accounts, LDAP/Active Directory, and (in newer versions) SAML-based SSO. Production environments should use LDAP or SSO for all user accounts, reserving local accounts as break-glass only.
-
----
-
-## 1. Local Accounts
-
-Local accounts are stored in the SANnav PostgreSQL database. Manage under **Administration > User Management > Local Users**.
-
-### Creating a Local Account
-
-1. Navigate to **Administration > User Management > Local Users > New User**.
-2. Enter username, full name, and email address.
-3. Set a strong initial password (meet SANnav's password policy: minimum 12 characters, upper/lower/number/special).
-4. Assign a role (see [Access Control](../access-control/index.md)).
-5. Click **Save**.
-
-### Password Policy Configuration
-
-Navigate to **Administration > Security Settings > Password Policy**:
-
-| Setting | Recommended Value |
-|---|---|
-| Minimum length | 12 |
-| Require uppercase | Yes |
-| Require lowercase | Yes |
-| Require numbers | Yes |
-| Require special characters | Yes |
-| Maximum age (days) | 90 |
-| Password history | 12 (cannot reuse last 12) |
-| Account lockout threshold | 5 failed attempts |
-| Lockout duration (minutes) | 30 |
-
-### Break-Glass Account
-
-Maintain exactly one local admin account as break-glass for when LDAP is unavailable:
-- Username: `admin` or `sannav-breakglass`
-- Password: stored in vault (e.g., HashiCorp Vault, CyberArk), not known to individual engineers
-- Rotate quarterly
-- All use must be logged (audited in SANnav audit trail)
-
----
-
-## 2. LDAP / Active Directory Integration
-
-Configure under **Administration > Server Settings > LDAP**.
-
-### Configuration Parameters
-
-| Parameter | Value |
-|---|---|
-| Authentication type | LDAP |
-| Server hostname | `ldap.corp.example.com` |
-| Port | 636 (LDAPS, preferred) |
-| Base DN | `DC=corp,DC=example,DC=com` |
-| Bind DN | `CN=sannav-svc,OU=Service Accounts,DC=corp,DC=example,DC=com` |
-| User search base | `OU=SAN-Users,DC=corp,DC=example,DC=com` |
-| User search attribute | `sAMAccountName` |
-| Group search base | `OU=SAN-Groups,DC=corp,DC=example,DC=com` |
-| Group member attribute | `member` |
-| Follow referrals | Disabled (for single-domain environments) |
-
-### LDAPS Certificate Trust
-
-If the LDAP server uses a self-signed or internal CA certificate, import the CA certificate into SANnav:
-
 ```bash
 # Copy CA cert to SANnav appliance
 scp corp-ca.crt admin@sannav-dc1.corp.example.com:/tmp/
@@ -89,6 +13,8 @@ sudo keytool -import -trustcacerts -alias corp-ldap-ca \
 
 # Restart SANnav to pick up new truststore
 sudo sannav restart
+```
+
 ```text
 ┌─────────────────────────────────── Brocade SANnav — Authentication ───────────────────────────────────┐
 │                                                                                                       │
@@ -136,11 +62,3 @@ sudo sannav restart
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-Track certificate expiry; renew at least 30 days before expiry. SANnav will issue a warning alert when the certificate is within the warning threshold if certificate monitoring is enabled.
----
-
-## Related Reference
-
-- [Standard LDAP Integration](../../../../../security/ldap-integration/index.md) — field reference, service account standards, TLS requirements, and connectivity testing
-- [Standard SAML Configuration](../../../../../security/saml-configuration/index.md) — SP/IdP setup, Azure AD and Okta steps, attribute mapping, and security requirements

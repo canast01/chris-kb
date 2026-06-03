@@ -1,18 +1,3 @@
-# Confluence — Procedures
-
-
-<div class="kb-summary">
-Procedures reference covering Page Management, Creating Pages, Page History and Versioning, Page Permissions, Watching and Notifications and 13 more sections.
-</div>
-
-## Page Management
-
-Creating, organizing, and managing Confluence pages including templates, macros, history, and permissions.
-
-## Creating Pages
-
-New pages can be created from the space sidebar, a parent page, or via API.
-
 ```bash
 # Create a page via REST API
 curl -u user:token -X POST \
@@ -36,6 +21,8 @@ curl -u user:token -X PUT \
   "https://your-instance.atlassian.net/wiki/rest/api/content/12345" \
   -H "Content-Type: application/json" \
   -d '{"version":{"number":4},"type":"page","title":"Updated Title","body":{"storage":{"value":"<p>New content</p>","representation":"storage"}}}'
+```
+
 ```text
 ┌───────────────────────────────── Confluence — Operations Procedures ──────────────────────────────────┐
 │                                                                                                       │
@@ -81,13 +68,6 @@ curl -u user:token -X PUT \
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-Add a version comment when saving: **Edit → Save → enter comment** — this helps trace why content changed.
-
-## Page Permissions
-
-Restrict access at the page level in addition to space-level controls.
-
 ```bash
 # Get current restrictions
 curl -u user:token \
@@ -101,16 +81,6 @@ curl -u user:token -X PUT \
 curl -u user:token -X DELETE \
   "https://your-instance.atlassian.net/wiki/rest/api/content/12345/restriction"
 ```
-
-| Permission Level | Scope | Overrides Space? |
-|-----------------|-------|-----------------|
-| Space admin | All pages in space | Base level |
-| Space view | Space-level read | Yes |
-| Page restriction | Single page only | Yes (additive) |
-| Anonymous access | Public pages | Requires global setting |
-
-## Watching and Notifications
-
 ```bash
 # Watch a page (receive change notifications)
 curl -u user:token -X POST \
@@ -124,17 +94,6 @@ curl -u user:token -X DELETE \
 curl -u user:token \
   "https://your-instance.atlassian.net/wiki/rest/api/content/12345/notification/child-created"
 ```
-
----
-
-## Cleanup
-
-Practical guidance for archiving pages, removing orphaned content, and keeping spaces tidy.
-
-## Archiving Pages
-
-Archiving removes a page from navigation without deleting it. Archived pages remain searchable but are hidden from space tree views.
-
 ```bash
 # Archive a single page via REST API
 curl -u user:token -X PUT \
@@ -146,13 +105,6 @@ curl -u user:token -X PUT \
 curl -u user:token \
   "https://your-instance.atlassian.net/wiki/rest/api/content?spaceKey=ENG&status=archived&limit=50"
 ```
-
-To archive in bulk, use: **Space Settings → Content Tools → Archive**.
-
-## Removing Orphaned Pages
-
-Orphaned pages have no parent and do not appear in the space tree. They accumulate over migrations and copy-paste operations.
-
 ```bash
 # Find pages with no parent using CQL in Advanced Search:
 # space = "ENG" AND ancestor = null AND status = current
@@ -162,11 +114,6 @@ curl -u user:token \
   "https://your-instance.atlassian.net/wiki/rest/api/content?spaceKey=ENG&expand=ancestors&limit=100" \
   | jq '.results[] | select(.ancestors == []) | {id, title}'
 ```
-
-Review each result before deletion — some root-level pages are intentional.
-
-## Bulk Delete Operations
-
 ```bash
 # Delete a page by ID
 curl -u user:token -X DELETE \
@@ -183,19 +130,6 @@ curl -u user:token \
   "https://your-instance.atlassian.net/wiki/rest/api/content?spaceKey=ENG&limit=200&expand=version,ancestors" \
   | jq -r '.results[] | [.id, .title, .version.when] | @csv' > space_audit.csv
 ```
-
-| Operation | UI Location | API Method |
-|-----------|------------|------------|
-| Archive page | Page Actions → Archive | PUT /content/{id} status=archived |
-| Delete page | Page Actions → Delete | DELETE /content/{id} |
-| Move page | Page Actions → Move | PUT /content/{id}/move |
-| Restore archived | Space Admin → Archived | PUT /content/{id} status=current |
-| Bulk delete | Space Admin → Content Tools | Iterate DELETE |
-
-## Quarterly Cleanup Checklist
-
-Run these checks every quarter to keep spaces healthy:
-
 ```bash
 # Find pages not updated in 365+ days (paste in Advanced Search CQL box)
 # space = "ENG" AND lastModified < "2025-05-01" AND status = current
@@ -206,16 +140,6 @@ curl -u user:token \
   "https://your-instance.atlassian.net/wiki/rest/api/content?spaceKey=ENG&expand=body.storage&limit=50" \
   | jq '.results[] | select((.body.storage.value | length) < 100) | {id, title}'
 ```
-
-- Remove or archive pages with no views in 12 months
-- Merge stub pages (fewer than 3 lines of real content)
-- Consolidate duplicate how-to pages
-- Update or delete pages with broken links
-
-## Handling Attachment Bloat
-
-Attachments are a major source of storage growth. Remove stale versions.
-
 ```bash
 # List attachments for a page
 curl -u user:token \
@@ -225,24 +149,6 @@ curl -u user:token \
 curl -u user:token -X DELETE \
   "https://your-instance.atlassian.net/wiki/rest/api/content/ATTACHMENT_ID/version/1"
 ```
-
-| Attachment Type | Typical Size | Recommended Action |
-|----------------|-------------|-------------------|
-| Old screenshots | 200 KB–2 MB | Delete superseded versions |
-| PDF exports | 1–10 MB | Link externally if still needed |
-| Log files | Variable | Delete; store in object storage |
-| Video recordings | 50–500 MB | Move to dedicated media host |
-
----
-
-## Search
-
-Mastering CQL search syntax, filtering results, saved searches, and label-based discovery.
-
-## CQL Syntax Basics
-
-Confluence Query Language (CQL) powers advanced search. Access it via **Search → Advanced Search**.
-
 ```bash
 # Pages in a space modified in the last 30 days
 space = "ENG" AND lastModified > "2025-04-01" AND type = page
@@ -259,21 +165,6 @@ label = "incident" AND type = page
 # Combine multiple filters
 space IN ("ENG", "OPS") AND label = "on-call" AND status = current
 ```
-
-## CQL Operators Reference
-
-| Operator | Meaning | Example |
-|----------|---------|---------|
-| `=` | Exact match | `space = "ENG"` |
-| `~` | Contains / fuzzy | `title ~ "deploy"` |
-| `!=` | Not equal | `status != archived` |
-| `IN` | Matches any in list | `type IN (page, blogpost)` |
-| `NOT IN` | Excludes list | `space NOT IN ("ARCHIVE")` |
-| `>` / `<` | Date comparison | `lastModified > "2025-01-01"` |
-| `AND` / `OR` | Boolean logic | `label = "ops" AND type = page` |
-
-## Filtering by Content Type and Dates
-
 ```bash
 # Filter by content type
 type IN (page, blogpost, comment, attachment)
@@ -290,9 +181,6 @@ label != "archived" AND space = "ENG"
 # Full-text body search
 text ~ "kubernetes deployment" AND space = "ENG"
 ```
-
-## Running CQL Queries via API
-
 ```bash
 # Run a CQL query from the command line
 curl -u user:token -G \
@@ -315,11 +203,6 @@ while true; do
   START=$((START + LIMIT))
 done
 ```
-
-## Labels
-
-Labels are the fastest way to build cross-space navigation without restructuring pages.
-
 ```bash
 # Add a label to a page
 curl -u user:token -X POST \
@@ -340,21 +223,6 @@ curl -u user:token -G \
   "https://your-instance.atlassian.net/wiki/rest/api/search" \
   --data-urlencode 'cql=label = "runbook" AND space = "OPS"'
 ```
-
-| Field | CQL Keyword | Search Type |
-|-------|------------|-------------|
-| Title | `title ~` | Fuzzy or exact |
-| Body text | `text ~` | Full-text index |
-| Labels | `label =` | Exact match only |
-| Creator | `creator =` | Username or accountId |
-| Last modified | `lastModified >` | ISO date string |
-| Space key | `space =` | Exact space key |
-| Ancestor page | `ancestor =` | Page ID |
-
-## Saved Searches
-
-Save frequent CQL queries for team reuse. In the UI: run an advanced search, then click the bookmark icon → **Save this search**. Saved searches appear in the search sidebar.
-
 ```bash
 # Export search results to a file for reporting
 curl -s -u user:token -G \

@@ -1,16 +1,3 @@
-# GitHub Actions — CLI Reference
-
-
-<div class="kb-summary">
-> Part of the [GitHub Actions Operations](../index.md) reference. The `gh` CLI (GitHub CLI) is the primary tool for managing GitHub Actions from the command line.
-</div>
-
-> Part of the [GitHub Actions Operations](../index.md) reference.
-
-The `gh` CLI (GitHub CLI) is the primary tool for managing GitHub Actions from the command line.
-
-## Installation
-
 ```bash
 # macOS
 brew install gh
@@ -29,6 +16,8 @@ apt update && apt install gh -y
 # Verify
 gh --version
 gh auth login
+```
+
 ```text
 ┌─────────────────────────────────── GitHub Actions — CLI Reference ────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -59,9 +48,6 @@ gh auth login
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-## Environment Management
-
 ```bash
 # List environments
 gh api repos/OWNER/REPO/environments | jq '.environments[].name'
@@ -76,9 +62,6 @@ gh api --method PUT repos/OWNER/REPO/environments/production \
 # View environment details
 gh api repos/OWNER/REPO/environments/production | jq .
 ```
-
-## Runner Management
-
 ```bash
 # List runners
 gh api repos/OWNER/REPO/actions/runners | jq '.runners[] | {id, name, status, labels}'
@@ -99,9 +82,6 @@ gh api orgs/ORG/actions/runner-groups | jq '.runner_groups[] | {id, name, visibi
 RUNNER_ID=123
 gh api --method DELETE repos/OWNER/REPO/actions/runners/$RUNNER_ID
 ```
-
-## Artifact Management
-
 ```bash
 # List artifacts for a run
 gh api repos/OWNER/REPO/actions/runs/RUN_ID/artifacts | jq '.artifacts[]'
@@ -120,9 +100,6 @@ gh api repos/OWNER/REPO/actions/artifacts | \
     echo "Deleted artifact $id"
   done
 ```
-
-## Cache Management
-
 ```bash
 # List caches
 gh cache list
@@ -137,9 +114,6 @@ gh cache delete --all --branch feature/my-branch
 # View cache usage
 gh api repos/OWNER/REPO/actions/cache/usage | jq .
 ```
-
-## Usage and Billing
-
 ```bash
 # Check Actions minutes usage (org)
 gh api orgs/ORG/settings/billing/actions | jq '{
@@ -151,9 +125,6 @@ gh api orgs/ORG/settings/billing/actions | jq '{
 # Per-repo usage
 gh api repos/OWNER/REPO/actions/cache/usage | jq .
 ```
-
-## Useful One-Liners
-
 ```bash
 # Find all failed runs in the last 7 days
 gh run list --status failure --json databaseId,name,createdAt \
@@ -175,9 +146,6 @@ gh workflow list --json name,state,updatedAt | \
   jq --arg cutoff "$(date -d '30 days ago' +%Y-%m-%dT%H:%M:%SZ)" \
     '.[] | select(.updatedAt < $cutoff) | .name'
 ```
-
-## Environment Variables in Workflows
-
 ```yaml
 # Workflow-level env
 env:

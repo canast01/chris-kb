@@ -1,23 +1,3 @@
-# Nexus Dashboard: Insights, Orchestrator, and Data Broker Integrations
-
-
-<div class="kb-summary">
-Cisco Nexus Dashboard acts as a hosting platform for multiple services: Nexus Dashboard Insights (NDI), Nexus Dashboard Orchestrator (NDO), and Nexus Dashboard Data Broker (NDDB). This page covers how to install, configure, and verify these service integrations.
-</div>
-
-## Nexus Dashboard Services Overview
-
-Nexus Dashboard is the hosting platform — individual services are installed as separate applications.
-
-| Service | Purpose | Primary Fabric Type |
-|---|---|---|
-| Nexus Dashboard Insights (NDI) | Telemetry, anomaly detection, health scoring | ACI, NX-OS (NDFC) |
-| Nexus Dashboard Orchestrator (NDO) | Multi-site ACI policy management | ACI multi-site |
-| Nexus Dashboard Data Broker (NDDB) | Traffic tapping, monitoring port groups | ACI, NX-OS |
-| Nexus Dashboard Fabric Controller (NDFC) | NX-OS fabric provisioning and management | NX-OS |
-
-## Installing a Service Application
-
 ```bash
 # List installed services on Nexus Dashboard
 curl -sk -X GET \
@@ -31,6 +11,8 @@ curl -sk -X POST \
   -H "Authorization: Bearer <token>" \
   -H "Content-Type: multipart/form-data" \
   -F "file=@nd-insights-4.2.1.tar.gz"
+```
+
 ```text
 ┌─────────────────────────────────── Nexus Dashboard — Integrations ────────────────────────────────────┐
 │                                                                                                       │
@@ -61,13 +43,3 @@ curl -sk -X POST \
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-## Common Integration Issues
-
-| Issue | Likely Cause | Fix |
-|---|---|---|
-| NDI fabric shows "Disconnected" | APIC credentials changed or expired | Update credentials in NDI > Settings > Fabric Connections |
-| NDO site sync failing | ND and APIC version incompatibility | Check Cisco compatibility matrix |
-| Service app stuck in "Installing" | Insufficient cluster resources | Verify ND node CPU/memory meets requirements |
-| NDDB session not capturing traffic | SPAN filter mismatch | Review VLAN/EPG filter configuration |
-| NDI telemetry gaps | Network path between leaf and ND blocked | Open UDP 5640 (ERSPAN) between fabric and ND cluster |

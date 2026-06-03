@@ -1,28 +1,3 @@
-# Aria Automation — CLI Reference
-
-
-<div class="kb-summary">
-CLI Reference reference covering vracli (Appliance CLI), Kubernetes (On-Premises Appliance), PowerShell (PowervRA Module), Useful Log Paths.
-</div>
-
-## vracli (Appliance CLI)
-
-SSH to the Aria Automation appliance and use `vracli` for appliance-level management.
-
-| Command | Description |
-|---|---|
-| `vracli status` | Show health status of all Aria Automation services |
-| `vracli version` | Display the installed Aria Automation version |
-| `vracli certificate list` | List installed TLS certificates |
-| `vracli certificate import --cert /path/cert.pem --key /path/key.pem` | Import a new TLS certificate |
-| `vracli proxy` | View or configure proxy settings |
-
----
-
-## Kubernetes (On-Premises Appliance)
-
-The Aria Automation appliance runs workloads in a Kubernetes cluster. The namespace for Aria Automation services is `prelude`.
-
 ```bash
 # List all pods in the prelude namespace
 kubectl get pods -n prelude
@@ -35,6 +10,8 @@ kubectl describe pod <pod-name> -n prelude
 
 # List services
 kubectl get svc -n prelude
+```
+
 ```text
 ┌─────────────────────────────────── Aria Automation — CLI Reference ───────────────────────────────────┐
 │                                                                                                       │
@@ -80,9 +57,6 @@ kubectl get svc -n prelude
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-### Deployments
-
 ```bash
 # List all deployments
 curl -s -H "Authorization: Bearer $TOKEN" \
@@ -96,21 +70,11 @@ curl -s -H "Authorization: Bearer $TOKEN" \
 curl -s -X DELETE -H "Authorization: Bearer $TOKEN" \
   "https://<aria-auto>/deployment/api/deployments/<deployment-id>"
 ```
-
-### Cloud Templates (Blueprints)
-
 ```bash
 # List all blueprints
 curl -s -H "Authorization: Bearer $TOKEN" \
   "https://<aria-auto>/blueprint/api/blueprints" | jq '.content[]|.name,.id'
 ```
-
----
-
-## PowerShell (PowervRA Module)
-
-Install the module: `Install-Module -Name PowervRA`
-
 ```powershell
 # Connect to Aria Automation
 Connect-VRAServer -Server aria-auto.domain.com -Credential (Get-Credential)
@@ -127,13 +91,3 @@ New-VRADeployment -CatalogItemName "My Catalog Item" -DeploymentName "test-01" -
 # Remove a deployment
 Remove-VRADeployment -Id "<deployment-id>"
 ```
-
----
-
-## Useful Log Paths
-
-| Log | Path on Appliance |
-|---|---|
-| Service logs (all components) | `/services-logs/` |
-| Kubernetes pod logs | `kubectl logs <pod> -n prelude` |
-| Appliance syslog | `/var/log/` |

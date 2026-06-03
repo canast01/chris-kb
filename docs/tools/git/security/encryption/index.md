@@ -1,23 +1,3 @@
-# Git — Encryption
-
-
-<div class="kb-summary">
-Git itself stores content as objects — commits, trees, blobs — without native encryption. Encryption is applied at the transport layer (SSH/TLS), at the signing layer (GPG/SSH signatures), and optionally at rest through credential helpers and storage-layer controls.
-</div>
-
----
-
-## Transport Encryption
-
-### SSH Transport
-
-SSH is the preferred transport for Git. Modern Git SSH uses:
-
-- **Key exchange:** `curve25519-sha256` (ECDH on Curve25519)
-- **Host authentication:** `ssh-ed25519` (server host key)
-- **Encryption:** `chacha20-poly1305@openssh.com` or `aes256-gcm@openssh.com`
-- **MAC:** Authenticated encryption (AEAD, no separate MAC needed)
-
 ```bash
 # Verify SSH cipher negotiated for a Git host
 ssh -vvv git@github.com 2>&1 | grep -E "kex|cipher|mac"
@@ -28,6 +8,8 @@ Host github.com gitlab.corp.example.com
     Ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com
     MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com
     HostKeyAlgorithms ssh-ed25519,rsa-sha2-512
+```
+
 ```text
 ┌────────────────────────────────────────── Git — Encryption ───────────────────────────────────────────┐
 │                                                                                                       │
@@ -73,9 +55,6 @@ Host github.com gitlab.corp.example.com
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-**TLS version enforcement** (server-side, nginx/Apache reverse proxy in front of GitLab):
-
 ```nginx
 # Minimum TLS 1.2; prefer TLS 1.3
 ssl_protocols TLSv1.2 TLSv1.3;
@@ -84,15 +63,6 @@ ssl_prefer_server_ciphers on;
 ssl_session_cache shared:SSL:10m;
 ssl_session_timeout 10m;
 ```
-
----
-
-## Commit and Tag Signing
-
-### GPG Signing
-
-GPG signing creates a cryptographic proof of commit authorship. It does not encrypt content but provides integrity and non-repudiation.
-
 ```bash
 # Configure Git to sign all commits with GPG
 git config --global user.signingkey <GPG_KEY_ID>
@@ -114,16 +84,6 @@ git verify-tag v1.2.3
 # Show signatures in log
 git log --show-signature --oneline -10
 ```
-
-**GPG key requirements:**
-
-| Setting | Recommended Value |
-|---|---|
-| Algorithm | Ed25519 or RSA 4096 |
-| Expiry | 2 years maximum |
-| Passphrase | Required |
-| Subkey for signing | Yes (keep master offline) |
-
 ```bash
 # Generate an Ed25519 GPG key
 gpg --expert --full-generate-key
@@ -135,11 +95,6 @@ gpg --armor --export <KEY_ID>
 # Backup private key (store offline/in secrets manager)
 gpg --armor --export-secret-keys <KEY_ID> > gpg_private_backup.asc
 ```
-
-### SSH Commit Signing (Git 2.34+)
-
-Git 2.34 introduced SSH key signing — simpler than GPG for teams already using SSH.
-
 ```bash
 # Use the same SSH key for transport and signing
 git config --global gpg.format ssh
@@ -155,15 +110,6 @@ git config --global gpg.ssh.allowedSignersFile ~/.config/git/allowed_signers
 # Verify a commit signed with SSH
 git verify-commit HEAD
 ```
-
----
-
-## Credential Encryption
-
-Git credentials (tokens, passwords) must never be stored in plaintext.
-
-### OS Keychain Integration
-
 ```bash
 # macOS — store in Keychain
 git config --global credential.helper osxkeychain
@@ -177,9 +123,6 @@ git config --global credential.helper /usr/lib/git-core/git-credential-libsecret
 # Linux — pass (GPG-encrypted password store)
 git config --global credential.helper /usr/share/doc/git/contrib/credential/gnome-keyring/git-credential-gnome-keyring
 ```
-
-### Auditing Stored Credentials
-
 ```bash
 # List credentials currently stored by the helper
 git credential-osxkeychain get <<'EOF'
@@ -196,15 +139,6 @@ EOF
 # Verify no plaintext credentials in global git config
 grep -i "password\|token\|secret" ~/.gitconfig
 ```
-
----
-
-## Encrypting Sensitive Files in Repositories
-
-### git-crypt
-
-`git-crypt` transparently encrypts specific files using GPG or a shared symmetric key.
-
 ```bash
 # Install
 brew install git-crypt   # macOS
@@ -232,11 +166,6 @@ git-crypt unlock /path/to/git-crypt-key
 # or with GPG:
 git-crypt unlock
 ```
-
-### SOPS (Secrets OPerationS)
-
-SOPS is preferred over git-crypt for structured files (YAML, JSON) and integrates with cloud KMS.
-
 ```bash
 # Install
 brew install sops
@@ -260,13 +189,6 @@ sops secrets/database.enc.yaml
 # Decrypt to stdout
 sops --decrypt secrets/database.enc.yaml
 ```
-
----
-
-## LFS (Large File Storage) Security
-
-Git LFS stores large binary files on a separate server. Ensure the LFS endpoint uses HTTPS with valid certificates.
-
 ```bash
 # Verify LFS endpoint
 git lfs env | grep Endpoint
@@ -280,13 +202,6 @@ git lfs locks
 # Unlock a file
 git lfs unlock path/to/large/file.bin
 ```
-
----
-
-## Detecting Secrets in History
-
-Even after removing a secret from the current branch, it remains in Git history.
-
 ```bash
 # Scan entire history with truffleHog
 trufflehog git file://. --only-verified
@@ -301,11 +216,3 @@ git filter-repo --path secrets/old-secret.env --invert-paths
 # Force-push rewritten history (coordinate with all users)
 git push --force-with-lease origin main
 ```
-
----
-
-## Related Pages
-
-- [Git — Authentication](../authentication/index.md)
-- [Git — Access Control](../access-control/index.md)
-- [Git — Hardening](../hardening/index.md)

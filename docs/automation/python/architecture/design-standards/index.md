@@ -1,34 +1,3 @@
-# Python Automation — Standards
-
-
-<div class="kb-summary">
-Consistent standards enforce code quality, make security reviews tractable, and allow any team member to understand, run, and modify automation safely.
-</div>
-
----
-
-## PEP 8 Compliance
-
-All Python code must comply with PEP 8. Compliance is enforced automatically via pre-commit hooks — do not rely on manual review.
-
-Key rules summary:
-
-| Rule | Detail |
-|---|---|
-| Indentation | 4 spaces (never tabs) |
-| Line length | 88 characters max (Black default) |
-| Blank lines | 2 blank lines between top-level definitions; 1 between methods |
-| Imports | Standard lib → third-party → local; one import per line |
-| Naming | `snake_case` for functions/variables, `PascalCase` for classes, `UPPER_CASE` for constants |
-| Strings | Prefer double quotes (Black enforces this) |
-| Whitespace | No trailing whitespace; single space around operators |
-
----
-
-## Type Hints and `mypy`
-
-All functions must have type annotations. Type checking is enforced in CI.
-
 ```python
 from __future__ import annotations  # enables forward references in Python 3.9
 
@@ -59,6 +28,8 @@ def process_widgets(
         output_path.write_text(str(results))
 
     return len(results)
+```
+
 ```text
 ┌────────────────────────────────────── Python — Design Standards ──────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -83,11 +54,6 @@ def process_widgets(
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-### Structured JSON Logging (`structlog`)
-
-Use `structlog` for any automation that feeds logs into an aggregator (Elastic, Loki, Splunk, CloudWatch).
-
 ```python
 import structlog
 
@@ -104,27 +70,10 @@ def deploy_widget(name: str, env: str) -> None:
         log.error("deployment_failed", error=str(exc), exc_info=True)
         raise
 ```
-
-Sample JSON output:
-
 ```json
 {"event": "deployment_started", "widget": "widget-42", "env": "prod", "timestamp": "2026-05-08T14:22:01Z", "level": "info"}
 {"event": "deployment_complete", "widget": "widget-42", "env": "prod", "duration_ms": 342, "timestamp": "2026-05-08T14:22:01.342Z", "level": "info"}
 ```
-
-### Logging Rules
-
-| Do | Don't |
-|---|---|
-| `log.info("widget_deployed", name=name)` | `print(f"Widget {name} deployed")` |
-| Use `log.exception()` in except blocks | `log.error(str(exc))` (loses stack trace) |
-| Bind context early: `log.bind(widget=name)` | Repeat context in every log call |
-| Log at `DEBUG` for detailed tracing | Log sensitive data (passwords, tokens) |
-
----
-
-## Error Handling
-
 ```python
 import requests
 from requests.exceptions import HTTPError, ConnectionError, Timeout
@@ -159,21 +108,6 @@ def fetch_widget(name: str) -> dict:
             f"Network error fetching widget '{name}': {exc}"
         ) from exc
 ```
-
-### Error Handling Rules
-
-- Catch specific exceptions, never bare `except:` or `except Exception:` in library code
-- Always chain exceptions with `raise ... from exc` to preserve context
-- Define domain-specific exception classes in a module-level `exceptions.py`
-- Use `finally` for resource cleanup: file handles, connections, temp files
-- Let unexpected exceptions propagate — do not silently swallow them
-
----
-
-## `requirements.txt` and `pyproject.toml` Standards
-
-### `requirements.txt` (venv projects)
-
 ```text
 # requirements.txt — pin exact versions for reproducibility
 requests==2.31.0
@@ -188,22 +122,6 @@ mypy==1.8.0
 black==24.2.0
 ruff==0.3.2
 ```
-
-### Version pinning policy
-
-| Context | Strategy |
-|---|---|
-| Production scripts | Pin exact versions (`==`) |
-| Shared libraries | Pin minimum with upper bound (`>=2.0,<3.0`) |
-| Dev/test dependencies | Pin exact versions |
-| Dockerfile base image | Pin to minor version (`python:3.12-slim`) |
-
----
-
-## Pre-Commit Hooks
-
-Pre-commit prevents bad code from entering the repository.
-
 ```yaml
 # .pre-commit-config.yaml
 repos:
@@ -237,7 +155,6 @@ repos:
           - types-requests
           - pydantic
 ```
-
 ```bash
 # Install hooks (run once per clone)
 pip install pre-commit
@@ -249,9 +166,6 @@ pre-commit run --all-files
 # Update hook versions
 pre-commit autoupdate
 ```
-
-### `ruff` configuration (`pyproject.toml`)
-
 ```toml
 [tool.ruff]
 line-length = 88
@@ -274,11 +188,6 @@ ignore = ["S101"]  # allow assert in tests
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["S", "T20"]
 ```
-
----
-
-## Testing with `pytest`
-
 ```python
 # tests/conftest.py
 import pytest
@@ -292,7 +201,6 @@ def widget_api_url() -> str:
 def mock_widget_response() -> dict:
     return {"name": "widget-01", "state": "Active", "priority": 5}
 ```
-
 ```python
 # tests/test_api.py
 import pytest
@@ -326,14 +234,12 @@ def test_fetch_widget_api_error():
     with pytest.raises(WidgetAPIError):
         fetch_widget("widget-01")
 ```
-
 ```toml
 # pytest configuration (pyproject.toml)
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-v --tb=short"
 ```
-
 ```bash
 # Run tests
 pytest
@@ -347,12 +253,3 @@ pytest tests/test_api.py -v
 # Run tests matching a name pattern
 pytest -k "test_fetch"
 ```
-
-### Test coverage targets
-
-| Layer | Minimum coverage |
-|---|---|
-| API clients | 90% |
-| Business logic | 85% |
-| CLI / entrypoints | 70% |
-| Configuration loading | 80% |

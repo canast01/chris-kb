@@ -1,30 +1,3 @@
-# Change Request Procedure
-
-
-<div class="kb-summary">
-A Request for Change (RFC) documents a planned modification to infrastructure, applications, or configuration. Every non-standard change requires an RFC before implementation.
-</div>
-
-## RFC Required Fields
-
-| Field | Description | Required? |
-|---|---|---|
-| Title | Short description (< 80 chars) | Mandatory |
-| Description | What will be changed and how | Mandatory |
-| Business justification | Why this change is needed | Mandatory |
-| Systems / CIs affected | List from CMDB | Mandatory |
-| Risk assessment | Impact × Likelihood; risk score | Mandatory |
-| Change type | Standard / Normal / Emergency | Mandatory |
-| Maintenance window | Start/end datetime UTC | Mandatory |
-| Rollback plan | Step-by-step reversal procedure | Mandatory |
-| Test results | Non-prod evidence (High risk) | Required for High/Critical |
-| Implementation steps | Numbered runbook | Mandatory |
-| Post-change validation | Smoke tests / monitoring checks | Mandatory |
-| Requester | Name and contact | Mandatory |
-| Service owner | Name and email | Mandatory |
-
-## RFC Template
-
 ```markdown
 Title:          [INFRA] Upgrade PostgreSQL 14 → 15 on db-prod-01
 Description:    In-place major version upgrade using pg_upgrade.
@@ -55,6 +28,8 @@ Rollback Steps:
   2. Restore VM to snapshot snap-xyz
   3. Start postgresql-14
   4. Notify stakeholders
+```
+
 ```text
 ┌──────────────────────────────────────── Change Request (RFC) ─────────────────────────────────────────┐
 │                                                                                                       │

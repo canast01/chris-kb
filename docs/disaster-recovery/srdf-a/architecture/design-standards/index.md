@@ -1,25 +1,7 @@
-# SRDF/A — Standards
-
-
-<div class="kb-summary">
-> Part of the [SRDF/A](../../index.md) reference.
-</div>
-
----
-
-## RPO and Cycle Time
-
-SRDF/A cycle time defines the maximum data age (RPO) when a failure occurs mid-cycle. Default cycle time is 30 seconds; the maximum acceptable lag is negotiated per application class.
-
-| Application Class | Target RPO | Cycle Time | Why | Notes |
-|---|---|---|---|---|
-| Tier 1 (financial, critical DB) | ≤ 30s | 30s | Minimal data exposure for transaction systems | Default |
-| Tier 2 (business apps) | ≤ 60s | 60s | Balances RPO against WAN bandwidth consumption | Allowed if WAN constrained |
-| Tier 3 (dev/test replication) | ≤ 300s | 300s | WAN efficiency more important than low RPO | Batch workloads |
-
-Monitor actual achieved RPO — it is always ≤ cycle time in normal operation:
 ```bash
 symrdf -g <rdfg> query -v | grep "Minimum Cycle Time"
+```
+
 ```text
 ┌────────────────────────────────────── SRDF/A — Design Standards ──────────────────────────────────────┐
 │                                                                                                       │
@@ -64,24 +46,12 @@ symrdf -g <rdfg> query -v | grep "Minimum Cycle Time"
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-Where 1.20 = 20% headroom for burst absorption. Measure peak change rate with:
-
 ```bash
 symrdf -g <rdfg> query -v | grep "MBs Written"
 ```
-
-## Device Sizing
-
-- R2 (target) volumes must be equal in size to R1 (source) — no thin over-subscription on R2
-- R2 volumes must be formatted identically (track type, emulation) as R1
-- Verify before establishing:
 ```bash
 symdev show -sid <target_SID> <dev_id> | grep -E "Size|Track"
 ```
-
-## Bandwidth Sizing Diagram
-
 ```mermaid
 flowchart TD
     measureWrite["Measure Peak Write Rate\nsymrdf -g rdfg query -v | grep MBs Written"]

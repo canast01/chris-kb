@@ -1,43 +1,3 @@
-# Jira — Backup & Restore
-
-
-<div class="kb-summary">
-Backup & Restore reference covering Backup Strategy Overview, XML Backup / Restore (Admin UI), File Storage Backup, Data Center Backup Best Practices, Restore Procedure and 1 more sections.
-</div>
-
-## Backup Strategy Overview
-
-Jira requires three independent backup components for a complete recovery:
-
-| Component | What it covers | Recommended method |
-|---|---|---|
-| **Database** | All issue data, users, configurations, workflows | PostgreSQL `pg_dump` |
-| **Shared Home** | Attachments, avatars, logos, plugin data | Filesystem snapshot / rsync |
-| **Local Home** | Per-node config (`dbconfig.xml`, `cluster.properties`) | Filesystem copy |
-| **XML Export** | Lightweight instance backup (not for large instances) | Jira Admin UI / REST API |
-
-!!! warning "XML Backup Limitations"
-    The built-in XML backup is unsuitable for instances with >10 GB of data or >1 million issues. It does not include attachments. Use database-level backups for production.
-
----
-
-## XML Backup / Restore (Admin UI)
-
-### Create XML Backup
-
-`Admin → System → Backup System`
-
-Options:
-
-| Option | Default | Notes |
-|---|---|---|
-| Include attachments | Off | Significantly increases backup size |
-| Backup path | `<jira-home>/export/` | Must be writable by the Jira process user |
-
-The output is a `.zip` file containing `entities.xml` and optionally an `attachments/` directory.
-
-### Automate XML Backup via REST
-
 ```bash
 #!/bin/bash
 # xml-backup.sh — Trigger Jira XML backup via REST API
@@ -54,6 +14,8 @@ curl -s -u "${USER}:${TOKEN}" \
   -o /dev/null -w "%{http_code}\n"
 
 echo "XML backup triggered at ${TIMESTAMP}"
+```
+
 ```text
 ┌────────────────────────────────────── Jira — Backup and Restore ──────────────────────────────────────┐
 │                                                                                                       │
@@ -99,29 +61,10 @@ echo "XML backup triggered at ${TIMESTAMP}"
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-Run this as a cron job:
-
 ```cron
 # /etc/cron.d/jira-backup
 0 1 * * * jira /opt/scripts/pg-backup-jira.sh >> /var/log/jira-backup.log 2>&1
 ```
-
-### Backup Retention Policy
-
-| Retention | Policy |
-|---|---|
-| Daily backups | Keep 7 days |
-| Weekly backups (Sunday) | Keep 4 weeks |
-| Monthly backups (1st of month) | Keep 12 months |
-| Off-site / object storage copy | Keep 90 days |
-
----
-
-## File Storage Backup
-
-### Shared Home Backup
-
 ```bash
 #!/bin/bash
 # filesystem-backup.sh
@@ -146,9 +89,6 @@ tar -czf "${BACKUP_DIR}/jira_fs_${TIMESTAMP}.tar.gz" \
 
 echo "Filesystem backup complete: ${BACKUP_DIR}/${TIMESTAMP}"
 ```
-
-### What to Include
-
 ```text
 /var/atlassian/application-data/jira/shared/
 ├── attachments/          ← INCLUDE (primary data)
@@ -164,21 +104,6 @@ echo "Filesystem backup complete: ${BACKUP_DIR}/${TIMESTAMP}"
 ├── cluster.properties    ← INCLUDE
 └── jira-config.properties ← INCLUDE
 ```
-
----
-
-## Data Center Backup Best Practices
-
-### Backup Window
-
-For Data Center with rolling upgrades, a backup of a running instance is possible but requires care:
-
-1. **Database**: Use `pg_dump` — PostgreSQL MVCC ensures a consistent snapshot without locking
-2. **Filesystem**: Use LVM snapshot or storage array snapshot for consistency with the DB point-in-time
-3. **Coordination**: Snapshot the filesystem and database at the same point in time to avoid referential inconsistency
-
-### Snapshot-Based Backup (Recommended for DC)
-
 ```bash
 #!/bin/bash
 # snapshot-backup.sh — Coordinated LVM snapshot backup
@@ -211,18 +136,6 @@ tar -czf "/backup/jira/fs/jira_fs_$(date +%Y%m%d).tar.gz" \
 umount "${MOUNT_POINT}"
 lvremove -f "/dev/${VG}/${SNAP_NAME}"
 ```
-
----
-
-## Restore Procedure
-
-### Full Restore (Database + Filesystem)
-
-!!! danger "Production Restore Checklist"
-    Before restoring, confirm: backup file integrity, target environment specs, DNS/load balancer is pointing away from the target instance, all cluster nodes are stopped.
-
-#### Step 1 — Stop Jira
-
 ```bash
 # All nodes
 systemctl stop jira
@@ -230,9 +143,6 @@ systemctl stop jira
 # Verify no Jira processes remain
 ps aux | grep -i jira | grep -v grep
 ```
-
-#### Step 2 — Restore Database
-
 ```bash
 # Drop and recreate the database
 psql -h db.example.com -U postgres -c "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = 'jiradb';"
@@ -249,9 +159,6 @@ PGPASSWORD="${JIRA_DB_PASSWORD}" pg_restore \
   --no-owner \
   /backup/jira/db/jira_db_20260101-010000.pgdump
 ```
-
-#### Step 3 — Restore Filesystem
-
 ```bash
 # Clear existing shared home
 rm -rf /var/atlassian/application-data/jira/shared/*
@@ -263,9 +170,6 @@ tar -xzf /backup/jira/fs/jira_fs_20260101.tar.gz \
 # Fix ownership
 chown -R jira:jira /var/atlassian/application-data/jira/shared/
 ```
-
-#### Step 4 — Start and Validate
-
 ```bash
 # Start first node only
 systemctl start jira
@@ -273,27 +177,16 @@ systemctl start jira
 # Monitor startup logs
 tail -f /opt/atlassian/jira/logs/catalina.out
 ```
-
-Expected startup log entries:
-
 ```text
 INFO  [main] Jira starting up...
 INFO  [main] Jira has been successfully started
 ```
-
-#### Step 5 — Rebuild Search Index
-
 ```bash
 curl -u admin:token -X POST \
   "https://jira.example.com/rest/api/2/reindex" \
   -H "Content-Type: application/json" \
   -d '{"type": "FOREGROUND"}'
 ```
-
-Or via UI: `Admin → System → Indexing → Full Re-index`
-
-#### Step 6 — Validate
-
 ```bash
 # Check cluster node registration
 psql -h db.example.com -U jira -d jiradb \
@@ -306,26 +199,7 @@ psql -h db.example.com -U jira -d jiradb \
 # Health endpoint
 curl -s https://jira.example.com/status | python3 -m json.tool
 ```
-
-#### Step 7 — Bring Up Remaining Nodes
-
 ```bash
 # Start additional nodes after primary is healthy
 systemctl start jira   # on jira-app-02, jira-app-03
 ```
-
----
-
-## Restore Validation Checklist
-
-| Check | Command / Method | Expected |
-|---|---|---|
-| Jira starts | `systemctl status jira` | Active (running) |
-| Health endpoint | `GET /status` | `{"state":"RUNNING"}` |
-| Issue browse | Open any known issue in browser | Issue loads correctly |
-| Attachments | Open issue with known attachment | File downloads |
-| User login | Log in as test user | Successful |
-| Workflow | Transition a test issue | Transition succeeds |
-| Email | Trigger notification | Email received |
-| Reindex complete | `Admin → Indexing` | No pending reindex |
-| Cluster nodes | Admin → Clustering | All expected nodes shown |

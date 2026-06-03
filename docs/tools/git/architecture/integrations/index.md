@@ -1,18 +1,3 @@
-# Git — Integrations
-
-
-<div class="kb-summary">
-This page covers how Git platforms (GitHub, GitLab) integrate with CI/CD pipelines, issue trackers, identity providers, container registries, and developer tooling.
-</div>
-
----
-
-## CI/CD Integration
-
-### GitHub Actions
-
-GitHub Actions is natively triggered by Git events via `.github/workflows/*.yml`.
-
 ```yaml
 # .github/workflows/ci.yml
 name: CI
@@ -41,6 +26,8 @@ jobs:
 
       - name: Test
         run: go test -race ./...
+```
+
 ```text
 ┌───────────────────────────────────────── Git — Integrations ──────────────────────────────────────────┐
 │                                                                                                       │
@@ -86,26 +73,6 @@ jobs:
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-Predefined CI/CD variables:
-
-| Variable | Value |
-|----------|-------|
-| `CI_COMMIT_SHA` | Full commit SHA |
-| `CI_COMMIT_REF_NAME` | Branch or tag name |
-| `CI_PROJECT_PATH` | `namespace/project` |
-| `CI_REGISTRY` | GitLab container registry hostname |
-| `CI_PIPELINE_SOURCE` | How the pipeline was triggered |
-| `CI_MERGE_REQUEST_IID` | MR number (only in MR pipelines) |
-
----
-
-## Jira Integration
-
-### GitHub — Jira Smart Commits
-
-Reference Jira issues in commit messages; the GitHub for Jira app updates the issue automatically.
-
 ```yaml
 git commit -m "PROJ-123 Add retry logic for payment API
 
@@ -113,18 +80,6 @@ git commit -m "PROJ-123 Add retry logic for payment API
 - PROJ-123 #comment Fixed the race condition
 - PROJ-123 #time 2h"
 ```
-
-Smart commit commands:
-
-| Syntax | Action |
-|--------|--------|
-| `PROJ-123` | Links commit to issue |
-| `PROJ-123 #comment <text>` | Adds comment to issue |
-| `PROJ-123 #time <Xh Ym>` | Logs work time |
-| `PROJ-123 #transition <status>` | Transitions workflow state |
-
-### GitLab — Jira Integration Setup
-
 ```yaml
 # gitlab.rb (Omnibus) — system-wide Jira configuration
 # Or configure per-project: Settings > Integrations > Jira
@@ -135,21 +90,11 @@ Smart commit commands:
 # Password/Token: <Jira API token>
 # Transition IDs: 31 (In Progress), 41 (Done)
 ```
-
 ```bash
 # Verify integration via GitLab API
 curl -s --header "PRIVATE-TOKEN: $GITLAB_TOKEN" \
   "https://gitlab.example.com/api/v4/projects/:id/integrations/jira"
 ```
-
----
-
-## Webhook Configuration
-
-Webhooks deliver HTTP POST payloads to external services on Git events.
-
-### GitHub Webhook
-
 ```bash
 # Create webhook via API
 curl -X POST \
@@ -168,9 +113,6 @@ curl -X POST \
     }
   }'
 ```
-
-### GitLab Webhook
-
 ```bash
 # Create project webhook via API
 curl -X POST \
@@ -186,9 +128,6 @@ curl -X POST \
     "enable_ssl_verification": true
   }'
 ```
-
-### Payload Verification (HMAC-SHA256)
-
 ```bash
 # Bash — verify GitHub webhook signature
 verify_signature() {
@@ -200,13 +139,6 @@ verify_signature() {
   [ "$signature" = "$expected" ]
 }
 ```
-
----
-
-## LDAP / SSO Authentication
-
-### GitLab LDAP (Omnibus)
-
 ```ruby
 # /etc/gitlab/gitlab.rb
 gitlab_rails['ldap_enabled'] = true
@@ -235,7 +167,6 @@ gitlab_rails['ldap_servers'] = {
   }
 }
 ```
-
 ```bash
 # Test LDAP configuration
 sudo gitlab-rake gitlab:ldap:check
@@ -243,9 +174,6 @@ sudo gitlab-rake gitlab:ldap:check
 # Force LDAP group sync
 sudo gitlab-rake gitlab:ldap:group_sync
 ```
-
-### SAML / SSO (GitLab)
-
 ```ruby
 # /etc/gitlab/gitlab.rb
 gitlab_rails['omniauth_providers'] = [
@@ -267,25 +195,6 @@ gitlab_rails['omniauth_providers'] = [
   }
 ]
 ```
-
-### GitHub Enterprise SAML
-
-Configure under **Settings → Authentication security → SAML single sign-on**:
-
-| Field | Value |
-|-------|-------|
-| Sign on URL | `https://idp.example.com/sso/saml` |
-| Issuer | `https://idp.example.com` |
-| Public certificate | IdP signing certificate (PEM) |
-| Signature method | `RSA-SHA256` |
-| Digest method | `SHA256` |
-
----
-
-## Container Registry Integration
-
-### GitLab Container Registry
-
 ```bash
 # Authenticate
 docker login registry.gitlab.example.com -u $USER -p $GITLAB_TOKEN
@@ -303,9 +212,6 @@ docker push "$CI_REGISTRY_IMAGE/$CI_COMMIT_REF_SLUG:latest"
 curl -s --header "PRIVATE-TOKEN: $GITLAB_TOKEN" \
   "https://gitlab.example.com/api/v4/projects/:id/registry/repositories" | jq .
 ```
-
-### GitHub Container Registry (GHCR)
-
 ```bash
 # Authenticate
 echo "$GITHUB_TOKEN" | docker login ghcr.io -u "$GITHUB_ACTOR" --password-stdin
@@ -314,21 +220,6 @@ echo "$GITHUB_TOKEN" | docker login ghcr.io -u "$GITHUB_ACTOR" --password-stdin
 docker build -t ghcr.io/$GITHUB_REPOSITORY:$GITHUB_SHA .
 docker push ghcr.io/$GITHUB_REPOSITORY:$GITHUB_SHA
 ```
-
----
-
-## IDE Integration Overview
-
-| IDE | Git Integration | Notes |
-|-----|----------------|-------|
-| **VS Code** | Built-in Source Control panel + GitLens extension | GitLens adds blame, history, PR review in-editor |
-| **JetBrains (IntelliJ / GoLand / PyCharm)** | Built-in VCS (Git) tool window | Branch graph, interactive rebase, conflict resolution UI |
-| **Vim / Neovim** | `vim-fugitive`, `gitsigns.nvim`, `neogit` | Fugitive is the de-facto standard; `:Git blame`, `:GBrowse` |
-| **Emacs** | `magit` | Full Git porcelain inside Emacs; widely regarded as best-in-class |
-| **Eclipse** | EGit plugin | Standard for Java enterprise shops |
-
-### VS Code Settings for Large Repos
-
 ```jsonc
 // .vscode/settings.json
 {
@@ -342,11 +233,6 @@ docker push ghcr.io/$GITHUB_REPOSITORY:$GITHUB_SHA
   "search.followSymlinks": false
 }
 ```
-
----
-
-## Integration Architecture Summary
-
 ```mermaid
 graph LR
     subgraph "Git Platform"

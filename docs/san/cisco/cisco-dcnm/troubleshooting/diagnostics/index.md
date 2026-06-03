@@ -1,37 +1,3 @@
-# Cisco DCNM — Diagnostics
-
-
-<div class="kb-summary">
-> Part of the [Cisco DCNM](../../index.md) reference.
-</div>
-
----
-
-## Overview
-
-This page covers diagnostic procedures and log collection steps for investigating DCNM application issues, performance degradation, or preparing for Cisco TAC escalation.
-
----
-
-## Log File Locations
-
-| Log | Content |
-|---|---|
-| `/var/log/dcnm/server.log` | Main application log — startup, API, errors |
-| `/var/log/dcnm/discovery.log` | Fabric discovery and switch crawl |
-| `/var/log/dcnm/pm.log` | Performance manager polling |
-| `/var/log/dcnm/events.log` | SNMP trap and event processing |
-| `/var/log/dcnm/install.log` | Upgrade and patch installation |
-| `/var/log/dcnm/audit.log` | User activity and configuration changes |
-| `/var/log/dcnm/ha.log` | HA replication and failover events |
-| `/var/log/messages` | OS-level system log |
-
----
-
-## Generating a Support Bundle
-
-For Cisco TAC escalation, collect the DCNM support bundle:
-
 ```bash
 ssh root@dcnm-dc1.corp.example.com
 
@@ -49,6 +15,8 @@ ssh root@dcnm-dc1.corp.example.com
 
 # Transfer to workstation for TAC case upload
 scp root@dcnm-dc1.corp.example.com:/tmp/dcnm-support-$(date +%Y%m%d).tar.gz ./
+```
+
 ```text
 ┌────────────────────────────────────── Cisco DCNM — Diagnostics ───────────────────────────────────────┐
 │                                                                                                       │
@@ -96,11 +64,6 @@ scp root@dcnm-dc1.corp.example.com:/tmp/dcnm-support-$(date +%Y%m%d).tar.gz ./
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
----
-
-## Database Diagnostics
-
 ```bash
 # Connect to DCNM database
 psql -U postgres sane
@@ -130,9 +93,6 @@ ORDER BY n_dead_tup DESC;
 
 sudo -u postgres vacuumdb --all --analyze
 ```
-
-### Performance DB (pmdb)
-
 ```bash
 psql -U postgres pmdb
 
@@ -149,11 +109,6 @@ SELECT min(collecttime), max(collecttime) FROM pmdata;
 # DCNM GUI: Administration > Settings > Data Retention
 # Set Performance Data retention to 14 days (from 30)
 ```
-
----
-
-## Network Diagnostics
-
 ```bash
 # Test SSH to a managed switch
 ssh -v -o ConnectTimeout=10 -o StrictHostKeyChecking=no \
@@ -170,11 +125,6 @@ tcpdump -i eth0 -n udp port 162 -c 50 -w /tmp/dcnm-trap-capture.pcap
 # Analyse capture (requires tcpdump or Wireshark on workstation)
 tcpdump -r /tmp/dcnm-trap-capture.pcap -v
 ```
-
----
-
-## Discovery Diagnostics
-
 ```bash
 # Enable discovery debug for a specific switch
 grep "10.20.1.5" /var/log/dcnm/discovery.log | tail -50
@@ -191,11 +141,6 @@ curl -sk -b dcnm-cookie.txt \
   "${DCNM_HOST}/rest/inventory/switches/<serialNumber>" \
   | python3 -m json.tool | grep "managementState"
 ```
-
----
-
-## HA Diagnostics
-
 ```bash
 # On either DCNM HA node
 /usr/local/cisco/dcm/dcnm/bin/dcnm-ha-status.sh
@@ -214,11 +159,6 @@ SELECT now() - pg_last_xact_replay_timestamp() AS replication_lag;"
 # Check HA log for errors
 tail -f /var/log/dcnm/ha.log | grep -i "error\|fail\|disconnect"
 ```
-
----
-
-## Performance Diagnostics
-
 ```bash
 # System resource snapshot
 echo "=== $(date) ===" >> /tmp/dcnm-perf.txt

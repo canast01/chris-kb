@@ -1,14 +1,3 @@
-# ServiceNow — Access Control
-
-
-<div class="kb-summary">
-ServiceNow access control is enforced through Access Control Lists (ACLs), Roles, Groups, and data segmentation. The model is additive — access is denied by default unless an ACL explicitly grants it.
-</div>
-
----
-
-## Access Control Architecture
-
 ```text
 ┌────────────────────────────────────── ServiceNow Access Control ──────────────────────────────────────┐
 │                                                                                                       │
@@ -99,20 +88,6 @@ ServiceNow access control is enforced through Access Control Lists (ACLs), Roles
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-// List members of a group
-var groupName = 'SNOW-Administrators';
-var groupRecord = new GlideRecord('sys_user_group');
-groupRecord.addQuery('name', groupName);
-groupRecord.query();
-if (groupRecord.next()) {
-    var memberRec = new GlideRecord('sys_user_grmember');
-    memberRec.addQuery('group', groupRecord.sys_id);
-    memberRec.query();
-    while (memberRec.next()) {
-        gs.info(memberRec.user.name + ' (' + memberRec.user.user_name + ')');
-    }
-}
 ```text
 
 ---
@@ -123,6 +98,8 @@ ACLs define who can perform which operations on which data. Navigate to: System 
 
 ### ACL Structure
 
+```
+
 ```yaml
 Name:       <operation>_<table>_<field>
 Operation:  read, write, create, delete, execute
@@ -130,11 +107,6 @@ Object:     Table name (e.g., incident, change_request)
 Name:       * (all fields) or specific field name
 Type:       record (row-level) or field-level
 ```
-
-### Example ACL Configurations
-
-**Restrict delete on Incidents to admins only:**
-
 ```javascript
 // ACL Rule
 // Name: delete_incident
@@ -148,9 +120,6 @@ Type:       record (row-level) or field-level
     return gs.hasRole('admin') || gs.hasRole('itil_admin');
 })()
 ```
-
-**Field-level ACL — hide salary field from non-HR:**
-
 ```javascript
 // Name: read_sys_user.salary
 // Operation: read
@@ -161,9 +130,6 @@ Type:       record (row-level) or field-level
 // Condition:
 gs.hasRole('hr_admin') || gs.hasRole('admin')
 ```
-
-**Record-level ACL — users can only see their own requests:**
-
 ```javascript
 // Name: read_sc_request (self-only)
 // Operation: read
@@ -175,9 +141,6 @@ gs.hasRole('hr_admin') || gs.hasRole('admin')
            gs.hasRole('admin');
 })()
 ```
-
-### Auditing ACLs
-
 ```javascript
 // Script to list all ACLs granting admin access
 var aclRec = new GlideRecord('sys_security_acl');
@@ -196,28 +159,10 @@ while (openAcl.next()) {
     gs.info('OPEN ACL: ' + openAcl.name + ' | ' + openAcl.operation);
 }
 ```
-
----
-
-## Data Segmentation
-
-### Company / Domain Separation
-
-For multi-tenant or multi-company instances, use domain separation:
-
-- System Properties → `glide.sys.domain.access_check` = `true`
-- Each record belongs to a domain
-- Users in a domain can only see records in their domain (and parent domains)
-
 ```javascript
 // Verify domain separation is active
 gs.getProperty('glide.sys.domain.access_check') === 'true'
 ```
-
-### Assignment Group Visibility
-
-Restrict which assignment groups can be seen by non-admins:
-
 ```javascript
 // ACL on sys_user_group — restrict group visibility
 // Only return groups where the user is a member or the group is marked public
@@ -230,21 +175,6 @@ Restrict which assignment groups can be seen by non-admins:
     return member.hasNext();
 })()
 ```
-
----
-
-## Privileged Access Management
-
-### Elevated Privilege Workflow
-
-For temporary admin access:
-
-1. User submits SC Request: "Temporary Admin Access"
-2. Manager + Security approves
-3. Automated workflow adds user to `SNOW-Temp-Admins` group
-4. Scheduled job removes from group after approved duration
-5. All actions during temp access session logged to audit table
-
 ```javascript
 // Scheduled job: Remove expired temp admin access
 var tempAdmin = new GlideRecord('sys_user_grmember');
@@ -256,20 +186,6 @@ while (tempAdmin.next()) {
     tempAdmin.deleteRecord();
 }
 ```
-
----
-
-## Integration Access Control
-
-### REST API Access by External Systems
-
-| System | Role | Table Access | Method |
-|---|---|---|---|
-| Monitoring tool | Custom `svc_monitoring` | `incident` read | OAuth 2.0 |
-| CMDB sync tool | Custom `svc_cmdb_sync` | `cmdb_ci_*` write | OAuth 2.0 |
-| Change management UI | Custom `svc_change_api` | `change_request` read | OAuth 2.0 |
-| Backup tool | Custom `svc_backup` | Read-only all | mTLS |
-
 ```javascript
 // Create a custom minimal role for an integration
 // System Definition → Roles → New
@@ -280,13 +196,6 @@ while (tempAdmin.next()) {
 // read incident: role = svc_monitoring_role
 // read sys_user: role = svc_monitoring_role (name, email fields only)
 ```
-
----
-
-## Access Review
-
-### Quarterly Access Review Script
-
 ```javascript
 // Run in Script Editor — export admin group membership
 var report = [];
@@ -305,22 +214,3 @@ while (adminGroup.next()) {
 }
 gs.info(JSON.stringify(report, null, 2));
 ```
-
-**Review checklist:**
-
-- [ ] Admin group membership matches approved list
-- [ ] No inactive users in any role-bearing group
-- [ ] Service account roles are still necessary and minimal
-- [ ] Temp access groups are empty (no expired grants remain)
-- [ ] OAuth applications are still active integrations
-- [ ] ACLs with `admin_overrides=true` are documented and justified
-- [ ] Domain separation is active (if multi-company)
-- [ ] MID Server account has only required roles
-
----
-
-## Related Pages
-
-- [ServiceNow — Authentication](../authentication/index.md)
-- [ServiceNow — Encryption](../encryption/index.md)
-- [ServiceNow — Hardening](../hardening/index.md)

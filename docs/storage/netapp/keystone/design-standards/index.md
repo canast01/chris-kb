@@ -1,40 +1,3 @@
-# NetApp Keystone Standards
-
-
-<div class="kb-summary">
-NetApp Keystone Standards reference covering Service Level Selection, Naming Conventions, Capacity Management Thresholds, Monthly Operational Standards, Decommission Standards.
-</div>
-
-## Service Level Selection
-
-Assign workloads to the appropriate Keystone service tier before provisioning. Tier selection directly affects billing — workloads on a higher-performance tier than needed incur unnecessary cost, while workloads under-tiered will breach SLA latency targets.
-
-| Service Level | Target Workloads | IOPS/TB | Latency |
-|---|---|---|---|
-| Extreme | Oracle, SQL Server, SAP HANA, high-IOPS transactional | Up to 12,000 | < 1 ms |
-| Premium | Mixed workloads, VMware vSphere, ERP secondary tiers | Up to 4,000 | < 1 ms |
-| Performance | General-purpose file and block, NAS shares | Up to 2,000 | < 2 ms |
-| Value | Backup targets, archive, infrequent access | Up to 64 | < 17 ms |
-| Object (StorageGRID) | Unstructured data, S3 object, media repositories | S3 throughput | SLA per contract |
-
-- Map each application to a tier at provisioning time; document the tier in the CMDB or a capacity register
-- Do not downgrade a workload from a higher-performance tier to a lower tier mid-subscription — plan service level assignments at provisioning time
-- Review burst usage monthly; persistent burst signals that committed capacity on the tier should be increased at the next amendment opportunity
-
----
-
-## Naming Conventions
-
-| Object | Standard | Example |
-|---|---|---|
-| QoS adaptive policy-group | `<tier>-ks` | `extreme-ks`, `premium-ks`, `performance-ks`, `value-ks` |
-| Volume | Site naming standard + `-ks` suffix if needed for identification | `vol_oradb01_data`, not overridden for Keystone |
-| Volume comment | Include application owner and Keystone tier | `app=oradb01 team=finance tier=extreme` |
-| SVM | Standard SVM naming; tag SVM description with `keystone=true` | `svm_prod_ks` or `svm_prod` with comment tag |
-| Snapshot | Standard ONTAP naming via snapshot policy; no Keystone-specific deviation | `hourly.2025-05-07_0800` |
-
-### Volume Tagging via Comments
-
 ```bash
 # Set a volume comment to identify application owner and Keystone tier
 volume modify \
@@ -44,6 +7,8 @@ volume modify \
 
 # List volumes with their comments to verify tagging
 volume show -fields vserver,volume,comment | grep keystone
+```
+
 ```text
 ┌───────────────────────────────── NetApp Keystone — Design Standards ──────────────────────────────────┐
 │                                                                                                       │
@@ -98,21 +63,6 @@ volume show -fields vserver,volume,comment | grep keystone
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
----
-
-## Capacity Management Thresholds
-
-| Threshold | Trigger | Action | Owner |
-|---|---|---|---|
-| 70% of committed | Capacity review trigger | Forecast growth; estimate time to burst | Storage team |
-| 80% of committed | Warning threshold | Begin capacity amendment process with KSM; set EMS alert | Storage + KSM |
-| 90% of committed | Near-burst | Escalate to KSM; accelerate amendment; review for quick decommissions | KSM + storage team |
-| 100% of committed | Burst billing begins | Emergency amendment; identify and remove idle volumes or snapshots | KSM + management |
-| Burst limit reached | Provisioning blocked | Emergency amendment or service-level adjustment required | KSM + storage team |
-
-### ONTAP EMS Threshold Alerts
-
 ```bash
 # Set a volume-level space threshold alert at 80% utilisation
 # (Keystone billing is based on logical used, but physical capacity matters for planning)
@@ -132,27 +82,6 @@ set admin
 volume show -vserver svm_prod -volume vol_oradb01_data \
     -fields space-nearly-full-threshold-percent,space-full-threshold-percent
 ```
-
----
-
-## Monthly Operational Standards
-
-| Activity | Frequency | Owner | Output |
-|---|---|---|---|
-| Capacity consumption review vs. committed | Monthly (before billing close) | Storage team | Confirmed no unexpected burst |
-| Consumption report download and archive | Monthly | Storage team | Archived report for chargeback / audit |
-| Unclassified volume audit | Monthly | Storage team | Zero volumes without QoS policy-group |
-| Snapshot usage review on premium tiers | Monthly | Storage team | Excessive snapshots identified and addressed |
-| BlueXP burst trend review | Monthly | Storage team + KSM | Amendment plan if burst trending upward |
-| Service level appropriateness review | Quarterly | Storage team + application owners | Workloads not over or under-tiered |
-| KSM engagement | Quarterly | Storage team | Capacity forecast; subscription alignment |
-
----
-
-## Decommission Standards
-
-When decommissioning volumes on Keystone-managed clusters, capacity is freed from the billing tier as soon as the volume is deleted and the Collector reports the next collection cycle. Ensure the following before decommissioning:
-
 ```bash
 # Step 1: Confirm the volume is no longer in use (no active client mounts)
 nfs show -vserver svm_prod | grep vol_oldapp
@@ -176,5 +105,3 @@ volume show -vserver svm_prod -volume vol_oldapp
 # Step 6: Confirm the capacity is reflected in the next BlueXP reporting cycle
 # (capacity reduction visible in BlueXP within the next Collector collection interval)
 ```
-
-Note: if decommissioning occurs after the monthly billing close, the capacity is still billed for that period. Time decommissions before the billing close date to capture the reduction in the current invoice period.

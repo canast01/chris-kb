@@ -1,29 +1,3 @@
-# Git — Backup & Restore
-
-
-<div class="kb-summary">
-This page covers repository backup strategies, platform-level backup procedures, and restore procedures for both individual repositories and full platform instances.
-</div>
-
----
-
-## Backup Strategy Overview
-
-| Strategy | Scope | RPO | Complexity |
-|----------|-------|-----|------------|
-| `git clone --mirror` | Single repository | Minutes | Low |
-| Bare repo rsync | Single/batch repos | Minutes | Low |
-| GitLab backup rake task | Full instance | Hours | Medium |
-| GitLab Geo | Full instance | Seconds | High |
-| GHES snapshot | Full appliance | Minutes | Medium |
-| Object storage sync (LFS/artifacts) | Blobs only | Minutes | Low |
-
----
-
-## Repository Mirroring with `git clone --mirror`
-
-A mirror clone includes all refs (branches, tags, notes, stash) and is the most complete single-repo backup method.
-
 ```bash
 # Initial mirror clone
 git clone --mirror https://github.com/org/repo.git /backup/repo.git
@@ -35,6 +9,8 @@ git remote update --prune
 # Verify the mirror is complete
 git fsck --full
 git count-objects -vH
+```
+
 ```text
 ┌────────────────────────────────────── Git — Backup and Restore ───────────────────────────────────────┐
 │                                                                                                       │
@@ -80,13 +56,6 @@ git count-objects -vH
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
----
-
-## GitLab Instance Backup
-
-### Backup with `gitlab-backup`
-
 ```bash
 # Create a full backup (stops writes briefly for consistency)
 sudo gitlab-backup create
@@ -101,28 +70,12 @@ ls -lh /var/opt/gitlab/backups/
 # Exclude specific data to speed up backup
 sudo gitlab-backup create SKIP=artifacts,lfs,uploads,registry
 ```
-
-The backup archive contains:
-
-| Component | Included |
-|-----------|----------|
-| PostgreSQL database dump | Yes |
-| Git repositories | Yes |
-| Wiki repositories | Yes |
-| CI/CD artifacts | Optional (`SKIP=artifacts`) |
-| LFS objects | Optional (`SKIP=lfs`) |
-| Container registry | No (backup separately) |
-| GitLab configuration (`/etc/gitlab/`) | **No — backup manually** |
-
 ```bash
 # Always backup configuration separately — it contains secrets
 sudo tar -czf /secure/gitlab-config-$(date +%Y%m%d).tar.gz \
   /etc/gitlab/gitlab.rb \
   /etc/gitlab/gitlab-secrets.json
 ```
-
-### Scheduled GitLab Backup (Cron)
-
 ```bash
 # /etc/cron.d/gitlab-backup
 0 2 * * * root /opt/gitlab/bin/gitlab-backup create CRON=1 2>&1 | tee -a /var/log/gitlab-backup.log
@@ -131,9 +84,6 @@ sudo tar -czf /secure/gitlab-config-$(date +%Y%m%d).tar.gz \
 # /etc/gitlab/gitlab.rb:
 # gitlab_rails['backup_keep_time'] = 604800   # seconds = 7 days
 ```
-
-### Backup to S3
-
 ```ruby
 # /etc/gitlab/gitlab.rb
 gitlab_rails['backup_upload_connection'] = {
@@ -145,13 +95,6 @@ gitlab_rails['backup_upload_connection'] = {
 gitlab_rails['backup_upload_remote_directory'] = 'my-gitlab-backups'
 gitlab_rails['backup_multipart_chunk_size']    = 104857600   # 100 MB
 ```
-
----
-
-## GitHub Repository Archive
-
-### Single Repository Archive (GitHub API)
-
 ```bash
 # Request an archive (GitHub generates a tarball of source at HEAD)
 curl -L \
@@ -163,11 +106,6 @@ curl -L \
 # Full git history — use mirror clone instead
 git clone --mirror git@github.com:ORG/REPO.git repo.git
 ```
-
-### GitHub Enterprise — Backup Utilities
-
-GitHub provides the open-source `github-backup-utils` for GHES:
-
 ```bash
 # Install
 git clone https://github.com/github/backup-utils.git /opt/github-backup-utils
@@ -184,20 +122,10 @@ GHE_EXTRA_USER_DISK_REQUIRED_PERCENTAGE=50
 # Verify backup
 /opt/github-backup-utils/bin/ghe-backup-verify
 ```
-
-Backup schedule (recommended):
-
 ```bash
 # /etc/cron.d/ghes-backup
 0 */4 * * * root /opt/github-backup-utils/bin/ghe-backup >> /var/log/ghes-backup.log 2>&1
 ```
-
----
-
-## Restore Procedures
-
-### Restore a Single Repository from Mirror
-
 ```bash
 # Option 1: Push mirror to a new remote
 cd /backup/repo.git
@@ -207,9 +135,6 @@ git push --mirror
 # Option 2: Clone from the mirror locally
 git clone /backup/repo.git ~/restored-repo
 ```
-
-### Restore GitLab Instance
-
 ```bash
 # 1. Ensure GitLab version matches the backup version
 sudo gitlab-rake gitlab:env:info | grep "GitLab information"
@@ -232,9 +157,6 @@ sudo gitlab-ctl restart
 sudo gitlab-rake gitlab:check SANITIZE=true
 sudo gitlab-rake gitlab:doctor:secrets
 ```
-
-### Restore GitHub Enterprise from Backup Utils
-
 ```bash
 # Restore to a fresh GHES appliance (same version)
 /opt/github-backup-utils/bin/ghe-restore github-new.example.com
@@ -242,13 +164,6 @@ sudo gitlab-rake gitlab:doctor:secrets
 # Restore specific snapshot
 /opt/github-backup-utils/bin/ghe-restore -s /backup/ghes/20240506T020000 github-new.example.com
 ```
-
----
-
-## Bare Repo Backup
-
-A bare clone contains only the `.git` contents without a working tree. Suitable for scripted batch backups.
-
 ```bash
 # Create bare backup
 git clone --bare https://github.com/org/repo.git /backup/repo.git
@@ -264,13 +179,6 @@ git clone /backup/repo.bundle ~/restored-repo
 git -C ~/restored-repo remote set-url origin https://github.com/org/repo.git
 git -C ~/restored-repo fetch origin
 ```
-
----
-
-## Backup Verification Steps
-
-Always validate backups after creation. A backup that cannot be restored is not a backup.
-
 ```bash
 #!/usr/bin/env bash
 # verify-backup.sh
@@ -294,14 +202,3 @@ git -C "$BACKUP_PATH" show-ref | head -20
 
 echo "Verification complete for: $BACKUP_PATH"
 ```
-
-### Verification Checklist
-
-| Check | Command | Expected Result |
-|-------|---------|-----------------|
-| Object integrity | `git fsck --full` | No errors or broken links |
-| Ref count | `git show-ref \| wc -l` | Matches source repository |
-| Commit count | `git rev-list --count --all` | Matches source |
-| Pack files valid | `git verify-pack -v *.idx` | No checksum errors |
-| Latest commit accessible | `git log -1` | Shows expected HEAD commit |
-| Tags present | `git tag -l \| wc -l` | Matches source repository |

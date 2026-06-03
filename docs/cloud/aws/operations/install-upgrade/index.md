@@ -1,16 +1,3 @@
-# AWS — Install & Upgrade
-
-
-<div class="kb-summary">
-> Part of the [Operations](../index.md) section.
-</div>
-
----
-
-## EC2 Patching
-
-EC2 instances patched monthly via AWS Systems Manager Patch Manager:
-
 ```bash
 # View patch compliance status
 aws ssm describe-instance-patch-states --instance-ids <i-xxxx>
@@ -25,6 +12,8 @@ aws ssm send-command \
 # List instances with missing patches
 aws ssm describe-instance-patches --instance-id <i-xxxx> \
     --filters "Key=State,Values=Missing"
+```
+
 ```text
 ┌───────────────────────────────── AWS Operations — Install & Upgrade ──────────────────────────────────┐
 │                                                                                                       │
@@ -72,9 +61,6 @@ aws ssm describe-instance-patches --instance-id <i-xxxx> \
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-## Lambda Runtime Deprecation
-
 ```bash
 # List Lambda functions by runtime
 aws lambda list-functions --query 'Functions[*].[FunctionName,Runtime]' --output table | sort
@@ -82,11 +68,6 @@ aws lambda list-functions --query 'Functions[*].[FunctionName,Runtime]' --output
 # Update runtime (requires testing)
 aws lambda update-function-configuration --function-name <name> --runtime python3.12
 ```
-
-Check deprecation dates: [AWS Lambda runtimes](https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtimes.html) — review quarterly.
-
-## EKS Upgrade
-
 ```bash
 # Check current EKS version
 aws eks describe-cluster --name <cluster-name> --query 'cluster.version'
@@ -101,20 +82,6 @@ aws eks update-cluster-version --name <cluster-name> --kubernetes-version 1.30
 aws eks update-nodegroup-version --cluster-name <cluster-name> \
     --nodegroup-name <nodegroup-name> --kubernetes-version 1.30
 ```
-
-EKS support policy: N-2 minor versions. Cluster running unsupported version → no patches or support.
-
-## Account Decommissioning
-
-1. Disable IAM users and access keys in the account
-2. Suspend account workloads (stop EC2, scale down ECS)
-3. Export data and close active services
-4. Move account to Suspended OU in Organizations
-5. After 90-day hold: close account via Billing Console
-6. Update CMDB; remove from monitoring inventory
-
-## Reserved Instance Management
-
 ```bash
 # Check RI utilisation
 aws ce get-reservation-utilization --time-period Start=2026-01-01,End=2026-01-31
@@ -123,5 +90,3 @@ aws ce get-reservation-utilization --time-period Start=2026-01-01,End=2026-01-31
 aws ec2 describe-reserved-instances --filters "Name=state,Values=active" \
     --query "ReservedInstances[?End<='$(date -d '+90 days' +%Y-%m-%d)T23:59:59'].[ReservedInstancesId,InstanceType,End]"
 ```
-
-Alert 90 days before RI expiry — initiate renewal or Savings Plan conversion.

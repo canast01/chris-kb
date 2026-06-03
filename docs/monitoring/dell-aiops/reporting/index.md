@@ -1,25 +1,3 @@
-# Dell AIOps: Executive Reports, Trend Analysis, and Capacity Planning Exports
-
-
-<div class="kb-summary">
-Dell AIOps extends CloudIQ reporting with AI-enriched content: trend analysis, predicted capacity curves, and executive-level infrastructure health summaries. This page covers the available report types, scheduling, and export options.
-</div>
-
-## AIOps Report Types
-
-Navigation: **CloudIQ > AIOps > Reports**
-
-| Report | Audience | Frequency |
-|---|---|---|
-| Executive Health Summary | CTO/CIO, management | Monthly |
-| Infrastructure Trend Analysis | Architects, engineers | Weekly |
-| Capacity Planning Forecast | Storage administrators | Monthly |
-| Recommendations Effectiveness | Operations leads | Monthly |
-| Anomaly and Incident Timeline | Operations, security | On-demand / weekly |
-| Bottleneck History | Performance engineers | On-demand |
-
-## Generating an AIOps Report On-Demand
-
 ```bash
 # Generate an executive health summary report
 curl -sk -X POST \
@@ -48,6 +26,8 @@ curl -sk -X GET \
 curl -sk -X GET "<download_url>" \
   -H "Authorization: Bearer <access_token>" \
   -o aiops-exec-summary.pdf
+```
+
 ```text
 ┌─────────────────────────────────────── Dell AIOps — Reporting ────────────────────────────────────────┐
 │                                                                                                       │
@@ -79,13 +59,3 @@ curl -sk -X GET "<download_url>" \
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-## Common Reporting Issues
-
-| Issue | Likely Cause | Fix |
-|---|---|---|
-| Executive summary shows incomplete data | Some systems have no telemetry | Check system connectivity status before generating |
-| Prediction section blank | < 14 days of data | Allow longer data collection period |
-| CSV export missing columns | Old API version | Upgrade to latest API endpoint version |
-| Report not delivered | Email relay not configured | Check CloudIQ notification settings |
-| Trend shows large unexplained spike | Bulk data migration or test | Note in report commentary; exclude from trend if needed |

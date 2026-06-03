@@ -1,14 +1,3 @@
-# PowerShell — Script Reference
-
-
-<div class="kb-summary">
-Script Reference reference covering VM Health Report, Datastore Utilization Alert.
-</div>
-
-## VM Health Report
-
-Generates a per-cluster VM health report: power state, CPU/memory, snapshot age, and datastore utilization. Outputs to CSV and console.
-
 ```powershell
 # vm-health-report.ps1
 # Usage: .\vm-health-report.ps1 -vCenter <hostname> -OutputPath .\report.csv
@@ -41,6 +30,8 @@ $report | Export-Csv -Path $OutputPath -NoTypeInformation
 $report | Format-Table -AutoSize
 Write-Host "`nReport saved: $OutputPath" -ForegroundColor Green
 Disconnect-VIServer -Confirm:$false
+```
+
 ```text
 ┌────────────────────────────────── PowerShell — Scripts (Operations) ──────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

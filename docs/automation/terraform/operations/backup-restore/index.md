@@ -1,14 +1,3 @@
-# Terraform — Backup & Restore
-
-
-<div class="kb-summary">
-Backup & Restore reference covering State File Backup, State Recovery After Corruption, Checklist Before Destructive Operations.
-</div>
-
-## State File Backup
-
-The Terraform state file is the source of truth for managed infrastructure. Back it up before any destructive operation.
-
 ```bash
 # Local state — copy with timestamp
 cp terraform.tfstate "terraform.tfstate.bak-$(date +%Y%m%d-%H%M%S)"
@@ -19,6 +8,8 @@ aws s3 cp s3://my-tf-state/project/terraform.tfstate \
 
 # Pull remote state locally for inspection
 terraform state pull > terraform.tfstate.local-$(date +%Y%m%d)
+```
+
 ```text
 ┌──────────────────────────────────── Terraform — Backup & Restore ─────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -43,11 +34,3 @@ terraform state pull > terraform.tfstate.local-$(date +%Y%m%d)
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-## Checklist Before Destructive Operations
-
-- [ ] Pull current state: `terraform state pull > pre-op-state.tfstate`
-- [ ] Tag the backup with ticket/date
-- [ ] Confirm S3 versioning is enabled on the state bucket
-- [ ] Confirm DynamoDB state lock table exists
-- [ ] Run `terraform plan` and review output before `apply`

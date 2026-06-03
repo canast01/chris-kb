@@ -1,12 +1,3 @@
-# API Connectivity
-
-
-<div class="kb-summary">
-Test, diagnose, and maintain connectivity to internal and external APIs across infrastructure and platform services.
-</div>
-
-## Basic Connectivity Tests
-
 ```bash
 # HTTP status check
 curl -o /dev/null -sw "%{http_code} %{time_total}s\n" https://api.example.com/health
@@ -26,6 +17,8 @@ curl -s -X POST \
   -H "Authorization: Bearer <token>" \
   -d '{"key":"value"}' \
   https://api.example.com/v1/resource | jq .
+```
+
 ```text
 ┌─────────────────────────────────── Integration — API Connectivity ────────────────────────────────────┐
 │                                                                                                       │
@@ -59,9 +52,6 @@ curl -s -X POST \
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-## Authentication Checks
-
 ```bash
 # OAuth2 — obtain token via client credentials flow
 curl -s -X POST https://auth.example.com/oauth/token \
@@ -77,9 +67,6 @@ aws sts get-caller-identity    # verify identity before API calls
 # Check token expiry (JWT)
 echo "<jwt-payload-base64>" | base64 -d | jq .exp | xargs -I {} date -d @{}
 ```
-
-## Platform API Health Checks
-
 ```bash
 # Azure Resource Manager API
 az rest --method get --url "https://management.azure.com/subscriptions?api-version=2022-12-01" | jq '.value | length'
@@ -94,9 +81,6 @@ kubectl get --raw /readyz
 # Vault (HashiCorp)
 curl -s http://vault:8200/v1/sys/health | jq '{sealed:.sealed,initialized:.initialized}'
 ```
-
-## Rate Limiting and Throttling
-
 ```bash
 # Check rate limit headers in response
 curl -v https://api.example.com/endpoint 2>&1 | grep -i "x-rate-limit\|retry-after\|x-ratelimit"
@@ -104,9 +88,6 @@ curl -v https://api.example.com/endpoint 2>&1 | grep -i "x-rate-limit\|retry-aft
 # Test with retry on 429
 curl --retry 5 --retry-delay 10 --retry-max-time 120 https://api.example.com/endpoint
 ```
-
-## API Monitoring Script
-
 ```bash
 #!/bin/bash
 # Quick health check across multiple endpoints
@@ -121,15 +102,3 @@ for name in "${!ENDPOINTS[@]}"; do
   echo "$name: HTTP $code"
 done
 ```
-
-## Troubleshooting
-
-| Symptom | Check | Action |
-|---|---|---|
-| `curl: (6) Could not resolve host` | DNS failure | `dig` hostname; check `/etc/resolv.conf`; check DNS server |
-| `SSL: certificate verify failed` | CA not trusted | Add CA cert; check `CURL_CA_BUNDLE` env var |
-| HTTP 401 Unauthorized | Token expired or wrong scope | Refresh token; verify scope includes required permission |
-| HTTP 403 Forbidden | Correct identity but insufficient permissions | Review IAM policy / RBAC role assignment |
-| HTTP 429 Too Many Requests | Rate limit hit | Implement exponential backoff; check rate limit headers |
-| HTTP 503 / timeout | API endpoint down or overloaded | Check API status page; retry with backoff; escalate to service owner |
-| Response time > 5s | Network latency? API overloaded? | `traceroute` to API host; check API latency metrics on provider side |

@@ -1,11 +1,3 @@
-# VCF — Design Standards
-
-
-<div class="kb-summary">
-Design Standards reference covering Supported Configurations, Compliance Checks in SDDC Manager.
-</div>
-
-VCF Physical and Logical Design Requirements
 ```text
 ┌───────────────────────────── VMware Cloud Foundation — Design Standards ──────────────────────────────┐
 │                                                                                                       │
@@ -100,8 +92,6 @@ VCF Physical and Logical Design Requirements
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-                         │
-                         ▼
 ```text
 ```
 ```text
@@ -116,6 +106,8 @@ VCF Physical and Logical Design Requirements
 │  DNS: forward + reverse for all FQDNs before deploy                                                   │
 │  NTP: all components synchronised                                                                     │
 └─────────────────────────────────────────────────────┘
+```
+
 ```powershell
 ┌───────────────────────────── VMware Cloud Foundation — Design Standards ──────────────────────────────┐
 │                                                                                                       │

@@ -1,11 +1,3 @@
-# VCF Security — Authentication
-
-
-<div class="kb-summary">
-Authentication reference covering Common Issues, Related Reference.
-</div>
-
-VCF Authentication Flow
 ```text
 ┌────────────────────────────── VMware Cloud Foundation — Authentication ───────────────────────────────┐
 │                                                                                                       │
@@ -100,9 +92,6 @@ VCF Authentication Flow
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-                       │ passes auth context to
-          ┌────────────┼────────────┐
-          ▼            ▼            ▼
 ```text
 ```
 ```text
@@ -114,6 +103,8 @@ VCF Authentication Flow
 │ source       │ │ source       │ │ component creds                                                     │
 │              │ │              │ │ on schedule                                                         │
 └──────────────┘ └──────────────┘ └──────────────────┘
+```
+
 ```text
 ┌────────────────────────────── VMware Cloud Foundation — Authentication ───────────────────────────────┐
 │                                                                                                       │
@@ -161,45 +152,3 @@ VCF Authentication Flow
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-## Common Issues
-
-- Failed or stuck tasks.
-- Certificate, DNS, or authentication issues.
-- Capacity pressure.
-- Service health warnings.
-- Version mismatch after maintenance.
-- Monitoring gaps.
-
-### Operational Tasks
-
-| Task | Command |
-|---|---|
-| Review alarms and events. |  |
-| Confirm ownership and support notes. |  |
-| Validate dependencies. |  |
-| Document changes. |  |
-| Confirm monitoring coverage. |  |
-
-### Upgrade Notes
-
-- Confirm compatibility.
-- Review known issues.
-- Confirm rollback plan.
-- Validate health before and after the change.
-
-### Best Practices
-
-| Recommendation | Detail |
-|---|---|
-| Keep naming consistent. | Keep naming consistent. |
-| Keep versions aligned. | Keep versions aligned. |
-| Avoid unsupported version combinations. | Avoid unsupported version combinations. |
-| Document exceptions. | Document exceptions. |
-| Validate after every change. | Validate after every change. |
----
-
-## Related Reference
-
-- [Standard LDAP Integration](../../../../../security/ldap-integration/index.md) — field reference, service account standards, TLS requirements, and connectivity testing
-- [Standard SAML Configuration](../../../../../security/saml-configuration/index.md) — SP/IdP setup, Azure AD and Okta steps, attribute mapping, and security requirements

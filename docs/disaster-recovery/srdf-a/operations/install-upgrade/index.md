@@ -1,25 +1,3 @@
-# SRDF/A — Install & Upgrade
-
-
-<div class="kb-summary">
-> Part of the [SRDF/A](../../index.md) reference.
-</div>
-
----
-## Version Compatibility
-
-SRDF/A feature availability is tied to the HYPERMAX OS version running on each PowerMax array. Both source and target arrays must run a mutually supported version — check the **Dell EMC Simple Support Matrix** before any firmware upgrade.
-
-For mixed-version environments (e.g., during staged upgrades), confirm the specific SRDF/A features in use (cascade, adaptive copy, SRDF/Metro) are supported across both array OS versions.
-
----
-
-## Firmware Upgrade Procedure
-
-Active SRDF/A pairs must be handled carefully during array firmware upgrades (Non-Disruptive Upgrades — NDU).
-
-**Standard procedure:**
-
 ```bash
 # Step 1 — Suspend SRDF/A replication on the device group
 symrdf -g <dgname> -sid <r1_sid> suspend -noprompt
@@ -38,6 +16,8 @@ symrdf -g <dgname> -sid <r1_sid> resume -noprompt
 # Step 6 — Verify pair state returns to Consistent
 symrdf -g <dgname> -sid <r1_sid> query
 # Wait for SyncInProg → Consistent transition before closing the change window
+```
+
 ```text
 ┌───────────────────────────────────── SRDF/A — Install & Upgrade ──────────────────────────────────────┐
 │                                                                                                       │
@@ -90,14 +70,3 @@ symrdf -g <dgname> -sid <r1_sid> query
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-## SRDF/A to SRDF/S Migration
-
-Migrating an existing SRDF/A group to synchronous (SRDF/S) requires:
-
-1. Confirming the WAN link RTT is ≤5ms sustained.
-2. Suspending the existing SRDF/A pair.
-3. Converting the RDF group type to synchronous via Unisphere (requires brief application outage or scheduled maintenance).
-4. Resuming and verifying the pair enters `Synchronized` state.
-
-Consult Dell Professional Services before converting production SRDF groups between async and sync modes.

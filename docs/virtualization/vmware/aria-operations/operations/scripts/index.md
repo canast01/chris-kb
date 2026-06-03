@@ -1,11 +1,3 @@
-# Aria Operations — Scripts
-
-
-<div class="kb-summary">
-Scripts reference covering Export Active Alerts to CSV (Python), Capacity Report (PowerShell), Cluster Health Check (Bash), Alert Export via REST (Bash / curl), Related Sections.
-</div>
-
-Aria Operations API — Script Interaction Pattern
 ```text
 ┌─────────────────────────────────────── Aria Operations Scripts ───────────────────────────────────────┐
 │                                                                                                       │
@@ -96,8 +88,6 @@ Aria Operations API — Script Interaction Pattern
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-                       │ 2. Parse JSON response
-                       ▼
 ```text
 ```
 ```text
@@ -108,6 +98,8 @@ Aria Operations API — Script Interaction Pattern
 │  → ITSM integration                                                                                   │
 │  NOTE: re-authenticate every 25 min for long runs                                                     │
 └─────────────────────────────────────────────────────┘
+```
+
 ```text
 ┌─────────────────────────────────────── Aria Operations Scripts ───────────────────────────────────────┐
 │                                                                                                       │
@@ -153,11 +145,6 @@ Aria Operations API — Script Interaction Pattern
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
----
-
-## Capacity Report (PowerShell)
-
 ```powershell
 ## Export cluster capacity summary via REST API
 $AriaOpsHost = "aria-ops.domain.local"
@@ -173,11 +160,6 @@ foreach ($cluster in $Response.resourceList) {
     Write-Output "Cluster: $($cluster.resourceKey.name)"
 }
 ```
-
----
-
-## Cluster Health Check (Bash)
-
 ```bash
 #!/usr/bin/env bash
 ## Quick Aria Operations cluster health check
@@ -194,11 +176,6 @@ echo ""
 echo "=== Service Status ==="
 ssh admin@$HOST "vracli status"
 ```
-
----
-
-## Alert Export via REST (Bash / curl)
-
 ```bash
 #!/usr/bin/env bash
 HOST="aria-ops.domain.local"
@@ -220,11 +197,3 @@ curl -sk -H "Authorization: vRealizeOpsToken $TOKEN" \
 
 echo "Alerts saved to /tmp/aria-ops-alerts-$(date +%Y%m%d).json"
 ```
-
----
-
-## Related Sections
-
-- [CLI Reference](../cli-reference/index.md) — vracli and REST API basics
-- [Operations](../index.md) — operational runbooks
-- [Troubleshooting](../../troubleshooting/index.md) — diagnostic use cases

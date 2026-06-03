@@ -1,22 +1,3 @@
-# SANnav — Scripts
-
-
-<div class="kb-summary">
-> Part of the [SANnav](../../index.md) reference.
-</div>
-
----
-
-## Overview
-
-This page contains reusable scripts for automating common SANnav operations via the REST API. All scripts use `curl` and Python 3 (standard library only). Adapt credentials and endpoint URLs for your environment before use.
-
----
-
-## Authentication Helper
-
-Save this as a sourced function or include at the top of each script:
-
 ```bash
 #!/usr/bin/env bash
 # sannav-auth.sh — obtain and export a SANnav API token
@@ -48,6 +29,8 @@ cleanup() {
   echo "Session logged out"
 }
 trap cleanup EXIT
+```
+
 ```text
 ┌───────────────────────────────── Brocade SANnav — Operations Scripts ─────────────────────────────────┐
 │                                                                                                       │
@@ -95,13 +78,6 @@ trap cleanup EXIT
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
----
-
-## Offline Port Report
-
-Lists all F_Ports and E_Ports that are not Online — useful for daily port health reporting:
-
 ```python
 #!/usr/bin/env python3
 # sannav-offline-ports.py
@@ -151,13 +127,6 @@ finally:
           headers={"Authorization": f"Bearer {TOKEN}"})
     urllib.request.urlopen(req, context=ctx).close()
 ```
-
----
-
-## Zone Set Export (All Fabrics)
-
-Exports the active zone set for each fabric to a dated JSON file — run as a nightly cron job:
-
 ```bash
 #!/usr/bin/env bash
 # sannav-zone-export.sh
@@ -203,13 +172,6 @@ curl -sk -X DELETE "${SANNAV_HOST}/rest/logout" \
 
 echo "Zone export complete: $(date)"
 ```
-
----
-
-## Firmware Version Compliance Check
-
-Checks all switches against a defined minimum firmware version baseline and reports non-compliant switches:
-
 ```python
 #!/usr/bin/env python3
 # sannav-firmware-check.py

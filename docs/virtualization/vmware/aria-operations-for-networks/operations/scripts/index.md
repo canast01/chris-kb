@@ -1,14 +1,3 @@
-# Aria Operations for Networks — Scripts
-
-
-<div class="kb-summary">
-Scripts reference covering Authenticate and Get API Token, Get Flows for a Source VM, Get All Open Problems, Export Security Recommendations to CSV, Check Data Source Health (Monitoring Integration) and 2 more sections.
-</div>
-
----
-
-## Authenticate and Get API Token
-
 ```python
 #!/usr/bin/env python3
 import requests, json, csv
@@ -31,6 +20,8 @@ def get_token():
 
 TOKEN = get_token()
 HEADERS = {"Authorization": f"NetworkInsight {TOKEN}", "Content-Type": "application/json"}
+```
+
 ```text
 ┌──────────────────────────────────────────── vRNI Scripts ─────────────────────────────────────────────┐
 │                                                                                                       │
@@ -76,11 +67,6 @@ HEADERS = {"Authorization": f"NetworkInsight {TOKEN}", "Content-Type": "applicat
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
----
-
-## Get All Open Problems
-
 ```python
 def get_open_problems():
     url = f"https://{VRNI_HOST}/api/ni/problems"
@@ -102,11 +88,6 @@ def get_open_problems():
 
 get_open_problems()
 ```
-
----
-
-## Export Security Recommendations to CSV
-
 ```python
 def export_security_recommendations(output_file="vrni-security-recs.csv"):
     url = f"https://{VRNI_HOST}/api/ni/micro-segmentation/recommendations"
@@ -131,11 +112,6 @@ def export_security_recommendations(output_file="vrni-security-recs.csv"):
 
 export_security_recommendations()
 ```
-
----
-
-## Check Data Source Health (Monitoring Integration)
-
 ```python
 def check_data_source_health():
     """Returns list of unhealthy data sources. Exit 1 if any found."""
@@ -162,11 +138,6 @@ def check_data_source_health():
 
 check_data_source_health()
 ```
-
----
-
-## Bulk-Add IPs to Application Group
-
 ```python
 def add_ips_to_application(application_id, ip_list):
     url = f"https://{VRNI_HOST}/api/ni/groups/applications/{application_id}/ip-addresses"
@@ -180,11 +151,6 @@ add_ips_to_application(
     ip_list=["10.10.1.50", "10.10.1.51", "10.10.1.52"]
 )
 ```
-
----
-
-## Daily Health Report (Cron-ready)
-
 ```python
 #!/usr/bin/env python3
 """

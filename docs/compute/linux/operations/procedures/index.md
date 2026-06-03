@@ -1,14 +1,3 @@
-# Linux — Procedures
-
-
-<div class="kb-summary">
-Day-to-day operational tasks and how-to guides.
-</div>
-
-## Change Readiness Checks
-
-Run these checks before any change activity.
-
 ```bash
 # Confirm system is healthy before making changes
 uptime
@@ -21,6 +10,8 @@ dpkg -l | awk 'NR>5' > /tmp/pre-change-packages.txt   # Ubuntu
 
 # Capture running kernel
 uname -r
+```
+
 ```text
 ┌──────────────────────────────────── Linux Operations — Procedures ────────────────────────────────────┐
 │                                                                                                       │
@@ -65,9 +56,6 @@ uname -r
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-## Memory
-
 ```bash
 # Detailed memory breakdown
 cat /proc/meminfo
@@ -82,9 +70,6 @@ dmesg | grep -i "out of memory" | tail -10
 # Drop caches if available memory is low (safe on production — does not affect file data)
 echo 3 > /proc/sys/vm/drop_caches
 ```
-
-## Network Operations
-
 ```bash
 # Check interface state and IP addresses
 ip addr show
@@ -116,9 +101,6 @@ firewall-cmd --list-services
 # Check iptables directly
 iptables -L -n -v
 ```
-
-## Log Investigation
-
 ```bash
 # Search journal for a specific service over a time range
 journalctl -u sshd --since "2024-01-15 08:00" --until "2024-01-15 09:00" --no-pager
@@ -136,9 +118,6 @@ cat /var/log/auth.log # Ubuntu/Debian
 dmesg -T | tail -50
 dmesg -T | grep -i "error\|warning\|fail"
 ```
-
-## User and Access Management
-
 ```bash
 # List logged-in users
 who
@@ -162,11 +141,6 @@ chage -l <username>
 visudo -c   # validate sudoers file
 ls -la /etc/sudoers.d/
 ```
-
----
-
-## systemd Service Dependency Model
-
 ```mermaid
 flowchart TD
     hardwareInit["hardware.target\ndevice enumeration"]
@@ -185,9 +159,6 @@ flowchart TD
     networkOnline --> rsyslog
     basic --> auditd
 ```
-
-## Service Management
-
 ```bash
 # List all running services
 systemctl list-units --type=service --state=running
@@ -207,9 +178,6 @@ systemctl status <service>
 journalctl -u <service> -n 100 --no-pager
 journalctl -u <service> --since "1 hour ago"
 ```
-
-### Listing Services
-
 ```bash
 # All active services
 systemctl list-units --type=service --state=active
@@ -223,9 +191,6 @@ systemctl list-units --type=service --all
 # Services that are enabled but not running
 systemctl list-units --type=service --state=inactive | grep enabled
 ```
-
-### Service Dependencies
-
 ```bash
 # What does a service depend on?
 systemctl list-dependencies <service>
@@ -239,9 +204,6 @@ systemctl cat <service>
 # Show all properties
 systemctl show <service>
 ```
-
-### Creating a Custom Service
-
 ```ini
 # /etc/systemd/system/myapp.service
 [Unit]
@@ -262,30 +224,11 @@ SyslogIdentifier=myapp
 [Install]
 WantedBy=multi-user.target
 ```
-
 ```bash
 # Load and start the new unit
 systemctl daemon-reload
 systemctl enable --now myapp
 ```
-
-### Common Infrastructure Services
-
-| Service | Unit Name | Description |
-|---|---|---|
-| SSH | `sshd` | Remote access |
-| NTP (chrony) | `chronyd` | Time synchronisation |
-| DNS cache | `systemd-resolved` | Local DNS resolution |
-| Firewall | `firewalld` / `ufw` | Host-based firewall |
-| Audit daemon | `auditd` | Syscall and file auditing |
-| Log daemon | `rsyslog` | Remote syslog forwarding |
-| Cron | `crond` / `cron` | Scheduled jobs |
-| LVM monitoring | `lvm2-monitor` | Thin pool and VG monitoring |
-| Multipath | `multipathd` | SAN multipath I/O |
-| Network manager | `NetworkManager` | Interface and connection management |
-
-### Service Resource Limits
-
 ```bash
 # Check current limits on a running service
 systemctl show <service> | grep -E "LimitNOFILE|LimitNPROC|MemoryMax|CPUQuota"
@@ -300,9 +243,6 @@ EOF
 systemctl daemon-reload
 systemctl restart <service>
 ```
-
-### Masking and Unwanted Services
-
 ```bash
 # Mask a service (prevents any start, even manual)
 systemctl mask <service>
@@ -313,9 +253,6 @@ systemctl unmask <service>
 # Services to disable on production servers (no UI needed)
 systemctl disable --now bluetooth cups avahi-daemon
 ```
-
-### Troubleshooting a Failed Service
-
 ```bash
 # 1. Check status for the error message
 systemctl status <service> -l
@@ -332,13 +269,6 @@ systemd-analyze verify /etc/systemd/system/<service>.service
 # 5. Test ExecStart command manually as the service user
 sudo -u <service-user> /path/to/binary --args
 ```
-
-## Patching
-
-Patch management procedures for RHEL 8/9 and Ubuntu 22.04 LTS servers.
-
-### Patching Flow
-
 ```mermaid
 flowchart TD
     preCheck["Pre-patch checks\nuptime · systemctl --failed · df -h"]
@@ -355,9 +285,6 @@ flowchart TD
     rebootNeeded -- No --> postValidate
     postValidate --> done
 ```
-
-### Pre-Patch Checklist
-
 ```bash
 # 1. Confirm system is healthy before patching
 uptime
@@ -375,9 +302,6 @@ uname -r
 dnf check-update   # RHEL
 apt list --upgradable 2>/dev/null   # Ubuntu
 ```
-
-### RHEL — dnf Patching
-
 ```bash
 # List available updates
 dnf check-update
@@ -397,9 +321,6 @@ dnf update --exclude=kernel* -y
 # List installed security advisories
 dnf updateinfo list security installed | head -20
 ```
-
-### RHEL — yum history (Rollback)
-
 ```bash
 # List recent transactions
 yum history list | head -20
@@ -410,9 +331,6 @@ yum history info <transaction-id>
 # Undo a specific transaction (rollback)
 yum history undo <transaction-id>
 ```
-
-### Ubuntu — apt Patching
-
 ```bash
 # Refresh package index
 apt update
@@ -429,9 +347,6 @@ apt full-upgrade -y
 # Remove unused packages after upgrade
 apt autoremove -y
 ```
-
-### Kernel Updates and Reboot
-
 ```bash
 # Check if a reboot is required (RHEL)
 needs-restarting -r
@@ -440,9 +355,6 @@ needs-restarting -r
 # Check if a reboot is required (Ubuntu)
 ls /var/run/reboot-required 2>/dev/null && echo "Reboot required" || echo "No reboot needed"
 ```
-
-### Post-Patch Validation
-
 ```bash
 # Confirm updated kernel is running (after reboot)
 uname -r
@@ -457,12 +369,3 @@ systemctl --failed
 rpm -qa --qf "%{NAME}-%{VERSION}-%{RELEASE}.%{ARCH}\n" | sort > /tmp/post-patch-packages.txt
 diff /tmp/pre-patch-packages.txt /tmp/post-patch-packages.txt
 ```
-
-### Patch Schedule Standards
-
-| Server Tier | Patch Frequency | Reboot Window |
-|---|---|---|
-| Non-production | Weekly (automated) | Immediate on completion |
-| Production — non-critical | Monthly (change-controlled) | Weekend 02:00–06:00 |
-| Production — critical | Quarterly OR emergency (CVE ≥ 9.0) | Agreed maintenance window |
-| Emergency (CVSS ≥ 9.0) | Within 72 hours | Emergency change process |

@@ -1,14 +1,3 @@
-# InsightIQ: Collector Connectivity, Data Gaps, and Performance Issues
-
-
-<div class="kb-summary">
-This page covers common InsightIQ operational problems: connectivity failures between the InsightIQ collector and PowerScale clusters, data collection gaps, and performance degradation on the InsightIQ appliance itself.
-</div>
-
-## Collector Connectivity Checks
-
-InsightIQ communicates with PowerScale clusters via the OneFS platform API (port 8080 HTTPS). Connectivity failures result in data gaps.
-
 ```bash
 # Verify InsightIQ can reach the PowerScale API from the appliance
 ssh admin@insightiq.example.com
@@ -25,6 +14,8 @@ sudo tail -f /var/log/insightiq/collector.log
 
 # Restart the collector if it has stopped
 sudo systemctl restart iiq-collector
+```
+
 ```text
 ┌───────────────────────────────────── InsightIQ — Troubleshooting ─────────────────────────────────────┐
 │                                                                                                       │
@@ -56,22 +47,3 @@ sudo systemctl restart iiq-collector
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-Recommended InsightIQ appliance resources:
-
-| Resource | Minimum | Recommended (> 5 clusters) |
-|---|---|---|
-| vCPU | 4 | 8 |
-| Memory | 16 GB | 32 GB |
-| OS Disk | 60 GB | 100 GB |
-| Data Disk | 500 GB | 2 TB |
-
-## Common Troubleshooting Reference
-
-| Problem | First Check | Second Check |
-|---|---|---|
-| No data for cluster | Collector service running | PowerScale API credentials valid |
-| Data stops after upgrade | Collector service restarted | InsightIQ version compatible with OneFS version |
-| Reports taking > 5 minutes | Data retention too long | Reduce retention; add more disk to data volume |
-| Graph shows flat line | Check collection status in UI | Review collector.log for API errors |
-| Cannot log in to InsightIQ UI | Web service status | Reset admin password via console |

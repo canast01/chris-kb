@@ -1,16 +1,3 @@
-# FabricOS — Scripts
-
-
-<div class="kb-summary">
-> Part of the [Operations](../index.md) reference.
-</div>
-
----
-
-## Fabric Health Check (Bash)
-
-SSH to a Brocade switch, collect key diagnostic outputs, parse for errors, and print a PASS/WARNING/CRITICAL summary for each section.
-
 ```bash
 #!/bin/bash
 # brocade_fabric_health.sh
@@ -104,6 +91,8 @@ printf " Overall: %s\n" "$(status_label $overall)"
 echo "=============================="
 
 exit $overall
+```
+
 ```text
 ┌───────────────────────────────────── Brocade Fabric OS — Scripts ─────────────────────────────────────┐
 │                                                                                                       │
@@ -212,13 +201,6 @@ exit $overall
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
----
-
-## ISL Utilization Report (Python)
-
-SSH to every switch in the fabric, collect `portperfshow` on ISL ports, and print a per-switch/per-port utilization table.
-
 ```python
 #!/usr/bin/env python3
 """
@@ -313,17 +295,6 @@ for host in SWITCH_HOSTS:
 print()
 sys.exit(1 if any_warn else 0)
 ```
-
-**Usage:** `SWITCH_HOSTS=192.168.1.10,192.168.1.11 SWITCH_USER=admin python3 brocade_isl_utilization.py`
-
-Requires: Python 3.7+, `pip install paramiko`, SSH key access to switches.
-
----
-
-## Zoning Audit (Perl)
-
-SSH to a switch, parse `cfgshow` and `zoneshow`, and flag common zoning hygiene issues.
-
 ```perl
 #!/usr/bin/env perl
 # brocade_zoning_audit.pl
@@ -427,15 +398,6 @@ exit scalar(grep { /^CRIT/ } @findings) ? 2
      : scalar(grep { /^WARN/ } @findings) ? 1
      : 0;
 ```
-
-**Usage:** `SWITCH_HOST=192.168.1.10 SWITCH_USER=admin perl brocade_zoning_audit.pl`
-
----
-
-## Ansible Config Backup Playbook
-
-Back up Brocade switch configurations via `configupload`, capture firmware version and switch state, and archive with a datestamp.
-
 ```yaml
 ---
 # brocade_backup.yml
@@ -492,17 +454,6 @@ Back up Brocade switch configurations via `configupload`, capture firmware versi
       ansible.builtin.debug:
         msg: "Backup complete for {{ inventory_hostname }} — archive: {{ backup_path }}/{{ inventory_hostname }}_backup_{{ date_stamp }}.tar.gz"
 ```
-
-**Usage:** `ansible-playbook -i inventory brocade_backup.yml`
-
-Requires: Ansible, SSH access to all switches, a backup server reachable via SCP.
-
----
-
-## Daily Check Script (Bash)
-
-SSH to the Brocade switch, confirm it is Online, check for ports in unexpected fault or disabled state, verify fabric connectivity, and flag recent errors.
-
 ```bash
 #!/bin/bash
 # brocade_daily_check.sh
@@ -554,13 +505,6 @@ echo ""
 echo "Daily check: $FAIL failure(s)"
 [ "$FAIL" -gt 0 ] && exit 2 || exit 0
 ```
-
----
-
-## Windows: Brocade Health via Plink (CMD)
-
-Use plink.exe to SSH to a Brocade switch and run key health commands from a Windows PC.
-
 ```batch
 @echo off
 REM brocade-health.bat — requires plink.exe from PuTTY (https://www.putty.org)
@@ -595,13 +539,6 @@ echo ----------------------------------------
 
 echo Done.
 ```
-
----
-
-## Windows: Port Status Report (PowerShell via Plink)
-
-Use PowerShell to call plink and parse Brocade CLI output, finding offline ports or ports with errors.
-
 ```powershell
 # brocade-port-report.ps1
 # Usage: .\brocade-port-report.ps1 -SwitchHost <IP> -SshUser <user> -PlinkPath <path>

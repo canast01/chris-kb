@@ -1,14 +1,3 @@
-# Database Backup Validation
-
-
-<div class="kb-summary">
-Confirm database backups are completing successfully, files are intact, and restores work before they are needed in an actual incident.
-</div>
-
-## Daily Backup Status Checks
-
-### PostgreSQL (pg_basebackup / pgBackRest)
-
 ```bash
 # pgBackRest — check latest backup info
 pgbackrest --stanza=<stanza-name> info
@@ -18,6 +7,8 @@ pgbackrest --stanza=<stanza-name> info --output=json | jq '.[] | .backup[-1]'
 
 # Check WAL archiving is current
 psql -U postgres -c "SELECT last_archived_wal, last_archived_time, last_failed_wal FROM pg_stat_archiver;"
+```
+
 ```text
 ┌──────────────────────────────────── Database — Backup Validation ─────────────────────────────────────┐
 │                                                                                                       │
@@ -56,9 +47,6 @@ psql -U postgres -c "SELECT last_archived_wal, last_archived_time, last_failed_w
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-## Backup File Integrity Check
-
 ```bash
 # PostgreSQL — verify backup with pgBackRest
 pgbackrest --stanza=<stanza-name> check
@@ -69,13 +57,6 @@ xtrabackup --prepare --target-dir=/backup/mysql/latest/
 # SQL Server — verify backup file checksum
 RESTORE VERIFYONLY FROM DISK = '/backup/mssql/mydb_full.bak' WITH CHECKSUM;
 ```
-
-## Test Restore Procedure
-
-Perform test restores to a non-production target on a defined schedule (weekly for critical DBs).
-
-### PostgreSQL Test Restore
-
 ```bash
 # Restore to test instance
 pgbackrest --stanza=<stanza-name> --pg1-path=/var/lib/pgsql/test-restore restore
@@ -83,9 +64,6 @@ pgbackrest --stanza=<stanza-name> --pg1-path=/var/lib/pgsql/test-restore restore
 pg_ctl -D /var/lib/pgsql/test-restore start
 psql -p 5433 -U postgres -c "SELECT count(*) FROM pg_stat_user_tables;"
 ```
-
-### MySQL Test Restore
-
 ```bash
 # Copy backup to test directory
 xtrabackup --prepare --target-dir=/restore/mysql-test/
@@ -94,9 +72,6 @@ chown -R mysql: /var/lib/mysql-test/
 mysqld_safe --datadir=/var/lib/mysql-test --socket=/tmp/mysql-test.sock &
 mysql -S /tmp/mysql-test.sock -e "SHOW DATABASES;"
 ```
-
-### SQL Server Test Restore
-
 ```sql
 RESTORE DATABASE [TestRestore] FROM DISK = '/backup/mssql/prod_full.bak'
 WITH MOVE 'proddb' TO '/var/opt/mssql/data/TestRestore.mdf',
@@ -106,32 +81,3 @@ WITH MOVE 'proddb' TO '/var/opt/mssql/data/TestRestore.mdf',
 USE TestRestore;
 SELECT COUNT(*) FROM important_table;
 ```
-
-## Validation Checklist
-
-- [ ] Full backup completed successfully within last 24h
-- [ ] Backup file size is within expected range (not zero, not anomalously small)
-- [ ] Backup integrity verified (checksum / prepare passed)
-- [ ] WAL/binary log archiving current (within 15 min of now)
-- [ ] Test restore performed and database queryable
-- [ ] RPO validated: backup age does not exceed recovery point objective
-- [ ] Backup storage has > 20% free space remaining
-- [ ] Backup job alert cleared in monitoring system
-
-## RPO / RTO Targets
-
-| Backup Type | Frequency | Retention | RPO Target |
-|---|---|---|---|
-| Full backup | Daily | 30 days | 24 hours |
-| Incremental / differential | Every 4–6h | 7 days | 4–6 hours |
-| WAL / binlog archiving | Continuous | 7 days | < 5 minutes (PITR) |
-
-## Troubleshooting
-
-| Symptom | Check | Action |
-|---|---|---|
-| Backup job not running | Scheduler (cron/SQL Agent) enabled? | Verify cron entry or SQL Server Agent job enabled |
-| Backup size unexpectedly small | Partial backup / excluded tables | Review backup command excludes; check tablespace |
-| Restore fails with corruption | Backup file corrupt or incomplete | Restore from prior day's backup; review disk errors |
-| WAL archiving lagging | Disk space or permissions | Check archive target disk space; check pg_wal directory size |
-| Test restore DB inconsistent | Point-in-time alignment | Apply WAL/binlogs to correct point; verify LSN/SCN |

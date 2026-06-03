@@ -1,16 +1,3 @@
-# MDS — Scripts
-
-
-<div class="kb-summary">
-> Part of the [Cisco MDS](../../index.md) reference.
-</div>
-
----
-
-## Fabric Health Check (Bash)
-
-SSH to a Cisco MDS switch, collect key diagnostic outputs, and print a health summary flagging down interfaces, environmental issues, and zoning problems.
-
 ```bash
 #!/bin/bash
 # mds_fabric_health.sh
@@ -91,6 +78,8 @@ echo "==============================="
 printf " Overall: %s\n" "$(status_label $overall)"
 echo "==============================="
 exit $overall
+```
+
 ```text
 ┌───────────────────────────────── Cisco MDS 9000 — Operations Scripts ─────────────────────────────────┐
 │                                                                                                       │
@@ -185,17 +174,6 @@ exit $overall
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-**What you should see**
-
-A list of findings sorted alphabetically. CRIT lines mean a device is logged into a VSAN but has no zone membership (a configuration problem). WARN lines mean a zone contains a WWN that is not currently logged in (could be a stale entry). The summary line shows counts of each. Exit code 0 means clean, 1 means warnings, 2 means critical issues.
-
----
-
-## Interface Error Counter Monitor (Bash)
-
-Collect FC interface error counters from MDS, compare against a stored baseline, and alert on significant increments.
-
 ```bash
 #!/bin/bash
 # mds_interface_errors.sh
@@ -272,62 +250,16 @@ done
 
 exit $rc
 ```
-
-### How to run this script — step by step
-
-**Before you start — what you need**
-- A Linux or macOS machine (or WSL on Windows)
-- SSH key-based authentication to the MDS switch for non-interactive cron use
-- Network access to the MDS switch management IP
-
-**Step 1 — Save the file**
-
-1. Open a text editor
-2. Copy the entire code block above
-3. Save it as `mds_interface_errors.sh` in `/opt/scripts/` or your home directory
-
-**Step 2 — Fill in your details**
-
-Edit these variables near the top of the script:
-
-| Variable | What to put here | How to find it |
-|---|---|---|
-| `MDS_HOST` | IP address of the MDS switch | Switch management IP |
-| `MDS_USER` | SSH username | Usually `admin` |
-| `ALERT_THRESHOLD` | Error delta count to trigger a warning | Default 100 — lower it if you want earlier alerts |
-| `CRIT_THRESHOLD` | Error delta count to trigger critical | Default 1000 |
-
-**Step 3 — Open a terminal**
-
-- **For .sh:** Open Terminal on Linux/Mac, or use Git Bash / WSL on Windows
-
-**Step 4 — Make the script executable and run it manually first**
-
 ```bash
 chmod +x mds_interface_errors.sh
 MDS_HOST=192.168.1.20 MDS_USER=admin ./mds_interface_errors.sh
 ```
-
-**Step 5 — Schedule via cron (optional)**
-
 ```text
 crontab -e
 ```
-Add:
 ```text
 */15 * * * * MDS_HOST=192.168.1.20 MDS_USER=admin /opt/scripts/mds_interface_errors.sh >> /var/log/mds_errors.log 2>&1
 ```
-
-**What you should see**
-
-On the first run a baseline file is created and the output is `OK — all counter deltas within threshold`. On subsequent runs, any interface whose error counter increased by more than the threshold since the last run is reported as WARN or CRIT with the counter name and delta value.
-
----
-
-## Ansible MDS Config Backup Playbook
-
-Capture running configuration, NX-OS version, and active zoning from all MDS switches in the `cisco_mds` group, then archive with a datestamp.
-
 ```yaml
 ---
 # mds_backup.yml
@@ -394,59 +326,14 @@ Capture running configuration, NX-OS version, and active zoning from all MDS swi
       ansible.builtin.debug:
         msg: "Backup complete: {{ backup_path }}/{{ inventory_hostname }}_backup_{{ date_stamp }}.tar.gz"
 ```
-
-### How to run this script — step by step
-
-**Before you start — what you need**
-- A Linux or WSL machine with Ansible installed (`pip install ansible`)
-- An Ansible inventory file listing your MDS switches under the group `cisco_mds`
-- SSH access from the Ansible control machine to each MDS switch
-- A writable backup directory (`backup_path`)
-
-**Step 1 — Save the file**
-
-1. Open a text editor
-2. Copy the entire code block above
-3. Save it as `mds_backup.yml`
-
-**Step 2 — Fill in your details**
-
-Edit the `vars:` section:
-
-| Variable | What to put here | How to find it |
-|---|---|---|
-| `mds_user` | SSH username for the MDS switches | Usually `admin` |
-| `backup_path` | Directory where backups will be saved | Any writable local path, e.g. `/backups/mds` |
-
-**Step 3 — Create an inventory file**
-
-Create a file called `inventory` next to the playbook:
 ```text
 [cisco_mds]
 mds1 ansible_host=192.168.1.20
 mds2 ansible_host=192.168.1.21
 ```
-
-**Step 4 — Open a terminal**
-
-- **For .yml (Ansible):** Requires Linux/WSL. Open a Linux or WSL terminal.
-
-**Step 5 — Run the playbook**
-
 ```text
 ansible-playbook -i inventory mds_backup.yml
 ```
-
-**What you should see**
-
-Ansible runs through each task for every MDS switch in the inventory: creates a temp directory, captures running-config, NX-OS version, and active zoneset, archives them into a `.tar.gz` file, and prints the archive path. Check the backup directory to confirm the files are present.
-
----
-
-## Windows: Cisco MDS Health Check via Plink (CMD)
-
-Use plink.exe to SSH to a Cisco MDS switch and run key NX-OS commands with labelled separator lines to produce a quick health report from a Windows PC.
-
 ```batch
 @echo off
 REM mds-health.bat — Cisco MDS health check via SSH (plink)
@@ -509,62 +396,13 @@ echo ----------------------------------------
 echo.
 echo Done.
 ```
-
-### How to run this script — step by step
-
-**Before you start — what you need**
-- PuTTY installed on Windows — download from https://www.putty.org
-- `plink.exe` available (installed with PuTTY, usually at `C:\Program Files\PuTTY\plink.exe`)
-- SSH access to the Cisco MDS switch management IP
-- MDS switch admin credentials
-
-**Step 1 — Save the file**
-
-1. Open **Notepad** (Windows key → search Notepad)
-2. Copy the entire code block above
-3. Click **File → Save As**
-4. Change "Save as type" to **All Files**
-5. Save it as `mds-health.bat` on your Desktop
-
-**Step 2 — Fill in your details**
-
-Open the saved file and change these lines near the top:
-
-| Variable | What to put here | How to find it |
-|---|---|---|
-| `MDS_HOST` | IP address of the MDS switch | Switch management IP — ask your SAN admin |
-| `SSH_USER` | SSH username | Usually `admin` |
-| `PLINK` | Path to plink.exe | Default `plink.exe` if PuTTY is in PATH, otherwise `C:\Program Files\PuTTY\plink.exe` |
-
-**Step 3 — Accept the SSH fingerprint first (one-time step)**
-
-Open Command Prompt and run:
 ```text
 plink.exe -ssh admin@192.168.1.20
 ```
-Type `y` when asked, then Ctrl+C. Do this once per switch.
-
-**Step 4 — Open a terminal**
-
-Open **Command Prompt**: Windows key → search `cmd` → press Enter
-
-**Step 5 — Run the script**
-
 ```bash
 cd C:\Users\YourName\Desktop
 mds-health.bat
 ```
-
-**What you should see**
-
-Six labelled sections: NX-OS software version and uptime, interface brief (all FC/Ethernet interfaces), FLOGI database (logged-in HBAs and storage ports), active zoneset configuration, last 20 syslog entries, and CPU/memory utilisation.
-
----
-
-## Windows: Cisco MDS Port Report (PowerShell via Plink)
-
-Use PowerShell to call plink and capture Cisco MDS NX-OS output, then parse it to build a clean port report showing interface state, speed, and connected device WWPNs.
-
 ```powershell
 # mds-port-report.ps1
 # Usage: .\mds-port-report.ps1 -MdsHost <IP> -SshUser <user> -PlinkPath <path>
@@ -658,68 +496,16 @@ if ($downCount -gt 0) {
     Write-Host "RESULT: All FC interfaces are up." -ForegroundColor Green
 }
 ```
-
-### How to run this script — step by step
-
-**Before you start — what you need**
-- Windows 10 or 11 with PowerShell (already installed)
-- PuTTY installed — download from https://www.putty.org — this provides `plink.exe`
-- Network access to the Cisco MDS switch management IP
-- MDS switch admin credentials
-
-**Step 1 — Save the file**
-
-1. Open **Notepad** (Windows key → search Notepad)
-2. Copy the entire code block above
-3. Click **File → Save As**
-4. Change "Save as type" to **All Files**
-5. Save it as `mds-port-report.ps1` on your Desktop
-
-**Step 2 — Fill in your details**
-
-You pass all values on the command line:
-
-| Variable | What to put here | How to find it |
-|---|---|---|
-| `$MdsHost` | IP address of the MDS switch | Switch management IP |
-| `$SshUser` | SSH username | Usually `admin` |
-| `$PlinkPath` | Full path to plink.exe | Default `plink.exe` if in PATH, or `C:\Program Files\PuTTY\plink.exe` |
-
-**Step 3 — Accept the SSH fingerprint first (one-time step)**
-
-Open Command Prompt and run:
 ```text
 plink.exe -ssh admin@192.168.1.20
 ```
-Type `y` when asked, then Ctrl+C.
-
-**Step 4 — Open a terminal**
-
-Windows key → search `PowerShell` → right-click → **Run as Administrator**
-
-**Step 5 — Allow scripts to run**
-
 ```powershell
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 ```
-
-**Step 6 — Run the script**
-
 ```bash
 cd C:\Users\YourName\Desktop
 .\mds-port-report.ps1 -MdsHost 192.168.1.20 -SshUser admin -PlinkPath "C:\Program Files\PuTTY\plink.exe"
 ```
-
-**What you should see**
-
-A table with one row per FC interface showing VSAN, state (up/down/isolated), mode (F-Port, E-Port, etc.), speed, and the WWN of the connected device (from the FLOGI database). Interfaces that are down or isolated are highlighted in red. The final line gives an overall result.
-
----
-
-## Daily Check Script
-
-SSH to the Cisco MDS switch, check software version, interface states, FLOGI count, system resources, and recent log entries.
-
 ```bash
 #!/bin/bash
 # mds_daily_check.sh
@@ -768,13 +554,6 @@ echo ""
 echo "Daily check: $FAIL failure(s)"
 [ "$FAIL" -gt 0 ] && exit 2 || exit 0
 ```
-
----
-
-## Incident Triage Script
-
-Capture a full diagnostic snapshot to a timestamped file for use during incident investigation.
-
 ```bash
 #!/bin/bash
 # mds_triage.sh
@@ -814,13 +593,6 @@ ssh_cmd() { ssh $SSH_OPTS "$SSH_USER@$MDS_HOST" "$1" 2>/dev/null; }
 
 echo "Triage data saved to: $OUTFILE"
 ```
-
----
-
-## Change Pre-Check Script
-
-Validate MDS state before a firmware upgrade or zone change. Exits 2 on any failure.
-
 ```bash
 #!/bin/bash
 # mds_precheck.sh
@@ -885,13 +657,6 @@ echo ""
 echo "Pre-check: $FAIL failure(s)"
 [ "$FAIL" -gt 0 ] && exit 2 || exit 0
 ```
-
----
-
-## Post-Change Validation Script
-
-Confirm the MDS has returned to a healthy state after maintenance.
-
 ```bash
 #!/bin/bash
 # mds_postcheck.sh
@@ -942,13 +707,6 @@ echo ""
 echo "Post-change validation: $FAIL failure(s)"
 [ "$FAIL" -gt 0 ] && exit 2 || exit 0
 ```
-
----
-
-## Health Check Script
-
-Cron-safe summary: switch name, firmware, interface counts, FLOGI count, active zoneset, and CPU. Exits 0 (OK), 1 (WARNING), or 2 (CRITICAL).
-
 ```bash
 #!/bin/bash
 # mds_health_check.sh

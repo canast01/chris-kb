@@ -1,16 +1,3 @@
-# GitHub Actions — Scripts
-
-
-<div class="kb-summary">
-> Part of the [GitHub Actions Operations](../index.md) reference. Utility scripts for managing GitHub Actions infrastructure — secrets rotation, runner health, artifact cleanup, and workflow monitoring.
-</div>
-
-> Part of the [GitHub Actions Operations](../index.md) reference.
-
-Utility scripts for managing GitHub Actions infrastructure — secrets rotation, runner health, artifact cleanup, and workflow monitoring.
-
-## Secret Rotation Script
-
 ```bash
 #!/bin/bash
 # rotate-secrets.sh — Rotate GitHub secrets from HashiCorp Vault
@@ -41,6 +28,8 @@ rotate_secret "AWS_SECRET_ACCESS_KEY" "secret/data/aws"   "secret_key"
 rotate_secret "SLACK_BOT_TOKEN"       "secret/data/slack" "bot_token"
 
 echo "All secrets rotated."
+```
+
 ```text
 ┌────────────────────────────────────── GitHub Actions — Scripts ───────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -63,9 +52,6 @@ echo "All secrets rotated."
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-## Bulk Secret Audit Script
-
 ```bash
 #!/bin/bash
 # audit-secrets.sh — List all secrets across repos and environments
@@ -99,9 +85,6 @@ gh repo list $ORG --limit 200 --json name -q '.[].name' | \
 echo "Audit written to $OUTPUT"
 wc -l "$OUTPUT"
 ```
-
-## Failed Run Notifier (Webhook)
-
 ```bash
 #!/bin/bash
 # notify-failures.sh — Check for recent failures and post to Slack
@@ -134,9 +117,6 @@ if [ "$COUNT" -gt 0 ]; then
     -d "{\"channel\": \"$SLACK_CHANNEL\", \"text\": \"$MESSAGE\"}"
 fi
 ```
-
-## Runner Auto-Registration Script
-
 ```bash
 #!/bin/bash
 # register-runner.sh — Register a new self-hosted runner

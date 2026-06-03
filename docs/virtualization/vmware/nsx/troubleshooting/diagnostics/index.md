@@ -1,41 +1,3 @@
-# NSX — Diagnostics
-
-
-<div class="kb-summary">
-Diagnostics reference covering Ports and Protocols Reference, Log Locations, NSX Manager CLI Diagnostics, Edge Node CLI Diagnostics, ESXi Host NSX Diagnostics and 4 more sections.
-</div>
-
-## Ports and Protocols Reference
-
-| Traffic | Protocol | Port | Direction |
-|---|---|---|---|
-| NSX Manager UI/API | HTTPS | 443 | Client → Manager |
-| NSX Manager CLI (SSH) | SSH | 22 | Admin → Manager |
-| Geneve overlay | UDP | 6081 | TEP → TEP (ESXi/Edge) |
-| BGP | TCP | 179 | Edge uplink → Physical router |
-| BFD | UDP | 3784 | Edge uplink → Physical router |
-| vCenter → NSX Manager | HTTPS | 443 | vCenter → Manager |
-| NSX Manager → ESXi | HTTPS | 443 | Manager → ESXi host |
-| NSX Manager → iDRAC | HTTPS | 443 | Manager → iDRAC (for bare-metal Edge) |
-| DNS | TCP/UDP | 53 | Manager/Edge → DNS servers |
-| NTP | UDP | 123 | Manager/Edge → NTP servers |
-| Syslog (UDP) | UDP | 514 | Manager/Edge → Syslog server |
-| Syslog (TLS) | TCP | 6514 | Manager/Edge → Syslog server |
-
----
-
-## Log Locations
-
-### NSX Manager
-
-| Log File | Location | Content |
-|---|---|---|
-| Manager | `/var/log/vmware/nsx-manager/manager.log` | Control plane, policy realisation |
-| API | `/var/log/vmware/nsx-manager/audit.log` | API calls, user actions, role changes |
-| HTTP access | `/var/log/vmware/nsx-manager/access.log` | API endpoint access log |
-| Cluster | `/var/log/vmware/nsx-manager/corfu.log` | Corfu DB / Raft state |
-| System | `/var/log/syslog` | OS-level system events |
-
 ```bash
 # SSH to NSX Manager node
 # Live log tail
@@ -46,6 +8,8 @@ grep -i "error\|fail\|exception" /var/log/vmware/nsx-manager/manager.log | tail 
 
 # Search audit log for admin actions
 grep -i "role\|login\|delete\|create" /var/log/vmware/nsx-manager/audit.log | tail -20
+```
+
 ```text
 ┌────────────────────────────────────────── NSX — Diagnostics ──────────────────────────────────────────┐
 │                                                                                                       │
@@ -93,11 +57,6 @@ grep -i "role\|login\|delete\|create" /var/log/vmware/nsx-manager/audit.log | ta
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
----
-
-## NSX Manager CLI Diagnostics
-
 ```bash
 # SSH to any NSX Manager node
 nsxcli
@@ -132,11 +91,6 @@ get alarms | grep -i "critical\|high"
 get version
 get nodes
 ```
-
----
-
-## Edge Node CLI Diagnostics
-
 ```bash
 # SSH to Edge node (admin user)
 # All routing commands require VRF context
@@ -179,11 +133,6 @@ get node memory
 get services
 get version
 ```
-
----
-
-## ESXi Host NSX Diagnostics
-
 ```bash
 # SSH to ESXi host as root
 
@@ -212,19 +161,6 @@ vsipioctl getservices -f <filter-name>        # Service definitions in rules
 # vDS and VNI mapping
 net-vdl2 -M all -s 0
 ```
-
----
-
-## Traceflow
-
-Traceflow injects a synthetic probe packet into the logical network and traces its path hop-by-hop. Use it to determine exactly where a packet is being dropped.
-
-### Launch Traceflow
-
-**NSX Manager UI: Plan & Troubleshoot → Traceflow**
-
-Or via API:
-
 ```bash
 # Create a traceflow request
 curl -sk -u 'admin:password' \
@@ -257,24 +193,6 @@ curl -sk -u 'admin:password' \
 curl -sk -u 'admin:password' \
   "https://<nsx-manager>/api/v1/traceflows/<traceflow-id>"
 ```
-
-### Traceflow Output Interpretation
-
-| Observation Type | Meaning |
-|---|---|
-| `FORWARDED` at a hop | Packet passed through this component |
-| `DROPPED` at a hop | Packet dropped here — check rule or route |
-| `RECEIVED` at destination | Packet reached the destination |
-| `DELIVERED` at ESXi host | Packet delivered to VM vNIC |
-
-If Traceflow shows `DROPPED` at the DFW filter of the source VM, the drop reason will identify the specific rule ID.
-
----
-
-## Packet Capture
-
-### Edge Node Packet Capture
-
 ```bash
 # SSH to Edge node
 
@@ -291,9 +209,6 @@ debug packet capture interface fp-eth0 file /tmp/edge-cap.pcap count 1000
 # Copy from Edge to external location
 scp /tmp/edge-cap.pcap user@jumphost:/tmp/
 ```
-
-### ESXi Host Packet Capture
-
 ```bash
 # Capture on a physical NIC (vmnic)
 pktcap-uw --capture Uplink --switchport <portid> --outfile /tmp/vmnic-cap.pcap --count 500
@@ -307,15 +222,6 @@ net-stats -l | grep <vm-name>
 # Capture with BPF filter
 pktcap-uw --capture Uplink --switchport <portid> --filter "port 6081" --outfile /tmp/geneve-cap.pcap
 ```
-
----
-
-## API-Based Diagnostics
-
-### Check Realisation State
-
-After making a policy change, verify it has been realised on all transport nodes:
-
 ```bash
 # Check segment realisation
 curl -sk -u 'admin:password' \
@@ -329,9 +235,6 @@ curl -sk -u 'admin:password' \
 curl -sk -u 'admin:password' \
   "https://<nsx-manager>/policy/api/v1/infra/tier-0s/<t0-id>/state"
 ```
-
-### Check Open Alarms
-
 ```bash
 curl -sk -u 'admin:password' \
   "https://<nsx-manager>/api/v1/alarms?status=OPEN&severity=CRITICAL" | python3 -c "
@@ -345,9 +248,6 @@ for a in d.get('results',[]):
     print(f'  [{ts}] {src}: {summ}')
 "
 ```
-
-### Check Transport Node Connectivity to Manager
-
 ```bash
 # Transport node should have a connection_state of "success" or "in_sync"
 curl -sk -u 'admin:password' \
@@ -358,13 +258,6 @@ print(f'State: {d.get(\"state\",\"?\")}')
 print(f'Transport failures: {d.get(\"transport_failures\",[])}')
 "
 ```
-
----
-
-## Diagnostic Data Collection for Support
-
-When opening a Broadcom support case for NSX:
-
 ```bash
 # 1. NSX Manager support bundle (from any Manager node)
 # UI: System → Support Bundle → Download
@@ -388,5 +281,3 @@ get tunnel status >> /tmp/cluster-status.txt
 summarize-dvfilter > /tmp/dvfilter.txt
 vsipioctl getrules -f <affected-filter> >> /tmp/dvfilter.txt
 ```
-
-Provide timestamps of when the issue started, what changes were made in the 24 hours before the issue, and a clear description of the impact scope.

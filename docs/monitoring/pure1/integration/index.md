@@ -1,17 +1,3 @@
-# Pure1 Integration
-
-<div class="kb-summary">
-Pure1 Integration reference covering Overview, Native Array Integration, Email Alert Integration, Aria Operations Integration (Pure Storage Management Pack), Splunk Integration and 1 more sections.
-</div>
-
-## Overview
-
-Pure1 integrates natively with all Pure Storage FlashArray and FlashBlade systems via outbound telemetry. External integrations extend Pure1 data and alerts into ITSM, observability, on-call, and notification platforms.
-
-## Native Array Integration
-
-All Pure arrays connect to Pure1 automatically over outbound HTTPS. No on-premises collector is required.
-
 ```bash
 # Verify array connectivity from Purity CLI
 purearray list --connection
@@ -22,6 +8,8 @@ purearray list --network
 
 # Set proxy if needed
 purearray set --proxy https://<proxy-host>:<port>
+```
+
 ```text
 ┌────────────────────────────────────── Pure1 — Integration Guide ──────────────────────────────────────┐
 │                                                                                                       │
@@ -52,29 +40,12 @@ purearray set --proxy https://<proxy-host>:<port>
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-Separate rules for WARNING (email) and CRITICAL (PagerDuty + ServiceNow) are the recommended pattern.
-
-## Aria Operations Integration (Pure Storage Management Pack)
-
-The Pure Storage Management Pack for Aria Operations pulls FlashArray metrics into vROps for correlated VMware + storage dashboards.
-
 ```text
 Aria Operations > Admin > Solutions > Pure Storage Management Pack
 - Pure1 API endpoint: https://api.pure1.purestorage.com
 - API key / private key: (service account key from Pure1)
 - Collection interval: 5 minutes
 ```
-
-Key metrics available in Aria Operations from this integration:
-- Array IOPS, throughput, latency
-- Volume-level performance
-- Array capacity used / available / data reduction ratio
-
-## Splunk Integration
-
-A Splunk Heavy Forwarder or a scheduled script pulls Pure1 API data for fleet health and capacity dashboards in Splunk.
-
 ```python
 # Example: scheduled Pure1 API pull for Splunk index
 # Runs every 15 minutes via Splunk scripted input or cron
@@ -95,15 +66,3 @@ for array in resp.json()["items"]:
     }
     print(json.dumps(event))  # Splunk scripted input reads stdout
 ```
-
-## Integration Summary
-
-| Integration | Method | Purpose |
-|---|---|---|
-| FlashArray / FlashBlade | Outbound HTTPS (native — Purity) | Fleet health, capacity, performance telemetry |
-| Aria Operations | Pure Storage Management Pack | vROps dashboards with Pure array data |
-| Splunk | Pure1 REST API poller | Capacity and alert events in Splunk |
-| ServiceNow | Pure1 alert webhook | Auto-ticket creation on CRITICAL alerts |
-| PagerDuty | Pure1 alert webhook | On-call notification for CRITICAL alerts |
-| Slack / Teams | Pure1 alert webhook | Real-time alert notifications to ops channel |
-| Email | Pure1 notification rules | WARNING alert distribution |

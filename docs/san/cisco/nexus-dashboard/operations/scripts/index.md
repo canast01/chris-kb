@@ -1,20 +1,3 @@
-# Nexus Dashboard — Scripts
-
-
-<div class="kb-summary">
-> Part of the [Nexus Dashboard](../../index.md) reference.
-</div>
-
----
-
-## Overview
-
-Automation scripts for Nexus Dashboard and NDFC via the REST API. All scripts use `curl` and Python 3 standard library. Set `ND_HOST`, `ND_USER`, and `ND_PASS` (via environment variable) before use.
-
----
-
-## Authentication Helper
-
 ```bash
 #!/usr/bin/env bash
 # nd-auth.sh — obtain a Nexus Dashboard API token
@@ -45,6 +28,8 @@ cleanup() {
   echo "Session logged out"
 }
 trap cleanup EXIT
+```
+
 ```text
 ┌───────────────────────────── Cisco Nexus Dashboard — Operations Scripts ──────────────────────────────┐
 │                                                                                                       │
@@ -92,13 +77,6 @@ trap cleanup EXIT
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
----
-
-## Zone Database Nightly Export
-
-Exports zone databases for all NDFC fabrics each night:
-
 ```bash
 #!/usr/bin/env bash
 # nd-zone-export.sh
@@ -143,13 +121,6 @@ find "${EXPORT_DIR}" -name "*-zones-*.json" -mtime +90 -delete
 
 echo "Zone export complete: $(date)"
 ```
-
----
-
-## NDI Anomaly Summary Report
-
-Generates a daily anomaly summary and emails it to the SAN team:
-
 ```python
 #!/usr/bin/env python3
 # nd-anomaly-report.py
@@ -214,13 +185,6 @@ finally:
         headers={"Authorization": f"Bearer {TOKEN}"}), context=ctx
     ).close()
 ```
-
----
-
-## NDFC Firmware Compliance Check
-
-Checks all switches against minimum NX-OS firmware baseline:
-
 ```python
 #!/usr/bin/env python3
 # nd-firmware-check.py

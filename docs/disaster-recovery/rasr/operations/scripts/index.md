@@ -1,29 +1,3 @@
-# RASR — Scripts
-
-
-<div class="kb-summary">
-Scripts reference covering Script Inventory, New-RASRImage, Test-RASRImageAge, Remove-OldRASRImages, Test-RASRImageIntegrity and 2 more sections.
-</div>
-
-## Script Inventory
-
-| Script | Purpose |
-|---|---|
-| [New-RASRImage](#new-rasrimage) | Automated RASR image creation with logging and alerting |
-| [Test-RASRImageAge](#test-rasrimageage) | Check if latest image exceeds maximum age threshold |
-| [Remove-OldRASRImages](#remove-oldrasrimages) | Clean up images exceeding retention count |
-| [Test-RASRImageIntegrity](#test-rasrimageintegrity) | Verify integrity of all images on share |
-| [New-RASRScheduledTask](#new-rasrscheduledtask) | Register scheduled backup task via PowerShell |
-| [Invoke-PostRestoreValidation](#invoke-postrestorevalidation) | Automated post-restore validation checks |
-
-All scripts assume RASR is installed at `C:\Program Files\Dell\RASR\rasrutil.exe`. Adjust the `$RASRBin` variable as needed.
-
----
-
-## New-RASRImage
-
-Creates a RASR system image, writes a structured log, and writes a Windows Event Log entry on failure.
-
 ```powershell
 <#
 .SYNOPSIS
@@ -99,6 +73,8 @@ function New-RASRImage {
 # New-RASRImage -Destination "\\nas01\rasr-images\$env:COMPUTERNAME" `
 #               -ShareUser "CORP\svc-rasr" `
 #               -SharePassword "S3cr3t!"
+```
+
 ```text
 ┌─────────────────────────────────────────── RASR — Scripts ────────────────────────────────────────────┐
 │                                                                                                       │
@@ -140,13 +116,6 @@ function New-RASRImage {
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
----
-
-## Test-RASRImageAge
-
-Checks whether the most-recent RASR image on a share was created within a configurable maximum-age window. Returns a non-zero exit code and writes an event log entry if the latest image is stale.
-
 ```powershell
 <#
 .SYNOPSIS
@@ -197,13 +166,6 @@ function Test-RASRImageAge {
 # Test-RASRImageAge -SharePath "\\nas01\rasr-images\SERVER01" -MaxAgeDays 1
 # if (-not (Test-RASRImageAge ...)) { Send-MailMessage ... }
 ```
-
----
-
-## Remove-OldRASRImages
-
-Deletes RASR images on a share that exceed the configured retention count, keeping the most recent N images.
-
 ```powershell
 <#
 .SYNOPSIS
@@ -248,13 +210,6 @@ function Remove-OldRASRImages {
 # Remove-OldRASRImages -SharePath "\\nas01\rasr-images\SERVER01" -RetentionCount 4
 # Remove-OldRASRImages -SharePath "\\nas01\rasr-images\SERVER01" -WhatIf
 ```
-
----
-
-## Test-RASRImageIntegrity
-
-Iterates all RASR images on a share and runs `rasrutil.exe /verify` against each. Outputs a pass/fail report.
-
 ```powershell
 <#
 .SYNOPSIS
@@ -319,13 +274,6 @@ function Test-RASRImageIntegrity {
 # Test-RASRImageIntegrity -SharePath "\\nas01\rasr-images\SERVER01" `
 #                         -ShareUser "CORP\svc-rasr" -SharePassword "S3cr3t!"
 ```
-
----
-
-## New-RASRScheduledTask
-
-Registers the RASR weekly backup task in Windows Task Scheduler. Idempotent — updates the task if it already exists.
-
 ```powershell
 <#
 .SYNOPSIS
@@ -384,13 +332,6 @@ function New-RASRScheduledTask {
 #                       -ShareUser "CORP\svc-rasr" `
 #                       -SharePassword "S3cr3t!"
 ```
-
----
-
-## Invoke-PostRestoreValidation
-
-Runs automated post-restore health checks and outputs a structured report. Designed to run immediately after a RASR restore completes and the server boots.
-
 ```powershell
 <#
 .SYNOPSIS

@@ -1,32 +1,3 @@
-# Git — Common Issues
-
-
-<div class="kb-summary">
-Quick-reference for the most frequently encountered Git problems in enterprise environments, with precise fix commands and explanations.
-</div>
-
----
-
-## Issue Reference Table
-
-| Issue | Symptom | Primary Fix |
-|-------|---------|-------------|
-| [Merge conflict](#merge-conflicts) | `CONFLICT (content): Merge conflict in <file>` | Resolve manually, then `git add` + `git commit` |
-| [Detached HEAD](#detached-head) | `HEAD detached at <sha>` | `git switch -` or `git switch -c <new-branch>` |
-| [Push rejected — non-fast-forward](#push-rejected-non-fast-forward) | `! [rejected] ... (non-fast-forward)` | `git pull --rebase origin <branch>` then re-push |
-| [Large file error](#large-file-errors) | `remote: error: File ... is X MB; this exceeds GitHub's file size limit` | Remove from history, use Git LFS |
-| [Authentication failure](#authentication-failures) | `Authentication failed for 'https://...'` | Rotate token, update credential store |
-| [SSH key rejected](#ssh-key-rejected) | `Permission denied (publickey)` | Add key to SSH agent, verify key in platform |
-| [Submodule issues](#submodule-issues) | `Submodule ... not initialised` or stale checkout | `git submodule update --init --recursive` |
-
----
-
-## Merge Conflicts
-
-Merge conflicts occur when two branches modify the same lines in a file, or when a file is modified in one branch and deleted in another.
-
-### Diagnose
-
 ```bash
 # See which files are conflicted
 git status
@@ -37,6 +8,8 @@ git diff
 
 # Use a 3-way diff tool
 git mergetool
+```
+
 ```text
 ┌───────────────────────────────────────── Git — Common Issues ─────────────────────────────────────────┐
 │                                                                                                       │
@@ -82,9 +55,6 @@ git mergetool
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-### Using `git rerere` to Remember Resolutions
-
 ```bash
 # Enable rerere (re-use recorded resolution)
 git config --global rerere.enabled true
@@ -93,33 +63,18 @@ git config --global rerere.enabled true
 # Future identical conflicts are resolved automatically
 git rerere
 ```
-
----
-
-## Detached HEAD
-
-A detached HEAD occurs when `HEAD` points directly to a commit SHA rather than a branch ref. Common after `git checkout <sha>`, `git checkout <tag>`, or completing a rebase.
-
-### Diagnose
-
 ```bash
 git status
 # HEAD detached at a1b2c3d
 
 git log --oneline -5
 ```
-
-### Fix — Return to Previous Branch
-
 ```bash
 # Return to wherever you were before
 git switch -
 # or
 git checkout -
 ```
-
-### Fix — Save Work Done in Detached HEAD State
-
 ```bash
 # Create a new branch at the current (detached) commit
 git switch -c feature/save-my-work
@@ -127,31 +82,18 @@ git switch -c feature/save-my-work
 # Or attach to an existing branch (only if no new commits were made)
 git switch main
 ```
-
-### Fix — Discard Detached HEAD Work
-
 ```bash
 # Return to main, discarding any uncommitted detached-HEAD changes
 git switch main
 # Any commits made in detached HEAD state are now unreachable (dangling)
 # They will be garbage collected after ~2 weeks
 ```
-
----
-
-## Push Rejected — Non-Fast-Forward
-
 ```yaml
 ! [rejected] main -> main (non-fast-forward)
 error: failed to push some refs to 'origin'
 hint: Updates were rejected because the tip of your current branch is behind
 hint: its remote counterpart.
 ```
-
-This happens when the remote branch has commits your local branch does not have.
-
-### Fix — Rebase (Preferred for Linear History)
-
 ```bash
 # Fetch and rebase your commits on top of remote
 git pull --rebase origin main
@@ -160,24 +102,15 @@ git pull --rebase origin main
 # Then push
 git push origin main
 ```
-
-### Fix — Merge (Preserves Branch History)
-
 ```bash
 git pull origin main        # creates a merge commit
 git push origin main
 ```
-
-### Fix — Force Push (Destructive — Only for Personal Branches)
-
 ```bash
 # WARNING: rewrites remote history — never use on shared/protected branches
 git push --force-with-lease origin feature/my-branch
 # --force-with-lease is safer than --force: fails if someone else pushed since your last fetch
 ```
-
-### Prevent Force Push on Protected Branches (GitLab)
-
 ```bash
 # Via API — enable branch protection
 curl -X POST \
@@ -185,18 +118,10 @@ curl -X POST \
   "https://gitlab.example.com/api/v4/projects/:id/protected_branches" \
   --data 'name=main&push_access_level=0&merge_access_level=40&allow_force_push=false'
 ```
-
----
-
-## Large File Errors
-
 ```text
 remote: error: File large-binary.bin is 150.00 MB; this exceeds GitHub's file size limit of 100.00 MB.
 remote: error: GH001: Large files detected. You may want to try Git Large File Storage.
 ```
-
-### Fix — Remove Large File from Current Commit (Not Yet Pushed)
-
 ```bash
 # Undo the last commit, keep changes staged
 git reset --soft HEAD~1
@@ -208,9 +133,6 @@ git add .gitignore
 
 git commit -m "Remove large binary; add to .gitignore"
 ```
-
-### Fix — Remove Large File from History (Already Committed)
-
 ```bash
 # Using git-filter-repo (recommended over BFG for complex cases)
 pip install git-filter-repo
@@ -225,9 +147,6 @@ git reflog expire --expire=now --all
 git gc --prune=now --aggressive
 git push --force origin main
 ```
-
-### Fix — Migrate Large File to Git LFS
-
 ```bash
 # Install LFS
 git lfs install
@@ -242,18 +161,10 @@ git lfs migrate import --include="*.bin" --everything
 
 git push --force-with-lease origin main
 ```
-
----
-
-## Authentication Failures
-
 ```text
 remote: HTTP Basic: Access denied
 fatal: Authentication failed for 'https://gitlab.example.com/org/repo.git'
 ```
-
-### Diagnose
-
 ```bash
 # Check which credential store is active
 git config --global credential.helper
@@ -267,9 +178,6 @@ EOF
 # Test authentication
 curl -sf -u username:TOKEN https://api.github.com/user | jq .login
 ```
-
-### Fix — Update Stored Credentials
-
 ```bash
 # macOS — remove cached entry and let Git re-prompt
 git credential-osxkeychain erase <<EOF
@@ -291,9 +199,6 @@ git remote set-url origin https://oauth2:NEW_TOKEN@gitlab.example.com/org/repo.g
 # Git Credential Manager (cross-platform)
 git credential-manager-core erase
 ```
-
-### Fix — Token Rotation (GitHub)
-
 ```bash
 # Verify new token works
 curl -H "Authorization: Bearer $NEW_TOKEN" https://api.github.com/user | jq .login
@@ -302,18 +207,10 @@ curl -H "Authorization: Bearer $NEW_TOKEN" https://api.github.com/user | jq .log
 git remote set-url origin https://github.com/org/repo.git
 git config --global credential.helper osxkeychain   # or manager-core
 ```
-
----
-
-## SSH Key Rejected
-
 ```text
 git@github.com: Permission denied (publickey).
 fatal: Could not read from remote repository.
 ```
-
-### Diagnose
-
 ```bash
 # Test SSH connection with verbose output
 ssh -vT git@github.com
@@ -325,9 +222,6 @@ ssh-add -l
 # Check known_hosts
 ssh-keygen -F github.com
 ```
-
-### Fix — Add Key to SSH Agent
-
 ```bash
 # Start agent if not running
 eval "$(ssh-agent -s)"
@@ -341,9 +235,6 @@ ssh-add -l
 # Persist across reboots (macOS)
 ssh-add --apple-use-keychain ~/.ssh/id_ed25519
 ```
-
-### Fix — Register Key with Platform
-
 ```bash
 # Copy public key
 cat ~/.ssh/id_ed25519.pub
@@ -361,9 +252,6 @@ curl -X POST \
   "https://gitlab.example.com/api/v4/user/keys" \
   --data "title=$(hostname)&key=$(cat ~/.ssh/id_ed25519.pub)"
 ```
-
-### Fix — SSH Config for Multiple Keys
-
 ```bash
 # ~/.ssh/config
 Host github.com
@@ -379,18 +267,10 @@ Host gitlab.example.com
     IdentitiesOnly yes
     Port 22
 ```
-
----
-
-## Submodule Issues
-
-### Submodule Not Initialised
-
 ```text
 error: Server does not allow request for unadvertised object
 fatal: remote error: upload-pack: not our ref
 ```
-
 ```bash
 # Initialise and clone all submodules recursively
 git submodule update --init --recursive
@@ -398,9 +278,6 @@ git submodule update --init --recursive
 # Clone with submodules from the start
 git clone --recurse-submodules https://github.com/org/repo.git
 ```
-
-### Submodule Pointing to Wrong/Stale Commit
-
 ```bash
 # Check submodule status
 git submodule status
@@ -415,11 +292,6 @@ git submodule update --remote --merge
 git submodule foreach git reset --hard
 git submodule update --recursive
 ```
-
-### Submodule Appears Modified But Has No Changes
-
-This is usually a line-ending or file-mode issue.
-
 ```bash
 # Check what changed
 git submodule foreach git status
@@ -431,9 +303,6 @@ git submodule foreach git config core.fileMode false
 # Reset silently modified submodule
 git submodule foreach git checkout -- .
 ```
-
-### Remove a Submodule
-
 ```bash
 # Proper removal — three steps required
 git submodule deinit -f path/to/submodule
@@ -441,11 +310,6 @@ git rm -f path/to/submodule
 rm -rf .git/modules/path/to/submodule
 git commit -m "Remove submodule path/to/submodule"
 ```
-
----
-
-## Quick Diagnostic Commands
-
 ```bash
 # Show full config (effective, merged from all scopes)
 git config --list --show-origin

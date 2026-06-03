@@ -1,41 +1,3 @@
-# Aria Operations for Networks — Integrations
-
-
-<div class="kb-summary">
-Integrations reference covering NSX-T Integration, Physical Switch Integration — NetFlow/IPFIX, vDS IPFIX (ESXi Distributed Switch), NSX-T Built-In IPFIX, Palo Alto Firewall Integration and 2 more sections.
-</div>
-
-## NSX-T Integration
-
-AON connects to NSX-T Manager with a **read-only** service account. The Collector polls the NSX-T API on a 10-minute interval (default).
-
-**Data pulled from NSX-T:**
-
-| API Endpoint | Data |
-|---|---|
-| `/api/v1/logical-switches` | Overlay logical switches and their VNIs |
-| `/api/v1/logical-ports` | Logical port to VM attachment mapping |
-| `/api/v1/ns-groups` / `/policy/api/v1/infra/domains/default/groups` | Security group membership |
-| `/api/v1/firewall/sections` / `/policy/api/v1/infra/domains/default/security-policies` | DFW rule sections and rules |
-| `/api/v1/logical-routers` / `/policy/api/v1/infra/tier-0s` | T0/T1 router topology |
-| `/api/v1/logical-router-ports` | Router interface IPs |
-| `/api/v1/transport-nodes` | Host transport node registration |
-| `/policy/api/v1/infra/tags` | NSX tag inventory |
-| `/api/v1/cluster` | NSX Manager cluster health |
-
-NSX-T 3.2+ uses the Policy API (`/policy/api/v1`). AON automatically detects the NSX-T version and switches between Manager API and Policy API where needed. NSX-T 4.x is fully supported via Policy API only.
-
-**Adding NSX-T as a data source (UI):**
-
-Settings → Accounts and Data Sources → Add Source → NSX-T Manager
-
-Required fields:
-- NSX-T Manager FQDN or IP
-- Username / Password (dedicated read-only account)
-- Nickname for display in AON UI
-
-**Minimum NSX-T role required:** Assign the built-in `Auditor` role to the service account. This provides read-only access to DFW rules, security groups, segments, and transport nodes.
-
 ```bash
 # Verify NSX-T API connectivity from Collector VM
 curl -k -u 'svc-aon:PASSWORD' \
@@ -47,6 +9,8 @@ curl -k -u 'svc-aon:PASSWORD' \
 curl -k -u 'svc-aon:PASSWORD' \
   https://nsxmgr.example.local/policy/api/v1/infra/tier-0s \
   -o /dev/null -w "HTTP %{http_code}\n"
+```
+
 ```text
 ┌────────────────────────────────────────── vRNI Integrations ──────────────────────────────────────────┐
 │                                                                                                       │
@@ -92,11 +56,6 @@ curl -k -u 'svc-aon:PASSWORD' \
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-## Physical Switch Integration — NetFlow/IPFIX
-
-### Cisco IOS-XE — NetFlow v9
-
 ```ios
 ! Step 1: Define the exporter
 flow exporter AON-EXPORTER
@@ -140,9 +99,6 @@ show flow exporter AON-EXPORTER statistics
 show flow monitor AON-MONITOR cache
 show flow monitor AON-MONITOR statistics
 ```
-
-### Cisco NX-OS — NetFlow v9
-
 ```nxos
 feature netflow
 
@@ -178,9 +134,6 @@ interface Ethernet1/1
 show flow exporter AON-EXPORTER
 show flow monitor AON-MONITOR statistics
 ```
-
-### Arista EOS — IPFIX
-
 ```eos
 flow tracking hardware
    tracker AON-TRACKER
@@ -200,9 +153,6 @@ flow tracking hardware
 show flow tracking hardware tracker AON-TRACKER
 show flow tracking hardware detail
 ```
-
-### Juniper Junos — NetFlow v9
-
 ```junos
 # Configure sampling
 set forwarding-options sampling input rate 1
@@ -222,25 +172,6 @@ set interfaces ge-0/0/1 unit 0 family inet sampling output
 show services flow-monitoring version9 template
 show services flow-monitoring statistics
 ```
-
-## vDS IPFIX (ESXi Distributed Switch)
-
-Capturing east-west VM traffic within an ESXi cluster without physical switch changes requires IPFIX on the vDS.
-
-**vCenter UI path:** Networking → Select vDS → Configure → NetFlow
-
-| Field | Value |
-|---|---|
-| Collector IP | Collector VM IP |
-| Collector Port | 2055 |
-| Observation Domain ID | 0 (or any unique value per vDS) |
-| Active Flow Timeout | 60 (seconds) |
-| Idle Flow Timeout | 15 (seconds) |
-| Sampling Rate | 0 (every packet) or higher (1000 = 1:1000) |
-| Process internal flows only | Disabled (to see inter-host traffic) |
-
-Via PowerCLI:
-
 ```powershell
 $vds = Get-VDSwitch -Name "vDS-Production"
 $configSpec = New-Object VMware.Vim.VMwareDVSConfigSpec
@@ -270,15 +201,6 @@ Get-VDPortgroup -VDSwitch $vds | Where-Object { $_.Name -match "^PG-(App|Web|DB)
     Write-Host "Enabled IPFIX on $($_.Name)"
 }
 ```
-
-## NSX-T Built-In IPFIX
-
-NSX-T can export IPFIX directly from the nsx-vswitch on each transport node, capturing overlay traffic without any changes to the physical fabric.
-
-**NSX-T Policy UI:** System → Fabric → Settings → IPFIX Collector Profiles → Add
-
-Or via NSX-T API:
-
 ```bash
 curl -k -u 'admin:PASSWORD' -X POST \
   https://nsxmgr.example.local/policy/api/v1/infra/ipfix-l2-collector-profiles/AON-COLLECTOR \
@@ -304,17 +226,6 @@ curl -k -u 'admin:PASSWORD' -X POST \
     "packet_sample_probability": 1.0
   }'
 ```
-
-Assign the IPFIX profile to a segment, binding to transport nodes.
-
-## Palo Alto Firewall Integration
-
-AON ingests Palo Alto traffic logs via two methods:
-
-**Method 1: Syslog forwarding to Collector**
-
-PAN-OS: Device → Server Profiles → Syslog → Add
-
 ```yaml
 Name: AON-Syslog
 Syslog Server IP: 10.10.10.50
@@ -323,49 +234,6 @@ Port: 514
 Format: BSD
 Facility: LOG_USER
 ```
-
-Create a Log Forwarding Profile (Objects → Log Forwarding) referencing AON-Syslog for traffic logs, then attach to all Security policy rules.
-
-**Method 2: Panorama API** — Add Panorama as a data source; AON queries traffic logs via the XML API. This avoids syslog and centralizes collection.
-
-**Adding in AON UI:** Settings → Accounts and Data Sources → Add Source → Palo Alto Networks → Panorama or NGFW
-
-Required credentials: admin-level API key or dedicated account with `Log Viewer` access.
-
-## ServiceNow CMDB Integration
-
-AON correlates discovered VMs and network devices with ServiceNow CMDB CI records to add business context to topology views.
-
-**UI path:** Settings → Integrations → ServiceNow
-
-| Field | Value |
-|---|---|
-| ServiceNow Instance URL | `https://yourinstance.service-now.com` |
-| Username | ServiceNow user with `cmdb_read` role |
-| Password | — |
-| Sync Interval | 24 hours (default) |
-
-Correlation logic: IP address and hostname matching between AON-discovered assets and ServiceNow CI records. Matched CIs surface in AON VM detail views with CMDB metadata (owner, environment, service, support group).
-
-## Syslog and SIEM Forwarding
-
-AON can forward alerts and events outbound to a syslog receiver or SIEM.
-
-**UI path:** Settings → Notifications → Syslog → Add
-
-| Field | Value |
-|---|---|
-| Server | SIEM IP or FQDN |
-| Port | 514 (UDP default) or 6514 (TLS) |
-| Protocol | UDP / TCP / TLS |
-| Format | RFC 3164 or RFC 5424 |
-
-Events forwarded: new problem detected, alert threshold crossed, data source sync failure, collector disconnected.
-
-**Webhook integration:**
-
-Settings → Notifications → Webhook → Add
-
 ```json
 {
   "url": "https://hooks.slack.com/services/T000/B000/xxxx",
@@ -374,5 +242,3 @@ Settings → Notifications → Webhook → Add
   "body_template": "{\"text\": \"[AON] {{severity}}: {{alert_name}} — {{description}}\"}"
 }
 ```
-
-PagerDuty integration is available as a built-in notification type in AON 6.x+.

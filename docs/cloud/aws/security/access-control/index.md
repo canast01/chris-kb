@@ -1,27 +1,3 @@
-# AWS — Access Control
-
-
-<div class="kb-summary">
-Access Control reference covering IAM Fundamentals, Least-Privilege Policy Design, Cross-Account Access, Resource-Based Policies, Permission Boundary and 4 more sections.
-</div>
-
----
-
-## IAM Fundamentals
-
-| Concept | Description |
-|---|---|
-| IAM User | Long-lived identity with access keys or password; avoid for services |
-| IAM Role | Temporary credentials via STS; use for EC2, Lambda, ECS, cross-account |
-| IAM Group | Collection of users sharing policies; cannot be used as a principal |
-| IAM Policy | JSON document defining Allow/Deny on actions/resources |
-| Permission Boundary | Max permissions a role/user can ever have, regardless of attached policies |
-| SCP (Service Control Policy) | Org-level guardrail — applies to entire accounts, not individual principals |
-
----
-
-## Least-Privilege Policy Design
-
 ```json
 {
   "Version": "2012-10-17",
@@ -40,6 +16,8 @@ Access Control reference covering IAM Fundamentals, Least-Privilege Policy Desig
     }
   ]
 }
+```
+
 ```text
 ┌─────────────────────────── AWS Access Control — Least-Privilege IAM Design ───────────────────────────┐
 │                                                                                                       │
@@ -87,13 +65,6 @@ Access Control reference covering IAM Fundamentals, Least-Privilege Policy Desig
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
----
-
-## Resource-Based Policies
-
-For S3, KMS, SQS, Lambda — attached to the resource, not the principal. Grant access without requiring IAM role assumptions.
-
 ```bash
 # S3 bucket policy — allow specific role from another account
 aws s3api put-bucket-policy --bucket my-bucket --policy '{
@@ -116,11 +87,6 @@ aws s3control put-public-access-block \
   --public-access-block-configuration \
     BlockPublicAcls=true,IgnorePublicAcls=true,BlockPublicPolicy=true,RestrictPublicBuckets=true
 ```
-
----
-
-## Permission Boundary
-
 ```bash
 # Create boundary policy (max permissions this role can have)
 aws iam create-policy \
@@ -147,11 +113,6 @@ aws iam create-role \
   --assume-role-policy-document file://trust.json \
   --permissions-boundary arn:aws:iam::<account>:policy/DeveloperBoundary
 ```
-
----
-
-## Policy Simulation
-
 ```bash
 # Test whether a role can perform specific actions
 aws iam simulate-principal-policy \
@@ -161,11 +122,6 @@ aws iam simulate-principal-policy \
   --query 'EvaluationResults[*].[EvalActionName,EvalDecision]' \
   --output table
 ```
-
----
-
-## Access Advisor — Identify Unused Permissions
-
 ```bash
 # Generate access advisor report for a role
 JOB_ID=$(aws iam generate-service-last-accessed-details \
@@ -179,11 +135,6 @@ aws iam get-service-last-accessed-details --job-id $JOB_ID \
   --output table
 # Services never accessed — candidates for removal from the policy
 ```
-
----
-
-## AWS Organizations — SCPs
-
 ```bash
 # List SCPs attached to an OU
 aws organizations list-policies-for-target \
@@ -200,11 +151,6 @@ aws organizations list-policies-for-target \
 #   "Resource": "*"
 # }
 ```
-
----
-
-## Audit — Privilege Review
-
 ```bash
 # Users with AdministratorAccess
 aws iam list-entities-for-policy \

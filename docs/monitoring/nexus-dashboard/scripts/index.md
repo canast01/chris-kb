@@ -1,15 +1,3 @@
-# Nexus Dashboard — Monitoring Scripts
-
-<div class="kb-summary">
-Nexus Dashboard Scripts reference covering Authentication, Fabric Fault Export, ACI Fault Summary (via APIC), Forward P1/P2 Faults to ServiceNow, Script Inventory.
-</div>
-
-## Authentication
-
-Nexus Dashboard REST API uses OAuth2 token authentication. ACI APIC uses cookie-based authentication. Scripts load credentials from the secrets manager at runtime.
-
-### Nexus Dashboard API Auth
-
 ```python
 import requests
 
@@ -31,6 +19,8 @@ def nd_get(path: str, token: str, params: dict = None) -> dict:
                         params=params, verify=True)
     resp.raise_for_status()
     return resp.json()
+```
+
 ```text
 ┌───────────────────────────────── Nexus Dashboard — Scripts Reference ─────────────────────────────────┐
 │                                                                                                       │
@@ -63,9 +53,6 @@ def nd_get(path: str, token: str, params: dict = None) -> dict:
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-## ACI Fault Summary (via APIC)
-
 ```python
 def apic_fault_summary(session: requests.Session) -> dict:
     """Return fault counts by severity from APIC."""
@@ -78,9 +65,6 @@ def apic_fault_summary(session: requests.Session) -> dict:
             summary[sev] += int(attrs.get("count", 0))
     return summary
 ```
-
-## Forward P1/P2 Faults to ServiceNow
-
 ```python
 import os
 
@@ -100,15 +84,3 @@ def create_incident(fault: dict) -> str:
     resp.raise_for_status()
     return resp.json()["result"]["number"]
 ```
-
-## Script Inventory
-
-| Script | Purpose | Schedule |
-|---|---|---|
-| `nd_health_check.py` | Query ND REST API for cluster node health and service status | Daily |
-| `fabric_fault_export.py` | Export active fabric faults to CSV (filtered by severity and fabric) | Daily |
-| `ndfc_compliance_report.py` | Generate policy compliance report for all NDFC-managed fabrics | Weekly |
-| `alert_to_servicenow.py` | Forward P1/P2 fabric faults to ServiceNow | Event-driven |
-| `apic_fault_summary.py` | Query ACI APIC REST API for fault counts by severity and category | Daily |
-
-Scripts are stored in `scripts/nexus-dashboard/`. Load all credentials from the secrets manager. Use `verify=True` for all HTTPS calls (add internal CA bundle path if required: `verify="/path/to/ca-bundle.crt"`).

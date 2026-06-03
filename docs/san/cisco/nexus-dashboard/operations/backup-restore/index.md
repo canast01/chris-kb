@@ -1,63 +1,3 @@
-# Nexus Dashboard — Backup & Restore
-
-
-<div class="kb-summary">
-> Part of the [Nexus Dashboard](../../index.md) reference.
-</div>
-
----
-
-## Overview
-
-Nexus Dashboard backup captures the full cluster state:
-- Platform configuration (users, LDAP, certificates, site registrations)
-- NDFC database (fabrics, zones, device aliases, inventory, events)
-- NDI configuration and anomaly history (optional — large)
-- Application configuration and state
-
-Backups are critical for cluster recovery after node failure and as pre-upgrade snapshots. ND backup uses an external SCP or SFTP target — local-only backups are insufficient for DR.
-
----
-
-## Backup Configuration
-
-### Configure Remote Backup Destination
-
-Navigate to **Admin Console > Operations > Backup & Restore > Settings**:
-
-| Setting | Recommended Value |
-|---|---|
-| Backup type | SCP or SFTP |
-| Remote host | `backup-server.corp.example.com` |
-| Remote path | `/backups/nexus-dashboard/dc1/` |
-| Username | `nd-bkp` (write permission on target path) |
-| Authentication | SSH key (preferred) or password |
-| Encryption | Enabled — set a strong passphrase (store in vault) |
-| Retention count | 4 (keep last 4 backups) |
-
-Test the remote destination by clicking **Test Connection** before relying on it.
-
-### Schedule Automated Backups
-
-Navigate to **Admin Console > Operations > Backup & Restore > Schedule**:
-
-| Field | Value |
-|---|---|
-| Frequency | Weekly |
-| Day | Sunday |
-| Time | 02:00 (local appliance time) |
-| Include app data | Yes for NDFC; optional for NDI (large) |
-
-### Manual Backup (GUI)
-
-1. Navigate to **Admin Console > Operations > Backup & Restore**.
-2. Click **Backup Now**.
-3. Select: include or exclude NDI telemetry data (exclude for faster backup unless telemetry history is required).
-4. Click **Start Backup**.
-5. Monitor progress — backup status updates in the UI. Completion time depends on data size: 10-30 minutes typical.
-
-### Manual Backup (CLI)
-
 ```bash
 ssh ndadmin@nd-dc1-1.corp.example.com
 
@@ -73,6 +13,8 @@ acs backup status
 
 # List available backups
 acs backup list
+```
+
 ```text
 ┌───────────────────────── Cisco Nexus Dashboard — Operations Backup & Restore ─────────────────────────┐
 │                                                                                                       │
@@ -120,30 +62,3 @@ acs backup list
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
----
-
-## Backup Retention Policy
-
-| Backup Type | Frequency | Retention | Storage |
-|---|---|---|---|
-| ND cluster full backup | Weekly | 4 copies | Remote SCP/SFTP |
-| Pre-upgrade ND backup | Before every upgrade | Indefinite | Remote SCP/SFTP |
-| NDFC zone export | Before every zone change | 90 days | Change management system |
-| VM snapshots | Before each upgrade | Delete within 48h post-upgrade | vCenter datastore |
-
-Do not rely on VM snapshots as the primary recovery mechanism. Snapshots held longer than 48 hours degrade VM I/O performance and should be deleted after confirming the upgrade is stable.
-
----
-
-## Backup Verification
-
-Test the backup restore procedure at least annually:
-
-1. Deploy a temporary ND cluster (in a test environment or a dedicated DR environment).
-2. Restore the most recent production backup.
-3. Validate NDFC fabric inventory, zone databases, and user accounts.
-4. Document the test results (time to restore, any issues encountered).
-5. Delete the test cluster after validation.
-
-A restore that has never been tested in practice is not a reliable recovery plan.

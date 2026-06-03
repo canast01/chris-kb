@@ -1,22 +1,11 @@
-# CloudIQ CLI Reference
-
-
-<div class="kb-summary">
-CloudIQ is accessed programmatically via its REST API using OAuth2 client credentials. There is no standalone CLI binary; all automation uses the REST API directly. The API base URL is `https://cloudiq.apis.dell.com`.
-</div>
-
----
-
-## Authentication
-
-CloudIQ uses OAuth2 client credentials. Generate a client ID and secret from the CloudIQ portal under Settings → API Access.
-
 ```bash
 # Request an access token
 curl -X POST https://cloudiq.apis.dell.com/auth/oauth/v2/token   -H "Content-Type: application/x-www-form-urlencoded"   -d "grant_type=client_credentials&client_id=<client_id>&client_secret=<client_secret>"
 
 # The response contains access_token — use it as Bearer token in all requests
 # Token expires in 3600 seconds (1 hour)
+```
+
 ```text
 ┌─────────────────────────────────── CloudIQ — CLI and API Reference ───────────────────────────────────┐
 │                                                                                                       │
@@ -49,11 +38,6 @@ curl -X POST https://cloudiq.apis.dell.com/auth/oauth/v2/token   -H "Content-Typ
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
----
-
-## Recommendations
-
 ```bash
 # List all recommendations
 curl -X GET "https://cloudiq.apis.dell.com/cloudiq/rest/v1/recommendations"   -H "Authorization: Bearer <token>"
@@ -61,11 +45,6 @@ curl -X GET "https://cloudiq.apis.dell.com/cloudiq/rest/v1/recommendations"   -H
 # List recommendations for a specific system
 curl -X GET "https://cloudiq.apis.dell.com/cloudiq/rest/v1/recommendations?filter=system_id%20eq%20%22<system_id>%22"   -H "Authorization: Bearer <token>"
 ```
-
----
-
-## Python Automation Example
-
 ```python
 import requests
 

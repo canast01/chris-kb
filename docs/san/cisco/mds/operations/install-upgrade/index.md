@@ -1,59 +1,3 @@
-# MDS — Install & Upgrade
-
-
-<div class="kb-summary">
-> Part of the [Cisco MDS](../../index.md) reference.
-</div>
-
----
-
-## Version Tracking
-
-NX-OS versions for MDS 9000 are tracked on the Cisco Software Advisor. Version selection is driven by:
-
-- HCL requirements of connected host HBA drivers
-- HCL requirements of connected storage array microcode (PowerMax, Pure, NetApp)
-- Cisco TAC recommended releases (listed per platform on the software download page)
-- End-of-support dates for the current NX-OS train
-
-End-of-sale and end-of-support dates are tracked in the CMDB. Alerts are triggered 18 months before end-of-support to allow adequate planning.
-
----
-
-## Upgrade Methods
-
-| Method | Applicability | Disruption |
-|---|---|---|
-| `install all` | All platforms | Reloads the switch — disruptive |
-| ISSU | Directors (9706/9710) | Non-disruptive if prerequisites met |
-| EPLD upgrade | All platforms | Separate from NX-OS; may require reload |
-
-**ISSU prerequisites (9706/9710):**
-
-- Dual supervisors must be installed and in sync
-- Both supervisors must be running the same NX-OS version
-- No ongoing configuration sessions
-- No in-service diagnostics running
-- No ports in error-disabled state on the upgrade path
-
-If ISSU prerequisites are not met, fall back to `install all` in a maintenance window.
-
----
-
-## Upgrade Procedure (`install all`)
-
-**Pre-upgrade checklist:**
-
-- [ ] Current NX-OS version noted: `show version`
-- [ ] Running config saved: `copy running-config startup-config`
-- [ ] Config backed up off-switch via SCP
-- [ ] HCL compatibility confirmed for target NX-OS version
-- [ ] EPLD upgrade required? Check Cisco release notes for the target version
-- [ ] Maintenance window booked — `install all` reloads the switch
-- [ ] Dual-fabric confirmed — the other fabric will carry all I/O during the reload
-
-**Upgrade steps:**
-
 ```bash
 # Step 1 — Copy the target NX-OS image to the switch bootflash
 copy scp://<server>/<path>/nxos.bin bootflash:
@@ -74,6 +18,8 @@ show version
 show interface brief   # all ports up
 show vsan             # all VSANs active
 show zoneset active   # zoning intact
+```
+
 ```text
 ┌──────────────────────────────── Cisco MDS 9000 — Install and Upgrade ─────────────────────────────────┐
 │                                                                                                       │
@@ -121,16 +67,6 @@ show zoneset active   # zoning intact
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-5. Configure VSANs on the ISL trunk port to allow only the required VSANs.
-6. Update CMDB and SAN design register with the new switch domain ID and port allocation.
-
----
-
-## Decommission Procedure
-
-When removing a switch from the fabric:
-
 ```bash
 # Step 1 — Move all host and storage ports to other switches
 # Step 2 — Disable the ISL port-channels to isolate the switch from the fabric

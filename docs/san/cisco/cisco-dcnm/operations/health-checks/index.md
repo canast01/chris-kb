@@ -1,29 +1,3 @@
-# Cisco DCNM — Health Checks
-
-
-<div class="kb-summary">
-> Part of the [Cisco DCNM](../../index.md) reference.
-</div>
-
----
-
-## Overview
-
-Run these checks on a regular schedule — daily for critical SAN environments, weekly minimum for all production fabrics. Checks are performed via the DCNM web GUI, REST API, and the DCNM appliance CLI.
-
----
-
-## 1. DCNM Appliance Health
-
-### GUI
-
-Navigate to **Administration > System > System Status**. Verify:
-- All services show **Running**
-- Disk usage below 80%
-- Memory usage below 85%
-
-### Appliance CLI
-
 ```bash
 ssh root@dcnm-dc1.corp.example.com
 
@@ -44,6 +18,8 @@ grep -i "ERROR\|SEVERE\|Exception" /var/log/dcnm/server.log | tail -50
 # NTP status
 timedatectl status
 # Expected: synchronized: yes
+```
+
 ```text
 ┌───────────────────────────────────── Cisco DCNM — Health Checks ──────────────────────────────────────┐
 │                                                                                                       │
@@ -91,68 +67,8 @@ timedatectl status
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
----
-
-## 5. Active Alarms
-
-Navigate to **Monitor > Alarms > Active Alarms**. Triage:
-
-| Severity | Action |
-|---|---|
-| Critical | Immediate response |
-| Major | Assign and respond within 4 hours |
-| Minor | Review and acknowledge within 24 hours |
-| Warning | Review daily |
-
-Suppress acknowledged alarms that have no current operational impact. Use the **Acknowledge** function to track ownership.
-
----
-
-## 6. Zone Set Consistency
-
-Navigate to **SAN > Zoning > Active Zone Sets**. Verify:
-- The correct zone set is active in each VSAN
-- Zone member count matches expectations (unexpected changes may indicate unauthorised zone modifications)
-
 ```bash
 # On MDS switch to verify zone set consistency
 show zoneset active vsan <vsan-id>
 # Compare against expected zone set exported from DCNM
 ```
-
----
-
-## 7. End Device Inventory
-
-Navigate to **SAN > End Devices**. Verify:
-- Expected host HBAs and storage ports are listed and Online
-- No unexpected FC IDs (may indicate rogue devices or fabric segment leakage)
-- Device alias assignments are correct
-
----
-
-## 8. Performance Manager Data
-
-Navigate to **Monitor > Performance > Interfaces**. Verify:
-- Performance data is being collected for all managed switches (data should be current; if last update is > 10 minutes ago, PM polling may have stalled)
-- No sustained high-utilization ISLs approaching capacity
-- No growing error counters on any port
-
----
-
-## Weekly Health Check Summary
-
-| Check | Pass Criterion | Location |
-|---|---|---|
-| DCNM services running | All services: Running | Admin > System Status |
-| Disk usage < 80% | < 80% | Appliance CLI / Admin |
-| NTP synchronized | Yes | Appliance CLI |
-| All switches managed | 0 unmanageable | SAN > Fabrics |
-| All VSANs active | 0 isolated/inactive | SAN > VSANs |
-| All ISLs up | 0 ISL down | SAN > ISLs |
-| ISL utilization | No ISL > 70% sustained | Monitor > Performance |
-| No unacknowledged critical alarms | 0 critical unacked | Monitor > Alarms |
-| Active zone set correct | Matches expected | SAN > Zoning |
-| Performance data current | Last poll < 10 min | Monitor > Performance |
-| DB backup successful | Last backup < 8 days | Backup log |

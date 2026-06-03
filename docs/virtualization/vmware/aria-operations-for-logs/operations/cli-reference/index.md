@@ -1,14 +1,3 @@
-# Aria Ops for Logs — CLI Reference
-
-
-<div class="kb-summary">
-Aria Operations for Logs (formerly vRealize Log Insight) exposes a REST API and a `vracli` / `li-admin` CLI available on the virtual appliance via SSH. The Ingestion API receives log data from agents and third-party sources.
-</div>
-
----
-
-## Appliance CLI (SSH Access)
-
 ```bash
 # SSH to the Log Insight appliance
 ssh admin@<li-appliance-fqdn>
@@ -27,6 +16,8 @@ li-admin log-collection-status
 
 # Show current storage usage
 li-admin storage
+```
+
 ```text
 ┌────────────────────────────── Aria Operations for Logs — CLI Reference ───────────────────────────────┐
 │                                                                                                       │
@@ -72,11 +63,6 @@ li-admin storage
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
----
-
-## REST API — Queries & Alerts
-
 ```bash
 # Run a log query
 curl -k -X POST https://<li-fqdn>/api/v1/events/query \
@@ -92,22 +78,12 @@ curl -k -X GET https://<li-fqdn>/api/v1/alerts \
 curl -k -X GET https://<li-fqdn>/api/v1/notification/channels \
   -H "Authorization: Bearer <sessionId>"
 ```
-
----
-
-## REST API — Ingestion
-
 ```bash
 # Send logs via CFAPI (Log Insight Ingestion API)
 curl -k -X POST https://<li-fqdn>:9543/api/v1/events/ingest/<agentId> \
   -H "Content-Type: application/json" \
   -d '{"messages":[{"text":"test log message","timestamp":<epoch_ms>,"fields":[{"name":"hostname","content":"myhost"}]}]}'
 ```
-
----
-
-## REST API — Administration
-
 ```bash
 # List data sources (agents)
 curl -k -X GET https://<li-fqdn>/api/v1/agents \
@@ -125,11 +101,6 @@ curl -k -X GET https://<li-fqdn>/api/v1/system/info \
 curl -k -X GET https://<li-fqdn>/api/v1/system/storage \
   -H "Authorization: Bearer <sessionId>"
 ```
-
----
-
-## Common Patterns
-
 ```bash
 # Daily health check
 li-admin status

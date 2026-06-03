@@ -1,20 +1,11 @@
-# AWS — Diagnostics
-
-
-<div class="kb-summary">
-Diagnostics reference covering Identify Current Identity and Account, EC2 — Instance Diagnostics, EC2 — Network Diagnostics, RDS — Diagnostics, Lambda — Diagnostics and 3 more sections.
-</div>
-
----
-
-## Identify Current Identity and Account
-
 ```bash
 aws sts get-caller-identity
 # Returns: UserId, Account, Arn — confirm you are in the correct account and role
 
 # Check profile in use
 aws configure list
+```
+
 ```text
 ┌─────────────────────────────── AWS Diagnostics — Investigation Toolset ───────────────────────────────┐
 │                                                                                                       │
@@ -62,11 +53,6 @@ aws configure list
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
----
-
-## EC2 — Network Diagnostics
-
 ```bash
 # Check VPC Reachability Analyzer (path analysis)
 aws ec2 create-network-insights-path \
@@ -93,11 +79,6 @@ aws logs filter-log-events \
   --start-time $(($(date +%s) - 3600))000 \
   --query 'events[*].message' --output text
 ```
-
----
-
-## RDS — Diagnostics
-
 ```bash
 # Check recent RDS events (errors, failovers)
 aws rds describe-events \
@@ -131,11 +112,6 @@ aws logs filter-log-events \
   --start-time $(($(date +%s) - 3600))000 \
   --query 'events[*].message' --output text | head -50
 ```
-
----
-
-## Lambda — Diagnostics
-
 ```bash
 # List recent invocation errors
 aws logs filter-log-events \
@@ -172,11 +148,6 @@ aws cloudwatch get-metric-statistics \
   --period 300 --statistics Sum \
   --query 'sort_by(Datapoints, &Timestamp)[-1].Sum' --output text
 ```
-
----
-
-## EKS — Cluster Diagnostics
-
 ```bash
 # Cluster control plane logs (requires logging enabled)
 aws eks update-cluster-config \
@@ -202,11 +173,6 @@ kubectl get nodes -o wide
 kubectl describe node <node-name> | grep -A 20 "Conditions:"
 kubectl get pods -A --field-selector=status.phase!=Running,status.phase!=Succeeded
 ```
-
----
-
-## IAM — Policy Debugging
-
 ```bash
 # Simulate a specific action to find why it's denied
 aws iam simulate-principal-policy \
@@ -225,11 +191,6 @@ aws iam list-role-policies --role-name MyRole  # Inline policies
 aws iam get-role --role-name MyRole \
   --query 'Role.AssumeRolePolicyDocument' | python3 -m json.tool
 ```
-
----
-
-## CloudFormation — Stack Diagnostics
-
 ```bash
 # Show stack events ordered by time (most recent first)
 aws cloudformation describe-stack-events \

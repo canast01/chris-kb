@@ -1,26 +1,7 @@
-# SRDF/S — Install & Upgrade
-
-
-<div class="kb-summary">
-> Part of the [SRDF/S Operations](../index.md) reference.
-</div>
-
----
-
-## HYPERMAX OS Version Compatibility
-
-SRDF/S pairs require compatible HYPERMAX OS versions on both arrays. Always check the Dell interoperability matrix before mixed-version pairing.
-
-| Source Array | Target Array | Supported? | Why |
-|---|---|---|---|
-| PowerMax 2500 (10.0.x) | PowerMax 2500 (10.0.x) | Yes (same version) | Identical microcode level — full SRDF/S feature parity |
-| PowerMax 2500 (10.0.x) | PowerMax 8500 (10.0.x) | Yes (same major) | Same major release supports cross-model pairing |
-| PowerMax (10.0.x) | VMAX All Flash (8.4.x) | Check matrix — limited | Different product generations; some SRDF/S features unavailable |
-| PowerMax (10.1.x) | PowerMax (10.0.x) | Check matrix — N-1 typically supported | N-1 is generally allowed but verify specific feature requirements |
-
-Verify current version:
 ```bash
 symcfg list -v | grep "Microcode"
+```
+
 ```text
 ┌───────────────────────────────────── SRDF/S — Install & Upgrade ──────────────────────────────────────┐
 │                                                                                                       │
@@ -73,22 +54,6 @@ symcfg list -v | grep "Microcode"
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
----
-
-## License Lifecycle
-
-SRDF licenses are array-bound per PowerMax array. Track:
-
-| Item | Action | Why |
-|---|---|---|
-| License expiry dates | Annual review; alert 90 days before expiry | Expired license disables SRDF operations — potential production outage |
-| SRDF/S vs SRDF/A licences | Separate SKUs; verify correct licence type is applied | Wrong license type results in replication mode mismatch at establish time |
-| SRDF/E (encryption) | Optional add-on — track separately | Required for compliance frameworks mandating data-in-transit encryption |
-| License compliance | Compare licensed pairs vs. `symcfg list -rdfg` output | Over-deployed pairs may fail to establish if license count is exceeded |
-
-## NDU Firmware Upgrade Sequence
-
 ```mermaid
 flowchart TD
     preCheck["Verify All Pairs Synchronized\nsymrdf -g rdfg query | grep -v Synchronized"]

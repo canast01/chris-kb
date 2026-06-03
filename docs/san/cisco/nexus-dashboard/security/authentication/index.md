@@ -1,75 +1,3 @@
-# Nexus Dashboard — Authentication
-
-
-<div class="kb-summary">
-> Part of the [Nexus Dashboard](../../index.md) reference.
-</div>
-
----
-
-## Overview
-
-Nexus Dashboard uses Keycloak as its internal identity provider. It supports local accounts, LDAP/Active Directory, TACACS+, RADIUS, and SAML 2.0 SSO. Production environments should use LDAP or SAML for named user accounts, with a single local admin account reserved as break-glass.
-
----
-
-## 1. Local Accounts
-
-Local accounts are managed under **Admin Console > Security > Local Users**.
-
-### Creating a Local Account
-
-1. Navigate to **Admin Console > Security > Local Users > Add User**.
-2. Enter username, full name, and email.
-3. Set a strong initial password.
-4. Assign a role (see [Access Control](../access-control/index.md)).
-5. Click **Save**.
-
-### Password Policy
-
-Configure under **Admin Console > Security > Security Settings > Password Policy**:
-
-| Setting | Recommended Value |
-|---|---|
-| Minimum length | 12 characters |
-| Require uppercase | Yes |
-| Require lowercase | Yes |
-| Require numbers | Yes |
-| Require special characters | Yes |
-| Maximum age | 90 days |
-| Password history | 12 (cannot reuse last 12) |
-| Account lockout after | 5 failed attempts |
-| Lockout duration | 30 minutes |
-
-### Break-Glass Account
-
-Maintain exactly one local admin account as break-glass:
-- Username: `admin` (default) or `nd-breakglass`
-- Password: stored in vault (HashiCorp Vault, CyberArk) — not known to individual engineers
-- Rotate quarterly
-- All use must be recorded in the audit trail
-- Used only when LDAP/SAML is unavailable
-
----
-
-## 2. LDAP / Active Directory
-
-Configure under **Admin Console > Security > Authentication > Login Domains > Add**:
-
-| Field | Value |
-|---|---|
-| Domain name | `CORP-AD` |
-| Type | Active Directory |
-| Server address | `ldap.corp.example.com` |
-| Port | 636 (LDAPS) |
-| Base DN | `DC=corp,DC=example,DC=com` |
-| Bind DN | `CN=nd-svc,OU=Service Accounts,DC=corp,DC=example,DC=com` |
-| Bind password | Service account password |
-| User attribute | `sAMAccountName` |
-| Group search base | `OU=ND-Groups,DC=corp,DC=example,DC=com` |
-
-### Import CA Certificate for LDAPS
-
 ```bash
 ssh ndadmin@nd-dc1-1.corp.example.com
 
@@ -78,6 +6,8 @@ acs certificates import-ca --cert /tmp/corp-ca.crt --name corp-ldap-ca
 
 # Verify
 acs certificates show-ca
+```
+
 ```text
 ┌─────────────────────────── Cisco Nexus Dashboard — Security Authentication ───────────────────────────┐
 │                                                                                                       │
@@ -125,9 +55,3 @@ acs certificates show-ca
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
----
-
-## Related Reference
-
-- [Standard LDAP Integration](../../../../../security/ldap-integration/index.md) — field reference, service account standards, TLS requirements, and connectivity testing
-- [Standard SAML Configuration](../../../../../security/saml-configuration/index.md) — SP/IdP setup, Azure AD and Okta steps, attribute mapping, and security requirements

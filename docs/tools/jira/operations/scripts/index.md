@@ -1,10 +1,3 @@
-# Jira — Scripts
-
-
-<div class="kb-summary">
-All scripts use environment variables for credentials. Set these before running:
-</div>
-
 ```bash
 export JIRA_URL="https://jira.example.com"
 export JIRA_USER="admin@example.com"
@@ -13,6 +6,8 @@ export JIRA_DB_HOST="db.example.com"
 export JIRA_DB_NAME="jiradb"
 export JIRA_DB_USER="jira"
 export PGPASSWORD="${JIRA_DB_PASSWORD}"
+```
+
 ```text
 ┌────────────────────────────────────── Jira — Operations Scripts ──────────────────────────────────────┐
 │                                                                                                       │
@@ -44,9 +39,6 @@ export PGPASSWORD="${JIRA_DB_PASSWORD}"
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-### Inactive User Report (SQL)
-
 ```sql
 -- Users who have not logged in for 90+ days
 SELECT u.user_name, u.lower_display_name, u.email_address,
@@ -58,13 +50,6 @@ WHERE a.attribute_value IS NULL
    OR TO_TIMESTAMP(a.attribute_value::bigint / 1000) < now() - interval '90 days'
 ORDER BY last_login ASC NULLS FIRST;
 ```
-
----
-
-## 3. Bulk Issue Transition
-
-Transitions all issues matching a JQL filter to a target workflow status.
-
 ```bash
 #!/bin/bash
 # jira-bulk-transition.sh — Transition all matching issues
@@ -135,13 +120,6 @@ for t in transitions:
 done
 echo "Done."
 ```
-
----
-
-## 4. Project Cleanup Script
-
-Archives stale issues and identifies projects with no recent activity.
-
 ```bash
 #!/bin/bash
 # jira-project-cleanup.sh — Report stale projects and issues
@@ -209,11 +187,6 @@ for row in stale:
     print(f"  [{row[0]}] {row[1]} — last activity: {row[3]} ({row[4]})")
 PYEOF
 ```
-
----
-
-## 5. Plugin / App List Export
-
 ```bash
 #!/bin/bash
 # jira-plugin-list.sh — Export all installed apps with version and status
@@ -245,13 +218,6 @@ echo "Total plugins: $(wc -l < ${OUTPUT})"
 echo "Enabled:  $(grep -c ',True,' ${OUTPUT})"
 echo "Disabled: $(grep -c ',False,' ${OUTPUT})"
 ```
-
----
-
-## 6. Log Rotation Automation
-
-Jira rotates `atlassian-jira.log` automatically, but Tomcat `catalina.out` grows unbounded. Manage with `logrotate`:
-
 ```ini
 # /etc/logrotate.d/jira
 /opt/atlassian/jira/logs/catalina.out {
@@ -286,15 +252,9 @@ Jira rotates `atlassian-jira.log` automatically, but Tomcat `catalina.out` grows
     notifempty
 }
 ```
-
-Test log rotation config:
-
 ```bash
 logrotate --debug /etc/logrotate.d/jira
 ```
-
-Archive old logs to object storage:
-
 ```bash
 #!/bin/bash
 # archive-logs.sh — Move logs older than 30 days to S3
@@ -306,13 +266,6 @@ find "${LOG_DIR}" -name "*.gz" -mtime +30 -exec \
 
 echo "Log archive complete: $(date)"
 ```
-
----
-
-## 7. JVM Heap Dump Capture
-
-Use for diagnosing OutOfMemoryError or suspected memory leaks.
-
 ```bash
 #!/bin/bash
 # jira-heap-dump.sh — Capture JVM heap dump from Jira process
@@ -346,9 +299,6 @@ else
   exit 1
 fi
 ```
-
-### Thread Dump (No JVM Pause)
-
 ```bash
 #!/bin/bash
 # jira-thread-dump.sh — Capture 3 consecutive thread dumps (for deadlock/hang analysis)
@@ -371,9 +321,6 @@ grep -A 2000 "Full thread dump" /opt/atlassian/jira/logs/catalina.out \
 
 echo "Thread dumps extracted to: ${OUTPUT_DIR}"
 ```
-
-### JVM Statistics (Real-Time)
-
 ```bash
 # Monitor GC in real time
 JIRA_PID=$(pgrep -f 'atlassian-jira' | head -1)

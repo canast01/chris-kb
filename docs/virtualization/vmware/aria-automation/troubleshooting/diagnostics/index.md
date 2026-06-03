@@ -1,16 +1,3 @@
-# Aria Automation — Diagnostics
-
-
-<div class="kb-summary">
-Diagnostics reference covering Blueprints (Cloud Templates), Deployments, Requests and Catalog, Related Sections.
-</div>
-
-## Blueprints (Cloud Templates)
-
-### Blueprint Structure
-
-A Cloud Template YAML has three top-level sections:
-
 ```yaml
 formatVersion: 1
 inputs:
@@ -45,6 +32,8 @@ resources:
     properties:
       networkType: existing
       name: VLAN-100-Servers
+```
+
 ```text
 ┌──────────────────────────────────── Aria Automation — Diagnostics ────────────────────────────────────┐
 │                                                                                                       │
@@ -90,24 +79,6 @@ resources:
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
----
-
-## Deployments
-
-### Deployment Status Values
-
-| Status | Meaning | Action |
-|---|---|---|
-| `CREATE_SUCCESSFUL` | Deployment created without errors | None — healthy state |
-| `CREATE_FAILED` | One or more resources failed to provision | Check deployment events log |
-| `UPDATE_SUCCESSFUL` | Day-2 action completed | None |
-| `UPDATE_FAILED` | Day-2 action failed | Check action log; retry or rollback |
-| `DELETE_SUCCESSFUL` | All resources cleaned up | None |
-| `DELETE_FAILED` | Some resources not deleted | Manual cleanup may be required |
-
-### Deployment Lifecycle Commands
-
 ```bash
 # List all deployments
 curl -sk -H "Authorization: Bearer $TOKEN" \
@@ -129,9 +100,6 @@ curl -sk -H "Authorization: Bearer $TOKEN" \
   "https://<vra-fqdn>/deployment/api/deployments/<deployment-id>/events?eventTypes=FAILED" \
   | python3 -m json.tool
 ```
-
-### Day-2 Actions
-
 ```bash
 # List available day-2 actions for a deployment
 curl -sk -H "Authorization: Bearer $TOKEN" \
@@ -148,24 +116,6 @@ curl -sk -X POST -H "Authorization: Bearer $TOKEN" \
     "inputs": {}
   }'
 ```
-
----
-
-## Requests and Catalog
-
-### Request Status Values
-
-| Status | Meaning | Next Step |
-|---|---|---|
-| `PENDING_APPROVAL` | Waiting for approver action | Approver notified by email |
-| `APPROVAL_REJECTED` | Approver rejected the request | Requester notified; no provisioning |
-| `IN_PROGRESS` | Provisioning underway | Monitor deployment events |
-| `SUCCESSFUL` | Deployment complete | Check deployment in Deployments tab |
-| `FAILED` | Provisioning error occurred | Review request events for root cause |
-| `CANCELLED` | Requester or admin cancelled | No resources created |
-
-### Request Troubleshooting Commands
-
 ```bash
 # List all requests
 curl -sk -H "Authorization: Bearer $TOKEN" \
@@ -187,10 +137,3 @@ curl -sk -H "Authorization: Bearer $TOKEN" \
   "https://<vra-fqdn>/catalog/api/requests?requestState=FAILED" \
   | python3 -m json.tool
 ```
-
----
-
-## Related Sections
-
-- [Operations](../../operations/index.md) — health checks and procedures
-- [Escalation](../escalation/index.md) — opening vendor support cases

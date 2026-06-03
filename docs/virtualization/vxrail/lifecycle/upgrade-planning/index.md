@@ -1,11 +1,3 @@
-# VxRail Upgrade Procedure
-
-
-<div class="kb-summary">
-VxRail upgrades include VMware software, Dell firmware, drivers, and VxRail-specific lifecycle validation. Use VxRail Manager and the approved upgrade bundle — do not treat a VxRail upgrade like a standard ESXi upgrade.
-</div>
-
-VxRail Upgrade Sequence
 ```text
 ┌─────────────────────────────────────────────────────────────┐
 │  Phase 1: Plan          Phase 2: Pre-checks                                                           │
@@ -17,8 +9,6 @@ VxRail Upgrade Sequence
 │                         DNS · NTP · backups                                                           │
 └─────────────────────────────────────────────────────────────┘
 ```
-                    │
-                    ▼
 ```text
 ┌─────────────────────────────────────────────────────────────┐
 │  Phase 3–4: Bundle + Pre-check                                                                        │
@@ -26,22 +16,6 @@ VxRail Upgrade Sequence
 │  Run LCM Pre-Check → all green before proceeding                                                      │
 └──────────────────────────┬──────────────────────────────────┘
 ```
-                           │
-          ┌────────────────▼──────────────────┐
-          │  Phase 5: Node-by-Node Upgrade     │
-          │                                   │
-          │  Node N:                          │
-          │  evacuate VMs → enter MM          │
-          │  firmware update → ESXi update    │
-          │  reboot → exit MM                 │
-          │  validate → next node             │
-          └────────────────┬──────────────────┘
-                           │
-          ┌────────────────▼──────────────────┐
-          │  Phase 7–8: Post-Upgrade           │
-          │  validate health · firmware        │
-          │  update change ticket · versions   │
-          └────────────────────────────────────┘
 ```bash
 
 ---
@@ -125,95 +99,8 @@ Collect before starting:
 
 Save with standard name:
 
+```
+
 ```text
 vxrail-support-bundle-CLUSTERNAME-YYYY-MM-DD.zip
 ```
-
----
-
-## Phase 4: Upgrade Pre-Check
-
-Run VxRail Manager pre-check.
-
-If pre-check fails:
-
-1. Capture failure message and detailed output
-2. Do not start upgrade
-3. Fix the known issue and re-run pre-check
-4. Open a Dell support case if unclear
-5. Attach support bundle if needed
-
----
-
-## Phase 5: Upgrade Execution
-
-### Start Upgrade
-
-1. Upload or select upgrade bundle in VxRail Manager
-2. Confirm target version and run validation
-3. Accept upgrade plan and start upgrade
-4. Monitor each stage
-
-### Monitor Upgrade
-
-Watch:
-
-- VxRail Manager status and upgrade percentage
-- vCenter tasks
-- Host maintenance mode, firmware updates, and reboots
-- vSAN resync activity
-- Hardware alerts
-
-### Node-by-Node Behavior
-
-For each node:
-
-1. Workloads migrate off node
-2. Host enters maintenance mode
-3. Firmware and software updated
-4. Host reboots and reconnects
-5. Host exits maintenance mode
-6. Health validated
-7. Upgrade moves to next node
-
-### Do Not Interrupt
-
-Do not reboot VxRail Manager, reboot hosts manually, cancel upgrade, restart services, make unrelated vCenter changes, or force remove hosts from maintenance mode — unless instructed by Dell support.
-
----
-
-## Phase 6: Failed Upgrade Handling
-
-If upgrade fails or gets stuck:
-
-1. Capture exact error and screenshots
-2. Review VxRail Manager status and vCenter tasks
-3. Identify affected node
-4. Check host maintenance mode state, vSAN health, and hardware alerts
-5. Collect support bundle
-6. Open Dell support case
-7. Follow Dell recovery steps
-
-> Do not guess on failed VxRail upgrades. The wrong action makes recovery harder.
-
----
-
-## Phase 7: Post-Upgrade Validation
-
-- VxRail Manager UI shows target version
-- All hosts Connected
-- vSAN Skyline Health green, no unexpected resyncs
-- Hardware health clean, firmware matches baseline
-- VMs running, DRS and HA healthy
-- Backups working
-- Monitoring tools receiving data
-
-## Phase 8: Documentation
-
-Update:
-
-- Change ticket with upgrade start/end time and results
-- VxRail, vCenter, ESXi, firmware, and driver versions
-- Pre-check and post-check results
-- Issues found and Dell case number if used
-- Lessons learned

@@ -1,24 +1,3 @@
-# Cisco DCNM — CLI Reference
-
-
-<div class="kb-summary">
-> Part of the [Cisco DCNM](../../index.md) reference.
-</div>
-
----
-
-## Overview
-
-DCNM CLI access is via SSH to the DCNM appliance (root or admin account). The primary management interface is the REST API for automation. This page covers both.
-
----
-
-## DCNM Appliance CLI
-
-Connect: `ssh root@dcnm-dc1.corp.example.com`
-
-### Service Management
-
 ```bash
 # Start all DCNM services
 /usr/local/cisco/dcm/dcnm/sbin/dcnm-server start
@@ -36,6 +15,8 @@ Connect: `ssh root@dcnm-dc1.corp.example.com`
 systemctl start dcnm-server
 systemctl stop dcnm-pm        # performance manager only
 systemctl restart dcnm-events
+```
+
 ```text
 ┌───────────────────────────────────── Cisco DCNM — CLI Reference ──────────────────────────────────────┐
 │                                                                                                       │
@@ -83,9 +64,6 @@ systemctl restart dcnm-events
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-### Network Diagnostics
-
 ```bash
 # Test SSH connectivity to a managed switch
 ssh -o ConnectTimeout=5 -o BatchMode=yes dcnm_mgmt@<switch-ip> 'show version' 2>&1
@@ -97,9 +75,6 @@ snmpget -v3 -u dcnm_poll -l authPriv -a SHA -A <auth-pass> \
 # Test if DCNM is receiving traps (capture for 30 seconds)
 sudo tcpdump -i eth0 -n udp port 162 -c 20
 ```
-
-### HA Management
-
 ```bash
 # Check HA status
 /usr/local/cisco/dcm/dcnm/bin/dcnm-ha-status.sh
@@ -110,13 +85,6 @@ sudo tcpdump -i eth0 -n udp port 162 -c 20
 # Check VIP status
 ip addr show | grep <vip-address>
 ```
-
----
-
-## REST API Reference
-
-### Authentication
-
 ```bash
 # Login with Basic Auth — returns session cookie
 curl -sk -c dcnm-cookie.txt -X POST \
@@ -131,9 +99,6 @@ export DCNM="https://dcnm-dc1.corp.example.com"
 # Logout
 curl -sk -b dcnm-cookie.txt -X POST "${DCNM}/rest/logout"
 ```
-
-### Inventory Queries
-
 ```bash
 # List all switches
 curl -sk -b dcnm-cookie.txt "${DCNM}/rest/inventory/switches" \
@@ -151,9 +116,6 @@ curl -sk -b dcnm-cookie.txt "${DCNM}/rest/san/fabric" \
 curl -sk -b dcnm-cookie.txt "${DCNM}/rest/san/vsan" \
   | python3 -m json.tool
 ```
-
-### Zoning Queries
-
 ```bash
 # Get zone database for a fabric
 curl -sk -b dcnm-cookie.txt \
@@ -170,9 +132,6 @@ curl -sk -b dcnm-cookie.txt \
   "${DCNM}/rest/san/devicealias?fabricName=DC1-FABRIC-A" \
   | python3 -m json.tool
 ```
-
-### Event and Alarm Queries
-
 ```bash
 # Get all active alarms
 curl -sk -b dcnm-cookie.txt \
@@ -184,9 +143,6 @@ curl -sk -b dcnm-cookie.txt \
   "${DCNM}/rest/events/allevents?size=100&sortby=eventtime&orderby=desc" \
   | python3 -m json.tool
 ```
-
-### Image Management
-
 ```bash
 # List firmware images in DCNM repository
 curl -sk -b dcnm-cookie.txt "${DCNM}/rest/fm/image" \
@@ -201,11 +157,6 @@ curl -sk -b dcnm-cookie.txt -X POST "${DCNM}/rest/fm/upgrade" \
     "installMode": "non-disruptive"
   }' | python3 -m json.tool
 ```
-
----
-
-## Useful One-Liners
-
 ```bash
 # Count switches by management state
 curl -sk -b dcnm-cookie.txt "${DCNM}/rest/inventory/switches" \

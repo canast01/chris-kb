@@ -1,18 +1,3 @@
-# Confluence — Encryption
-
-
-<div class="kb-summary">
-TLS configuration, data at rest encryption, attachment storage security, and database encryption.
-</div>
-
-## TLS — Encryption in Transit
-
-All Confluence traffic should be served over HTTPS. TLS termination can occur at Confluence directly (via the embedded Tomcat), or at a reverse proxy (Nginx, Apache, load balancer).
-
-### TLS at a Reverse Proxy (Recommended)
-
-Running TLS termination at a reverse proxy is the preferred approach. It simplifies certificate management and keeps the Java keystore simple.
-
 ```nginx
 # /etc/nginx/conf.d/confluence.conf
 server {
@@ -47,6 +32,8 @@ server {
         proxy_set_header X-Forwarded-Proto https;
     }
 }
+```
+
 ```text
 ┌─────────────────────────────────────── Confluence — Encryption ───────────────────────────────────────┐
 │                                                                                                       │
@@ -92,18 +79,6 @@ server {
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-<!-- /opt/atlassian/confluence/conf/server.xml — SSL Connector -->
-<Connector port="8443" maxHttpHeaderSize="8192"
-           maxThreads="150" minSpareThreads="25" maxSpareThreads="75"
-           enableLookups="false" disableUploadTimeout="true"
-           acceptCount="100" scheme="https" secure="true"
-           sslProtocol="TLSv1.2+TLSv1.3"
-           clientAuth="false"
-           sslEnabledProtocols="TLSv1.2,TLSv1.3"
-           ciphers="TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
-           keystoreFile="/opt/atlassian/confluence/conf/keystore.jks"
-           keystorePass="changeit" />
 ```text
 
 ## Database Encryption
@@ -112,11 +87,12 @@ Confluence stores all content (pages, comments, attachments metadata) in its dat
 
 ### Encrypted Database Connection
 
+```
+
 ```xml
 <!-- /opt/atlassian/confluence/confluence/WEB-INF/classes/confluence-init.properties -->
 <!-- Ensure JDBC URL uses SSL -->
 ```
-
 ```bash
 ## /var/atlassian/application-data/confluence/confluence.cfg.xml
 ## Ensure the JDBC URL includes SSL parameters:
@@ -125,9 +101,6 @@ jdbc:postgresql://dbserver.example.local:5432/confluence?ssl=true&sslmode=requir
 ## For MySQL:
 jdbc:mysql://dbserver.example.local:3306/confluence?useSSL=true&requireSSL=true
 ```
-
-### Database Password Encryption
-
 ```bash
 ## Store the database password encrypted in confluence.cfg.xml
 ## Use Confluence's built-in password encoding tool
@@ -136,11 +109,6 @@ jdbc:mysql://dbserver.example.local:3306/confluence?useSSL=true&requireSSL=true
 ## The encoded password is stored in confluence.cfg.xml as:
 ## <property name="hibernate.connection.password">{AES}EncryptedValue=</property>
 ```
-
-### Database at Rest Encryption
-
-Database-level encryption is handled at the database server, not by Confluence directly:
-
 ```sql
 -- PostgreSQL with pgcrypto (column-level encryption example)
 -- Prefer Transparent Data Encryption (TDE) at the storage layer
@@ -151,13 +119,6 @@ Database-level encryption is handled at the database server, not by Confluence d
 -- PostgreSQL — use filesystem-level encryption (LUKS on the data partition)
 -- or pgcrypto for sensitive column encryption
 ```
-
-## Attachment Storage Encryption
-
-Confluence stores file attachments on the filesystem (by default under `<confluence-home>/attachments/`).
-
-### Filesystem-Level Encryption (Linux)
-
 ```bash
 ## The attachment directory should be on an encrypted volume (LUKS)
 ## Verify the attachment directory location
@@ -180,9 +141,6 @@ rsync -avz /var/atlassian/application-data/confluence/attachments/ /secure/confl
 ## 4. Start Confluence
 systemctl start confluence
 ```
-
-### Windows — BitLocker for Attachment Storage
-
 ```powershell
 ## If Confluence is running on Windows, ensure the attachment volume is BitLocker-encrypted
 Get-BitLockerVolume -MountPoint "D:" | Select-Object VolumeStatus, ProtectionStatus
@@ -191,11 +149,6 @@ Get-BitLockerVolume -MountPoint "D:" | Select-Object VolumeStatus, ProtectionSta
 Get-Content "C:\ProgramData\Atlassian\Application Data\Confluence\confluence.cfg.xml" |
   Select-String "attachments.dir"
 ```
-
-## Backup Encryption
-
-Confluence backups contain all content and must be encrypted.
-
 ```bash
 ## Encrypt a Confluence backup archive with GPG
 gpg --symmetric --cipher-algo AES256 /backups/confluence-backup-2026-05-07.zip
@@ -212,25 +165,18 @@ openssl enc -d -aes-256-cbc \
   -pass file:/secure/backup-passphrase.txt
 ls -la /tmp/test-decrypt.zip
 ```
-
-## Cookie and Session Security
-
 ```yaml
 Confluence security properties (General Configuration > Security Configuration):
 - Secure flag on cookies: Enabled (cookies sent only over HTTPS)
 - HttpOnly flag: Enabled (JavaScript cannot read session cookies)
 - Content Security Policy: Configure via reverse proxy headers
 ```
-
 ```nginx
 ## Nginx — security headers for Confluence
 add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline';" always;
 add_header X-Content-Type-Options "nosniff" always;
 add_header Referrer-Policy "strict-origin-when-cross-origin" always;
 ```
-
-## Encryption Audit
-
 ```bash
 ## Verify HTTPS enforced (HTTP redirects to HTTPS)
 curl -I http://confluence.example.local/ 2>/dev/null | grep "Location:"
@@ -253,16 +199,3 @@ mount | grep "/secure\|/encrypted"
 ## Check backup files are encrypted (should not be plain zip)
 file /backups/confluence-backup-*.zip* | grep -v "Zip archive"
 ```
-
-## Quick Reference
-
-| Topic | Location / Command |
-|---|---|
-| TLS certificate (Nginx) | `/etc/nginx/conf.d/confluence.conf` |
-| TLS certificate (Tomcat) | `/opt/atlassian/confluence/conf/server.xml` |
-| Java truststore | `/opt/atlassian/confluence/jre/lib/security/cacerts` |
-| Database JDBC URL | `/var/atlassian/.../confluence.cfg.xml` |
-| Attachment directory | `<confluence-home>/attachments/` (configurable in cfg.xml) |
-| Cookie security | General Configuration > Security Configuration |
-| Verify TLS ciphers | `nmap --script ssl-enum-ciphers -p 443 <host>` |
-| Backup encryption | `gpg --symmetric` or `openssl enc -aes-256-cbc` |

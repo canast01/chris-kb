@@ -1,27 +1,8 @@
-# RecoverPoint — Diagnostics
-
-
-<div class="kb-summary">
-> Part of the [RecoverPoint](../../index.md) > [Troubleshooting](../index.md) reference.
-</div>
-
----
-
-## Log Locations
-
-| Log | Location |
-|---|---|
-| RPA system logs | Accessible via `boxmgmt` → `Support` → `Collect support bundle` |
-| RPMA audit log | RecoverPoint Management Application → Reports → Audit Log |
-| Splitter logs (ESXi) | `/var/log/vmkernel.log` on ESXi host |
-
----
-
-## Support Bundle Collection
-
 ```bash
 # Via boxmgmt
 boxmgmt support collect_bundle
+```
+
 ```text
 ┌───────────────────────────────────── RecoverPoint — Diagnostics ──────────────────────────────────────┐
 │                                                                                                       │
@@ -63,5 +44,3 @@ boxmgmt support collect_bundle
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-> If `esxcli recoverpoint` commands are not available, the RP4VM VIB is not installed or has been corrupted. Re-deploy from the RecoverPoint Deployment Manager.

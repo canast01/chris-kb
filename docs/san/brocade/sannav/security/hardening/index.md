@@ -1,20 +1,3 @@
-# SANnav — Hardening
-
-
-<div class="kb-summary">
-> Part of the [SANnav](../../index.md) reference.
-</div>
-
----
-
-## Overview
-
-Hardening the SANnav appliance reduces the attack surface of the management plane. Apply this baseline during initial deployment and validate quarterly. The SANnav appliance is a Linux VM — hardening applies both to SANnav application configuration and to the underlying OS.
-
----
-
-## 1. Replace Default Credentials
-
 ```bash
 # SSH to SANnav appliance
 ssh admin@sannav-dc1.corp.example.com
@@ -26,6 +9,8 @@ passwd admin
 
 # Change default OS root password (if accessible)
 sudo passwd root
+```
+
 ```text
 ┌───────────────────────────────── Brocade SANnav — Security Hardening ─────────────────────────────────┐
 │                                                                                                       │
@@ -73,11 +58,6 @@ sudo passwd root
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
----
-
-## 4. SSH Hardening
-
 ```bash
 sudo vi /etc/ssh/sshd_config
 
@@ -100,13 +80,6 @@ sudo systemctl restart sshd
 # Verify
 sudo sshd -T | grep -E "permitrootlogin|passwordauthentication|protocol|maxauthtries"
 ```
-
----
-
-## 5. OS Patching
-
-The SANnav appliance OS (CentOS/RHEL based) requires security patching independently of SANnav application upgrades:
-
 ```bash
 # Check for available security updates
 sudo yum updateinfo list security
@@ -117,15 +90,6 @@ sudo yum update --security -y
 # Verify SANnav services still running after OS update
 sannav status
 ```
-
-Patch the OS quarterly at minimum. Critical OS CVEs (CVSS 9.0+) should be patched within 30 days of publication.
-
----
-
-## 6. NTP Synchronization
-
-Correct time is essential for log correlation, event timestamps, and certificate validity:
-
 ```bash
 # Check NTP synchronization
 timedatectl status
@@ -140,52 +104,11 @@ sudo systemctl enable --now chronyd
 chronyc tracking
 # Expected: Reference ID should match your NTP server, offset < 1ms
 ```
-
----
-
-## 7. SANnav Application Hardening
-
-### Disable Unused Authentication Methods
-
-If LDAP is configured and working, disable local account login for all accounts except break-glass:
-
-1. Navigate to **Administration > Security Settings > Authentication**.
-2. Set primary authentication method to **LDAP**.
-3. Set fallback to **Local** (required for break-glass when LDAP is unavailable).
-
-### Session Hardening
-
-Navigate to **Administration > Security Settings > Session**:
-- Idle timeout: 15 minutes
-- Absolute timeout: 8 hours
-- Concurrent sessions per user: 2
-
-### API Token Controls
-
-REST API tokens inherit the session idle timeout. For automation accounts:
-- Use dedicated service accounts (`svc-monitor`, `svc-automation`)
-- Ensure scripts always call `/rest/logout` — uncleaned sessions count against the concurrent session limit
-- Monitor for long-lived sessions in **Administration > Audit Log** (filter: LOGIN events without corresponding LOGOUT)
-
----
-
-## 8. Login Banner
-
-Configure a legal warning banner for the SANnav web UI:
-
-1. Navigate to **Administration > Security Settings > Login Banner**.
-2. Enter the banner text:
-
 ```text
 WARNING: This system is for authorized use only.
 All connections are monitored and recorded.
 Unauthorized access or use is prohibited and may be subject to legal action.
 ```
-
-3. Click **Save**. The banner appears on the SANnav login page.
-
-For SSH access, configure the OS banner:
-
 ```bash
 sudo vi /etc/issue.net
 # Add:
@@ -195,56 +118,3 @@ sudo vi /etc/ssh/sshd_config
 # Banner /etc/issue.net
 sudo systemctl restart sshd
 ```
-
----
-
-## Hardening Checklist
-
-### Appliance Access
-
-- [ ] Default admin password changed; stored in vault
-- [ ] SSH restricted to management subnet via firewalld rich rule
-- [ ] PermitRootLogin no in sshd_config
-- [ ] SSH banner configured
-- [ ] Unused OS services disabled
-
-### Application Security
-
-- [ ] LDAP configured; LDAP role mappings applied
-- [ ] Local accounts limited to break-glass only
-- [ ] Password policy enforced (12+ chars, complexity, 90-day rotation)
-- [ ] Account lockout configured (5 attempts, 30-minute lockout)
-- [ ] Session idle timeout: 15 minutes
-- [ ] Login banner visible on SANnav login page
-
-### Encryption
-
-- [ ] TLS certificate from corporate CA (not self-signed)
-- [ ] TLS 1.0 and 1.1 disabled; TLS 1.2/1.3 only
-- [ ] LDAPS (port 636) used; not plain LDAP
-- [ ] Backup encryption enabled; passphrase in vault
-
-### Patching
-
-- [ ] SANnav application at latest minor/patch release
-- [ ] OS security patches applied within last 90 days
-- [ ] NTP synchronized; clock offset < 100ms
-
-### Monitoring
-
-- [ ] Syslog forwarding configured to SIEM
-- [ ] SANnav audit log reviewed quarterly
-- [ ] Failed login alerting configured in SIEM
-
----
-
-## Periodic Review Schedule
-
-| Review | Frequency |
-|---|---|
-| Hardening checklist | Quarterly |
-| Break-glass password rotation | Quarterly |
-| OS security patching | Monthly (critical CVEs within 30 days) |
-| TLS certificate expiry check | Monthly |
-| User access review | Quarterly |
-| SANnav application upgrade | Align with Broadcom release cycle |

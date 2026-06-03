@@ -1,11 +1,3 @@
-# VCF Operations — Scripts
-
-
-<div class="kb-summary">
-Scripts reference covering Trigger SoS Health Check and Poll Result (Bash).
-</div>
-
-VCF API Automation — Data Flow
 ```text
 ┌──────────────────────────── VMware Cloud Foundation — Operational Scripts ────────────────────────────┐
 │                                                                                                       │
@@ -100,8 +92,6 @@ VCF API Automation — Data Flow
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-                       │ returns JSON
-                       ▼
 ```text
 ```
 ```text
@@ -112,6 +102,8 @@ VCF API Automation — Data Flow
 │  → ITSM ticketing system                                                                              │
 │  → CMDB asset discovery                                                                               │
 └─────────────────────────────────────────────────────┘
+```
+
 ```powershell
 ┌──────────────────────────── VMware Cloud Foundation — Operational Scripts ────────────────────────────┐
 │                                                                                                       │

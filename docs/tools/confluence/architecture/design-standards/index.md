@@ -1,18 +1,3 @@
-# Confluence — Standards
-
-
-<div class="kb-summary">
-Standards reference covering Page Templates, Page Templates vs Blueprints, Updating and Deleting Templates, Common Storage Format Macros, Blueprints.
-</div>
-
-## Page Templates
-
-Creating and managing page templates, blueprints, and template variables.
-
-## Page Templates vs Blueprints
-
-Templates are static page skeletons. Blueprints are templates enhanced with a multi-step creation wizard.
-
 ```bash
 # List global templates
 curl -u user:token \
@@ -25,6 +10,8 @@ curl -u user:token \
 # Get a specific template by ID
 curl -u user:token \
   "https://your-instance.atlassian.net/wiki/rest/api/template/TEMPLATE_ID"
+```
+
 ```text
 ┌──────────────────────────────────── Confluence — Design Standards ────────────────────────────────────┐
 │                                                                                                       │
@@ -70,24 +57,6 @@ curl -u user:token \
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-
-Note: updating a template does not retroactively change pages already created from it.
-
-## Common Storage Format Macros
-
-| Macro Name | Storage Tag | Purpose |
-|-----------|-------------|---------|
-| Placeholder | `<ac:placeholder>` | Prompts author to fill in |
-| Panel | `<ac:structured-macro ac:name="panel">` | Highlighted info box |
-| Status | `<ac:structured-macro ac:name="status">` | Coloured status badge |
-| Table of Contents | `<ac:structured-macro ac:name="toc">` | Auto-generated nav |
-| Code Block | `<ac:structured-macro ac:name="code">` | Syntax-highlighted code |
-| Info | `<ac:structured-macro ac:name="info">` | Blue info panel |
-
-## Blueprints
-
-Blueprints add a creation wizard with fill-in fields before the page body is created. They require an Atlassian Connect app.
-
 ```json
 // atlassian-connect.json blueprint module entry
 {
