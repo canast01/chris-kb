@@ -4644,6 +4644,48 @@ How It Works reference covering Overview, Log Pipeline Architecture, ESXi Syslog
 │  Ingestion API     = REST endpoint for pushing structured JSON logs from custom applications          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────── Aria Ops for Logs — Log Event Ingestion and Query Pipeline ──────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│    A log event flows from its source through ingestion, parsing, and indexing before                  │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│    it becomes searchable. Alerts fire on query patterns; events can be forwarded.                     │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│                                                                                                       │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │               Ingestion Layer                │  │             Parsing and Indexing            │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │       Syslog UDP 514 (fire-and-forget)       │  │      Timestamp extraction (event time)      │   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   │          Syslog TCP 601 / TLS 6514           │  │        Hostname / source field mapped       │   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   │      vSphere agent: ESXi + vCenter push      │  │     Auto field extraction from known src    │   │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   │        REST ingest API: JSON payload         │  │      Custom regex fields: user-defined      │   │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   │       CF/vRLI agent: application logs        │  │    Full-text index (Lucene/Elasticsearch)   │   │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│                                                                                                       │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│    Indexed events are stored per retention policy (default 30 days on-disk).                          │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│                                                                                                       │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│                                                                                                       │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │              Query and Alerting              │  │            Forwarding and Archive           │   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   │    Interactive search: free-text + fields    │  │       Syslog forward: to Splunk / SIEM      │   │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   │         Saved query: reusable filter         │  │      Webhook forward: JSON to endpoint      │   │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│   │       Alert: query fires if count &gt; N        │  │     Email: alert notification per query     │   │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│   │       Dashboard: pinned query widgets        │  │      S3/NFS archive: compliance export      │   │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│   │      Launch-in-context: Aria Ops → vRLI      │  │     Content pack: pre-built alert rules     │   │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│                                                                                                       │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│    Physical Infrastructure (the hardware everything above runs on):                                   │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│    vRLI master VM + worker VMs · NIC for syslog · disk for index · NTP for timestamps                 │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│                                                                                                       │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│    Key terms:                                                                                         │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│                                                                                                       │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│    vRLI            = vRealize Log Insight; former product name; same as Aria Logs                     │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│    vSphere agent   = vRLI agent installed on ESXi and vCenter; pushes structured logs                 │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│    Field extraction= vRLI parses raw text to create queryable named fields                            │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│    Content pack    = bundle of pre-built dashboards + alerts for one product                          │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│    Launch-in-context= Aria Ops alert deeplinks to vRLI filtered to same object/time                   │
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│    Retention       = on-disk retention period; default 30 days; expand with disk/NFS                  │
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│    Worker node     = additional vRLI VM; master load-balances ingestion across workers                │
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│                                                                                                       │
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 
 
 
