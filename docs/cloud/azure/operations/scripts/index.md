@@ -84,7 +84,7 @@ flowchart LR
 
 Prints a formatted health report covering VMs, load balancers, SQL servers, and recent critical activity log events. Exits non-zero if any critical events are found.
 
-~~~bash
+```bash
 #!/bin/bash
 set -euo pipefail
 
@@ -161,7 +161,7 @@ if [[ "${CRITICAL_COUNT}" -gt 0 ]]; then
 fi
 
 echo -e "${GREEN}Health check PASSED — no critical events detected.${RESET}"
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -208,7 +208,7 @@ Tables showing your VMs with power state, load balancers, and SQL servers. Then 
 
 Authenticates via DefaultAzureCredential, lists all VMs across a subscription, checks tags, backup enrollment, and monitoring agent presence, then exports a CSV report.
 
-~~~python
+```python
 #!/usr/bin/env python3
 """Azure VM Health and Compliance Report — tags, backup, monitoring agent."""
 
@@ -314,7 +314,7 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -363,7 +363,7 @@ One line per VM as it scans: VM name, power state, and either OK or a list of fl
 
 Compares daily average spend for the last 7 days versus the prior 7 days per service, flags any service with more than a configurable percentage increase, and sends an alert email via SMTP.
 
-~~~python
+```python
 #!/usr/bin/env python3
 """Azure Cost Spike Alert — detects per-service cost increases and emails alerts."""
 
@@ -482,7 +482,7 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -536,7 +536,7 @@ A table showing each Azure service with its average daily spend for the previous
 
 Lists all NSGs across a subscription, identifies inbound rules that allow Internet traffic, and flags any rule permitting SSH, RDP, or unrestricted TCP from any source.
 
-~~~python
+```python
 #!/usr/bin/env python3
 """Azure NSG Audit — flags overly permissive inbound rules."""
 
@@ -658,7 +658,7 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -707,7 +707,7 @@ A table with one row per problematic NSG rule. Each row shows the NSG name, reso
 
 Checks ASR replication health, triggers failover for specified VMs, waits for completion, verifies the VMs are running in the target region, and prints a summary.
 
-~~~yaml
+```yaml
 ---
 # azure_dr_failover.yml
 # Requires: azure.azcollection
@@ -794,7 +794,7 @@ Checks ASR replication health, triggers failover for specified VMs, waits for co
           {{ item.vms[0].network_interface_names | default(['(check portal)']) | first }}
       loop: "{{ vm_status.results }}"
       when: item.vms is defined and item.vms | length > 0
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -844,7 +844,7 @@ Ansible checks ASR replication health, triggers the failover for each VM in your
 
 Lists all managed disk snapshots, identifies those older than 30 days, calculates total wasted storage cost, and optionally deletes them with a confirmation prompt.
 
-~~~bash
+```bash
 #!/bin/bash
 set -euo pipefail
 
@@ -956,7 +956,7 @@ if [[ "${DELETE_OLD:-}" == "--delete" ]]; then
     echo "Aborted."
   fi
 fi
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -1009,7 +1009,7 @@ A table listing every managed disk snapshot with its age in days and size in GB.
 
 Lists all Key Vaults in a subscription, checks every certificate's expiration date, and flags certificates expiring within 30 days (WARNING) or 14 days (CRITICAL). Exits non-zero if any CRITICAL certificates are found.
 
-~~~python
+```python
 #!/usr/bin/env python3
 """Azure Key Vault Certificate Expiry Check — WARNING <30d, CRITICAL <14d."""
 
@@ -1115,7 +1115,7 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -1165,7 +1165,7 @@ A table sorted with CRITICAL certificates first, then WARNING, then OK. Each row
 
 Checks VM power states, load balancer health, storage account tiers, Key Vault certificate expiry, and NSG rule permissiveness across production resource groups, then prints a consolidated summary.
 
-~~~yaml
+```yaml
 ---
 # azure_infra_health.yml
 # Requires: azure.azcollection
@@ -1299,7 +1299,7 @@ Checks VM power states, load balancer health, storage account tiers, Key Vault c
           - "Key Vaults      : {{ keyvault_names | join(', ') }}"
           - "Run date        : {{ ansible_date_time.iso8601 }}"
           - "Result          : PASSED (assertions above would have failed otherwise)"
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -1346,7 +1346,7 @@ Ansible works through each check in sequence. VM asserts show green `ok` if all 
 
 Check your Azure VMs, monitor alerts, and get Advisor recommendations directly from Windows using the Azure CLI.
 
-~~~batch
+```batch
 @echo off
 REM azure-health-check.bat
 REM Requires: Azure CLI for Windows
@@ -1379,7 +1379,7 @@ echo.
 
 echo Health check complete.
 pause
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -1428,7 +1428,7 @@ A table of all your Azure VMs with their current power state (running, stopped, 
 
 Get a full health and recommendations report for your Azure subscription using the official Az PowerShell module.
 
-~~~powershell
+```powershell
 # azure-resource-health.ps1
 # Requires: Az PowerShell module
 # Install with: Install-Module -Name Az -Scope CurrentUser -Repository PSGallery -Force
@@ -1503,7 +1503,7 @@ Write-Host "Resource Group: $(if ($ResourceGroup) { $ResourceGroup } else { 'All
 Write-Host "Total VMs     : $($vmReport.Count)"
 Write-Host "VMs running   : $(($vmReport | Where-Object { $_.Status -eq 'OK' }).Count)"
 Write-Host "VMs not running: $($notRunning.Count)"
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -1556,7 +1556,7 @@ The first time it runs, it installs the Az PowerShell module automatically (can 
 
 Azure environment daily health check covering authentication, VM power states, Advisor HIGH severity HA issues, NSG rule count, and resource group population.
 
-~~~bash
+```bash
 #!/bin/bash
 # azure_daily_check.sh — Azure environment daily health check
 SUBSCRIPTION_ID="${SUBSCRIPTION_ID:-}"
@@ -1575,7 +1575,7 @@ check "Resource health OK" bash -c "az resource list --resource-group $RESOURCE_
 echo ""
 echo "Daily check: $FAIL failure(s)"
 [[ $FAIL -gt 0 ]] && exit 2 || exit 0
-~~~
+```
 
 ---
 
@@ -1583,7 +1583,7 @@ echo "Daily check: $FAIL failure(s)"
 
 Capture VM states, NSG rules, storage account status, Key Vault access logs, recent Activity Log events, and Advisor recommendations to a timestamped file.
 
-~~~bash
+```bash
 #!/bin/bash
 # azure_triage.sh
 # Usage: SUBSCRIPTION_ID=<id> RESOURCE_GROUP=<rg> ./azure_triage.sh
@@ -1618,7 +1618,7 @@ OUTFILE="/tmp/azure_triage_${RESOURCE_GROUP}_$(date +%Y%m%d_%H%M%S).txt"
 } > "$OUTFILE" 2>&1
 
 echo "Triage data saved to: $OUTFILE"
-~~~
+```
 
 ---
 
@@ -1626,7 +1626,7 @@ echo "Triage data saved to: $OUTFILE"
 
 Validate Azure environment before a deployment. Exits 2 if any critical condition is found.
 
-~~~bash
+```bash
 #!/bin/bash
 # azure_precheck.sh
 # Usage: SUBSCRIPTION_ID=<id> RESOURCE_GROUP=<rg> ./azure_precheck.sh
@@ -1668,7 +1668,7 @@ fi
 echo ""
 echo "Pre-check: $FAIL failure(s)"
 [ "$FAIL" -gt 0 ] && exit 2 || exit 0
-~~~
+```
 
 ---
 
@@ -1676,7 +1676,7 @@ echo "Pre-check: $FAIL failure(s)"
 
 After a deployment: confirm new resources exist and are healthy, no new Activity Log errors, VMs still accessible, and tags applied correctly.
 
-~~~bash
+```bash
 #!/bin/bash
 # azure_postcheck.sh
 # Usage: SUBSCRIPTION_ID=<id> RESOURCE_GROUP=<rg> [NEW_RESOURCE_NAME=<name>] ./azure_postcheck.sh
@@ -1722,7 +1722,7 @@ fi
 echo ""
 echo "Post-change validation: $FAIL failure(s)"
 [ "$FAIL" -gt 0 ] && exit 2 || exit 0
-~~~
+```
 
 ---
 
@@ -1730,7 +1730,7 @@ echo "Post-change validation: $FAIL failure(s)"
 
 Cron-safe summary: VM counts (running/stopped), storage account count, Advisor HIGH/MEDIUM recommendations, and recent Activity Log error count. Exits 0 (OK), 1 (WARNING), or 2 (CRITICAL).
 
-~~~bash
+```bash
 #!/bin/bash
 # azure_health_check.sh
 # Cron: */5 * * * * SUBSCRIPTION_ID=<id> RESOURCE_GROUP=<rg> /opt/scripts/azure_health_check.sh
@@ -1761,4 +1761,4 @@ elif [ "${STOPPED:-0}" -gt 0 ] || [ "${HIGH_ADV:-0}" -gt 0 ] || [ "${ACT_ERRORS:
   exit 1
 fi
 exit 0
-~~~
+```

@@ -77,7 +77,7 @@ Evergreen Automation Flow
 
 Before a Purity upgrade or Evergreen controller refresh, validate host paths, pod stretch status, mediator reachability, and snapshot count to produce a go/no-go checklist.
 
-~~~bash
+```bash
 #!/bin/bash
 # Evergreen Pre-Upgrade Path Validation
 # Prints a go/no-go checklist before a Purity upgrade or controller refresh.
@@ -236,7 +236,7 @@ else
     echo -e " ${GRN}VERDICT: READY FOR UPGRADE${NC}"
     exit 0
 fi
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -286,7 +286,7 @@ Six numbered checks, each showing `[GO]` in green, `[WARN]` in yellow, or `[NO-G
 
 Use the FlashArray REST API to assess upgrade readiness: check the current Purity version, outstanding alerts, pending drive rebuilds, and pod sync state, then print a formatted readiness report with blockers highlighted.
 
-~~~python
+```python
 #!/usr/bin/env python3
 """
 FlashArray Upgrade Readiness Check (Evergreen)
@@ -437,7 +437,7 @@ else:
         print()
     print(f"{GRN}No blockers found — array is ready for upgrade.{NC}")
     sys.exit(0)
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -486,7 +486,7 @@ A formatted table with four rows: Purity version (INFO), active alerts (OK/WARN/
 
 Run pre-upgrade readiness checks across an entire FlashArray fleet — retrieve current Purity version, check for active alerts, validate drive health, verify ActiveCluster pod health, and assert there are no blockers before proceeding with any upgrade.
 
-~~~yaml
+```yaml
 ---
 # Evergreen Pre-Upgrade Fleet Check Playbook
 # Inventory group: flasharrays
@@ -644,7 +644,7 @@ Run pre-upgrade readiness checks across an entire FlashArray fleet — retrieve 
         validate_certs: "{{ fa_validate_certs }}"
         status_code: [200, 204]
       ignore_errors: true
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -699,7 +699,7 @@ Ansible runs all four checks on every FlashArray in your inventory simultaneousl
 
 Authenticate to the Pure1 REST API using an API key, retrieve capacity metrics for all arrays in your Evergreen//One subscription, and print a formatted report showing total capacity, used capacity, and data reduction ratio.
 
-~~~powershell
+```powershell
 # evergreen_usage_pure1.ps1 — Evergreen//One Usage Report via Pure1 REST API (Windows PowerShell)
 # Requires: PowerShell 5.1+ (pre-installed on Windows 10/11)
 # Pure1 API: https://api.pure1.purestorage.com/api/1.x/
@@ -828,7 +828,7 @@ foreach ($arr in $Arrays) {
 }
 
 Write-Host "`n=== Report complete ===" -ForegroundColor Cyan
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -880,7 +880,7 @@ A table listing every array in your Pure1 account with its total capacity in TiB
 
 Connect to the Pure1 API, retrieve health scores for all arrays, and flag any array below a score of 90. For each array, also check the FlashArray REST API for active critical alerts. Outputs PASS/FAIL per array.
 
-~~~python
+```python
 #!/usr/bin/env python3
 """
 evergreen_daily_check.py
@@ -979,7 +979,7 @@ label = "PASS" if overall == 0 else "WARN" if overall == 1 else "FAIL"
 colour = GRN if overall == 0 else YEL if overall == 1 else RED
 print(f"{colour}RESULT: {label}{NC}")
 sys.exit(overall)
-~~~
+```
 
 ---
 
@@ -987,7 +987,7 @@ sys.exit(overall)
 
 Pull all arrays from Pure1, capture health score, active alerts, and capacity stats for each. Save to a timestamped JSON file including array version and model.
 
-~~~python
+```python
 #!/usr/bin/env python3
 """
 evergreen_incident_triage.py
@@ -1084,7 +1084,7 @@ with open(OUT, "w") as f:
     json.dump(triage, f, indent=2)
 
 print(f"\nTriage data saved to: {OUT}")
-~~~
+```
 
 ---
 
@@ -1092,7 +1092,7 @@ print(f"\nTriage data saved to: {OUT}")
 
 Run before an NDU upgrade. Verifies `purearray upgrade --check` passes on the target array, health score is above 90 in Pure1, no active critical alerts, and all pods are online. Exits 2 on failure.
 
-~~~bash
+```bash
 #!/bin/bash
 # evergreen_precheck.sh
 # Usage: FA_HOST=fa01 FA_API_TOKEN=xxx PURE1_APP_ID=xxx PURE1_PRIVATE_KEY_FILE=/path/key.pem ./evergreen_precheck.sh
@@ -1167,7 +1167,7 @@ OFFLINE_PODS=$(purepod list 2>/dev/null | awk 'NR>1 && $2!="online" {print $1}' 
 echo
 [[ $EXIT_CODE -eq 0 ]] && echo -e "${GRN}VERDICT: GO${NC}" || echo -e "${RED}VERDICT: NO-GO${NC}"
 exit $EXIT_CODE
-~~~
+```
 
 ---
 
@@ -1175,7 +1175,7 @@ exit $EXIT_CODE
 
 After an NDU upgrade, confirm the target Purity version is installed, no new alerts appeared post-upgrade, and the Pure1 health score is maintained.
 
-~~~bash
+```bash
 #!/bin/bash
 # evergreen_postcheck.sh
 # Usage: FA_HOST=fa01 FA_API_TOKEN=xxx EXPECTED_VERSION=6.6.3 ./evergreen_postcheck.sh
@@ -1246,7 +1246,7 @@ fi
 echo
 [[ $EXIT_CODE -eq 0 ]] && echo -e "${GRN}RESULT: PASS${NC}" || echo -e "${RED}RESULT: FAIL${NC}"
 exit $EXIT_CODE
-~~~
+```
 
 ---
 
@@ -1254,7 +1254,7 @@ exit $EXIT_CODE
 
 Lightweight cron-safe script providing a fleet summary: total arrays, arrays with critical alerts, arrays below health score 90, and total capacity consumed. Exits 0 (healthy), 1 (warning), or 2 (critical).
 
-~~~python
+```python
 #!/usr/bin/env python3
 """
 evergreen_health.py — cron-safe Evergreen fleet health check
@@ -1343,4 +1343,4 @@ try:
 except Exception as exc:
     print(f"[{datetime.datetime.now():%Y-%m-%d %H:%M:%S}] ERROR: {exc}")
     sys.exit(2)
-~~~
+```

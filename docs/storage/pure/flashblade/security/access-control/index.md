@@ -4,7 +4,7 @@
 <div class="kb-summary">
 > Part of the [FlashBlade Security](../index.md) reference.
 </div>
-```powershell
+```text
 ┌────────────────────────────────── Pure FlashBlade — Access Control ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

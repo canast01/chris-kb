@@ -82,7 +82,7 @@ Automation Architecture — FlashBlade
 
 Connect to a FlashBlade via the `py-pure-client` SDK, check blades, hardware, active alerts, file systems, and buckets, then print a health summary. Exits non-zero if alerts or blade failures are detected.
 
-~~~python
+```python
 #!/usr/bin/env python3
 """
 FlashBlade Array Health Check
@@ -235,7 +235,7 @@ for level, msg in issues:
     print(f"  {c}[{level}]{NC} {msg}")
 print(f"{'='*60}\n")
 sys.exit(worst)
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -281,7 +281,7 @@ python fb_health.py
 
 Run `purefb filesystem list` and produce a formatted capacity table, flagging any filesystems over 80% used. Useful for weekly capacity reviews.
 
-~~~bash
+```bash
 #!/bin/bash
 # FlashBlade Filesystem Capacity Report
 # Usage: FB_HOST=flashblade01 FB_API_TOKEN=xxx ./fb_fs_report.sh
@@ -349,7 +349,7 @@ printf "Total filesystems: %d  |  Over %d%%: %d\n" "$total" "$WARN_PCT" "$over_w
 
 (( over_warn > 0 )) && echo -e "${YEL}Review filesystems approaching their provisioned limit.${NC}"
 exit $(( over_warn > 0 ? 1 : 0 ))
-~~~
+```
 
 ---
 
@@ -357,7 +357,7 @@ exit $(( over_warn > 0 ? 1 : 0 ))
 
 Connect to source and target FlashBlades via the REST API, list all replication links, check status, direction, lag time, and throughput, then alert if any link is not Active or if lag exceeds the RPO threshold.
 
-~~~python
+```python
 #!/usr/bin/env python3
 """
 FlashBlade ActiveDR Replication Monitor
@@ -475,7 +475,7 @@ for lvl, msg in issues:
     c = RED if lvl == "CRITICAL" else YEL
     print(f"  {c}[{lvl}]{NC} {msg}")
 sys.exit(worst)
-~~~
+```
 
 ---
 
@@ -483,7 +483,7 @@ sys.exit(worst)
 
 Connect to a FlashBlade via SSH, check array status, active alerts, hardware health, and filesystem capacity. Flag any filesystem over 80% used or any hardware component not healthy.
 
-~~~bash
+```bash
 #!/bin/bash
 # fb_daily_check.sh
 # Usage: FB_HOST=flashblade01 SSH_USER=pureuser ./fb_daily_check.sh
@@ -553,7 +553,7 @@ else
     echo -e "${RED}RESULT: FAIL${NC}"
 fi
 exit $FAIL
-~~~
+```
 
 ---
 
@@ -561,7 +561,7 @@ exit $FAIL
 
 Connect to a FlashBlade S3 endpoint using `boto3`, list all buckets, count objects and total size per bucket, and flag buckets with versioning enabled and large object counts.
 
-~~~python
+```python
 #!/usr/bin/env python3
 """
 FlashBlade S3 Bucket Audit
@@ -668,7 +668,7 @@ print(tabulate(
 ))
 
 print(f"\nNote: Buckets with versioning enabled and >{VERSION_WARN:,} objects may have significant version overhead.")
-~~~
+```
 
 ---
 
@@ -676,7 +676,7 @@ print(f"\nNote: Buckets with versioning enabled and >{VERSION_WARN:,} objects ma
 
 Authenticate to the FlashBlade REST API, retrieve array information, active alerts, and hardware component health, then print a formatted health summary.
 
-~~~powershell
+```powershell
 # fb_health_rest.ps1 — FlashBlade Health Check via REST API (Windows PowerShell)
 # Requires: PowerShell 5.1+ (pre-installed on Windows 10/11)
 # Run: .\fb_health_rest.ps1
@@ -773,4 +773,4 @@ try {
 } catch {}
 
 Write-Host "`n=== Health check complete ===" -ForegroundColor Cyan
-~~~
+```

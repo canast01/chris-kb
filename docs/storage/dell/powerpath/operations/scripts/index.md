@@ -62,7 +62,7 @@ Scripts reference covering Path Health Check, Path Count Validator, Policy Audit
 
 Runs `powermt display dev=all`, counts total devices, dead paths, and devices with fewer paths than the expected minimum. Prints a summary table of each device with its path counts. Exits non-zero if any dead paths are found. Suitable for cron or a monitoring agent.
 
-~~~bash
+```bash
 #!/bin/bash
 # powerpath_health_check.sh — PowerPath path health check
 # Usage: EXPECTED_PATHS=4 ./powerpath_health_check.sh
@@ -146,7 +146,7 @@ else
   echo "STATUS: OK — All paths healthy."
   exit 0
 fi
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -187,7 +187,7 @@ A table with one row per PowerPath pseudo device showing total paths, dead paths
 
 Parses `powermt display dev=all` output and validates that every pseudo device has exactly the expected number of paths. Prints PASS/FAIL per device and a final summary. Exits 0 if all pass, 1 if any fail.
 
-~~~perl
+```perl
 #!/usr/bin/env perl
 # powerpath_path_validator.pl — Validate path counts for all PowerPath pseudo devices
 # Usage: EXPECTED_PATHS=4 ./powerpath_path_validator.pl
@@ -257,7 +257,7 @@ printf "%s\n", '-' x 68;
 printf "Total: %d devices — %d PASS, %d FAIL\n", $pass + $fail, $pass, $fail;
 
 exit($fail > 0 ? 1 : 0);
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -298,7 +298,7 @@ A table listing each pseudo device with total paths, dead paths, alive paths, an
 
 Runs `powermt display options` and `powermt display dev=all`, checks that all pseudo devices are using the CLAROpt (`co`) load balancing policy, and reports any exceptions. If the `--fix` flag is passed, automatically applies CLAROpt to all devices and persists the change with `powermt save`.
 
-~~~bash
+```bash
 #!/bin/bash
 # powerpath_policy_audit.sh — Audit and optionally fix PowerPath load balancing policy
 # Usage: ./powerpath_policy_audit.sh [--fix]
@@ -381,7 +381,7 @@ else
   echo "STATUS: PASS — All devices using CLAROpt policy."
   exit 0
 fi
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -428,7 +428,7 @@ The current global PowerPath options, then a per-device table showing the policy
 
 Uses plink.exe to SSH into a Linux host that has PowerPath installed and runs path health checks remotely from a Windows CMD window.
 
-~~~batch
+```batch
 @echo off
 REM powerpath_remote_check.bat — PowerPath device check on a remote Linux host via plink
 REM Uses plink.exe (PuTTY) to SSH into the Linux server running PowerPath.
@@ -466,7 +466,7 @@ echo.
 echo ========================================
 echo   Remote check complete.
 echo ========================================
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -511,7 +511,7 @@ powerpath_remote_check.bat
 
 If PowerPath for Windows is installed directly on your Windows server, you can run `powermt` commands locally without SSH. This .bat file runs a health check and saves a report.
 
-~~~batch
+```batch
 @echo off
 REM powerpath_local_check.bat — PowerPath health check on a LOCAL Windows server
 REM Run this ON the Windows server that has PowerPath for Windows installed.
@@ -555,7 +555,7 @@ echo.
 
 REM Open the report in Notepad automatically
 notepad "%REPORT_FILE%"
-~~~
+```
 
 ---
 
@@ -563,7 +563,7 @@ notepad "%REPORT_FILE%"
 
 SSHes to each Linux host running PowerPath, runs `powermt display dev=all`, counts paths per device, flags any device with fewer than 2 active paths, and flags any path in a dead or failed state.
 
-~~~bash
+```bash
 #!/bin/bash
 # powerpath_daily_check.sh — Daily PowerPath path health check on Linux hosts
 # Usage: HOST_IP=192.168.1.50 SSH_USER=root EXPECTED_PATHS=4 ./powerpath_daily_check.sh
@@ -635,7 +635,7 @@ echo "========================================"
 [[ "$FAIL" -eq 0 ]] && echo "  Result: PASS — all paths healthy on $HOST_IP" || \
   echo "  Result: FAIL — dead or low-path devices found on $HOST_IP"
 exit $FAIL
-~~~
+```
 
 ---
 
@@ -643,7 +643,7 @@ exit $FAIL
 
 Captures `powermt display dev=all`, `powermt check`, `powermt display options=all`, and kernel messages related to SCSI/multipath to a timestamped file.
 
-~~~bash
+```bash
 #!/bin/bash
 # powerpath_triage.sh — Capture PowerPath state to timestamped file
 # Usage: HOST_IP=192.168.1.50 SSH_USER=root ./powerpath_triage.sh
@@ -694,7 +694,7 @@ pp_ssh() { ssh $SSH_OPTS "${SSH_USER}@${HOST_IP}" "$@" 2>&1 || echo "Command fai
 
 echo ""
 echo "Output saved to: $OUTFILE"
-~~~
+```
 
 ---
 
@@ -702,7 +702,7 @@ echo "Output saved to: $OUTFILE"
 
 Before HBA maintenance or replacement: confirms each volume has more than 2 active paths, no paths are currently recovering, and `powermt check` returns clean. Exits 2 if any path count equals 1.
 
-~~~bash
+```bash
 #!/bin/bash
 # powerpath_precheck.sh — Pre-check before HBA maintenance on a Linux host
 # Usage: HOST_IP=192.168.1.50 SSH_USER=root MIN_PATHS=2 ./powerpath_precheck.sh
@@ -791,7 +791,7 @@ else
   echo "  Result: NOT READY — resolve failures above (exit 2)"
   exit 2
 fi
-~~~
+```
 
 ---
 
@@ -799,7 +799,7 @@ fi
 
 After HBA maintenance: runs `powermt display dev=all`, confirms all expected paths per device are restored, and compares path count to the pre-change baseline.
 
-~~~bash
+```bash
 #!/bin/bash
 # powerpath_postcheck.sh — Post-HBA maintenance path validation
 # Usage: HOST_IP=x SSH_USER=root EXPECTED_PATHS=4 ./powerpath_postcheck.sh
@@ -875,7 +875,7 @@ else
   echo "  Result: FAIL — some devices have not fully restored expected paths"
   exit 1
 fi
-~~~
+```
 
 ---
 
@@ -883,7 +883,7 @@ fi
 
 Cron-safe script reporting total devices, total paths, dead paths count, and devices with fewer than 2 active paths. Exits 0 (OK), 1 (warning), or 2 (critical/dead paths found).
 
-~~~bash
+```bash
 #!/bin/bash
 # powerpath_health.sh — Cron-safe PowerPath health check
 # Usage: HOST_IP=x SSH_USER=root ./powerpath_health.sh
@@ -939,4 +939,4 @@ status_map = {0: 'OK', 1: 'WARNING', 2: 'CRITICAL'}
 print(f'PP_HEALTH host=${HOST_IP} total_devices={total_devices} total_paths={total_paths} dead_paths={dead_paths} low_path_devices={low_path_devs} status={status_map[worst]}')
 sys.exit(worst)
 "
-~~~
+```

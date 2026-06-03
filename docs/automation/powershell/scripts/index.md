@@ -73,7 +73,7 @@ Five numbered checks run in sequence. Each prints how many accounts were found. 
 
 Scan Windows servers for expiring certificates in the LocalMachine\My store and IIS SSL bindings, flag those expiring within configurable warning and critical thresholds, and send an email report.
 
-~~~powershell
+```powershell
 #!/usr/bin/env pwsh
 # cert-expiry-monitor.ps1
 # Usage: ./cert-expiry-monitor.ps1 -Servers server1,server2 -SmtpServer smtp.example.com -AlertEmail ops@example.com
@@ -209,7 +209,7 @@ if (($CritList.Count -gt 0 -or $WarnList.Count -gt 0) -and $SmtpServer -and $Ale
         -Body $Body -SmtpServer $SmtpServer
     Write-Host "Alert email sent to $AlertEmail"
 }
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -266,7 +266,7 @@ A table showing every certificate found on each server, sorted by days remaining
 
 Check that required services are running across a server fleet. Optionally attempt automatic restart for stopped services. Exits with a monitoring-compatible code.
 
-~~~powershell
+```powershell
 #!/usr/bin/env pwsh
 # service-health-monitor.ps1
 # Usage: ./service-health-monitor.ps1 [-AttemptRestart]
@@ -388,7 +388,7 @@ if ($NotRunning.Count -gt 0) {
 
 Write-Log "Check complete. ExitCode=$ExitCode | Log: $LOGFILE"
 exit $ExitCode
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -447,7 +447,7 @@ Timestamped log lines as each service is checked. A summary table shows every se
 
 A batch file that launches any PowerShell script, logs all output to a timestamped file, and shows it in the console at the same time. Useful for running scripts on a schedule or double-clicking from your Desktop.
 
-~~~batch
+```batch
 @echo off
 REM ps-runner.bat
 REM Launches a PowerShell script and logs all output to C:\Logs\
@@ -486,7 +486,7 @@ if %errorlevel% equ 0 (
 )
 
 pause
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -535,7 +535,7 @@ The PowerShell script runs and its output appears in the Command Prompt window i
 
 Automatically check and install the PowerShell modules most commonly needed for infrastructure work. Includes an example of using Posh-SSH for SSH connections from PowerShell.
 
-~~~powershell
+```powershell
 # Install-InfraModules.ps1
 # Checks and installs required PowerShell modules for infrastructure work.
 # Run as Administrator for system-wide install, or without for current user only.
@@ -626,7 +626,7 @@ Write-Host @"
 # Disconnect when done:
 Remove-SSHSession -SessionId `$session.SessionId
 "@
-~~~
+```
 
 ### How to run this script — step by step
 

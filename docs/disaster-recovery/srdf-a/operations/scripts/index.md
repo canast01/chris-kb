@@ -10,7 +10,7 @@
 
 Use SYMCLI to query SRDF/A cycle time and delta set processing time for a given RDF group, compare against configurable thresholds, and print the last 10 samples for trend visibility.
 
-~~~bash
+```bash
 #!/usr/bin/env bash
 # srdf-cycle-time-monitor.sh
 # Usage: SID=<symm_id> RDF_GROUP=<group_num> ./srdf-cycle-time-monitor.sh
@@ -83,7 +83,7 @@ fi
 
 echo ""
 exit ${EXIT_CODE}
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -171,7 +171,7 @@ Timestamped log lines for each step: verifying Synchronized state, suspending, w
 
 Re-establish and resynchronize SRDF relationships back to production after a DR test, once the host team confirms they have unmounted R2 copies.
 
-~~~bash
+```bash
 #!/usr/bin/env bash
 # srdf-resync-after-dr-test.sh
 # Usage: SID=<sid> RDF_GROUP=<rdfg> CG_NAME=<cg> ./srdf-resync-after-dr-test.sh
@@ -267,7 +267,7 @@ log ""
 log "=== RESYNC COMPLETE ==="
 log "Production SRDF replication is restored."
 log "Log: ${LOGFILE}"
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -311,7 +311,7 @@ A prompt asking you to confirm that DR hosts have stopped I/O and unmounted R2 L
 
 Query the Unisphere for PowerMax REST API from a Windows PC to list all SRDF/A pairs, their replication state, and flag any volume not in Consistent or Synchronized state.
 
-~~~powershell
+```powershell
 # srdf-a-state-check-windows.ps1
 # Usage: .\srdf-a-state-check-windows.ps1 -UnisphereHost <IP> -UnisphereUser <user> -UnispherePass <pass> -SID <array_serial> -RdfGroup <group_num>
 # Requires: PowerShell 5.1 or later
@@ -427,7 +427,7 @@ try {
     Write-Host "ERROR retrieving volume data: $_" -ForegroundColor Red
     exit 1
 }
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -482,7 +482,7 @@ Confirmation that the RDF group exists on the array, then a table listing every 
 
 Use plink.exe to SSH to the SYMCLI Linux management server and run SYMCLI commands to check SRDF/A pair states and verify replication — without needing SYMCLI installed on your Windows PC.
 
-~~~batch
+```batch
 @echo off
 REM srdf-a-cycle-check.bat — SRDF/A state check via SSH to SYMCLI host (plink)
 REM Uses plink.exe (from PuTTY) for SSH. Download: https://www.putty.org
@@ -533,7 +533,7 @@ echo ----------------------------------------
 
 echo.
 echo Done.
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -592,7 +592,7 @@ Three sections: SRDF/A pair list showing all device pairs and their current stat
 
 SSH to the SYMCLI management host and check SRDF/A pair states. Flags any pairs not in Consistent or Synchronized state and detects Transmit_Idle, Split, or Mixed conditions.
 
-~~~bash
+```bash
 #!/bin/bash
 # srdf_daily_check.sh
 # Usage: SYMCLI_HOST=<ip> SSH_USER=<user> SID=<sid> RDF_GROUP=<rdfg> ./srdf_daily_check.sh
@@ -630,7 +630,7 @@ done
 echo ""
 echo "Daily check: $FAIL failure(s)"
 [ "$FAIL" -gt 0 ] && exit 2 || exit 0
-~~~
+```
 
 ---
 
@@ -638,7 +638,7 @@ echo "Daily check: $FAIL failure(s)"
 
 Capture a full SRDF/A diagnostic snapshot to a timestamped file via SSH to the SYMCLI host.
 
-~~~bash
+```bash
 #!/bin/bash
 # srdf_triage.sh
 # Usage: SYMCLI_HOST=<ip> SSH_USER=<user> SID=<sid> RDF_GROUP=<rdfg> ./srdf_triage.sh
@@ -670,7 +670,7 @@ ssh_cmd() { ssh $SSH_OPTS "$SSH_USER@$SYMCLI_HOST" "$1" 2>/dev/null; }
 } > "$OUTFILE" 2>&1
 
 echo "Triage data saved to: $OUTFILE"
-~~~
+```
 
 ---
 
@@ -678,7 +678,7 @@ echo "Triage data saved to: $OUTFILE"
 
 Validate SRDF/A pair state before R1 or R2 storage maintenance. Exits 2 on any failure.
 
-~~~bash
+```bash
 #!/bin/bash
 # srdf_precheck.sh
 # Usage: SYMCLI_HOST=<ip> SSH_USER=<user> SID=<sid> RDF_GROUP=<rdfg> ./srdf_precheck.sh
@@ -725,7 +725,7 @@ fi
 echo ""
 echo "Pre-check: $FAIL failure(s)"
 [ "$FAIL" -gt 0 ] && exit 2 || exit 0
-~~~
+```
 
 ---
 
@@ -733,7 +733,7 @@ echo "Pre-check: $FAIL failure(s)"
 
 Confirm all SRDF/A pairs have returned to Consistent state after maintenance and RPO is within SLA.
 
-~~~bash
+```bash
 #!/bin/bash
 # srdf_postcheck.sh
 # Usage: SYMCLI_HOST=<ip> SSH_USER=<user> SID=<sid> RDF_GROUP=<rdfg> ./srdf_postcheck.sh
@@ -772,7 +772,7 @@ echo "[INFO] SRDF link utilisation: ${UTIL:-N/A}%"
 echo ""
 echo "Post-change validation: $FAIL failure(s)"
 [ "$FAIL" -gt 0 ] && exit 2 || exit 0
-~~~
+```
 
 ---
 
@@ -780,7 +780,7 @@ echo "Post-change validation: $FAIL failure(s)"
 
 Cron-safe summary: total pairs, pairs Consistent, pairs degraded, delta mark count, and link utilization. Exits 0 (OK), 1 (WARNING), or 2 (CRITICAL).
 
-~~~bash
+```bash
 #!/bin/bash
 # srdf_health_check.sh
 # Cron: */5 * * * * SYMCLI_HOST=<ip> SSH_USER=<user> SID=<sid> RDF_GROUP=<rdfg> /opt/scripts/srdf_health_check.sh
@@ -811,4 +811,4 @@ elif [ "${DEGRADED:-0}" -gt 0 ]; then
   exit 1
 fi
 exit 0
-~~~
+```

@@ -10,7 +10,7 @@
 
 Queries SYMCLI to report total installed capacity, activated capacity, and remaining COD reserve for a PowerMax array. Warns if activated capacity exceeds 80% of total installed (i.e., COD reserve is running low).
 
-~~~bash
+```bash
 #!/bin/bash
 # cod_capacity_report.sh — Report COD activated vs. reserve capacity on a PowerMax array
 # Usage: SID=000123456789 SYMCLI_PATH=/usr/symcli/bin ./cod_capacity_report.sh
@@ -59,7 +59,7 @@ echo "  Report complete — $(date '+%Y-%m-%d %H:%M:%S')"
 echo "  Review output above for COD reserve vs. activated capacity."
 echo "  Alert if activated capacity approaches total installed capacity."
 echo "========================================"
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -138,7 +138,7 @@ Ansible prints the array configuration overview, pool utilisation, and license s
 
 Queries the Unisphere for PowerMax REST API from a Windows PC to report current licensed capacity and available COD headroom. No SYMCLI installation required — just network access to the Unisphere server.
 
-~~~powershell
+```powershell
 # cod_license_query.ps1 — COD license query via Unisphere REST API (Windows PowerShell)
 # Requires: PowerShell 5.1+ (built into Windows 10/11)
 # Run: .\cod_license_query.ps1
@@ -206,7 +206,7 @@ Write-Host ""
 Write-Host "========================================"
 Write-Host "  Query complete."
 Write-Host "========================================"
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -259,7 +259,7 @@ First a capacity block showing total usable, used, and subscribed capacity in TB
 
 Queries the Unisphere REST API for the `system_capacity` endpoint, parses `total_usable_capacity_gb` and `used_capacity_gb`, calculates percentage used, flags if above 85%, and prints licensed vs consumed COD capacity.
 
-~~~bash
+```bash
 #!/bin/bash
 # cod_daily_check.sh — Daily capacity check via Unisphere REST API
 # Usage: UNISPHERE_HOST=192.168.1.100 SID=000123456789 UNISPHERE_USER=sysadmin UNISPHERE_PASS=secret ./cod_daily_check.sh
@@ -320,7 +320,7 @@ fi
 
 echo "========================================"
 exit $STATUS
-~~~
+```
 
 ---
 
@@ -328,7 +328,7 @@ exit $STATUS
 
 Captures full capacity output from the Unisphere REST API and `symcfg -sid $SID list -license` to a timestamped file for incident documentation.
 
-~~~bash
+```bash
 #!/bin/bash
 # cod_triage.sh — Capture COD capacity and license state to timestamped file
 # Usage: UNISPHERE_HOST=x SID=x UNISPHERE_USER=x UNISPHERE_PASS=x ./cod_triage.sh
@@ -385,7 +385,7 @@ AUTH=$(printf '%s:%s' "$UNISPHERE_USER" "$UNISPHERE_PASS" | base64)
 
 echo ""
 echo "Output saved to: $OUTFILE"
-~~~
+```
 
 ---
 
@@ -393,7 +393,7 @@ echo "Output saved to: $OUTFILE"
 
 Before requesting a COD activation: confirms current capacity utilisation is approaching threshold (>80% used), confirms Unisphere is reachable, and confirms no pending license changes. Exits 2 if the system is not ready.
 
-~~~bash
+```bash
 #!/bin/bash
 # cod_precheck.sh — Pre-check before COD activation request
 # Usage: UNISPHERE_HOST=x SID=x UNISPHERE_USER=x UNISPHERE_PASS=x ./cod_precheck.sh
@@ -464,7 +464,7 @@ else
   echo "  Result: NOT READY — resolve failures above before proceeding"
   exit 2
 fi
-~~~
+```
 
 ---
 
@@ -472,7 +472,7 @@ fi
 
 After COD activation: verifies new capacity is visible in `symcfg show` and confirms storage groups are still accessible.
 
-~~~bash
+```bash
 #!/bin/bash
 # cod_postcheck.sh — Post-change validation after COD activation
 # Usage: UNISPHERE_HOST=x SID=x UNISPHERE_USER=x UNISPHERE_PASS=x ./cod_postcheck.sh
@@ -540,7 +540,7 @@ else
   echo "  Result: FAIL — investigate issues above"
   exit 1
 fi
-~~~
+```
 
 ---
 
@@ -548,7 +548,7 @@ fi
 
 Cron-safe script that reports SID, total usable, used, available, and % used. Exits 0 (OK), 1 (warning at 80%), or 2 (critical at 90%).
 
-~~~bash
+```bash
 #!/bin/bash
 # cod_health.sh — Cron-safe COD health check
 # Usage: UNISPHERE_HOST=x SID=x UNISPHERE_USER=x UNISPHERE_PASS=x ./cod_health.sh
@@ -592,4 +592,4 @@ fi
 
 echo "COD_HEALTH SID=${SID} total_tb=${TOTAL} used_tb=${USED} avail_tb=${AVAIL} pct_used=${PCT}% status=${STATUS}"
 exit $EXIT
-~~~
+```

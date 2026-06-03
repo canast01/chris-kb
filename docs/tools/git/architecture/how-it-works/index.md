@@ -175,7 +175,7 @@ sequenceDiagram
 
 ## Storage Layout
 
-```bash
+```text
 # GitLab on-disk layout (default Omnibus)
 /var/opt/gitlab/
 ├── git-data/

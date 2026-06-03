@@ -62,7 +62,7 @@ Automation scripts and reusable code for Dell PowerScale operations.
 
 SSH to a PowerScale node and runs key `isi` commands to check node state, storage pool utilisation, active jobs, recent events, and SyncIQ policy status. Exits non-zero if any node is in SMARTFAIL or DOWN state.
 
-~~~perl
+```perl
 #!/usr/bin/env perl
 # powerscale_health_check.pl — Cluster health check for Dell PowerScale / OneFS
 # Usage: PS_HOST=ps01.example.com PS_USER=root ./powerscale_health_check.pl
@@ -128,7 +128,7 @@ if ($issues > 0) {
     print "  STATUS: OK — No critical issues detected.\n";
     exit 0;
 }
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -171,7 +171,7 @@ Five labelled sections: node status (isi status), storage pools, active jobs, re
 
 Runs `isi sync policies list -v` and `isi sync reports list` to check the state and last run result of every SyncIQ replication policy. Prints a table of policy name, state, last run time, and duration. Exits non-zero if any policy is in a FAILED state.
 
-~~~bash
+```bash
 #!/bin/bash
 # powerscale_synciq_monitor.sh — Monitor SyncIQ policy health on Dell PowerScale
 # Usage: PS_HOST=ps01.example.com PS_USER=root ./powerscale_synciq_monitor.sh
@@ -242,7 +242,7 @@ else
   echo "STATUS: OK — All SyncIQ policies healthy."
   exit 0
 fi
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -285,7 +285,7 @@ First the raw verbose policy list and last 5 reports are printed, then a summary
 
 Runs `isi quota quotas list -v` and formats the output as a CSV-style report showing path, quota type, current usage, soft threshold, hard threshold, and percentage used. Flags any quota over 80% with a WARNING marker.
 
-~~~bash
+```bash
 #!/bin/bash
 # powerscale_quota_report.sh — Generate a quota utilisation report for Dell PowerScale
 # Usage: PS_HOST=ps01.example.com PS_USER=root ./powerscale_quota_report.sh [> quota_report.csv]
@@ -365,7 +365,7 @@ if [[ "$OVER_THRESHOLD" -gt 0 ]]; then
   echo "# $OVER_THRESHOLD quota(s) at or above ${WARN_PCT}% — review flagged rows." >&2
 fi
 exit 0
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -392,7 +392,7 @@ PS_HOST=192.168.1.30 PS_USER=root ./powerscale_quota_report.sh > quota_report.cs
 
 Playbook targeting the `powerscale` host group. Runs SyncIQ policy list, recent reports, and cluster status via the shell module, then fails the play if any FAILED policy state is detected.
 
-~~~yaml
+```yaml
 ---
 # powerscale_synciq_health.yml — Ansible SyncIQ health check playbook for Dell PowerScale
 # Inventory group: powerscale
@@ -440,7 +440,7 @@ Playbook targeting the `powerscale` host group. Runs SyncIQ policy list, recent 
     - name: Confirm all checks passed
       ansible.builtin.debug:
         msg: "SyncIQ health check passed for {{ inventory_hostname }}."
-~~~
+```
 
 ---
 
@@ -448,7 +448,7 @@ Playbook targeting the `powerscale` host group. Runs SyncIQ policy list, recent 
 
 SSH to a PowerScale node using paramiko to run `isi statistics query current` for key performance counters. Compares current values to configurable baselines and alerts if CPU exceeds 80% or disk latency exceeds 10 ms.
 
-~~~python
+```python
 #!/usr/bin/env python3
 # powerscale_perf_check.py — Performance baseline check for Dell PowerScale via SSH
 # Requirements: paramiko
@@ -565,7 +565,7 @@ def main():
 
 if __name__ == "__main__":
     main()
-~~~
+```
 
 ---
 
@@ -845,7 +845,7 @@ exit "$STATE"
 
 Connect to the OneFS REST API from a Windows PC and print a formatted summary of cluster configuration, health state, and recent events — no SSH or isi CLI required on your desktop.
 
-~~~powershell
+```powershell
 # powerscale_cluster_health.ps1 — PowerScale cluster health via OneFS REST API (Windows PowerShell)
 # Run: .\powerscale_cluster_health.ps1
 # Requires: PowerShell 5.1+ (built into Windows 10/11)
@@ -903,7 +903,7 @@ try {
 } catch {
     Write-Host "  ERROR fetching cluster health: $_" -ForegroundColor Red
 }
-~~~
+```
 
 ---
 
@@ -911,7 +911,7 @@ try {
 
 Run `isi` commands on your PowerScale cluster from a Windows Command Prompt using plink.exe (PuTTY) over SSH.
 
-~~~batch
+```batch
 @echo off
 REM powerscale_node_status.bat — PowerScale node and drive status via SSH (plink/PuTTY)
 
@@ -939,7 +939,7 @@ echo [3] Storage pool list ...
 
 echo.
 echo Done.
-~~~
+```
 
 ---
 

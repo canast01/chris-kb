@@ -62,7 +62,7 @@ Ansible connects to each server in sequence and runs disk, load, and service che
 
 Update a web application fleet one host at a time without downtime: drain from the load balancer, stop, update, start, health-check, and re-add. Stops immediately on first failure.
 
-~~~yaml
+```yaml
 ---
 # rolling-update.yml
 # Usage: ansible-playbook rolling-update.yml -i inventory/hosts.yml
@@ -163,7 +163,7 @@ Update a web application fleet one host at a time without downtime: drain from t
     - name: Report update result for this host
       debug:
         msg: "{{ inventory_hostname }}: updated to {{ app_version }}, health OK, back in LB."
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -211,7 +211,7 @@ Ansible processes one server at a time. For each server you see: drain request, 
 
 Verify that every inventory host meets baseline configuration requirements: SSH access, Python, sudoers, required packages, hostname, NTP sync, and DNS resolution.
 
-~~~yaml
+```yaml
 ---
 # inventory-validate.yml
 # Usage: ansible-playbook inventory-validate.yml -i inventory/hosts.yml
@@ -333,7 +333,7 @@ Verify that every inventory host meets baseline configuration requirements: SSH 
       fail:
         msg: "Validation failed for: {{ non_compliant | join(', ') }}"
       when: non_compliant | length > 0
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -378,7 +378,7 @@ For each host in your inventory, a table is printed showing PASS or FAIL for eac
 
 Bash wrapper that generates a new database password, encrypts it into an Ansible Vault file, runs the playbook to push it to the database and app servers, and rolls back if the playbook fails.
 
-~~~bash
+```bash
 #!/usr/bin/env bash
 # rotate-db-secret.sh
 # Usage: VAULT_PASSWORD_FILE=<path> DB_VARS_FILE=<path> ./rotate-db-secret.sh
@@ -461,7 +461,7 @@ else
     log "  Review playbook errors above and investigate before retrying."
     exit 1
 fi
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -511,7 +511,7 @@ Step-by-step log messages showing: backup created, new password generated, passw
 
 Ansible does not run natively on Windows. This batch file uses WSL (Windows Subsystem for Linux) to run your Ansible playbooks without leaving Windows.
 
-~~~batch
+```batch
 @echo off
 REM ansible-run.bat
 REM Runs an Ansible playbook via WSL from Windows.
@@ -547,7 +547,7 @@ if %errorlevel% equ 0 (
 )
 
 pause
-~~~
+```
 
 ---
 
@@ -555,7 +555,7 @@ pause
 
 Test that Ansible can reach all hosts in your inventory by running `ansible all -m ping` via WSL from PowerShell. Shows a count of successful and failed hosts.
 
-~~~powershell
+```powershell
 # ansible-ping-test.ps1
 param(
     [Parameter(Mandatory)]
@@ -599,7 +599,7 @@ if ($failedCount -gt 0) {
 }
 
 Write-Host "`nAll hosts reachable." -ForegroundColor Green
-~~~
+```
 
 ---
 

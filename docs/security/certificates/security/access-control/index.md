@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Access Control reference covering Emergency Revocation Sequence, Audit Logging, Certificate Pinning, Revocation Emergency Procedure.
 </div>
-```powershell
+```text
 ┌─────────────────────────── Security Certificates Security — Access Control ───────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

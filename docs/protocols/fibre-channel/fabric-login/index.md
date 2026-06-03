@@ -68,32 +68,32 @@ sequenceDiagram
 ### Brocade FOS
 
 ```bash
-# Show fabric logins on this switch
+## Show fabric logins on this switch
 nsshow
 
-# Show logins across all switches
+## Show logins across all switches
 nsallshow
 
-# Show FLOGI database (ports logged into this switch's F_ports)
+## Show FLOGI database (ports logged into this switch's F_ports)
 switchshow | grep Online
 
-# Per-port FLOGI details
+## Per-port FLOGI details
 portlogshow <slot/port>
 ```
 
 ### Cisco MDS
 
 ```bash
-# FLOGI database — who is logged in to the fabric
+## FLOGI database — who is logged in to the fabric
 show flogi database vsan 10
 
-# Name server — all registered ports
+## Name server — all registered ports
 show fcns database vsan 10
 
-# PLOGI state between two ports
+## PLOGI state between two ports
 show topology
 
-# Detailed port login info
+## Detailed port login info
 show interface fc1/1
 ```
 
@@ -110,15 +110,15 @@ show interface fc1/1
 ## Useful Diagnostic Commands
 
 ```bash
-# Brocade — port error counters (CRC, loss-of-sync)
+## Brocade — port error counters (CRC, loss-of-sync)
 porterrshow
 
-# Brocade — port statistics
+## Brocade — port statistics
 portstatshow <port>
 
-# Cisco MDS — interface counters
+## Cisco MDS — interface counters
 show interface fc1/1 counters
 
-# Verify FCID assigned to a WWPN
+## Verify FCID assigned to a WWPN
 nsshow | grep <wwpn-last-4-chars>
 ```

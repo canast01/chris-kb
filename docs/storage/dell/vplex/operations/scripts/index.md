@@ -80,7 +80,7 @@ flowchart LR
 
 SSH to a VPLEX management server and runs vplexcli commands to check cluster health indications, distributed device health, and director hardware state. Reports any health-state value that is not "ok" and exits non-zero if issues are found.
 
-~~~bash
+```bash
 #!/bin/bash
 # vplex_device_health.sh — Distributed device and director health check for Dell VPLEX
 # Usage: VPLEX_HOST=vplex-mgmt.example.com VPLEX_USER=service ./vplex_device_health.sh
@@ -154,7 +154,7 @@ else
   echo "STATUS: OK — All VPLEX health checks passed."
   exit 0
 fi
-~~~
+```
 
 **Usage:**
 ```text
@@ -167,7 +167,7 @@ VPLEX_HOST=192.168.1.20 VPLEX_USER=service ./vplex_device_health.sh
 
 SSH to a VPLEX Metro system and queries consistency group operational status. Parses for any CG that is not in `in-sync` state and emits a Nagios-compatible PASS/WARNING/CRITICAL result. Alerts on split-brain or out-of-sync state.
 
-~~~perl
+```perl
 #!/usr/bin/env perl
 # vplex_cg_monitor.pl — Metro consistency group monitor for Dell VPLEX
 # Usage: VPLEX_HOST=vplex-mgmt.example.com VPLEX_USER=service ./vplex_cg_monitor.pl
@@ -227,7 +227,7 @@ print "\n";
 if ($worst == 2) { print "CRITICAL: One or more consistency groups are in a split-brain or out-of-sync state.\n"; exit 2; }
 elsif ($worst == 1) { print "WARNING: One or more consistency groups require attention.\n"; exit 1; }
 else { print "OK: All consistency groups are in-sync.\n"; exit 0; }
-~~~
+```
 
 **Usage:**
 ```text

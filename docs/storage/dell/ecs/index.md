@@ -112,7 +112,7 @@ Dell ECS (Enterprise Content Storage) is a scale-out, software-defined object st
 
 ## Health Commands
 
-~~~bash
+```bash
 # Authenticate to the ECS Management REST API (returns X-SDS-AUTH-TOKEN header)
 curl -s -k -u "sysadmin:<password>" \
   "https://<ecs-node>:4443/login" -D -
@@ -137,7 +137,7 @@ ecscli bucket list --namespace <namespace>
 
 # Get bucket metadata including versioning, quota, replication group
 ecscli bucket get --namespace <namespace> --name <bucket>
-~~~
+```
 
 ## Common Issues
 

@@ -38,7 +38,7 @@
 
 Authenticate to the Pure1 REST API using a JWT signed with your private key, fetch subscription asset usage metrics, and print a table showing committed vs. consumed vs. burst per array. Warns if any array is consuming more than 90% of committed capacity.
 
-~~~python
+```python
 #!/usr/bin/env python3
 """
 Evergreen//One Consumption Usage Report
@@ -180,7 +180,7 @@ if warnings:
 else:
     print(f"\n{GRN}All arrays are within {WARN_PCT}% of committed capacity.{NC}")
     sys.exit(0)
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -229,7 +229,7 @@ A table listing every array in your Evergreen//One subscription with its service
 
 Fetch 30-day availability, read latency, and write latency metrics from the Pure1 API for all Evergreen//One arrays, compare against SLA guarantees (99.9999% availability, sub-1ms read latency), and print a compliance report flagging any breaches.
 
-~~~python
+```python
 #!/usr/bin/env python3
 """
 Evergreen//One SLA Compliance Check
@@ -409,7 +409,7 @@ if breaches:
 else:
     print(f"{GRN}All arrays are SLA-compliant for the {LOOKBACK_DAYS}-day review period.{NC}")
     sys.exit(0)
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -458,7 +458,7 @@ A table showing each Evergreen//One array with its 30-day average availability p
 
 Lightweight cron-friendly script that fetches current burst capacity usage from the Pure1 API using JWT authentication via curl, and sends an email alert if burst exceeds the configured warning percentage.
 
-~~~bash
+```bash
 #!/bin/bash
 # Evergreen//One Burst Capacity Alert
 # Cron-friendly: sends email if burst > WARN_BURST_PCT of committed.
@@ -592,7 +592,7 @@ else
     log "OK: Burst ${BURST_PCT}% is within threshold ${WARN_BURST_PCT}% — no alert needed."
     exit 0
 fi
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -647,7 +647,7 @@ Timestamped log lines showing the authentication, the burst consumption fetched 
 
 Authenticate to the Pure1 REST API using an API key, retrieve Evergreen//One subscription details and asset information, and print a formatted report. Warns if within 90 days of term end or above 90% capacity usage.
 
-~~~powershell
+```powershell
 # eo1_subscription_check.ps1 — Evergreen//One Subscription Check via Pure1 API (Windows PowerShell)
 # Requires: PowerShell 5.1+ (pre-installed on Windows 10/11)
 # Pure1 API tokens generated at: https://pure1.purestorage.com (Settings -> API Registration)
@@ -804,7 +804,7 @@ if ($warnings.Count -gt 0) {
     Write-Host "All subscriptions are within capacity and term limits." -ForegroundColor Green
     exit 0
 }
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -856,7 +856,7 @@ A report showing each Evergreen//One subscription with its status, start date, e
 
 Get Evergreen//One subscription from Pure1 API, calculate consumed vs reserved capacity, flag if over 90% consumed, and check if subscription term end is within 90 days. Outputs PASS/FAIL.
 
-~~~python
+```python
 #!/usr/bin/env python3
 """
 eo1_daily_check.py
@@ -955,7 +955,7 @@ label  = "PASS" if overall == 0 else "FAIL"
 colour = GRN if overall == 0 else RED
 print(f"{colour}RESULT: {label}{NC}")
 sys.exit(overall)
-~~~
+```
 
 ---
 
@@ -963,7 +963,7 @@ sys.exit(overall)
 
 Capture subscription details, all assets in the subscription, capacity consumed per asset, and Pure1 health scores for all managed arrays to a timestamped file.
 
-~~~python
+```python
 #!/usr/bin/env python3
 """
 eo1_incident_triage.py
@@ -1042,7 +1042,7 @@ with open(OUT, "w") as f:
     json.dump(triage, f, indent=2)
 
 print(f"\nTriage data saved to: {OUT}")
-~~~
+```
 
 ---
 
@@ -1050,7 +1050,7 @@ print(f"\nTriage data saved to: {OUT}")
 
 Before adding new workloads, confirm the subscription has more than 15% headroom, the term end is more than 90 days away, and there are no active Pure1 CRITICAL alerts on subscription assets. Exits 2 on failure.
 
-~~~python
+```python
 #!/usr/bin/env python3
 """
 eo1_precheck.py
@@ -1161,7 +1161,7 @@ if exit_code == 0:
 else:
     print(f"{RED}VERDICT: NO-GO — resolve issues first{NC}")
 sys.exit(exit_code)
-~~~
+```
 
 ---
 
@@ -1169,7 +1169,7 @@ sys.exit(exit_code)
 
 After adding a workload, confirm consumed capacity increased as expected and is within the subscription reserve, and that no new CRITICAL alerts appeared.
 
-~~~python
+```python
 #!/usr/bin/env python3
 """
 eo1_postcheck.py
@@ -1268,7 +1268,7 @@ else:
 print()
 print(f"{GRN}RESULT: PASS{NC}" if exit_code == 0 else f"{RED}RESULT: FAIL{NC}")
 sys.exit(exit_code)
-~~~
+```
 
 ---
 
@@ -1276,7 +1276,7 @@ sys.exit(exit_code)
 
 Lightweight cron-safe script. Outputs subscription name, reserved, consumed, percentage used, and days to term end. Exits 0 (healthy), 1 (warning), or 2 (critical).
 
-~~~python
+```python
 #!/usr/bin/env python3
 """
 eo1_health.py — cron-safe Evergreen//One health check
@@ -1360,4 +1360,4 @@ try:
 except Exception as exc:
     print(f"[{datetime.datetime.now():%Y-%m-%d %H:%M:%S}] ERROR: {exc}")
     sys.exit(2)
-~~~
+```

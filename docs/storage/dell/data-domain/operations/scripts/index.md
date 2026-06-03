@@ -9,7 +9,7 @@ Scripts reference covering Daily Health Check, Ansible Daily Check Playbook, DDB
 
 SSH to a Data Domain appliance and print a formatted health summary covering filesystem space, compression ratio, active alerts, replication state, and system uptime. Exits non-zero if any active alerts are found.
 
-~~~bash
+```bash
 #!/bin/bash
 # dd_health_check.sh — Daily health check for a Dell Data Domain appliance
 # Usage: DD_HOST=dd01.example.com DD_USER=sysadmin ./dd_health_check.sh
@@ -69,7 +69,7 @@ else
   echo "STATUS: OK — No active alerts."
   exit 0
 fi
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -154,7 +154,7 @@ Ansible runs three tasks on each Data Domain host and prints the raw output of `
 
 Runs `ddboost show clients` and `ddboost status`, parses for disconnected clients, and prints a formatted table. Exits non-zero if any client is found in a disconnected or unknown state.
 
-~~~bash
+```bash
 #!/bin/bash
 # dd_ddboost_check.sh — Check DDBoost client connectivity on a Data Domain appliance
 # Usage: DD_HOST=dd01.example.com DD_USER=sysadmin ./dd_ddboost_check.sh
@@ -220,7 +220,7 @@ else
   echo "STATUS: OK — All DDBoost clients connected."
   exit 0
 fi
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -265,7 +265,7 @@ The DDBoost overall status followed by a table showing each backup client, its I
 
 Uses plink.exe (part of the free PuTTY package) to SSH into the Data Domain from a Windows machine and run the three most important health commands: system stats, active alerts, and filesystem space.
 
-~~~batch
+```batch
 @echo off
 REM dd_health_check.bat — Data Domain health check from Windows CMD
 REM Uses plink.exe (PuTTY) to SSH into the Data Domain appliance.
@@ -304,7 +304,7 @@ echo.
 echo ========================================
 echo   Health check complete.
 echo ========================================
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -360,7 +360,7 @@ Three sections of output: system performance counters, a list of any active aler
 
 Uses the Data Domain REST API to authenticate, pull system information, and check active alerts — all from a PowerShell window on your Windows PC. No SSH required.
 
-~~~powershell
+```powershell
 # dd_health_rest.ps1 — Data Domain health check via REST API (Windows PowerShell)
 # Requires: PowerShell 5.1+ (built into Windows 10/11)
 # Run: .\dd_health_rest.ps1
@@ -445,7 +445,7 @@ Write-Host ""
 Write-Host "========================================"
 Write-Host "  Health check complete."
 Write-Host "========================================"
-~~~
+```
 
 ### How to run this script — step by step
 

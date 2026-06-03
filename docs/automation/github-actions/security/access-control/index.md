@@ -68,14 +68,14 @@ steps:
 ## Workflow Permissions
 
 ```yaml
-# Minimal permissions — default deny, grant explicitly
+## Minimal permissions — default deny, grant explicitly
 permissions:
   contents: read
   id-token: write    # only for OIDC jobs
   packages: write    # only for jobs pushing to GHCR
 
-# Never use:
-# permissions: write-all
+## Never use:
+## permissions: write-all
 ```
 
 !!! warning "Fork PRs and secrets"
@@ -84,7 +84,7 @@ permissions:
 ## Environment Protection Rules
 
 ```yaml
-# Workflow — reference environment to trigger protection
+## Workflow — reference environment to trigger protection
 jobs:
   deploy-prod:
     environment: production     # triggers protection rules + reviewer gate
@@ -107,8 +107,8 @@ Configure in **Repo Settings → Environments → production**:
 ## `GITHUB_TOKEN` Permissions
 
 ```yaml
-# Restrict GITHUB_TOKEN to read-only by default (org or repo setting)
-# Then grant write only where needed
+## Restrict GITHUB_TOKEN to read-only by default (org or repo setting)
+## Then grant write only where needed
 
 permissions:
   contents: write       # only for release creation
@@ -118,7 +118,7 @@ permissions:
 ```
 
 ```bash
-# Set default token permissions at org level
+## Set default token permissions at org level
 gh api --method PATCH orgs/ORG \
   -f members_can_create_repositories=false \
   --field default_workflow_permissions=read
@@ -127,10 +127,10 @@ gh api --method PATCH orgs/ORG \
 ## Self-Hosted Runner Security
 
 ```yaml
-# Restrict which workflows can use self-hosted runners
-# Settings → Actions → Runner groups → Restrict to selected repositories
+## Restrict which workflows can use self-hosted runners
+## Settings → Actions → Runner groups → Restrict to selected repositories
 
-# In workflow — target runner groups
+## In workflow — target runner groups
 runs-on:
   group: prod-runners          # named runner group
   labels: [self-hosted, linux]
@@ -140,7 +140,7 @@ runs-on:
     Self-hosted runners in public repositories are a high-risk attack surface. Malicious PRs can execute arbitrary code on the runner host. Restrict self-hosted runners to private repositories or trusted workflow triggers only.
 
 ```yaml
-# Safe pattern — only run privileged jobs on self-hosted for protected branches
+## Safe pattern — only run privileged jobs on self-hosted for protected branches
 jobs:
   deploy:
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
@@ -150,40 +150,40 @@ jobs:
 ### Runner Hardening
 
 ```bash
-# Run runner as a dedicated non-root user
+## Run runner as a dedicated non-root user
 useradd -r -s /sbin/nologin -m -d /home/github-runner github-runner
 
-# Ephemeral runners — register, run one job, deregister
+## Ephemeral runners — register, run one job, deregister
 ./config.sh --ephemeral ...
-# Prevents state accumulation between jobs
+## Prevents state accumulation between jobs
 
-# Restrict runner network access (only allow required endpoints)
-# github.com, api.github.com, objects.githubusercontent.com, *.actions.githubusercontent.com
+## Restrict runner network access (only allow required endpoints)
+## github.com, api.github.com, objects.githubusercontent.com, *.actions.githubusercontent.com
 ```
 
 ## Secret Scanning
 
 ```bash
-# Enable secret scanning and push protection via API
+## Enable secret scanning and push protection via API
 gh api --method PATCH repos/ORG/REPO \
   -f 'security_and_analysis[secret_scanning][status]=enabled' \
   -f 'security_and_analysis[secret_scanning_push_protection][status]=enabled'
 
-# List alerts
+## List alerts
 gh api repos/ORG/REPO/secret-scanning/alerts | jq '.[] | {state, secret_type, html_url}'
 ```
 
 ## Audit Log
 
 ```bash
-# Org audit log — all Actions-related events
+## Org audit log — all Actions-related events
 gh api orgs/ORG/audit-log \
   --paginate \
   -f phrase="action:workflows" \
   -f per_page=100 \
   | jq '.[] | {action, actor, repo, created_at}'
 
-# Filter for secret access events
+## Filter for secret access events
 gh api orgs/ORG/audit-log \
   -f phrase="action:org.actions_secret" \
   | jq '.[] | {action, actor, name: .config.secret_name}'
@@ -192,7 +192,7 @@ gh api orgs/ORG/audit-log \
 ## Preventing Secret Leaks
 
 ```yaml
-# Mask a dynamically generated value
+## Mask a dynamically generated value
 - name: Generate and mask token
   id: auth
   run: |
@@ -200,10 +200,10 @@ gh api orgs/ORG/audit-log \
     echo "::add-mask::$TOKEN"
     echo "token=$TOKEN" >> "$GITHUB_OUTPUT"
 
-# Never echo secrets directly — even masked, the pattern is bad
-# run: echo ${{ secrets.MY_SECRET }}   # ← avoid
+## Never echo secrets directly — even masked, the pattern is bad
+## run: echo ${{ secrets.MY_SECRET }}   # ← avoid
 
-# Use intermediate env vars
+## Use intermediate env vars
 - name: Use secret safely
   run: ./script.sh
   env:

@@ -67,42 +67,42 @@ High-speed serial protocol for Storage Area Network (SAN) connectivity between h
 ## Health Checks — Cisco MDS
 
 ```bash
-# Port status
+## Port status
 show interface fc brief
 
-# FLOGI database — confirmed logged-in devices
+## FLOGI database — confirmed logged-in devices
 show flogi database
 
-# FC Name Server — host-to-storage mapping
+## FC Name Server — host-to-storage mapping
 show fcns database
 
-# Active zones
+## Active zones
 show zoneset active
 
-# Interface error counters
+## Interface error counters
 show interface fc1/1 counters errors
 
-# Port utilisation
+## Port utilisation
 show interface fc1/1 counters brief
 ```
 
 ## Health Checks — Brocade
 
 ```bash
-# Switch and port status
+## Switch and port status
 switchshow
 
-# Port error counters
+## Port error counters
 porterrshow
 
-# FLOGI entries
+## FLOGI entries
 nsshow
 
-# Active zoning
+## Active zoning
 cfgshow | head -30
 cfgactvshow
 
-# Per-port stats
+## Per-port stats
 portshow <port-number>
 ```
 

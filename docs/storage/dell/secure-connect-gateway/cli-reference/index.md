@@ -4,7 +4,7 @@
 <div class="kb-summary">
 > Part of the [Secure Connect Gateway](../index.md) reference.
 </div>
-```powershell
+```text
 ┌────────────────────────────────────── Dell SCG — CLI Reference ───────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

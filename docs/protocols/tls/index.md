@@ -68,35 +68,35 @@ TLS (Transport Layer Security) provides encryption, integrity, and authenticatio
 ## Certificate and Handshake Inspection
 
 ```bash
-# Check certificate details for a live service
+## Check certificate details for a live service
 echo | openssl s_client -connect <host>:443 -servername <host> 2>/dev/null | \
   openssl x509 -noout -text | grep -E "Subject:|Issuer:|Not Before:|Not After:|Subject Alternative Name" -A1
 
-# Check expiry only
+## Check expiry only
 echo | openssl s_client -connect <host>:443 -servername <host> 2>/dev/null | \
   openssl x509 -noout -dates
 
-# Show full TLS handshake (negotiated version + cipher)
+## Show full TLS handshake (negotiated version + cipher)
 openssl s_client -connect <host>:443 -servername <host> 2>&1 | \
   grep -E "Protocol|Cipher|Certificate chain|Verify"
 
-# Force specific TLS version (testing)
+## Force specific TLS version (testing)
 openssl s_client -connect <host>:443 -tls1_2
 openssl s_client -connect <host>:443 -tls1_3
 
-# Check certificate chain completeness
+## Check certificate chain completeness
 openssl s_client -connect <host>:443 -showcerts 2>/dev/null | grep -E "^---$|subject=|issuer="
 ```
 
 ## Cipher Suite Audit
 
 ```bash
-# Install testssl.sh for comprehensive audit
+## Install testssl.sh for comprehensive audit
 curl -O https://testssl.sh/testssl.sh
 chmod +x testssl.sh
 ./testssl.sh <host>:443
 
-# Quick cipher check with nmap
+## Quick cipher check with nmap
 nmap --script ssl-enum-ciphers -p 443 <host>
 ```
 
@@ -113,7 +113,7 @@ ssl_session_tickets off;
 ssl_stapling on;
 ssl_stapling_verify on;
 
-# HSTS (once TLS is confirmed working)
+## HSTS (once TLS is confirmed working)
 add_header Strict-Transport-Security "max-age=63072000; includeSubDomains; preload" always;
 ```
 
@@ -128,7 +128,7 @@ SSLSessionTickets off
 ## OCSP Stapling Verification
 
 ```bash
-# Check if OCSP stapling is working
+## Check if OCSP stapling is working
 openssl s_client -connect <host>:443 -status -servername <host> 2>/dev/null | \
   grep -A 10 "OCSP response"
 ```
@@ -136,10 +136,10 @@ openssl s_client -connect <host>:443 -status -servername <host> 2>/dev/null | \
 ## Certificate Validation
 
 ```bash
-# Verify a certificate chain (cert.pem + intermediate.pem + root.pem)
+## Verify a certificate chain (cert.pem + intermediate.pem + root.pem)
 openssl verify -CAfile root.pem -untrusted intermediate.pem cert.pem
 
-# Check OCSP status
+## Check OCSP status
 openssl ocsp \
   -issuer intermediate.pem \
   -cert cert.pem \

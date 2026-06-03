@@ -62,7 +62,7 @@ Scripts reference covering Cluster Health Check (Perl), SnapMirror Lag Monitor (
 
 SSH to an ONTAP cluster management LIF, run key health commands, parse the output, and print a PASS/WARNING/CRITICAL summary with an exit code reflecting the worst finding.
 
-~~~perl
+```perl
 #!/usr/bin/perl
 use strict;
 use warnings;
@@ -181,7 +181,7 @@ print "\n=== ONTAP Cluster Health: $CLUSTER ===\n";
 print "$_\n" for @messages;
 print "\nOverall status: $label\n";
 exit $worst;
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -239,7 +239,7 @@ The script connects to your ONTAP cluster and prints a line for each check (brok
 
 SSH to an ONTAP destination cluster, parse all SnapMirror relationships, convert lag times to minutes, and print a table with PASS/WARN/CRIT per relationship.
 
-~~~bash
+```bash
 #!/bin/bash
 # SnapMirror Lag Monitor
 # Usage: ONTAP_HOST=cluster ONTAP_USER=admin ONTAP_PASS=secret ./sm_lag.sh
@@ -326,7 +326,7 @@ case $worst in
     2) echo -e "${RED}CRITICAL: One or more relationships are unhealthy or exceed the critical lag threshold.${NC}" ;;
 esac
 exit $worst
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -380,7 +380,7 @@ A table listing every SnapMirror relationship with columns for lag time in minut
 
 SSH to ONTAP, collect volume space data, print a table sorted by utilisation, highlight volumes approaching capacity, and optionally export to CSV.
 
-~~~python
+```python
 #!/usr/bin/env python3
 """
 ONTAP Volume Capacity Reporter
@@ -503,7 +503,7 @@ def main():
 
 if __name__ == "__main__":
     main()
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -563,7 +563,7 @@ A table listing every ONTAP volume, sorted from most-used to least-used. Each ro
 
 Query the ONTAP REST API to check cluster health, aggregate space, and SnapMirror relationships, then fail if any aggregate exceeds 85% or any SnapMirror relationship is unhealthy.
 
-~~~yaml
+```yaml
 ---
 # ONTAP Health Playbook
 # Requirements: ansible-galaxy collection install netapp.ontap
@@ -666,7 +666,7 @@ Query the ONTAP REST API to check cluster health, aggregate space, and SnapMirro
     - name: Health check passed
       ansible.builtin.debug:
         msg: "All ONTAP health checks passed."
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -717,7 +717,7 @@ Ansible runs each task in sequence, printing `ok` or `failed` next to each step.
 
 Connect to ONTAP via SSH, check aggregate utilisation, and print a per-aggregate status report suitable for cron scheduling. Skips `aggr0_*` root aggregates.
 
-~~~perl
+```perl
 #!/usr/bin/perl
 use strict;
 use warnings;
@@ -785,7 +785,7 @@ printf "Summary : OK=%d  WARNING=%d  CRITICAL=%d\n", $ok, $warn, $crit;
 exit 2 if $crit;
 exit 1 if $warn;
 exit 0;
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -840,7 +840,7 @@ A report showing every data aggregate (skipping root aggregates like `aggr0_*`),
 
 Connect to the ONTAP REST API using basic authentication, retrieve cluster information, node states, and active health alerts, then print a formatted health report. No SSH or third-party tools required — works from any Windows PC on the same network as the cluster.
 
-~~~powershell
+```powershell
 # ontap_health_rest.ps1 — ONTAP Cluster Health via REST API (Windows PowerShell)
 # Requires: PowerShell 5.1+ (pre-installed on Windows 10/11)
 # Run: .\ontap_health_rest.ps1
@@ -917,7 +917,7 @@ if ($alerts -and $alerts.records -and $alerts.records.Count -gt 0) {
 }
 
 Write-Host "`n=== Report complete ===" -ForegroundColor Cyan
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -972,7 +972,7 @@ The script prints a formatted report showing the cluster name, ONTAP version, an
 
 Use plink.exe (part of the free PuTTY package) to SSH into your ONTAP cluster, run volume and aggregate space commands, and highlight any volumes using more than 80% of their capacity. Works from any Windows Command Prompt.
 
-~~~batch
+```batch
 @echo off
 REM ontap_vol_check.bat — ONTAP Volume Space Check via Plink (Windows CMD)
 REM Uses plink.exe (part of PuTTY) to SSH into the ONTAP cluster.
@@ -1010,7 +1010,7 @@ echo.
 echo === Check complete ===
 
 :end
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -1058,7 +1058,7 @@ ontap_vol_check.bat
 
 Runs all standard ONTAP daily checks over SSH in sequence: cluster health, aggregate state and capacity, offline volumes, interface status, and system health alerts.
 
-~~~bash
+```bash
 #!/bin/bash
 # ontap_daily_check.sh — ONTAP daily operations check via SSH
 # Usage: ONTAP_HOST=cluster1 ONTAP_USER=admin ONTAP_PASS=secret ./ontap_daily_check.sh
@@ -1149,7 +1149,7 @@ ALERT_CNT=$(echo "$HEALTH_OUT" | grep -v 'node\|entries\|^$' | grep -c '.' || tr
 echo ""
 echo "=== Daily check complete — $PASS_CNT passed, $WARN_CNT warned, $FAIL_CNT failed ==="
 [[ $FAIL_CNT -gt 0 ]] && exit 2 || exit 0
-~~~
+```
 
 ---
 
@@ -1157,7 +1157,7 @@ echo "=== Daily check complete — $PASS_CNT passed, $WARN_CNT warned, $FAIL_CNT
 
 Captures comprehensive ONTAP diagnostic data over SSH for incident response. Collects cluster state, health alerts, offline volumes, degraded aggregates, down interfaces, and critical event log entries to a timestamped file for sharing with NetApp support.
 
-~~~bash
+```bash
 #!/bin/bash
 # ontap_triage.sh — ONTAP incident triage data collector via SSH
 # Usage: ONTAP_HOST=cluster1 ONTAP_USER=admin ONTAP_PASS=secret ./ontap_triage.sh
@@ -1224,7 +1224,7 @@ ssh_cmd "storage disk show -broken -fields disk,container-type,bay,shelf" || tru
 echo ""
 echo "========================================================="
 echo "Triage collection complete. Output saved to: $OUTFILE"
-~~~
+```
 
 ---
 
@@ -1232,7 +1232,7 @@ echo "Triage collection complete. Output saved to: $OUTFILE"
 
 Confirms ONTAP cluster readiness before a maintenance window. Verifies cluster health, no offline volumes, all aggregates online, all network interfaces up, and no active critical health alerts.
 
-~~~bash
+```bash
 #!/bin/bash
 # ontap_precheck.sh — ONTAP pre-change validation via SSH
 # Usage: ONTAP_HOST=cluster1 ONTAP_USER=admin ONTAP_PASS=secret ./ontap_precheck.sh
@@ -1296,7 +1296,7 @@ if [[ $FAIL -gt 0 ]]; then
   exit 2
 fi
 echo -e "${GRN}PRE-CHECK PASSED — safe to proceed with maintenance.${NC}"
-~~~
+```
 
 ---
 
@@ -1304,7 +1304,7 @@ echo -e "${GRN}PRE-CHECK PASSED — safe to proceed with maintenance.${NC}"
 
 Confirms ONTAP health after a maintenance window. Runs the same checks as the pre-check script plus verifies that SnapMirror relationships are healthy and confirms no new health events were raised during the change window.
 
-~~~bash
+```bash
 #!/bin/bash
 # ontap_postcheck.sh — ONTAP post-change validation via SSH
 # Usage: ONTAP_HOST=cluster1 ONTAP_USER=admin ONTAP_PASS=secret ./ontap_postcheck.sh
@@ -1369,7 +1369,7 @@ if [[ $FAIL -gt 0 ]]; then
   exit 2
 fi
 echo -e "${GRN}POST-CHECK PASSED — change completed successfully.${NC}"
-~~~
+```
 
 ---
 
@@ -1377,7 +1377,7 @@ echo -e "${GRN}POST-CHECK PASSED — change completed successfully.${NC}"
 
 Connects to an ONTAP cluster using the netapp-ontap Python library, checks cluster health, node states, aggregate utilisation, and volume space, then prints a colour-coded summary.
 
-~~~python
+```python
 #!/usr/bin/env python3
 """
 ontap_health.py — ONTAP cluster health check via REST API (netapp-ontap library)
@@ -1523,4 +1523,4 @@ if issues:
 
 print(f"{'='*65}\n")
 sys.exit(worst)
-~~~
+```

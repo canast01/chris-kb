@@ -41,27 +41,27 @@ Monitoring job status is essential for confirming scheduled backups ran successf
 ## Listing and Filtering Jobs
 
 ```bash
-# List all backup jobs in a vault
+## List all backup jobs in a vault
 az backup job list \
   --resource-group <rg> \
   --vault-name <vault-name> \
   --output table
 
-# Filter jobs by status (Completed, Failed, InProgress, Cancelled)
+## Filter jobs by status (Completed, Failed, InProgress, Cancelled)
 az backup job list \
   --resource-group <rg> \
   --vault-name <vault-name> \
   --status Failed \
   --output table
 
-# Filter jobs by operation type
+## Filter jobs by operation type
 az backup job list \
   --resource-group <rg> \
   --vault-name <vault-name> \
   --operation Backup \
   --output table
 
-# Filter jobs within a specific time range
+## Filter jobs within a specific time range
 az backup job list \
   --resource-group <rg> \
   --vault-name <vault-name> \
@@ -83,13 +83,13 @@ az backup job list \
 ## Inspecting a Specific Job
 
 ```bash
-# Show full details for a job (job ID from list output)
+## Show full details for a job (job ID from list output)
 az backup job show \
   --resource-group <rg> \
   --vault-name <vault-name> \
   --name <job-id>
 
-# Get just the status and error details
+## Get just the status and error details
 az backup job show \
   --resource-group <rg> \
   --vault-name <vault-name> \
@@ -105,13 +105,13 @@ az backup job show \
 Use `az backup job wait` in automation pipelines to block until a job finishes before proceeding.
 
 ```bash
-# Wait for a specific job to complete (polls every 30 seconds)
+## Wait for a specific job to complete (polls every 30 seconds)
 az backup job wait \
   --resource-group <rg> \
   --vault-name <vault-name> \
   --name <job-id>
 
-# Trigger on-demand backup and wait for completion
+## Trigger on-demand backup and wait for completion
 JOB_ID=$(az backup protection backup-now \
   --resource-group <rg> \
   --vault-name <vault-name> \
@@ -132,7 +132,7 @@ az backup job wait \
 ## Failed Job Remediation
 
 ```bash
-# List all failed jobs with error messages
+## List all failed jobs with error messages
 az backup job list \
   --resource-group <rg> \
   --vault-name <vault-name> \
@@ -140,7 +140,7 @@ az backup job list \
   --query "[].{Item:properties.entityFriendlyName, Operation:properties.operation, Error:properties.errorDetails[0].errorString, Time:properties.startTime}" \
   --output table
 
-# Retry a failed backup job (re-trigger on-demand)
+## Retry a failed backup job (re-trigger on-demand)
 az backup protection backup-now \
   --resource-group <rg> \
   --vault-name <vault-name> \
@@ -165,7 +165,7 @@ Common failure causes and remediation:
 ## Cancelling a Running Job
 
 ```bash
-# Cancel a job that is currently in progress
+## Cancel a job that is currently in progress
 az backup job stop \
   --resource-group <rg> \
   --vault-name <vault-name> \
@@ -177,13 +177,13 @@ az backup job stop \
 ## Job Monitoring via Azure Monitor
 
 ```bash
-# Query backup job alerts in Azure Monitor (requires diagnostic settings enabled)
+## Query backup job alerts in Azure Monitor (requires diagnostic settings enabled)
 az monitor log-analytics query \
   --workspace <workspace-id> \
   --analytics-query "AddonAzureBackupJobs | where JobStatus == 'Failed' | project TimeGenerated, JobOperation, BackupItemFriendlyName, JobFailureCode | order by TimeGenerated desc | take 20" \
   --output table
 
-# List configured diagnostic settings on the vault
+## List configured diagnostic settings on the vault
 az monitor diagnostic-settings list \
   --resource <vault-resource-id> \
   --output table

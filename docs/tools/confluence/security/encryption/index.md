@@ -119,23 +119,23 @@ Confluence stores all content (pages, comments, attachments metadata) in its dat
 ```
 
 ```bash
-# /var/atlassian/application-data/confluence/confluence.cfg.xml
-# Ensure the JDBC URL includes SSL parameters:
+## /var/atlassian/application-data/confluence/confluence.cfg.xml
+## Ensure the JDBC URL includes SSL parameters:
 jdbc:postgresql://dbserver.example.local:5432/confluence?ssl=true&sslmode=require
 
-# For MySQL:
+## For MySQL:
 jdbc:mysql://dbserver.example.local:3306/confluence?useSSL=true&requireSSL=true
 ```
 
 ### Database Password Encryption
 
 ```bash
-# Store the database password encrypted in confluence.cfg.xml
-# Use Confluence's built-in password encoding tool
+## Store the database password encrypted in confluence.cfg.xml
+## Use Confluence's built-in password encoding tool
 /opt/atlassian/confluence/bin/atlas-util.sh encrypt-password
 
-# The encoded password is stored in confluence.cfg.xml as:
-# <property name="hibernate.connection.password">{AES}EncryptedValue=</property>
+## The encoded password is stored in confluence.cfg.xml as:
+## <property name="hibernate.connection.password">{AES}EncryptedValue=</property>
 ```
 
 ### Database at Rest Encryption
@@ -160,35 +160,35 @@ Confluence stores file attachments on the filesystem (by default under `<conflue
 ### Filesystem-Level Encryption (Linux)
 
 ```bash
-# The attachment directory should be on an encrypted volume (LUKS)
-# Verify the attachment directory location
+## The attachment directory should be on an encrypted volume (LUKS)
+## Verify the attachment directory location
 grep "attachments" /var/atlassian/application-data/confluence/confluence.cfg.xml
 
-# Check if the directory is on an encrypted mount
+## Check if the directory is on an encrypted mount
 df /var/atlassian/application-data/confluence/attachments/
 mount | grep "$(df /var/atlassian/application-data/confluence/attachments/ | tail -1 | awk '{print $1}')"
 
-# If not on encrypted storage, move attachments to an encrypted mount:
-# 1. Stop Confluence
+## If not on encrypted storage, move attachments to an encrypted mount:
+## 1. Stop Confluence
 systemctl stop confluence
 
-# 2. Move attachments to encrypted mount
+## 2. Move attachments to encrypted mount
 rsync -avz /var/atlassian/application-data/confluence/attachments/ /secure/confluence-attachments/
 
-# 3. Update attachment path in confluence.cfg.xml
-# <property name="attachments.dir">/secure/confluence-attachments</property>
+## 3. Update attachment path in confluence.cfg.xml
+## <property name="attachments.dir">/secure/confluence-attachments</property>
 
-# 4. Start Confluence
+## 4. Start Confluence
 systemctl start confluence
 ```
 
 ### Windows — BitLocker for Attachment Storage
 
 ```powershell
-# If Confluence is running on Windows, ensure the attachment volume is BitLocker-encrypted
+## If Confluence is running on Windows, ensure the attachment volume is BitLocker-encrypted
 Get-BitLockerVolume -MountPoint "D:" | Select-Object VolumeStatus, ProtectionStatus
 
-# Verify attachment directory location
+## Verify attachment directory location
 Get-Content "C:\ProgramData\Atlassian\Application Data\Confluence\confluence.cfg.xml" |
   Select-String "attachments.dir"
 ```
@@ -198,15 +198,15 @@ Get-Content "C:\ProgramData\Atlassian\Application Data\Confluence\confluence.cfg
 Confluence backups contain all content and must be encrypted.
 
 ```bash
-# Encrypt a Confluence backup archive with GPG
+## Encrypt a Confluence backup archive with GPG
 gpg --symmetric --cipher-algo AES256 /backups/confluence-backup-2026-05-07.zip
 
-# Or use openssl for encryption
+## Or use openssl for encryption
 openssl enc -aes-256-cbc -salt -in /backups/confluence-backup.zip \
   -out /backups/confluence-backup.zip.enc \
   -pass file:/secure/backup-passphrase.txt
 
-# Verify the encrypted backup can be decrypted
+## Verify the encrypted backup can be decrypted
 openssl enc -d -aes-256-cbc \
   -in /backups/confluence-backup.zip.enc \
   -out /tmp/test-decrypt.zip \
@@ -224,7 +224,7 @@ Confluence security properties (General Configuration > Security Configuration):
 ```
 
 ```nginx
-# Nginx — security headers for Confluence
+## Nginx — security headers for Confluence
 add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline';" always;
 add_header X-Content-Type-Options "nosniff" always;
 add_header Referrer-Policy "strict-origin-when-cross-origin" always;
@@ -233,25 +233,25 @@ add_header Referrer-Policy "strict-origin-when-cross-origin" always;
 ## Encryption Audit
 
 ```bash
-# Verify HTTPS enforced (HTTP redirects to HTTPS)
+## Verify HTTPS enforced (HTTP redirects to HTTPS)
 curl -I http://confluence.example.local/ 2>/dev/null | grep "Location:"
-# Should redirect to https://
+## Should redirect to https://
 
-# Verify TLS version
+## Verify TLS version
 nmap --script ssl-enum-ciphers -p 443 confluence.example.local | grep -E "TLS|SSLv"
 
-# Verify certificate is valid and not self-signed
+## Verify certificate is valid and not self-signed
 openssl s_client -connect confluence.example.local:443 </dev/null 2>/dev/null | \
   openssl x509 -noout -issuer -subject -dates
 
-# Verify database connection uses SSL
+## Verify database connection uses SSL
 grep -i "ssl\|encrypt" /var/atlassian/application-data/confluence/confluence.cfg.xml
 
-# Verify attachment directory is on encrypted storage
+## Verify attachment directory is on encrypted storage
 lsblk -o NAME,TYPE,MOUNTPOINT | grep crypt
 mount | grep "/secure\|/encrypted"
 
-# Check backup files are encrypted (should not be plain zip)
+## Check backup files are encrypted (should not be plain zip)
 file /backups/confluence-backup-*.zip* | grep -v "Zip archive"
 ```
 

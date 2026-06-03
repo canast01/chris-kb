@@ -131,17 +131,17 @@ Current API version: `2.x` (Purity//FB 4.x)
 **Authentication:**
 
 ```bash
-# Log in and obtain a session token
+## Log in and obtain a session token
 curl -s -k -X POST "https://<fb_ip>/api/login" \
   -H "Content-Type: application/json" \
   -d '{"username":"pureuser","password":"<password>"}' \
   -c /tmp/fb_cookies.txt
 
-# Use the session cookie for subsequent requests
+## Use the session cookie for subsequent requests
 curl -s -k -X GET "https://<fb_ip>/api/2.x/arrays" \
   -b /tmp/fb_cookies.txt | jq .
 
-# Alternatively, use an API token (preferred for automation)
+## Alternatively, use an API token (preferred for automation)
 curl -s -k -X GET "https://<fb_ip>/api/2.x/arrays" \
   -H "x-auth-token: <api_token>" | jq .
 ```
@@ -149,29 +149,29 @@ curl -s -k -X GET "https://<fb_ip>/api/2.x/arrays" \
 **Generate an API token:**
 
 ```bash
-# On the array CLI
+## On the array CLI
 purefb admin apitoken create <username>
 ```
 
 **Common API calls:**
 
 ```bash
-# Get array status and version
+## Get array status and version
 GET /api/2.x/arrays
 
-# List all filesystems with space usage
+## List all filesystems with space usage
 GET /api/2.x/file-systems?space=true
 
-# List all blades and health
+## List all blades and health
 GET /api/2.x/blades
 
-# List all active alerts
+## List all active alerts
 GET /api/2.x/alerts?filter=state%3D%27unflagged%27
 
-# List S3 buckets
+## List S3 buckets
 GET /api/2.x/buckets
 
-# List replication relationships
+## List replication relationships
 GET /api/2.x/array-connections
 ```
 

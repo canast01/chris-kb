@@ -63,7 +63,7 @@
 
 Check Keystone Collector service status, verify the last collection timestamp from the collector log, and confirm the collector can reach the Keystone API endpoint. Exits non-zero if the collector is stopped or the last collection is more than two hours old.
 
-~~~bash
+```bash
 #!/bin/bash
 # Keystone Collector Health Check
 # Run on the Keystone Collector host.
@@ -160,7 +160,7 @@ case $worst in
     2) echo -e "${RED}Overall: FAIL${NC}" ;;
 esac
 exit $worst
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -210,7 +210,7 @@ Three check results: `[PASS]`, `[WARN]`, or `[FAIL]` for the service status, las
 
 Authenticate to the NetApp BlueXP / Keystone API with an API key, retrieve committed vs. consumed capacity per service level tier, calculate burst usage percentage, and print a formatted table. Warns if burst exceeds 10% of committed for any tier.
 
-~~~python
+```python
 #!/usr/bin/env python3
 """
 Keystone Usage Report
@@ -334,7 +334,7 @@ def main():
 
 if __name__ == "__main__":
     main()
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -388,7 +388,7 @@ A table with one row per Keystone service level tier (e.g., Extreme, Performance
 
 SSH to the ONTAP cluster backing a Keystone subscription, list all volumes and their assigned QoS policy groups, and flag any volumes that have no QoS policy assigned. Unclassified volumes may be billed at the wrong Keystone service level tier.
 
-~~~bash
+```bash
 #!/bin/bash
 # Keystone Volume Service Level Audit
 # Usage: ONTAP_HOST=cluster ONTAP_USER=admin ONTAP_PASS=secret ./keystone_vol_audit.sh
@@ -465,7 +465,7 @@ else
     echo -e "${GRN}All volumes have a QoS policy assigned.${NC}"
     exit 0
 fi
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -515,7 +515,7 @@ A table listing every online volume with its SVM, volume name, QoS policy group,
 
 Authenticate to the NetApp ActiveIQ Keystone API using OAuth2 with a client ID and secret, retrieve subscription and usage data, and print a formatted capacity report.
 
-~~~powershell
+```powershell
 # keystone_usage_rest.ps1 — Keystone Subscription Usage via REST API (Windows PowerShell)
 # Requires: PowerShell 5.1+ (pre-installed on Windows 10/11)
 # Keystone API via ActiveIQ: https://api.activeiq.netapp.com/
@@ -631,7 +631,7 @@ foreach ($sub in $Subscriptions) {
 
 Write-Host "`n" + ("-" * 80)
 Write-Host "Report complete." -ForegroundColor Cyan
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -684,7 +684,7 @@ The script authenticates, lists your Keystone subscriptions, and for each one pr
 
 Authenticate to the Keystone API and retrieve monthly usage history for each subscription. Print a simple text-based bar chart showing monthly consumption trends and warn if any month exceeded committed capacity.
 
-~~~powershell
+```powershell
 # keystone_trending.ps1 — Keystone Usage Trending (Windows PowerShell)
 # Requires: PowerShell 5.1+ (pre-installed on Windows 10/11)
 # Run: .\keystone_trending.ps1
@@ -793,7 +793,7 @@ foreach ($sub in $Subscriptions) {
 }
 
 Write-Host "`n=== Trend report complete ===" -ForegroundColor Cyan
-~~~
+```
 
 ### How to run this script — step by step
 

@@ -89,7 +89,7 @@ Dell Secure Connect Gateway (SCG) is the outbound-only connectivity appliance th
 
 ## Health Commands
 
-~~~bash
+```bash
 # Test outbound connectivity from the SCG appliance to Dell support endpoints
 curl -sv --max-time 10 https://esrs.emc.com/esrs/v2/device/heartbeat 2>&1 | grep -E "(connected|SSL|error|timeout)"
 
@@ -110,7 +110,7 @@ journalctl -u dell-scg --since "24 hours ago" | grep -i "error\|fail\|disconnect
 
 # From a registered array — test SCG reachability (PowerMax example via Solutions Enabler)
 symcfg -sid <SID> -esrs list
-~~~
+```
 
 ## Common Issues
 

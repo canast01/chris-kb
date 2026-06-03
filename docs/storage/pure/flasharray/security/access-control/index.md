@@ -4,7 +4,7 @@
 <div class="kb-summary">
 FlashArray uses a role-based access control (RBAC) model with four built-in roles. Custom roles are not supported.
 </div>
-```powershell
+```text
 ┌────────────────────────────────── Pure FlashArray — Access Control ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

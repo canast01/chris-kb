@@ -4,7 +4,7 @@
 <div class="kb-summary">
 > Part of the [Flex on Demand](../../index.md) reference.
 </div>
-```powershell
+```text
 ┌─────────────────────────────────── Dell FoD — Install and Upgrade ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

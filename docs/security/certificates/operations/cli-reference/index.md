@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Windows certificate operations use `certutil` for verification, revocation, and store management. Linux operations rely on `openssl` for inspection, verification, and TLS connectivity testing.
 </div>
-```powershell
+```text
 ┌────────────────────────── Security Certificates Operations — CLI Reference ───────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

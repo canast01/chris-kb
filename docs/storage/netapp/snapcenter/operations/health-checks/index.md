@@ -82,7 +82,7 @@
 - [ ] No unprotected resources flagged in the SnapCenter Dashboard
 - [ ] Server TLS certificate is valid and not expiring within 30 days
 
-~~~bash
+```bash
 # Connect to SnapCenter (run from a host with SnapCenter PowerShell toolkit installed)
 Open-SmConnection -SMSbaseurl https://<snapcenter-server>:8146
 
@@ -103,4 +103,4 @@ Get-SmBackup -ResourceName <resource_name> | Select BackupName, BackupTime, Stat
 
 # Check all policies
 Get-SmPolicy | Select PolicyName, PluginType, BackupType
-~~~
+```

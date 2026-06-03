@@ -11,7 +11,7 @@
 
 Query the RecoverPoint REST API to report the replication state, lag, and RPO compliance for every consistency group.
 
-~~~python
+```python
 #!/usr/bin/env python3
 # rp-cg-health.py
 # Usage: RP_HOST=<host> RP_USER=<user> RP_PASS=<pass> python3 rp-cg-health.py
@@ -119,7 +119,7 @@ if non_active:
 else:
     print("RESULT: ALL CGs ACTIVE")
     sys.exit(0)
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -207,7 +207,7 @@ Timestamped log lines showing each step: locating the CG, getting the remote cop
 
 Query all RecoverPoint consistency groups, compare current lag to configured RPO, and flag any CG whose lag exceeds 2x the RPO.
 
-~~~python
+```python
 #!/usr/bin/env python3
 # rp-rpo-compliance.py
 # Usage: RP_HOST=<host> RP_USER=<user> RP_PASS=<pass> python3 rp-rpo-compliance.py
@@ -330,7 +330,7 @@ else:
     print("RESULT: All CGs within RPO.")
 
 sys.exit(exit_code)
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -374,7 +374,7 @@ A table listing every CG with its configured RPO, current lag, compliance status
 
 Query the RecoverPoint REST API from a Windows PC to report cluster health, RPA node status, and the state of every consistency group — highlighting any CG not in Active state.
 
-~~~powershell
+```powershell
 # rp-cg-status-windows.ps1
 # Usage: .\rp-cg-status-windows.ps1 -RpaHost <IP> -RpUser <user> -RpPass <pass>
 # Requires: PowerShell 5.1 or later (built into Windows 10/11)
@@ -494,7 +494,7 @@ try {
     Write-Host "ERROR retrieving consistency group details: $_" -ForegroundColor Red
     exit 1
 }
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -548,7 +548,7 @@ Cluster name and RPA node health (green = OK, red = fault), followed by a table 
 
 Use plink.exe to SSH to the RecoverPoint Management IP and run CLI status commands to quickly check system and group health from a Windows PC.
 
-~~~batch
+```batch
 @echo off
 REM rp-cg-health.bat — RecoverPoint CG health check via SSH (plink)
 REM Uses plink.exe (from PuTTY) for SSH. Download: https://www.putty.org
@@ -591,7 +591,7 @@ echo ----------------------------------------
 
 echo.
 echo Done.
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -648,7 +648,7 @@ Three sections of output: overall system status (RPA health, replication state),
 
 Check RPA system status via SSH and CG health via REST API. Flags any CGs not in ACTIVE state and any RPO exceeding 15 minutes.
 
-~~~bash
+```bash
 #!/bin/bash
 # rp_daily_check.sh
 # Usage: RPA_HOST=<ip> RPA_USER=admin RPA_PASS=<pass> ./rp_daily_check.sh
@@ -693,7 +693,7 @@ fi
 echo ""
 echo "Daily check: $FAIL failure(s)"
 [ "$FAIL" -gt 0 ] && exit 2 || exit 0
-~~~
+```
 
 ---
 
@@ -701,7 +701,7 @@ echo "Daily check: $FAIL failure(s)"
 
 Capture a full diagnostic snapshot via SSH and REST API to a timestamped file.
 
-~~~bash
+```bash
 #!/bin/bash
 # rp_triage.sh
 # Usage: RPA_HOST=<ip> RPA_USER=admin RPA_PASS=<pass> ./rp_triage.sh
@@ -738,7 +738,7 @@ api_get()  { curl -sk -u "$RPA_USER:$RPA_PASS" -H "Accept: application/json" "ht
 } > "$OUTFILE" 2>&1
 
 echo "Triage data saved to: $OUTFILE"
-~~~
+```
 
 ---
 
@@ -746,7 +746,7 @@ echo "Triage data saved to: $OUTFILE"
 
 Validate RecoverPoint state before storage or host maintenance. Exits 2 on any failure.
 
-~~~bash
+```bash
 #!/bin/bash
 # rp_precheck.sh
 # Usage: RPA_HOST=<ip> RPA_USER=admin RPA_PASS=<pass> ./rp_precheck.sh
@@ -791,7 +791,7 @@ fi
 echo ""
 echo "Pre-check: $FAIL failure(s)"
 [ "$FAIL" -gt 0 ] && exit 2 || exit 0
-~~~
+```
 
 ---
 
@@ -799,7 +799,7 @@ echo "Pre-check: $FAIL failure(s)"
 
 Confirm all CGs have returned to ACTIVE state after maintenance and verify image access is not left enabled.
 
-~~~bash
+```bash
 #!/bin/bash
 # rp_postcheck.sh
 # Usage: RPA_HOST=<ip> RPA_USER=admin RPA_PASS=<pass> ./rp_postcheck.sh
@@ -843,7 +843,7 @@ fi
 echo ""
 echo "Post-change validation: $FAIL failure(s)"
 [ "$FAIL" -gt 0 ] && exit 2 || exit 0
-~~~
+```
 
 ---
 
@@ -851,7 +851,7 @@ echo "Post-change validation: $FAIL failure(s)"
 
 Cron-safe summary: RPA count, CG count, active vs not-active CGs, and max RPO. Exits 0 (OK), 1 (WARNING), or 2 (CRITICAL).
 
-~~~bash
+```bash
 #!/bin/bash
 # rp_health_check.sh
 # Cron: */5 * * * * RPA_HOST=<ip> RPA_USER=admin RPA_PASS=<pass> /opt/scripts/rp_health_check.sh
@@ -876,4 +876,4 @@ elif [ "$NOT_ACTIVE" -gt 0 ]; then
   exit 1
 fi
 exit 0
-~~~
+```

@@ -102,7 +102,7 @@ Run these checks before any maintenance or change, or as first steps when invest
 - [ ] `isi network subnets list` — SmartConnect zones are configured correctly and DNS delegation is in place
 - [ ] `isi statistics query current --keys CPU` — no individual nodes showing sustained CPU saturation
 
-~~~bash
+```bash
 # Overall cluster node and drive health summary
 isi status
 
@@ -129,7 +129,7 @@ isi statistics query current --keys CPU
 
 # Show installed OneFS version and license status
 isi license list
-~~~
+```
 
 ## Cluster Health Commands
 

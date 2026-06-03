@@ -75,9 +75,9 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## Health Commands
 
-~~~bash
+```bash
 # Add environment-specific commands here
-~~~
+```
 
 ## Common Issues
 

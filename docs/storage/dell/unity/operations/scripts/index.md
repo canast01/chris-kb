@@ -63,7 +63,7 @@
 
 Uses `uemcli` to run a comprehensive health check against a Dell Unity array: component health, pool capacity, LUN status, active alerts, and storage processor state. Exits non-zero if any component is in a non-OK health state.
 
-~~~bash
+```bash
 #!/bin/bash
 # unity_health_check.sh — Dell Unity system health check via uemcli
 # Usage: UNITY_HOST=unity01.example.com UNITY_USER=admin UNITY_PASS=secret ./unity_health_check.sh
@@ -140,7 +140,7 @@ else
   echo "STATUS: OK — All health checks passed."
   exit 0
 fi
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -187,7 +187,7 @@ Five labelled sections in your terminal: component health (lists any non-OK comp
 
 Uses `uemcli` to check the health state of SP A and SP B and to enumerate all network interfaces. Alerts in PASS/WARNING/CRITICAL format if either SP is Faulted or if any interface is down.
 
-~~~perl
+```perl
 #!/usr/bin/env perl
 # unity_sp_monitor.pl — Storage processor health monitor for Dell Unity
 # Usage: UNITY_HOST=unity01.example.com UNITY_USER=admin UNITY_PASS=secret ./unity_sp_monitor.pl
@@ -250,7 +250,7 @@ if ($worst == 2) {
 print "=" x 50 . "\n";
 
 exit($worst == 2 ? 2 : ($worst == 1 ? 1 : 0));
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -296,7 +296,7 @@ Two sections: the storage processor health output (SP A and SP B with their curr
 
 Runs `uemcli /rep/session show -detail` and parses each replication session for its state. Prints a formatted table of session name, source, destination, state, and last sync time. Exits non-zero if any session is in an Error state.
 
-~~~bash
+```bash
 #!/bin/bash
 # unity_repl_check.sh — Replication session health check for Dell Unity
 # Usage: UNITY_HOST=unity01.example.com UNITY_USER=admin UNITY_PASS=secret ./unity_repl_check.sh
@@ -375,7 +375,7 @@ else
   echo "STATUS: OK — All replication sessions healthy."
   exit 0
 fi
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -420,7 +420,7 @@ First the raw `uemcli` output for all replication sessions, then a formatted sum
 
 Playbook that uses the `shell` module to run `uemcli` health commands against a Unity array. Registers outputs for pool health, LUN status, active alerts, and replication sessions, and uses `fail when` to catch any detected issues.
 
-~~~yaml
+```yaml
 ---
 # unity_health.yml — Ansible health check playbook for Dell Unity
 # Inventory host: unity (the Unity management IP or DNS name)
@@ -499,7 +499,7 @@ Playbook that uses the `shell` module to run `uemcli` health commands against a 
     - name: All checks passed
       ansible.builtin.debug:
         msg: "Dell Unity health check completed successfully for {{ unity_host }}."
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -550,7 +550,7 @@ Ansible prints a task log. You will see the pool health, LUN status, active aler
 
 Connect to the Dell Unity REST API from a Windows PC and print a formatted health summary including system info, model, software version, and active alerts — no uemcli install required.
 
-~~~powershell
+```powershell
 # unity_health_check.ps1 — Dell Unity health check via REST API (Windows PowerShell)
 # Run: .\unity_health_check.ps1
 # Requires: PowerShell 5.1+ (built into Windows 10/11) — no extra install needed
@@ -679,7 +679,7 @@ Write-Host ""
 Write-Host "========================================"
 Write-Host "  Health check complete."
 Write-Host "========================================"
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -734,7 +734,7 @@ Three sections: (1) authentication confirmation; (2) system info including name,
 
 Run Unity CLI commands from a Windows Command Prompt using plink.exe (PuTTY) to check capacity and pool details over SSH — without installing uemcli on your Windows PC.
 
-~~~batch
+```batch
 @echo off
 REM unity_capacity_check.bat — Check Dell Unity capacity and storage pools via SSH (plink/PuTTY)
 REM Uses plink.exe to run uemcli commands on the Unity management address over SSH.
@@ -786,7 +786,7 @@ if %ERRORLEVEL% neq 0 (
 
 echo.
 echo Done.
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -842,7 +842,7 @@ Two sections of output printed in your Command Prompt window: (1) the overall sy
 
 Runs all standard Dell Unity daily checks in sequence via uemcli: system general health, capacity summary, critical and error alerts, and storage pool state. Exits non-zero if any critical or error alert is found or if any pool is in a degraded state.
 
-~~~bash
+```bash
 #!/bin/bash
 # unity_daily_check.sh — Dell Unity daily operations check
 # Usage: UNITY_HOST=unity01 UNITY_USER=admin UNITY_PASS=secret ./unity_daily_check.sh
@@ -911,7 +911,7 @@ fi
 echo ""
 echo "=== Daily check complete: $PASS passed, $WARN warned, $FAIL failed ==="
 [[ $FAIL -gt 0 ]] && exit 2 || exit 0
-~~~
+```
 
 ---
 
@@ -919,7 +919,7 @@ echo "=== Daily check complete: $PASS passed, $WARN warned, $FAIL failed ==="
 
 Captures all relevant Dell Unity diagnostic data via uemcli for incident response. Collects system info, capacity, all alerts, pool state, LUN status, replication sessions, and event history to a timestamped file for sharing with Dell EMC support.
 
-~~~bash
+```bash
 #!/bin/bash
 # unity_triage.sh — Dell Unity incident triage data collector
 # Usage: UNITY_HOST=unity01 UNITY_USER=admin UNITY_PASS=secret ./unity_triage.sh
@@ -980,7 +980,7 @@ $U /sys/event show -limit 100 2>/dev/null || true
 echo ""
 echo "========================================================="
 echo "Triage collection complete. Output saved to: $OUTFILE"
-~~~
+```
 
 ---
 
@@ -988,7 +988,7 @@ echo "Triage collection complete. Output saved to: $OUTFILE"
 
 Validates Dell Unity readiness before a maintenance window. Confirms no active critical or error alerts, all storage pools are healthy, no thin-provisioning overcommit exists, and replication sessions are active. Exits with code 2 on any failure.
 
-~~~bash
+```bash
 #!/bin/bash
 # unity_precheck.sh — Dell Unity pre-change validation
 # Usage: UNITY_HOST=unity01 UNITY_USER=admin UNITY_PASS=secret ./unity_precheck.sh
@@ -1077,7 +1077,7 @@ if [[ $FAIL -gt 0 ]]; then
   exit 2
 fi
 echo -e "${GRN}PRE-CHECK PASSED — safe to proceed with maintenance.${NC}"
-~~~
+```
 
 ---
 
@@ -1085,7 +1085,7 @@ echo -e "${GRN}PRE-CHECK PASSED — safe to proceed with maintenance.${NC}"
 
 Confirms Dell Unity health after a maintenance window. Runs the same checks as pre-check plus explicitly queries replication session state via uemcli /prot/replSession to confirm replication has resumed successfully after the change.
 
-~~~bash
+```bash
 #!/bin/bash
 # unity_postcheck.sh — Dell Unity post-change validation
 # Usage: UNITY_HOST=unity01 UNITY_USER=admin UNITY_PASS=secret ./unity_postcheck.sh
@@ -1175,7 +1175,7 @@ if [[ $FAIL -gt 0 ]]; then
   exit 2
 fi
 echo -e "${GRN}POST-CHECK PASSED — change completed successfully.${NC}"
-~~~
+```
 
 ---
 
@@ -1183,7 +1183,7 @@ echo -e "${GRN}POST-CHECK PASSED — change completed successfully.${NC}"
 
 Authenticates to the Dell Unity REST API, retrieves system health, active alert count, and pool capacity, then prints a concise status summary with OK/WARN/CRIT indicators. Suitable for scheduled monitoring or a quick pre-call health gate.
 
-~~~python
+```python
 #!/usr/bin/env python3
 """
 unity_health.py — Dell Unity health check via REST API
@@ -1361,4 +1361,4 @@ if issues:
 
 print(f"{'='*60}\n")
 sys.exit(worst)
-~~~
+```

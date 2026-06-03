@@ -81,7 +81,7 @@ The script works through each workspace (dev, staging, prod) in order. For each 
 
 Automates the full Terraform workflow on Windows: checks for terraform.exe, runs init, validate, and plan, prompts for confirmation, applies if confirmed, and logs everything to a timestamped file.
 
-~~~bat
+```bat
 @echo off
 REM tf-plan-apply.bat
 REM Usage: Edit the TF_DIR and TF_VAR_ values below, then run from Command Prompt.
@@ -165,7 +165,7 @@ echo.
 echo Apply complete.
 pause
 endlocal
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -208,7 +208,7 @@ The script runs through 6 numbered steps. After the plan output you are prompted
 
 Reads the current Terraform state, lists all resources with their type and provider, groups by resource type with counts, and flags tainted resources.
 
-~~~powershell
+```powershell
 # tf-state-audit.ps1
 # Run from inside your Terraform project directory.
 # Usage: cd C:\path\to\terraform\project ; .\tf-state-audit.ps1
@@ -285,7 +285,7 @@ if ($tainted.Count -eq 0) {
 Write-Report ""
 Write-Report "Report saved to : $ReportFile"
 Write-Host "Audit complete. Report: $ReportFile" -ForegroundColor Green
-~~~
+```
 
 ### How to run this script — step by step
 

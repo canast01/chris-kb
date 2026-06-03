@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Azure access control is built on Azure Role-Based Access Control (RBAC).
 </div>
-```powershell
+```text
 ┌──────────────────────────────── Cloud Azure Security — Access Control ────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

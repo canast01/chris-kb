@@ -64,7 +64,7 @@
 
 Connect to SnapCenter, retrieve all backup jobs from the last 24 hours, print a formatted table, and send an email alert if any jobs have failed.
 
-~~~powershell
+```powershell
 # SnapCenter Backup Job Status Monitor
 # Usage: .\sc_job_monitor.ps1
 
@@ -88,7 +88,7 @@ $allJobs | Sort-Object StartDateTime -Descending | Format-Table -AutoSize
 
 $failedJobs = $allJobs | Where-Object { $_.Status -eq "Failed" }
 if ($failedJobs.Count -gt 0) { exit 1 } else { exit 0 }
-~~~
+```
 
 ---
 
@@ -96,7 +96,7 @@ if ($failedJobs.Count -gt 0) { exit 1 } else { exit 0 }
 
 Connect to SnapCenter, list all protected resources, check the age of the last backup for each, and flag resources that have not been backed up within the expected window.
 
-~~~powershell
+```powershell
 # SnapCenter Resource Health Check
 # Usage: .\sc_resource_health.ps1
 
@@ -129,7 +129,7 @@ foreach ($res in $resources) {
 
 $results | Sort-Object AgeHours -Descending | Format-Table -AutoSize
 if (($results | Where-Object { $_.Status -eq "OVERDUE" }).Count -gt 0) { exit 1 } else { exit 0 }
-~~~
+```
 
 ---
 
@@ -137,7 +137,7 @@ if (($results | Where-Object { $_.Status -eq "OVERDUE" }).Count -gt 0) { exit 1 
 
 For each SnapCenter-protected resource, verify that at least one secondary (SnapVault/SnapMirror) copy exists, and print a PASS/FAIL report for DR readiness validation.
 
-~~~powershell
+```powershell
 # SnapCenter Secondary Backup Validation
 # Usage: .\sc_secondary_check.ps1
 
@@ -162,7 +162,7 @@ foreach ($res in $resources) {
 }
 
 if ($fail -gt 0) { exit 1 } else { exit 0 }
-~~~
+```
 
 ---
 
@@ -170,7 +170,7 @@ if ($fail -gt 0) { exit 1 } else { exit 0 }
 
 Use the SnapCenter REST API to authenticate, check recent job status, check resource health, and fail the playbook if any job is in a Failed state.
 
-~~~yaml
+```yaml
 ---
 # SnapCenter Monitoring Playbook
 # Run: ansible-playbook snapcenter_monitor.yml \
@@ -217,7 +217,7 @@ Use the SnapCenter REST API to authenticate, check recent job status, check reso
       ansible.builtin.fail:
         msg: "{{ failed_jobs | length }} SnapCenter job(s) failed."
       when: (sc_jobs.json.JobList | selectattr('Status', 'equalto', 'Failed') | list) | length > 0
-~~~
+```
 
 ---
 
@@ -225,7 +225,7 @@ Use the SnapCenter REST API to authenticate, check recent job status, check reso
 
 Cron-safe PowerShell script reporting service status, connected hosts count, last backup job result per resource group, and pending job count.
 
-~~~powershell
+```powershell
 # sc_daily_check.ps1 — Daily SnapCenter backup job and service health check
 # Usage: $env:SC_HOST="snapcenter01"; $env:SC_USER="admin"; $env:SC_PASS="secret"; .\sc_daily_check.ps1
 
@@ -249,4 +249,4 @@ $Jobs   = (Invoke-RestMethod -Uri "$BaseUrl/jobs" -Headers $Headers -Method GET)
 $Failed  = ($Jobs | Where-Object { $_.Status -eq "Failed" }).Count
 Write-Host "Jobs last ${LookbackHours}h: $($Jobs.Count)  Failed: $Failed"
 if ($Failed -gt 0) { exit 1 } else { exit 0 }
-~~~
+```

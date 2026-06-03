@@ -11,7 +11,7 @@
 
 SSH to a Cisco MDS switch, collect key diagnostic outputs, and print a health summary flagging down interfaces, environmental issues, and zoning problems.
 
-~~~bash
+```bash
 #!/bin/bash
 # mds_fabric_health.sh
 # Usage: MDS_HOST=mds1 MDS_USER=admin ./mds_fabric_health.sh
@@ -91,7 +91,7 @@ echo "==============================="
 printf " Overall: %s\n" "$(status_label $overall)"
 echo "==============================="
 exit $overall
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -184,7 +184,7 @@ A list of findings sorted alphabetically. CRIT lines mean a device is logged int
 
 Collect FC interface error counters from MDS, compare against a stored baseline, and alert on significant increments.
 
-~~~bash
+```bash
 #!/bin/bash
 # mds_interface_errors.sh
 # Usage: MDS_HOST=mds1 MDS_USER=admin ./mds_interface_errors.sh
@@ -259,7 +259,7 @@ for key in "${!current[@]}"; do
 done
 
 exit $rc
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -316,7 +316,7 @@ On the first run a baseline file is created and the output is `OK — all counte
 
 Capture running configuration, NX-OS version, and active zoning from all MDS switches in the `cisco_mds` group, then archive with a datestamp.
 
-~~~yaml
+```yaml
 ---
 # mds_backup.yml
 # Usage: ansible-playbook -i inventory mds_backup.yml
@@ -381,7 +381,7 @@ Capture running configuration, NX-OS version, and active zoning from all MDS swi
     - name: Report completion
       ansible.builtin.debug:
         msg: "Backup complete: {{ backup_path }}/{{ inventory_hostname }}_backup_{{ date_stamp }}.tar.gz"
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -435,7 +435,7 @@ Ansible runs through each task for every MDS switch in the inventory: creates a 
 
 Use plink.exe to SSH to a Cisco MDS switch and run key NX-OS commands with labelled separator lines to produce a quick health report from a Windows PC.
 
-~~~batch
+```batch
 @echo off
 REM mds-health.bat — Cisco MDS health check via SSH (plink)
 REM Uses plink.exe (from PuTTY) for SSH. Download: https://www.putty.org
@@ -496,7 +496,7 @@ echo ----------------------------------------
 
 echo.
 echo Done.
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -553,7 +553,7 @@ Six labelled sections: NX-OS software version and uptime, interface brief (all F
 
 Use PowerShell to call plink and capture Cisco MDS NX-OS output, then parse it to build a clean port report showing interface state, speed, and connected device WWPNs.
 
-~~~powershell
+```powershell
 # mds-port-report.ps1
 # Usage: .\mds-port-report.ps1 -MdsHost <IP> -SshUser <user> -PlinkPath <path>
 # Requires: plink.exe from PuTTY (https://www.putty.org)
@@ -645,7 +645,7 @@ if ($downCount -gt 0) {
 } else {
     Write-Host "RESULT: All FC interfaces are up." -ForegroundColor Green
 }
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -708,7 +708,7 @@ A table with one row per FC interface showing VSAN, state (up/down/isolated), mo
 
 SSH to the Cisco MDS switch, check software version, interface states, FLOGI count, system resources, and recent log entries.
 
-~~~bash
+```bash
 #!/bin/bash
 # mds_daily_check.sh
 # Usage: MDS_HOST=<ip> SSH_USER=admin ./mds_daily_check.sh
@@ -755,7 +755,7 @@ fi
 echo ""
 echo "Daily check: $FAIL failure(s)"
 [ "$FAIL" -gt 0 ] && exit 2 || exit 0
-~~~
+```
 
 ---
 
@@ -763,7 +763,7 @@ echo "Daily check: $FAIL failure(s)"
 
 Capture a full diagnostic snapshot to a timestamped file for use during incident investigation.
 
-~~~bash
+```bash
 #!/bin/bash
 # mds_triage.sh
 # Usage: MDS_HOST=<ip> SSH_USER=admin ./mds_triage.sh
@@ -801,7 +801,7 @@ ssh_cmd() { ssh $SSH_OPTS "$SSH_USER@$MDS_HOST" "$1" 2>/dev/null; }
 } > "$OUTFILE" 2>&1
 
 echo "Triage data saved to: $OUTFILE"
-~~~
+```
 
 ---
 
@@ -809,7 +809,7 @@ echo "Triage data saved to: $OUTFILE"
 
 Validate MDS state before a firmware upgrade or zone change. Exits 2 on any failure.
 
-~~~bash
+```bash
 #!/bin/bash
 # mds_precheck.sh
 # Usage: MDS_HOST=<ip> SSH_USER=admin EXPECTED_FLOGI=50 EXPECTED_ZONESET=prod_zoneset ./mds_precheck.sh
@@ -872,7 +872,7 @@ fi
 echo ""
 echo "Pre-check: $FAIL failure(s)"
 [ "$FAIL" -gt 0 ] && exit 2 || exit 0
-~~~
+```
 
 ---
 
@@ -880,7 +880,7 @@ echo "Pre-check: $FAIL failure(s)"
 
 Confirm the MDS has returned to a healthy state after maintenance.
 
-~~~bash
+```bash
 #!/bin/bash
 # mds_postcheck.sh
 # Usage: MDS_HOST=<ip> SSH_USER=admin ./mds_postcheck.sh
@@ -929,7 +929,7 @@ fi
 echo ""
 echo "Post-change validation: $FAIL failure(s)"
 [ "$FAIL" -gt 0 ] && exit 2 || exit 0
-~~~
+```
 
 ---
 
@@ -937,7 +937,7 @@ echo "Post-change validation: $FAIL failure(s)"
 
 Cron-safe summary: switch name, firmware, interface counts, FLOGI count, active zoneset, and CPU. Exits 0 (OK), 1 (WARNING), or 2 (CRITICAL).
 
-~~~bash
+```bash
 #!/bin/bash
 # mds_health_check.sh
 # Cron: */5 * * * * MDS_HOST=<ip> SSH_USER=admin /opt/scripts/mds_health_check.sh
@@ -964,4 +964,4 @@ elif [ "${DOWN:-0}" -gt 0 ]; then
   exit 1
 fi
 exit 0
-~~~
+```

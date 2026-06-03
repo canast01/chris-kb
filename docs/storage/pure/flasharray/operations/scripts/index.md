@@ -78,7 +78,7 @@ Automation Architecture — FlashArray
 
 Connect to a FlashArray via REST API v2, check overall health, active alerts, hardware status, drive health, volumes, and pod state, then print a formatted summary. Exits non-zero if critical alerts or degraded drives are found.
 
-~~~python
+```python
 #!/usr/bin/env python3
 """
 FlashArray Health Check
@@ -232,7 +232,7 @@ if issues:
 
 print(f"{'='*60}\n")
 sys.exit(worst)
-~~~
+```
 
 ### How to run — step by step
 
@@ -251,7 +251,7 @@ python fa_health.py
 
 Connect to both FlashArrays in an ActiveCluster pair, list all pods and mediator status, and alert if any pod is not in a stretched and online state or if the mediator is offline.
 
-~~~python
+```python
 #!/usr/bin/env python3
 """
 FlashArray ActiveCluster Pod Status Monitor
@@ -351,7 +351,7 @@ for level, msg in issues:
     print(f"  {c}[{level}]{NC} {msg}")
 print(f"{'='*70}\n")
 sys.exit(worst)
-~~~
+```
 
 ```bash
 export FA1_HOST=192.168.1.10
@@ -367,7 +367,7 @@ python fa_activecluster.py
 
 List all volumes with their size, used space, and connections, then list snapshots, flagging any older than 30 days.
 
-~~~bash
+```bash
 #!/bin/bash
 # FlashArray Volume and Snapshot Report
 # Requires: Pure Storage CLI tools in PATH
@@ -429,7 +429,7 @@ done
 
 echo
 echo "Note: Snapshots older than ${SNAP_AGE_WARN_DAYS} days flagged for capacity review."
-~~~
+```
 
 ---
 
@@ -437,7 +437,7 @@ echo "Note: Snapshots older than ${SNAP_AGE_WARN_DAYS} days flagged for capacity
 
 List all FlashArray drives, filter for any not in a healthy state, and exit non-zero if failures found. Designed for cron scheduling.
 
-~~~bash
+```bash
 #!/bin/bash
 # FlashArray Drive Failure Alert
 # Usage: FA_HOST=flasharray01 FA_API_TOKEN=xxx ./fa_drive_alert.sh
@@ -491,7 +491,7 @@ else
     echo -e "${GRN}All $total drives healthy on $FA_HOST${NC}"
     exit 0
 fi
-~~~
+```
 
 ---
 
@@ -499,7 +499,7 @@ fi
 
 Authenticate to the FlashArray REST API v2, check array health, active alerts, pod status, and assert that no critical alerts or drive failures exist.
 
-~~~yaml
+```yaml
 ---
 # FlashArray Health Playbook
 # Run: ansible-playbook fa_health.yml \
@@ -619,7 +619,7 @@ Authenticate to the FlashArray REST API v2, check array health, active alerts, p
     - name: Health check passed
       ansible.builtin.debug:
         msg: "All FlashArray health checks passed for {{ fa_url }}"
-~~~
+```
 
 ---
 
@@ -627,7 +627,7 @@ Authenticate to the FlashArray REST API v2, check array health, active alerts, p
 
 Connect to the FlashArray REST API v2, retrieve array information, active alerts, and drive health, then print a formatted health summary.
 
-~~~powershell
+```powershell
 # fa_health_rest.ps1 — FlashArray Health Check via REST API
 # Requires: PowerShell 5.1+
 
@@ -714,7 +714,7 @@ try {
 } catch {}
 
 Write-Host "`n=== Health check complete ===" -ForegroundColor Cyan
-~~~
+```
 
 ---
 
@@ -722,7 +722,7 @@ Write-Host "`n=== Health check complete ===" -ForegroundColor Cyan
 
 Runs all standard FlashArray daily checks in sequence. Exits non-zero if any critical alert is found or any drive is not healthy.
 
-~~~bash
+```bash
 #!/bin/bash
 # fa_daily_check.sh — FlashArray daily operations check
 # Usage: FA_HOST=flasharray01 FA_API_TOKEN=xxx ./fa_daily_check.sh
@@ -800,7 +800,7 @@ fi
 echo ""
 echo "=== Daily check complete: $PASS passed, $FAIL failed ==="
 [[ $FAIL -gt 0 ]] && exit 2 || exit 0
-~~~
+```
 
 ---
 
@@ -808,7 +808,7 @@ echo "=== Daily check complete: $PASS passed, $FAIL failed ==="
 
 Validates FlashArray readiness before a maintenance window. Exits with code 2 on any failure.
 
-~~~bash
+```bash
 #!/bin/bash
 # fa_precheck.sh — FlashArray pre-change validation
 # Usage: FA_HOST=flasharray01 FA_API_TOKEN=xxx ./fa_precheck.sh
@@ -864,7 +864,7 @@ if [[ $FAIL -gt 0 ]]; then
   exit 2
 fi
 echo -e "${GRN}PRE-CHECK PASSED — safe to proceed with maintenance.${NC}"
-~~~
+```
 
 ---
 
@@ -872,7 +872,7 @@ echo -e "${GRN}PRE-CHECK PASSED — safe to proceed with maintenance.${NC}"
 
 Confirms FlashArray health after a maintenance window, including replication and capacity checks.
 
-~~~bash
+```bash
 #!/bin/bash
 # fa_postcheck.sh — FlashArray post-change validation
 # Usage: FA_HOST=flasharray01 FA_API_TOKEN=xxx ./fa_postcheck.sh
@@ -934,7 +934,7 @@ if [[ $FAIL -gt 0 ]]; then
   exit 2
 fi
 echo -e "${GRN}POST-CHECK PASSED — change completed successfully.${NC}"
-~~~
+```
 
 ---
 
@@ -942,7 +942,7 @@ echo -e "${GRN}POST-CHECK PASSED — change completed successfully.${NC}"
 
 Rapidly collects comprehensive FlashArray diagnostic data for incident response, saved to a timestamped file.
 
-~~~bash
+```bash
 #!/bin/bash
 # fa_triage.sh — FlashArray incident triage data collector
 # Usage: FA_HOST=flasharray01 FA_API_TOKEN=xxx ./fa_triage.sh
@@ -991,4 +991,4 @@ purearray monitor 2>/dev/null || true
 echo ""
 echo "========================================================"
 echo "Triage collection complete. Output saved to: $OUTFILE"
-~~~
+```

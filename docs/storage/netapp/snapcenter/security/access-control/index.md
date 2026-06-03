@@ -4,7 +4,7 @@
 <div class="kb-summary">
 > Part of the [SnapCenter Security](../index.md) reference.
 </div>
-```powershell
+```text
 ┌───────────────────────────────── NetApp SnapCenter — Access Control ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

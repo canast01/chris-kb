@@ -11,7 +11,7 @@
 
 Prints a formatted section-by-section health report for EC2 instances, RDS databases, and load balancers. Exits non-zero if any instances are found in a stopped state.
 
-~~~bash
+```bash
 #!/bin/bash
 set -euo pipefail
 
@@ -79,7 +79,7 @@ if [[ "${STOPPED_COUNT}" -gt 0 ]]; then
 fi
 
 echo -e "${GREEN}Health check PASSED.${RESET}"
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -173,7 +173,7 @@ A table with one row per S3 bucket. Each row shows YES/NO for public access bloc
 
 Queries Cost Explorer for the past N months (default 3), formats a top-10 services table, and highlights services with a cost increase greater than 20% versus the prior month.
 
-~~~bash
+```bash
 #!/bin/bash
 set -euo pipefail
 
@@ -240,7 +240,7 @@ for svc, mc in top10:
     flag = "  *** >20% INCREASE ***" if pct > 20 else ""
     print(f"{svc:<50} ${prev:>11.2f} ${curr:>11.2f} {pct:>+7.1f}%{flag}")
 PYEOF
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -288,7 +288,7 @@ A table of your top 10 most expensive AWS services for the past 3 months, with a
 
 Copies AMIs from the source region to the DR region, launches replacement EC2 instances, waits for them to be running, and prints a summary of new instance IDs and IPs.
 
-~~~yaml
+```yaml
 ---
 # ec2_dr_failover.yml
 # Requires: amazon.aws, community.aws collections
@@ -380,7 +380,7 @@ Copies AMIs from the source region to the DR region, launches replacement EC2 in
           — private IP: {{ item.private_ip_address }}
           — public IP: {{ item.public_ip_address | default('none') }}
       loop: "{{ launched_instances.results | map(attribute='instances') | flatten }}"
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -431,7 +431,7 @@ Ansible prints each task as it runs. You will see it copying AMIs (this can take
 
 Lists all IAM users and access keys, flags keys that are unused, overdue for rotation, or older than one year, and optionally deactivates stale keys with a confirmation prompt.
 
-~~~python
+```python
 #!/usr/bin/env python3
 """IAM Access Key Age Audit — flags stale, unused, and overdue-for-rotation keys."""
 
@@ -545,7 +545,7 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -600,7 +600,7 @@ A table with one row per access key showing the user, key ID, status, age in day
 
 Lists all CloudWatch alarms, filters for those in ALARM state, prints a formatted table of alarm name, metric, threshold, and reason, and exits non-zero if any alarms are firing.
 
-~~~bash
+```bash
 #!/bin/bash
 set -euo pipefail
 
@@ -655,7 +655,7 @@ for a in firing:
 
 sys.exit(1)
 PYEOF
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -700,7 +700,7 @@ A count table showing how many alarms are in OK, ALARM, and INSUFFICIENT_DATA st
 
 Checks EC2 instance states, RDS status, ELB health, S3 bucket replication, and Route 53 health check results for a given environment tag, then prints a pass/fail summary.
 
-~~~yaml
+```yaml
 ---
 # aws_infra_health.yml
 # Requires: amazon.aws, community.aws collections
@@ -792,7 +792,7 @@ Checks EC2 instance states, RDS status, ELB health, S3 bucket replication, and R
           - "Load balancers checked : {{ elb_facts.load_balancers | length }}"
           - "S3 buckets found       : {{ s3_facts.buckets | length }}"
           - "Result: PASSED (assertions above would have failed otherwise)"
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -835,7 +835,7 @@ Ansible runs through each check in order — EC2, RDS, ELB, S3, Route53. Each `a
 
 Check your AWS EC2 instances, ELB health, CloudWatch alarms, and RDS databases directly from Windows using the AWS CLI. No Linux needed.
 
-~~~batch
+```batch
 @echo off
 REM aws-health-check.bat
 REM Requires: AWS CLI for Windows (download from https://aws.amazon.com/cli/)
@@ -872,7 +872,7 @@ echo.
 
 echo Health check complete.
 pause
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -919,7 +919,7 @@ Tables printed in your Command Prompt window showing EC2 instance statuses, ELB 
 
 List all your S3 buckets and check versioning, logging, and encryption settings using the AWS Tools for PowerShell module.
 
-~~~powershell
+```powershell
 # aws-s3-inventory.ps1
 # Requires: AWS Tools for PowerShell
 # Install with: Install-Module -Name AWS.Tools.S3 -Scope CurrentUser
@@ -997,7 +997,7 @@ if ($flagged.Count -gt 0) {
         Write-Host "  $($_.BucketName) — $($_.Flags)" -ForegroundColor Yellow
     }
 }
-~~~
+```
 
 ### How to run this script — step by step
 

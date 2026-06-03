@@ -82,7 +82,7 @@
 - [ ] All volumes are assigned to the correct Keystone service-level AQoS policy group
 - [ ] Burst usage is within acceptable range — not approaching the burst limit
 
-~~~bash
+```bash
 # On the Keystone Collector VM — check collector service status
 sudo systemctl status keystone-collector
 
@@ -100,7 +100,7 @@ volume show -fields volume,svm,qos-policy-group
 
 # Confirm ONTAP cluster is reachable from the Collector VM
 curl -sk https://<cluster-mgmt-lif>/api/cluster | python3 -m json.tool
-~~~
+```
 
 ## Change Readiness
 

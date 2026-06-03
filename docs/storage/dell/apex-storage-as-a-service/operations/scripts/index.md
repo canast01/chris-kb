@@ -63,7 +63,7 @@
 
 Authenticates to the APEX REST API, retrieves all subscriptions, and checks committed vs. consumed capacity. Warns at 80% and goes critical at 90% of the committed tier.
 
-~~~python
+```python
 #!/usr/bin/env python3
 # apex_capacity_monitor.py — APEX STaaS subscription capacity monitor
 # Requirements: requests
@@ -172,7 +172,7 @@ def main():
 
 if __name__ == "__main__":
     main()
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -220,7 +220,7 @@ A table listing each APEX subscription with committed capacity, consumed capacit
 
 Polls the APEX REST API for all active alerts across subscriptions and prints a formatted report. Exits non-zero if any CRITICAL severity alerts are found.
 
-~~~python
+```python
 #!/usr/bin/env python3
 # apex_alert_report.py — Retrieve and report active APEX STaaS alerts
 # Requirements: requests
@@ -307,7 +307,7 @@ def main():
 
 if __name__ == "__main__":
     main()
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -353,7 +353,7 @@ A table with severity, resource name, and description for each active alert. The
 
 Playbook that calls the APEX REST API via the `uri` module to check subscription capacity and active alerts, printing a summary and failing the play if capacity is critical or critical alerts exist.
 
-~~~yaml
+```yaml
 ---
 # apex_health.yml — Ansible health check playbook for Dell APEX STaaS
 # Required vars: apex_client_id, apex_client_secret
@@ -423,7 +423,7 @@ Playbook that calls the APEX REST API via the `uri` module to check subscription
         alerts_resp.json is defined and
         (alerts_resp.json.alerts | default([]) |
          selectattr('severity', 'equalto', 'CRITICAL') | list | length) > 0
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -465,7 +465,7 @@ Ansible authenticates to the APEX API, lists all subscriptions, and retrieves ac
 
 Authenticates to the Dell APEX REST API with OAuth2, lists all APEX systems, checks `health_score` for each system, flags any below 80, checks contracted vs consumed capacity, and flags if above 85% consumed.
 
-~~~bash
+```bash
 #!/bin/bash
 # apex_daily_check.sh — Daily APEX system health and capacity check
 # Usage: APEX_CLIENT_ID=x APEX_CLIENT_SECRET=x ./apex_daily_check.sh
@@ -564,7 +564,7 @@ else
   echo "  Result: WARNING — review items above"
   exit 1
 fi
-~~~
+```
 
 ---
 
@@ -572,7 +572,7 @@ fi
 
 Captures all APEX system details, capacity status, active alerts, and recent events to a timestamped file.
 
-~~~bash
+```bash
 #!/bin/bash
 # apex_triage.sh — Capture APEX system state for incident triage
 # Usage: APEX_CLIENT_ID=x APEX_CLIENT_SECRET=x ./apex_triage.sh
@@ -648,7 +648,7 @@ for s in systems:
 
 echo ""
 echo "Output saved to: $OUTFILE"
-~~~
+```
 
 ---
 
@@ -656,7 +656,7 @@ echo "Output saved to: $OUTFILE"
 
 Before a significant workload increase: confirms APEX system health is above 80, contracted capacity headroom is above 20%, no active CRITICAL alerts exist, and Dell maintenance is not scheduled in the next 4 hours. Exits 2 on failure.
 
-~~~bash
+```bash
 #!/bin/bash
 # apex_precheck.sh — Pre-check before significant APEX workload increase
 # Usage: APEX_CLIENT_ID=x APEX_CLIENT_SECRET=x ./apex_precheck.sh
@@ -754,7 +754,7 @@ else
   echo "  Result: NOT READY — resolve failures above"
   exit 2
 fi
-~~~
+```
 
 ---
 
@@ -762,7 +762,7 @@ fi
 
 After a workload change: confirms health_score is still above 80, consumed capacity is within expected range of the pre-change baseline plus expected growth, and no new alerts have appeared.
 
-~~~bash
+```bash
 #!/bin/bash
 # apex_postcheck.sh — Post-change validation for APEX workload change
 # Usage: APEX_CLIENT_ID=x APEX_CLIENT_SECRET=x BASELINE_CONSUMED_TIB=x EXPECTED_GROWTH_TIB=x ./apex_postcheck.sh
@@ -854,7 +854,7 @@ else
   echo "  Result: FAIL — investigate issues above"
   exit 1
 fi
-~~~
+```
 
 ---
 
@@ -862,7 +862,7 @@ fi
 
 Cron-safe script reporting system name, health score, contracted vs consumed, percentage used, and alert count. Exits 0 (OK), 1 (warning), or 2 (critical).
 
-~~~bash
+```bash
 #!/bin/bash
 # apex_health.sh — Cron-safe APEX health check
 # Usage: APEX_CLIENT_ID=x APEX_CLIENT_SECRET=x ./apex_health.sh
@@ -931,7 +931,7 @@ for s in systems:
 
 sys.exit(worst)
 " <<< "$SYSTEMS"
-~~~
+```
 
 ---
 
@@ -939,7 +939,7 @@ sys.exit(worst)
 
 Uses the Dell APEX REST API with OAuth2 to fetch all APEX Block storage systems and report contracted vs. used capacity from a Windows PowerShell window.
 
-~~~powershell
+```powershell
 # apex_capacity_report.ps1 — APEX Block Storage capacity report (Windows PowerShell)
 # Requires: PowerShell 5.1+ (built into Windows 10/11)
 # Run: .\apex_capacity_report.ps1
@@ -1034,7 +1034,7 @@ if ($Flagged -gt 0) {
     Write-Host "  STATUS: OK — All systems below 80% of contracted capacity."
     exit 0
 }
-~~~
+```
 
 ### How to run this script — step by step
 

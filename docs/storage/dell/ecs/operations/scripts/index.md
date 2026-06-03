@@ -63,7 +63,7 @@
 
 Queries the ECS Management REST API to check node status, cluster capacity utilisation, and active alerts. Warns if capacity exceeds 80% and goes critical above 90%.
 
-~~~python
+```python
 #!/usr/bin/env python3
 # ecs_health_check.py — Node and capacity health check via ECS Management REST API
 # Requirements: requests
@@ -203,7 +203,7 @@ def main():
 
 if __name__ == "__main__":
     main()
-~~~
+```
 
 **Requirements:** Python 3.7+, `pip install requests`, network access to ECS management on port 4443.
 
@@ -218,7 +218,7 @@ ECS_HOST=ecs01.example.com ECS_USER=sysadmin ECS_PASS=yourpassword python ecs_he
 
 Authenticates to the ECS REST API, iterates all namespaces and their buckets, and prints a report of bucket name, owner, total size, and object count. Flags any bucket whose size exceeds a configurable threshold.
 
-~~~python
+```python
 #!/usr/bin/env python3
 # ecs_bucket_audit.py — Audit all ECS namespaces and buckets via REST API
 # Requirements: requests
@@ -316,7 +316,7 @@ def main():
 
 if __name__ == "__main__":
     main()
-~~~
+```
 
 **Usage:**
 ```text
@@ -329,7 +329,7 @@ ECS_HOST=ecs01.example.com ECS_USER=sysadmin ECS_PASS=secret WARN_SIZE_GB=500 py
 
 Uses the AWS CLI with a custom `--endpoint-url` to test S3 connectivity to an ECS cluster. Performs list, put, get, and delete operations against a test bucket and prints PASS/FAIL for each step.
 
-~~~bash
+```bash
 #!/bin/bash
 # ecs_s3_check.sh — S3 connectivity check against Dell ECS using the AWS CLI
 # Requirements: aws CLI installed and on PATH
@@ -414,7 +414,7 @@ echo "  Results: $PASS passed, $FAIL failed"
 echo "========================================"
 
 [[ "$FAIL" -eq 0 ]] && exit 0 || exit 1
-~~~
+```
 
 ---
 

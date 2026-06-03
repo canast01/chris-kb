@@ -10,7 +10,7 @@
 
 Polls the CloudIQ REST API for all active alerts across the storage estate and prints a formatted report grouped by severity. Exits non-zero if any CRITICAL alerts are found. Designed for cron or monitoring integration.
 
-~~~python
+```python
 #!/usr/bin/env python3
 # cloudiq_alert_poller.py — Poll CloudIQ for active alerts across all systems
 # Requirements: requests
@@ -111,7 +111,7 @@ def main():
 
 if __name__ == "__main__":
     main()
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -195,7 +195,7 @@ Ansible connects to CloudIQ, prints the list of active alerts and storage system
 
 Authenticates to CloudIQ using OAuth2 and prints a count of CRITICAL, WARNING, and INFO alerts — all from a PowerShell window on your Windows PC.
 
-~~~powershell
+```powershell
 # cloudiq_alert_summary.ps1 — CloudIQ active alert summary (Windows PowerShell)
 # Requires: PowerShell 5.1+ (built into Windows 10/11)
 # Run: .\cloudiq_alert_summary.ps1
@@ -264,7 +264,7 @@ if ($Critical -gt 0) {
     Write-Host "  STATUS: OK — No critical or warning alerts."
     exit 0
 }
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -314,7 +314,7 @@ A summary box showing counts for CRITICAL, WARNING, and INFO alerts, plus a tota
 
 Uses the same CloudIQ OAuth2 token to list all managed storage systems and highlight any with a health score below 80.
 
-~~~powershell
+```powershell
 # cloudiq_system_health.ps1 — CloudIQ system health summary (Windows PowerShell)
 # Requires: PowerShell 5.1+ (built into Windows 10/11)
 # Run: .\cloudiq_system_health.ps1
@@ -389,7 +389,7 @@ if ($Degraded -gt 0) {
     Write-Host "  STATUS: OK — All systems have health score 80 or above."
     exit 0
 }
-~~~
+```
 
 ### How to run this script — step by step
 

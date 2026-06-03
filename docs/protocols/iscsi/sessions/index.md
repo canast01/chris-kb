@@ -44,16 +44,16 @@ flowchart LR
 ## Viewing Sessions — Linux
 
 ```bash
-# List all active sessions (brief)
+## List all active sessions (brief)
 iscsiadm -m session
 
-# Detailed session info (connections, state, target IQN)
+## Detailed session info (connections, state, target IQN)
 iscsiadm -m session -P 3
 
-# Show session parameters (timeouts, queue depth)
+## Show session parameters (timeouts, queue depth)
 iscsiadm -m session -P 3 | grep -E "Target|State|Recovery|Queue"
 
-# Session stats (bytes tx/rx, retries)
+## Session stats (bytes tx/rx, retries)
 iscsiadm -m session -s
 ```
 
@@ -69,19 +69,19 @@ iscsiadm -m session -s
 ## Login / Logout
 
 ```bash
-# Login to all discovered targets (persistent)
+## Login to all discovered targets (persistent)
 iscsiadm -m node --login
 
-# Login to a specific target
+## Login to a specific target
 iscsiadm -m node -T <IQN> -p <ip>:3260 --login
 
-# Make login persistent across reboots
+## Make login persistent across reboots
 iscsiadm -m node -T <IQN> -p <ip>:3260 -o update -n node.startup -v automatic
 
-# Logout from a target
+## Logout from a target
 iscsiadm -m node -T <IQN> -p <ip>:3260 --logout
 
-# Logout all sessions
+## Logout all sessions
 iscsiadm -m node --logoutall=all
 ```
 
@@ -90,10 +90,10 @@ iscsiadm -m node --logoutall=all
 For throughput, configure multiple sessions per target (each using a different NIC):
 
 ```bash
-# /etc/iscsi/iscsid.conf
+## /etc/iscsi/iscsid.conf
 node.session.nr_sessions = 2
 
-# Or per-node override
+## Or per-node override
 iscsiadm -m node -T <IQN> -p <ip> -o update -n node.session.nr_sessions -v 2
 ```
 
@@ -102,10 +102,10 @@ iscsiadm -m node -T <IQN> -p <ip> -o update -n node.session.nr_sessions -v 2
 When a session encounters an error (network drop, array reboot), iSCSI attempts recovery before failing I/O to the OS. The `replacement_timeout` controls how long it waits.
 
 ```bash
-# Check session state during recovery
+## Check session state during recovery
 iscsiadm -m session -P 3 | grep -i state
 
-# Force session re-establishment
+## Force session re-establishment
 iscsiadm -m node -T <IQN> -p <ip>:3260 --logout
 iscsiadm -m node -T <IQN> -p <ip>:3260 --login
 ```

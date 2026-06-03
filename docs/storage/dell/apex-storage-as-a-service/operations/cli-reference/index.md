@@ -4,7 +4,7 @@
 <div class="kb-summary">
 > Part of the [APEX Storage as a Service](../index.md) reference.
 </div>
-```powershell
+```text
 ┌─────────────────────────────────── Dell Apex STaaS — CLI Reference ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

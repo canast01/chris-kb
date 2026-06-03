@@ -55,7 +55,7 @@
 - [ ] Pure1 phone-home is active — Pure's SLA monitoring and proactive support depend on continuous telemetry
 - [ ] No unresolved support cases with critical or high priority outstanding
 
-~~~bash
+```bash
 # All monitoring is performed through the Pure1 portal
 # Pure1: https://pure1.purestorage.com
 
@@ -69,7 +69,7 @@ purearray list --space         # capacity and data reduction summary
 purealert list                 # active hardware or software alerts
 purepod list                   # replication pod and ActiveCluster status
 purevol list --space           # per-volume space usage
-~~~
+```
 
 ## Change Readiness
 

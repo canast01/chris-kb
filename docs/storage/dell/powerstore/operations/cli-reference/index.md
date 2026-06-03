@@ -4,7 +4,7 @@
 <div class="kb-summary">
 PowerStore management uses the PowerStore Manager web UI, REST API, and the `pstcli` command-line interface. `pstcli` connects to the PowerStore management IP and supports scripting and automation for all array operations.
 </div>
-```powershell
+```text
 ┌─────────────────────────────────── Dell PowerStore — CLI Reference ───────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

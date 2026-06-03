@@ -4,7 +4,7 @@
 <div class="kb-summary">
 > Part of the [Dell Flex on Demand](../index.md) reference.
 </div>
-```powershell
+```text
 ┌────────────────────────────────── Dell FoD — Scripts and Automation ──────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -63,7 +63,7 @@
 
 Queries the CloudIQ REST API to pull capacity metrics for all FOD-enrolled systems and prints a monthly usage report showing committed baseline, current consumed, and burst delta. Flags any system where consumption exceeds the committed tier.
 
-~~~python
+```python
 #!/usr/bin/env python3
 # fod_usage_reporter.py — FOD metered usage report via CloudIQ REST API
 # Requirements: requests
@@ -154,7 +154,7 @@ def main():
 
 if __name__ == "__main__":
     main()
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -198,7 +198,7 @@ A table listing each storage system with its committed tier, current usage, burs
 
 Polls the CloudIQ API for a specific system and checks whether current usage exceeds the committed FOD baseline. Designed for cron or monitoring integration — prints a single status line and exits with an appropriate code.
 
-~~~bash
+```bash
 #!/bin/bash
 # fod_burst_detect.sh — Detect FOD burst consumption for a specific system via CloudIQ API
 # Usage:
@@ -241,7 +241,7 @@ else
   echo "OK: System ${SYSTEM_ID} within committed baseline. Used=${USED_TIB} TiB, Committed=${COMMITTED_TIB} TiB"
   exit 0
 fi
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -289,7 +289,7 @@ A single line: either `OK: System PS-001234 within committed baseline. Used=45.3
 
 Playbook targeting localhost that calls the CloudIQ REST API to list all storage systems and their capacity, prints a summary, and warns if any system shows burst consumption.
 
-~~~yaml
+```yaml
 ---
 # fod_audit.yml — Ansible FOD usage audit playbook via CloudIQ REST API
 # Usage: CLOUDIQ_TOKEN=xxx ansible-playbook fod_audit.yml
@@ -344,7 +344,7 @@ Playbook targeting localhost that calls the CloudIQ REST API to list all storage
         msg: >
           NOTICE: Review capacity results above for any system where used_tib
           exceeds committed_tib — those systems are incurring FOD burst charges.
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -384,7 +384,7 @@ Ansible lists all storage systems from CloudIQ and then fetches capacity details
 
 Queries the Unisphere for PowerMax REST API to show array information and license details including FOD status — all from a PowerShell window on Windows.
 
-~~~powershell
+```powershell
 # fod_license_status.ps1 — FOD license status via Unisphere REST API (Windows PowerShell)
 # Requires: PowerShell 5.1+ (built into Windows 10/11)
 # Run: .\fod_license_status.ps1
@@ -458,7 +458,7 @@ Write-Host ""
 Write-Host "========================================"
 Write-Host "  Query complete."
 Write-Host "========================================"
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -511,7 +511,7 @@ An array information block showing model, total usable capacity, and used capaci
 
 Queries Unisphere REST for current capacity, calculates burst consumption, and flags if approaching the burst ceiling (>70% of burst budget used).
 
-~~~bash
+```bash
 #!/bin/bash
 # fod_daily_check.sh — Daily FOD capacity and burst check via Unisphere REST API
 # Usage: UNISPHERE_HOST=x SID=x UNISPHERE_USER=x UNISPHERE_PASS=x ./fod_daily_check.sh
@@ -570,7 +570,7 @@ else:
     print(f'  Status          : OK')
     sys.exit(0)
 " <<< "$CAP_JSON"
-~~~
+```
 
 ---
 
@@ -578,7 +578,7 @@ else:
 
 Captures FOD status, full license output, and capacity allocations to a timestamped file.
 
-~~~bash
+```bash
 #!/bin/bash
 # fod_triage.sh — Capture FOD status and capacity state to timestamped file
 # Usage: UNISPHERE_HOST=x SID=x UNISPHERE_USER=x UNISPHERE_PASS=x ./fod_triage.sh
@@ -632,7 +632,7 @@ AUTH=$(printf '%s:%s' "$UNISPHERE_USER" "$UNISPHERE_PASS" | base64)
 
 echo ""
 echo "Output saved to: $OUTFILE"
-~~~
+```
 
 ---
 
@@ -640,7 +640,7 @@ echo "Output saved to: $OUTFILE"
 
 Before a planned workload increase: confirms burst headroom is available, confirms the FOD billing cycle is not within the last 5 days (to avoid double-burst charges), and confirms Unisphere is reachable. Exits 2 if not ready.
 
-~~~bash
+```bash
 #!/bin/bash
 # fod_precheck.sh — Pre-check before planned workload increase under FOD
 # Usage: UNISPHERE_HOST=x SID=x UNISPHERE_USER=x UNISPHERE_PASS=x BILLING_DAY_OF_MONTH=1 ./fod_precheck.sh
@@ -720,7 +720,7 @@ else
   echo "  Result: NOT READY — resolve failures above before proceeding"
   exit 2
 fi
-~~~
+```
 
 ---
 
@@ -728,7 +728,7 @@ fi
 
 After a workload change: confirms FOD consumption has returned to baseline within expected range, checks for unexpected burst activation, and generates a usage report.
 
-~~~bash
+```bash
 #!/bin/bash
 # fod_postcheck.sh — Post-change validation after FOD workload change
 # Usage: UNISPHERE_HOST=x SID=x UNISPHERE_USER=x UNISPHERE_PASS=x BASELINE_USED_TB=x ./fod_postcheck.sh
@@ -804,7 +804,7 @@ else
   echo "  Result: WARN — review items above and re-check after 1h"
   exit 1
 fi
-~~~
+```
 
 ---
 
@@ -812,7 +812,7 @@ fi
 
 Cron-safe script reporting current capacity allocation, burst status (active/inactive), percentage of burst budget consumed, and days remaining in the billing period. Exits 0 (OK), 1 (warning), or 2 (critical).
 
-~~~bash
+```bash
 #!/bin/bash
 # fod_health.sh — Cron-safe FOD health check
 # Usage: UNISPHERE_HOST=x SID=x UNISPHERE_USER=x UNISPHERE_PASS=x ./fod_health.sh
@@ -861,4 +861,4 @@ elif burst_pct >= warn:
 else:
     sys.exit(0)
 " <<< "$CAP_JSON"
-~~~
+```

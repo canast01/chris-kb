@@ -64,7 +64,7 @@
 
 SSH to the destination ONTAP cluster, parse SnapMirror lag times, colour-code each relationship by severity, and exit with a code reflecting the worst status. Thresholds are configurable via environment variables.
 
-~~~bash
+```bash
 #!/bin/bash
 # SnapMirror Lag Monitor with ANSI colour coding
 # Usage: ONTAP_HOST=dst-cluster ONTAP_USER=admin ONTAP_PASS=secret ./sm_lag_monitor.sh
@@ -161,7 +161,7 @@ case $worst in
     2) echo -e "${RED}CRITICAL: One or more relationships are unhealthy or exceed the critical lag threshold.${NC}" ;;
 esac
 exit $worst
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -213,7 +213,7 @@ A table listing every SnapMirror relationship with source path, destination path
 
 Perform a controlled SnapMirror failover at the DR site: quiesce all relationships, wait for in-flight transfers to stop, break relationships to make destination volumes read-write, and print host-side mount instructions. Requires confirmation at each destructive step.
 
-~~~bash
+```bash
 #!/bin/bash
 # SnapMirror Planned DR Failover Script
 # Usage: DEST_CLUSTER=dr-cluster DEST_SVM=svm_dr VOLUMES="vol1 vol2 vol3" \
@@ -278,7 +278,7 @@ for vol in $VOLUMES; do
 done
 
 log "Failover complete. Log saved to: $LOG_FILE"
-~~~
+```
 
 ---
 
@@ -286,7 +286,7 @@ log "Failover complete. Log saved to: $LOG_FILE"
 
 SSH to both source and destination clusters, collect SnapMirror relationship data, cross-reference to verify all expected relationships exist, and report any missing or broken-off relationships.
 
-~~~perl
+```perl
 #!/usr/bin/perl
 use strict;
 use warnings;
@@ -326,7 +326,7 @@ my $dst_raw = ssh_run($dst_ssh, 'snapmirror show -fields source-path,destination
 $dst_ssh->disconnect;
 
 printf "%-50s %-10s %-15s %s\n", "DESTINATION PATH", "HEALTHY", "STATE", "LAG";
-~~~
+```
 
 ---
 
@@ -334,7 +334,7 @@ printf "%-50s %-10s %-15s %s\n", "DESTINATION PATH", "HEALTHY", "STATE", "LAG";
 
 Resync SnapMirror relationships after a DR test — verify destination volumes exist, resync each relationship, wait for healthy status with retries, and print a completion summary.
 
-~~~yaml
+```yaml
 ---
 # SnapMirror Resync Playbook
 # Use after a DR test to re-establish SnapMirror protection.
@@ -369,7 +369,7 @@ Resync SnapMirror relationships after a DR test — verify destination volumes e
         that: "item.healthy == true"
         fail_msg: "Relationship for {{ item.volume }} is still unhealthy after resync."
       loop: "{{ final_status }}"
-~~~
+```
 
 ---
 
@@ -377,7 +377,7 @@ Resync SnapMirror relationships after a DR test — verify destination volumes e
 
 Use the ONTAP REST API on the destination cluster to retrieve all SnapMirror relationships, filter for any that are not in a healthy `snapmirrored` state, and print a formatted status report.
 
-~~~powershell
+```powershell
 # sm_status_rest.ps1 — SnapMirror Relationship Status via REST API (Windows PowerShell)
 $DestCluster = "192.168.2.100"
 $OntapUser   = "admin"
@@ -402,4 +402,4 @@ foreach ($rel in $resp.records | Sort-Object { $_.healthy }) {
         Write-Host ("  [ISSUE]  {0} -> {1}  state={2}" -f $source, $dest, $rel.state) -ForegroundColor Red
     }
 }
-~~~
+```

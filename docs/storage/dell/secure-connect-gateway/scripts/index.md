@@ -63,7 +63,7 @@
 
 Tests outbound HTTPS connectivity from the SCG host to the required Dell support endpoints, checks the SCG service status, and prints a PASS/FAIL summary for each check. Suitable for cron or a monitoring probe.
 
-~~~bash
+```bash
 #!/bin/bash
 # scg_connectivity_check.sh — Secure Connect Gateway connectivity health check
 # Run this script ON the SCG appliance or Linux host running the SCG service.
@@ -140,7 +140,7 @@ echo "  Results: $PASS passed, $FAIL failed"
 echo "========================================"
 
 [[ "$FAIL" -eq 0 ]] && exit 0 || exit 1
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -182,7 +182,7 @@ Connectivity test results (PASS/FAIL) for each Dell cloud endpoint (esrs.emc.com
 
 Queries the SCG REST API to list all registered devices, checks each device's connectivity status, and flags any device that is not in a connected/active state. Useful for quarterly audits and decommission cleanup.
 
-~~~python
+```python
 #!/usr/bin/env python3
 # scg_device_audit.py — Audit registered devices on Dell Secure Connect Gateway
 # Run on the SCG host or any host with network access to the SCG management interface.
@@ -271,7 +271,7 @@ def main():
 
 if __name__ == "__main__":
     main()
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -320,7 +320,7 @@ The SCG version, then a table of all registered devices showing name, type, IP, 
 
 Playbook targeting the SCG host. Checks the SCG service status, verifies outbound connectivity to Dell endpoints, queries the local API for registered devices, and fails if any device is disconnected or the service is not running.
 
-~~~yaml
+```yaml
 ---
 # scg_status.yml — Ansible status check playbook for Dell Secure Connect Gateway
 # Inventory host: scg (the SCG appliance or Linux host running dell-scg)
@@ -394,7 +394,7 @@ Playbook targeting the SCG host. Checks the SCG service status, verifies outboun
     - name: All checks passed
       ansible.builtin.debug:
         msg: "SCG health check completed successfully on {{ inventory_hostname }}."
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -436,7 +436,7 @@ Ansible checks the SCG service status, tests connectivity to each Dell endpoint 
 
 Uses plink.exe to SSH into the SCG appliance from a Windows PC and run service and device listing commands.
 
-~~~batch
+```batch
 @echo off
 REM scg_connection_test.bat — SCG connection test from Windows CMD
 REM Uses plink.exe (PuTTY) to SSH into the SCG appliance.
@@ -471,7 +471,7 @@ echo.
 echo ========================================
 echo   Connection test complete.
 echo ========================================
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -524,7 +524,7 @@ The SCG gateway service status from `dsagw status`, then a list of devices that 
 
 Queries the SCG REST API from a PowerShell window to list all managed devices and any active connectivity alerts.
 
-~~~powershell
+```powershell
 # scg_device_inventory.ps1 — SCG device inventory via REST API (Windows PowerShell)
 # Requires: PowerShell 5.1+ (built into Windows 10/11)
 # Run: .\scg_device_inventory.ps1
@@ -609,7 +609,7 @@ Write-Host ""
 Write-Host "========================================"
 Write-Host "  Inventory complete."
 Write-Host "========================================"
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -660,7 +660,7 @@ A list of all devices registered in SCG with their name, type, IP, and connectio
 
 SSHes to the SCG host, runs `dsagw status` and `dsagw list-devices`, counts devices in error state, and checks the last telemetry upload time. Prints PASS/FAIL output.
 
-~~~bash
+```bash
 #!/bin/bash
 # scg_daily_check.sh — Daily SCG status check via SSH
 # Usage: SCG_HOST=scg01.example.com SSH_USER=admin ./scg_daily_check.sh
@@ -721,7 +721,7 @@ echo ""
 echo "========================================"
 [[ "$FAIL" -eq 0 ]] && echo "  Result: PASS" || echo "  Result: FAIL"
 exit $FAIL
-~~~
+```
 
 ---
 
@@ -729,7 +729,7 @@ exit $FAIL
 
 Captures SCG status, device list with states, recent log entries, connectivity test to Dell backend, and certificate expiry to a timestamped file.
 
-~~~bash
+```bash
 #!/bin/bash
 # scg_triage.sh — Capture SCG state to timestamped file for incident triage
 # Usage: SCG_HOST=scg01.example.com SSH_USER=admin ./scg_triage.sh
@@ -781,7 +781,7 @@ scg_ssh() { ssh $SSH_OPTS "${SSH_USER}@${SCG_HOST}" "$@" 2>&1 || echo "Command f
 
 echo ""
 echo "Output saved to: $OUTFILE"
-~~~
+```
 
 ---
 
@@ -789,7 +789,7 @@ echo "Output saved to: $OUTFILE"
 
 Confirms SCG is running, all devices are connected, backend connectivity test passes, and certificate is valid for more than 30 days. Exits 2 on any failure.
 
-~~~bash
+```bash
 #!/bin/bash
 # scg_precheck.sh — Pre-check before SCG update or restart
 # Usage: SCG_HOST=scg01.example.com SSH_USER=admin ./scg_precheck.sh
@@ -856,7 +856,7 @@ else
   echo "  Result: NOT READY — resolve failures before proceeding"
   exit 2
 fi
-~~~
+```
 
 ---
 
@@ -864,7 +864,7 @@ fi
 
 After an SCG update or restart: re-runs the same checks, confirms all devices have reconnected, and verifies that telemetry has resumed. Compares device count to a pre-change baseline.
 
-~~~bash
+```bash
 #!/bin/bash
 # scg_postcheck.sh — Post-change validation after SCG update or restart
 # Usage: SCG_HOST=x SSH_USER=admin EXPECTED_DEVICE_COUNT=5 ./scg_postcheck.sh
@@ -932,7 +932,7 @@ else
   echo "  Result: FAIL — investigate issues above"
   exit 1
 fi
-~~~
+```
 
 ---
 
@@ -940,7 +940,7 @@ fi
 
 Cron-safe script checking SCG service status, device count, devices in error, and Dell backend reachability. Exits 0 (OK), 1 (warning), or 2 (critical).
 
-~~~bash
+```bash
 #!/bin/bash
 # scg_health.sh — Cron-safe SCG health check
 # Usage: SCG_HOST=x SSH_USER=admin ./scg_health.sh
@@ -976,4 +976,4 @@ else
   echo "SCG_HEALTH host=${SCG_HOST} service=UP devices_total=${TOTAL} devices_error=${ERROR_COUNT} backend_reachable=${BACKEND_OK} status=OK"
   exit 0
 fi
-~~~
+```

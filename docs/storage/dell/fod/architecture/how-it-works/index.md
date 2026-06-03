@@ -4,7 +4,7 @@
 <div class="kb-summary">
 How It Works reference covering Overview, Metering Model, Supported Platforms, Use Cases, Best Practices.
 </div>
-```powershell
+```text
 ┌─────────────────────────────────────── Dell FoD — How It Works ───────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

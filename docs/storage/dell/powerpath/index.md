@@ -111,7 +111,7 @@ Dell PowerPath is host-based multipath I/O software that manages multiple physic
 
 ## Health Commands
 
-~~~bash
+```bash
 # Display all PowerPath managed devices and their path states
 powermt display dev=all
 
@@ -129,7 +129,7 @@ powermt version
 
 # Test and restore all paths (marks dead paths for retry)
 powermt restore
-~~~
+```
 
 ## Common Issues
 

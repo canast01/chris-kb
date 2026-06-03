@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Access Control reference covering Role-Based Access Control (RBAC), Local User Management, LDAP and Active Directory Group Mapping, iSCSI CHAP Authentication, NFS Export Access Control and 4 more sections.
 </div>
-```powershell
+```text
 ┌─────────────────────────────────── Dell Unity XT — Access Control ────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

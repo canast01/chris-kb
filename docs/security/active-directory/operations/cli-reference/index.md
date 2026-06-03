@@ -4,7 +4,7 @@
 <div class="kb-summary">
 Active Directory management uses native tools (`repadmin`, `dcdiag`, `nltest`, `netdom`, `dsquery`) and the ActiveDirectory PowerShell module. All commands assume RSAT-AD-PowerShell is installed or the command is run on a Domain Controller.
 </div>
-```powershell
+```text
 ┌──────────────────────── Security Active Directory Operations — CLI Reference ─────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

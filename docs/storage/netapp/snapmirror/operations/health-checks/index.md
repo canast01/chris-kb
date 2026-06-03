@@ -82,7 +82,7 @@
 - [ ] Destination aggregate has sufficient free space for incoming transfers
 - [ ] No transfer queue backlog on the destination cluster
 
-~~~bash
+```bash
 # Show all relationships with lag time, health, and state
 snapmirror show -fields source-path,destination-path,lag-time,healthy,state,last-transfer-end-timestamp
 
@@ -100,7 +100,7 @@ snapmirror history show -fields source-path,destination-path,status,transfer-siz
 
 # Show SnapMirror Synchronous relationships and sync state
 snapmirror show -type sync -fields lag-time,healthy,is-healthy
-~~~
+```
 
 ## Relationship States
 
