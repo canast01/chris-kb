@@ -25,7 +25,6 @@ snmpget -v3 -u dcnm_poll -l authPriv -a SHA -A <auth-pass> \
 
 # Step 3: Check DCNM discovery log
 grep "<switch-ip>" /var/log/dcnm/discovery.log | tail -30
-```
 ```text
 ┌───────────────────────────── Cisco DCNM — Troubleshooting Common Issues ──────────────────────────────┐
 │                                                                                                       │

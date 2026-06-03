@@ -23,7 +23,6 @@ flowchart TD
     sevA -- No --> collectDiag --> portal --> submit
     submit --> monitor
     monitor -->|"SLA breach"| escalateTAM
-```
 ```text
 ┌───────────────────────────── Windows Server — Troubleshooting Escalation ─────────────────────────────┐
 │                                                                                                       │

@@ -19,7 +19,6 @@ flowchart LR
     monitoring["Monitoring Platform\nZabbix · SCOM"]
 
     gitRepo --> sccm --> servers --> schedTask --> output --> monitoring
-```
 ```text
 ┌───────────────────────────────── Windows Server — Operations Scripts ─────────────────────────────────┐
 │                                                                                                       │

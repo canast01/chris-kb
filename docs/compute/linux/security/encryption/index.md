@@ -28,7 +28,6 @@ mkfs.xfs /dev/mapper/secure-data
 # Mount it
 mkdir /mnt/secure-data
 mount /dev/mapper/secure-data /mnt/secure-data
-```
 ```text
 ┌───────────────────────────────────────── Linux — Encryption ──────────────────────────────────────────┐
 │                                                                                                       │

@@ -26,7 +26,6 @@ graph TB
   class TENANT,MG ctrl
   class SUBP,SUBD cloud
   class HUB,SP1,SP2 net
-```
 ```text
 ┌────────────────────────────────── Azure Architecture — How It Works ──────────────────────────────────┐
 │                                                                                                       │

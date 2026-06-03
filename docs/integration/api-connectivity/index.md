@@ -26,7 +26,6 @@ curl -s -X POST \
   -H "Authorization: Bearer <token>" \
   -d '{"key":"value"}' \
   https://api.example.com/v1/resource | jq .
-```
 ```text
 ┌─────────────────────────────────── Integration — API Connectivity ────────────────────────────────────┐
 │                                                                                                       │

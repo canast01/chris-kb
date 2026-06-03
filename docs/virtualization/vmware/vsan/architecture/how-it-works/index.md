@@ -12,14 +12,51 @@ How It Works reference covering Storage Architecture Modes, Objects and Componen
 OSA uses a two-tier model within each disk group: a dedicated flash cache device and one or more capacity devices.
 
 ```text
-ESXi Host (OSA)
-└── Disk Group 1
-    ├── Cache SSD (NVMe or SATA SSD) — write buffer + read cache
-    ├── Capacity Disk 1 (SSD or HDD)
-    ├── Capacity Disk 2
-    └── Capacity Disk N (up to 7 per group)
-└── Disk Group 2 (optional, up to 5 per host)
-    └── ...
+┌───────────────────────────────────────── vSAN — How It Works ─────────────────────────────────────────┐
+│                                                                                                       │
+│  vSAN pools local disks from ESXi hosts into a shared datastore; data is                              │
+│  distributed across hosts using a policy-driven object-based storage model.                           │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                  Data Path                   │  │                 Disk Groups                 │   │
+│   │            VM write → vSAN object            │  │          1 cache NVMe/SSD per group         │   │
+│   │           Policy: FTT + RAID type            │  │         1-7 capacity disks per group        │   │
+│   │          Components placed on hosts          │  │          Express Storage Arch (ESA)         │   │
+│   │           Witness: metadata quorum           │  │              All-NVMe: ESA only             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Each object (VMDK) is split into components placed across hosts per the storage policy.              │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Cluster Requirements             │  │                Fault Domains                │   │
+│   │             Min 3 hosts (FTT=1)              │  │         Rack awareness: per-rack FD         │   │
+│   │             10GbE+ vSAN VMkernel             │  │         Stretched: 2 sites + witness        │   │
+│   │         Unicast: no multicast needed         │  │          FD isolates host failures          │   │
+│   │           Health: periodic resync            │  │             Min 3 FDs for FTT=1             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  vSAN requires dedicated SSDs/NVMe for cache and HDDs/SSDs for capacity on each host;                 │
+│  10GbE+ network with dedicated vSAN VMkernel adapter.                                                 │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Object        = vSAN storage unit; one VMDK = one or more objects                                    │
+│  Component     = slice of an object placed on a single host                                           │
+│  Witness       = metadata-only component; tie-breaker for quorum                                      │
+│  FTT           = Failures To Tolerate; policy setting; FTT=1 needs 3 hosts                            │
+│  RAID-1        = mirroring; FTT=1: 2 data + 1 witness                                                 │
+│  RAID-5        = erasure coding; FTT=1: 4 hosts; more space-efficient                                 │
+│  Disk group    = cache + capacity disks on one host; O(SA: per host)                                  │
+│  ESA           = Express Storage Architecture; vSAN 8+; all-NVMe only                                 │
+│  Fault domain  = logical grouping of hosts; failure unit for placement                                │
+│  Stretched cluster= 2 active sites + 1 witness site; RPO=0 across sites                               │
+│  Resync        = after host failure/return, components rebalanced                                     │
+│  VMkernel      = special NIC adapter; vSAN uses vmk for cluster traffic                               │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌───────────────────────────────────────── vSAN — How It Works ─────────────────────────────────────────┐

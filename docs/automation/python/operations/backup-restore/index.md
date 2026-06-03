@@ -37,7 +37,6 @@ git ls-files --others --exclude-standard
 # Tag a release before major changes
 git tag -a v1.4.2 -m "Pre-maintenance snapshot $(date -I)"
 git push origin v1.4.2
-```
 ```text
 ┌────────────────────────────────────── Python — Backup & Restore ──────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

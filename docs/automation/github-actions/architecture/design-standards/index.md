@@ -8,12 +8,28 @@
 ## Workflow File Structure
 
 ```text
-.github/
-└── workflows/
-    ├── ci.yml          # lint, test, build on every push/PR
-    ├── deploy.yml      # deploy to staging/prod on merge to main
-    ├── security.yml    # weekly security scans
-    └── cleanup.yml     # scheduled resource cleanup
+┌────────────────────────────────── GitHub Actions — Design Standards ──────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      Standards for consistent, secure, maintainable GitHub Actions workflows across repos     │   │
+│   │     Security: pin all third-party actions by SHA; avoid GITHUB_TOKEN write-all permission     │   │
+│   │    Structure: one workflow per concern; reusable workflows for shared logic; no copy-paste    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Workflow Structure Rules           │  │                Security Rules               │   │
+│   │         Name workflows descriptively         │  │           Pin: uses: action@<sha>           │   │
+│   │           One workflow per concern           │  │          Minimal GITHUB_TOKEN perms         │   │
+│   │       Reusable workflow for shared CI        │  │           OIDC over static secrets          │   │
+│   │        Cache keyed on lock file hash         │  │       No secrets in env: at top level       │   │
+│   │       Concurrency: cancel-in-progress        │  │       Required reviewers for prod env       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │    Reusable workflow = workflow called via uses: org/repo/.github/workflows/shared.yml@main   │   │
+│   │ SHA pinning       = uses: actions/checkout@<40-char SHA> instead of @v4; prevents tag mutation│   │
+│   │ OIDC              = workflow requests short-lived AWS/Azure token; no stored cloud credentials│   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌────────────────────────────────── GitHub Actions — Design Standards ──────────────────────────────────┐

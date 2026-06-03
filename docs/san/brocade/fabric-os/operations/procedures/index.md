@@ -23,7 +23,6 @@ flowchart TD
 
     style done fill:#15803d,color:#fff
     style start fill:#2563eb,color:#fff
-```
 ```text
 ┌────────────────────────────── Brocade Fabric OS — Operations Procedures ──────────────────────────────┐
 │                                                                                                       │

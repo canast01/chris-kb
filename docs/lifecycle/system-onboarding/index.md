@@ -15,7 +15,6 @@ flowchart LR
     D --> E[Backup & DR]
     E --> F[CMDB &\nDocumentation]
     F --> G[Handover to\nApp / Ops Team]
-```
 ```text
 ┌────────────────────────────────────────── System Onboarding ──────────────────────────────────────────┐
 │                                                                                                       │

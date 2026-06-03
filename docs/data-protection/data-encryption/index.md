@@ -26,7 +26,6 @@ dmsetup ls --target crypt
 
 # Dump LUKS header info
 cryptsetup luksDump /dev/sdb
-```
 ```text
 ┌────────────────────────────────── Data Protection — Data Encryption ──────────────────────────────────┐
 │                                                                                                       │

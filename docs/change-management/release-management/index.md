@@ -17,26 +17,40 @@ Coordinates planning, scheduling, and execution of software and infrastructure r
 ## Release Lifecycle
 
 ```text
-1. Scope definition
-   → Features/fixes identified; linked to tickets/epics
-
-2. Release planning
-   → Target date agreed; release branch cut or tagged
-
-3. Testing gate
-   → Unit / integration / regression / UAT complete
-
-4. Release review
-   → RFC submitted; risk assessed; approval obtained
-
-5. Deployment
-   → Change window executed per deployment procedure
-
-6. Verification
-   → Smoke tests; monitoring soak; stakeholder sign-off
-
-7. Release closure
-   → RFC closed; release notes published; team briefed
+┌───────────────────────────────────────── Release Management ──────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │         Release management: package, schedule, and coordinate multi-change deployments        │   │
+│   │         Release calendar: scheduled windows, freeze periods, and dependency sequencing        │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │           Planning          │  │          Execution          │  │          Close-out          │   │
+│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
+│   │      Release packaging      │  │       Sequenced deploy      │  │        Release review       │   │
+│   │        Dependency map       │  │         Gate checks         │  │       Lessons learned       │   │
+│   │      Go/No-Go criteria      │  │       Rollback trigger      │  │        Metrics review       │   │
+│   │        Freeze periods       │  │        Communication        │  │        Backlog update       │   │
+│   │      Stakeholder comms      │  │        Live dashboard       │  │         RFC closure         │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│   │      Phase       │     Timeline     │        Gate       │      Owner       │     Artefact     │   │
+│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+│   │     Planning     │      T-14d       │    Release plan   │   Release mgr    │   Release doc    │   │
+│   │      Freeze      │       T-7d       │    No new items   │    Change mgr    │  Freeze notice   │   │
+│   │     Go/No-Go     │       T-1h       │  All checks pass  │   Release mgr    │   Decision log   │   │
+│   │      Review      │       T+2d       │   Success verify  │   Release mgr    │  Review report   │   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Release package= Group of related changes deployed together in a coordinated window                │
+│    Freeze period  = No new changes added to release after freeze date; scope locked                   │
+│    Dependency map = Which changes must complete before others can start; sequence critical            │
+│    Go/No-Go call  = Release decision meeting T-1h; all dependencies and pre-checks confirmed          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌───────────────────────────────────────── Release Management ──────────────────────────────────────────┐

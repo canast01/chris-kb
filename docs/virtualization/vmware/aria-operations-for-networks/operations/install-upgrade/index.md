@@ -72,7 +72,6 @@ curl -sk https://aon-platform.example.local -o /dev/null -w "HTTP %{http_code}\n
 # SSH to platform to verify services
 ssh ubuntu@aon-platform.example.local
 sudo systemctl status vrni-platform nginx cassandra
-```
 ```text
 ┌─────────────────────────────────────── vRNI Install & Upgrade ────────────────────────────────────────┐
 │                                                                                                       │

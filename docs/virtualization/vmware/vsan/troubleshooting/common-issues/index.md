@@ -29,7 +29,6 @@ esxcli vsan storage list
 
 # 6. Network connectivity between hosts
 esxcli vsan debug network test
-```
 ```text
 ┌──────────────────────────────────────── vSAN — Common Issues ─────────────────────────────────────────┐
 │                                                                                                       │

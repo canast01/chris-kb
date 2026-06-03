@@ -54,7 +54,6 @@ echo "Token: ${TOKEN:0:40}..."   # Print first 40 chars to confirm success
 # --- Reusable header for all subsequent calls ---
 AUTH="Authorization: Bearer ${TOKEN}"
 BASE="https://cloudiq.apis.dell.com/rest/v1"
-```
 ```text
 ┌───────────────────────────────────── Dell CloudIQ CLI Reference ──────────────────────────────────────┐
 │                                                                                                       │

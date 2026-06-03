@@ -57,7 +57,6 @@ gr.query();
 while (gr.next()) {
     gs.print(gr.getValue('name') + ' | ' + gr.getValue('duration') + ' | ' + gr.getValue('thread'));
 }
-```
 ```text
 ┌────────────────────────────────────── ServiceNow Common Issues ───────────────────────────────────────┐
 │                                                                                                       │

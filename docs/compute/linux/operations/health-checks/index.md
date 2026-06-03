@@ -32,7 +32,6 @@ flowchart TD
     ntpOk -- No --> investigate
     selinux -- Yes --> allOk
     selinux -- No --> investigate
-```
 ```text
 ┌──────────────────────────────────────── Linux — Health Checks ────────────────────────────────────────┐
 │                                                                                                       │

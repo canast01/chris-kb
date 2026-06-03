@@ -31,7 +31,6 @@ curl -sk -X POST \
   -H "Authorization: Bearer <token>" \
   -H "Content-Type: multipart/form-data" \
   -F "file=@nd-insights-4.2.1.tar.gz"
-```
 ```text
 ┌─────────────────────────────────── Nexus Dashboard — Integrations ────────────────────────────────────┐
 │                                                                                                       │

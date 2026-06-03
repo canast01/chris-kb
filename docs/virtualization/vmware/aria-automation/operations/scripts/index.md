@@ -48,7 +48,6 @@ if ($Results) {
 } else {
     Write-Host "No failed deployments in the last 24 hours."
 }
-```
 ```text
 ┌───────────────────────────────── Aria Automation — Scripts Reference ─────────────────────────────────┐
 │                                                                                                       │

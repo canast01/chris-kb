@@ -17,7 +17,6 @@ symrdf query -g <dgname> > /tmp/srdf_s_prechange_$(date +%Y%m%d_%H%M).txt
 symcfg -sid <r1_sid> list -rdfg <rdf_group_number> >> /tmp/srdf_s_prechange_$(date +%Y%m%d_%H%M).txt
 symrdf -sid <r1_sid> -rdfg <rdf_group_number> verify -synchronized
 echo "Baseline captured at $(date)"
-```
 ```text
 ┌───────────────────────────────────────── SRDF/S — Procedures ─────────────────────────────────────────┐
 │                                                                                                       │

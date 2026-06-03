@@ -56,7 +56,6 @@ aws rds modify-db-instance \
 # Start / stop instance (for dev/test)
 aws rds stop-db-instance --db-instance-identifier <db-id>
 aws rds start-db-instance --db-instance-identifier <db-id>
-```
 ```text
 ┌─────────────────────────────── AWS Operations — Procedures & Runbooks ────────────────────────────────┐
 │                                                                                                       │

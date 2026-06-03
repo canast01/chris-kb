@@ -102,8 +102,8 @@ import diagrams  # noqa: F401
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# Matches the first bare ``` block (no language tag on the opening line).
-_BLOCK_RE = re.compile(r'^```\n.*?^```$', re.MULTILINE | re.DOTALL)
+# Matches the first ```text block (or bare ``` fallback for legacy files).
+_BLOCK_RE = re.compile(r'^```(?:text)?\n.*?^```$', re.MULTILINE | re.DOTALL)
 # Matches the first ```mermaid block (fallback for pages that have mermaid diagrams).
 _MERMAID_RE = re.compile(r'^```mermaid\n.*?^```$', re.MULTILINE | re.DOTALL)
 
@@ -131,7 +131,7 @@ def _write(name):
     except FileNotFoundError:
         print(f'  ERROR: file not found: {entry["file"]}', file=sys.stderr)
         return False
-    replacement = '```\n' + '\n'.join(lines) + '\n```'
+    replacement = '```text\n' + '\n'.join(lines) + '\n```'
     _repl = replacement  # capture for lambda (avoids re escape processing of backslashes)
     new_content, n = _BLOCK_RE.subn(lambda m: _repl, content, count=1)
     # If block exists but is after the kb-grid, strip it and let the fallback re-insert correctly.

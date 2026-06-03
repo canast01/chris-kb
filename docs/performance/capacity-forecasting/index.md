@@ -8,7 +8,35 @@ Capacity forecasting predicts when a resource will be exhausted based on histori
 ## Forecasting Model
 
 ```text
-Days to exhaustion = (Current capacity - Current usage) / Growth rate per day
+┌───────────────────────────────── Performance — Capacity Forecasting ──────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │    Project future capacity needs from historical growth trends for compute/storage/network    │   │
+│   │     Collect 90-day trend data; extrapolate to 12/18/24 month horizon; add headroom buffer     │   │
+│   │         Alert at 75% usage; plan procurement at 80%; never operate above 90% sustained        │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Metrics to Forecast              │  │               Forecast Process              │   │
+│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+│   │          CPU: peak + average util %          │  │            Collect 90-day history           │   │
+│   │          RAM: committed vs balloon           │  │            Calculate growth rate            │   │
+│   │         Storage: used + growth/month         │  │           Extrapolate to 12/24 mo           │   │
+│   │          Network: peak bandwidth %           │  │           Add 20% headroom buffer           │   │
+│   │           VM count + density ratio           │  │          Raise procurement request          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Headroom     = Buffer above projected peak; allows for spikes and unplanned growth                 │
+│    Balloon mem  = VMware memory balloon driver; reclaims VM memory under host pressure                │
+│    Growth rate  = Measured increase per month/quarter; used to project future consumption             │
+│    Procurement lead = Time from request to delivered capacity; plan 3-6 months ahead                  │
+│    Overcommit   = Allocating more vCPU/RAM than physical; acceptable with headroom tracking           │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌───────────────────────────────── Performance — Capacity Forecasting ──────────────────────────────────┐

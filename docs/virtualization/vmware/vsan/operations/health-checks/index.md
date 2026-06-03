@@ -6,37 +6,51 @@ Health Checks reference covering Weekly Checks, Performance Baseline, Network He
 </div>
 
 ```text
-vSAN HEALTH CHECK SCOPE
-
-  ┌───────────────────────────────────────────────────────┐
-  │                   vSAN Cluster                        │
-  │                                                       │
-  │  ┌─────────────────────────────────────────────────┐  │
-  │  │  Cluster-Level Checks                           │  │
-  │  │  ├── vSAN partition / membership (CMMDS)        │  │
-  │  │  ├── Software version alignment (all hosts)     │  │
-  │  │  ├── Time drift (< 500 ms required)             │  │
-  │  │  └── Capacity (< 70% alert, < 80% escalate)     │  │
-  │  └─────────────────────────────────────────────────┘  │
-  │                                                       │
-  │  ┌─────────────────────────────────────────────────┐  │
-  │  │  Host-Level Checks (per ESXi host)              │  │
-  │  │  ├── vSAN vmkernel tagged and reachable         │  │
-  │  │  ├── MTU 9000 end-to-end (vmkping -d -s 8972)  │  │
-  │  │  ├── Disk group state (healthy / degraded)      │  │
-  │  │  └── NIC errors / link speed                    │  │
-  │  └─────────────────────────────────────────────────┘  │
-  │                                                       │
-  │  ┌─────────────────────────────────────────────────┐  │
-  │  │  Object-Level Checks                            │  │
-  │  │  ├── All objects healthy (no absent components) │  │
-  │  │  ├── Storage policy compliance                  │  │
-  │  │  └── Resync queue: 0 bytes remaining (idle)     │  │
-  │  └─────────────────────────────────────────────────┘  │
-  └───────────────────────────────────────────────────────┘
-           │
-           ▼
-  Skyline Health (vCenter UI) + esxcli vsan health cluster list
+┌──────────────────────────────────────── vSAN — Health Checks ─────────────────────────────────────────┐
+│                                                                                                       │
+│  vSAN health checks verify cluster, network, disk, and object health; run daily                       │
+│  via the vSAN Health UI or Test-VsanClusterHealth PowerCLI cmdlet.                                    │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Cluster Health                │  │                Network Health               │   │
+│   │         All hosts: member of cluster         │  │             vSAN MTU test: 9000             │   │
+│   │             No host disconnected             │  │          Latency <1ms host to host          │   │
+│   │        Witness reachable (stretched)         │  │            No multicast required            │   │
+│   │         No decommission in progress          │  │            Unicast agent running            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Cluster and network health are prerequisites; disk and object health depend on them.                 │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Disk & Object Health             │  │               Capacity Health               │   │
+│   │            All disks: healthy/OK             │  │            Free space >30% total            │   │
+│   │            No degraded components            │  │               Resync ETA <24h               │   │
+│   │           Policy compliance: 100%            │  │           No dedup overhead alarm           │   │
+│   │           Resync: 0 bytes pending            │  │          Capacity per host balanced         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Physical disk health reported via SMART; failed disk shows degraded component;                       │
+│  replace disk within 60 minutes to avoid data loss window.                                            │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Degraded      = component lost; vSAN has no redundancy until rebuilt                                 │
+│  Absent        = component temporarily missing; wait 60min before rebuild                             │
+│  Resync        = rebuilding missing components after host/disk failure                                │
+│  Policy compliance= all VMs must meet FTT policy; red = risk                                          │
+│  MTU test      = vSAN sends 8972-byte pings to test jumbo frames end-to-end                           │
+│  Unicast agent = replaced multicast in vSAN 6.6+; always check running                                │
+│  SMART         = disk self-monitoring; pre-failure indicator                                          │
+│  Decommission  = remove host from vSAN while migrating data; slow                                     │
+│  60-min timer  = vSAN waits 60 min before marking absent as degraded                                  │
+│  Witness (stretched)= third-site VM; heartbeat must be <200ms RTT                                     │
+│  Free 30%      = vSAN needs headroom for resync; alert at <25%                                        │
+│  Resync ETA    = estimate shown in vSAN performance health panel                                      │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌──────────────────────────────────────── vSAN — Health Checks ─────────────────────────────────────────┐

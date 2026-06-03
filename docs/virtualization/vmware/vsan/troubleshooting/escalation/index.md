@@ -6,43 +6,51 @@ Guidance on when to escalate vSAN incidents to VMware (Broadcom) support, what t
 </div>
 
 ```text
-ESCALATION PATH
-
-  vSAN incident detected
-         │
-         ▼
-  L1 — On-call storage engineer
-  ├── esxcli vsan health / cluster / object checks
-  ├── Timeline: first 30 minutes
-  └── Resolved? ──► close
-         │
-         │ Not resolved within 1 hour
-         ▼
-  L2 — Storage team lead / senior engineer
-  ├── Deeper log analysis (clomd, cmmdsd, vmkernel)
-  ├── Collect state capture bundle
-  ├── Any inaccessible objects? → escalate immediately
-  └── Resolved? ──► RCA + preventive actions
-         │
-         │ P1: inaccessible objects / data risk
-         │ P2: degraded >24h / stalled resync
-         ▼
-  L3 — Platform / Infrastructure Manager
-  ├── Business impact confirmed
-  ├── Stakeholders notified
-  └── Approve vendor escalation
-         │
-         ▼
-  VMware GSS (Broadcom Support)
-  ├── P1: phone + portal — call +1 877 486 9273
-  ├── P2: portal case — same day
-  └── P3: portal case — within the week
-
-  Attach to every case:
-  ├── esxcli vsan cluster/health/object/resync output
-  ├── vm-support --vsan bundle (per affected host)
-  ├── vc-support bundle
-  └── Timeline + environment details
+┌────────────────────────────────────────── vSAN — Escalation ──────────────────────────────────────────┐
+│                                                                                                       │
+│  Escalate vSAN issues to VMware GSS when data is at risk, resync is stalled,                          │
+│  or cluster is degraded below FTT policy with no recovery path.                                       │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Escalation Triggers              │  │             Pre-Escalation Steps            │   │
+│   │            Multiple disk failures            │  │            Collect support bundle           │   │
+│   │             All objects degraded             │  │           Run vm-support on hosts           │   │
+│   │           Resync stalled >4 hours            │  │          Note exact error messages          │   │
+│   │         Data inaccessible / I/O hang         │  │          Capture cmmds-tool output          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Multiple simultaneous disk failures require urgent GSS engagement; data may be at risk.              │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                GSS Engagement                │  │               Escalation Path               │   │
+│   │            Open P1 SR immediately            │  │             T1: triage + bundle             │   │
+│   │          Include vSAN build number           │  │             T2: vSAN SE assigned            │   │
+│   │          Attach support bundle ZIP           │  │            T3: engineering review           │   │
+│   │            Do NOT power off hosts            │  │             CritSit if data lost            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Do not touch physical disks or power cycle hosts without GSS guidance when data                      │
+│  is degraded; further failures may push below quorum threshold.                                       │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Degraded      = FTT policy not met; one more failure = data loss                                     │
+│  Quorum        = majority of object components must be accessible                                     │
+│  I/O hang      = VMs stalled waiting for storage; immediate P1                                        │
+│  Support bundle= includes all vSAN host logs + CMMDS metadata                                         │
+│  vm-support    = per-host diagnostic bundle; run on all affected hosts                                │
+│  cmmds-tool    = shows component placement; critical for GSS triage                                   │
+│  P1 SR         = highest priority SR; triggers 24/7 oncall response                                   │
+│  CritSit       = Critical Situation; executive escalation; 24/7 war room                              │
+│  T2/T3         = senior SE or engineering involvement                                                 │
+│  Do not power off= hosts hold component data; powering off worsens state                              │
+│  Build number  = vSAN version from: esxcli vsan cluster get                                           │
+│  GSS           = Global Support Services (VMware/Broadcom)                                            │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌────────────────────────────────────────── vSAN — Escalation ──────────────────────────────────────────┐

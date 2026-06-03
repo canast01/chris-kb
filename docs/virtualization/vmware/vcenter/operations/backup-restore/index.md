@@ -6,45 +6,51 @@ Backup & Restore reference covering Alert on Backup Failure, Restore Procedure, 
 </div>
 
 ```text
-VCSA Backup & Restore Architecture
-════════════════════════════════════════════════════════
-
-  Backup Flow (file-based, VAMI)
-  ┌─────────────────────────────────────────────────┐
-  │  VCSA                                           │
-  │  ┌───────────────────────────────────────────┐  │
-  │  │ vCenter DB (vPostgres)                    │  │
-  │  │ SSO config / identity sources / roles     │  │ ──── VAMI Backup
-  │  │ Certificates (VMCA, STS, Machine SSL)     │  │      Scheduler
-  │  │ Alarm definitions / scheduled tasks       │  │      (daily, 02:00)
-  │  └───────────────────────────────────────────┘  │
-  └────────────────────┬────────────────────────────┘
-                       │ SFTP / FTPS / HTTPS
-                       ▼
-              ┌────────────────────┐
-              │  Backup Target     │
-              │  (SFTP server /    │
-              │   NFS / S3)        │
-              │                    │
-              │  Retention: 7 days │
-              │  Encryption: AES   │
-              └────────────────────┘
-
-  Restore Flow (full appliance redeploy)
-  ┌───────────┐    ┌──────────────────┐    ┌────────────────┐
-  │  VCSA ISO │    │  Stage 1         │    │  Stage 2       │
-  │  (same or │───▶│  Deploy new VCSA │───▶│  Import backup │
-  │   newer   │    │  on target ESXi  │    │  Enter encrypt │
-  │   version)│    │  Set IP/FQDN     │    │  password      │
-  └───────────┘    └──────────────────┘    └───────┬────────┘
-                                                   │ 30-60 min
-                                                   ▼
-                                           ┌────────────────┐
-                                           │  Stage 3       │
-                                           │  Validate:     │
-                                           │  services, SSO │
-                                           │  hosts, API    │
-                                           └────────────────┘
+┌────────────────────────────────── vCenter Server — Backup & Restore ──────────────────────────────────┐
+│                                                                                                       │
+│  vCenter provides built-in file-based backup via VAMI; image-level backup via                         │
+│  third-party tools using VADP; restore rebuilds the appliance from backup files.                      │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Backup Methods                │  │                 Backup Scope                │   │
+│   │          File-based: VAMI schedule           │  │          Config: inventory + policy         │   │
+│   │         Protocols: FTP/FTPS/HTTP/SCP         │  │              Events & tasks DB              │   │
+│   │         Image-based: 3rd party tools         │  │         Stats DB excluded by default        │   │
+│   │           Schedule: daily minimum            │  │           Certs included in backup          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  File-based backup exports VCSA config; restore deploys a new VCSA then imports.                      │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Restore Procedure               │  │               Validation Steps              │   │
+│   │             Deploy new VCSA OVA              │  │           Verify host connectivity          │   │
+│   │           Point to backup location           │  │            Check SSO login works            │   │
+│   │           Stage 1: appliance setup           │  │           Confirm inventory intact          │   │
+│   │            Stage 2: data restore             │  │           Validate alarms/policies          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Backup target must be reachable from VCSA management network; backup files are                       │
+│  compressed tarballs; restore needs network access to backup server.                                  │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  VAMI         = vCenter Appliance Management Interface; port 5480                                     │
+│  File-based   = VCSA native backup; transfers config + DB to remote server                            │
+│  Image-based  = full VMDK snapshot backup; requires quiescing or powered-off                          │
+│  VADP         = vStorage APIs for Data Protection; 3rd-party backup API                               │
+│  SCP          = Secure Copy; encrypted file transfer for backup destination                           │
+│  Stage 1/2    = two-phase restore: deploy appliance, then restore config                              │
+│  Stats DB     = performance metrics DB; excluded from default backup scope                            │
+│  Retention    = number of backup copies to keep; set in VAMI scheduler                                │
+│  Encryption   = backup password encrypts the tarball at rest                                          │
+│  RTO          = target restore time; typically <1h for file-based restore                             │
+│  Quiescing    = VADP flush; ensures consistent VM disk state during backup                            │
+│  Tarball      = compressed archive format used by VCSA file-based backup                              │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌────────────────────────────────── vCenter Server — Backup & Restore ──────────────────────────────────┐

@@ -42,7 +42,6 @@ flowchart LR
     I --> L([Error Stream\n$Error / Write-Error])
     style F fill:#1565c0,color:#fff
     style I fill:#2e7d32,color:#fff
-```
 ```text
 ┌────────────────────────────────────── PowerShell — How It Works ──────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

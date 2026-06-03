@@ -6,32 +6,51 @@ Commonly used ESXi shell and PowerCLI commands for managing and troubleshooting 
 </div>
 
 ```text
-CLI TOOL CHAIN
-
-  Administrator
-       │
-       ├── PowerCLI (workstation / automation host)
-       │       │   Connect-VIServer → vCenter API (HTTPS/443)
-       │       │
-       │       ├── Get-VsanClusterHealthSummary  ──► health status
-       │       ├── Get-VsanDiskGroup             ──► disk group inventory
-       │       ├── Get-VsanSpaceUsage            ──► capacity report
-       │       └── Set-VsanClusterConfiguration  ──► config changes
-       │
-       └── ESXi Shell (SSH to ESXi host as root)
-               │   esxcli vsan <namespace> <command>
-               │
-               ├── vsan cluster get        ──► membership, master UUID
-               ├── vsan health cluster get ──► Skyline health tests
-               ├── vsan storage list       ──► disk groups, SSDs, caps
-               ├── vsan storage add/remove ──► disk group management
-               ├── vsan network list       ──► vmkernel network config
-               ├── vsan debug object list  ──► object health / UUID
-               ├── vsan debug resync ...   ──► resync status / throttle
-               └── vsan debug network test ──► unicast peer connectivity
-                           │
-                           ▼
-               vSAN Kernel Modules (LSOM / CLOM / DOM / CMMDS)
+┌──────────────────────────────────────── vSAN — CLI Reference ─────────────────────────────────────────┐
+│                                                                                                       │
+│  vSAN CLI operations use esxcli on hosts, RVC (Ruby vSphere Console), PowerCLI,                       │
+│  and the vSphere Client UI for health, disk, and object management.                                   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               esxcli Commands                │  │                 RVC Commands                │   │
+│   │           esxcli vsan cluster get            │  │           vsan.health.health_test           │   │
+│   │           esxcli vsan storage list           │  │            vsan.disks_info <host>           │   │
+│   │           esxcli vsan network list           │  │            vsan.obj_status_report           │   │
+│   │           esxcli vsan debug object           │  │            vsan.resync_dashboard            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  esxcli runs on the ESXi host shell; RVC runs from the vCenter or jump host.                          │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              PowerCLI Commands               │  │            Object & Disk Commands           │   │
+│   │         Get-VsanClusterConfiguration         │  │           esxcli vsan debug object          │   │
+│   │           Get-VsanDisk | Ft Status           │  │          cmmds-tool find (metadata)         │   │
+│   │            Test-VsanClusterHealth            │  │           vsanObserver (perf data)          │   │
+│   │           Get-VsanView (advanced)            │  │            esxcli vsan trace cat            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  All commands execute against host or vCenter management plane; cmmds-tool                            │
+│  is host-local only and reads cluster metadata database.                                              │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  esxcli vsan   = vSAN management namespace in ESXi CLI                                                │
+│  RVC           = Ruby vSphere Console; legacy; still used for vSAN diag                               │
+│  cmmds-tool    = Cluster Monitoring, Membership, Directory Service tool                               │
+│  CMMDS         = cluster metadata store; tracks object component locations                            │
+│  vsanObserver  = performance observability tool; requires RVC                                         │
+│  obj_status    = per-object health report; shows degraded/absent                                      │
+│  resync_dash   = RVC command showing active resync bytes/throughput                                   │
+│  debug object  = detailed per-object component and placement info                                     │
+│  vsan trace    = per-host vSAN trace log; crash and I/O analysis                                      │
+│  health_test   = runs all vSAN health checks programmatically                                         │
+│  Get-VsanDisk  = PowerCLI; lists disk status across cluster                                           │
+│  Test-VsanCluster= PowerCLI; triggers health check run                                                │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌──────────────────────────────────────── vSAN — CLI Reference ─────────────────────────────────────────┐

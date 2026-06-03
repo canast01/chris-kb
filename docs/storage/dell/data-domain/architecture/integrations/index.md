@@ -23,7 +23,6 @@ graph TD
     ddReceiver --> sisl
     sisl --> nvramCache
     nvramCache --> ddfs
-```
 ```text
 ┌──────────────────────────────────── Dell Data Domain Integrations ────────────────────────────────────┐
 │                                                                                                       │

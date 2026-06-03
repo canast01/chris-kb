@@ -12,9 +12,49 @@ Diagnostics reference covering Support Bundle, Collector VM Log Locations, Test 
 Collect the support bundle before opening a case — it includes Platform and Collector logs, system state, and configuration.
 
 ```text
-Settings → Support → Download Support Bundle
-  Select: Platform + All Collectors
-  Download and attach to VMware Support case
+┌────────────────────────────────────────── vRNI Diagnostics ───────────────────────────────────────────┐
+│                                                                                                       │
+│  app.log analysis, REST API diagnostic checks, and support bundle for vRNI.                           │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Log File Diagnostics             │  │               REST API Checks               │   │
+│   │          /var/log/app.log: main log          │  │           GET /api/ni/infra/health          │   │
+│   │          /var/log/proxy.log: flows           │  │          GET /data-sources: status          │   │
+│   │              grep ERROR app.log              │  │          GET /flows: verify receipt         │   │
+│   │         Check timestamp of last flow         │  │           GET /entities/vms: count          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Logs reveal internal errors; REST API checks validate data availability from outside.                │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Support Bundle                │  │            Collector Diagnostics            │   │
+│   │         SSH: support-bundle generate         │  │               SSH collector VM              │   │
+│   │          VAMI: download bundle ZIP           │  │           tail /var/log/proxy.log           │   │
+│   │           Bundle includes all logs           │  │           service collector status          │   │
+│   │               Attach to GSS SR               │  │           ping platform from coll           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  vRNI platform + collector VMs; SSH jump host; VAMI browser access on port 5480                       │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  app.log             = Primary platform log: errors, auth events, analytics issues                    │
+│  proxy.log           = Collector log: flow receipt rate and forwarding to platform                    │
+│  GET /infra/health    = REST endpoint returning component health status JSON                          │
+│  Support Bundle      = Compressed archive of all logs; generated via SSH or VAMI                      │
+│  GSS SR              = Global Support Services case; attach bundle for analysis                       │
+│  grep ERROR          = Quick scan of app.log for exception and error entries                          │
+│  Flow Timestamp      = Last-seen time on flow records; stale = collection stopped                     │
+│  GET /entities/vms   = Returns VM count; empty = vCenter source not syncing                           │
+│  service collector   = Systemd service on collector VM; check status first                            │
+│  ping platform       = Basic connectivity test from collector to platform IP                          │
+│  VAMI Download       = Browser-based support bundle download from port 5480                           │
+│  Collector Log Level = Adjust in collector config for verbose debugging output                        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌────────────────────────────────────────── vRNI Diagnostics ───────────────────────────────────────────┐

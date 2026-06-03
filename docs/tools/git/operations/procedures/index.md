@@ -21,7 +21,6 @@ chore/    — Maintenance, deps, config (chore/upgrade-node-18)
 docs/     — Documentation changes (docs/update-api-reference)
 hotfix/   — Urgent production fixes (hotfix/payment-timeout)
 release/  — Release preparation (release/v2.4.0)
-```
 ```text
 ┌───────────────────────────────────── Git — Operations Procedures ─────────────────────────────────────┐
 │                                                                                                       │

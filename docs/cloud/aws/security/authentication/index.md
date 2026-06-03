@@ -31,7 +31,6 @@ aws sso-admin list-permission-sets \
 # Provision credentials via SSO login (CLI)
 aws sso login --profile prod
 # Or configure SSO profile in ~/.aws/config:
-```
 ```text
 ┌───────────────────────────── AWS Authentication — SSO, MFA & Credentials ─────────────────────────────┐
 │                                                                                                       │

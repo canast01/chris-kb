@@ -26,14 +26,35 @@ A version mismatch between ND and its managed fabrics can result in loss of mana
 ## Pre-Upgrade Checklist
 
 ```text
-1. Check the Cisco Nexus Dashboard Compatibility Matrix for target version compatibility
-2. Verify ACI APIC and NX-OS firmware are compatible with the target ND version
-3. Take a cluster backup: Admin > Backup and Restore > Backup Now (to SFTP/NFS)
-4. Take VM snapshots of all ND nodes (for VMware deployments)
-5. Note current cluster health: Admin > Cluster Configuration — all nodes Online
-6. Download the ND upgrade image from software.cisco.com
-7. Notify network operations team — brief service interruptions may occur per node during rolling upgrade
-8. Schedule the upgrade in the change management system
+┌─────────────────────────────── Nexus Dashboard — Lifecycle Management ────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                    Deploy                    │  │                   Upgrade                   │   │
+│   │              Bootstrap 3 nodes               │  │             Check release notes             │   │
+│   │            Assign mgmt + data IPs            │  │             Backup config first             │   │
+│   │             Form cluster via UI              │  │              acs upgrade apply              │   │
+│   │            Install apps (NDI etc)            │  │             Rolling node upgrade            │   │
+│   │               Onboard fabrics                │  │               Verify apps post              │   │
+│   │              Configure ITSM out              │  │               Rollback if fail              │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  3 physical or VM nodes · Cisco ISO install · upgrade via acs CLI or ND UI                            │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Bootstrap = Initial ND node setup: assign hostname, IPs, NTP, DNS via console                        │
+│  Cluster form = Joining 3 nodes into quorum cluster via ND web UI                                     │
+│  App install = Installing NDI, NDFC, NDO as apps from ND admin > Apps                                 │
+│  Fabric onboard = Adding APIC or NX-OS fabric to ND with credentials                                  │
+│  acs upgrade = CLI command to apply upgrade image to cluster                                          │
+│  Rolling upgrade = Upgrading nodes sequentially to maintain quorum                                    │
+│  Backup = acs backup create before upgrade; stored externally                                         │
+│  Rollback = Restoring from backup if upgrade causes data loss                                         │
+│  Release notes = Cisco release notes; check for breaking changes before upgrade                       │
+│  Verify apps = Post-upgrade check: NDI collecting, NDFC managing, NDO syncing                         │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌─────────────────────────────── Nexus Dashboard — Lifecycle Management ────────────────────────────────┐

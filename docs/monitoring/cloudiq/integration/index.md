@@ -26,17 +26,34 @@ All Dell storage and server platforms are registered in the SCG and data flows a
 CloudIQ can auto-create ServiceNow incidents on CRITICAL alerts via webhook.
 
 ```text
-CloudIQ portal > Settings > Notifications > Add Notification Rule
-- Trigger: Alert Severity = CRITICAL
-- Action: Webhook
-- URL: https://<servicenow-instance>/api/now/table/incident
-- Authentication: Basic or OAuth token
-- Payload: map alert object, description, severity to ServiceNow fields
-  {
-    "short_description": "{{alert.name}} on {{system.name}}",
-    "severity": "1",
-    "assignment_group": "storage-ops"
-  }
+┌───────────────────────────────────── CloudIQ — Integration Guide ─────────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               ITSM Integration               │  │               Monitoring Stack              │   │
+│   │              ServiceNow webhook              │  │               Aria Ops adapter              │   │
+│   │             Auto-incident create             │  │             Grafana data source             │   │
+│   │               CMDB asset link                │  │              Splunk HTTP Event              │   │
+│   │             Alert → incident map             │  │              PagerDuty webhook              │   │
+│   │             Bi-directional sync              │  │              Custom REST script             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  CloudIQ in Dell cloud · webhook receivers on-prem or in monitoring SaaS platforms                    │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Webhook = Outbound HTTP POST from CloudIQ when alert fires; JSON body with array details             │
+│  ServiceNow webhook = HTTP endpoint in ServiceNow receiving CloudIQ alerts as incidents               │
+│  Auto-incident = ServiceNow incident created automatically from CloudIQ alert payload                 │
+│  CMDB link = Matching CloudIQ array to ServiceNow CMDB CI using serial number                         │
+│  Aria Ops adapter = PAK package pulling CloudIQ health data into Aria Operations                      │
+│  Grafana data source = Custom plugin or REST proxy exposing CloudIQ metrics to Grafana                │
+│  Splunk HEC = HTTP Event Collector; CloudIQ webhook forwarded for log-based correlation               │
+│  PagerDuty webhook = CloudIQ alert forwarded to PagerDuty for on-call routing                         │
+│  REST script = Python/shell script polling CloudIQ API and pushing to other systems                   │
+│  Bi-directional = ServiceNow incident closure reflected back to CloudIQ alert state                   │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌───────────────────────────────────── CloudIQ — Integration Guide ─────────────────────────────────────┐

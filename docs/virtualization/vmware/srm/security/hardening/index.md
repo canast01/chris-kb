@@ -7,24 +7,51 @@ Hardening reference covering Least-Privilege SRA Service Accounts, Rotate SRA Cr
 
   SRM Hardening Controls
 ```text
-┌──────────────────────────────────────────────────────────────┐
-│  Network Restrictions        Access Controls                                                          │
-│  ┌──────────────────────┐    ┌──────────────────────────┐                                             │
-│  │ SRM ← only from:     │    │ Separate config role from │                                            │
-│  │  vCenter TCP 443     │    │  run role:                │                                            │
-│  │  Remote SRM TCP 9086 │    │  SRM Admin: config+run   │                                             │
-│  │  Mgmt WS TCP 443     │    │  DR RunTeam: run only    │                                             │
-│  └──────────────────────┘    └──────────────────────────┘                                             │
+┌─────────────────────────────────────── VMware SRM — Hardening ────────────────────────────────────────┐
 │                                                                                                       │
-│  Test Network Isolation      Credential Rotation                                                      │
-│  ┌──────────────────────┐    ┌──────────────────────────┐                                             │
-│  │ Isolated portgroup:  │    │ SRA API token: rotate    │                                             │
-│  │  no uplinks assigned │    │  quarterly               │                                             │
-│  │ Test VMs must NOT    │    │ 1. New token on array    │                                             │
-│  │  reach production    │    │ 2. Update in SRM         │                                             │
-│  └──────────────────────┘    │ 3. Delete old token      │                                             │
-│                              └──────────────────────────┘                                             │
-└──────────────────────────────────────────────────────────────┘
+│  SRM hardening: restrict failover to authorised users, enforce TLS 1.2+, isolate                      │
+│  SRM management traffic, audit all plan runs, and use MFA for DR access.                              │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Access Hardening               │  │              Network Hardening              │   │
+│   │         SRM Admin: 2–3 accounts max          │  │             Mgmt VLAN: isolated             │   │
+│   │             MFA: via vCenter SSO             │  │            No SRM from guest nets           │   │
+│   │          Dual-person: real failover          │  │             WAN: encrypted link             │   │
+│   │         Least privilege: plan tester         │  │           Firewall: SRM ↔ SRM only          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Dual-person control for real failover prevents accidental production impact.                         │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Config Hardening               │  │              Audit & Compliance             │   │
+│   │           TLS 1.2 min: disable old           │  │          Log: all plan runs + user          │   │
+│   │       Enterprise cert: replace self-s        │  │             SIEM: vCenter events            │   │
+│   │           Patch: SRM on 30-day SLA           │  │           DR test evidence: stored          │   │
+│   │          SQL: TDE + regular backup           │  │            Quarterly: role audit            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  SRM Server VMs on management network; WAN replication over encrypted link;                           │
+│  SQL Server VM hardened separately with Windows security baseline.                                    │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Dual-person   = two approvals required to trigger real failover                                      │
+│  Least privilege= Plan Admin role for testers; Admin for DR team only                                 │
+│  TLS 1.2       = disable TLS 1.0/1.1 via IIS TLS settings on SRM                                      │
+│  Enterprise cert= replace self-signed for compliance; re-pair required                                │
+│  SQL TDE       = Transparent Data Encryption for SRM config DB                                        │
+│  MFA           = enforced at SSO layer; requires RADIUS or smart card                                 │
+│  SIEM          = collect vCenter events including SRM failover events                                 │
+│  Evidence      = DR test results; screenshot or export of plan run                                    │
+│  Quarterly audit= review SRM admin + plan admin role assignments                                      │
+│  WAN encrypted = IPSEC or MPLS encryption for replication traffic                                     │
+│  Patch SLA     = apply SRM patches within 30 days of release                                          │
+│  DR test evidence= required for DR compliance (ISO 22301, SOC 2)                                      │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌─────────────────────────────────────── VMware SRM — Hardening ────────────────────────────────────────┐

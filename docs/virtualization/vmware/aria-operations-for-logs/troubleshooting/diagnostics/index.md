@@ -25,7 +25,6 @@ tail -f /var/log/loginsight/runtime.log
 grep -i "error\|exception\|fail" /var/log/loginsight/runtime.log | tail -100
 grep -i "error\|drop"           /var/log/loginsight/ingestion.log | tail -50
 grep -i "error\|warn"           /var/log/loginsight/cassandra/system.log | tail -50
-```
 ```text
 ┌─────────────────────────────── Aria Operations for Logs — Diagnostics ────────────────────────────────┐
 │                                                                                                       │

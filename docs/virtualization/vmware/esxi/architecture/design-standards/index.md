@@ -7,32 +7,51 @@ Design Standards reference covering BIOS / UEFI Baseline, VMkernel Adapter Layou
 
 ESXi Host Design Checklist — Standard Layout
 ```text
-┌──────────────────────────────────────────────────────────┐
-│  Naming & DNS                                                                                         │
-│  └── FQDN: esxi-<nn>.<domain>  (A + PTR records)                                                      │
+┌─────────────────────────────────────── ESXi — Design Standards ───────────────────────────────────────┐
 │                                                                                                       │
-│  BIOS / UEFI Baseline                                                                                 │
-│  ├── Hyperthreading: Enabled                                                                          │
-│  ├── Power Policy: High Performance                                                                   │
-│  ├── C-States: Disabled (or C1 only)                                                                  │
-│  ├── IOMMU / VT-d: Enabled                                                                            │
-│  ├── Secure Boot + TPM 2.0: Enabled                                                                   │
-│  └── IPMI / iDRAC / iLO: Enabled on OOB NIC                                                           │
+│  Hardware sizing, HA cluster design, and build standards for ESXi deployments.                        │
 │                                                                                                       │
-│  NIC Layout (vDS — 4 pNICs minimum)                                                                   │
-│  ├── vmnic0 + vmnic1 → vDS uplinks (active/active)                                                    │
-│  └── vmnic2 + vmnic3 → vDS uplinks (teamed, LACP)                                                     │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Hardware Requirements             │  │                Cluster Design               │   │
+│   │           Min 2 sockets / 16 cores           │  │            Min 3 hosts for HA N+1           │   │
+│   │           256 GB RAM per prod host           │  │           Max 96 hosts per cluster          │   │
+│   │          2x 10/25 GbE NICs mgmt+VM           │  │           EVC mode per CPU family           │   │
+│   │          2x 10/25 GbE vMotion/vSAN           │  │           DRS threshold: moderate           │   │
+│   │           Boot: SD/USB/M.2 or disk           │  │           HA admission ctrl: slots          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
-│  VMkernel Adapters                                                                                    │
-│  ├── vmk0  Management    1500 MTU  Mgmt VLAN                                                          │
-│  ├── vmk1  vMotion       9000 MTU  vMotion VLAN                                                       │
-│  ├── vmk2  vSAN          9000 MTU  vSAN VLAN                                                          │
-│  └── vmk3  NFS / iSCSI   9000 MTU  Storage VLAN                                                       │
+│  Physical sizing → cluster policy → HA/DRS tuning → network teaming standard.                         │
 │                                                                                                       │
-│  Boot Device: M.2 NVMe (preferred)                                                                    │
-│  HBA Config: FC / NVMe-oF — single-initiator zoning                                                   │
-│  NTP: 2+ servers matching vCenter NTP sources                                                         │
-└──────────────────────────────────────────────────────────┘
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Networking Standards             │  │              Storage Standards              │   │
+│   │         dvSwitch for all prod hosts          │  │            VMFS-6 on shared LUNs            │   │
+│   │            vmk0 mgmt VLAN tagged             │  │           vSAN disk group: 1 cache          │   │
+│   │           vMotion on dedicated vmk           │  │          Datastore naming standard          │   │
+│   │          NIC teaming: LACP/failover          │  │           Multipathing: RR for SAN          │   │
+│   │            MTU 9000 vSAN/vMotion             │  │            VAAI enabled on arrays           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Rack servers (2U), ToR switches (25 GbE), SAN fabric, power redundancy (2N)                          │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  EVC     = Enhanced vMotion Compat; masks CPU features for live migration                             │
+│  HA      = High Availability; vSphere restarts VMs after host failure                                 │
+│  DRS     = Distributed Resource Scheduler; balances CPU/mem load via vMotion                          │
+│  LACP    = Link Aggregation Control Protocol; bonds NICs for bandwidth                                │
+│  MTU     = Maximum Transmission Unit; jumbo frames (9000) for vSAN/vMotion                            │
+│  RR      = Round Robin; PSA path policy across all active storage paths                               │
+│  vmk     = VMkernel adapter; carries system traffic (mgmt/vMotion/vSAN)                               │
+│  dvSwitch= Distributed vSwitch; enforces consistent port config across hosts                          │
+│  VAAI    = vStorage API Array Integration; array offload for clone/zeroing                            │
+│  Admission ctrl = HA policy reserving capacity to restart VMs on failure                              │
+│  N+1     = cluster design with capacity to lose 1 host without VM impact                              │
+│  Slot    = HA resource unit = worst-case VM CPU+mem in cluster                                        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌─────────────────────────────────────── ESXi — Design Standards ───────────────────────────────────────┐

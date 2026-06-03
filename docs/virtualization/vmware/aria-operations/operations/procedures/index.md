@@ -7,10 +7,49 @@ Procedures reference covering Maintenance Windows, Capacity Reclamation Workflow
 
 Aria Operations — Alert Lifecycle
 ```text
-┌─────────────────────────────────────────────────────┐
-│  Alert Fires                                                                                          │
-│  (symptom threshold breached for N wait cycles)                                                       │
-└──────────────────────┬──────────────────────────────┘
+┌───────────────────────────────────── Aria Operations Procedures ──────────────────────────────────────┐
+│                                                                                                       │
+│  Add adapter, certificate rotation, and policy management procedures for vROps.                       │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Add Adapter Instance             │  │             Certificate Rotation            │   │
+│   │            1. Data Sources > Add             │  │           1. Generate CSR in VAMI           │   │
+│   │            2. Choose adapter kind            │  │            2. Get CA-signed cert            │   │
+│   │         3. Enter host + credentials          │  │          3. Upload cert in VAMI SSL         │   │
+│   │         4. Test + Save; check green          │  │           4. Verify browser trust           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Adapter add and cert rotation are routine; policy management is ongoing governance.                  │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Policy Management               │  │             Credential Rotation             │   │
+│   │            1. Policies > Add/Edit            │  │         1. Update source account pw         │   │
+│   │          2. Set symptom thresholds           │  │           2. Edit adapter instance          │   │
+│   │          3. Assign to object groups          │  │           3. Enter new credential           │   │
+│   │           4. Validate alert firing           │  │                4. Test + Save               │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  vROps cluster; vCenter/NSX as adapter targets; CA for cert signing; AD for accounts                  │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Adapter Instance    = Configured connection from vROps to a specific data source                     │
+│  Adapter Kind        = Type of adapter: vSphere, NSX, AWS, etc.                                       │
+│  Test Connection     = vROps built-in check validating credentials and reachability                   │
+│  CSR                 = Certificate Signing Request; sent to CA for signing                            │
+│  VAMI SSL            = Certificate upload page in VAMI for vROps web cert                             │
+│  Policy              = Named ruleset defining alert thresholds for an object group                    │
+│  Symptom             = Single condition (e.g. CPU > 90%) contributing to an alert                     │
+│  Object Group        = Collection of objects sharing a policy assignment                              │
+│  Credential Rotation = Updating stored adapter credentials after password change                      │
+│  Adapter Green       = Status showing adapter collecting without errors                               │
+│  Alert Validation    = Test that a known condition triggers the expected alert                        │
+│  Policy Inheritance  = Child groups inherit parent policy; overridden at child level                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌───────────────────────────────────── Aria Operations Procedures ──────────────────────────────────────┐

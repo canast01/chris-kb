@@ -32,7 +32,6 @@ tar czf /root/pre-change-config-$(date +%Y%m%d).tar.gz /etc/<service>/
 # Verify service is healthy before starting
 systemctl status <service>
 curl -sf http://localhost:<port>/health
-```
 ```text
 ┌──────────────────────────────────────── Deployment Procedure ─────────────────────────────────────────┐
 │                                                                                                       │

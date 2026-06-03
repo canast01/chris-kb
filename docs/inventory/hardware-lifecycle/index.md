@@ -48,7 +48,6 @@ dmidecode -t bios | grep -E "Version|Release Date"
 # Check if fwupd supports the device
 fwupdmgr get-devices
 fwupdmgr refresh && fwupdmgr update  # update via LVFS
-```
 ```text
 ┌─────────────────────────────────── Inventory — Hardware Lifecycle ────────────────────────────────────┐
 │                                                                                                       │

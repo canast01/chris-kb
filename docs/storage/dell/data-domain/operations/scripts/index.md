@@ -69,42 +69,42 @@ else
   echo "STATUS: OK — No active alerts."
   exit 0
 fi
-```
-
-### How to run this script — step by step
-
-**Before you start — what you need**
-- A Linux/macOS computer or Windows with Git Bash installed
-- SSH access to your Data Domain appliance (ask your storage admin for the IP and a username)
-- The Data Domain user account must have at least read-only (sysadmin) permissions
-
-**Step 1 — Save the file**
-
-1. Open **Notepad** (search for it in the Start menu) or any text editor
-2. Copy the entire code block above
-3. Click **File → Save As**
-4. Change "Save as type" to **All Files**
-5. Name it `dd_health_check.sh` and save it to your Desktop
-
-**Step 2 — Fill in your details**
-
-Open the saved file and change these values near the top:
-
-| Variable | What to put | How to find it |
-|---|---|---|
-| `DD_HOST` | IP address or hostname of your Data Domain | Ask your storage admin, e.g. `192.168.10.50` |
-| `DD_USER` | SSH username on the Data Domain | Default is `sysadmin` |
-
-**Step 3 — Open a terminal**
-
-- **For .sh (Bash):** Install Git for Windows (gitforwindows.org) and open Git Bash.
-
-**Step 4 — Run the script**
-
-```bash
-cd ~/Desktop
-chmod +x dd_health_check.sh
-DD_HOST=192.168.10.50 DD_USER=sysadmin ./dd_health_check.sh
+```text
+┌────────────────────────────────────── Dell Data Domain Scripts ───────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │         Automate DD operations via SSH; DDOS CLI scriptable with ssh user@dd "command"        │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                         # Space utilisation report across multiple DDs                        │   │
+│   │                                 for DD in dd-primary dd-dr; do                                │   │
+│   │                      echo "=== $DD ==="; ssh admin@$DD "filesys show space"                   │   │
+│   │                                              done                                             │   │
+│   │                                                                                               │   │
+│   │                                  # Replication health report                                  │   │
+│   │           ssh admin@dd-primary "replication show all" | grep -E "Context|lag|state"           │   │
+│   │                                                                                               │   │
+│   │                                 # Check dedup ratio per MTree                                 │   │
+│   │                ssh admin@dd-primary "mtree list" | awk "{print \$1, \$3, \$4}"                │   │
+│   │                                                                                               │   │
+│   │                                  # Alert if filesystem > 80%                                  │   │
+│   │      PCT=$(ssh admin@dd-primary "filesys show space" | grep "Active" | awk "{print \$5}")     │   │
+│   │                                if [ "${PCT%\%}" -gt 80 ]; then                                │   │
+│   │            echo "ALERT: DD filesystem ${PCT} full" | mail -s "DD Alert" ops@corp.com          │   │
+│   │                                               fi                                              │   │
+│   │                                                                                               │   │
+│   │                                    # Collect support bundle                                   │   │
+│   │    ssh admin@dd-primary "support bundle save /data/col1/support/bundle-$(date +%Y%m%d).tar"   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    SSH automation = DDOS allows non-interactive SSH commands; use key-based auth for scripts          │
+│    filesys show space= Returns Active tier: total, used, available, compression factor                │
+│    support bundle = DD diagnostic archive; ssh extraction copies to local filesystem                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌────────────────────────────────────── Dell Data Domain Scripts ───────────────────────────────────────┐

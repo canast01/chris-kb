@@ -36,7 +36,6 @@ curl -sk -u 'admin:password' \
     }]
   }' \
   "https://<nsx-manager>/policy/api/v1/infra/domains/default/groups/sg-web-tier"
-```
 ```text
 ┌────────────────────────────────────── NSX — Standard Procedures ──────────────────────────────────────┐
 │                                                                                                       │

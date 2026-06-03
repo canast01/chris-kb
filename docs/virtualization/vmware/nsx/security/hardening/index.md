@@ -65,7 +65,6 @@ for r in d.get('results', []):
         print(f'Rule 65535: action={r.get(\"action\")}')
 "
 # Expected: action=DROP
-```
 ```text
 ┌─────────────────────────────────────────── NSX — Hardening ───────────────────────────────────────────┐
 │                                                                                                       │

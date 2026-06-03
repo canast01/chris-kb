@@ -37,7 +37,6 @@ git diff
 
 # Use a 3-way diff tool
 git mergetool
-```
 ```text
 ┌───────────────────────────────────────── Git — Common Issues ─────────────────────────────────────────┐
 │                                                                                                       │

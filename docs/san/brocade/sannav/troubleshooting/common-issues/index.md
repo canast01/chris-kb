@@ -47,7 +47,6 @@ tail -f /opt/sannav/logs/event-engine.log | grep "trap\|SNMP"
 
 # Step 4: If traps arrive but are discarded, check community/credential mismatch
 # Ensure SNMPv3 credentials on switch match what SANnav has configured
-```
 ```text
 ┌─────────────────────────── Brocade SANnav — Troubleshooting Common Issues ────────────────────────────┐
 │                                                                                                       │

@@ -29,7 +29,6 @@ $share   = "\\nas01\rasr-images\prod\$(hostname)"
     LatestImage     = (Get-ChildItem $share -Filter "*.wim" -ErrorAction SilentlyContinue |
                        Sort-Object LastWriteTime -Descending | Select-Object -First 1).Name
 } | Format-List
-```
 ```text
 ┌──────────────────────────────────────── RASR — Health Checks ─────────────────────────────────────────┐
 │                                                                                                       │

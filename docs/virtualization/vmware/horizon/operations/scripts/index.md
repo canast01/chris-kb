@@ -7,24 +7,51 @@ Scripts reference covering Get Session Count by Pool, Force Logoff Disconnected 
 
   Automation via PowerCLI / REST API
 ```text
-┌──────────────────────────────────────────────────────────┐
-│  Connect-HVServer ──► token/session                                                                   │
+┌──────────────────────────────── VMware Horizon — Operational Scripts ─────────────────────────────────┐
 │                                                                                                       │
-│  Session Management        Pool Management                                                            │
-│  ┌──────────────────┐      ┌──────────────────────────┐                                               │
-│  │ Get-HVLocalSession│     │ Get-HVPool               │                                               │
-│  │ Invoke-HVSession  │     │ Get-HVMachine -ErrorState│                                               │
-│  │ Logoff            │     │ Remove-HVDesktop         │                                               │
-│  └──────────────────┘      └──────────────────────────┘                                               │
+│  PowerCLI Horizon View module and REST API scripts automate pool reporting,                           │
+│  session management, golden image push, and licence capacity checks.                                  │
 │                                                                                                       │
-│  Reporting                 REST API (Bearer token)                                                    │
-│  ┌──────────────────┐      ┌──────────────────────────┐                                               │
-│  │ Entitlement      │      │ POST /rest/login          │                                              │
-│  │ report CSV       │      │ GET  /inventory/v1/pools  │                                              │
-│  │ Pool availability│      │ POST /action/refresh      │                                              │
-│  │ alert script     │      └──────────────────────────┘                                               │
-│  └──────────────────┘                                                                                 │
-└──────────────────────────────────────────────────────────┘
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Reporting Scripts               │  │               Session Scripts               │   │
+│   │           Get-HVPool | Export-Csv            │  │           Get-HVLocalSession (all)          │   │
+│   │          Get-HVMachine | Ft Status           │  │             Disconnect-HVSession            │   │
+│   │          Licence usage: API /usage           │  │            Send-HVSessionMessage            │   │
+│   │        Pool capacity: available count        │  │          Remove-HVSession (logoff)          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Read-only scripts for reporting; destructive session ops require Horizon admin role.                 │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Maintenance Scripts              │  │              REST API Examples              │   │
+│   │        Start-HVMachineRecycle (push)         │  │               POST /rest/login              │   │
+│   │           Reset-HVMachine (reboot)           │  │         GET /rest/inventory/v1/pools        │   │
+│   │         Set-HVPool -Enable/-Disable          │  │         PUT /rest/config/pools/{id}         │   │
+│   │         Rebuild stuck clone: remove          │  │           GET /rest/monitor/pools           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  PowerCLI scripts connect from jump host to Connection Server; REST API on port 443;                  │
+│  use service account with minimum Horizon admin privileges.                                           │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Get-HVPool        = list all Horizon pools and their status                                          │
+│  Get-HVMachine     = list desktop VMs and their state                                                 │
+│  Get-HVLocalSession= list active and disconnected sessions                                            │
+│  Disconnect-HVSession= disconnect user session without logoff                                         │
+│  Remove-HVSession  = force logoff of a session                                                        │
+│  Send-HVSessionMessage= send popup message to user sessions                                           │
+│  Start-HVMachineRecycle= push golden image update to pool                                             │
+│  Reset-HVMachine   = force reboot a desktop VM                                                        │
+│  POST /rest/login  = obtain Horizon REST API session token                                            │
+│  PUT /rest/config/pools= update pool configuration via REST                                           │
+│  GET /rest/monitor = health monitor endpoints for CS/pools                                            │
+│  Licence /usage    = REST endpoint for licence consumption reporting                                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌──────────────────────────────── VMware Horizon — Operational Scripts ─────────────────────────────────┐

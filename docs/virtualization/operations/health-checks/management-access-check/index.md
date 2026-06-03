@@ -6,35 +6,35 @@ Run this check weekly to confirm all management endpoints are reachable and acce
 </div>
 
 ```text
-Management Access Check Flow
-═══════════════════════════════════════════════════════════
-
-  DNS resolves? ──► HTTPS reachable? ──► Login OK?
-        │                │                   │
-       FAIL             FAIL                FAIL
-        │                │                   │
-  Check DNS        Check firewall       Check SSO/AD
-  or FQDN          or service           or creds
-
-  Endpoints to verify:
-  ┌─────────────────────────────────────────────────────┐
-  │  vCenter         https://vcenter.example.local         │
-  │  ├─ SSO login    administrator@vsphere.local        │
-  │  └─ VAMI         https://vcenter.example.local:5480    │
-  │                                                     │
-  │  NSX Manager     https://nsx.example.local             │
-  │  ├─ Cluster      get cluster status → STABLE        │
-  │  └─ Services     get services → running             │
-  │                                                     │
-  │  Aria Operations https://aria-ops.example.local        │
-  │  └─ Collection   State: OK (< 5 min lag)            │
-  │                                                     │
-  │  VxRail Manager  https://vxrail.example.local          │
-  │  └─ Node health  All nodes: Healthy                 │
-  │                                                     │
-  │  iDRAC nodes     https://idrac-esx-<site>-<##>     │
-  │  └─ Hardware     No disk / NIC / PSU alerts         │
-  └─────────────────────────────────────────────────────┘
+┌─────────────────────────────────────── Management Access Check ───────────────────────────────────────┐
+│                                                                                                       │
+│    Run weekly; confirm DNS, HTTPS, and login for every management endpoint                            │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │        Check Sequence (per endpoint)         │  │             Endpoints to Verify             │   │
+│   │        ──────────────────────────────        │  │        ─────────────────────────────        │   │
+│   │            1. DNS resolves FQDN?             │  │             vCenter FQDN (HTTPS)            │   │
+│   │            FAIL → check DNS / HOSTS          │  │               └─ SSO login test             │   │
+│   │         2. HTTPS port 443 reachable?         │  │               └─ VAMI port 5480             │   │
+│   │           FAIL → check firewall rule         │  │               NSX Manager FQDN              │   │
+│   │              3. Login succeeds?              │  │             Backup console FQDN             │   │
+│   │           FAIL → check SSO / AD bind         │  │             Monitoring dashboard            │   │
+│   │        4. Session timeout acceptable?        │  │              Storage array FQDN             │   │
+│   │           FAIL → check session policy        │  │              vSAN Witness host              │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    FQDN    = Fully Qualified Domain Name; must resolve in DNS; e.g. vcenter.corp.local                │
+│    SSO     = vCenter Single Sign-On; authentication service; default domain: vsphere.local            │
+│    VAMI    = vCenter Appliance Management Interface; port 5480; cert and patch management             │
+│    AD bind = LDAP/LDAPS connection from SSO to Active Directory; check if login fails                 │
+│    Timeout = Session idle timeout; check if users report being logged out too quickly                 │
+│    NSX Mgr = NSX Manager UI; HTTPS on port 443; login via admin or LDAP-integrated account            │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌─────────────────────────────────────── Management Access Check ───────────────────────────────────────┐

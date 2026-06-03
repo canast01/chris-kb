@@ -6,30 +6,51 @@ CLI Reference (PowerCLI & DCLI) reference covering Hosts, Clusters, Virtual Mach
 </div>
 
 ```text
-vCenter CLI Interfaces
-════════════════════════════════════════════════════════
-
-  Management Workstation                    VCSA (SSH)
-  ┌─────────────────────────────┐           ┌──────────────────────────┐
-  │                             │           │                          │
-  │  PowerCLI (PowerShell)      │  :443     │  service-control         │
-  │  ┌──────────────────────┐   │──────────▶│   --status / --restart   │
-  │  │ Connect-VIServer      │   │           │                          │
-  │  │ Get-VM / Get-VMHost   │   │           │  vecs-cli                │
-  │  │ Get-Cluster           │   │           │   (certificate stores)   │
-  │  │ Get-Datastore         │   │           │                          │
-  │  │ Get-VIEvent           │   │           │  vmafd-cli               │
-  │  │ New-VIPermission      │   │           │   (SSO / domain info)    │
-  │  └──────────────────────┘   │           │                          │
-  │                             │           │  dcli                    │
-  │  REST API (curl/python)     │  :443     │   (vSphere Automation)   │
-  │  ┌──────────────────────┐   │──────────▶│                          │
-  │  │ POST /api/session     │   │           │  certificate-manager     │
-  │  │ GET  /api/vcenter/vm  │   │           │   (cert replace/renew)   │
-  │  │ GET  /api/vcenter/host│   │           │                          │
-  │  │ GET  /health/system   │   │           │  df -h / top / ss -tlnp  │
-  │  └──────────────────────┘   │           │                          │
-  └─────────────────────────────┘           └──────────────────────────┘
+┌─────────────────────────────────── vCenter Server — CLI Reference ────────────────────────────────────┐
+│                                                                                                       │
+│  vCenter is primarily managed via the HTML5 UI, but PowerCLI, govc, and the                           │
+│  VCSA appliance shell provide CLI automation and troubleshooting capabilities.                        │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              PowerCLI Commands               │  │                govc Commands                │   │
+│   │         Connect-VIServer -Server vc          │  │           govc about (VC version)           │   │
+│   │              Get-VM | Sort Name              │  │          govc ls / (inventory tree)         │   │
+│   │           Get-VMHost | Sort State            │  │              govc vm.info <vm>              │   │
+│   │          Move-VM -Destination $host          │  │            govc host.info <host>            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  PowerCLI connects via REST/SOAP; govc uses vSphere REST API natively.                                │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             VCSA Appliance Shell             │  │              vCenter API (REST)             │   │
+│   │           service-control --status           │  │             GET /api/vcenter/vm             │   │
+│   │          service-control --restart           │  │             POST /api/vcenter/vm            │   │
+│   │           vmon-cli -l (list svcs)            │  │            GET /api/vcenter/host            │   │
+│   │          vcsa-util backup (CLI bkp)          │  │              Bearer token auth              │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  All CLI tools connect over TCP to vCenter management IP; shell access is via SSH                     │
+│  on port 22 (must be enabled in VAMI or appliance console).                                           │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  PowerCLI       = VMware PowerShell module; wraps vSphere SOAP/REST APIs                              │
+│  govc           = open-source Go CLI for vSphere REST API automation                                  │
+│  vmon-cli       = vCenter service control; lists and manages VCSA services                            │
+│  service-control= wrapper for vmon-cli; used in support bundles                                       │
+│  vcsa-util      = appliance utility; backup, restore, certificate ops                                 │
+│  VCSA shell     = Bash shell accessed via SSH; restricted by default                                  │
+│  REST API       = modern vSphere API; JSON; bearer token auth                                         │
+│  SOAP API       = legacy vSphere API; XML; session ticket auth                                        │
+│  Bearer token   = short-lived JWT obtained from POST /api/session                                     │
+│  GOVC_URL       = env var: https://user:pass@vc-fqdn for govc                                         │
+│  Inventory path = /dc/vm/folder/name; used in govc ls and vm.info                                     │
+│  SSH enable     = VAMI > Access > SSH login; off by default                                           │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌─────────────────────────────────── vCenter Server — CLI Reference ────────────────────────────────────┐

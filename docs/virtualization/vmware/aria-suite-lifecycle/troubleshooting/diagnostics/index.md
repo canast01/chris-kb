@@ -7,25 +7,49 @@ Diagnostics reference covering Service Status Verification, Certificate Expiry C
 
   LCM Diagnostic Data Sources
 ```text
-┌─────────────────────────────────────────────────────────────────┐
-│  LCM Appliance (SSH as root)       LCM API                                                            │
-│  ┌───────────────────────────┐     ┌──────────────────────────┐                                       │
-│  │ vracli support-bundle     │     │ GET /lcm/api/v1/health   │                                       │
-│  │ /var/log/vmware/vrlcm/    │     │ GET /api/v2/environments │                                       │
-│  │  lcm-app.log (main)       │     │  → health per product    │                                       │
-│  │  lcm-install.log (deploy) │     │ GET /api/v2/requests     │                                       │
-│  │  locker.log (cert/pw ops) │     │  ?state=RUNNING          │                                       │
-│  │  upgrade/ (per upgrade)   │     └──────────────────────────┘                                       │
-│  └───────────────────────────┘                                                                        │
+┌───────────────────────────────────── Aria Suite LCM Diagnostics ──────────────────────────────────────┐
 │                                                                                                       │
-│  System Checks                     Certificate Checks                                                 │
-│  ┌───────────────────────────┐     ┌──────────────────────────┐                                       │
-│  │ systemctl list-units      │     │ openssl s_client :443    │                                       │
-│  │  --type=service | grep lcm│     │ GET /api/v1/certificates │                                       │
-│  │ df -h (disk thresholds)   │     │  days-to-expiry          │                                       │
-│  │ chronyc tracking (NTP)    │     └──────────────────────────┘                                       │
-│  └───────────────────────────┘                                                                        │
-└─────────────────────────────────────────────────────────────────┘
+│  Logscraper, vlcm log analysis, and environment health checks for LCM.                                │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               LCM Log Analysis               │  │            REST API Health Checks           │   │
+│   │            /var/log/vlcm/vlcm.log            │  │            GET /lcm/api/v1/health           │   │
+│   │         installer.log: deploy steps          │  │           GET /environments status          │   │
+│   │             grep ERROR vlcm.log              │  │           GET /products: versions           │   │
+│   │         Check failed request ID log          │  │          Compare expected vs actual         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  vlcm.log reveals LCM internal errors; REST health confirms product state externally.                 │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Logscraper Usage               │  │                Support Bundle               │   │
+│   │          LCM UI: Tools > Logscraper          │  │             SSH: lcm-support.sh             │   │
+│   │        Select environment + products         │  │             Bundle: all LCM logs            │   │
+│   │           Download log archive ZIP           │  │           Logscraper + bundle = SR          │   │
+│   │               Attach to GSS SR               │  │        VAMI: download support bundle        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  LCM VM; SSH jump host; VAMI on port 5480; all managed product VMs accessible                         │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  vlcm.log            = Primary LCM application log; first stop for any LCM issue                      │
+│  installer.log       = Records each step of product deploy or upgrade action                          │
+│  Logscraper          = LCM built-in tool collecting logs from all managed products                    │
+│  Logscraper Archive  = ZIP of all product logs; generated per environment                             │
+│  lcm-support.sh      = SSH script generating LCM-level support bundle                                 │
+│  GET /health         = REST API endpoint for LCM and product health JSON                              │
+│  GET /environments   = Lists environments with status for comparison                                  │
+│  GET /products       = Lists product versions; validate against expected                              │
+│  Request ID Log      = LCM writes per-request log for each action triggered                           │
+│  grep ERROR          = Quick scan of vlcm.log to find exception lines                                 │
+│  VAMI Support Bundle = Browser download of LCM support archive                                        │
+│  GSS SR Attachment   = Logscraper archive + support bundle required for P1/P2                         │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌───────────────────────────────────── Aria Suite LCM Diagnostics ──────────────────────────────────────┐

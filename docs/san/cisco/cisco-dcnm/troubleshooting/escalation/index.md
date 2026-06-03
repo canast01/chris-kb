@@ -92,7 +92,6 @@ jstat -gcutil ${DCNM_PID} 1s 5
 
 # 5. OS-level resource snapshot
 top -b -n 1 > /tmp/top-snapshot-$(date +%Y%m%d).txt
-```
 ```text
 ┌─────────────────────────────── Cisco DCNM — Troubleshooting Escalation ───────────────────────────────┐
 │                                                                                                       │

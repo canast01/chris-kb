@@ -25,7 +25,6 @@ flowchart TD
     severity -- Minor --> sev3 --> openSR
     openSR --> monitor
     monitor -->|"No progress 24h"| escalateAccount
-```
 ```text
 ┌──────────────────────────────────── Linux — Escalation Procedures ────────────────────────────────────┐
 │                                                                                                       │

@@ -12,11 +12,49 @@ Access control in Git hosting platforms governs who can read, write, and adminis
 Git platforms implement access control at multiple layers:
 
 ```text
-Organisation / Instance level
-  └── Team / Group level
-        └── Repository level
-              └── Branch level
-                    └── File level (CODEOWNERS)
+┌──────────────────────────────────────── Git — Access Control ─────────────────────────────────────────┐
+│                                                                                                       │
+│  GitHub/GitLab access control: SSH keys, PATs, org permissions, and team structures.                  │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Authentication Methods            │  │             Authorisation Model             │   │
+│   │         SSH key: ed25519 recommended         │  │         Organisation → Teams → Repos        │   │
+│   │           PAT: scoped, expiry set            │  │   Roles: Read/Triage/Write/Maintain/Admin   │   │
+│   │        OIDC: keyless CI auth to cloud        │  │       CODEOWNERS: path-level reviewers      │   │
+│   │         MFA: mandatory for all users         │  │         Outside collaborators: avoid        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    SSH + MFA for humans; OIDC for machines; team-based grants at org level                            │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Audit and Review               │  │                 Offboarding                 │   │
+│   │      Org audit log: GitHub Security tab      │  │             Remove user from org            │   │
+│   │        Review PATs: Settings > Tokens        │  │          Revoke all PATs + SSH keys         │   │
+│   │       Inactive users: quarterly review       │  │      Transfer repo ownership if needed      │   │
+│   │        Deploy keys: repo-scoped only         │  │         Audit commits signed by user        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  GitHub/GitLab org · SSO IdP · audit log retention · key management                                   │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  PAT          = Personal Access Token; scoped (repo/read:org); set expiry                             │
+│  OIDC         = OpenID Connect; CI workloads get short-lived tokens, no secrets                       │
+│  Deploy key   = SSH key scoped to single repo; read-only preferred                                    │
+│  Outside collaborator= non-org member with repo access; harder to audit                               │
+│  Maintain role= can manage repo settings but not delete or add admins                                 │
+│  Triage role  = can manage issues and PRs but not push code                                           │
+│  Org audit log= records all permission changes, invites, deletions                                    │
+│  SSO SAML     = GitHub Enterprise + IdP; enforce org access via SSO                                   │
+│  Inactive user= member with no commits/PRs in 90 days; review for removal                             │
+│  Transfer     = move repo to another user/org; preserves history                                      │
+│  Revoke PAT   = Settings → Developer Settings → PATs → Revoke                                         │
+│  MFA enforce  = org setting requiring all members to have MFA enabled                                 │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌──────────────────────────────────────── Git — Access Control ─────────────────────────────────────────┐

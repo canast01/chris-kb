@@ -47,7 +47,6 @@ flowchart TD
     style investigateRTT fill:#be123c,color:#fff
     style investigateDir fill:#be123c,color:#fff
     style investigateLink fill:#b45309,color:#fff
-```
 ```text
 ┌─────────────────────────────────────── SRDF/S — Health Checks ────────────────────────────────────────┐
 │                                                                                                       │

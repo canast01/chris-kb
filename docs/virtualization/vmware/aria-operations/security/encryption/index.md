@@ -12,7 +12,49 @@ Aria Operations ships with a self-signed certificate. Replace with a CA-signed c
 **Via UI:**
 
 ```text
-Administration → Certificates → Replace Certificate
+┌───────────────────────────────────── Aria Operations Encryption ──────────────────────────────────────┐
+│                                                                                                       │
+│  TLS, LDAPS, certificate management, and data encryption for Aria Operations (vROps).                 │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            In-Transit Encryption             │  │            Certificate Management           │   │
+│   │             TLS 1.2+ UI and API              │  │            VAMI: Admin > SSL cert           │   │
+│   │          TLS between cluster nodes           │  │         Upload CA-signed cert + key         │   │
+│   │           LDAPS for directory auth           │  │          Monitor expiry proactively         │   │
+│   │            HTTPS for all adapters            │  │         LCM can manage cert rotation        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  TLS protects all comms; D@RE protects stored data; certs managed via VAMI or LCM.                    │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Data-at-Rest Encryption            │  │               Cipher Hardening              │   │
+│   │          vSphere D@RE on datastore           │  │            Disable TLS 1.0 / 1.1            │   │
+│   │           vSAN encryption optional           │  │             Enforce AES-256-GCM             │   │
+│   │         KMS manages encryption keys          │  │          openssl: verify negotiated         │   │
+│   │         No native app-level encrypt          │  │            Disable weak RC4/3DES            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  vSphere with D@RE; KMS server; CA for cert issuance; LCM for cert lifecycle mgmt                     │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  TLS 1.2+            = Minimum transport encryption for all vROps communications                      │
+│  LDAPS               = LDAP over TLS; required for secure directory authentication                    │
+│  D@RE                = Data-at-Rest Encryption; vSphere storage-layer encryption                      │
+│  KMS                 = Key Management Server; manages D@RE encryption keys                            │
+│  CA-Signed Cert      = Certificate from trusted CA; replaces self-signed default                      │
+│  VAMI SSL Page       = Location in VAMI to upload new TLS cert and private key                        │
+│  LCM Cert Mgmt       = Aria Suite LCM rotates vROps cert across all nodes                             │
+│  Cipher Suite        = Algorithm set for key exchange + encryption + MAC                              │
+│  AES-256-GCM         = Preferred bulk cipher for TLS in vROps                                         │
+│  Cert Expiry Monitor = Proactively track cert validity; alert at 60/30/14 days                        │
+│  Inter-node TLS      = Encrypted comms between master, data, and replica nodes                        │
+│  Self-Signed Default = vROps ships with self-signed cert; replace for production                      │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌───────────────────────────────────── Aria Operations Encryption ──────────────────────────────────────┐

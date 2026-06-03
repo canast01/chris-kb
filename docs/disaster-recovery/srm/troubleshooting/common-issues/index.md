@@ -34,7 +34,6 @@ flowchart TD
     class vr,sraLog,cert,netCheck,script action
     class q1,planFailed decision
     class start terminal
-```
 ```text
 ┌───────────────────────────────────────── SRM — Common Issues ─────────────────────────────────────────┐
 │                                                                                                       │

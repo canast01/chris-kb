@@ -7,13 +7,49 @@ Health Checks reference covering Cluster Node Health via API, Adapter Health, Di
 
 Aria Operations — Health Check Coverage Map
 ```text
-┌─────────────────────────────────────────────────────┐
-│  Cluster Node Health                                                                                  │
-│  Admin → Cluster Management                                                                           │
-│  vracli cluster health                                                                                │
-│  Expected: all nodes ONLINE                                                                           │
-│  Watch: OFFLINE · DEGRADED · SYNCING                                                                  │
-└──────────────────────┬──────────────────────────────┘
+┌──────────────────────────────────── Aria Operations Health Checks ────────────────────────────────────┐
+│                                                                                                       │
+│  Node status, adapter health, and collection status checks for Aria Operations (vROps).               │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Cluster Node Health              │  │                Adapter Health               │   │
+│   │         Admin > Cluster: all green?          │  │           Data Sources: all green?          │   │
+│   │            Master: ONLINE status             │  │          Last collection < 10 min?          │   │
+│   │         Data nodes: ONLINE + joined          │  │           Adapter logs: no errors?          │   │
+│   │         Collector: COLLECTING status         │  │          Object count as expected?          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Node and adapter health are primary checks; collection status confirms data flow.                    │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Collection Status Checks           │  │           Platform Resource Checks          │   │
+│   │           Alerts firing normally?            │  │           Disk: /storage/db < 80%?          │   │
+│   │           Dashboards loading data?           │  │           RAM usage within sizing?          │   │
+│   │          Capacity data up to date?           │  │                NTP: in sync?                │   │
+│   │            Reports generating OK?            │  │              Cert: not expired?             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  vROps cluster on vSphere; SSD-backed datastore; NTP server; SMTP for alert delivery                  │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Cluster Status      = vROps Admin UI showing all node roles and health states                        │
+│  ONLINE Status       = Node is fully joined, serving requests, and collecting data                    │
+│  COLLECTING Status   = Remote collector actively sending metrics to master cluster                    │
+│  Adapter Green       = Data source collecting without errors in last 10 minutes                       │
+│  Last Collection     = Timestamp of most recent successful adapter data pull                          │
+│  Object Count        = Expected number of monitored resources; drop = issue                           │
+│  /storage/db         = vROps metric database path; monitor disk consumption                           │
+│  Alert Firing        = Verify known issue triggers alert; confirms policy active                      │
+│  Dashboard Data      = Widgets show current metrics; blank = collection problem                       │
+│  Capacity Freshness  = Capacity model updates every cycle; stale = issue                              │
+│  NTP Sync            = Required for accurate metric timestamps and alert timing                       │
+│  Cert Expiry         = vROps UI cert; expired cert blocks browser and API access                      │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌──────────────────────────────────── Aria Operations Health Checks ────────────────────────────────────┐

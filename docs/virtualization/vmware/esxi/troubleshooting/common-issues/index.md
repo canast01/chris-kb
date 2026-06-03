@@ -7,35 +7,51 @@ Common Issues reference covering Resolution Steps, All Paths Down (APD) — Stor
 
 ESXi Common Issue Resolution Paths
 ```text
-┌────────────────────────────────────────────────────────┐
-│  Host Disconnected from vCenter                                                                       │
-│  └── restart hostd → vpxa → check NTP / cert                                                          │
+┌──────────────────────────────────────── ESXi — Common Issues ─────────────────────────────────────────┐
 │                                                                                                       │
-│  All Paths Down (APD)                                                                                 │
-│  ├── State: APD → transient, paths may return                                                         │
-│  └── State: PDL → permanent, power off VMs                                                            │
-│      Fix: rescan HBAs, check SAN fabric / zoning                                                      │
+│  Host disconnect, PSOD, storage APD/PDL, VM power-on failures, and fixes.                             │
 │                                                                                                       │
-│  High CPU Ready (%RDY)                                                                                │
-│  ├── > 10% per vCPU → investigate                                                                     │
-│  ├── Reduce vCPU count (right-size VM)                                                                │
-│  ├── Remove CPU limits (should be -1 / unlimited)                                                     │
-│  └── DRS migration or add hosts to cluster                                                            │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Host Connectivity Issues           │  │             PSOD / Kernel Crash             │   │
+│   │          vCenter shows disconnected          │  │           Purple screen on console          │   │
+│   │           Check mgmt vmk0 IP/VLAN            │  │           Note error code + offset          │   │
+│   │             Restart hostd / vpxa             │  │          Collect vm-support bundle          │   │
+│   │             Check DNS resolution             │  │           Review /var/log/vmkernel          │   │
+│   │          Reconnect from vCenter UI           │  │              Engage VMware GSS              │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
-│  High Memory Balloon / Swap                                                                           │
-│  ├── Balloon (MCTLSZ) → acceptable                                                                    │
-│  ├── Host swap (SWR/s > 0) → performance problem                                                      │
-│  └── Fix: DRS migrate, add RAM, set reservations                                                      │
+│  Diagnose host/network issues first; storage APD/PDL separate path below.                             │
 │                                                                                                       │
-│  PSOD (Purple Screen of Death)                                                                        │
-│  ├── Screenshot the panic string + offset                                                             │
-│  ├── Collect core dump: /var/core/ or vmkdump/                                                        │
-│  ├── vm-support -w /tmp/ → support bundle                                                             │
-│  └── Open P1 with Broadcom Support                                                                    │
+│                          ▼                                                 ▼                          │
 │                                                                                                       │
-│  NTP Drift → Auth Failures                                                                            │
-│  └── esxcli system ntp set + /etc/init.d/ntpd restart                                                 │
-└────────────────────────────────────────────────────────┘
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Storage Issues                │  │             VM Power-On Failures            │   │
+│   │            APD: check path state             │  │            Insufficient resources           │   │
+│   │         PDL: array controller check          │  │          Lock file from prior crash         │   │
+│   │           esxcli storage core path           │  │            Remove stale .lck file           │   │
+│   │           Latency: check DAVG/KAVG           │  │             Disk space exhausted            │   │
+│   │           Rescan storage adapters            │  │           VMtools version mismatch          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  x86 hosts, SAN/NAS/vSAN storage, ToR switches, management network, vCenter                           │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  PSOD     = Purple Screen Of Death; ESXi kernel panic; host reboots                                   │
+│  APD      = All Paths Down; storage paths lost; VM I/O paused                                         │
+│  PDL      = Permanent Device Loss; device signals permanent failure                                   │
+│  hostd    = ESXi host agent; manages host locally; restart to recover                                 │
+│  vpxa     = vCenter agent on ESXi; communicates with vCenter                                          │
+│  DAVG     = Device Average latency; measured at storage adapter layer                                 │
+│  KAVG     = Kernel Average latency; delay in VMkernel queue                                           │
+│  .lck     = VM lock file; stale lock prevents VM power-on                                             │
+│  vm-support = bundle command to collect ESXi diagnostic data                                          │
+│  vmkernel.log = main ESXi system log; first check for any issue                                       │
+│  Reconnect = vCenter action to re-establish agent connection to host                                  │
+│  vmk0     = management VMkernel adapter; ping test first step                                         │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌──────────────────────────────────────── ESXi — Common Issues ─────────────────────────────────────────┐

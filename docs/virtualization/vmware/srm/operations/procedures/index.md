@@ -7,26 +7,51 @@ Procedures reference covering Create a Protection Group (vSphere Replication), C
 
   Test Failover vs Actual Failover
 ```text
-┌──────────────────────────────────────────────────────────────┐
-│  Test Failover (non-disruptive)                                                                       │
-│  ┌───────────────────────────────────────────────────────┐                                            │
-│  │ VMs powered on at recovery site in isolated network   │                                            │
-│  │ Production VMs still running at protected site        │                                            │
-│  │ ──► verify, then Cleanup (removes test VMs)           │                                            │
-│  └───────────────────────────────────────────────────────┘                                            │
+┌─────────────────────────────────── VMware SRM — Common Procedures ────────────────────────────────────┐
 │                                                                                                       │
-│  Planned Migration (both sites up)                                                                    │
-│  ┌───────────────────────────────────────────────────────┐                                            │
-│  │ Protected VMs gracefully shut down ──► replicate      │                                            │
-│  │ ──► power on at recovery site ──► update DNS          │                                            │
-│  └───────────────────────────────────────────────────────┘                                            │
+│  Routine SRM procedures: add VM to protection group, run DR test, perform planned                     │
+│  failover, reprotect after failover, and update recovery plan steps.                                  │
 │                                                                                                       │
-│  Disaster Recovery (protected site down)                                                              │
-│  ┌───────────────────────────────────────────────────────┐                                            │
-│  │ Use last replicated point ──► power on at recovery    │                                            │
-│  │ ──► Reprotect (reverse replication) ──► Failback      │                                            │
-│  └───────────────────────────────────────────────────────┘                                            │
-└──────────────────────────────────────────────────────────────┘
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              DR Test Procedure               │  │               Planned Failover              │   │
+│   │          Test: bubble network only           │  │          Notify stakeholders first          │   │
+│   │           Select plan: Test option           │  │           Replication sync: verify          │   │
+│   │            Monitor: plan progress            │  │            Run: Planned migration           │   │
+│   │           Cleanup: remove test VMs           │  │           Failback: Reprotect+run           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  DR test must always use Test mode; run actual failover only with explicit approval.                  │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Protection Group Mgmt             │  │               Plan Maintenance              │   │
+│   │               Add VM to group                │  │             Update startup order            │   │
+│   │          Configure IP customisation          │  │           Add custom recovery step          │   │
+│   │          Verify replication running          │  │           Update network mappings           │   │
+│   │           Remove decommissioned VM           │  │             Document RTO target             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Test failover uses isolated network on recovery site; cleanup deletes test VMs;                      │
+│  planned failover powers off protected site VMs before starting.                                      │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Test mode     = failover to bubble network; no production impact                                     │
+│  Planned migration= graceful failover; quiesce source then fail over                                  │
+│  Disaster recovery= forced failover; uses last available replica                                      │
+│  Reprotect     = reverses replication; recovery becomes protected                                     │
+│  Failback      = reprotect then planned migration back to original                                    │
+│  Bubble network= isolated VLAN; test VMs not routable to production                                   │
+│  IP customisation= re-IP VMs with recovery-site addresses on failover                                 │
+│  Startup order = priority sequence; lower number powers on first                                      │
+│  Custom step   = script or manual step in recovery plan                                               │
+│  Cleanup       = SRM removes test VMs and associated snapshots                                        │
+│  Protection group= collection of VMs replicated and failed over together                              │
+│  Network mapping= maps source portgroup to recovery portgroup                                         │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌─────────────────────────────────── VMware SRM — Common Procedures ────────────────────────────────────┐

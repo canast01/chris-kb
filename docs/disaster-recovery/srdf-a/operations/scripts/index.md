@@ -83,41 +83,46 @@ fi
 
 echo ""
 exit ${EXIT_CODE}
-```
-
-### How to run this script — step by step
-
-**Before you start — what you need**
-- A Linux server with SYMCLI installed (the Dell EMC Solutions Enabler package)
-- SYMCLI must be able to communicate with the PowerMax / VMAX array (via local or gatekeeper connectivity)
-- The Symmetrix array serial number (SID) and the RDF group number for your SRDF/A relationship
-
-**Step 1 — Save the file**
-
-1. Open a text editor on the SYMCLI Linux management server
-2. Copy the entire code block above
-3. Save it as `srdf-cycle-time-monitor.sh`
-
-**Step 2 — Fill in your details**
-
-Pass as environment variables when running, or set defaults in the script:
-
-| Variable | What to put here | How to find it |
-|---|---|---|
-| `SID` | Symmetrix / PowerMax serial number | Run `symcfg list` on the SYMCLI host |
-| `RDF_GROUP` | RDF group number for the SRDF/A pair | Run `symrdf list -sid <SID>` to see RDF groups |
-| `WARN_THRESHOLD` | Cycle time in seconds that triggers a warning | Default 30s — adjust based on your RPO requirement |
-| `CRIT_THRESHOLD` | Cycle time in seconds that triggers critical | Default 60s |
-
-**Step 3 — Open a terminal**
-
-- **For .sh:** Log into the SYMCLI Linux management server via SSH or console and open a terminal
-
-**Step 4 — Make the script executable and run it**
-
-```bash
-chmod +x srdf-cycle-time-monitor.sh
-SID=000123456789 RDF_GROUP=1 ./srdf-cycle-time-monitor.sh
+```text
+┌────────────────────────────────────────── SRDF/A — Scripts ───────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                  SRDF/A — Automation Scripts                                  │   │
+│   │               Scripts automate routine SRDF/A operations — run via cron or CI/CD              │   │
+│   │               Always store credentials in vault (not in script); log all output               │   │
+│   │                 Test scripts in non-production before scheduling in production                │   │
+│   │                        Scope scripts to least-privilege service account                       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │          Status / Reporting Scripts          │  │              Automation Scripts             │   │
+│   │           Job success rate report            │  │            Auto-expire old points           │   │
+│   │              Capacity trending               │  │          Auto-add new VMs to policy         │   │
+│   │            SLA compliance report             │  │          Nightly DR test validation         │   │
+│   │             RPO / RTO dashboard              │  │             Alert on job failure            │   │
+│   │                 symrdf query                 │  │           symrdf suspend / resume           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Two PowerMax arrays (production + DR site) · FC/FCIP SRDF link (dedicated bandwidth) · RF ports      │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SRDF          = Symmetrix Remote Data Facility; EMC array-based replication technology               │
+│  R1            = source SRDF volume on production array; host writes flow here                        │
+│  R2            = target SRDF volume on DR array; receives replicated data asynchronously              │
+│  Delta Set     = batch of host writes accumulated per SRDF/A cycle; shipped to R2 atomically          │
+│  Cycle Time    = SRDF/A replication interval (15–60 seconds); determines maximum RPO                  │
+│  symrdf        = Solutions Enabler CLI for SRDF operations: establish, split, failover, restore       │
+│  SRDF Link     = FC or FCIP path between R1 and R2 arrays; dedicated, monitored bandwidth             │
+│  Suspended     = SRDF pair state where replication is paused; R2 data frozen at last cycle            │
+│  Failover      = SRDF operation making R2 read-write; R1 becomes Not Ready to hosts                   │
+│  Restore       = after failover resolution, re-establishes replication with R1 as source              │
+│  Establish     = initial sync or re-sync operation that copies R1 to R2 in full                       │
+│  Split         = breaks SRDF pair temporarily; both R1 and R2 are R/W; no replication                 │
+│  FCIP          = Fibre Channel over IP; tunnels FC SRDF traffic over IP WAN link                      │
+│  Unisphere     = Dell PowerMax management GUI; REST API; array health and provisioning                │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌────────────────────────────────────────── SRDF/A — Scripts ───────────────────────────────────────────┐

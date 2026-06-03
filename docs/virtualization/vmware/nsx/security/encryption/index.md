@@ -23,7 +23,6 @@ openssl s_client -connect nsx-manager.example.local:443 -tls1_3 # Should succeed
 # Check the presented certificate
 openssl s_client -connect nsx-manager.example.local:443 -tls1_2 2>/dev/null | \
   openssl x509 -noout -dates -subject -issuer
-```
 ```text
 ┌────────────────────────────────────────── NSX — Encryption ───────────────────────────────────────────┐
 │                                                                                                       │

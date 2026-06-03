@@ -111,41 +111,42 @@ def main():
 
 if __name__ == "__main__":
     main()
-```
-
-### How to run this script — step by step
-
-**Before you start — what you need**
-- Python 3.7 or newer installed (python.org)
-- The `requests` library: open Command Prompt and run `pip install requests`
-- A CloudIQ API client ID and client secret (see Step 2 for where to find these)
-- Internet access to https://cloudiq.dell.com
-
-**Step 1 — Save the file**
-
-1. Open **Notepad**
-2. Copy the entire code block above
-3. Click **File → Save As**, change "Save as type" to **All Files**
-4. Name it `cloudiq_alert_poller.py` and save it to your Desktop
-
-**Step 2 — Fill in your details**
-
-| Variable | What to put | How to find it |
-|---|---|---|
-| `CLOUDIQ_CLIENT_ID` | Your CloudIQ API client ID | Log into cloudiq.dell.com → Settings → API Access → Create credentials |
-| `CLOUDIQ_CLIENT_SECRET` | Your CloudIQ API client secret | Shown once when you create the API credentials |
-
-**Step 3 — Open a terminal**
-
-- **For .py (Python):** Open Command Prompt. Install Python first from python.org if needed.
-
-**Step 4 — Run the script**
-
-```bash
-cd C:\Users\YourName\Desktop
-set CLOUDIQ_CLIENT_ID=your-client-id
-set CLOUDIQ_CLIENT_SECRET=your-client-secret
-python cloudiq_alert_poller.py
+```text
+┌──────────────────────────────────────── Dell CloudIQ Scripts ─────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │        Automate CloudIQ operations with REST API scripts: asset queries, health reports       │   │
+│   │        Use Bearer token authentication; base URL: https://cloudiq.dell.com/cloudiq/rest       │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                       # Get Bearer token                                      │   │
+│   │                 TOKEN=$(curl -s -X POST https://cloudiq.dell.com/auth/token \                 │   │
+│   │             -d "grant_type=client_credentials&client_id=$ID&client_secret=$SECRET" \          │   │
+│   │                                      | jq -r .access_token)                                   │   │
+│   │                                                                                               │   │
+│   │                          # List all storage systems and health scores                         │   │
+│   │                          curl -s -H "Authorization: Bearer $TOKEN" \                          │   │
+│   │                    https://cloudiq.dell.com/cloudiq/rest/v1/storage-systems \                 │   │
+│   │                   | jq ".results[] | {name, health_score, capacity_used_pct}"                 │   │
+│   │                                                                                               │   │
+│   │                                # Export capacity report to CSV                                │   │
+│   │                          curl -s -H "Authorization: Bearer $TOKEN" \                          │   │
+│   │                "https://cloudiq.dell.com/cloudiq/rest/v1/metrics?type=capacity" \             │   │
+│   │                 | jq -r ".results[] | [.system,.date,.used_gb,.total_gb] | @csv"              │   │
+│   │                                                                                               │   │
+│   │                               # SCG: test all device connections                              │   │
+│   │               ssh admin@<SCG_IP> "scg device list --format json | jq .[].status"              │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    client_credentials = OAuth 2.0 flow for API automation; client ID + secret from CloudIQ UI         │
+│    access_token       = Short-lived JWT bearer token; typically 1-hour expiry; refresh as needed      │
+│    health_score       = Numeric 0-100 AI score per system in API response                             │
+│    /v1/metrics        = Telemetry endpoint: query capacity, performance, alerts by system             │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌──────────────────────────────────────── Dell CloudIQ Scripts ─────────────────────────────────────────┐

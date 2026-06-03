@@ -14,7 +14,6 @@ Deep-dive reference articles on specific VMware behaviors, edge cases, and troub
 │   │    Network packet loss, recovery behavior, resource contention, snapshot impact on storage    │   │
 │   │     Storage latency troubleshooting: APD/PDL response, VMFS locking, datastore I/O queues     │   │
 │   │        Time/DNS validation: NTP sync required for HA, vSAN, and certificate operations        │   │
-│   │   Learning path · Cross-product scenarios · 25 reactive + planned workflows across products   │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
 │    Cluster topics cover HA design · performance topics isolate bottlenecks                            │

@@ -34,7 +34,6 @@ kubectl get nodes
 
 # Check failing pods on the affected node
 kubectl get pods --all-namespaces --field-selector spec.nodeName=<node-hostname> | grep -v Running
-```
 ```text
 ┌────────────────────────── Cisco Nexus Dashboard — Operations Common Issues ───────────────────────────┐
 │                                                                                                       │

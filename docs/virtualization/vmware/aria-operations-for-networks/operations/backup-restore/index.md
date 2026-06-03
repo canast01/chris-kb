@@ -46,7 +46,6 @@ TOKEN=$(curl -sk -X POST "${PLATFORM}/api/ni/auth/token" \
   -d '{"username":"admin@local","password":"PASSWORD"}' \
   | python3 -c "import sys,json; print(json.load(sys.stdin)['token'])")
 echo "Token: $TOKEN"
-```
 ```text
 ┌──────────────────────────────────────── vRNI Backup & Restore ────────────────────────────────────────┐
 │                                                                                                       │

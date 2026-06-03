@@ -7,26 +7,49 @@ CLI Reference reference covering Services, Certificates, Proxy & Network, NTP & 
 
   LCM CLI Coverage (SSH to LCM as root)
 ```text
-┌─────────────────────────────────────────────────────────────────┐
-│  vracli sub-commands                                                                                  │
-│  ┌───────────────────────────────────────────────────────┐                                            │
-│  │ status             → appliance + service health       │                                            │
-│  │ cluster status     → node quorum state                │                                            │
-│  │ services list/restart/stop/start                      │                                            │
-│  │ certificate list/show/import/delete                   │                                            │
-│  │ proxy show/set/clear                                  │                                            │
-│  │ network show / dns set                                │                                            │
-│  │ ntp show/set                                          │                                            │
-│  │ support-bundle     → generate log bundle              │                                            │
-│  └───────────────────────────────────────────────────────┘                                            │
+┌──────────────────────────────────── Aria Suite LCM CLI Reference ─────────────────────────────────────┐
 │                                                                                                       │
-│  Log Files                      System Checks                                                         │
-│  ┌─────────────────────────┐    ┌────────────────────────────┐                                        │
-│  │ /var/log/lcm/lcm-app.log│    │ timedatectl status (NTP)   │                                        │
-│  │ /var/log/lcm/lcm-debug  │    │ chronyc makestep           │                                        │
-│  │ journalctl -u <svc>     │    │ df -h (disk)               │                                        │
-│  └─────────────────────────┘    └────────────────────────────┘                                        │
-└─────────────────────────────────────────────────────────────────┘
+│  VAMI management, REST API endpoints, vlcm log files, and SSH commands for LCM.                       │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Key REST API Endpoints            │  │               VAMI Operations               │   │
+│   │         GET /lcm/api/v1/environments         │  │              https://<lcm>:5480             │   │
+│   │           GET /lcm/api/v1/products           │  │             Backup + restore UI             │   │
+│   │         POST /lcm/api/v1/request/...         │  │            Network + NTP settings           │   │
+│   │            GET /lcm/api/v1/health            │  │           Depot configuration page          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  REST API for automation; VAMI for appliance config; SSH for log and service access.                  │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                 SSH Commands                 │  │                Log Locations                │   │
+│   │             service vlcm status              │  │                /var/log/vlcm/               │   │
+│   │             service vlcm restart             │  │            vlcm.log: main LCM log           │   │
+│   │          lcm-support.sh: bundle gen          │  │        installer.log: product deploy        │   │
+│   │          ntpq -p: time sync verify           │  │         logscraper: all product logs        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  LCM VM on vSphere; SSH via jump host; VAMI on port 5480; log files on LCM disk                       │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  VAMI                = Virtual Appliance Management Interface; port 5480                              │
+│  GET /environments   = REST endpoint listing all LCM environments and status                          │
+│  GET /products       = REST endpoint listing products and their versions                              │
+│  POST /request       = REST endpoint to trigger install, upgrade, or cert action                      │
+│  GET /health         = REST endpoint returning LCM and product health summary                         │
+│  vlcm service        = Main LCM application service; restart to recover hung UI                       │
+│  vlcm.log            = Primary LCM log; first stop for any LCM issue                                  │
+│  installer.log       = Records product deployment steps and errors                                    │
+│  logscraper          = LCM tool collecting logs from all managed products                             │
+│  lcm-support.sh      = Script generating LCM support bundle for GSS                                   │
+│  ntpq -p             = NTP peer verification; LCM must be in sync                                     │
+│  Depot Config Page   = VAMI page to add/edit online or local content depot                            │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌──────────────────────────────────── Aria Suite LCM CLI Reference ─────────────────────────────────────┐

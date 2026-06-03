@@ -36,7 +36,6 @@ Connect: `ssh root@dcnm-dc1.corp.example.com`
 systemctl start dcnm-server
 systemctl stop dcnm-pm        # performance manager only
 systemctl restart dcnm-events
-```
 ```text
 ┌───────────────────────────────────── Cisco DCNM — CLI Reference ──────────────────────────────────────┐
 │                                                                                                       │

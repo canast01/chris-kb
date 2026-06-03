@@ -23,7 +23,6 @@ flowchart TD
     branchProt --> result{Issues found?}
     result -->|No| ok(["Health check passed"])
     result -->|Yes| investigate(["Investigate and remediate"])
-```
 ```text
 ┌─────────────────────────────────── GitHub Actions — Health Checks ────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -6,46 +6,33 @@ Morning checks covering all components that can silently degrade overnight. Targ
 </div>
 
 ```text
-Morning Check Sequence
-═══════════════════════════════════════════════════════════
-
-  START (07:00 – 07:15)
-        │
-        ▼
-  ┌─────────────────┐     FAIL → Investigate before
-  │ 1. vCenter      │            proceeding further
-  │    Alarms       ├─── OK ──►  continue
-  └─────────────────┘
-        │
-        ▼
-  ┌─────────────────┐     FAIL → Restart vpxa/hostd
-  │ 2. Host status  │            or escalate
-  │    Connected?   ├─── OK ──►  continue
-  └─────────────────┘
-        │
-        ▼
-  ┌─────────────────┐     FAIL → Check HA logs
-  │ 3. Cluster HA   │            and admission ctrl
-  │    DRS enabled? ├─── OK ──►  continue
-  └─────────────────┘
-        │
-        ▼
-  ┌─────────────────┐     WARN → Plan capacity action
-  │ 4. Datastore    │     FAIL → Immediate remediation
-  │    free space   ├─── OK ──►  continue
-  └─────────────────┘
-        │
-        ▼
-  ┌─────────────────┐     FAIL → Check disk groups
-  │ 5. vSAN health  │            and resync queue
-  │    Skyline grn? ├─── OK ──►  continue
-  └─────────────────┘
-        │
-        ▼
-  ┌─────────────────┐     FAIL → Investigate and
-  │ 6. Backup jobs  │            retry or escalate
-  │    All success? ├─── OK ──►  DONE — record results
-  └─────────────────┘
+┌──────────────────────────────── Daily Health Check — Morning Sequence ────────────────────────────────┐
+│                                                                                                       │
+│    Run every morning; target completion under 15 minutes; document failures in the change log         │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │       Step       │    Component     │   Pass Condition  │     On FAIL      │       Tool       │   │
+│   │  ──────────────  │  ──────────────  │  ───────────────  │  ──────────────  │  ──────────────  │   │
+│   │    1  vCenter    │  No red alarms   │  All green/clear  │ Investigate 1st  │  vSphere Client  │   │
+│   │  2  Host status  │  All connected   │   No disconnects  │   Restart vpxa   │  vSphere Client  │   │
+│   │  3  Cluster HA   │    HA enabled    │    Admission OK   │  Check HA logs   │   esxcli / UI    │   │
+│   │  4  vSAN health  │   Green status   │     No resync     │  vSAN Health UI  │  vSAN Health UI  │   │
+│   │  5  Datastores   │    < 80% used    │    No overprov.   │  Free up space   │   Storage view   │   │
+│   │   6  VM state    │  All powered on  │   No stuck tasks  │  Force-end task  │  vSphere Client  │   │
+│   │  7  Backup jobs  │  All succeeded   │   No failed jobs  │ → backup runbook │  Backup console  │   │
+│   │   8  Snapshots   │    None stale    │   < 24h or 10 GB  │ Consolidate VMs  │   Snapshot mgr   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    vpxa       = VMware vCenter Agent on each ESXi host; restart restores host connection              │
+│    hostd      = ESXi host management daemon; restart if vpxa restart fails                            │
+│    HA admission = Policy ensuring enough cluster capacity to restart all protected VMs                │
+│    Resync     = vSAN rebuilding data to meet the storage policy; do not patch during                  │
+│    Consolidate = Merging stale snapshots into the VM base disk; run via vSphere Client                │
+│    Stuck task  = vCenter task in running state > 30 min; cancel via task manager panel                │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌──────────────────────────────── Daily Health Check — Morning Sequence ────────────────────────────────┐

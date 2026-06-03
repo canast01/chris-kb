@@ -104,40 +104,59 @@ printf " Overall: %s\n" "$(status_label $overall)"
 echo "=============================="
 
 exit $overall
-```
-
-### How to run this script — step by step
-
-**Before you start — what you need**
-- A Linux or macOS machine (or WSL on Windows)
-- `ssh` installed (already present on Linux/Mac; install OpenSSH on WSL)
-- Network access to the Brocade switch management IP
-- Brocade switch admin credentials with SSH access
-
-**Step 1 — Save the file**
-
-1. Open a text editor
-2. Copy the entire code block above
-3. Save it as `brocade_fabric_health.sh`
-
-**Step 2 — Fill in your details**
-
-Edit these lines near the top of the script:
-
-| Variable | What to put here | How to find it |
-|---|---|---|
-| `SWITCH_HOST` | IP address of the Brocade switch | Check your switch management console or ask your SAN admin |
-| `SWITCH_USER` | SSH username | Usually `admin` |
-
-**Step 3 — Open a terminal**
-
-- **For .sh:** Open Terminal on Linux/Mac, or use Git Bash / WSL on Windows
-
-**Step 4 — Make the script executable and run it**
-
-```bash
-chmod +x brocade_fabric_health.sh
-SWITCH_HOST=192.168.1.10 SWITCH_USER=admin ./brocade_fabric_health.sh
+```text
+┌───────────────────────────────────── Brocade Fabric OS — Scripts ─────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │       FOS automation: Python/Ansible scripts using REST API and SSH for bulk operations       │   │
+│   │         Zone automation: Ansible brocade_fibrechannel modules for alias/zone/cfgenable        │   │
+│   │          Health scripts: SSH-based porterrshow/sfpshow collection across all switches         │   │
+│   │         REST API scripts: Python requests; authenticate, query port stats, parse JSON         │   │
+│   │          Bulk port ops: loop portdisable/portenable via paramiko SSH for mass changes         │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    REST API / SSH access -> script logic -> output parsing -> action or reporting                     │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │         Zone Scripts        │  │        Health Scripts       │  │         REST Scripts        │   │
+│   │       Ansible playbook      │  │         SSH paramiko        │  │       Python requests       │   │
+│   │       alicreate batch       │  │         porterrshow         │  │          Token auth         │   │
+│   │       zonecreate batch      │  │       sfpshow collect       │  │        Port stats GET       │   │
+│   │        cfgenable auto       │  │       Report generate       │  │          JSON parse         │   │
+│   │       Idempotent runs       │  │       Alert on errors       │  │        Alert trigger        │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    All scripts run from jump host; never from fabric switches directly                                │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   Script type    │       Tool       │        Auth       │      Output      │      Notes       │   │
+│   │    Zone mgmt     │     Ansible      │      SSH key      │   Zone change    │    Idempotent    │   │
+│   │   Health check   │    Python+SSH    │    Password/key   │    CSV report    │   All switches   │   │
+│   │    REST query    │      Python      │    Bearer token   │     JSON/CSV     │     FOS 8.2+     │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical: jump host -> mgmt network -> switch mgmt Ethernet ports                                  │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Ansible module = brocade_fibrechannel collection; idempotent zone/alias/cfgenable tasks            │
+│    paramiko       = Python SSH library; executes FOS CLI commands programmatically                    │
+│    Bearer token   = REST API authentication token; obtained via POST /rest/v1/login                   │
+│    Idempotent     = Script produces same result whether run once or multiple times                    │
+│    Jump host      = Dedicated management host with access to switch mgmt network                      │
+│    porterrshow    = FOS CLI command parsed by health scripts to detect port errors                    │
+│    sfpshow        = FOS CLI command reporting SFP optical power values per port                       │
+│    REST GET       = Read-only REST API call; fetches port stats, switch info, zone config             │
+│    CSV report     = Health script output format; imported into Excel or monitoring tool               │
+│    cfgenable auto = Ansible task to activate zone set after alias and zone creation                   │
+│    Batch alias    = Create multiple aliases from CSV input file in single script run                  │
+│    Alert trigger  = Script sends email or webhook when health metric exceeds threshold                │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌───────────────────────────────────── Brocade Fabric OS — Scripts ─────────────────────────────────────┐

@@ -33,7 +33,6 @@ graph TD
     adminUser --> ldap & localFallback
     adminUser --> ddboostUser
     ddCLI --> auditLog
-```
 ```text
 ┌─────────────────────────────────── Dell Data Domain Authentication ───────────────────────────────────┐
 │                                                                                                       │

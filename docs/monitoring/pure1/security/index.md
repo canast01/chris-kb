@@ -22,12 +22,36 @@ Operations staff monitoring dashboards should have the Read-only role. Admin acc
 Pure1 supports SAML 2.0 SSO and SCIM provisioning from enterprise IdPs (Okta, Azure AD, ADFS).
 
 ```text
-Pure1 > Administration > Single Sign-On > Configure
-- IdP metadata URL or XML upload
-- Attribute mapping:
-  - email → user account
-  - role claim → Admin or Read-only (via IdP group claim)
-- Enable SCIM for automatic user provisioning/deprovisioning
+┌────────────────────────────────────────── Pure1 — Security ───────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Access Control                │  │                Data Security                │   │
+│   │             SSO / local account              │  │              TLS 1.2 phonehome              │   │
+│   │              MFA on Pure1 login              │  │              Encrypted at rest              │   │
+│   │              RBAC: Admin/Viewer              │  │                Telemetry only               │   │
+│   │               API RSA key auth               │  │                No data access               │   │
+│   │             Annual access review             │  │                 SOC2 Type II                │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Data in Pure cloud datacentres · tenant isolation · SOC2 Type II · no customer data                  │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SSO = Single Sign-On; Pure1 supports SAML 2.0 for corporate IdP integration                          │
+│  MFA = Multi-factor authentication for Pure1 UI login                                                 │
+│  RBAC = Admin (full) vs Viewer (read-only) per Pure1 org                                              │
+│  RSA key auth = Pure1 API uses RSA-signed JWT; no shared secret                                       │
+│  TLS 1.2 = Phonehome and API connections encrypted in transit                                         │
+│  Telemetry only = Pure1 receives metrics and events; no customer data or files                        │
+│  No data access = Pure Storage cannot access stored customer data via Pure1                           │
+│  Encrypted at rest = Telemetry data encrypted in Pure cloud storage                                   │
+│  SOC2 Type II = Pure Storage annual security audit; covers data handling                              │
+│  Tenant isolation = Each customer org data separated in multi-tenant cloud                            │
+│  Annual review = Yearly audit of Pure1 users; remove stale accounts and roles                         │
+│  API key rotation = RSA key pair rotated annually per security policy                                 │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌────────────────────────────────────────── Pure1 — Security ───────────────────────────────────────────┐

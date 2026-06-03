@@ -23,7 +23,6 @@ flowchart TD
     dc --- netlogon
     dc --- sysvol
     client -->|"GPO download"| sysvol
-```
 ```text
 ┌──────────────────────────────────── Windows Server — Integrations ────────────────────────────────────┐
 │                                                                                                       │

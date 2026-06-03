@@ -27,7 +27,6 @@ graph LR
     backoff --> sendReq
     checkRetry -->|No| raiseAlert
     checkStatus -->|ConnectionError\nTimeout| checkRetry
-```
 ```text
 ┌──────────────────────────────────────── Python — Integrations ────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

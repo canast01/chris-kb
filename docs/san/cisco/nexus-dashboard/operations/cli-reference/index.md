@@ -33,7 +33,6 @@ acs cluster info
 
 # Show platform version
 acs version
-```
 ```text
 ┌────────────────────────── Cisco Nexus Dashboard — Operations CLI Reference ───────────────────────────┐
 │                                                                                                       │

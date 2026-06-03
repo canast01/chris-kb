@@ -34,7 +34,6 @@ smartctl -a /dev/sda | grep -E "Serial|Model|Capacity|Health"
 # Network interfaces
 ip link show | awk '/^[0-9]/{print $2}'
 ethtool <interface> | grep -E "Speed|Duplex"
-```
 ```text
 ┌───────────────────────────────────── Inventory — Asset Tracking ──────────────────────────────────────┐
 │                                                                                                       │

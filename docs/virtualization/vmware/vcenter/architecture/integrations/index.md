@@ -6,38 +6,50 @@ Integrations reference covering Veeam Backup & Replication, Identity and Authent
 </div>
 
 ```text
-vCenter Integration Map
-════════════════════════════════════════════════════════
-
-                    ┌──────────────────┐
-                    │   vCenter Server │
-                    │   (VCSA)         │
-                    └────────┬─────────┘
-        ┌───────────┬────────┼─────────┬───────────┐
-        │           │        │         │           │
-  ┌─────▼──────┐ ┌──▼──────┐ │  ┌──────▼──────┐ ┌─▼──────────┐
-  │  Identity  │ │ Storage │ │  │  NSX         │ │  Monitoring │
-  │  (AD/LDAP) │ │ (VASA / │ │  │  Manager     │ │  (Aria Ops) │
-  │  SAML/ADFS │ │  VMFS / │ │  │  Compute Mgr │ │  vCenter    │
-  │  LDAPS:636 │ │  NFS /  │ │  │  ↔ DFW tags  │ │  Adapter    │
-  └────────────┘ │  vVols) │ │  └─────────────┘ └────────────┘
-                 └─────────┘ │
-                             │
-                   ┌─────────▼──────────────────────┐
-                   │  Backup (VADP)                  │
-                   │  Backup Server (Veeam/Commvault) │
-                   │    → vCenter API (snapshot/CBT) │
-                   │    → Backup Proxy (hot-add)      │
-                   │    → Repository (SFTP/S3/disk)  │
-                   └─────────────────────────────────┘
-
-  SSO / Certificate Trust
-  ┌──────────────────────────────────────────────────┐
-  │  vCenter SSO (vsphere.local)                     │
-  │    ├── AD Identity Source (LDAPS)  ← user authn  │
-  │    ├── VMCA (CA)                  ← cert signing │
-  │    └── Lookup Service             ← registry     │
-  └──────────────────────────────────────────────────┘
+┌──────────────────────────────────── vCenter Server — Integrations ────────────────────────────────────┐
+│                                                                                                       │
+│  vCenter integrates with identity, storage, network, backup, and monitoring                           │
+│  systems via standardised APIs and plugin frameworks.                                                 │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Identity Integrations             │  │             Storage Integrations            │   │
+│   │          Active Directory via LDAP           │  │            VASA: storage policies           │   │
+│   │             SAML IdP federation              │  │            vVols: per-VM volumes            │   │
+│   │               SSO local domain               │  │           NFS / iSCSI / FC mounts           │   │
+│   │          MFA via smart card/RADIUS           │  │             HCI: vSAN integrated            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Identity gates all logins; storage providers register via VASA for policy management.                │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Network & Security              │  │             Backup & Monitoring             │   │
+│   │             NSX: SDN via vCenter             │  │               VADP: backup API              │   │
+│   │          vDS: distributed switching          │  │           CBT: changed block track          │   │
+│   │            Firewall rules via NSX            │  │            vROps: perf monitoring           │   │
+│   │           Microsegmentation policy           │  │             SNMP / syslog export            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Integration traffic crosses the management network; VADP uses NBD or SAN transport.                  │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  VADP    = vStorage APIs for Data Protection; backup quiescing and CBT                                │
+│  CBT     = Changed Block Tracking; incremental backup efficiency mechanism                            │
+│  VASA    = vSphere APIs for Storage Awareness; policy-based storage mgmt                              │
+│  vVols   = Virtual Volumes; per-VM storage objects on VASA-capable arrays                             │
+│  vDS     = vSphere Distributed Switch; centralised network config in VC                               │
+│  NSX     = Network & Security virtualisation; integrates with vCenter                                 │
+│  vROps   = VMware Aria Operations; pulls metrics via vCenter APIs                                     │
+│  SAML    = Security Assertion Markup Language; federated SSO token format                             │
+│  LDAP    = Lightweight Directory Access Protocol; AD identity source                                  │
+│  NBD     = Network Block Device; backup transport over TCP (slower)                                   │
+│  SAN     = Storage Area Network; fast backup transport via FC/iSCSI                                   │
+│  HCI     = Hyper-Converged Infrastructure; vSAN = primary HCI integration                             │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌──────────────────────────────────── vCenter Server — Integrations ────────────────────────────────────┐

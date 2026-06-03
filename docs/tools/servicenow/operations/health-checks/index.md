@@ -37,7 +37,6 @@ flowchart TD
 
     REPL -- Errors found --> INV5["Purge stale ECC records\nCheck MID Server logs"]
     REPL -- Clear --> OK
-```
 ```text
 ┌───────────────────────────────────── ServiceNow — Health Checks ──────────────────────────────────────┐
 │                                                                                                       │

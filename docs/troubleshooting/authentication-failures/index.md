@@ -56,7 +56,6 @@ flowchart TD
     T --> U{CRL/OCSP reachable?}
     U -- No --> V[Fix CDP / add OCSP proxy]
     U -- Yes --> W[Check EKU — Client Auth OID 1.3.6.1.5.5.7.3.2]
-```
 ```text
 ┌─────────────────────────────────────── Authentication Failures ───────────────────────────────────────┐
 │                                                                                                       │

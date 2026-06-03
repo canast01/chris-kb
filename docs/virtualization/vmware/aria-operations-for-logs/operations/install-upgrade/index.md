@@ -58,7 +58,6 @@ Aria Operations for Logs is deployed as a Linux-based virtual appliance (OVA). F
 curl -sk -u 'admin:<password>' \
   "https://vrli-prod-01.example.local/api/v2/cluster/nodes" | \
   jq '.nodes[] | {host: .hostname, state: .state, role: .role}'
-```
 ```text
 ┌─────────────────────────── Aria Operations for Logs — Install and Upgrade ────────────────────────────┐
 │                                                                                                       │

@@ -91,40 +91,52 @@ echo "==============================="
 printf " Overall: %s\n" "$(status_label $overall)"
 echo "==============================="
 exit $overall
-```
-
-### How to run this script — step by step
-
-**Before you start — what you need**
-- A Linux or macOS machine (or WSL on Windows)
-- `ssh` installed (already present on Linux/Mac)
-- Network access to the Cisco MDS switch management IP
-- MDS switch admin credentials with SSH access enabled
-
-**Step 1 — Save the file**
-
-1. Open a text editor
-2. Copy the entire code block above
-3. Save it as `mds_fabric_health.sh`
-
-**Step 2 — Fill in your details**
-
-Edit these lines near the top of the script:
-
-| Variable | What to put here | How to find it |
-|---|---|---|
-| `MDS_HOST` | IP address of the MDS switch | Check your Cisco DCNM or ask your SAN admin |
-| `MDS_USER` | SSH username | Usually `admin` |
-
-**Step 3 — Open a terminal**
-
-- **For .sh:** Open Terminal on Linux/Mac, or use Git Bash / WSL on Windows
-
-**Step 4 — Make the script executable and run it**
-
-```bash
-chmod +x mds_fabric_health.sh
-MDS_HOST=192.168.1.20 MDS_USER=admin ./mds_fabric_health.sh
+```text
+┌───────────────────────────────── Cisco MDS 9000 — Operations Scripts ─────────────────────────────────┐
+│                                                                                                       │
+│  MDS scripting: NX-API, Ansible cisco.nxos, Python NETCONF, zone automation, reports.                 │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               NX-API Scripting               │  │               Zone Automation               │   │
+│   │           POST /ins json CLI exec            │  │        Ansible: cisco.nxos.nxos_vsan        │   │
+│   │           Auth: admin:pass base64            │  │           Python: NETCONF ncclient          │   │
+│   │            show commands via REST            │  │             Batch zone from CSV             │   │
+│   │          Exec zone config commands           │  │          Validate: show zone active         │   │
+│   │          Config push via JSON body           │  │           Device alias bulk create          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  NX-API and Ansible cisco.nxos automate MDS zones; NETCONF for config as code.                        │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Reporting Scripts               │  │             Maintenance Scripts             │   │
+│   │         Port utilisation: weekly CSV         │  │          Config backup: SCP nightly         │   │
+│   │          Zone audit: stale aliases           │  │           Zone snapshot pre-change          │   │
+│   │         SFP power: inventory script          │  │            NX-OS ver check script           │   │
+│   │          FLOGI count: device report          │  │             Stale alias cleanup             │   │
+│   │            VSAN member inventory             │  │           Port error daily report           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  MDS switch · NX-API port 443 · management Ethernet · automation Linux host                           │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  NX-API          = NX-OS REST-like API; JSON over HTTP/HTTPS; /ins endpoint                           │
+│  cisco.nxos      = Ansible Galaxy collection for MDS/Nexus NX-OS automation                           │
+│  nxos_vsan       = Ansible module; create, modify, and delete VSANs on MDS                            │
+│  ncclient        = Python NETCONF library; send XML RPC to NX-OS NETCONF server                       │
+│  show zone active= NX-OS CLI; post-change validation of zone set members                              │
+│  Device alias    = human-readable WWN label; managed via CFS distribution                             │
+│  CSV batch       = bulk zone creation from spreadsheet; script loops per row                          │
+│  SFP power script= parse show interface transceiver; export to monitoring                             │
+│  FLOGI count     = number of devices logged into fabric; trending report                              │
+│  Config backup   = copy run scp:// nightly; store in version control                                  │
+│  Stale alias     = alias with no active FLOGI; identify and remove quarterly                          │
+│  Port error daily= parse show interface fc counters; alert on CRC increase                            │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌───────────────────────────────── Cisco MDS 9000 — Operations Scripts ─────────────────────────────────┐

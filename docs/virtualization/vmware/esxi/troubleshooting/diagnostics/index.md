@@ -7,31 +7,51 @@ ESXi Diagnostics reference covering Common Issues, Log Analysis, Performance Tro
 
 ESXi Diagnostic Data Sources
 ```text
-┌──────────────────────────────────────────────────────────┐
-│  vSphere Client (GUI)                                                                                 │
-│  ├── Host → Monitor → Issues & Alarms                                                                 │
-│  ├── Host → Monitor → Tasks (recent task failures)                                                    │
-│  └── Host → Monitor → Performance (CPU, mem, storage)                                                 │
-├──────────────────────────────────────────────────────────┤
-│  ESXi Shell / SSH (CLI)                                                                               │
-│  ├── /var/log/vmkernel.log  storage, network, drivers                                                 │
-│  ├── /var/log/hostd.log     API, VM ops, config                                                       │
-│  ├── /var/log/vpxa.log      vCenter agent comms                                                       │
-│  ├── /var/log/fdm.log       HA / Fault Domain Manager                                                 │
-│  ├── /var/log/auth.log      SSH logins, PAM failures                                                  │
-│  └── esxtop                 interactive real-time perf                                                │
-│      c=CPU  m=Mem  d=Disk  n=Net                                                                      │
-├──────────────────────────────────────────────────────────┤
-│  Support Bundle                                                                                       │
-│  └── vm-support -w /tmp/                                                                              │
-│      Includes all logs + config + network + storage state                                             │
-├──────────────────────────────────────────────────────────┤
-│  Key Performance Thresholds                                                                           │
-│  ├── CPU Ready    < 5%    │ > 10% → investigate                                                       │
-│  ├── Mem Balloon  ~0      │ Growing → monitor                                                         │
-│  ├── Mem Swap     = 0     │ > 0 → urgent                                                              │
-│  └── DS Latency   < 10ms  │ > 20ms → investigate                                                      │
-└──────────────────────────────────────────────────────────┘
+┌───────────────────────────────────────── ESXi — Diagnostics ──────────────────────────────────────────┐
+│                                                                                                       │
+│  Log file locations, esxcli diagnostic commands, and support bundle collection.                       │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Key Log Files                 │  │          esxcli Diagnostic Commands         │   │
+│   │            /var/log/vmkernel.log             │  │             esxcli system stats             │   │
+│   │              /var/log/hostd.log              │  │           esxcli network stat get           │   │
+│   │              /var/log/vpxa.log               │  │           esxcli storage core path          │   │
+│   │            /var/log/fdm.log (HA)             │  │            esxcli vm process list           │   │
+│   │            /scratch/log (SD/USB)             │  │            esxcli system process            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Logs → esxcli live state → esxtop performance → support bundle for GSS.                              │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              esxtop Performance              │  │                Support Bundle               │   │
+│   │            esxtop interactive TUI            │  │          vm-support -w /tmp/bundle          │   │
+│   │             c=CPU, m=mem, d=disk             │  │           vCenter: Export Support           │   │
+│   │            n=network, i=interrupt            │  │           Includes logs + configs           │   │
+│   │             batch mode: -b -n 5              │  │             Upload to VMware SR             │   │
+│   │             DAVG > 25ms = issue              │  │             Keep for 30 days min            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  x86 hosts, SAN/NAS storage, management network, syslog server for logs                               │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  vmkernel.log = main ESXi kernel log; storage/network/crash events                                    │
+│  hostd.log   = host daemon log; VM operations, config changes                                         │
+│  vpxa.log    = vCenter agent log; connection issues to vCenter                                        │
+│  fdm.log     = HA agent log; cluster membership and failover events                                   │
+│  esxtop      = real-time performance tool; CPU/mem/disk/net metrics                                   │
+│  DAVG        = device average latency; > 25ms indicates storage issue                                 │
+│  KAVG        = kernel average latency; VMkernel queue delay                                           │
+│  vm-support  = CLI tool to create ESXi diagnostic bundle                                              │
+│  SR          = Service Request; VMware GSS support ticket                                             │
+│  /scratch    = persistent log path; on SD/USB hosts may be volatile                                   │
+│  batch mode  = esxtop -b -n N; captures N iterations non-interactively                                │
+│  Support bundle = zip of logs, configs, hardware state for GSS analysis                               │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌───────────────────────────────────────── ESXi — Diagnostics ──────────────────────────────────────────┐

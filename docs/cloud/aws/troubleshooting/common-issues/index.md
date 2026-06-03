@@ -169,7 +169,6 @@ aws cloudformation describe-stack-events \
 aws cloudformation continue-update-rollback \
   --stack-name my-stack \
   --resources-to-skip LogicalResourceId1 LogicalResourceId2
-```
 ```text
 ┌───────────────────────────────── AWS Troubleshooting — Common Issues ─────────────────────────────────┐
 │                                                                                                       │

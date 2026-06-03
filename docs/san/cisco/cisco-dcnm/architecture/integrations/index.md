@@ -93,7 +93,6 @@ EOF
 systemctl restart rsyslog
 logger -p local0.info -t dcnm "Test message"
 # Verify arrival at SIEM
-```
 ```text
 ┌────────────────────────────────────── Cisco DCNM — Integrations ──────────────────────────────────────┐
 │                                                                                                       │

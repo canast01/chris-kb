@@ -7,31 +7,51 @@ ESXi CLI Reference reference covering Network, Storage — Devices & Paths, Data
 
 ESXi CLI Tool Map
 ```text
-┌─────────────────────────────────────────────────────────┐
-│  esxcli — structured CLI for host management                                                          │
-│  ├── system    hostname, ntp, syslog, accounts                                                        │
-│  ├── network   nic, vswitch, ip, firewall, route                                                      │
-│  ├── storage   core (devices, paths), nmp, vmfs, san                                                  │
-│  ├── software  vib list/install/update, acceptance                                                    │
-│  ├── hardware  platform, cpu, memory, sensors, ipmi                                                   │
-│  └── vsan      cluster, health, storage, network                                                      │
+┌──────────────────────────────────────── ESXi — CLI Reference ─────────────────────────────────────────┐
 │                                                                                                       │
-│  vim-cmd — VM and host operations                                                                     │
-│  ├── vmsvc/   power, snapshot, config, summary                                                        │
-│  └── hostsvc/ storage, maintenance mode, datastore                                                    │
+│  esxcli on-host, vim-cmd, govc (remote), and PowerCLI automation commands.                            │
 │                                                                                                       │
-│  vmkfstools — VMDK operations                                                                         │
-│  ├── -c  create  -i  clone  -X  extend  -k  check                                                     │
-│  └── -p  partition info  -e  check and fix                                                            │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               esxcli (on-host)               │  │              vim-cmd (on-host)              │   │
+│   │          esxcli system version get           │  │           vim-cmd vmsvc/getallvms           │   │
+│   │         esxcli network ip interface          │  │          vim-cmd vmsvc/power.on ID          │   │
+│   │           esxcli storage core path           │  │         vim-cmd hostsvc/maintenance         │   │
+│   │            esxcli vm process list            │  │          vim-cmd hostsvc/firmware/          │   │
+│   │           esxcli software vib list           │  │           vim-cmd solo/registervm           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
 │                                                                                                       │
-│  esxtop — real-time performance (interactive)                                                         │
-│  ├── c  CPU view  (%RDY, %CSTP, %USED)                                                                │
-│  ├── m  Memory view (MCTLSZ balloon, SWCUR swap)                                                      │
-│  ├── d  Disk I/O view (DAVG latency)                                                                  │
-│  └── n  Network view (drops, throughput)                                                              │
+│  govc (remote vCenter API) and PowerCLI for scripted multi-host operations.                           │
 │                                                                                                       │
-│  Logs  /var/log/vmkernel.log  hostd  vpxa  fdm  auth                                                  │
-└─────────────────────────────────────────────────────────┘
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              govc (remote CLI)               │  │              PowerCLI (remote)              │   │
+│   │                govc host.info                │  │           Get-VMHost | select Name          │   │
+│   │              govc datastore.ls               │  │          Get-Datastore | sort Name          │   │
+│   │            govc vm.migrate -host             │  │           Move-VM -Destination $h           │   │
+│   │         govc host.maintenance.enter          │  │           Set-VMHost -State Maint           │   │
+│   │         govc events -type HostEvent          │  │            Get-VIEvent -Entity $h           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  ESXi hosts on x86; management network for SSH/API access to host/vCenter                             │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  esxcli    = on-host CLI; namespaces: system, network, storage, vm, software                          │
+│  vim-cmd   = on-host; wraps vSphere API calls (hostsvc/vmsvc namespaces)                              │
+│  govc      = open-source Go CLI for vCenter API; runs from any workstation                            │
+│  PowerCLI  = VMware PowerShell module for scripted vSphere management                                 │
+│  VIB       = vSphere Installation Bundle; ESXi extension/driver package                               │
+│  GOVC_URL  = env var pointing govc at vCenter: https://user:pass@vc/sdk                               │
+│  maintenance = host state; vCenter migrates VMs before maintenance tasks                              │
+│  hostsvc   = vim-cmd namespace for host-level service operations                                      │
+│  vmsvc     = vim-cmd namespace for VM lifecycle operations                                            │
+│  PSC       = Platform Services Controller; SSO/certs (pre-7.0)                                        │
+│  fdm       = Fault Domain Manager; HA agent queried via vim-cmd                                       │
+│  vCenter API = REST + SOAP endpoint; govc/PowerCLI both use it                                        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌──────────────────────────────────────── ESXi — CLI Reference ─────────────────────────────────────────┐

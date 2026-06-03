@@ -31,7 +31,6 @@ flowchart TD
     M -- No --> O([Escalate — see Escalation runbook])
     style O fill:#c62828,color:#fff
     style N fill:#2e7d32,color:#fff
-```
 ```text
 ┌────────────────────────────────────── PowerShell — Diagnostics ───────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

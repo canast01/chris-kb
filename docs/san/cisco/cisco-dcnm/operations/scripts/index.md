@@ -47,7 +47,6 @@ cleanup() {
 }
 trap cleanup EXIT
 echo "Authenticated to ${DCNM_HOST}"
-```
 ```text
 ┌─────────────────────────────────── Cisco DCNM — Operations Scripts ───────────────────────────────────┐
 │                                                                                                       │

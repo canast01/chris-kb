@@ -7,18 +7,51 @@ Access Control reference covering Pool-Level Admin Delegation, Desktop Pool Enti
 
   RBAC: AD Groups → Entitlements → Pools
 ```text
-┌──────────────┐    ┌───────────────────┐    ┌─────────────────────┐
-│ AD Groups    │    │ Horizon Roles      │    │ Desktop Pools /                                         │
-│              │    │                   │    │ Access Groups                                            │
-│ CORP\Horizon─┼───►│ Administrators    │    │                                                          │
-│ -Admins      │    │ (full config)     │    │ ┌─────────────────┐                                      │
-│              │    ├───────────────────┤    │ │ Pool-Win10-Float│                                      │
-│ CORP\Horizon─┼───►│ Help Desk Admin   │    │ │   entitlements  │                                      │
-│ -HelpDesk    │    │ (session mgmt)    │    │ │                 │                                      │
-│              │    ├───────────────────┤    │ │ VDI-LON-KW-     │                                      │
-│ CORP\Horizon─┼───►│ Inventory Admin   │───►│ │ W11-IC-Users    │                                      │
-│ -Pool-Admins │    │ (scoped to group) │    │ └─────────────────┘                                      │
-└──────────────┘    └───────────────────┘    └─────────────────────┘
+┌─────────────────────────────────── VMware Horizon — Access Control ───────────────────────────────────┐
+│                                                                                                       │
+│  Horizon access control uses AD groups for pool entitlements, Horizon admin roles                     │
+│  for management, and UAG for external session access control.                                         │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                 Admin Roles                  │  │              Pool Entitlements              │   │
+│   │         Administrators: full control         │  │          Entitle: AD user or group          │   │
+│   │          Local role: per pod scope           │  │             Per-pool entitlement            │   │
+│   │          Custom roles: limited ops           │  │           Global entitlement: CPA           │   │
+│   │           Read-only: helpdesk role           │  │             No direct VM access             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Entitlements control who gets a desktop; admin roles control who manages Horizon.                    │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              UAG Access Control              │  │              Audit & Compliance             │   │
+│   │         Allowlist: source IP filter          │  │          Events DB: log all logins          │   │
+│   │        Authentication: MFA via RADIUS        │  │            Horizon reports: usage           │   │
+│   │             SAML: forward to CS              │  │          Review: admin roles qtrly          │   │
+│   │         DMZ rules: only 443 inbound          │  │            Alert: login failures            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  UAG sits in DMZ with firewall rules; internal network only allows CS management;                     │
+│  desktop VLAN isolated from management network.                                                       │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Entitlement    = AD user/group assigned to pool; grants access                                       │
+│  Admin role     = Horizon admin privilege set; applied to AD group                                    │
+│  Custom role    = restricted admin role; e.g., helpdesk only                                          │
+│  Global entitlement= Cloud Pod Architecture; cross-pod pool access                                    │
+│  CPA            = Cloud Pod Architecture; multi-site/pod federation                                   │
+│  UAG allowlist  = IP source filtering on external UAG                                                 │
+│  RADIUS         = MFA backend; UAG proxies auth before CS                                             │
+│  SAML           = UAG passes assertion to Connection Server                                           │
+│  Events DB      = SQL DB; Horizon audit log; login/logoff events                                      │
+│  Read-only role = view sessions and machines; no changes                                              │
+│  DMZ firewall   = only port 443 inbound to UAG from internet                                          │
+│  Qtrly review   = audit Horizon admin role assignments                                                │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌─────────────────────────────────── VMware Horizon — Access Control ───────────────────────────────────┐

@@ -21,7 +21,6 @@ Network services knowledge base covering DNS, load balancers, and network servic
 nslookup <hostname>
 dig <hostname>
 dig <hostname> @<dns_server_ip>    # query a specific server directly
-```
 ```text
 ┌──────────────────────────────────── Networking — Network Services ────────────────────────────────────┐
 │                                                                                                       │

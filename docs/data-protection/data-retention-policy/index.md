@@ -25,7 +25,6 @@ flowchart LR
     H -- Yes --> I[Secure Deletion\nNIST 800-88]
     D -- Long-term archive --> J[Cold / Archive Storage\nTape / Object Storage]
     J --> G
-```
 ```text
 ┌─────────────────────────────── Data Protection — Data Retention Policy ───────────────────────────────┐
 │                                                                                                       │

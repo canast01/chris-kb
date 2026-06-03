@@ -6,39 +6,50 @@ Backup & Restore reference covering Supported Backup Methods, vSAN Configuration
 </div>
 
 ```text
-BACKUP FLOW — vSAN VM TO TARGET
-
-  VM (on vSAN Datastore)
-         │
-         │  ① vSphere Snapshot (quiesce guest I/O)
-         ▼
-  Changed Block Tracking (CBT)
-  reads only changed blocks since last backup
-         │
-         │  ② VADP transport (NBD or Direct NFS)
-         ▼
-  Backup Proxy VM
-  (Veeam / Commvault VSA — on vSAN host)
-         │
-         │  ③ Data stream (compressed + deduped)
-         ├──────────────────────────────────────────►  Backup Repository
-         │                                             (NAS / object store)
-         │
-         │  ④ Snapshot commit / delete
-         ▼
-  VM resumes normal I/O
-
-  RESTORE FLOW
-  ─────────────────────────────────────────────────
-  Backup Repository
-         │
-         │  Restore point selected in console
-         ▼
-  Backup Proxy
-         │
-         │  Write restored blocks → vSAN Datastore
-         ▼
-  VM powered on + validated
+┌─────────────────────────────────────── vSAN — Backup & Restore ───────────────────────────────────────┐
+│                                                                                                       │
+│  vSAN itself is not a backup solution; VMs on vSAN are backed up via VADP;                            │
+│  restore targets can be the same or a different datastore.                                            │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Backup Methods                │  │              vSAN Config Backup             │   │
+│   │         VADP: Veeam/Commvault/Avamar         │  │         vCenter backup includes vSAN        │   │
+│   │         CBT: incremental efficiency          │  │           Disk group config: in DB          │   │
+│   │          HotAdd: proxy on same host          │  │           Storage policies: VC DB           │   │
+│   │          NBD fallback if no HotAdd           │  │        Re-create diskgroup on restore       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  HotAdd provides fastest backup throughput; NBD over 10GbE is fallback.                               │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Restore Procedure               │  │                 DR with vSAN                │   │
+│   │        Restore from backup to vSAN DS        │  │            vSAN stretched: RPO=0            │   │
+│   │         Apply correct storage policy         │  │            SRM: vSAN replication            │   │
+│   │           Wait for resync if FTT>0           │  │           vSAN HCI Mesh: xsite DS           │   │
+│   │          Validate policy compliance          │  │           vSphere Rep: per-VM RPO           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Backup proxy VMs need access to vSAN datastore; HotAdd requires proxy on same cluster.               │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  VADP       = vStorage APIs for Data Protection; backup quiescing API                                 │
+│  CBT        = Changed Block Tracking; tracks changed sectors since last backup                        │
+│  HotAdd     = proxy VM on same host; attaches VMDK directly; fastest                                  │
+│  NBD        = Network Block Device; backup over TCP; slower fallback                                  │
+│  Proxy      = backup VM; intermediary between vSAN VM and backup target                               │
+│  Resync     = after restore, vSAN rebuilds missing replicas per policy                                │
+│  Policy compliance= UI shows red/yellow if restored VM policy not met                                 │
+│  SRM        = Site Recovery Manager; orchestrates vSAN failover                                       │
+│  vSphere Rep= vSphere Replication; per-VM async replication to DR site                                │
+│  HCI Mesh   = cross-cluster vSAN datastore sharing (vSAN 7.0+)                                        │
+│  Stretched  = 2-site active-active; RPO=0; needs >10ms RTT <5ms preferred                             │
+│  Diskgroup  = cache + capacity units; re-created after disk replacement                               │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌─────────────────────────────────────── vSAN — Backup & Restore ───────────────────────────────────────┐

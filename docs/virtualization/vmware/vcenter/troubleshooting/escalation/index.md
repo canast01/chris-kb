@@ -6,44 +6,51 @@ Escalation reference covering Severity Levels, SLA Tiers, Escalation Path, Usefu
 </div>
 
 ```text
-Escalation Path — Broadcom / VMware Support
-════════════════════════════════════════════════════════
-
-  Internal Triage (you)
-  ┌─────────────────────────────────────────────────┐
-  │  Collect evidence before opening case:          │
-  │  ├── df -h output                               │
-  │  ├── service-control --status --all             │
-  │  ├── vpxd.log tail (last 500 lines)             │
-  │  ├── SSO log tail                               │
-  │  ├── vCenter build number (Help → About)        │
-  │  ├── ESXi build numbers for affected hosts      │
-  │  └── Recent change log from CMDB                │
-  └───────────────────┬─────────────────────────────┘
-                      │
-                      ▼
-  ┌─────────────────────────────────────────────────┐
-  │  Generate vm-support bundle                     │
-  │  VAMI :5480 → Support → Create Support Bundle  │
-  │  OR: /usr/bin/vm-support -n <vcenter>           │
-  └───────────────────┬─────────────────────────────┘
-                      │
-                      ▼
-  ┌─────────────────────────────────────────────────┐
-  │  Open case: support.broadcom.com                │
-  │  ├── S1 (production down)  → 30 min SLA         │
-  │  ├── S2 (significant impact) → 4 hr SLA         │
-  │  └── S3/S4 (minor / question) → 8-12 hr SLA    │
-  └───────────────────┬─────────────────────────────┘
-                      │
-                      ▼ if no progress within SLA
-  ┌─────────────────────────────────────────────────┐
-  │  Escalate within Broadcom case                  │
-  │  ├── Request Senior PSE assignment              │
-  │  ├── Loop in TAM (if you have one) for S1/S2   │
-  │  └── Executive escalation via account team     │
-  │       for prolonged P1 outages                 │
-  └─────────────────────────────────────────────────┘
+┌───────────────────────────────────── vCenter Server — Escalation ─────────────────────────────────────┐
+│                                                                                                       │
+│  Escalate vCenter issues to VMware GSS when self-service troubleshooting exhausts                     │
+│  available options; attach support bundle and document timeline.                                      │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Escalation Triggers              │  │             Pre-Escalation Steps            │   │
+│   │           VCSA crashes repeatedly            │  │            Collect support bundle           │   │
+│   │             Data loss suspected              │  │           Snapshot VCSA if stable           │   │
+│   │           All self-steps exhausted           │  │          Document exact error text          │   │
+│   │          P1 outage: VC inaccessible          │  │            Timeline: when started           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  GSS requires SR number, support bundle, and change timeline to start root-cause.                     │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                GSS Engagement                │  │               Escalation Path               │   │
+│   │         Open SR at support.broadcom          │  │            T1: SR triage + bundle           │   │
+│   │         Severity: P1 for full outage         │  │            T2: Senior SE assigned           │   │
+│   │           Include vCenter version            │  │            T3: Engineering review           │   │
+│   │          Attach support bundle ZIP           │  │            CritSit: 24/7 coverage           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  GSS may request live session access via Bomgar/WebEx; prepare VCSA SSH access                        │
+│  and vSphere Client access for remote support engineers.                                              │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  GSS          = Global Support Services; VMware (Broadcom) official support                           │
+│  SR           = Service Request; support ticket number; reference in all calls                        │
+│  Support bundle= ZIP of all VCSA logs; generated via UI or vc-support.sh                              │
+│  Severity P1  = critical; production outage; fastest SLA response                                     │
+│  CritSit      = Critical Situation; escalation for P1 with exec involvement                           │
+│  T1/T2/T3     = support tiers; T3 has access to engineering teams                                     │
+│  Bomgar       = VMware remote access tool; screen share for live debug                                │
+│  Timeline     = chronological list of changes/events before the issue                                 │
+│  Snapshot     = pre-work safety net; capture VCSA state before GSS changes                            │
+│  KB article   = VMware knowledge base; check before raising SR                                        │
+│  vCenter version= full build number from Administration > About                                       │
+│  Broadcom portal= support.broadcom.com replaced my.vmware.com for SRs                                 │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌───────────────────────────────────── vCenter Server — Escalation ─────────────────────────────────────┐

@@ -34,7 +34,6 @@ graph TB
   class VCTR,NSX_T mgmt
   class ADMIN host
   class CLOUDS cloud
-```
 ```text
 ┌─────────────────────────────────── Aria Automation — How It Works ────────────────────────────────────┐
 │                                                                                                       │

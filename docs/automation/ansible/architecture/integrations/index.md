@@ -12,7 +12,6 @@ The `community.vmware` collection automates vSphere, ESXi, vCenter, vSAN, and NS
 ```bash
 ansible-galaxy collection install community.vmware
 pip install PyVmomi vsphere-automation-sdk-python
-```
 ```text
 ┌─────────────────────────────────────── Ansible — Integrations ────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

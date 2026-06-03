@@ -31,7 +31,6 @@ flowchart TD
     authOk -- No --> resolved
     authOk -- Yes --> sessionLimit
     sessionLimit --> resolved
-```
 ```text
 ┌─────────────────────────── Windows Server — Troubleshooting Common Issues ────────────────────────────┐
 │                                                                                                       │

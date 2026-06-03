@@ -26,7 +26,6 @@ flowchart TD
     localAuth -->|Yes| localRole["Assign local role"]
     localAuth -->|No| reject3["Login denied"]
     vsaRole & tacacsRole & localRole --> session["CLI / Web session\nopened with assigned role"]
-```
 ```text
 ┌───────────────────────────────── Brocade Fabric OS — Authentication ──────────────────────────────────┐
 │                                                                                                       │

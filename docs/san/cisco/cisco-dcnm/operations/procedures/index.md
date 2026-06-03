@@ -86,7 +86,6 @@ curl -sk -b dcnm-cookie.txt -X POST \
       {"aliasName": "purestor01-ct0-fc0", "pwwn": "52:4a:93:70:ab:cd:ef:00"}
     ]
   }' | python3 -m json.tool
-```
 ```text
 ┌───────────────────────────────── Cisco DCNM — Operations Procedures ──────────────────────────────────┐
 │                                                                                                       │

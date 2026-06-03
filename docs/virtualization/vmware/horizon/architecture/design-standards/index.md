@@ -7,22 +7,51 @@ Design Standards reference covering Desktop VM Sizing, Storage Sizing, VLAN and 
 
   Pod Design (up to 7 Connection Servers, 10,000 IC desktops)
 ```text
-┌─────────────────────────────────────────────────────────────┐
-│  Load Balancer / DNS Round-Robin                                                                      │
-│         ┌────────────┬────────────┬────────────┐                                                      │
-│         ▼            ▼            ▼            ▼                                                      │
-│  ┌────────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐                                                │
-│  │ CS Primary │ │ CS Rep 2 │ │ CS Rep 3 │ │  UAG(s)  │                                                │
-│  │(ADAM/LDAP) │ │(replica) │ │(replica) │ │  (DMZ)   │                                                │
-│  └─────┬──────┘ └────┬─────┘ └────┬─────┘ └──────────┘                                                │
-│        └─────────────┴────────────┘                                                                   │
-│                       │                                                                               │
-│            ┌──────────▼──────────┐                                                                    │
-│            │  vCenter + vSAN     │                                                                    │
-│            │  ESXi Cluster       │                                                                    │
-│            │  (desktop pools)    │                                                                    │
-│            └─────────────────────┘                                                                    │
-└─────────────────────────────────────────────────────────────┘
+┌────────────────────────────────── VMware Horizon — Design Standards ──────────────────────────────────┐
+│                                                                                                       │
+│  Horizon design standards define Connection Server sizing, UAG placement, desktop                     │
+│  pool type selection, storage tier, and display protocol choices.                                     │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Connection Server Sizing           │  │                 Pool Design                 │   │
+│   │           Max 4000 sessions per CS           │  │          Instant clone: non-persist         │   │
+│   │               Min 2 CS for HA                │  │         Full clone: persistent desks        │   │
+│   │           2 UAGs per site minimum            │  │            RDS farm: server-based           │   │
+│   │          Replica CS: read-only pod           │  │           vGPU: graphics-intensive          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Instant clone pools for non-persistent; full clone for persistent with profile.                      │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Storage Standards               │  │              Protocol Standards             │   │
+│   │          vSAN: preferred for pools           │  │            Blast Extreme: default           │   │
+│   │           Separate OS from profile           │  │             UDP: Blast over 8443            │   │
+│   │         vSAN dedupe: instant clones          │  │            PCoIP: legacy use only           │   │
+│   │         Profile: CIFS share or vVol          │  │         HTML5: fallback for browsers        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Desktop ESXi hosts need high RAM (512GB+) and fast storage for pool density;                         │
+│  Connection Server VMs need 8 vCPU / 32GB RAM per 4000 sessions.                                      │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Connection Server= Horizon broker; max 4000 concurrent sessions                                      │
+│  Replica CS    = secondary Connection Server; read-only LDAP replica                                  │
+│  UAG           = Unified Access Gateway; external session proxy                                       │
+│  Instant clone = forked from running parent VM in seconds                                             │
+│  Full clone    = independent persistent VM; user-assigned                                             │
+│  RDS farm      = RDSH hosts delivering published apps or desktops                                     │
+│  Blast Extreme = VMware display protocol; adaptive UDP/TCP                                            │
+│  PCoIP         = PC over IP; Teradici protocol; use for legacy clients                                │
+│  vSAN dedupe   = space savings on instant clone OS disks                                              │
+│  vGPU          = NVIDIA GRID partition; for CAD/graphics VDI                                          │
+│  Profile share = Windows file share for DEM/FSLogix user profiles                                     │
+│  Pod           = group of Connection Servers in same broadcast domain                                 │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌────────────────────────────────── VMware Horizon — Design Standards ──────────────────────────────────┐

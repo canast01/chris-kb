@@ -15,31 +15,40 @@
 ## Process Flow
 
 ```text
-  Service degraded or restart required
-           │
-           ▼
-  Check service status and recent logs ── Error requires fix? ──► Fix first, then restart
-           │ No (config reload / clear transient state)
-           ▼
-  Active connections or in-flight jobs?  ── Yes ──► Wait for drain or notify users
-           │ No
-           ▼
-  Try: reload (if supported) ── Success? ──► Done
-           │ Reload not supported / failed
-           ▼
-  Stop service
-           │
-           ▼
-  Start service
-           │
-           ▼
-  Service running + port listening?  ── No ──► Check logs; escalate if unrecoverable
-           │ Yes
-           ▼
-  Application responds to health check
-           │
-           ▼
-  Confirm with owner; clear monitoring alert
+┌────────────────────────────────────── Runbook — Service Restart ──────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │           Restart services in dependency order; verify each layer before proceeding           │   │
+│   │           Always stop dependants first; start dependencies first on the way back up           │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Linux (systemctl)               │  │             Windows (PowerShell)            │   │
+│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+│   │            systemctl status <svc>            │  │              Get-Service <svc>              │   │
+│   │             systemctl stop <svc>             │  │              Stop-Service <svc>             │   │
+│   │            systemctl start <svc>             │  │             Start-Service <svc>             │   │
+│   │           systemctl restart <svc>            │  │            Restart-Service <svc>            │   │
+│   │            journalctl -u <svc> -f            │  │          Get-EventLog -LogName App          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                               Order for dependent stack restart:                              │   │
+│   │                     STOP:  app-tier → middleware → database → storage-mount                   │   │
+│   │                     START: storage-mount → database → middleware → app-tier                   │   │
+│   │                  Verify each layer healthy before starting the next layer up                  │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Dependency order= Services depend on each other; wrong stop/start order causes cascading fails     │
+│    Graceful stop   = SIGTERM before SIGKILL; lets service flush buffers and close connections         │
+│    journalctl -f   = Follow live service log; monitor for errors during restart                       │
+│    Health check    = HTTP endpoint or service-level test confirming service is accepting traffic      │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌────────────────────────────────────── Runbook — Service Restart ──────────────────────────────────────┐

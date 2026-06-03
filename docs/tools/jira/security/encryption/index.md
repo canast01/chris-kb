@@ -55,7 +55,6 @@ server {
         client_max_body_size 100m;  # Match Jira attachment limit
     }
 }
-```
 ```text
 ┌────────────────────────────────────────── Jira — Encryption ──────────────────────────────────────────┐
 │                                                                                                       │

@@ -24,7 +24,6 @@ graph TB
   class ONTAP ctrl
   class KS,COMMIT,BURST,BILL cloud
   class ADMIN host
-```
 ```text
 ┌─────────────────────────────────── NetApp Keystone — How It Works ────────────────────────────────────┐
 │                                                                                                       │

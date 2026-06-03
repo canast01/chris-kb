@@ -22,7 +22,6 @@ graph LR
   class ARRAY ctrl
   class APEX,BILL cloud
   class ADMIN host
-```
 ```text
 ┌─────────────────────────────────────── Dell COD — How It Works ───────────────────────────────────────┐
 │                                                                                                       │

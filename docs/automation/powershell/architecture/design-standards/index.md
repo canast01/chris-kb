@@ -14,7 +14,6 @@ PowerShell enforces a fixed set of approved verbs. Using unapproved verbs genera
 ```powershell
 # List all approved verbs
 Get-Verb | Sort-Object Group, Verb | Format-Table -AutoSize
-```
 ```text
 ┌──────────────────────────────────── PowerShell — Design Standards ────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

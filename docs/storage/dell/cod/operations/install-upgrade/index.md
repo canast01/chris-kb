@@ -9,22 +9,38 @@ Lifecycle reference covering Entitlement Lifecycle, COD Entitlement Review Caden
 COD entitlements are tracked in the Dell License Management Portal and are tied to a specific PowerMax frame serial number (SID). The lifecycle of a COD entitlement follows this path:
 
 ```text
-Purchase order confirmed
-        │
-        ▼
-Dell issues license key → available in Dell License Management Portal
-        │
-        ▼
-License key applied to array via SYMCLI or Unisphere
-        │
-        ▼
-Capacity active — in use by thin pools and storage groups
-        │
-        ▼
-Frame upgrade or replacement?
-        │
-        ├── YES → Entitlement transfer to new frame SID (work with Dell account team)
-        └── NO  → Entitlement remains active until frame decommission
+┌───────────────────────────────────── Dell COD Install / Upgrade ──────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     COD install: order COD with array; verify hardware at delivery; register license keys     │   │
+│   │    COD upgrade: purchase additional COD for existing array; apply keys via licensing portal   │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                      New array with COD:                                      │   │
+│   │        1. Verify COD hardware visible in array management (locked drives/nodes listed)        │   │
+│   │                2. Log in to Dell Licensing Portal; find array by serial number                │   │
+│   │                                3. Download COD license key file                               │   │
+│   │                         4. Store key in password vault before applying                        │   │
+│   │                       5. Apply via array Settings > Licenses or REST API                      │   │
+│   │                          6. Confirm unlocked capacity appears in pool                         │   │
+│   │                        7. Update CMDB: total COD, activated, remaining                        │   │
+│   │                                                                                               │   │
+│   │                                    Upgrading existing COD:                                    │   │
+│   │                      1. Purchase additional COD through Dell account team                     │   │
+│   │                          2. Dell issues updated key for array serial                          │   │
+│   │                      3. Apply new key; previous activations remain active                     │   │
+│   │                               4. Update CMDB with new COD total                               │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Dell Licensing Portal = licensing.dell.com; manage COD/FOD keys per serial number                  │
+│    Updated key           = New COD key includes all previous + new units; apply to replace old        │
+│    Locked drives visible = Array shows reserved drives in inventory before COD applied                │
+│    CMDB update           = Record activation date, TB added, cumulative totals per array              │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌───────────────────────────────────── Dell COD Install / Upgrade ──────────────────────────────────────┐

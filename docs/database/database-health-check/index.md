@@ -22,7 +22,6 @@ mysql -u root -e "SHOW STATUS LIKE 'Threads_connected';"
 systemctl status mssql-server   # Linux
 # Windows:
 Get-Service -Name MSSQLSERVER
-```
 ```text
 ┌──────────────────────────────────── Database — Daily Health Check ────────────────────────────────────┐
 │                                                                                                       │

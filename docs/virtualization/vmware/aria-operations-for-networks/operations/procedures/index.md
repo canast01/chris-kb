@@ -40,7 +40,6 @@ curl -sk -X POST "${PLATFORM}/api/ni/datasources/vcenter" \
     "collector_id": "collector-001",
     "enabled": true
   }' | python3 -m json.tool
-```
 ```text
 ┌───────────────────────────────────── vRNI Operational Procedures ─────────────────────────────────────┐
 │                                                                                                       │

@@ -47,7 +47,6 @@ curl -k -u 'svc-aon:PASSWORD' \
 curl -k -u 'svc-aon:PASSWORD' \
   https://nsxmgr.example.local/policy/api/v1/infra/tier-0s \
   -o /dev/null -w "HTTP %{http_code}\n"
-```
 ```text
 ┌────────────────────────────────────────── vRNI Integrations ──────────────────────────────────────────┐
 │                                                                                                       │

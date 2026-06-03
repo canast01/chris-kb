@@ -7,25 +7,51 @@ Design Standards reference covering Test Network Design, IP Customization Strate
 
   Replication Topology + Recovery Plan Structure
 ```text
-┌──────────────────────────────────────────────────────────────┐
-│  Protected Site               Recovery Site                                                           │
-│  ┌────────────┐               ┌────────────┐                                                          │
-│  │ VMs on     │──VR/SRA──────►│ Replica    │                                                          │
-│  │ replicated │  (RPO target) │ VMDKs      │                                                          │
-│  │ datastore  │               └────────────┘                                                          │
-│  └────────────┘                                                                                       │
+┌──────────────────────────────────── VMware SRM — Design Standards ────────────────────────────────────┐
 │                                                                                                       │
-│  Recovery Plan (priority groups):                                                                     │
-│  ┌───────────────────────────────────────────────────────┐                                            │
-│  │  Priority 1: DCs / DNS / DHCP  ──► power on first    │                                             │
-│  │  Priority 2: Database servers  ──► wait for P1 done  │                                             │
-│  │  Priority 3: App servers       ──► wait for P2 done  │                                             │
-│  │  Priority 4: Web / LB          ──► wait for P3 done  │                                             │
-│  │  Priority 5: Non-critical      ──► last              │                                             │
-│  └───────────────────────────────────────────────────────┘                                            │
+│  SRM design standards define RPO tiers, protection group structure, test frequency,                   │
+│  recovery plan priority, and site-pair capacity requirements.                                         │
 │                                                                                                       │
-│  Network Mapping: Protected VLAN ──► Recovery VLAN / Test                                             │
-└──────────────────────────────────────────────────────────────┘
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              RPO Tier Standards              │  │           Protection Group Design           │   │
+│   │          Tier 1: ≤15min (ABR/sync)           │  │          Group by application tier          │   │
+│   │           Tier 2: ≤1h (vSR async)            │  │              One plan per group             │   │
+│   │           Tier 3: ≤4h (vSR async)            │  │           Startup order: DB first           │   │
+│   │          Tier 4: 24h (non-critical)          │  │          Dependencies: script wait          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  RPO tier drives replication technology choice; group VMs by app dependency.                          │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Recovery Site Standards            │  │                Test Standards               │   │
+│   │          Capacity: 100% Tier 1 VMs           │  │           Test: at least quarterly          │   │
+│   │          Standby: Tier 2–4 (burst)           │  │            Document RTO achieved            │   │
+│   │              N+1 hosts minimum               │  │           Cleanup: auto after test          │   │
+│   │             Same vSAN disk count             │  │          Evidence: screenshot plan          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Recovery site needs compute and storage for Tier 1 VMs always on standby;                            │
+│  WAN bandwidth must sustain replication traffic for all tiers.                                        │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  RPO           = Recovery Point Objective; acceptable data loss window                                │
+│  RTO           = Recovery Time Objective; time to restore service                                     │
+│  Tier 1        = most critical; <15min RPO; ABR or vSR 5min                                           │
+│  Protection group= set of VMs with same replication and recovery plan                                 │
+│  Startup order = SRM powers on VMs in sequence; DB before app                                         │
+│  Script wait   = custom step; waits for service health before next VM                                 │
+│  Burst capacity= recovery site scales up on failover from off state                                   │
+│  N+1 hosts     = recovery site has one host spare for HA during DR                                    │
+│  Quarterly test= regulatory minimum for most DR frameworks                                            │
+│  Evidence      = screenshot + log of test outcome for audit                                           │
+│  Cleanup       = SRM removes test VMs and snapshots after test                                        │
+│  WAN BW        = replication bandwidth; plan for peak replication rate                                │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌──────────────────────────────────── VMware SRM — Design Standards ────────────────────────────────────┐

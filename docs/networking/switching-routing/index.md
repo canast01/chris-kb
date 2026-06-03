@@ -15,7 +15,6 @@ show vlan brief
 show vlan id <id>
 show interfaces trunk
 show interface <int> status
-```
 ```text
 ┌────────────────────────────────── Networking — Switching & Routing ───────────────────────────────────┐
 │                                                                                                       │

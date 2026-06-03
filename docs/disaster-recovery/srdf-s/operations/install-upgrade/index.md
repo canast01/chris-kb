@@ -21,7 +21,6 @@ SRDF/S pairs require compatible HYPERMAX OS versions on both arrays. Always chec
 Verify current version:
 ```bash
 symcfg list -v | grep "Microcode"
-```
 ```text
 ┌───────────────────────────────────── SRDF/S — Install & Upgrade ──────────────────────────────────────┐
 │                                                                                                       │

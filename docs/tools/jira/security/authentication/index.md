@@ -54,7 +54,6 @@ Administration → User Management → User Directories → Add Directory → Mi
   <attribute name="ldap.groupsdn" value="OU=Groups,DC=corp,DC=example,DC=com"/>
   <attribute name="ldap.usessl" value="true"/>
 </directory>
-```
 ```text
 ┌──────────────────────────────────────── Jira — Authentication ────────────────────────────────────────┐
 │                                                                                                       │

@@ -25,7 +25,6 @@ The Connection Server is a standard domain member. Install Windows Server, join 
 
 # Check DNS resolves AD DCs
 nslookup _ldap._tcp.dc._msdcs.<your-domain>
-```
 ```text
 ┌──────────────────────────────────── VMware Horizon — Integrations ────────────────────────────────────┐
 │                                                                                                       │

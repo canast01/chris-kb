@@ -6,28 +6,34 @@ Practical runbooks for incidents, maintenance, lifecycle work, validation, evide
 </div>
 
 ```text
-Runbook Selection Flow
-═══════════════════════════════════════════════════════════
-
-  Event or task triggered
-           │
-     ┌─────┴──────────────────────────────┐
-     ▼                                    ▼
-  Unplanned incident               Planned work
-     │                                    │
-     ├─ VMs/hosts impacted ──► Incident Response
-     ├─ vCenter unavailable ──► vCenter Outage
-     ├─ Backup failed       ──► Backup Failure
-     └─ Unknown cause       ──► Evidence Collection
-                                 + RCA Template
-                                    │
-                                    ├─ Host maintenance  ──► Host Evacuation
-                                    ├─ Cert expiring     ──► Cert Renewal
-                                    ├─ Snapshots stale   ──► Snapshot Cleanup
-                                    ├─ VM request        ──► VM Lifecycle
-                                    ├─ Storage change    ──► Storage Path Validation
-                                    ├─ Network change    ──► Network Validation
-                                    └─ Scheduled window  ──► Maintenance Window
+┌─────────────────────────────────────── Virtualization Runbooks ───────────────────────────────────────┐
+│                                                                                                       │
+│    Practical runbooks for incidents, maintenance, lifecycle work, and RCA follow-up                   │
+│                                                                                                       │
+│                  ▼                                ▼                                ▼                  │
+│                                                                                                       │
+│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+│   │      Incident Response      │  │         Planned Work        │  │          Reference          │   │
+│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
+│   │        Backup failure       │  │       Host evacuation       │  │      Health check index     │   │
+│   │        vCenter outage       │  │       Snapshot cleanup      │  │       Troubleshooting       │   │
+│   │      Host disconnected      │  │         VM lifecycle        │  │          Inventory          │   │
+│   │       Evidence collect      │  │         Cert renewal        │  │       Quick reference       │   │
+│   │         RCA template        │  │      Maintenance window     │  │        Decision trees       │   │
+│   │      Incident response      │  │      Network validation     │  │         Cheat sheets        │   │
+│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Runbook          = Step-by-step procedure for a known task or incident type                        │
+│    Evidence collect = Gather logs and screenshots before any remediation begins                       │
+│    RCA              = Root Cause Analysis; post-incident document explaining why failure occurred     │
+│    Host evacuation  = vMotion all VMs off a host before patching or hardware work                     │
+│    VM lifecycle     = Standard steps for deploy, rename, reconfigure, and decommission                │
+│    Incident         = Unplanned disruption; follow incident response runbook immediately              │
+│    Planned work     = Scheduled change; requires approved change record before starting               │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌─────────────────────────────────────── Virtualization Runbooks ───────────────────────────────────────┐

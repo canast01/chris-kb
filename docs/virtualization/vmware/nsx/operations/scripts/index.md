@@ -107,44 +107,52 @@ except Exception as e:
 
 print(f"\nOverall: {'PASS' if overall == 0 else 'WARNING' if overall == 1 else 'CRITICAL'}")
 sys.exit(overall)
-```
-
-### How to run this script — step by step
-
-**Before you start — what you need**
-- Python 3.8 or newer installed from python.org — during install, tick "Add Python to PATH"
-- The `requests` library — install it once by running in Command Prompt:
-  `pip install requests urllib3`
-- Network access to your NSX-T Manager on port 443
-- NSX Manager admin credentials
-
-**Step 1 — Save the file**
-
-1. Open **Notepad** on your Windows PC
-2. Copy the entire code block above
-3. Click **File → Save As**
-4. Set "Save as type" to **All Files** (important — otherwise Windows adds .txt)
-5. Name it `nsxt_health_check.py` and save it to your Desktop
-
-**Step 2 — Fill in your details**
-
-Open the file in Notepad and update these lines near the top:
-
-| Variable | What to enter | How to find it |
-|---|---|---|
-| `NSX_HOST` | NSX Manager IP or FQDN e.g. `"192.168.1.200"` | Your NSX Manager address |
-| `NSX_USER` | NSX Manager username e.g. `"admin"` | Your NSX Manager login |
-| `NSX_PASS` | NSX Manager password | Your NSX Manager password |
-
-**Step 3 — Open Command Prompt**
-
-Windows key → type `cmd` → press Enter
-
-**Step 4 — Run it**
-
-```bash
-cd C:\Users\YourName\Desktop
-python nsxt_health_check.py
+```text
+┌──────────────────────────────────────────── NSX — Scripts ────────────────────────────────────────────┐
+│                                                                                                       │
+│  NSX REST API, Python, PowerShell, and Terraform scripts for NSX automation.                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Python / REST Scripts             │  │              PowerShell Scripts             │   │
+│   │          requests.get policy/api/v1          │  │            Invoke-RestMethod NSX            │   │
+│   │           List all segments + VNIs           │  │             Get-NsxLogicalSwitch            │   │
+│   │           Export DFW rules to CSV            │  │             New-NsxLogicalRouter            │   │
+│   │           Bulk group member audit            │  │            Export security policy           │   │
+│   │            Health check API poll             │  │              Connect-NSXServer              │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  REST API for ops scripts; Terraform for IaC segment and policy deployment.                           │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Terraform IaC                 │  │             Automation Patterns             │   │
+│   │            provider "nsxt" config            │  │             Idempotent API calls            │   │
+│   │             nsxt_policy_segment              │  │           Pagination: cursor param          │   │
+│   │         nsxt_policy_security_policy          │  │              Error retry on 429             │   │
+│   │          nsxt_policy_tier1_gateway           │  │            Realise status polling           │   │
+│   │         terraform plan/apply/destroy         │  │             Token refresh logic             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  NSX Manager VMs, management network, jump host, CI/CD runner for Terraform                           │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  NSX Policy API = /policy/api/v1; primary REST API for all NSX config                                 │
+│  Bearer token  = JWT auth token for NSX API; refresh via /api/session                                 │
+│  Cursor        = NSX API pagination param; use to page large result sets                              │
+│  429           = HTTP Too Many Requests; NSX rate limit; retry with backoff                           │
+│  Realise       = NSX applying changes to dataplane; poll status after                                 │
+│  Terraform NSX = HashiCorp provider for NSX; declare infra as HCL                                     │
+│  nsxt_policy_segment = Terraform resource for NSX overlay segment                                     │
+│  PowerNSX      = PowerShell module for NSX; older but widely used                                     │
+│  IaC           = Infrastructure as Code; version-controlled infra config                              │
+│  Idempotent    = API call safe to repeat; same result every time                                      │
+│  CSV export    = common audit output; DFW rules exported for review                                   │
+│  policy/api/v1 = NSX Policy API base path; preferred over MP API                                      │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌──────────────────────────────────────────── NSX — Scripts ────────────────────────────────────────────┐

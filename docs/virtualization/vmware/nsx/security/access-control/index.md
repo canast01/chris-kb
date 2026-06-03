@@ -55,7 +55,6 @@ for r in d.get('results', []):
     src   = r.get('identity_source_type', 'LOCAL')
     print(f'  {name:<50} type={rtype:<15} roles={roles:<25} source={src}')
 "
-```
 ```text
 ┌──────────────────────────────────────── NSX — Access Control ─────────────────────────────────────────┐
 │                                                                                                       │

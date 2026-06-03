@@ -21,7 +21,6 @@ ipAddrShow         # management IP addresses
 licenseShow        # installed licenses
 chassisShow        # chassis hardware inventory
 slotShow           # blade/slot population
-```
 ```text
 ┌────────────────────────────────── Brocade Fabric OS — CLI Reference ──────────────────────────────────┐
 │                                                                                                       │

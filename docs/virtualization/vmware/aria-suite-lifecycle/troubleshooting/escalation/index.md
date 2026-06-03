@@ -7,31 +7,49 @@ Escalation reference covering SR Handoff Checklist, VMware by Broadcom Knowledge
 
   LCM Escalation Path
 ```text
-┌─────────────────────────────────────────────────────────────────┐
-│  Step 1: Collect upfront (avoids data-request delay)                                                  │
-│  ┌─────────────────────────────────────────────────────────┐                                          │
-│  │ vracli support-bundle   │ LCM + product versions        │                                          │
-│  │ Request ID (if upgrade) │ Upgrade log (/vrlcm/upgrade/) │                                          │
-│  │ openssl x509 output     │ Timeline: last good → failure  │                                         │
-│  └─────────────────────────────────────────────────────────┘                                          │
-│                  │                                                                                    │
-│                  ▼                                                                                    │
-│  Step 2: Severity Assessment                                                                          │
-│  ┌──────────────────────────────────────────────────────────┐                                         │
-│  │ S1: prod env down, no workaround → open SR + call NOW    │                                         │
-│  │ S2: major feature unavailable → open SR (urgent)         │                                         │
-│  │ S3: partial degradation, workaround → normal SR          │                                         │
-│  │ S4: question / how-to → normal SR / KB search            │                                         │
-│  └──────────────────────────────────────────────────────────┘                                         │
-│                  │                                                                                    │
-│                  ▼                                                                                    │
-│  Step 3: Escalation Triggers                                                                          │
-│  ┌──────────────────────────────────────────────────────────┐                                         │
-│  │ S1 unresolved > 2h → Critical Escalation Team            │                                         │
-│  │ Recurring / SLA breach → TAM engagement                  │                                         │
-│  │ Do NOT power cycle partial-upgrade VMs without SR OK     │                                         │
-│  └──────────────────────────────────────────────────────────┘                                         │
-└─────────────────────────────────────────────────────────────────┘
+┌────────────────────────────────────── Aria Suite LCM Escalation ──────────────────────────────────────┐
+│                                                                                                       │
+│  Escalation with logscraper bundle, SR process, and TAM engagement for LCM.                           │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Escalation Triggers              │  │              SR Severity Levels             │   │
+│   │             LCM UI inaccessible              │  │          P1: LCM down or data loss          │   │
+│   │            All products degraded             │  │           P2: deploy/upgrade fails          │   │
+│   │           Upgrade fails and stuck            │  │          P3: cert or feature issue          │   │
+│   │          Cert expiry causing outage          │  │            P4: question / how-to            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Identify severity; run logscraper; open SR with bundle; call TAM for P1.                             │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                  SR Process                  │  │                TAM Engagement               │   │
+│   │          1. Run logscraper + bundle          │  │             Call TAM for P1 now             │   │
+│   │          2. Open GSS SR + severity           │  │           TAM escalates internally          │   │
+│   │         3. Attach bundle + timeline          │  │              Bridge call for P1             │   │
+│   │            4. Follow GSS guidance            │  │           Provide change log + env          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  LCM VM; logscraper via LCM UI; GSS portal for SR; TAM for P1/P2 escalation                           │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Logscraper          = LCM tool collecting logs from all products; mandatory for SR                   │
+│  Support Bundle      = LCM-level log archive from lcm-support.sh or VAMI                              │
+│  GSS                 = Global Support Services; Broadcom support portal                               │
+│  SR                  = Support Request; opened with severity and bundle attached                      │
+│  P1 Severity         = LCM or product fully down; 24/7 response; bridge call                          │
+│  P2 Severity         = Deploy/upgrade failure; priority business-hours response                       │
+│  P3 Severity         = Cert or feature issue; standard SLA                                            │
+│  TAM                 = Technical Account Manager; escalation for P1/P2                                │
+│  Bridge Call         = Live call with GSS + TAM + customer for P1 resolution                          │
+│  Change Log          = Recent changes provided to GSS for root cause analysis                         │
+│  Environment Details = LCM environment config; share with GSS for context                             │
+│  RCA                 = Root Cause Analysis document issued after P1 resolution                        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌────────────────────────────────────── Aria Suite LCM Escalation ──────────────────────────────────────┐

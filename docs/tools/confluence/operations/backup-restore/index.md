@@ -24,7 +24,6 @@ flowchart TD
     D --> D1[Attachments]
     D --> D2[Index]
     D --> D3[Plugins / Avatars]
-```
 ```text
 ┌─────────────────────────────────── Confluence — Backup and Restore ───────────────────────────────────┐
 │                                                                                                       │

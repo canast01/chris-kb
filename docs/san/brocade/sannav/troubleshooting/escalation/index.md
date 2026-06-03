@@ -84,7 +84,6 @@ uptime
 # Exact time the issue started
 # Any changes made before the issue (upgrade, configuration change, network change)
 # Steps already taken to troubleshoot
-```
 ```text
 ┌───────────────────────────── Brocade SANnav — Troubleshooting Escalation ─────────────────────────────┐
 │                                                                                                       │

@@ -43,7 +43,6 @@ iostat -x 5 12 > /tmp/iostat-baseline.txt
 # Memory
 free -m
 vmstat -S M 5 12
-```
 ```text
 ┌────────────────────────────────────── Performance — Baselining ───────────────────────────────────────┐
 │                                                                                                       │

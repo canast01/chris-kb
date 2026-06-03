@@ -7,34 +7,51 @@ Hardening reference covering Firewall Hardening, Advanced Security Settings, Sec
 
 ESXi Host Hardening Layers
 ```text
-┌─────────────────────────────────────────────────────────┐
-│  1. Network Attack Surface Reduction                                                                  │
-│  ├── Lockdown Mode: Normal (blocks direct SSH/API)                                                    │
-│  ├── Firewall: only required rulesets enabled                                                         │
-│  ├── SSH access restricted by IP (admin subnet only)                                                  │
-│  └── Telnet, FTP rulesets disabled                                                                    │
-├─────────────────────────────────────────────────────────┤
-│  2. Authentication Hardening                                                                          │
-│  ├── Shell + SSH: Stopped/Disabled in production                                                      │
-│  ├── Shell timeout: 600s idle, 300s interactive                                                       │
-│  ├── Password policy: complexity + lockout (5 fails)                                                  │
-│  └── Login banner: /Config/Etc/issue                                                                  │
-├─────────────────────────────────────────────────────────┤
-│  3. Boot Integrity                                                                                    │
-│  ├── UEFI Secure Boot: Enabled in BIOS/UEFI                                                           │
-│  ├── VIB acceptance: VMwareCertified / VMwareAccepted                                                 │
-│  └── TPM 2.0 attestation enabled (vSphere 7.0+)                                                       │
-├─────────────────────────────────────────────────────────┤
-│  4. Certificate Management                                                                            │
-│  ├── VMCA (default): vCenter CA signs host certs                                                      │
-│  ├── External CA mode: corporate CA for PCI/HIPAA                                                     │
-│  └── Expiry monitored: alert at 60 days remaining                                                     │
-├─────────────────────────────────────────────────────────┤
-│  5. Audit & Compliance Enforcement                                                                    │
-│  ├── Syslog → SIEM: auth.log, shell.log, hostd.log                                                    │
-│  ├── Host Profile: enforces baseline across cluster                                                   │
-│  └── Check Compliance after every change                                                              │
-└─────────────────────────────────────────────────────────┘
+┌────────────────────────────────────────── ESXi — Hardening ───────────────────────────────────────────┐
+│                                                                                                       │
+│  CIS VMware benchmark, lockdown mode, host firewall, and hardening profile.                           │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            CIS / STIG Benchmarks             │  │                Lockdown Mode                │   │
+│   │          CIS VMware ESXi benchmark           │  │           Normal: DCUI restricted           │   │
+│   │            DISA STIG for vSphere             │  │            Strict: no DCUI at all           │   │
+│   │          Disable SSH in production           │  │            Exception users config           │   │
+│   │             Disable MOB browser              │  │            All access via vCenter           │   │
+│   │           vSphere Assessment Tool            │  │           Enter/exit lockdown API           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  CIS/STIG baseline → lockdown mode → firewall rules → Host Profile enforce.                           │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Host Firewall                 │  │              Hardening Controls             │   │
+│   │          Default: deny all inbound           │  │            NTP configured (ntpd)            │   │
+│   │          Allow: vCenter/vMotion IPs          │  │            Syslog to remote host            │   │
+│   │         esxcli network firewall rule         │  │              Banner / MOTD set              │   │
+│   │            Limit SSH to mgmt VLAN            │  │              Disable SNMP v1/v2             │   │
+│   │          Close unnecessary services          │  │            Host Profile enforced            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  x86 hosts, management VLAN, dedicated OOB network, syslog collector                                  │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  CIS         = Center for Internet Security; produces hardening benchmarks                            │
+│  STIG        = Security Technical Implementation Guide; DOD hardening                                 │
+│  DISA        = Defense Information Systems Agency; publishes STIGs                                    │
+│  MOB         = Managed Object Browser; web debug UI; disable in prod                                  │
+│  Lockdown    = ESXi mode blocking direct host admin; enforces vCenter                                 │
+│  Exception users = accounts exempt from lockdown for break-glass access                               │
+│  MOTD        = Message of the Day; banner displayed at ESXi login                                     │
+│  ntpd        = NTP daemon on ESXi; keeps host clock in sync                                           │
+│  Host Profile= vCenter desired-state enforcement; applied after reconfig                              │
+│  VAT         = vSphere Assessment Tool; checks ESXi against benchmark                                 │
+│  Firewall rule= ESXi kernel-level packet filter; allow/deny per service                               │
+│  SNMP v3     = secure SNMP version with auth+enc; v1/v2 must be disabled                              │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌────────────────────────────────────────── ESXi — Hardening ───────────────────────────────────────────┐

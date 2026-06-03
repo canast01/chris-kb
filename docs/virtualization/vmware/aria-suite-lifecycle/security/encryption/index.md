@@ -7,27 +7,49 @@ Encryption reference covering Importing a Signed Certificate into Locker, Verify
 
   LCM Encryption Coverage
 ```text
-┌─────────────────────────────────────────────────────────────────┐
-│  Locker (certificate + secret vault)                                                                  │
-│  ┌─────────────────────────────────────────────────────────┐                                          │
-│  │ All certs/passwords encrypted with Locker Master        │                                          │
-│  │  Password (set at initial setup)                        │                                          │
-│  │ Passwords NEVER returned via API (alias + username only)│                                          │
-│  │ Locker Master Password → offline vault only             │                                          │
-│  └─────────────────────────────────────────────────────────┘                                          │
+┌────────────────────────────────────── Aria Suite LCM Encryption ──────────────────────────────────────┐
 │                                                                                                       │
-│  Certificate Lifecycle                    TLS                                                         │
-│  ┌────────────────────────────┐    ┌────────────────────┐                                             │
-│  │ Valid: >60 days  no action │    │ LCM 8.x: TLS 1.2+  │                                             │
-│  │ Expiring: 30-60  schedule  │    │ TLS 1.0/1.1 off    │                                             │
-│  │ Critical: 7-30   renew now │    │ Verify with        │                                             │
-│  │ Emergency: <7    immediate │    │  openssl s_client  │                                             │
-│  │ Expired         prod fails │    └────────────────────┘                                             │
-│  └────────────────────────────┘                                                                       │
+│  TLS for all managed products and centralised certificate management via LCM.                         │
 │                                                                                                       │
-│  Replace cert: Locker → Import → Environments → Replace Cert                                          │
-│  (Never replace certificates directly on product appliances)                                          │
-└─────────────────────────────────────────────────────────────────┘
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            In-Transit Encryption             │  │           Cert Management via LCM           │   │
+│   │           TLS 1.2+ LCM UI and API            │  │            Import CA cert to LCM            │   │
+│   │           TLS: LCM to all products           │  │          Assign cert to environment         │   │
+│   │            TLS: products to vIDM             │  │          LCM rotates cert all nodes         │   │
+│   │              LDAPS: vIDM to AD               │  │           Monitor expiry in LCM UI          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  LCM is the single point for cert lifecycle across all Aria products in environment.                  │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Data-at-Rest Encryption            │  │               Cipher Hardening              │   │
+│   │           vSphere D@RE on all VMs            │  │            Disable TLS 1.0 / 1.1            │   │
+│   │         LCM Locker: creds encrypted          │  │             Enforce AES-256-GCM             │   │
+│   │           vSAN encryption optional           │  │           Review via openssl check          │   │
+│   │            KMS manages D@RE keys             │  │           Disable RC4/3DES ciphers          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  vSphere with D@RE; KMS for key management; CA for cert signing; LCM for rotation                     │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  TLS 1.2+            = Minimum transport security for LCM and all products                            │
+│  LCM Cert Mgmt       = Centralised cert import, assignment, and rotation in LCM                       │
+│  Cert Import         = Upload CA-signed cert + key to LCM certificate store                           │
+│  Cert Assignment     = Link cert to environment; LCM pushes to all products                           │
+│  Cert Rotation       = LCM replaces cert on all product nodes in sequence                             │
+│  Expiry Monitor      = LCM tracks cert validity; warns at 60/30/14 days                               │
+│  LCM Locker          = Encrypted credential store inside LCM appliance                                │
+│  D@RE                = Data-at-Rest Encryption; vSphere storage-layer encryption                      │
+│  KMS                 = Key Management Server; manages D@RE encryption keys                            │
+│  LDAPS               = LDAP over TLS; vIDM authenticates to AD over port 636                          │
+│  Cipher Suite        = Algorithm set; enforce AES-256-GCM; disable legacy                             │
+│  Self-Signed Default = Default cert; replace with CA-signed before production                         │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌────────────────────────────────────── Aria Suite LCM Encryption ──────────────────────────────────────┐

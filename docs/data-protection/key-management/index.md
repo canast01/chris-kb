@@ -33,7 +33,6 @@ aws kms schedule-key-deletion --key-id <key-id> --pending-window-in-days 30
 
 # Cancel deletion
 aws kms cancel-key-deletion --key-id <key-id>
-```
 ```text
 ┌────────────────────────────────── Data Protection — Key Management ───────────────────────────────────┐
 │                                                                                                       │

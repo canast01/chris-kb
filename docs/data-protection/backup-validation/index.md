@@ -44,7 +44,6 @@ flowchart TD
     N --> O[Application Verification]
     O --> P[Test Report Generated]
     P --> M
-```
 ```text
 ┌───────────────────────────────── Data Protection — Backup Validation ─────────────────────────────────┐
 │                                                                                                       │

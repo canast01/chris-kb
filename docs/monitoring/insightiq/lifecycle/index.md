@@ -18,12 +18,34 @@ Key compatibility rules:
 ## Pre-Upgrade Checklist
 
 ```text
-1. Check compatibility on NetApp IMT for target InsightIQ and OneFS versions
-2. Back up the PostgreSQL database (see Backup section below)
-3. Take a VM snapshot of the InsightIQ appliance in vCenter
-4. Notify the storage operations team — dashboard access will be unavailable during upgrade
-5. Download the InsightIQ upgrade package from the NetApp Support Portal
-6. Verify available disk space: InsightIQ requires at least 10 GB free on the OS disk for upgrade staging
+┌────────────────────────────────── InsightIQ — Lifecycle Management ───────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                    Deploy                    │  │                   Upgrade                   │   │
+│   │            Deploy OVA to vCenter             │  │                 Backup first                │   │
+│   │              Assign IP and DNS               │  │                 Snapshot VM                 │   │
+│   │             Add clusters via UI              │  │              Apply upgrade pkg              │   │
+│   │                Configure SMTP                │  │              Verify collection              │   │
+│   │             Set retention policy             │  │               Rollback if fail              │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  OVA on vSphere management cluster · VM snapshot before upgrade · backup to NFS                       │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  OVA deployment = Importing InsightIQ as VM; set 4 vCPU, 8 GB RAM, 200+ GB disk                       │
+│  Cluster registration = Adding PowerScale cluster in InsightIQ UI with PAPI credentials               │
+│  Retention policy = Configured in InsightIQ settings; default 2 years raw data                        │
+│  SMTP configuration = InsightIQ settings for email alerts and scheduled reports                       │
+│  Upgrade package = Dell-provided upgrade file; applied via iiq_upgrade command                        │
+│  Snapshot = VM snapshot taken before upgrade; enables rollback if data is lost                        │
+│  Backup = iiq_backup run before upgrade; stored off-VM on NFS                                         │
+│  Verify collection = Check InsightIQ is collecting new data after upgrade                             │
+│  Rollback = Revert to VM snapshot if upgrade corrupts DB or stops collection                          │
+│  Decommission = iiq_backup → save archive → power off VM → remove from vCenter                        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌────────────────────────────────── InsightIQ — Lifecycle Management ───────────────────────────────────┐

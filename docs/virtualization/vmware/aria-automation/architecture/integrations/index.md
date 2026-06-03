@@ -40,7 +40,6 @@ curl -sk -H "Authorization: Bearer $TOKEN" \
 # Trigger data collection refresh
 curl -sk -X POST -H "Authorization: Bearer $TOKEN" \
   "https://<vra-fqdn>/iaas/api/cloud-accounts/<account-id>/data-collection"
-```
 ```text
 ┌─────────────────────────────────── Aria Automation — Integrations ────────────────────────────────────┐
 │                                                                                                       │

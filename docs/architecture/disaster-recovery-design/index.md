@@ -46,7 +46,6 @@ flowchart TD
     F -->|No| J{RTO < 24 hr?}
     J -->|Yes| K["Pilot Light\n(scale up on failover)"]
     J -->|No| L["Backup-Restore\n(periodic backup, manual restore process)"]
-```
 ```text
 ┌─────────────────────────────── Architecture — Disaster Recovery Design ───────────────────────────────┐
 │                                                                                                       │

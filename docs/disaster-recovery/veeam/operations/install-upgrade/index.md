@@ -33,7 +33,6 @@ flowchart TD
     class configBackup,snapshot,wait,vbrUpgrade,voneUpgrade,proxyUpgrade,repoUpgrade,validate,cleanup action
     class jobCheck decision
     class start,done terminal
-```
 ```text
 ┌────────────────────────────────────── Veeam — Install & Upgrade ──────────────────────────────────────┐
 │                                                                                                       │

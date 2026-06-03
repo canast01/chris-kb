@@ -6,37 +6,51 @@ Health Checks reference covering Disk Partition Usage, SSO and Lookup Service He
 </div>
 
 ```text
-Health Check Coverage Map
-════════════════════════════════════════════════════════
-
-  VAMI (:5480)                   Shell (SSH)
-  ┌────────────────────────┐     ┌───────────────────────┐
-  │ Summary tab            │     │ service-control        │
-  │  ├── CPU / RAM / Disk  │     │  --status --all        │
-  │  └── Service overview  │     │                        │
-  │                        │     │ df -h                  │
-  │ Services tab           │     │  ├── /storage/log      │
-  │  └── started/stopped   │     │  ├── /storage/db       │
-  │                        │     │  └── /storage/core     │
-  │ Certificate Mgmt tab   │     │                        │
-  │  └── expiry dates      │     │ timedatectl (NTP)      │
-  └────────────────────────┘     │ nslookup (DNS)         │
-                                 └───────────────────────┘
-
-  PowerCLI Checks (daily)
-  ┌────────────────────────────────────────────────────┐
-  │  Get-VMHost      → ConnectionState = Connected?    │
-  │  Get-Cluster     → DrsEnabled + HAEnabled?         │
-  │  Get-Snapshot    → age > 3 days? (flag stale)      │
-  │  Get-Datastore   → FreeSpacePct > 20%?             │
-  │  Get-VIEvent     → errors in last 24h?             │
-  │  REST /health    → system health = GREEN?          │
-  └────────────────────────────────────────────────────┘
-
-  Check Cadence
-  Daily ──▶ services, hosts connected, snapshots, alarms
-  Weekly ──▶ datastore capacity, certificate expiry
-  Pre-change ──▶ backup current, HA capacity, no migrations
+┌─────────────────────────────────── vCenter Server — Health Checks ────────────────────────────────────┐
+│                                                                                                       │
+│  Regular vCenter health checks verify service state, certificate validity, database                   │
+│  health, and host connectivity to prevent silent failures.                                            │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Service Health                │  │              Certificate Health             │   │
+│   │          VAMI: Summary panel green           │  │             Cert expiry >30 days            │   │
+│   │           vmon-cli -l: all RUNNING           │  │            STS cert: renew yearly           │   │
+│   │          SSO: login works normally           │  │           Machine cert: auto-renew          │   │
+│   │          Events: no critical alarms          │  │            certmgr: check via CLI           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Check services first; certificate expiry is the most common silent failure mode.                     │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Database & Disk                │  │              Host Connectivity              │   │
+│   │          Postgres: no vacuums stuck          │  │             All hosts: Connected            │   │
+│   │         Disk usage <80% on /storage          │  │           vpxa heartbeat: <60s ago          │   │
+│   │            Stats DB: no overflow             │  │             DRS: no red clusters            │   │
+│   │          Backup: last run <24h ago           │  │          HA: no admission failures          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  VCSA health depends on underlying ESXi host resource availability and shared                         │
+│  storage connectivity; network latency to hosts must be <10ms.                                        │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  VAMI         = vCenter Appliance Management Interface; port 5480                                     │
+│  vmon-cli     = service monitor; RUNNING state = healthy                                              │
+│  STS cert     = Security Token Service cert; 2-year expiry; breaks SSO if expired                     │
+│  Machine cert = VCSA machine SSL cert; auto-renewed by default                                        │
+│  certmgr      = certificate manager utility on VCSA appliance shell                                   │
+│  vpxa         = host agent; heartbeat to vCenter; disconnect = host error                             │
+│  Postgres     = VCSA embedded DB; vacuum stuck = performance degradation                              │
+│  /storage     = VCSA data partition; events, stats, logs stored here                                  │
+│  HA admission = cluster reserves capacity for one host failure; red if short                          │
+│  DRS red      = DRS migration imbalance or constraint violation                                       │
+│  Stats DB     = performance metrics; rollup jobs run on schedule                                      │
+│  certmgr      = /usr/lib/vmware-vmca/bin/certool for cert inspection                                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌─────────────────────────────────── vCenter Server — Health Checks ────────────────────────────────────┐

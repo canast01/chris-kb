@@ -6,42 +6,50 @@ Access Control reference covering Built-in Roles, Custom Roles, SSO Domain and I
 </div>
 
 ```text
-RBAC Permission Model
-════════════════════════════════════════════════════════
-
-  vCenter Inventory Hierarchy (permission scope)
-  ┌─────────────────────────────────────────────────────┐
-  │  Global Permission  ← applies to ALL vCenters       │
-  │  (use sparingly)                                     │
-  └───────────────────────────┬─────────────────────────┘
-                              │ propagates down
-                    ┌─────────▼──────────┐
-                    │  vCenter            │
-                    └─────────┬──────────┘
-                              │
-                    ┌─────────▼──────────┐
-                    │  Datacenter (DC-X)  │ ← assign most roles here
-                    └─────────┬──────────┘
-                              │
-               ┌──────────────┼─────────────────┐
-               │              │                 │
-      ┌────────▼──────┐ ┌─────▼──────┐ ┌───────▼─────┐
-      │  Cluster      │ │  Folder    │ │  Host       │
-      │  (CL-X-PROD)  │ │            │ │  (esxi-01)  │
-      └───────┬───────┘ └────────────┘ └─────────────┘
-              │
-     ┌────────▼────────┐
-     │  VM             │  ← No Access here overrides Admin above
-     │  (app-server-01)│
-     └─────────────────┘
-
-  Permission Assignment = Principal + Role + Scope
-  ┌───────────────────────────────────────────────────┐
-  │  CORP\grp-vcenter-ops  +  VM Operator  +  DC-LON  │
-  │  svc-veeam-backup      +  BackupOp     +  DC-LON  │
-  │  svc-nsx-compute       +  NSX-Integration + DC-LON│
-  │  svc-aria-ops          +  Read-Only    +  Root     │
-  └───────────────────────────────────────────────────┘
+┌─────────────────────────────────── vCenter Server — Access Control ───────────────────────────────────┐
+│                                                                                                       │
+│  vCenter access control uses SSO for authentication and a role-based permission                       │
+│  system applied at inventory object level for authorisation.                                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Role-Based Access               │  │            Permission Inheritance           │   │
+│   │           Roles: built-in + custom           │  │            Propagate to children            │   │
+│   │         Admin / ReadOnly / NoAccess          │  │           Override at child object          │   │
+│   │           Privilege sets per role            │  │             Global perm: all DCs            │   │
+│   │           Apply role to user/group           │  │         No propagate: exact obj only        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Assign minimum roles at highest useful object; propagate down the hierarchy.                         │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Identity Sources               │  │           Admin Lockout Prevention          │   │
+│   │               SSO local domain               │  │      Always keep administrator@vsphere      │   │
+│   │           Active Directory joined            │  │         Break-glass: local SSO user         │   │
+│   │            LDAP: OpenLDAP support            │  │        Audit: review perms quarterly        │   │
+│   │          AD groups mapped to roles           │  │         Log: all permission changes         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  SSO identity store traffic goes over LDAP/LDAPS to AD DCs on management network.                     │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SSO           = Single Sign-On; vCenter identity service; issues SAML tokens                         │
+│  Role          = named collection of privileges; applied to user+object pair                          │
+│  Privilege     = atomic permission; e.g., VirtualMachine.Power.On                                     │
+│  Propagate     = permission flows to all child objects in hierarchy                                   │
+│  Global perm   = permission applied at root level across all datacentres                              │
+│  administrator@vsphere.local= built-in SSO admin; never remove                                        │
+│  Break-glass   = local SSO account for use when AD/LDAP is down                                       │
+│  Identity source= AD, LDAP, or local domain; multiple sources allowed                                 │
+│  AD group      = Active Directory security group mapped to vCenter role                               │
+│  NoAccess role = explicitly blocks access at that object level                                        │
+│  Audit         = review all admin-role assignments at least quarterly                                 │
+│  Hierarchy     = DC → cluster → host → VM; permissions flow downward                                  │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌─────────────────────────────────── vCenter Server — Access Control ───────────────────────────────────┐

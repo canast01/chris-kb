@@ -36,7 +36,6 @@ symrdf -g 20 -type A query -detail | grep -E "Lag|Cycle Age"
 # Compare lag against SLA threshold (example: alert if > 60 seconds)
 LAG=$(symrdf -g 20 -type A query -detail | grep "Lag" | awk '{print $NF}')
 echo "Current lag: ${LAG} seconds"
-```
 ```text
 ┌─────────────────────────────────────── SRDF/A — Health Checks ────────────────────────────────────────┐
 │                                                                                                       │

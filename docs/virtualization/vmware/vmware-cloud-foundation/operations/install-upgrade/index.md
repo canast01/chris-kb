@@ -7,11 +7,51 @@ Install & Upgrade reference covering Async Patches, Upgrade Readiness, Bring-Up.
 
 VCF Upgrade Flow — SDDC Manager Orchestration
 ```text
-┌─────────────────────────────────────────────────────┐
-│  Step 1: Bundle Acquisition                                                                           │
-│  depot.vmware.com ──► SDDC Manager bundle store                                                       │
-│  (or offline: .tar file ► local depot)                                                                │
-└──────────────────────────┬──────────────────────────┘
+┌───────────────────────────── VMware Cloud Foundation — Install & Upgrade ─────────────────────────────┐
+│                                                                                                       │
+│  VCF installation uses Cloud Builder to deploy the management domain; upgrades                        │
+│  are orchestrated by SDDC Manager LCM using versioned upgrade bundles.                                │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Installation Steps              │  │           Pre-Install Requirements          │   │
+│   │           Deploy Cloud Builder OVA           │  │           HCL: all hardware listed          │   │
+│   │          Complete bringup JSON spec          │  │            DNS: all FQDNs resolve           │   │
+│   │        Cloud Builder validates input         │  │            NTP: all hosts synced            │   │
+│   │           Deploy mgmt domain (~2h)           │  │          VLANs: created on switches         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  DNS and NTP must be correct before bringup; validation failures abort deployment.                    │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Upgrade Process                │  │              Post-Upgrade Steps             │   │
+│   │         Download bundle in SDDC Mgr          │  │             Run VCF health check            │   │
+│   │           Run pre-check validation           │  │            Verify all certs valid           │   │
+│   │           Apply: mgmt domain first           │  │              Check vSAN health              │   │
+│   │        Then apply to workload domains        │  │             Validate NSX routing            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Bringup needs 4+ identical bare-metal servers; upgrade temporarily increases                         │
+│  host resource usage during patching; maintain 30% vSAN free space.                                   │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Cloud Builder = OVA appliance; validates spec and deploys management domain                          │
+│  Bringup       = initial VCF deployment process; ~2h for management domain                            │
+│  JSON spec     = configuration file for Cloud Builder; all IP/FQDN values                             │
+│  SDDC Manager  = takes over from Cloud Builder post-bringup                                           │
+│  LCM           = Lifecycle Manager in SDDC Mgr; manages all upgrades                                  │
+│  Bundle        = versioned upgrade package; downloaded from VMware depot                              │
+│  Pre-check     = automated readiness validation; must pass before upgrade                             │
+│  Mgmt domain first= always upgrade management domain before workload domains                          │
+│  VCF version   = e.g., VCF 5.2; all components versioned together                                     │
+│  HCL           = Hardware Compatibility List; VCF-specific server/NIC list                            │
+│  VLAN scheme   = mgmt/vSAN/vMotion/uplink VLANs defined in spec                                       │
+│  Depot         = VMware online update repository; SDDC Mgr downloads from                             │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌───────────────────────────── VMware Cloud Foundation — Install & Upgrade ─────────────────────────────┐

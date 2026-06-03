@@ -21,7 +21,6 @@ flowchart LR
 
     PROD -- "Scheduled Clone\n(weekly)" --> UAT
     PROD -- "On-demand Clone\n(before major release)" --> DEV
-```
 ```text
 ┌─────────────────────────────────── ServiceNow — Backup and Restore ───────────────────────────────────┐
 │                                                                                                       │

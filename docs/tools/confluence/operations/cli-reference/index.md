@@ -19,7 +19,6 @@ All examples below use a **Personal Access Token (PAT)**. Generate one at:
 export CF_URL="https://confluence.example.com"
 export CF_TOKEN="<your-PAT-here>"
 export CF_AUTH="Authorization: Bearer ${CF_TOKEN}"
-```
 ```text
 ┌───────────────────────────────────── Confluence — CLI Reference ──────────────────────────────────────┐
 │                                                                                                       │

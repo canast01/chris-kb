@@ -7,24 +7,51 @@ CLI Reference reference covering SRM REST API — Recovery Plans, PowerCLI for S
 
   SRM CLI / API Access
 ```text
-┌──────────────────────────────────────────────────────────────┐
-│  SRM REST API (vCenter SSO token)                                                                     │
-│  ┌──────────────────────────────────────────────────────┐                                             │
-│  │ POST /rest/com/vmware/cis/session → session token    │                                             │
-│  │ GET  /api/vcenter/dr/recovery/plans                  │                                             │
-│  │ POST /api/vcenter/dr/recovery/plans/<id>/start       │                                             │
-│  │      { "recovery_type": "TEST" | "FAILOVER" }        │                                             │
-│  └──────────────────────────────────────────────────────┘                                             │
+┌───────────────────────────────────── VMware SRM — CLI Reference ──────────────────────────────────────┐
 │                                                                                                       │
-│  PowerCLI (VMware.VimAutomation.Srm)                                                                  │
-│  ┌──────────────────────────────────────────────────────┐                                             │
-│  │ Connect-SrmServer -SrmServerAddress <fqdn>           │                                             │
-│  │ $srm.ExtensionData.Recovery.ListPlans()              │                                             │
-│  │ $srm.ExtensionData.Protection.ListProtectionGroups() │                                             │
-│  │ $srm.ExtensionData.Recovery.Start($plan, "TEST")     │                                             │
-│  │ $srm.ExtensionData.Recovery.Start($plan, "CLEANUP")  │                                             │
-│  └──────────────────────────────────────────────────────┘                                             │
-└──────────────────────────────────────────────────────────────┘
+│  SRM is managed primarily via the vSphere Client plugin; srm-util.exe and the SRM                     │
+│  REST API provide CLI automation for plan management and testing.                                     │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              srm-util Commands               │  │                 SRM REST API                │   │
+│   │          srm-util srmcli list-plans          │  │             POST /api/rest/login            │   │
+│   │          srm-util srmcli test-plan           │  │             GET /api/rest/plans             │   │
+│   │           srm-util srmcli run-plan           │  │         POST /api/rest/plans/{}/run         │   │
+│   │               srm-util showvms               │  │        GET /api/rest/plans/{}/status        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  srm-util.exe runs on SRM Server; REST API is accessible from any host on port 443.                   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             PowerCLI SRM Module              │  │             Diagnostic Commands             │   │
+│   │              Connect-SrmServer               │  │             Get-SrmRecoveryPlan             │   │
+│   │            Get-SrmProtectionGroup            │  │               srm-util history              │   │
+│   │            Start-SrmRecoveryPlan             │  │                srm-util plans               │   │
+│   │           Get-SrmReplicationGroup            │  │            Check replication lag            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  srm-util.exe runs on Windows SRM Server; PowerCLI module connects from jump host;                    │
+│  REST API on port 443 of SRM Server FQDN.                                                             │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  srm-util      = SRM command-line utility on the SRM Server VM                                        │
+│  srmcli        = sub-command for recovery plan operations                                             │
+│  list-plans    = show all configured recovery plans                                                   │
+│  test-plan     = run plan in test mode (bubble network)                                               │
+│  run-plan      = trigger actual failover (use with caution)                                           │
+│  showvms       = list VMs in protection group with replication status                                 │
+│  history       = show previous plan run results and timestamps                                        │
+│  Connect-SrmServer= PowerCLI; authenticate to SRM                                                     │
+│  Start-SrmRecoveryPlan= PowerCLI; trigger plan test or failover                                       │
+│  GET /api/rest/plans= list all recovery plans via REST                                                │
+│  POST /api/rest/plans/{}/run= trigger plan execution via REST                                         │
+│  Replication lag= time delta between protected and recovery replica                                   │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌───────────────────────────────────── VMware SRM — CLI Reference ──────────────────────────────────────┐

@@ -81,7 +81,6 @@ no zone default-zone permit vsan 10
 # Verify:
 show zone status vsan 10
 # Mode: Basic, Default-zone: deny
-```
 ```text
 ┌──────────────────────────────────── Cisco DCNM — Design Standards ────────────────────────────────────┐
 │                                                                                                       │

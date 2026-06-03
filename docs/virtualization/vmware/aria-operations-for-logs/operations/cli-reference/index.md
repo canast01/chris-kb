@@ -27,7 +27,6 @@ li-admin log-collection-status
 
 # Show current storage usage
 li-admin storage
-```
 ```text
 ┌────────────────────────────── Aria Operations for Logs — CLI Reference ───────────────────────────────┐
 │                                                                                                       │

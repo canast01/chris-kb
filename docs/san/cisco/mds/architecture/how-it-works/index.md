@@ -28,7 +28,6 @@ graph TB
   class MDSA,MDSB switch
   class H1A,H2A,H1B,H2B host
   class FA_CT0,PM_A,FA_CT1,PM_B storage
-```
 ```text
 ┌──────────────────────────────────── Cisco MDS 9000 — How It Works ────────────────────────────────────┐
 │                                                                                                       │

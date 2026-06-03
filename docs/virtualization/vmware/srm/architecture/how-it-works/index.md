@@ -17,6 +17,51 @@ The two SRM Servers form a **site pair**. Communication between them uses TCP 44
 
 Protected Site                        Recovery Site
 ```text
+┌────────────────────────────────────── VMware SRM — How It Works ──────────────────────────────────────┐
+│                                                                                                       │
+│  SRM orchestrates VM failover between a protected site and recovery site using                        │
+│  replication (vSphere Replication or array-based) and recovery plans.                                 │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Protected Site                │  │                Recovery Site                │   │
+│   │             SRM Server: primary              │  │             SRM Server: recovery            │   │
+│   │           VMs: production running            │  │            Replicas: powered off            │   │
+│   │           Replication: vSR or ABR            │  │           Recovery plan: failover           │   │
+│   │           Site pair: bidirectional           │  │          Test: no production impact         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Site pair connects two SRM servers; recovery plans define failover order and steps.                  │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Recovery Plan Execution            │  │              Replication Types              │   │
+│   │        Test: isolated bubble network         │  │           vSR: vSphere Replication          │   │
+│   │          Planned: graceful failover          │  │           ABR: array-based SAN rep          │   │
+│   │          Disaster: forced failover           │  │              RPO: vSR 5min–24h              │   │
+│   │          Failback: reprotect + run           │  │              ABR: near-zero RPO             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  SRM Servers run as Windows VMs on vCenter; replication traffic uses dedicated network                │
+│  or SAN replication; sites connected by WAN/MPLS/dark fibre.                                          │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  SRM Server    = Windows VM; Horizon-like broker for DR orchestration                                 │
+│  Site pair     = bidirectional connection between two SRM servers                                     │
+│  Recovery plan = ordered list of VMs + steps for failover                                             │
+│  vSR           = vSphere Replication; host-based async replication                                    │
+│  ABR           = Array-Based Replication; SAN-level sync/async                                        │
+│  RPO           = Recovery Point Objective; max data age at recovery                                   │
+│  Test failover = runs in bubble network; does not impact production                                   │
+│  Planned failover= graceful; sync replication, then failover                                          │
+│  Disaster failover= forced; uses last available replica state                                         │
+│  Failback      = reprotect recovery site as new protected site                                        │
+│  Bubble network= isolated test network; no production routing                                         │
+│  Reprotect     = reverse replication direction after failover                                         │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌────────────────────────────────────── VMware SRM — How It Works ──────────────────────────────────────┐

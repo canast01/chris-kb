@@ -28,7 +28,6 @@ git -C /backup/repo.git fsck --full
 # "dangling blob <sha>"      — orphaned blob, usually from git add then reset
 # "missing blob <sha>"       — CORRUPTION — object referenced but missing from disk
 # "broken link from tree"    — CORRUPTION — tree references a missing object
-```
 ```text
 ┌───────────────────────────────────────── Git — Health Checks ─────────────────────────────────────────┐
 │                                                                                                       │

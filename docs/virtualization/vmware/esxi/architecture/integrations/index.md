@@ -6,29 +6,51 @@ Integrations reference covering Network Integration, Backup Integration, Monitor
 </div>
 
 ```text
-ESXi Integration Map
-                    ┌─────────────────────┐
-                    │  vCenter Server      │
-                    │  ├── Cluster / HA    │
-                    │  ├── DRS / vMotion   │
-                    │  └── Host Profiles   │
-                    └──────────┬──────────┘
-                               │ vpxa / hostd (TCP 443/902)
-          ┌────────────────────▼──────────────────────┐
-          │            ESXi Host (VMkernel)            │
-          │                                            │
-   ┌──────┤  Storage           Network                 │
-   │ NSX  │  ├── FC / iSCSI    ├── vDS (vSphere port  │
-   │ VIBs │  ├── NFS 3 / 4.1  │   groups, LACP, LLDP)│
-   │ DFW  │  ├── NVMe/FC       ├── NIOC bandwidth ctrl │
-   │ TEPs │  └── vSAN (HCI)    └── CDP / LLDP discovery│
-   └──────┤                                            │
-          │  Backup (VADP)     Monitoring              │
-          │  ├── Veeam proxy   ├── Aria Ops (vROps)    │
-          │  ├── CBT tracking  ├── Log Insight syslog  │
-          │  └── Hot-add /     └── SNMP traps          │
-          │      NBD / SAN                             │
-          └────────────────────────────────────────────┘
+┌───────────────────────────────────────── ESXi — Integrations ─────────────────────────────────────────┐
+│                                                                                                       │
+│  ESXi integrates with vCenter, storage arrays, AD, backup agents, monitoring.                         │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             vCenter Integration              │  │             Storage Integration             │   │
+│   │        vCenter manages host lifecycle        │  │            VMFS on iSCSI/FC/FCoE            │   │
+│   │          vLCM patches ESXi firmware          │  │            NFS v3/v4.1 datastores           │   │
+│   │          HA/DRS cluster membership           │  │            vSAN local disk pools            │   │
+│   │         vMotion/svMotion operations          │  │            NVMe-oF fabric support           │   │
+│   │           dvSwitch port group mgmt           │  │            VAAI offload to array            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  vCenter API → ESXi agent; backup uses VADP/CBT snapshot transport.                                   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │          Identity / AD Integration           │  │             Backup / Monitoring             │   │
+│   │            AD join for host auth             │  │           Veeam VADP proxy on ESXi          │   │
+│   │            Smart card / CAC login            │  │            Commvault / Avamar CBT           │   │
+│   │          LDAP for SSO identity src           │  │           Aria Ops agent per host           │   │
+│   │          Local host users fallback           │  │              SNMP traps to NMS              │   │
+│   │          vSphere Roles on AD groups          │  │            Syslog to Log Insight            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  x86 hosts, SAN/NAS arrays, 10/25 GbE NICs, mgmt network for vCenter reach                            │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  VADP     = vStorage APIs for Data Protection; snapshot-based backup API                              │
+│  CBT      = Changed Block Tracking; tracks dirty disk blocks since backup                             │
+│  VAAI     = vStorage APIs for Array Integration; offloads clone/zero to array                         │
+│  vLCM     = vSphere Lifecycle Mgr; manages ESXi image + firmware baseline                             │
+│  dvSwitch = Distributed vSwitch; centrally managed by vCenter across hosts                            │
+│  VMFS     = VMware File System; clustered FS shared across ESXi hosts                                 │
+│  NFS      = Network File System; supported as ESXi datastore v3 and v4.1                              │
+│  NVMe-oF  = NVMe over Fabrics; high-perf block storage protocol on ESXi                               │
+│  Aria Ops = VMware monitoring; collects ESXi metrics via agent/API                                    │
+│  SNMP     = Simple Network Mgmt Protocol; ESXi sends traps on events                                  │
+│  SSO      = Single Sign-On; vCenter auth; integrates AD for ESXi login                                │
+│  svMotion = Storage vMotion; migrates VMDK between datastores live                                    │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌───────────────────────────────────────── ESXi — Integrations ─────────────────────────────────────────┐

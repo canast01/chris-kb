@@ -21,7 +21,6 @@ Network troubleshooting knowledge base covering connectivity testing, packet los
 nslookup <hostname>
 dig <hostname>
 dig <hostname> @<dns_server_ip>    # query a specific server directly
-```
 ```text
 ┌──────────────────────────────────── Networking — Troubleshooting ─────────────────────────────────────┐
 │                                                                                                       │

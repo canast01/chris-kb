@@ -7,19 +7,51 @@ Backup and Restore reference covering Verify the Backup, App Volumes Manager Dat
 
   Backup Sources                        Backup Methods
 ```text
-┌─────────────────────┐               ┌────────────────────────────┐
-│  Connection Server  │──vdmexport───►│  LDIF file (pod config)                                         │
-│  (ADAM/LDAP)        │               └────────────────────────────┘
-├─────────────────────┤               ┌────────────────────────────┐
-│  App Volumes SQL DB │──SQL backup──►│  cloudvolumes.bak                                               │
-│  (cloudvolumes)     │               └────────────────────────────┘
-├─────────────────────┤               ┌────────────────────────────┐
-│  DEM Config Share   │──robocopy────►│  \\fileserver\DEMConfig\                                        │
-│  (\\server\share)   │               └────────────────────────────┘
-├─────────────────────┤               ┌────────────────────────────┐
-│  Golden Image VM    │──snapshot────►│  PUBLISHED snapshot                                             │
-│  + AppStack VMDKs   │               │  on datastore                                                   │
-└─────────────────────┘               └────────────────────────────┘
+┌────────────────────────────────── VMware Horizon — Backup & Restore ──────────────────────────────────┐
+│                                                                                                       │
+│  Horizon backup covers the LDAP config database on Connection Servers, golden image                   │
+│  VMs, and user profile shares; desktop VMs themselves are stateless (instant clone).                  │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Config Backup                 │  │             Golden Image Backup             │   │
+│   │          LDAP backup: vdmexport.exe          │  │          VM snapshot before update          │   │
+│   │           Schedule: daily minimum            │  │         Clone golden image: pre-push        │   │
+│   │           Store: secure file share           │  │            Keep N-1 + N-2 images            │   │
+│   │          Include: Events DB backup           │  │          VADP: backup if persistent         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  LDAP backup is most critical; without it Horizon config must be rebuilt manually.                    │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Profile & Restore               │  │              Restore Procedure              │   │
+│   │          User profiles: FSLogix/DEM          │  │           Restore LDAP: vdmimport           │   │
+│   │         Profile share: daily backup          │  │          Re-register CS: reconnect          │   │
+│   │           DEM config: GPO + share            │  │          Rebuild pools from golden          │   │
+│   │          AppStack: backup VMDK file          │  │             Validate: test login            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Connection Server VMs should be backed up via VADP as well; profile CIFS share                       │
+│  must be on backed-up NAS; AppStack VMDKs on backed-up datastore.                                     │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  vdmexport.exe = Horizon LDAP config export tool; run on Connection Server                            │
+│  vdmimport     = Horizon LDAP config import; restore from backup                                      │
+│  LDAP          = Horizon stores its config in AD LDS (LDAP store)                                     │
+│  Golden image  = template VM; all instant clones derive from this                                     │
+│  N-1/N-2       = keep two previous golden image versions for rollback                                 │
+│  Events DB     = Horizon event log; SQL Server; backup separately                                     │
+│  FSLogix       = user profile container; VHDX file on CIFS share                                      │
+│  DEM           = Dynamic Environment Manager; policy-based profile                                    │
+│  AppStack      = App Volumes VMDK; contains installed applications                                    │
+│  VADP          = backup API; use for persistent full clone VMs                                        │
+│  CIFS share    = Windows file share; user profile store                                               │
+│  Re-register   = reconnect Connection Server to Horizon pod after restore                             │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌────────────────────────────────── VMware Horizon — Backup & Restore ──────────────────────────────────┐

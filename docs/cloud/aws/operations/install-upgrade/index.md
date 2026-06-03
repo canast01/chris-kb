@@ -25,7 +25,6 @@ aws ssm send-command \
 # List instances with missing patches
 aws ssm describe-instance-patches --instance-id <i-xxxx> \
     --filters "Key=State,Values=Missing"
-```
 ```text
 ┌───────────────────────────────── AWS Operations — Install & Upgrade ──────────────────────────────────┐
 │                                                                                                       │

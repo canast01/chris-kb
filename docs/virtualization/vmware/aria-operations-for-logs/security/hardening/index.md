@@ -10,7 +10,49 @@ Hardening reference covering Default Account Hardening, LDAPS-Only Authenticatio
 Change the `admin` password immediately after completing the setup wizard:
 
 ```text
-Administration → Authentication → Local Users → admin → Edit → Change Password
+┌──────────────────────────────── Aria Operations for Logs — Hardening ─────────────────────────────────┐
+│                                                                                                       │
+│  Harden vRLI with TLS syslog, firewall restrictions, minimal admin accounts, and audit.               │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Network Hardening               │  │               Access Hardening              │   │
+│   │          Use TLS 6514, not UDP 514           │  │       Minimum accounts: disable unused      │   │
+│   │       Firewall: UI (443) mgmt-net only       │  │       Admin password: strong + rotated      │   │
+│   │         VAMI (9543): jump host only          │  │       LDAP: use LDAPS (636), not plain      │   │
+│   │       SSH: disable after initial setup       │  │        MFA via vIDM if SSO configured       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Audit and monitoring settings ensure log integrity and compliance for vRLI itself.                   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Configuration Hardening            │  │             Audit and Compliance            │   │
+│   │       Disable TLS 1.0/1.1 on all ports       │  │          Syslog vRLI itself to SIEM         │   │
+│   │     CA-signed cert; no self-signed prod      │  │       Admin action audit in vRLI logs       │   │
+│   │     NTP: synced for log timestamp trust      │  │        VMware STIG: apply vRLI guide        │   │
+│   │     No plaintext syslog from prod hosts      │  │      Log retention: meet compliance min     │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  vRLI appliance · management VLAN · firewall · vIDM (SSO+MFA) · AD LDAPS · CA                         │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  UDP 514 disable   = UDP syslog provides no encryption or auth; replace with TLS 6514                 │
+│  VAMI restriction  = Restrict port 9543 to jump hosts only; avoid internet exposure                   │
+│  SSH disable       = SSH to vRLI appliance disabled post-setup; use VAMI for maintenance              │
+│  LDAPS             = LDAP over TLS; prevents AD credential sniffing                                   │
+│  Self-signed cert  = Acceptable in lab; production requires CA-signed cert                            │
+│  VMware STIG       = Security hardening guide; follow applicable controls for vRLI                    │
+│  Log vRLI to SIEM  = vRLI forwards its own admin audit events to Splunk/SIEM                          │
+│  Timestamp trust   = NTP sync ensures log timestamps are accurate; critical for forensics             │
+│  Compliance min    = Many regulations require ≥90d hot + 1yr archive log retention                    │
+│  TLS 1.0/1.1       = Deprecated protocols; disable in vRLI SSL config                                 │
+│  Admin audit       = vRLI logs all login, config change events in runtime.log                         │
+│  MFA enforcement   = Handled by vIDM access policy if vRLI uses SSO                                   │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌──────────────────────────────── Aria Operations for Logs — Hardening ─────────────────────────────────┐

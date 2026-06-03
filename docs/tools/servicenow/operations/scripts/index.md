@@ -10,7 +10,6 @@ Ready-to-use scripts for common ServiceNow operational tasks. All scripts use en
 export SN_INSTANCE="https://mycompany.service-now.com"
 export SN_USER="api_svc_account"
 export SN_PASS="your-password"
-```
 ```text
 ┌─────────────────────────────────── ServiceNow — Operations Scripts ───────────────────────────────────┐
 │                                                                                                       │

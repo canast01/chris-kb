@@ -13,9 +13,34 @@ Dell AIOps is integrated into the broader operational toolchain via CloudIQ's no
 All Dell storage systems must be registered in CloudIQ via the SCG. This is the prerequisite for all AIOps capabilities — without SCG-connected telemetry, AIOps has no data source.
 
 ```text
-Verify collection status:
-CloudIQ portal > Assets > [System] — check "Last Seen" timestamp
-SCG admin UI > Systems > [System] > Connection Status
+┌─────────────────────────────────── Dell AIOps — Integration Guide ────────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               ITSM Integration               │  │             Observability Stack             │   │
+│   │              ServiceNow webhook              │  │             Grafana data source             │   │
+│   │             Auto incident create             │  │              Splunk HEC forward             │   │
+│   │                CMDB CI update                │  │             Elastic integration             │   │
+│   │              PagerDuty routing               │  │              Custom REST client             │   │
+│   │              Jira issue create               │  │             Prometheus exporter             │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  AIOps on-prem · outbound TCP 443 to ITSM/SaaS targets · no inbound connections required              │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  ServiceNow webhook = AIOps POST to ServiceNow event endpoint on alert fire                           │
+│  CMDB CI = Configuration Item in ServiceNow matched to AIOps monitored system                         │
+│  Auto incident = ServiceNow incident created automatically from AIOps alert payload                   │
+│  PagerDuty = On-call routing; AIOps sends Events API v2 payload for escalation                        │
+│  Jira issue = AIOps creates Jira bug/task for recommendation tracking in dev teams                    │
+│  Grafana data source = AIOps REST API configured as Grafana JSON data source                          │
+│  Splunk HEC = HTTP Event Collector; AIOps forwards alerts as events for SIEM correlation              │
+│  Prometheus exporter = AIOps /metrics endpoint scraped by Prometheus                                  │
+│  Elastic integration = AIOps alert forwarded to Elasticsearch for log analytics                       │
+│  REST client = Custom script polling AIOps API and pushing to proprietary system                      │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌─────────────────────────────────── Dell AIOps — Integration Guide ────────────────────────────────────┐

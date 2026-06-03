@@ -40,7 +40,6 @@ Mandatory tags enforced via Azure Policy deny assignments at Management Group le
 az policy state list --resource-group <rg> \
     --filter "policyDefinitionId eq '/providers/Microsoft.Authorization/policyDefinitions/<required-tags-id>'" \
     --query "[?complianceState=='NonCompliant']"
-```
 ```text
 ┌──────────────────────────────── Azure Architecture — Design Standards ────────────────────────────────┐
 │                                                                                                       │

@@ -29,7 +29,6 @@ flowchart TD
     class jobId,jobDetail,errCode,clientLog,ddbCheck,bundle,ready,ddbVerify,escalate action
     class q1 decision
     class alert terminal
-```
 ```text
 ┌──────────────────────────── Commvault Diagnostics — Logs, Tools, Commands ────────────────────────────┐
 │                                                                                                       │

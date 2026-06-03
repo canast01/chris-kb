@@ -6,38 +6,30 @@ Run this check weekly or after any significant workload addition.
 </div>
 
 ```text
-Capacity Check Flow
-═══════════════════════════════════════════════════════════
-
-  ┌─────────────────────────────────────────────────────┐
-  │                  CPU Headroom                       │
-  │  Cluster avg < 70% → OK   ≥ 70% → investigate      │
-  └──────────────────────────┬──────────────────────────┘
-                             │
-                             ▼
-  ┌─────────────────────────────────────────────────────┐
-  │                 RAM Headroom                        │
-  │  Balloon = 0    → OK   Balloon > 0 → action now    │
-  │  Swap = 0       → OK   Swap > 0   → immediate P1   │
-  └──────────────────────────┬──────────────────────────┘
-                             │
-                             ▼
-  ┌────────────────────────────────────────────────────┐
-  │              Datastore Capacity                    │
-  │  < 70% used → OK                                   │
-  │  70–80% used → plan expansion (2 weeks)            │
-  │  > 80% used  → alert: schedule immediate action    │
-  │  > 90% used  → critical: no new VMs until resolved │
-  └──────────────────────────┬─────────────────────────┘
-                             │
-                             ▼
-  ┌─────────────────────────────────────────────────────┐
-  │                  vSAN Capacity                      │
-  │  < 60% used → OK                                   │
-  │  60–70% used → plan capacity expansion             │
-  │  > 70% used  → critical: rebuild may fail if disk  │
-  │                fails — expand immediately           │
-  └─────────────────────────────────────────────────────┘
+┌─────────────────────────────── Capacity Review — Weekly Resource Check ───────────────────────────────┐
+│                                                                                                       │
+│    Run weekly and after any significant workload addition; forecast 90 days ahead                     │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     Resource     │      Green       │   Amber — action  │  Red — escalate  │    Frequency     │   │
+│   │  ──────────────  │  ──────────────  │  ───────────────  │  ──────────────  │  ──────────────  │   │
+│   │   CPU cluster    │    < 70% avg     │   70-85% → plan   │  85%+ → P1 now   │  Daily + weekly  │   │
+│   │   RAM balloon    │    0 balloon     │  Any → investig.  │  > 0 swap → P1   │      Daily       │   │
+│   │    Datastore     │    < 75% used    │   75-85% → free   │  85%+ → expand   │      Daily       │   │
+│   │  vSAN capacity   │    < 70% used    │   70-80% → plan   │  80%+ → P1 now   │      Weekly      │   │
+│   │    Licensing     │   All covered    │   Expiry < 60 d   │  Expiry < 30 d   │     Monthly      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Balloon    = Memory reclaim driver inflates inside the VM; signals host memory pressure            │
+│    Swap       = Host swaps VM memory to disk; severe performance impact; treat as P1                  │
+│    Headroom   = Spare capacity after HA failover reservation is accounted for                         │
+│    Thin prov. = Allocating more virtual disk than physical; monitor actual used, not alloc            │
+│    Forecast   = Project current growth rate 90 days; order hardware before hitting amber              │
+│    vSAN slack = vSAN requires ~25% free space for rebuild operations; do not fill beyond 70%          │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌─────────────────────────────── Capacity Review — Weekly Resource Check ───────────────────────────────┐

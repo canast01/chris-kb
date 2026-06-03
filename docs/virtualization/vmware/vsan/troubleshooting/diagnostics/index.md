@@ -6,36 +6,51 @@ Diagnostic procedures for vSAN performance, object health, network issues, and d
 </div>
 
 ```text
-DIAGNOSTIC TOOL CHAIN
-
-  Incident
-     │
-     ├── vSphere Client (GUI)
-     │       └── Cluster → Monitor → vSAN → Skyline Health
-     │                                    → Performance
-     │                                    → Virtual Objects
-     │
-     ├── ESXi Shell (esxcli vsan)
-     │       ├── cluster get        — membership, master, partition
-     │       ├── health cluster get — all built-in health tests
-     │       ├── debug object list  — per-object UUID + health state
-     │       ├── debug resync ...   — bytes remaining, throttle
-     │       ├── storage list       — disk group + disk health
-     │       └── debug network test — per-peer packet loss / latency
-     │
-     ├── Log Files (ESXi /var/log/)
-     │       ├── vmkernel.log  — disk I/O errors, NIC events
-     │       ├── clomd.log     — CLOM: placement, resync triggers
-     │       ├── cmmdsd.log    — CMMDS: host join/leave, partitions
-     │       └── vsanmgmt.log  — management plane: health, policy
-     │
-     └── Support Bundle (if escalating)
-             ├── vm-support --vsan  (per ESXi host)
-             ├── vc-support         (VCSA)
-             └── esxcli vsan trace get -t 300 -d /tmp/vsantrace
-                          │
-                          ▼
-                 Upload to Broadcom case
+┌───────────────────────────────────────── vSAN — Diagnostics ──────────────────────────────────────────┐
+│                                                                                                       │
+│  vSAN diagnostics use the health UI, esxcli, RVC, cmmds-tool, and support bundle                      │
+│  to identify root causes of component, network, and performance issues.                               │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Health UI Checks               │  │               CLI Diagnostics               │   │
+│   │           vSAN Health: all green?            │  │           esxcli vsan debug object          │   │
+│   │          Object health: policy met?          │  │         cmmds-tool find -t DOM_NAME         │   │
+│   │           Network: MTU test pass?            │  │           esxcli vsan storage list          │   │
+│   │           Disk: all SMART healthy?           │  │         vsan.resync_dashboard (RVC)         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Start in health UI; drill to object level with esxcli for per-component detail.                      │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │           Performance Diagnostics            │  │                Log Collection               │   │
+│   │          vSAN Perf: latency graphs           │  │         VC support bundle: host logs        │   │
+│   │         vsanObserver: per-host stats         │  │           vm-support on host shell          │   │
+│   │        IOPS/throughput per datastore         │  │               vsan_health*.log              │   │
+│   │         NIC utilisation: esxtop net          │  │             vsantraces: I/O path            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  All diagnostics run from ESXi host shell or vCenter; vsanObserver requires Java;                     │
+│  support bundle is generated from vSphere Client > vCenter.                                           │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  cmmds-tool    = Cluster Membership and Directory Service CLI                                         │
+│  DOM_NAME      = Distributed Object Manager; per-object UUID                                          │
+│  RVC           = Ruby vSphere Console; vsan.resync_dashboard                                          │
+│  vsanObserver  = performance data collection tool; needs RVC                                          │
+│  vsan trace    = detailed I/O path log; written per host                                              │
+│  vm-support    = ESXi support bundle generator; per host                                              │
+│  esxtop net    = real-time ESXi NIC stats; throughput + drops                                         │
+│  MTU test      = pings vSAN VMkernel with 8972-byte payload                                           │
+│  IOPS graph    = vSAN Performance Service; must be enabled                                            │
+│  vsan_health   = health service log; check for ERROR lines                                            │
+│  Object health = per-VM health; shows absent/degraded components                                      │
+│  SMART         = disk self-test; pre-failure indicator                                                │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌───────────────────────────────────────── vSAN — Diagnostics ──────────────────────────────────────────┐

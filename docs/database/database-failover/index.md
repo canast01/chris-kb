@@ -29,7 +29,6 @@ psql -U postgres -c "SELECT pg_is_in_recovery();"  # should return 'f' (false)
 psql -U postgres -c "SELECT now() AS current_time;"
 
 # Update application connection string / DNS to point at new primary
-```
 ```text
 ┌──────────────────────────────────── Database — Failover Procedure ────────────────────────────────────┐
 │                                                                                                       │

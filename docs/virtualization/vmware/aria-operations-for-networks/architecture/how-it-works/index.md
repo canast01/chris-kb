@@ -17,11 +17,49 @@ Aria Operations for Networks (AON, formerly vRealize Network Insight / VRNi) con
 Collectors maintain a persistent TLS connection back to the Platform VM on TCP 443. All raw flow data, API-pulled topology, and parsed configs are shipped from Collector to Platform for indexing. The Platform VM is the sole persistent data store — Collectors hold no long-term state.
 
 ```text
-[ESXi hosts / vDS]   ──IPFIX/NetFlow──►  [Collector VM]  ──TLS 443──►  [Platform VM]
-[NSX-T Manager]      ──REST API──────►   [Collector VM]
-[vCenter Server]     ──REST API──────►   [Collector VM]
-[Physical switches]  ──NetFlow UDP 2055──► [Collector VM]
-[Palo Alto firewall] ──Syslog/API──────►  [Collector VM]
+┌─────────────────────────────────────────── How vRNI Works ────────────────────────────────────────────┐
+│                                                                                                       │
+│  Flow collection from NSX/switches/cloud, analytics processing, and flow map rendering.               │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Flow Collection Layer             │  │             Inventory Collection            │   │
+│   │           NSX-T IPFIX to collector           │  │           vCenter API: VMs + hosts          │   │
+│   │           Physical switch NetFlow            │  │          NSX API: segments + rules          │   │
+│   │             Cloud VPC flow logs              │  │             DNS: name resolution            │   │
+│   │        Collector forwards to platform        │  │           CMDB enrichment optional          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Collected flows and inventory feed the analytics engine for correlation and search.                  │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Analytics Engine               │  │                Flow Map & UI                │   │
+│   │          Correlates IPs to VM names          │  │        Flow Map: entity traffic view        │   │
+│   │         Detects micro-seg violations         │  │        Search: natural language query       │   │
+│   │          Anomaly detection on flows          │  │         Dashboards: predefined views        │   │
+│   │           Path tracing end-to-end            │  │           Export: CSV / API query           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  vRNI platform VM + collector VMs on vSphere; NSX-T and physical switches as sources                  │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Flow Record         = 5-tuple (src IP, dst IP, src port, dst port, proto) + byte/packet count        │
+│  IPFIX               = Standard flow export protocol; used by NSX-T and modern switches               │
+│  Collector           = Lightweight VM that receives IPFIX/NetFlow from data sources                   │
+│  Analytics Engine    = Platform component correlating flows with inventory for search                 │
+│  Flow Map            = Visual graph of traffic between application tiers and VMs                      │
+│  Path Tracing        = vRNI feature showing physical + logical path for a given flow                  │
+│  Micro-seg Violation = Flow allowed/denied differently than NSX DFW rule intent                       │
+│  Natural Language Search= vRNI query interface using plain English flow queries                       │
+│  Anomaly Detection   = Automatic flagging of unusual flow volume or new connections                   │
+│  Entity              = Any named object: VM, host, IP, application, security group                    │
+│  Inventory Sync      = Periodic API poll of vCenter/NSX to refresh entity metadata                    │
+│  VPC Flow Logs       = Cloud flow records from AWS/Azure ingested as a data source                    │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌─────────────────────────────────────────── How vRNI Works ────────────────────────────────────────────┐

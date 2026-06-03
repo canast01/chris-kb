@@ -25,7 +25,6 @@ graph LR
     CLEANROOM --> VALIDATE["Business Validation\n(app team testing)"]
     VALIDATE -->|"Approved"| REINTRODUCE["Reintroduce to Production"]
     VALIDATE -->|"Issues found"| RESTORE
-```
 ```text
 ┌─────────────────────────────────────────── IRE Clean Room ────────────────────────────────────────────┐
 │                                                                                                       │

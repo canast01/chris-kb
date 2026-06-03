@@ -59,37 +59,41 @@ echo "  Report complete — $(date '+%Y-%m-%d %H:%M:%S')"
 echo "  Review output above for COD reserve vs. activated capacity."
 echo "  Alert if activated capacity approaches total installed capacity."
 echo "========================================"
-```
-
-### How to run this script — step by step
-
-**Before you start — what you need**
-- A Linux server with Dell Solutions Enabler (SYMCLI) installed — this is where `symcfg`, `sympd`, and `symlicense` live
-- Access to that server via SSH or a local terminal
-- The SID (System ID) of your PowerMax array — a 12-digit number
-
-**Step 1 — Save the file**
-
-1. Open a text editor on the Solutions Enabler server
-2. Copy the entire code block above
-3. Save it as `cod_capacity_report.sh`
-
-**Step 2 — Fill in your details**
-
-| Variable | What to put | How to find it |
-|---|---|---|
-| `SID` | Your PowerMax system ID (12 digits) | Run `symcfg list` on the Solutions Enabler server to see all known arrays |
-| `SYMCLI_PATH` | Path to SYMCLI binaries | Default is `/usr/symcli/bin` — check with `which symcfg` |
-
-**Step 3 — Open a terminal**
-
-Open a terminal on the Solutions Enabler host (Linux).
-
-**Step 4 — Run the script**
-
-```bash
-chmod +x cod_capacity_report.sh
-SID=000123456789 ./cod_capacity_report.sh
+```text
+┌────────────────────────────────────────── Dell COD Scripts ───────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │      Scripts to query COD status across products and generate remaining-capacity reports      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                              # PowerStore — list license capacity                             │   │
+│   │                    curl -sk -u admin:$PASS https://<ps>/api/rest/license \                    │   │
+│   │                    | jq ".[] | {name: .name, is_evaluation: .is_evaluation}"                  │   │
+│   │                                                                                               │   │
+│   │                       # PowerStore — check capacity after COD activation                      │   │
+│   │                    curl -sk -u admin:$PASS https://<ps>/api/rest/cluster \                    │   │
+│   │                     | jq ".[0] | {total_raw_capacity, usable_raw_capacity}"                   │   │
+│   │                                                                                               │   │
+│   │                            # Unity — list license status via uemcli                           │   │
+│   │                 uemcli -d <unity> -u admin -p $PASS /license show -output csv                 │   │
+│   │                                                                                               │   │
+│   │                        # PowerMax Solutions Enabler — list COD licenses                       │   │
+│   │                     symlic -sid <SID> list | grep -i "capacity on demand"                     │   │
+│   │                                                                                               │   │
+│   │                       # Report: all arrays, COD status, capacity summary                      │   │
+│   │                                for ARRAY in "${ARRAYS[@]}"; do                                │   │
+│   │                  echo "=== $ARRAY ==="; curl -sk ... /api/rest/license | jq ...               │   │
+│   │                                              done                                             │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    total_raw_capacity = All physical raw storage including locked COD; in bytes                       │
+│    usable_raw_capacity= Capacity available to create pools; increases after COD activation            │
+│    symlic             = Solutions Enabler license command; requires SYMAPI connectivity               │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌────────────────────────────────────────── Dell COD Scripts ───────────────────────────────────────────┐

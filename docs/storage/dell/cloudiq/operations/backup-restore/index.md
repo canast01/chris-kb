@@ -35,7 +35,6 @@ curl -s -X POST "https://cloudiq.apis.dell.com/auth/oauth/v2/token" \
   -H "Content-Type: application/x-www-form-urlencoded" \
   -d "grant_type=client_credentials&client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}" \
   | python3 -c "import sys,json; d=json.load(sys.stdin); print('OK' if 'access_token' in d else 'FAIL')"
-```
 ```text
 ┌─────────────────────────────────── Dell CloudIQ Backup and Restore ───────────────────────────────────┐
 │                                                                                                       │

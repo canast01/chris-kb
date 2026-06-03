@@ -41,7 +41,6 @@ graph TD
     blobStorage --> blobLease
     tfClient -->|backend remote| tfcState
     tfcState --> tfcRuns
-```
 ```text
 ┌────────────────────────────────────── Terraform — CLI Reference ──────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

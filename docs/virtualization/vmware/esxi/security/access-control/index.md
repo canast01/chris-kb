@@ -7,13 +7,51 @@ ESXi Access Control reference covering Exception Users, Local Account Management
 
 ESXi Access Control Model
 ```text
-┌──────────────────────────────────────────────────────┐
-│  vCenter (Primary path — day-to-day operations)                                                       │
-│  ├── AD / SSO identity source                                                                         │
-│  ├── Role-based permissions propagated to ESXi                                                        │
-│  └── Lockdown Mode: blocks all direct host access                                                     │
-└──────────────────────┬───────────────────────────────┘
-                       │ vpxa / hostd (HTTPS 443/902)
+┌──────────────────────────────────────── ESXi — Access Control ────────────────────────────────────────┐
+│                                                                                                       │
+│  RBAC via vCenter roles, lockdown mode, and direct host permission management.                        │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                 vCenter RBAC                 │  │           Direct Host Permissions           │   │
+│   │          Roles: Admin, ReadOnly, VM          │  │             Local root: SSH only            │   │
+│   │          Assign role to user+object          │  │           DCUI access: locked down          │   │
+│   │          Propagate to child objects          │  │          Exception users: emergency         │   │
+│   │           AD group → vSphere role            │  │         Lockdown mode: normal/strict        │   │
+│   │           Audit permission changes           │  │          DCUI exception list config         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  vCenter roles govern all access; lockdown mode blocks direct ESXi SSH login.                         │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Privilege Management             │  │               Audit and Review              │   │
+│   │           No-priv users read-only            │  │          Review permissions monthly         │   │
+│   │           Custom roles: least priv           │  │           Remove stale AD accounts          │   │
+│   │           No global admin for ops            │  │          Log access events in Aria          │   │
+│   │          PowerCLI: Get-VIPermission          │  │           Alert on root SSH login           │   │
+│   │           Service accounts: named            │  │           Export permission report          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  x86 hosts, management network, AD/LDAP, vCenter SSO, syslog target                                   │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  RBAC        = Role-Based Access Control; user+role+object permission model                           │
+│  Lockdown mode = ESXi state; blocks direct host login; normal or strict                               │
+│  DCUI        = Direct Console UI; local keyboard/screen access to host                                │
+│  Exception users = accounts allowed DCUI in lockdown; emergency access                                │
+│  SSO         = Single Sign-On; vCenter identity service integrating AD                                │
+│  Propagate   = permission inherited by child inventory objects                                        │
+│  Least priv  = principle: grant minimum permissions needed for role                                   │
+│  Custom role = vSphere role built from individual privilege checkboxes                                │
+│  Get-VIPermission = PowerCLI cmdlet; lists all permissions on object                                  │
+│  Service acct= named account used by automation; not shared personal creds                            │
+│  Strict lockdown = no DCUI; only vCenter API access allowed to host                                   │
+│  Audit log   = record of permission changes; stored in vCenter events                                 │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌──────────────────────────────────────── ESXi — Access Control ────────────────────────────────────────┐

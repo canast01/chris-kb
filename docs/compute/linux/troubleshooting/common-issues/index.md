@@ -34,7 +34,6 @@ flowchart TD
     portOpen -- No --> resolved
     portOpen -- Yes --> fwBlock
     fwBlock --> resolved
-```
 ```text
 ┌──────────────────────────────── Linux — Troubleshooting Common Issues ────────────────────────────────┐
 │                                                                                                       │

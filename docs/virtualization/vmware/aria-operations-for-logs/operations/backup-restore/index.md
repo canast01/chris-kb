@@ -35,7 +35,6 @@ curl -sk -u 'admin:<password>' \
 
 # Check disk usage — do not back up a node with >90% disk (indicates ingestion pressure)
 df -h /var/log/loginsight
-```
 ```text
 ┌──────────────────────────── Aria Operations for Logs — Backup and Restore ────────────────────────────┐
 │                                                                                                       │

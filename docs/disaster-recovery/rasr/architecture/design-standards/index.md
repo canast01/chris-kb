@@ -27,12 +27,48 @@ Always capture immediately after:
 ## Image Naming Convention
 
 ```text
-Format: <hostname>_<environment>_<date>_<sequence>
-
-Examples:
-  app01_prod_20260510_001.wim
-  db02_prod_20260503_weekly.wim
-  dc01_prod_20260101_post-patch.wim
+┌─────────────────────────────────────── RASR — Design Standards ───────────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Sizing Guidelines               │  │               HA Requirements               │   │
+│   │         Deduplicate where supported          │  │           N+1 component redundancy          │   │
+│   │          Bandwidth: 10 GbE minimum           │  │          Heartbeat / health monitor         │   │
+│   │          Storage: 130% of raw data           │  │          Separate mgmt / data VLANs         │   │
+│   │         Latency: < 10 ms to storage          │  │          Out-of-band access (IPMI)          │   │
+│   │           CPU: 8+ vCPU for engine            │  │          Anti-affinity VM placement         │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Ports: 443 (PPDM REST API) · 2049 (NFS vault) · 9080 (CyberSense)                                  │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                   Standard RASR Design Rules                                  │   │
+│   │            RPO target drives snapshot/cycle frequency — document in service design            │   │
+│   │            RTO target drives recovery tier: instant, warm standby, or cold restore            │   │
+│   │                  Dedicated backup network VLAN — no shared production traffic                 │   │
+│   │  Encryption: AES-256 at rest on vault; TLS 1.3 for all mgmt; vault lock enforces immutability │   │
+│   │               Service accounts: minimum privilege; rotate credentials quarterly               │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Isolated network segment (airgap switch) · Vault PowerStore/DD appliance · Clean-room ESXi hosts     │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  RASR          = Ransomware Air-gap Secure Recovery; full workflow from detection to clean rest       │
+│  Vault         = isolated, air-gapped storage appliance receiving periodic replication copies         │
+│  Vault Lock    = WORM lock applied after sync; prevents modification or deletion of vault copies      │
+│  CyberSense    = ML analytics engine scanning vault data for corruption, encryption signatures        │
+│  PPDM          = PowerProtect Data Manager; orchestrates protection policies, jobs, and recovery      │
+│  Air Gap       = physical or logical network isolation preventing attacker lateral movement to        │
+│  Delta Set     = incremental changed blocks replicated from production to vault each cycle            │
+│  Clean Room    = isolated recovery environment: separate vCenter, network, and workstations           │
+│  Recovery Point= specific vault snapshot timestamp from which clean recovery is performed             │
+│  Integrity Lock= two-person authorization required to open vault; prevents insider unlock attac       │
+│  Journal       = write-order-consistent journal on vault enabling point-in-time recovery              │
+│  Scan Report   = CyberSense output: clean/suspect classification per file and block                   │
+│  Retention     = vault copy lifespan; typically 30–90 days of daily snapshots kept                    │
+│  RTO           = Recovery Time Objective; time from failover decision to restored service             │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌─────────────────────────────────────── RASR — Design Standards ───────────────────────────────────────┐

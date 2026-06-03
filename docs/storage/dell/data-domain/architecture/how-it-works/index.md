@@ -25,7 +25,6 @@ graph TB
   class BU host
   class CLOUD cloud
   class DDDR dr
-```
 ```text
 ┌─────────────────────────────────── Dell Data Domain — How It Works ───────────────────────────────────┐
 │                                                                                                       │

@@ -27,7 +27,6 @@ graph TB
   class DISK,TAPE store
   class SRC,ADMIN host
   class WEBCON mgmt
-```
 ```text
 ┌─────────────────────────────── Commvault — How It Works: Job Lifecycle ───────────────────────────────┐
 │                                                                                                       │

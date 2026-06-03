@@ -6,31 +6,51 @@ RDS reference covering Snapshots, Parameter Groups, Subnet Groups, Events and Ev
 </div>
 
 ```text
-RDS CLI: Instances · Snapshots · Events
-──────────────────────────────────────────────────────────────
-
-  describe-db-instances (list all / describe one)
-          │
-          ▼
-  ┌────────────────────────────────────────────────────┐
-  │  RDS Instance                                      │
-  │  start / stop / reboot-db-instance                 │
-  │  modify-db-instance (class, params, multi-az)      │
-  └───────────────────┬────────────────────────────────┘
-                      │
-          ┌───────────┼───────────────┐
-          ▼           ▼               ▼
-  ┌──────────────┐ ┌──────────────┐ ┌──────────────────┐
-  │  Snapshots   │ │  Read        │ │  Events          │
-  │              │ │  Replicas    │ │                  │
-  │ create-db-   │ │  create-db-  │ │ describe-events  │
-  │  snapshot    │ │  instance-   │ │ create-event-    │
-  │ restore-db-  │ │  read-       │ │  subscription    │
-  │  instance-   │ │  replica     │ │  (SNS alerts)    │
-  │  from-snap   │ │  promote-    │ │                  │
-  │  (PITR also) │ │  read-       │ │                  │
-  └──────────────┘ │  replica     │ └──────────────────┘
-                   └──────────────┘
+┌──────────────────────────────────────────── AWS CLI — RDS ────────────────────────────────────────────┐
+│                                                                                                       │
+│  RDS CLI commands for instance lifecycle, snapshots, parameter groups, and failover.                  │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Instance Management              │  │             Instance Inspection             │   │
+│   │        create-db-instance: provision         │  │            describe-db-instances            │   │
+│   │          modify-db-instance: change          │  │            describe-db-log-files            │   │
+│   │         reboot-db-instance: restart          │  │         download-db-log-file-portion        │   │
+│   │          delete-db-instance: remove          │  │         describe-pending-maintenance        │   │
+│   │            start/stop-db-instance            │  │           describe-events: history          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  modify-db-instance: use --apply-immediately or --no-apply-immediately for maintenance                │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Snapshots and Restore             │  │              High Availability              │   │
+│   │          create-db-snapshot: manual          │  │         failover-db-cluster: switch         │   │
+│   │         describe-db-snapshots: list          │  │          create-db-cluster-snapshot         │   │
+│   │      restore-db-instance-from-snapshot       │  │             describe-db-clusters            │   │
+│   │        copy-db-snapshot: cross-region        │  │             promote-read-replica            │   │
+│   │          delete-db-snapshot: purge           │  │       create-db-instance-read-replica       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  RDS managed nodes · Multi-AZ standby · EBS storage · KMS · VPC security groups                       │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  modify-db-instance= Changes instance class, storage, or parameter group                              │
+│  --apply-immediately= Applies modification now vs next maintenance window                             │
+│  Parameter group = Collection of database engine settings applied to instance                         │
+│  Snapshot        = Manual or automated point-in-time copy of RDS storage                              │
+│  copy-db-snapshot= Cross-region snapshot copy for DR; can re-encrypt with CMK                         │
+│  Multi-AZ        = Synchronous standby in second AZ; automatic failover                               │
+│  failover-db-cluster= Forces promotion of Aurora replica to writer                                    │
+│  promote-read-replica= Promotes MySQL/PostgreSQL read replica to standalone                           │
+│  Read replica    = Asynchronous replication for read scale-out                                        │
+│  describe-pending-maintenance= Shows queued OS or engine maintenance tasks                            │
+│  describe-events = Database event log: failovers, backups, restores                                   │
+│  Maintenance window= Weekly scheduled time for RDS to apply updates                                   │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌──────────────────────────────────────────── AWS CLI — RDS ────────────────────────────────────────────┐

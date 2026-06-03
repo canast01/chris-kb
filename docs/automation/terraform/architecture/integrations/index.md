@@ -27,7 +27,6 @@ provider "aws" {
   # 3. AWS_ACCESS_KEY_ID + AWS_SECRET_ACCESS_KEY env vars
   # Never: hardcoded credentials in .tf files
 }
-```
 ```text
 ┌────────────────────────────────────── Terraform — Integrations ───────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -6,32 +6,51 @@ EKS reference covering Node Groups, Fargate Profiles, IAM OIDC Provider, Access 
 </div>
 
 ```text
-EKS CLI: Cluster → Nodes → Workloads
-──────────────────────────────────────────────────────────────
-
-  ┌─────────────────────────────────────────────────────┐
-  │  EKS Control Plane (AWS managed)                    │
-  │  describe-cluster / list-clusters                   │
-  │  update-kubeconfig ──► ~/.kube/config               │
-  └────────────────────────┬────────────────────────────┘
-                           │ kubectl now works
-                           ▼
-  ┌─────────────────────────────────────────────────────┐
-  │  Node Groups / Fargate Profiles                     │
-  │  list-nodegroups                                    │
-  │  describe-nodegroup                                 │
-  │  update-nodegroup-config (scale min/max/desired)    │
-  └────────────────────────┬────────────────────────────┘
-                           │
-             ┌─────────────┼─────────────┐
-             ▼             ▼             ▼
-         ┌────────┐   ┌─────────┐   ┌────────────┐
-         │Add-ons │   │  OIDC   │   │Pod Identity│
-         │coredns │   │provider │   │Associations│
-         │vpc-cni │   │(IRSA)   │   │            │
-         │kube-   │   │         │   │            │
-         │proxy   │   │         │   │            │
-         └────────┘   └─────────┘   └────────────┘
+┌──────────────────────────────────────────── AWS CLI — EKS ────────────────────────────────────────────┐
+│                                                                                                       │
+│  EKS CLI commands for cluster management, node groups, add-ons, and kubeconfig.                       │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Cluster Operations              │  │            Node Group Operations            │   │
+│   │          create-cluster: provision           │  │               create-nodegroup              │   │
+│   │           describe-cluster: status           │  │              describe-nodegroup             │   │
+│   │         list-clusters: all in region         │  │           update-nodegroup-config           │   │
+│   │       update-cluster-version: upgrade        │  │           update-nodegroup-version          │   │
+│   │           delete-cluster: teardown           │  │               delete-nodegroup              │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Cluster upgraded first; then node groups updated to matching Kubernetes version                      │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Access and Auth                │  │                   Add-ons                   │   │
+│   │           update-kubeconfig: merge           │  │            create-addon: install            │   │
+│   │         create-access-entry: IAM map         │  │           describe-addon: version           │   │
+│   │           associate-access-policy            │  │            update-addon: upgrade            │   │
+│   │             list-access-entries              │  │             delete-addon: remove            │   │
+│   │            create-fargate-profile            │  │           describe-addon-versions           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  EKS control plane (AWS-managed) · EC2 worker nodes · VPC · IAM · EBS/EFS storage                     │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  EKS             = Elastic Kubernetes Service; managed Kubernetes control plane                       │
+│  Node group      = Managed group of EC2 worker nodes; auto-scaling enabled                            │
+│  update-kubeconfig= Adds EKS cluster to local ~/.kube/config for kubectl access                       │
+│  Access entry    = EKS API method mapping IAM principal to Kubernetes RBAC role                       │
+│  Associate policy= Binds a predefined EKS access policy to an access entry                            │
+│  Add-on          = Managed EKS component: CoreDNS, kube-proxy, VPC CNI, EBS CSI                       │
+│  Fargate profile = Runs pods serverlessly without managing EC2 node groups                            │
+│  update-cluster-version= Upgrades EKS control plane to next minor version                             │
+│  update-nodegroup-version= Replaces node group nodes with new Kubernetes AMI version                  │
+│  VPC CNI         = AWS VPC Container Network Interface plugin; assigns pod IPs from VPC               │
+│  EBS CSI driver  = Kubernetes CSI driver for provisioning EBS volumes as PVs                          │
+│  IRSA            = IAM Roles for Service Accounts; pods assume IAM roles via OIDC                     │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌──────────────────────────────────────────── AWS CLI — EKS ────────────────────────────────────────────┐

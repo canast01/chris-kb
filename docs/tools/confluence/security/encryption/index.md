@@ -47,7 +47,6 @@ server {
         proxy_set_header X-Forwarded-Proto https;
     }
 }
-```
 ```text
 ┌─────────────────────────────────────── Confluence — Encryption ───────────────────────────────────────┐
 │                                                                                                       │

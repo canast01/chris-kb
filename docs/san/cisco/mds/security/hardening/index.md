@@ -39,7 +39,6 @@ no cdp enable
 show feature | include telnet|http|tftp|ftp|snmp|ssh
 # Expected: telnet disabled, http-server disabled, tftp-server disabled
 #           https-server enabled, ssh enabled, snmp enabled
-```
 ```text
 ┌─────────────────────────────────── Cisco MDS — Security Hardening ────────────────────────────────────┐
 │                                                                                                       │

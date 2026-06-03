@@ -6,36 +6,51 @@ vSAN hardening covers the security baseline configuration applied to the ESXi ho
 </div>
 
 ```text
-HARDENING LAYERS
-
-  ┌──────────────────────────────────────────────────────┐
-  │  NETWORK LAYER                                       │
-  │  ├── ESXi firewall: restrict SSH to mgmt CIDR only   │
-  │  ├── vSAN VLAN isolated from management/vMotion      │
-  │  ├── MTU 9000 locked; switch PortFast on vSAN ports  │
-  │  └── NIOC: vSAN ≥ 50%, NSX TEP ≥ 25%, vMotion ≥ 25% │
-  └───────────────────────┬──────────────────────────────┘
-                          │
-  ┌───────────────────────▼──────────────────────────────┐
-  │  HOST ACCESS LAYER                                   │
-  │  ├── Lockdown Mode (Normal or Strict)                │
-  │  ├── SSH disabled; enable only for maintenance       │
-  │  ├── Password: ≥15 chars, complexity, 5-attempt lock │
-  │  └── NTP: two servers, < 500 ms drift enforced       │
-  └───────────────────────┬──────────────────────────────┘
-                          │
-  ┌───────────────────────▼──────────────────────────────┐
-  │  ENCRYPTION LAYER                                    │
-  │  ├── Data-in-Transit: AES-256-GCM (no KMS needed)   │
-  │  └── Data-at-Rest: KMS → KEK → DEK (AES-256-XTS)    │
-  └───────────────────────┬──────────────────────────────┘
-                          │
-  ┌───────────────────────▼──────────────────────────────┐
-  │  AUDIT LAYER                                         │
-  │  ├── Syslog → SIEM (SSH logins, disk events)         │
-  │  ├── Host Profiles → detect config drift             │
-  │  └── Aria Operations → SCG compliance score          │
-  └──────────────────────────────────────────────────────┘
+┌────────────────────────────────────────── vSAN — Hardening ───────────────────────────────────────────┐
+│                                                                                                       │
+│  vSAN hardening includes ESXi host hardening, vSAN network isolation, data-at-rest                    │
+│  encryption, disk-level secure erase, and lockdown mode on all hosts.                                 │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Network Hardening               │  │                Host Hardening               │   │
+│   │             Dedicated vSAN VLAN              │  │            Lockdown mode: enabled           │   │
+│   │          Isolate from guest VM nets          │  │           SSH: off when not in use          │   │
+│   │          Jumbo frames vSAN net only          │  │           ESXi shell: time-limited          │   │
+│   │        Firewall: block mgmt from VMs         │  │              Patch: 30-day SLA              │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Network isolation prevents VM-level attacks on vSAN management traffic.                              │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Data Hardening                │  │              Compliance & Audit             │   │
+│   │          Enable at-rest encryption           │  │            CIS vSphere benchmark            │   │
+│   │         Secure erase on disk removal         │  │         Syslog: vSAN events to SIEM         │   │
+│   │               KMS HA: 2+ nodes               │  │         Policy: enforce FTT>0 always        │   │
+│   │           Re-key schedule: 90 days           │  │          Alert: disk removed event          │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Physical disk security: tag decommissioned drives, apply secure erase, log disposal;                 │
+│  KMS appliances must be physically secured.                                                           │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Lockdown mode  = blocks direct ESXi access; requires vCenter for all ops                             │
+│  At-rest enc    = AES-256 encryption of all vSAN disk data                                            │
+│  Secure erase   = SCSI sanitize command; wipe disk before decommission                                │
+│  KMS HA         = 2+ KMS nodes; survives single KMS failure                                           │
+│  Re-key         = rotate KEK on schedule; 90 days is common policy                                    │
+│  vSAN VLAN      = dedicated L2 segment for inter-host vSAN traffic                                    │
+│  SIEM           = Security Info and Event Mgmt; vSAN alerts forwarded                                 │
+│  CIS benchmark  = Centre for Internet Security; vSphere hardening checklist                           │
+│  FTT>0 policy   = ensure all VMs have ≥1 failure tolerance                                            │
+│  Disk disposal  = document and secure-erase all removed vSAN disks                                    │
+│  Patch SLA      = critical patches within 7d; high within 30d                                         │
+│  SSH off        = SSH disabled on ESXi; enable only for active troubleshoot                           │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 ```text
 ┌────────────────────────────────────────── vSAN — Hardening ───────────────────────────────────────────┐

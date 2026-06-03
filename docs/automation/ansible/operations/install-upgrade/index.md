@@ -25,7 +25,6 @@ dnf install -y ansible-core    # minimal, no bundled collections
 dnf install -y ansible         # full community package
 
 ansible --version
-```
 ```text
 ┌───────────────────────────────────── Ansible — Install & Upgrade ─────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
