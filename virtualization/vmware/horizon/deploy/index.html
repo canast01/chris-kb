@@ -1,0 +1,5520 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
+      
+      
+      
+      
+        <link rel="prev" href="../architecture/integrations/">
+      
+      
+        <link rel="next" href="../operations/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Horizon — Deploy - Chris KB</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230f172a'/%3E%3Ctext x='16' y='22' font-family='system-ui%2Csans-serif' font-size='13' font-weight='800' fill='%2338bdf8' text-anchor='middle'%3ECA%3C/text%3E%3C/svg%3E">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Chris KB">
+  <meta name="theme-color" content="#0f172a">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+  <meta property="og:site_name" content="Chris KB">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Horizon — Deploy · Chris KB">
+  <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Horizon — Deploy · Chris KB">
+  <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
+
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="slate" data-md-color-accent="light-blue">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#horizon-deploy" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../../.." title="Chris KB" class="md-header__button md-logo" aria-label="Chris KB" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Chris KB
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Horizon — Deploy
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="slate" data-md-color-accent="light-blue"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="slate" data-md-color-accent="light-blue"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Platforms
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../site-map/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Site Map
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Chris KB" class="md-nav__button md-logo" aria-label="Chris KB" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Chris KB
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Platforms
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Platforms
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Virtualization
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_1" id="__nav_2_1_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_1_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Virtualization
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../operations/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Operations
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../reference/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1_4" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VMware
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_1_4" id="__nav_2_1_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_1_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_1_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    VMware
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../aria-automation/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Aria Automation
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../aria-operations/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Aria Operations
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../aria-operations-for-logs/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Aria Operations for Logs
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../aria-operations-for-networks/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Aria Operations for Networks
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../aria-suite-lifecycle/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Aria Suite Lifecycle
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../esxi/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ESXi
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1_4_8" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Horizon
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_1_4_8" id="__nav_2_1_4_8_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_1_4_8_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_1_4_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Horizon
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../architecture/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1_4_8_3" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="./" class="md-nav__link md-nav__link--active">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deploy
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="5" aria-labelledby="__nav_2_1_4_8_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_1_4_8_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Deploy
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../operations/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Operations
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../security/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../troubleshooting/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../nsx/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NSX
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../srm/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SRM
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../tanzu/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tanzu
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../topics/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Topics
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../vcenter/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    vCenter
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../vmware-cloud-foundation/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VMware Cloud Foundation
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../vsan/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    vSAN
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../vsphere-replication/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    vSphere Replication
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../vxrail/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VxRail
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../vxrail/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VxRail
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../cloud/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cloud
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../storage/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Storage
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../san/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SAN
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../compute/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Compute
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../networking/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Networking
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../monitoring/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitoring
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../security/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../tools/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../automation/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Automation
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../disaster-recovery/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Disaster Recovery
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../data-protection/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Protection
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../troubleshooting/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../runbooks/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Runbooks
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../change-management/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Change Management
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../architecture/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../performance/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Performance
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../certifications/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Certifications
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../project-management/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project Management
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../protocols/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Protocols
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../database/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Database
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../integration/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integration
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../inventory/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inventory
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../lifecycle/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lifecycle
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../ai/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../start-here/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Start Here
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../site-map/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Site Map
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#phase-1-prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 1 — Prerequisites
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 1 — Prerequisites">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#active-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Active Directory
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sql-server-events-db-and-app-volumes-db" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SQL Server — Events DB and App Volumes DB
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dns-records" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DNS Records
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ca-certificate-readiness" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CA Certificate Readiness
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-2-connection-server-pod" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2 — Connection Server Pod
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 2 — Connection Server Pod">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#install-primary-connection-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Install Primary Connection Server
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#install-replica-connection-servers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Install Replica Connection Servers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verify-adam-replication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify ADAM Replication
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#load-balancer-pool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Load Balancer Pool
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-3-unified-access-gateway-uag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 3 — Unified Access Gateway (UAG)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 3 — Unified Access Gateway (UAG)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#deploy-uag-ova" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deploy UAG OVA
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configure-uag-edge-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure UAG Edge Service
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#firewall-rules-required" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Firewall Rules Required
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-4-desktop-pools-and-rdsh-farms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 4 — Desktop Pools and RDSH Farms
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 4 — Desktop Pools and RDSH Farms">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#prepare-the-golden-image" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prepare the Golden Image
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-an-instant-clone-desktop-pool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create an Instant Clone Desktop Pool
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-an-rdsh-farm-and-application-pool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create an RDSH Farm and Application Pool
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#entitle-users-to-pools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entitle Users to Pools
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-5-app-volumes-and-dynamic-environment-manager" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 5 — App Volumes and Dynamic Environment Manager
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 5 — App Volumes and Dynamic Environment Manager">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#deploy-app-volumes-manager" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deploy App Volumes Manager
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#register-vcenter-and-create-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Register vCenter and Create Storage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#capture-and-assign-an-appstack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Capture and Assign an AppStack
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deploy-dem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deploy DEM
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-6-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 6 — Validation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 6 — Validation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#connection-server-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connection Server Health
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#uag-external-connectivity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        UAG External Connectivity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pool-provisioning-and-desktop-login" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pool Provisioning and Desktop Login
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#post-deployment-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Post-Deployment Checklist
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="Navigation" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../../../.." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    Home
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../../../" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Platforms
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../../../" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Virtualization
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../../" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    VMware
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Horizon
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="./" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Deploy
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+  <div class="kb-progress" id="kb-progress"></div>
+
+  
+  <nav class="kb-topnav" aria-label="Page navigation">
+    
+    <a href="../architecture/integrations/" class="kb-topnav__link kb-topnav__link--prev" id="kb-prev-link">
+      <span class="kb-topnav__arrow">&#8592;</span>
+      <span class="kb-topnav__title">Horizon — Integrations</span>
+    </a>
+    
+
+    <a href="../../../.." class="kb-topnav__link kb-topnav__home" title="Home">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+      <span class="kb-topnav__home-label">Home</span>
+    </a>
+
+    
+    <a href="../operations/" class="kb-topnav__link kb-topnav__link--next" id="kb-next-link">
+      <span class="kb-topnav__title">Horizon (VDI) — Operations</span>
+      <span class="kb-topnav__arrow">&#8594;</span>
+    </a>
+    
+  </nav>
+
+  
+                  
+
+
+
+<h1 id="horizon-deploy">Horizon — Deploy<a class="headerlink" href="#horizon-deploy" title="Permanent link">&para;</a></h1>
+<div class="kb-summary">
+End-to-end deployment guide for VMware Horizon VDI and published applications. Phases 1–2 establish the prerequisites and Connection Server pod; Phases 3–4 cover external access via UAG and desktop pool configuration; Phases 5–6 add application layering (App Volumes), user environment management (DEM), and final validation.
+</div>
+
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────────── Horizon — Deployment Phases ──────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Six phases from AD/vCenter prerequisites to a validated VDI environment. Complete each phase         │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  and confirm the exit criterion before advancing to the next phase.                                   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│                                                                                                       │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   ┌────────────────────────────┐  ┌────────────────────────────┐  ┌──────────────────────────────┐    │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │  Phase 1: Prerequisites    │  │   Phase 2: Connection      │  │  Phase 3: Unified Access     │    │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │  AD OUs + service accounts │  │   Server Pod               │  │  Gateway (UAG)               │    │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   │  SQL: Events DB + AV DB    │  │  Install primary CS        │  │  Deploy OVA — DMZ NIC config │    │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   │  DNS: FQDNs + VIP A-record │  │  Install replica CSs       │  │  Blast + PCoIP edge service  │    │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   │  vCenter linked, certs CA  │  │  Load balancer pool + VIP  │  │  SAML / cert trust to CS     │    │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   └────────────────────────────┘  └────────────────────────────┘  └──────────────────────────────┘    │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                                                                                                       │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│                ▼                               ▼                               ▼                      │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│                                                                                                       │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   ┌────────────────────────────┐  ┌────────────────────────────┐  ┌──────────────────────────────┐    │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │  Phase 4: Desktop Pools    │  │  Phase 5: App Volumes      │  │  Phase 6: Validation         │    │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │  &amp; RDSH Farms              │  │  &amp; DEM                     │  │                              │    │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │  Golden image + IC parent  │  │  App Volumes Mgr deploy    │  │  Session broker: all CS up   │    │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │  Instant clone pool config │  │  AppStack capture + assign │  │  UAG: external Blast test    │    │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   │  RDSH farm + app publish   │  │  DEM agent + GPO + share   │  │  Pool: VMs available + login │    │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   │  Entitlement: AD groups    │  │  Writable volumes for users│  │  App Volumes: AppStack attach│    │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│   └────────────────────────────┘  └────────────────────────────┘  └──────────────────────────────┘    │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│                                                                                                       │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  Physical Infrastructure: Connection Server VMs (Windows 2019/2022, 8 vCPU/32 GB) on vSphere;         │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  UAG VMs in DMZ with dual-NIC; ESXi hosts with vSAN/NFS storage for desktop pools.                    │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│                                                                                                       │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│                                                                                                       │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  Connection Server = Windows broker service; ADAM (AD LDS) config store; max 7 per pod                │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│  Replica CS        = secondary broker; auto-replicates ADAM from primary CS                           │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  UAG               = Unified Access Gateway; OVA appliance; DMZ; proxies Blast/PCoIP                  │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│  Instant clone     = vmFork-based pool; ~30 sec provision from running parent VM                      │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│  AppStack          = App Volumes VMDK; attached at login; real-time app delivery                      │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│  DEM               = Dynamic Environment Manager; GPO-based user profile and env policy               │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│                                                                                                       │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<hr />
+<h2 id="phase-1-prerequisites">Phase 1 — Prerequisites<a class="headerlink" href="#phase-1-prerequisites" title="Permanent link">&para;</a></h2>
+<p><strong>Exit criterion:</strong> AD, SQL, DNS, vCenter, and PKI ready; service accounts created and tested.</p>
+<h3 id="active-directory">Active Directory<a class="headerlink" href="#active-directory" title="Permanent link">&para;</a></h3>
+<p>Create the following in AD before installing any Horizon components:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>OU=VDI,DC=example,DC=local
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  OU=Computers-IC     ← instant clone machine accounts
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  OU=Computers-Full   ← full clone / RDSH machine accounts
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  OU=Horizon-Servers  ← Connection Server computer accounts
+</code></pre></div>
+<p>Service accounts required:</p>
+<table>
+<thead>
+<tr>
+<th>Account</th>
+<th>Permissions</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>svc-horizon-cs</code></td>
+<td>Domain user; local admin on CS VMs</td>
+<td>Horizon Connection Server service</td>
+</tr>
+<tr>
+<td><code>svc-horizon-composer</code></td>
+<td>Write to VDI computer OUs</td>
+<td>Instant clone domain join</td>
+</tr>
+<tr>
+<td><code>svc-horizon-av</code></td>
+<td>Domain user</td>
+<td>App Volumes Manager registration</td>
+</tr>
+<tr>
+<td><code>svc-horizon-events</code></td>
+<td>SQL: db_owner on Events DB</td>
+<td>Horizon Events database writes</td>
+</tr>
+</tbody>
+</table>
+<h3 id="sql-server-events-db-and-app-volumes-db">SQL Server — Events DB and App Volumes DB<a class="headerlink" href="#sql-server-events-db-and-app-volumes-db" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">-- Create Horizon Events database</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="n">HorizonEvents</span><span class="w"> </span><span class="k">COLLATE</span><span class="w"> </span><span class="n">Latin1_General_CS_AS</span><span class="p">;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="k">GO</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1">-- Create App Volumes database</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="n">AppVolumes</span><span class="w"> </span><span class="k">COLLATE</span><span class="w"> </span><span class="n">Latin1_General_CS_AS</span><span class="p">;</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="k">GO</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1">-- Grant service account access</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="n">USE</span><span class="w"> </span><span class="n">HorizonEvents</span><span class="p">;</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="p">[</span><span class="n">EXAMPLE</span><span class="err">\</span><span class="n">svc</span><span class="o">-</span><span class="n">horizon</span><span class="o">-</span><span class="n">events</span><span class="p">]</span><span class="w"> </span><span class="k">FOR</span><span class="w"> </span><span class="n">LOGIN</span><span class="w"> </span><span class="p">[</span><span class="n">EXAMPLE</span><span class="err">\</span><span class="n">svc</span><span class="o">-</span><span class="n">horizon</span><span class="o">-</span><span class="n">events</span><span class="p">];</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="k">ALTER</span><span class="w"> </span><span class="k">ROLE</span><span class="w"> </span><span class="n">db_owner</span><span class="w"> </span><span class="k">ADD</span><span class="w"> </span><span class="n">MEMBER</span><span class="w"> </span><span class="p">[</span><span class="n">EXAMPLE</span><span class="err">\</span><span class="n">svc</span><span class="o">-</span><span class="n">horizon</span><span class="o">-</span><span class="n">events</span><span class="p">];</span>
+</code></pre></div>
+<h3 id="dns-records">DNS Records<a class="headerlink" href="#dns-records" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>horizon-cs-vip.example.local     A  10.10.1.20   ; Connection Server LB VIP
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>horizon-cs01.example.local       A  10.10.1.21   ; CS node 1
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>horizon-cs02.example.local       A  10.10.1.22   ; CS node 2
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>uag-ext.example.com              A  203.0.113.10  ; UAG external FQDN (public)
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>uag-int.example.local            A  10.10.1.30   ; UAG internal NIC
+</code></pre></div>
+<h3 id="ca-certificate-readiness">CA Certificate Readiness<a class="headerlink" href="#ca-certificate-readiness" title="Permanent link">&para;</a></h3>
+<p>Obtain a certificate for the Connection Server pool FQDN (<code>horizon-cs-vip.example.local</code>) and the UAG external FQDN (<code>uag-ext.example.com</code>). Both must be issued by a CA trusted by end-user devices.</p>
+<hr />
+<h2 id="phase-2-connection-server-pod">Phase 2 — Connection Server Pod<a class="headerlink" href="#phase-2-connection-server-pod" title="Permanent link">&para;</a></h2>
+<p><strong>Exit criterion:</strong> Primary CS installed, at least one replica joined, ADAM replication verified, load balancer pool healthy.</p>
+<h3 id="install-primary-connection-server">Install Primary Connection Server<a class="headerlink" href="#install-primary-connection-server" title="Permanent link">&para;</a></h3>
+<p>Run the Horizon Connection Server installer on the first Windows Server 2019/2022 VM:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Run on the primary CS VM (domain-joined, 8 vCPU / 32 GB RAM)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">VMware-Horizon-Connection-Server-x86_64</span><span class="p">-&lt;</span><span class="n">version</span><span class="p">&gt;.</span><span class="n">exe</span> <span class="p">/</span><span class="n">silent</span> <span class="p">/</span><span class="n">install</span> <span class="p">`</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  <span class="p">/</span><span class="n">v</span><span class="s2">&quot;VDM_SERVER_INSTANCE_TYPE=1 `</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="s2">     VDM_SERVER_NAME=horizon-cs01.example.local `</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="s2">     VDM_INITIAL_ADMIN_SID=&lt;domain-admins-SID&gt; `</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="s2">     VDM_LICENSE_KEY=XXXXX-XXXXX-XXXXX-XXXXX&quot;</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c"># Verify service is running</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="s2">&quot;VMware Horizon View Connection Server&quot;</span>
+</code></pre></div>
+<p>After install, complete initial configuration in the Horizon Administrator console (<code>https://horizon-cs01.example.local/admin</code>):</p>
+<ol>
+<li>Apply license key (Administration → Product Licensing and Usage).</li>
+<li>Add vCenter: View Configuration → Servers → vCenter Servers → Add.</li>
+<li>Set data recovery password (for ADAM backup).</li>
+<li>Configure Events DB: View Configuration → Event Configuration → point to SQL <code>HorizonEvents</code>.</li>
+</ol>
+<h3 id="install-replica-connection-servers">Install Replica Connection Servers<a class="headerlink" href="#install-replica-connection-servers" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Run on each replica VM — select Replica role</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="n">VMware-Horizon-Connection-Server-x86_64</span><span class="p">-&lt;</span><span class="n">version</span><span class="p">&gt;.</span><span class="n">exe</span> <span class="p">/</span><span class="n">silent</span> <span class="p">/</span><span class="n">install</span> <span class="p">`</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  <span class="p">/</span><span class="n">v</span><span class="s2">&quot;VDM_SERVER_INSTANCE_TYPE=2 `</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="s2">     VDM_INITIAL_SERVER_URL=https://horizon-cs01.example.local&quot;</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c"># Verify ADAM replication from replica</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="n">vdmadmin</span> <span class="n">-A</span> <span class="n">-d</span> <span class="n">example</span><span class="p">.</span><span class="n">local</span> <span class="n">-u</span> <span class="n">svc-horizon-cs</span> <span class="n">-p</span> <span class="p">&lt;</span><span class="n">password</span><span class="p">&gt;</span> <span class="n">-verbose</span>
+</code></pre></div>
+<h3 id="verify-adam-replication">Verify ADAM Replication<a class="headerlink" href="#verify-adam-replication" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Check replication state between Connection Servers</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c"># Horizon Console → View Configuration → Servers → Connection Servers</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c"># All servers must show: Status = Connected, Replication = OK</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c"># CLI check</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="nb">Get-Service</span> <span class="s2">&quot;VMware Horizon View Connection Server&quot;</span> <span class="n">-ComputerName</span> <span class="n">horizon-cs01</span><span class="p">,</span><span class="n">horizon-cs02</span>
+</code></pre></div>
+<h3 id="load-balancer-pool">Load Balancer Pool<a class="headerlink" href="#load-balancer-pool" title="Permanent link">&para;</a></h3>
+<p>Add all Connection Server IPs to the LB pool. Configure health check: HTTPS on port 443, path <code>/broker/xml</code>. The pool VIP (<code>horizon-cs-vip.example.local</code>) is used by UAG and the Horizon Client.</p>
+<hr />
+<h2 id="phase-3-unified-access-gateway-uag">Phase 3 — Unified Access Gateway (UAG)<a class="headerlink" href="#phase-3-unified-access-gateway-uag" title="Permanent link">&para;</a></h2>
+<p><strong>Exit criterion:</strong> UAG deployed in DMZ, external FQDN resolves to UAG VIP, Blast Extreme session from external client succeeds.</p>
+<h3 id="deploy-uag-ova">Deploy UAG OVA<a class="headerlink" href="#deploy-uag-ova" title="Permanent link">&para;</a></h3>
+<p>UAG uses a PowerShell-based deployment script (<code>deploy-ova-uag.ps1</code>) and an INI configuration file:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># uag.ini — configure before deployment</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="no">[General]</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="n">source</span><span class="p">=</span><span class="n">VMware-Unified-Access-Gateway</span><span class="p">-&lt;</span><span class="n">version</span><span class="p">&gt;.</span><span class="n">ova</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="n">target</span><span class="p">=</span><span class="n">vi</span><span class="p">://</span><span class="n">administrator</span><span class="nv">@vsphere</span><span class="p">.</span><span class="n">local</span><span class="p">:&lt;</span><span class="n">password</span><span class="p">&gt;</span><span class="nv">@vcenter</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">local</span><span class="p">/</span><span class="n">Datacenter</span><span class="p">/</span><span class="n">host</span><span class="p">/</span><span class="n">cluster</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="n">deploymentOption</span><span class="p">=</span><span class="n">twonic</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="n">netInternet</span><span class="p">=</span><span class="n">PG-DMZ-External</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="n">netManagementNetwork</span><span class="p">=</span><span class="n">PG-Management</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="no">[Horizon]</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="n">proxyDestinationUrl</span><span class="p">=</span><span class="n">https</span><span class="p">://</span><span class="n">horizon-cs-vip</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="k">local:</span><span class="n">443</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="n">proxyDestinationUrlThumbprints</span><span class="p">=</span><span class="n">sha1</span><span class="p">:&lt;</span><span class="n">cs-vip-thumbprint</span><span class="p">&gt;</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="n">blastExternalUrl</span><span class="p">=</span><span class="n">https</span><span class="p">://</span><span class="n">uag-ext</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span><span class="p">:</span><span class="n">8443</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="n">pcoipExternalUrl</span><span class="p">=</span><span class="n">203</span><span class="p">.</span><span class="n">0</span><span class="p">.</span><span class="n">113</span><span class="p">.</span><span class="n">10</span><span class="p">:</span><span class="n">4172</span>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="n">tunnelExternalUrl</span><span class="p">=</span><span class="n">https</span><span class="p">://</span><span class="n">uag-ext</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span><span class="p">:</span><span class="n">443</span>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="c"># Deploy</span>
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="n">pwsh</span> <span class="n">deploy-ova-uag</span><span class="p">.</span><span class="n">ps1</span> <span class="n">uag</span><span class="p">.</span><span class="n">ini</span>
+</code></pre></div>
+<h3 id="configure-uag-edge-service">Configure UAG Edge Service<a class="headerlink" href="#configure-uag-edge-service" title="Permanent link">&para;</a></h3>
+<p>After deployment, log in to the UAG Admin UI at <code>https://&lt;uag-management-ip&gt;:9443</code>:</p>
+<ol>
+<li>Configure → Edge Service Settings → Horizon → Enable.</li>
+<li>Set Connection Server URL: <code>https://horizon-cs-vip.example.local</code>.</li>
+<li>Upload the CS pool certificate (PEM format) for thumbprint trust.</li>
+<li>If using Workspace ONE Access for SAML SSO: configure Identity Provider metadata under Authentication Methods.</li>
+</ol>
+<h3 id="firewall-rules-required">Firewall Rules Required<a class="headerlink" href="#firewall-rules-required" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>Destination</th>
+<th>Port</th>
+<th>Protocol</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Internet</td>
+<td>UAG external NIC</td>
+<td>443</td>
+<td>TCP</td>
+<td>Horizon Client HTTPS + Blast</td>
+</tr>
+<tr>
+<td>Internet</td>
+<td>UAG external NIC</td>
+<td>8443</td>
+<td>TCP/UDP</td>
+<td>Blast Extreme primary</td>
+</tr>
+<tr>
+<td>Internet</td>
+<td>UAG external NIC</td>
+<td>4172</td>
+<td>UDP</td>
+<td>PCoIP</td>
+</tr>
+<tr>
+<td>UAG internal NIC</td>
+<td>CS VIP</td>
+<td>443</td>
+<td>TCP</td>
+<td>UAG → Connection Server</td>
+</tr>
+<tr>
+<td>UAG internal NIC</td>
+<td>Desktop VMs</td>
+<td>22443</td>
+<td>TCP/UDP</td>
+<td>Blast Extreme via UAG</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="phase-4-desktop-pools-and-rdsh-farms">Phase 4 — Desktop Pools and RDSH Farms<a class="headerlink" href="#phase-4-desktop-pools-and-rdsh-farms" title="Permanent link">&para;</a></h2>
+<p><strong>Exit criterion:</strong> At least one instant clone pool provisioned with available desktops; users can connect and reach the desktop.</p>
+<h3 id="prepare-the-golden-image">Prepare the Golden Image<a class="headerlink" href="#prepare-the-golden-image" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c"># On the master VM (joined to domain, Windows 10/11 or Server 2019/2022)</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c"># Install Horizon Agent</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="n">VMware-Horizon-Agent-x86_64</span><span class="p">-&lt;</span><span class="n">version</span><span class="p">&gt;.</span><span class="n">exe</span> <span class="p">/</span><span class="n">silent</span> <span class="p">/</span><span class="n">install</span> <span class="p">`</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>  <span class="p">/</span><span class="n">v</span><span class="s2">&quot;VDM_VC_MANAGED_AGENT=1 ADDLOCAL=Core,BlastAgent,SVIAgent,USB,RTAV&quot;</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c"># Shut down and take a snapshot in vCenter — this is the parent snapshot</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c"># Name it: &quot;IC-Parent-v1-YYYYMMDD&quot;</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="nb">Stop-Computer</span> <span class="n">-Force</span>
+</code></pre></div>
+<h3 id="create-an-instant-clone-desktop-pool">Create an Instant Clone Desktop Pool<a class="headerlink" href="#create-an-instant-clone-desktop-pool" title="Permanent link">&para;</a></h3>
+<p>In the Horizon Administrator console:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Catalog → Desktop Pools → Add
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  → Pool Type: Automated Desktop Pool
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  → User Assignment: Floating (or Dedicated)
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>  → vCenter Server: select registered vCenter
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>  → Desktop Pool ID: WIN11-IC-POOL-01
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>  → Display Name: Windows 11 VDI
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>  → Provisioning: Instant Clones
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>  → Parent VM: &lt;master-vm-name&gt;
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>  → Snapshot: IC-Parent-v1-YYYYMMDD
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>  → Datastore: select vSAN datastore
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>  → Naming: WIN11-{n}  (generates WIN11-001, WIN11-002, ...)
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>  → Min provisioned: 10   Max: 50
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>  → Domain: example.local  OU: OU=Computers-IC,OU=VDI,DC=example,DC=local
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>  → Service account: EXAMPLE\svc-horizon-composer
+</code></pre></div>
+<h3 id="create-an-rdsh-farm-and-application-pool">Create an RDSH Farm and Application Pool<a class="headerlink" href="#create-an-rdsh-farm-and-application-pool" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>Catalog → Farms → Add
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>  → Farm Type: Automated Farm
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>  → Server OS: Windows Server 2022
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>  → Farm ID: RDSH-FARM-01
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>  → Naming: RDSH-{n}
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>  → Horizon Agent: SVIAgent + RDSH role
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>Catalog → Application Pools → Add
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>  → Pool source: Farm — RDSH-FARM-01
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>  → Select applications to publish
+</code></pre></div>
+<h3 id="entitle-users-to-pools">Entitle Users to Pools<a class="headerlink" href="#entitle-users-to-pools" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Catalog → Desktop Pools → [pool] → Entitlements → Add Entitlement
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>  → Search for AD group: VDI-Users-Standard
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>  → Add
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a># CLI — list entitlements
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>vdmadmin -A -d example.local -u svc-horizon-cs -p &lt;password&gt;
+</code></pre></div>
+<hr />
+<h2 id="phase-5-app-volumes-and-dynamic-environment-manager">Phase 5 — App Volumes and Dynamic Environment Manager<a class="headerlink" href="#phase-5-app-volumes-and-dynamic-environment-manager" title="Permanent link">&para;</a></h2>
+<p><strong>Exit criterion:</strong> AppStack attaches at user login; DEM applies user profile settings; writable volumes persist user data across sessions.</p>
+<h3 id="deploy-app-volumes-manager">Deploy App Volumes Manager<a class="headerlink" href="#deploy-app-volumes-manager" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c"># On Windows Server VM (separate from Connection Server)</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="n">App-Volumes-Manager</span><span class="p">-&lt;</span><span class="n">version</span><span class="p">&gt;.</span><span class="n">exe</span> <span class="p">/</span><span class="n">silent</span> <span class="p">/</span><span class="n">norestart</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c"># Configure SQL connection during installer wizard:</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="c">#   Server: sql-server.example.local</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="c">#   Database: AppVolumes</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c">#   Auth: Windows Auth using svc-horizon-av</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="c"># After install — register Connection Servers:</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="c"># App Volumes Manager (https://avmgr.example.local) →</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="c">#   Configuration → Managers → Register New</span>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="c">#   URL: https://horizon-cs01.example.local</span>
+</code></pre></div>
+<h3 id="register-vcenter-and-create-storage">Register vCenter and Create Storage<a class="headerlink" href="#register-vcenter-and-create-storage" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>App Volumes Manager → Configuration → Storage
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>  → Add vCenter: vcenter.example.local (service account: svc-horizon-av)
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>  → Add Datastore: select vSAN datastore for AppStack storage
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>  → Writable Volumes datastore: same or dedicated datastore
+</code></pre></div>
+<h3 id="capture-and-assign-an-appstack">Capture and Assign an AppStack<a class="headerlink" href="#capture-and-assign-an-appstack" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c"># Create a new AppStack package in App Volumes Manager:</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="c"># Packages → Create Package → Capture on a packaging VM</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="c"># Install the application(s) on the packaging VM</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="c"># Complete capture in App Volumes Manager → package is stored as VMDK</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="c"># Assign AppStack to AD group:</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="c"># Assignment → Applications → [AppStack] → Assign → AD Group: VDI-Apps-Office</span>
+</code></pre></div>
+<h3 id="deploy-dem">Deploy DEM<a class="headerlink" href="#deploy-dem" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c"># Install DEM Agent on golden image (add to golden image before taking IC snapshot)</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="n">DEM-Agent</span><span class="p">-&lt;</span><span class="n">version</span><span class="p">&gt;.</span><span class="n">exe</span> <span class="p">/</span><span class="n">silent</span> <span class="n">ADDLOCAL</span><span class="p">=</span><span class="n">DEM_AGENT</span> <span class="p">`</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>  <span class="p">/</span><span class="n">v</span><span class="s2">&quot;DEMSHARE=\\fileserver.example.local\DEM-Config$ `</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="s2">     PROFILEARCHIVE=\\fileserver.example.local\DEM-Profiles$&quot;</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="c"># Apply loopback GPO in AD for the VDI computers OU:</span>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="c"># Computer Config → Admin Templates → System → Group Policy</span>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="c">#   → User Group Policy loopback processing mode: Replace</span>
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="c"># DEM Management Console: configure FlexEngine directives:</span>
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a><span class="c">#   - Drive maps: H: → \\fileserver\home\%username%</span>
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a><span class="c">#   - Printer maps: default printer by AD site</span>
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a><span class="c">#   - Environment variables: APPDATA redirect</span>
+</code></pre></div>
+<hr />
+<h2 id="phase-6-validation">Phase 6 — Validation<a class="headerlink" href="#phase-6-validation" title="Permanent link">&para;</a></h2>
+<p><strong>Exit criterion:</strong> All checks in this phase pass. Sign off on the deployment and hand to operations.</p>
+<h3 id="connection-server-health">Connection Server Health<a class="headerlink" href="#connection-server-health" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c"># All CSs in pod must be green</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="c"># Horizon Console → Dashboard → System Health</span>
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c"># CLI</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="nb">Get-Service</span> <span class="s2">&quot;VMware Horizon View Connection Server&quot;</span> <span class="n">-ComputerName</span> <span class="n">horizon-cs01</span><span class="p">,</span><span class="n">horizon-cs02</span>
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="c"># Check ADAM replication</span>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="n">vdmadmin</span> <span class="n">-A</span> <span class="n">-d</span> <span class="n">example</span><span class="p">.</span><span class="n">local</span> <span class="n">-u</span> <span class="n">svc-horizon-cs</span> <span class="n">-p</span> <span class="p">&lt;</span><span class="n">password</span><span class="p">&gt;</span>
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a><span class="c"># All replica servers should show &quot;Replication: OK&quot;</span>
+</code></pre></div>
+<h3 id="uag-external-connectivity">UAG External Connectivity<a class="headerlink" href="#uag-external-connectivity" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c"># Test from an external client (or a VM with no corporate network access)</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="c"># Open Horizon Client → enter: uag-ext.example.com</span>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="c"># Authenticate with AD credentials</span>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c"># Confirm desktop session launches over Blast Extreme (port 8443)</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="c"># Verify UAG edge service health via REST API</span>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="nb">Invoke-RestMethod</span> <span class="n">-Uri</span> <span class="s2">&quot;https://&lt;uag-mgmt-ip&gt;:9443/rest/v1/monitor/service/horizon&quot;</span> <span class="p">`</span>
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>  <span class="n">-Credential</span> <span class="p">(</span><span class="nb">Get-Credential</span> <span class="n">admin</span><span class="p">)</span> <span class="n">-SkipCertificateCheck</span>
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a><span class="c"># Expected: &quot;serviceProviderId&quot; returned and status UP</span>
+</code></pre></div>
+<h3 id="pool-provisioning-and-desktop-login">Pool Provisioning and Desktop Login<a class="headerlink" href="#pool-provisioning-and-desktop-login" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c"># Confirm VMs are in Available state</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="c"># Horizon Console → Catalog → Desktop Pools → [pool] → Inventory</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="c"># Available VMs must equal min-provisioned count</span>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="c"># Log in as a test user</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="c"># Verify: desktop launches, drive maps apply, printer mapped</span>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="c"># Verify: AppStack attached (application appears in Start Menu)</span>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a><span class="c"># Verify: DEM profile loads (settings persist on reconnect)</span>
+</code></pre></div>
+<h3 id="post-deployment-checklist">Post-Deployment Checklist<a class="headerlink" href="#post-deployment-checklist" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Command / Location</th>
+<th>Pass Criterion</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Connection Servers</td>
+<td>Horizon Console → Dashboard</td>
+<td>All servers green</td>
+</tr>
+<tr>
+<td>ADAM replication</td>
+<td><code>vdmadmin -A -d example.local</code></td>
+<td>All replicas: OK</td>
+</tr>
+<tr>
+<td>vCenter registered</td>
+<td>View Configuration → Servers</td>
+<td>Connected</td>
+</tr>
+<tr>
+<td>UAG edge service</td>
+<td>UAG Admin UI port 9443 → Monitor</td>
+<td>Horizon service: UP</td>
+</tr>
+<tr>
+<td>Pool provisioning</td>
+<td>Catalog → Pools → Inventory</td>
+<td>Available VMs = min count</td>
+</tr>
+<tr>
+<td>External Blast session</td>
+<td>Horizon Client → uag-ext FQDN</td>
+<td>Desktop launches (port 8443)</td>
+</tr>
+<tr>
+<td>App Volumes attach</td>
+<td>Test user login</td>
+<td>AppStack VMDK shows in guest</td>
+</tr>
+<tr>
+<td>DEM policies</td>
+<td>Test user login</td>
+<td>Drive maps + printers applied</td>
+</tr>
+<tr>
+<td>Events DB</td>
+<td>View Configuration → Event Config</td>
+<td>Last event timestamp recent</td>
+</tr>
+<tr>
+<td>Certificates</td>
+<td>Browser to CS VIP + UAG external</td>
+<td>No certificate warnings</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+
+  
+  <nav class="kb-topnav kb-bottomnav" aria-label="Page navigation (bottom)">
+    
+    <a href="../architecture/integrations/" class="kb-topnav__link kb-topnav__link--prev">
+      <span class="kb-topnav__arrow">&#8592;</span>
+      <span class="kb-topnav__title">Horizon — Integrations</span>
+    </a>
+    
+
+    <a href="../../../.." class="kb-topnav__link kb-topnav__home" title="Home">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+      <span class="kb-topnav__home-label">Home</span>
+    </a>
+
+    
+    <a href="../operations/" class="kb-topnav__link kb-topnav__link--next">
+      <span class="kb-topnav__title">Horizon (VDI) — Operations</span>
+      <span class="kb-topnav__arrow">&#8594;</span>
+    </a>
+    
+  </nav>
+
+  
+  <nav class="kb-mobile-nav" aria-label="Mobile navigation">
+    
+    <a href="../architecture/integrations/" class="kb-mobile-nav__btn" title="Previous: Horizon — Integrations">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+    </a>
+    
+
+    <a href="../../../.." class="kb-mobile-nav__btn kb-mobile-nav__btn--home" title="Home">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+    </a>
+
+    
+    <a href="../operations/" class="kb-mobile-nav__btn" title="Next: Horizon (VDI) — Operations">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M4 11h12.17l-5.59-5.59L12 4l8 8-8 8-1.41-1.41L16.17 13H4v-2z"/></svg>
+    </a>
+    
+  </nav>
+
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      © Christos Anastasiadis
+    </div>
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.indexes", "navigation.path", "navigation.prune", "navigation.top", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy"], "search": "../../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+  
+      <script src="../../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  <script>
+    // Reading progress bar
+    (function () {
+      var bar = document.getElementById('kb-progress');
+      if (!bar) return;
+      function update() {
+        var scroll = window.scrollY;
+        var total = document.documentElement.scrollHeight - window.innerHeight;
+        bar.style.width = total > 0 ? (scroll / total * 100) + '%' : '0%';
+      }
+      window.addEventListener('scroll', update, { passive: true });
+      update();
+    })();
+
+    // Code block language badge
+    (function () {
+      document.querySelectorAll('code[class*="language-"]').forEach(function (code) {
+        var match = Array.from(code.classList).find(function (c) { return c.startsWith('language-'); });
+        if (!match) return;
+        var lang = match.replace('language-', '');
+        if (['text', 'plaintext', 'none', 'shell-session'].includes(lang)) return;
+        var block = code.closest('.highlight');
+        if (!block || block.querySelector('.kb-lang-badge')) return;
+        var badge = document.createElement('span');
+        badge.className = 'kb-lang-badge';
+        badge.textContent = lang;
+        block.style.position = 'relative';
+        block.appendChild(badge);
+      });
+    })();
+
+    // Ambient mouse glow
+    (function () {
+      if (window.matchMedia('(hover: none)').matches) return;
+      var glow = document.createElement('div');
+      glow.style.cssText = 'position:fixed;width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,rgba(56,189,248,0.07) 0%,transparent 65%);pointer-events:none;z-index:0;transform:translate(-50%,-50%);left:50%;top:50%;';
+      document.body.appendChild(glow);
+      var tx = window.innerWidth / 2, ty = window.innerHeight / 2, cx = tx, cy = ty;
+      document.addEventListener('mousemove', function (e) { tx = e.clientX; ty = e.clientY; }, { passive: true });
+      (function tick() {
+        cx += (tx - cx) * 0.05;
+        cy += (ty - cy) * 0.05;
+        glow.style.left = cx + 'px';
+        glow.style.top = cy + 'px';
+        requestAnimationFrame(tick);
+      })();
+    })();
+
+    // Konami code — ↑↑↓↓←→←→BA → confetti burst
+    (function () {
+      var seq = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','KeyB','KeyA'];
+      var pos = 0;
+      document.addEventListener('keydown', function (e) {
+        pos = (e.code === seq[pos]) ? pos + 1 : (e.code === seq[0] ? 1 : 0);
+        if (pos === seq.length) {
+          pos = 0;
+          var colors = ['#38bdf8','#818cf8','#34d399','#f59e0b','#f43f5e','#a78bfa','#7dd3fc'];
+          for (var i = 0; i < 80; i++) {
+            (function (i) {
+              setTimeout(function () {
+                var el = document.createElement('div');
+                var size = 6 + Math.random() * 9;
+                var angle = Math.random() * Math.PI * 2;
+                var dist = 180 + Math.random() * 320;
+                var tx = Math.cos(angle) * dist, ty = Math.sin(angle) * dist;
+                el.style.cssText = 'position:fixed;width:'+size+'px;height:'+size+'px;border-radius:'+(Math.random()>0.5?'50%':'3px')+';background:'+colors[i%colors.length]+';pointer-events:none;z-index:99998;left:50%;top:50%;transform:translate(-50%,-50%);transition:transform 0.9s ease-out,opacity 0.9s ease-out;opacity:1;';
+                document.body.appendChild(el);
+                requestAnimationFrame(function () { requestAnimationFrame(function () {
+                  el.style.transform = 'translate(calc(-50% + '+tx+'px),calc(-50% + '+ty+'px)) rotate('+Math.random()*720+'deg)';
+                  el.style.opacity = '0';
+                }); });
+                setTimeout(function () { el.remove(); }, 1000);
+              }, i * 12);
+            })(i);
+          }
+        }
+      });
+    })();
+
+    // Hero h1 typing animation
+    (function () {
+      var h1 = document.querySelector('.hero-body h1');
+      if (!h1) return;
+      var text = h1.textContent.trim();
+      h1.textContent = '';
+      var cursor = document.createElement('span');
+      cursor.style.cssText = '-webkit-text-fill-color:#38bdf8;animation:kb-blink 0.75s step-end infinite;';
+      cursor.textContent = '|';
+      h1.appendChild(cursor);
+      var i = 0;
+      var timer = setInterval(function () {
+        if (i < text.length) {
+          h1.insertBefore(document.createTextNode(text[i]), cursor);
+          i++;
+        } else {
+          clearInterval(timer);
+          setTimeout(function () { cursor.remove(); }, 700);
+        }
+      }, 75);
+    })();
+
+    // Time-of-day hero greeting
+    (function () {
+      var hero = document.querySelector('.hero-body');
+      if (!hero) return;
+      var h = new Date().getHours();
+      var greeting = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
+      var el = document.createElement('p');
+      el.textContent = greeting + '.';
+      el.style.cssText = 'color:rgba(255,255,255,0.5);font-size:0.82rem;margin-bottom:0.2rem;font-style:italic;margin-top:0;';
+      var h1 = hero.querySelector('h1');
+      if (h1) hero.insertBefore(el, h1);
+    })();
+
+    // Image lightbox
+    (function () {
+      document.querySelectorAll('.md-typeset img').forEach(function (img) {
+        img.style.cursor = 'zoom-in';
+        img.addEventListener('click', function () {
+          var overlay = document.createElement('div');
+          overlay.className = 'kb-lightbox-overlay';
+          var clone = new Image();
+          clone.src = img.src;
+          clone.alt = img.alt;
+          overlay.appendChild(clone);
+          overlay.addEventListener('click', function () { overlay.remove(); });
+          document.addEventListener('keydown', function esc(e) {
+            if (e.key === 'Escape') { overlay.remove(); document.removeEventListener('keydown', esc); }
+          });
+          document.body.appendChild(overlay);
+        });
+      });
+    })();
+
+    // Scroll-reveal — animate content sections as they enter viewport
+    (function () {
+      var targets = document.querySelectorAll('.md-typeset h2, .md-typeset h3, .md-typeset table, .md-typeset .admonition, .kb-grid');
+      if (!('IntersectionObserver' in window)) return;
+      targets.forEach(function (el) { el.classList.add('kb-reveal'); });
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('kb-visible'); io.unobserve(e.target); } });
+      }, { threshold: 0.08 });
+      targets.forEach(function (el) { io.observe(el); });
+    })();
+
+    // Floating TOC dot
+    (function () {
+      var links = document.querySelectorAll('.md-nav--secondary .md-nav__link');
+      if (links.length < 2) return;
+      var dot = document.createElement('div');
+      dot.className = 'kb-toc-dot';
+      document.body.appendChild(dot);
+      function update() {
+        var active = document.querySelector('.md-nav--secondary .md-nav__link--active');
+        if (!active) return;
+        var r = active.getBoundingClientRect();
+        dot.style.top = (r.top + r.height / 2 - 4) + 'px';
+        dot.style.opacity = '1';
+      }
+      window.addEventListener('scroll', update, { passive: true });
+      update();
+    })();
+
+    // Back to top pill
+    (function () {
+      var btn = document.createElement('a');
+      btn.className = 'kb-back-top';
+      btn.href = '#';
+      btn.textContent = '↑ Top';
+      btn.addEventListener('click', function (e) { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); });
+      document.body.appendChild(btn);
+      window.addEventListener('scroll', function () {
+        btn.classList.toggle('kb-back-top--visible', window.scrollY > 400);
+      }, { passive: true });
+    })();
+
+    // Live clock in footer
+    (function () {
+      function pad(n) { return n < 10 ? '0' + n : n; }
+      function tick(el) {
+        var d = new Date();
+        el.textContent = pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
+      }
+      var footer = document.querySelector('.md-footer-meta__inner');
+      if (!footer) return;
+      var clock = document.createElement('div');
+      clock.className = 'kb-footer-clock';
+      footer.appendChild(clock);
+      tick(clock);
+      setInterval(function () { tick(clock); }, 1000);
+    })();
+
+    // Smooth page transitions
+    (function () {
+      var content = document.querySelector('.md-content__inner');
+      document.addEventListener('click', function (e) {
+        var link = e.target.closest('a[href]');
+        if (!link || !link.href || link.target === '_blank') return;
+        try { if (new URL(link.href).hostname !== window.location.hostname) return; } catch(e) { return; }
+        if (link.href.includes('#')) return;
+        e.preventDefault();
+        var href = link.href;
+        if (content) content.classList.add('kb-fade-out');
+        setTimeout(function () { window.location.href = href; }, 190);
+      });
+    })();
+
+    // Spotlight effect — toggle with L
+    (function () {
+      if (window.matchMedia('(hover: none)').matches) return;
+      var spotlight = document.createElement('div');
+      spotlight.className = 'kb-spotlight';
+      document.body.appendChild(spotlight);
+      var mx = window.innerWidth / 2, my = window.innerHeight / 2;
+      var active = false;
+      function update() {
+        spotlight.style.background = 'radial-gradient(circle 200px at ' + mx + 'px ' + my + 'px, transparent 0%, rgba(2,6,23,0.72) 100%)';
+      }
+      document.addEventListener('mousemove', function (e) {
+        mx = e.clientX; my = e.clientY;
+        if (active) update();
+      }, { passive: true });
+      document.addEventListener('keydown', function (e) {
+        var tag = document.activeElement && document.activeElement.tagName;
+        if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+        if (e.key === 'l' || e.key === 'L') {
+          active = !active;
+          update();
+          spotlight.classList.toggle('kb-spotlight--on', active);
+        }
+      });
+    })();
+
+    // Service Worker registration
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('/sw.js');
+      });
+    }
+
+    // Keyboard shortcut overlay — press ?
+    (function () {
+      var shortcuts = [
+        ['/', 'Focus search'],
+        ['S', 'Focus search'],
+        ['F', 'Find on page'],
+        ['L', 'Toggle spotlight'],
+        ['?', 'Show shortcuts'],
+        ['Esc', 'Close / dismiss'],
+        ['↑ ↑ ↓ ↓ ← → ← → B A', '🎉'],
+      ];
+      var overlay = null;
+      function show() {
+        if (overlay) return;
+        overlay = document.createElement('div');
+        overlay.className = 'kb-shortcuts-overlay';
+        var box = document.createElement('div');
+        box.className = 'kb-shortcuts-box';
+        var title = document.createElement('h3');
+        title.textContent = 'Keyboard shortcuts';
+        box.appendChild(title);
+        var tbl = document.createElement('table');
+        shortcuts.forEach(function (s) {
+          var tr = document.createElement('tr');
+          var td1 = document.createElement('td');
+          td1.textContent = s[1];
+          var td2 = document.createElement('td');
+          s[0].split(' ').forEach(function (k) {
+            var kbd = document.createElement('kbd');
+            kbd.textContent = k;
+            td2.appendChild(kbd);
+            td2.appendChild(document.createTextNode(' '));
+          });
+          tr.appendChild(td1);
+          tr.appendChild(td2);
+          tbl.appendChild(tr);
+        });
+        box.appendChild(tbl);
+        overlay.appendChild(box);
+        overlay.addEventListener('click', function (e) { if (e.target === overlay) hide(); });
+        document.body.appendChild(overlay);
+      }
+      function hide() { if (overlay) { overlay.remove(); overlay = null; } }
+      document.addEventListener('keydown', function (e) {
+        var tag = document.activeElement && document.activeElement.tagName;
+        if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+        if (e.key === '?') { overlay ? hide() : show(); }
+        if (e.key === 'Escape') hide();
+      });
+    })();
+  </script>
+
+  </body>
+</html>
