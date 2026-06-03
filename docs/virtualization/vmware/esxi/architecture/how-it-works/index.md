@@ -298,7 +298,7 @@ Get-VMHost | ForEach-Object {
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
 │   │         Cluster Resource Percentage          │  │                 Slot Policy                 │   │
-│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│   │──────────────────────────────────────────────│  │─────────────────────────────────────────────│   │
 │   │ Default mode in vSphere 6.5+                 │  │ Legacy mode; still available                │   │
 │   │ Reserve X% of total cluster                  │  │ Slot = largest VM CPU + largest VM          │   │
 │   │   CPU and memory as failover                 │  │   memory in cluster                         │   │
@@ -453,7 +453,7 @@ Get-VMHost | ForEach-Object {
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
 │   │        Without DPU (traditional ESXi)        │  │       With DPU (vSphere 8 + SmartNIC)       │   │
-│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│   │──────────────────────────────────────────────│  │─────────────────────────────────────────────│   │
 │   │ Host CPU handles everything:                 │  │ Host CPU: VM compute only                   │   │
 │   │  · VM guest OS compute                       │  │ DPU handles all I/O plane work:             │   │
 │   │  · NSX networking (overlay)                  │  │  · vNIC I/O + packet processing             │   │

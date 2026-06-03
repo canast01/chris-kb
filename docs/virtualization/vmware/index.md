@@ -126,7 +126,7 @@ VMware platform knowledge base covering the full VMware stack — vCenter, ESXi,
 │      ▼                                                               ▼                                │
 │  ┌──────────────────────────────────────────────┐  ┌──────────────────────────────────────────────┐   │
 │  │  Step 4 · vSAN                               │  │  Step 5 · NSX                                │   │
-│  │  Cluster → Configure → vSAN → Turn on        │  │  Deploy NSX Manager OVA ×3 (cluster VIP)    │    │
+│  │  Cluster → Configure → vSAN → Turn on        │  │  Deploy NSX Manager OVA ×3 (cluster VIP)     │   │
 │  │  Claim disks: assign cache + capacity role   │  │  Register vCenter as compute manager         │   │
 │  │  Disk groups: 1 cache SSD + 1–7 cap disks    │  │  Create Transport Zones: Overlay + VLAN TZ   │   │
 │  │  Tag vmk2 for vSAN; verify unicast agents    │  │  Create Uplink Profile: MTU 9000, LAG mode   │   │
@@ -134,7 +134,7 @@ VMware platform knowledge base covering the full VMware stack — vCenter, ESXi,
 │  │  Skyline Health: all checks green            │  │  Deploy Edge nodes ×2  ·  Edge Cluster       │   │
 │  │  Create SPBM policies (FTT level, RAID type) │  │  T0 Gateway: BGP or static peer to router    │   │
 │  │  Enable Performance Service                  │  │  T1 Gateway: connected to T0, NAT + LB       │   │
-│  │  Enable dedup + compression if applicable    │  │  Create overlay segments for workloads        │  │
+│  │  Enable dedup + compression if applicable    │  │  Create overlay segments for workloads       │   │
 │  │  Verify object policy compliance: all green  │  │  DFW: define groups + firewall rule sets     │   │
 │  └──────────────────────────────────────────────┘  └──────────────────────────────────────────────┘   │
 │      │                                                               │                                │

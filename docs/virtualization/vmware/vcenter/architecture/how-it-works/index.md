@@ -320,7 +320,7 @@ Swagger UI: `https://<vcenter>/apiexplorer`
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
 │   │      Published Library (source vCenter)      │  │     Subscribed Library (target vCenter)     │   │
-│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│   │──────────────────────────────────────────────│  │─────────────────────────────────────────────│   │
 │   │ Contains: OVF/OVA templates                  │  │ Subscribes to published HTTPS URL           │   │
 │   │   VM templates (native format)               │  │ Sync policy: on-demand or immediate         │   │
 │   │   ISO images                                 │  │ Content cached locally on datastore         │   │
@@ -424,7 +424,7 @@ Swagger UI: `https://<vcenter>/apiexplorer`
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
 │   │       Initial Placement (VM power-on)        │  │       Ongoing Balancing (every 5 min)       │   │
-│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│   │──────────────────────────────────────────────│  │─────────────────────────────────────────────│   │
 │   │ DRS scores all eligible hosts                │  │ Measures host resource utilisation          │   │
 │   │ Prefers host with most headroom              │  │ Calculates cluster imbalance score          │   │
 │   │ Respects: affinity rules,                    │  │ Generates migration recommendations         │   │
