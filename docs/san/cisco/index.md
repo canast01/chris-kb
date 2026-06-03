@@ -75,6 +75,72 @@ Cisco SAN knowledge base covering MDS switches, DCNM, and Nexus Dashboard. Inclu
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+
+```text
+┌──────────────────────────────── Cisco MDS SAN — Fabric Build Sequence ────────────────────────────────┐
+│                                                                                                       │
+│  Step 1 · Physical Readiness                                                                          │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Rack MDS 9000 directors or fabric switches  ·  dual power feeds to separate PDUs                     │
+│  ISL cables between directors  ·  SFP type must match (SWL/LWL/ELWL per distance)                     │
+│  Management: OOB GigE port  ·  assign IP via console (serial cable, 9600 baud)                        │
+│  Upgrade NX-OS to target version  ·  verify supervisor and line card firmware                         │
+│  DNS A-records for all switch management FQDNs  ·  NTP reachable from management VRF                  │
+│                                                                                                       │
+│                                        │  complete NX-OS initial configuration                        │
+│                                        ▼                                                              │
+│  Step 2 · NX-OS Initialisation                                                                        │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Initial setup script on first boot  ·  hostname, admin password, management IP                       │
+│  Configure management VRF: ip route 0.0.0.0/0 vrf management <gateway>                                │
+│  Enable SSH  ·  disable Telnet  ·  configure AAA to RADIUS/TACACS+ for production                     │
+│  Set NTP server  ·  set timezone  ·  verify with show clock and show ntp status                       │
+│  Install and activate Feature Set: feature fport-channel-trunk  ·  feature npv if needed              │
+│                                                                                                       │
+│                                        │  configure VSANs and port channels                           │
+│                                        ▼                                                              │
+│  Step 3 · VSANs & Port Channels                                                                       │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Create VSANs: vsan database  ·  vsan <id> name <name>  ·  assign to interfaces                       │
+│  Create port channels for ISLs: interface port-channel <n>  ·  channel-group <id> force               │
+│  Assign F-ports (host) and E-ports (ISL) per VSAN  ·  no switchport on FC interfaces                  │
+│  Verify VSAN membership with show vsan membership  ·  check ISL state with show topology              │
+│  Enable FSPF load balancing on port channels for multi-path ISL traffic distribution                  │
+│                                                                                                       │
+│                                        │  build device-alias database and zones                       │
+│                                        ▼                                                              │
+│  Step 4 · Device Aliases + Zoning                                                                     │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Create device-alias database: device-alias name <alias> pwwn <wwn>  ·  commit                        │
+│  Create zones using device-alias names (not raw WWNs) for maintainability                             │
+│  zone name <zone>  ·  member device-alias <alias>  ·  one initiator per zone                          │
+│  Create zoneset  ·  add all zones  ·  zoneset activate name <set> vsan <id>                           │
+│  Verify: show zoneset active  ·  show fcns database  ·  no stale entries                              │
+│                                                                                                       │
+│                                        │  validate host and array logins                              │
+│                                        ▼                                                              │
+│  Step 5 · Host + Array Login                                                                          │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Connect host HBAs  ·  confirm FLOGI in show flogi database  ·  per-VSAN scope                        │
+│  Confirm device-alias auto-learnt or manually bound to PWWN                                           │
+│  Connect array front-end ports  ·  verify target FLOGI and PLOGI exchange                             │
+│  Run show fcns database vsan <id> to confirm full N-port visibility                                   │
+│  Validate LUN masking scope matches zone  ·  run I/O test from host                                   │
+│                                                                                                       │
+│                                        │  deploy Nexus Dashboard Fabric Controller                    │
+│                                        ▼                                                              │
+│  Step 6 · Nexus Dashboard & NDFC                                                                      │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Deploy Nexus Dashboard OVA (3 master nodes or 1 for lab)  ·  assign management IP                    │
+│  Install NDFC (formerly DCNM) service on Nexus Dashboard  ·  enable SAN controller                    │
+│  Add MDS fabrics via Discover  ·  SSH credentials required  ·  topology auto-builds                   │
+│  Configure SNMP trap and syslog forwarding from all switches to NDFC                                  │
+│  Enable performance monitoring  ·  configure fabric health and zoning drift alerts                    │
+│  Export zone config backups to NDFC  ·  document port inventory for CMDB                              │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="mds/"><strong>Cisco MDS</strong><span>MDS 9000 series switches — zoning, fabric configuration, CLI, health checks, and troubleshooting.</span></a>
 <a class="kb-card" href="cisco-dcnm/"><strong>DCNM</strong><span>Data Center Network Manager — SAN management, discovery, and monitoring.</span></a>

@@ -51,6 +51,69 @@ Veeam Backup & Replication — Backup Server scheduling, Proxy data movement via
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+
+```text
+┌───────────────────────── Veeam Backup & Replication — Installation Sequence ──────────────────────────┐
+│                                                                                                       │
+│  Step 1 · Prerequisites                                                                               │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Windows Server 2019/2022  ·  8+ vCPU  ·  32 GB RAM  ·  500 GB catalog disk (scale with jobs)         │
+│  SQL Server 2019+ local or remote  ·  service accounts with local admin and SQL sysadmin              │
+│  TCP 9392 (console)  ·  2500 (transport)  ·  443 (cloud/portal)  ·  6160 (installer service)          │
+│  DNS forward + reverse for all VBR, proxy, and repo nodes  ·  NTP sync to domain or PDC               │
+│  vCenter read/write service account  ·  vSphere API access confirmed                                  │
+│                                                                                                       │
+│                                        │  install VBR server                                          │
+│                                        ▼                                                              │
+│  Step 2 · Backup Server                                                                               │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Run VBR installer on Windows host  ·  point to SQL instance  ·  accept default services              │
+│  Activate licence  ·  connect vCenter via Add VMware vSphere infrastructure wizard                    │
+│  VBR Management Service  ·  Mount Service  ·  Backup Service all show Running                         │
+│  Configure global settings: email notifications, job parallelism, backup I/O control                  │
+│  Install Veeam Backup Enterprise Manager if multi-VBR console is needed                               │
+│                                                                                                       │
+│                                        │  add proxy servers                                           │
+│                                        ▼                                                              │
+│  Step 3 · Backup Proxies                                                                              │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Add Windows or Linux proxy via Managed Servers  ·  install Veeam Transport Service                   │
+│  Assign transport mode: Network (NBD), HotAdd (VMFS), or Direct SAN per datastore type                │
+│  Set max concurrent tasks per proxy  ·  assign proxies to backup jobs explicitly or auto              │
+│  For large environments: dedicated proxies per site or per datastore cluster                          │
+│                                                                                                       │
+│                                        │  configure backup repositories                               │
+│                                        ▼                                                              │
+│  Step 4 · Backup Repositories                                                                         │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Add repository: Windows/Linux path, SMB share, dedup appliance, or object storage                    │
+│  Scale-Out Backup Repository (SOBR): combine extents  ·  set capacity tier to object storage          │
+│  Enable immutability on S3/object extents or on Linux XFS + immutable flag repos                      │
+│  Set retention policy per repo  ·  enable per-VM backup chains for granular restore                   │
+│  Verify repo is reachable from proxies  ·  test write with a small job                                │
+│                                                                                                       │
+│                                        │  install Veeam ONE                                           │
+│                                        ▼                                                              │
+│  Step 5 · Veeam ONE                                                                                   │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Deploy Veeam ONE server (separate VM)  ·  connect to VBR server and vCenter                          │
+│  Veeam ONE Monitor: real-time job and infrastructure alarms  ·  configure alert thresholds            │
+│  Veeam ONE Reporter: capacity, chargeback, and compliance reports on schedule                         │
+│  Install Veeam ONE Agent on VBR server for deep job-level telemetry                                   │
+│                                                                                                       │
+│                                        │  create jobs and policies                                    │
+│                                        ▼                                                              │
+│  Step 6 · Jobs & Policies                                                                             │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Create backup jobs: select VMs/containers  ·  assign proxy + repo  ·  set retention                  │
+│  Add backup copy job to secondary repo or tape  ·  test restore from both tiers                       │
+│  Configure SureBackup job for automated restore verification  ·  set test schedule                    │
+│  Enable application-aware processing per VM (VSS quiesce)  ·  test SQL/Exchange aware                 │
+│  Document RPO/RTO per job  ·  confirm monitoring alerts reach on-call distribution list               │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="architecture/">

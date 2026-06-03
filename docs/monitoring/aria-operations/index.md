@@ -49,6 +49,72 @@ VMware Aria Operations monitoring platform — architecture, health checks, capa
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+
+```text
+┌──────────────────────────────── Aria Operations — Deployment Sequence ────────────────────────────────┐
+│                                                                                                       │
+│  Step 1 · Prerequisites                                                                               │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  vCenter service account: read-only + deploy VM + push metrics permission                             │
+│  Sizing: primary node 8 vCPU / 32 GB RAM / 512 GB disk (scale to cluster for >500 VMs)                │
+│  DNS A+PTR records for all Aria Ops nodes  ·  NTP sources reachable  ·  NTP synced                    │
+│  Ports: 443 (HTTPS UI)  ·  443 (adapter to vCenter)  ·  514/udp (syslog in)                           │
+│  Licence key for Aria Operations Advanced or Enterprise from Customer Connect                         │
+│                                                                                                       │
+│                                        │  deploy primary node OVA                                     │
+│                                        ▼                                                              │
+│  Step 2 · Primary Node                                                                                │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Deploy Aria Operations OVA to vCenter  ·  set IP, gateway, DNS, NTP during deployment                │
+│  Power on  ·  open https://<node-ip>  ·  run initial setup wizard                                     │
+│  Set admin password  ·  accept EULA  ·  activate licence (paste licence key)                          │
+│  Wait for primary node to reach Running state  ·  takes 15–20 minutes on first boot                   │
+│  Verify: Admin → Cluster Management  ·  primary node shows Online + Running                           │
+│                                                                                                       │
+│                                        │  add replica and data nodes                                  │
+│                                        ▼                                                              │
+│  Step 3 · Replica & Data Nodes                                                                        │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Deploy additional OVAs for replica nodes (minimum 2 for HA cluster)                                  │
+│  During OVA deployment: set role to Data and set primary node IP as master                            │
+│  Nodes auto-register  ·  Admin → Cluster Management shows all nodes joining                           │
+│  Expand cluster to add analytics nodes for larger deployments (>1000 VMs)                             │
+│  Verify all nodes Online  ·  cluster quorum established  ·  metrics processing active                 │
+│                                                                                                       │
+│                                        │  deploy remote collectors                                    │
+│                                        ▼                                                              │
+│  Step 4 · Remote Collectors                                                                           │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Deploy Remote Collector OVA at each remote site or DMZ segment                                       │
+│  During deploy: set role to Remote Collector  ·  set primary node FQDN + shared key                   │
+│  RC registers to primary  ·  Admin → Remote Collectors shows RC Online                                │
+│  Assign data sources to RC to route collection through local collector (reduces WAN)                  │
+│  Verify RC health  ·  confirm data flowing from remote vCenter through RC                             │
+│                                                                                                       │
+│                                        │  add data sources and adapters                               │
+│                                        ▼                                                              │
+│  Step 5 · Adapters & Data Sources                                                                     │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Add vCenter adapter: Data Sources → Add → VMware vSphere  ·  enter vCenter FQDN + creds              │
+│  Add NSX-T adapter  ·  vSAN adapter  ·  storage adapters (PowerStore, Pure, NetApp)                   │
+│  Management packs: install from Marketplace for non-vSphere targets (AWS, Azure, SQL)                 │
+│  Verify adapter collection status  ·  all adapters should show Collecting                             │
+│  Allow 30 minutes for initial inventory walk  ·  verify VMs and hosts appear in dashboard             │
+│                                                                                                       │
+│                                        │  configure alerts and dashboards                             │
+│                                        ▼                                                              │
+│  Step 6 · Alerts & Dashboards                                                                         │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Import management pack content  ·  activate relevant alert definitions per environment               │
+│  Configure notification plugins: SMTP  ·  ServiceNow  ·  Slack  ·  PagerDuty webhook                  │
+│  Tune noisy alerts: suppress known environment deviations  ·  set alert criticality                   │
+│  Create custom dashboards for: vSAN health, cluster capacity, VM rightsizing                          │
+│  Enable Continuous Availability (CA) if dual-site deployment  ·  configure witness node               │
+│  Baseline: document capacity headroom and first rightsizing recommendations                           │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 <div class="kb-grid kb-grid-5">
 <a class="kb-card" href="architecture/"><strong>Architecture</strong><span>Deployment topology, cluster sizing, adapter configuration, and vCenter integration.</span></a>
 <a class="kb-card" href="design-standards/"><strong>Standards</strong><span>Naming conventions, build baseline, and configuration checklist.</span></a>

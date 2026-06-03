@@ -75,6 +75,72 @@ Windows Server 2019/2022/2025 infrastructure — Active Directory DS, DNS, SMB f
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+
+```text
+┌──────────────────────────────── Windows Server — Deployment Sequence ─────────────────────────────────┐
+│                                                                                                       │
+│  Step 1 · Hardware Readiness                                                                          │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  BIOS/firmware at current vendor-recommended level  ·  update from iDRAC/iLO before OS                │
+│  BIOS: VT-x on  ·  VT-d on  ·  Secure Boot on (or off if driver signing issues)                       │
+│  TPM 2.0 chip present and enabled (required for BitLocker and Credential Guard)                       │
+│  NIC: OEM driver available for target OS version  ·  check Windows Server HCL                         │
+│  DNS: A+PTR records created before install  ·  hostname resolves before domain join                   │
+│                                                                                                       │
+│                                        │  install OS                                                  │
+│                                        ▼                                                              │
+│  Step 2 · OS Installation                                                                             │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Boot from ISO  ·  select Windows Server Datacenter or Standard (Desktop or Core)                     │
+│  Custom install  ·  create partitions: 100 MB EFI + 128 MB MSR + OS partition                         │
+│  Set local admin password  ·  activate Windows (KMS or MAK key) post-install                          │
+│  Windows Update: install all updates before domain join and role deployment                           │
+│  Configure hostname: Rename-Computer -NewName <hostname>  ·  reboot to apply                          │
+│                                                                                                       │
+│                                        │  configure network and domain                                │
+│                                        ▼                                                              │
+│  Step 3 · Network & Domain Join                                                                       │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Set static IP: New-NetIPAddress  ·  set DNS to domain controller IPs                                 │
+│  Test name resolution: Resolve-DnsName <domain>  ·  Resolve-DnsName <dc-fqdn>                         │
+│  Domain join: Add-Computer -DomainName <domain> -Credential <admin>  ·  reboot                        │
+│  Verify Kerberos: klist  ·  verify GPO applies: gpresult /r                                           │
+│  NIC teaming if redundancy needed: New-NetLbfoTeam  ·  set LACP or switch-independent                 │
+│                                                                                                       │
+│                                        │  install roles and features                                  │
+│                                        ▼                                                              │
+│  Step 4 · Roles & Features                                                                            │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  AD DS: Install-WindowsFeature AD-Domain-Services -IncludeManagementTools                             │
+│  Hyper-V: Install-WindowsFeature Hyper-V -IncludeManagementTools  ·  requires reboot                  │
+│  File Services: Install-WindowsFeature FS-FileServer FS-DFS-Namespace FS-DFS-Replication              │
+│  IIS: Install-WindowsFeature Web-Server -IncludeAllSubFeature                                         │
+│  Configure role-specific settings after feature install  ·  verify service started                    │
+│                                                                                                       │
+│                                        │  apply security baseline                                     │
+│                                        ▼                                                              │
+│  Step 5 · Security Hardening                                                                          │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Apply CIS or STIG GPO baseline  ·  audit policy: success and failure on logon/logoff                 │
+│  Enable Windows Defender  ·  configure exclusions for installed roles only                            │
+│  Disable unused services: Print Spooler, WinRM (if not needed), NetBIOS over TCP/IP                   │
+│  LAPS: verify local admin password managed  ·  check LAPS GUI or AD attribute                         │
+│  Enable BitLocker on OS drive (servers with TPM)  ·  store recovery key in AD                         │
+│                                                                                                       │
+│                                        │  configure monitoring and backup                             │
+│                                        ▼                                                              │
+│  Step 6 · Monitoring & Backup                                                                         │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  WSUS: configure Automatic Updates Group Policy  ·  point to WSUS server                              │
+│  Windows Admin Center: deploy WAC gateway  ·  add server to managed list                              │
+│  Deploy monitoring agent: Aria Ops  ·  SCOM  ·  or log analytics agent                                │
+│  Configure Windows event forwarding (WEF) to central log collector or SIEM                            │
+│  Backup: configure Windows Server Backup  ·  or deploy Veeam/Commvault agent                          │
+│  Test restore  ·  document recovery procedure  ·  confirm alerts reach on-call                        │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="architecture/">

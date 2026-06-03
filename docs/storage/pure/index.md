@@ -78,6 +78,72 @@ Pure Storage knowledge base covering FlashArray and FlashBlade — including Act
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+
+```text
+┌───────────────────────────── Pure Storage — Initial Deployment Sequence ──────────────────────────────┐
+│                                                                                                       │
+│  Step 1 · Physical Readiness                                                                          │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Rack FlashArray//X or //C  ·  dual power cables to redundant PDUs                                    │
+│  FC: cable controller ports to SAN fabric  ·  iSCSI/NVMe-oF: cable to storage VLAN                    │
+│  Replication: dedicated Ethernet ports for array-to-array replication network                         │
+│  Management: eth0 (controller A) and eth0 (controller B) connected to OOB switch                      │
+│  Confirm initial IP visible (factory default 192.168.170.2)  ·  set management IP                     │
+│                                                                                                       │
+│                                        │  complete Purity initial setup                               │
+│                                        ▼                                                              │
+│  Step 2 · Purity Initial Setup                                                                        │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Connect browser to management IP  ·  login with pureuser / pureuser (change immediately)             │
+│  Run initial setup wizard: array name, management IP, gateway, DNS, NTP, time zone                    │
+│  Set admin password  ·  set pureuser password  ·  enable two-factor if required                       │
+│  Configure alert notification: SMTP relay, recipient address, severity threshold                      │
+│  Register with Pure1 cloud: Settings → Support → register with Pure1 API token                        │
+│                                                                                                       │
+│                                        │  configure network interfaces                                │
+│                                        ▼                                                              │
+│  Step 3 · Network Interfaces                                                                          │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Create iSCSI interfaces: array → Network → Interfaces → enable iSCSI on each port                    │
+│  Create FC interfaces: ports auto-detected  ·  assign WWPN to SAN zone                                │
+│  Create replication interface: dedicated port  ·  assign replication network VLAN                     │
+│  NVMe-oF (FlashArray//XL): enable NVMe-oF  ·  assign RDMA or TCP transport per port                   │
+│  Verify connectivity: ping test from host management  ·  check port LEDs                              │
+│                                                                                                       │
+│                                        │  register hosts and connect volumes                          │
+│                                        ▼                                                              │
+│  Step 4 · Host Connectivity                                                                           │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Create host object: array → Storage → Hosts → Create  ·  enter IQN or WWNs                           │
+│  Create host group for VMware clusters or Oracle RAC  ·  add hosts to group                           │
+│  Create volume: Storage → Volumes → Create  ·  set size and name                                      │
+│  Connect volume to host group  ·  rescan storage from host  ·  confirm LUN visible                    │
+│  Deploy Pure Storage VASA Provider for vSphere  ·  enables vVols and Storage Policy                   │
+│                                                                                                       │
+│                                        │  configure protection groups                                 │
+│                                        ▼                                                              │
+│  Step 5 · Protection Groups                                                                           │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Create protection group: add volumes, hosts, or host groups                                          │
+│  Set snapshot schedule: frequency, retention window (local and replicated)                            │
+│  Add replication target: create array-to-array connection  ·  enter remote credentials                │
+│  Enable asynchronous replication  ·  verify first transfer completes cleanly                          │
+│  ActiveCluster (sync): add stretched volume to pod  ·  confirm mediator registered                    │
+│                                                                                                       │
+│                                        │  connect Pure1 and validate                                  │
+│                                        ▼                                                              │
+│  Step 6 · Pure1 & ActiveDR                                                                            │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Pure1 registration complete  ·  array telemetry uploading  ·  health visible in portal               │
+│  Install Pure Storage Plugin for VMware vCenter  ·  enables datastore management                      │
+│  ActiveDR (async DR): configure VM group  ·  test failover to DR array  ·  document RTO               │
+│  Enable Evergreen subscription checks  ·  confirm controller and shelf firmware current               │
+│  Run Pure1 Workload Planner assessment  ·  document baseline IOPs and latency                         │
+│  Capacity alert: set 80% threshold  ·  configure escalation path for storage growth                   │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="flasharray/"><strong>FlashArray</strong><span>All-flash block storage — ActiveDR, ActiveCluster, snapshots, replication, and Purity.</span></a>
 <a class="kb-card" href="flashblade/"><strong>FlashBlade</strong><span>Unified fast file and object storage — scale-out NFS, S3, and analytics workloads.</span></a>

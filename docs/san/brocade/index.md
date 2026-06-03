@@ -75,6 +75,72 @@ Brocade SAN knowledge base covering Fabric OS switches and SANnav management. In
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+
+```text
+┌───────────────────────────────── Brocade SAN — Fabric Build Sequence ─────────────────────────────────┐
+│                                                                                                       │
+│  Step 1 · Physical Readiness                                                                          │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Rack directors and edge switches  ·  connect power feeds to separate PDUs                            │
+│  ISL cables between directors  ·  use OM4/OS2 per port type (SWL/LWL)                                 │
+│  Management: 1 GbE OOB port per switch  ·  assign IP via front panel serial console                   │
+│  Confirm serial console access  ·  upgrade Fabric OS to target version (RFI approved)                 │
+│  DNS A-records for all switch management hostnames  ·  NTP server reachable                           │
+│                                                                                                       │
+│                                        │  configure switch parameters                                 │
+│                                        ▼                                                              │
+│  Step 2 · Switch Initialisation                                                                       │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Set switch name, domain ID (unique per fabric)  ·  disable port range not in use                     │
+│  Set BB credit per port type  ·  fabric-wide BB credit buffer tuning on ISLs                          │
+│  Enable Enhanced Transmission Selection (ETS) for FCoE if applicable                                  │
+│  Set in-band management to disabled  ·  restrict Telnet  ·  enable SSH only                           │
+│  Set insistent domain ID  ·  configure fabric parameters (E_D_TOV, R_A_TOV) consistently              │
+│                                                                                                       │
+│                                        │  form fabric with ISL trunking                               │
+│                                        ▼                                                              │
+│  Step 3 · Fabric Formation                                                                            │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Enable ISL trunking (brocade Trunking licence)  ·  group ISL ports into trunk groups                 │
+│  Verify fabric topology with fabricshow  ·  all principal switches visible                            │
+│  FCID assignment: verify no domain ID conflicts  ·  check fabricShow principal election               │
+│  Enable DLS (dynamic load sharing) on all switches  ·  verify with dlsShow                            │
+│  Run fabricShow  ·  nsShow  ·  trunkShow to confirm clean fabric state                                │
+│                                                                                                       │
+│                                        │  create aliases and zones                                    │
+│                                        ▼                                                              │
+│  Step 4 · Zoning                                                                                      │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Create PWWN-based aliases for every initiator and target: alicreate  ·  aliadd                       │
+│  Create peer zones: one initiator per zone  ·  all reachable targets in same zone                     │
+│  Never use domain,index (D,I) zoning in production — breaks on switch replacement                     │
+│  Create zone configuration (cfgcreate)  ·  add all zones  ·  cfgenable to activate                    │
+│  Verify active zone config with cfgShow  ·  test that hosts can see storage targets                   │
+│                                                                                                       │
+│                                        │  present ports to hosts and arrays                           │
+│                                        ▼                                                              │
+│  Step 5 · Host + Array Login                                                                          │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Connect host HBAs to fabric  ·  confirm FLOGI in nsShow output per port                              │
+│  Confirm PLOGI and PRLI exchange  ·  verify SCSI LUN discovery on host                                │
+│  Connect array front-end ports  ·  confirm target FLOGI and visibility in nsShow                      │
+│  Run nsAllShow to confirm all N-ports visible to fabric  ·  cross-check with array                    │
+│  Verify LUN masking on array matches zone scope  ·  test I/O from host to LUN                         │
+│                                                                                                       │
+│                                        │  deploy SANnav management                                    │
+│                                        ▼                                                              │
+│  Step 6 · SANnav Management                                                                           │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Deploy SANnav OVA on vSphere or install on RHEL  ·  assign management IP                             │
+│  Add all fabric switches via Discover Switches  ·  SSH credential required                            │
+│  Configure SNMP trap target = SANnav IP on all switches  ·  verify trap receipt                       │
+│  Set up syslog forwarding from switches to SANnav and to SIEM                                         │
+│  Enable performance collection  ·  configure SANnav alerts for port errors and congestion             │
+│  Baseline: export zone config backup  ·  document port-to-server mapping inventory                    │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="fabric-os/"><strong>Fabric OS</strong><span>Brocade switch OS — zoning, fabric configuration, CLI, health checks, and troubleshooting.</span></a>
 <a class="kb-card" href="sannav/"><strong>SANnav</strong><span>Brocade SAN management — fabric discovery, monitoring, and zoning management.</span></a>

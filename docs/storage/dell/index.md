@@ -80,6 +80,71 @@ Dell enterprise storage portfolio — block, file, object, and data protection p
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+
+```text
+┌───────────────────────────── Dell Storage — Initial Deployment Sequence ──────────────────────────────┐
+│                                                                                                       │
+│  Step 1 · Physical Readiness                                                                          │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Rack array (PowerStore / PowerMax / Unity / PowerScale)  ·  cable redundant power                    │
+│  Front-end connectivity: FC HBAs to SAN fabric  ·  iSCSI ports to storage VLAN                        │
+│  Back-end: NVMe or SAS expansion shelves cabled per topology guide                                    │
+│  OOB: iDRAC / service processor management port assigned  ·  OOB IP reachable                         │
+│  Network: storage management VLAN  ·  replication VLAN if remote replication needed                   │
+│                                                                                                       │
+│                                        │  run initial setup wizard                                    │
+│                                        ▼                                                              │
+│  Step 2 · Array Initialisation                                                                        │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  PowerStore: complete Embedded Service Enabler (ESE) wizard  ·  set management IP                     │
+│  Unity: connect Unisphere for Unity  ·  run initial configuration wizard                              │
+│  PowerMax / VMAX: Service Processor setup  ·  apply Enginuity/PowerMaxOS licence                      │
+│  Set NTP server  ·  DNS  ·  SMTP for alerts  ·  SNMP community or v3 credentials                      │
+│  Apply array licence  ·  verify all hardware components show Healthy in health page                   │
+│                                                                                                       │
+│                                        │  configure pools and storage resources                       │
+│                                        ▼                                                              │
+│  Step 3 · Pools & Provisioning                                                                        │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Create storage pool or appliance: assign drives (NVMe cache + SSD/NL-SAS capacity)                   │
+│  Define storage resource: LUN (block) or NAS file system + NFS/SMB share                              │
+│  Set thin or thick provisioning  ·  assign storage policy or tier                                     │
+│  PowerScale: create cluster subnet  ·  SmartPools tier policy  ·  access zone                         │
+│  Verify pool capacity and health  ·  check rebuild time estimate if a drive failed                    │
+│                                                                                                       │
+│                                        │  connect hosts                                               │
+│                                        ▼                                                              │
+│  Step 4 · Host Connectivity                                                                           │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Register host: add initiator WWNs (FC) or IQNs (iSCSI) to host object on array                       │
+│  Create host group for cluster nodes sharing LUNs (VMware cluster, Oracle RAC)                        │
+│  Zone FC initiators to array target ports in SAN fabric  ·  verify FLOGI visible                      │
+│  Map LUN to host group  ·  confirm LUN visible to hosts with rescan on each node                      │
+│  Deploy PowerPath (block) or configure native multipathing  ·  verify all paths active                │
+│                                                                                                       │
+│                                        │  configure replication and data protection                   │
+│                                        ▼                                                              │
+│  Step 5 · Replication & Protection                                                                    │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Native replication: configure remote system object  ·  create replication session                    │
+│  SRDF (PowerMax): configure SRDF groups  ·  establish R1–R2 device pairs  ·  sync                     │
+│  RecoverPoint: install splitter  ·  create consistency group  ·  set journal size                     │
+│  CloudIQ: register array  ·  enable proactive health monitoring + capacity analytics                  │
+│  Snapshots: configure local snapshot schedule per LUN or file system  ·  test restore                 │
+│                                                                                                       │
+│                                        │  connect monitoring and support                              │
+│                                        ▼                                                              │
+│  Step 6 · Monitoring & Support                                                                        │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Register array with CloudIQ SaaS  ·  enable Secure Remote Services (ESRS / SCG)                      │
+│  Configure SNMP traps to monitoring platform  ·  syslog to SIEM  ·  SMTP alerts                       │
+│  Install OMIVV vCenter plugin for Dell hardware health visibility                                     │
+│  Set capacity threshold alerts at 75% and 90%  ·  test email notification                             │
+│  Document: array serial, management IP, admin credentials in password vault                           │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="powermax/"><strong>PowerMax</strong><span>High-end all-flash array — SRDF replication, NVMe, multicloud, and enterprise performance.</span></a>
 <a class="kb-card" href="powerscale/"><strong>PowerScale</strong><span>Scale-out NAS — OneFS, SmartQuotas, SyncIQ, and multi-protocol file services.</span></a>

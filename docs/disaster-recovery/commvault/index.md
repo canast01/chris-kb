@@ -62,6 +62,70 @@ Commvault enterprise backup and recovery — CommServe command and control, Medi
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+
+```text
+┌────────────────────────────────── Commvault — Installation Sequence ──────────────────────────────────┐
+│                                                                                                       │
+│  Step 1 · Prerequisites                                                                               │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Windows Server 2019/2022  ·  16 vCPU  ·  64 GB RAM  ·  SQL Server 2019+ for CommServe DB             │
+│  Separate Windows or Linux MediaAgent nodes  ·  10 GbE data path to storage                           │
+│  TCP 8400/8401 (client comms)  ·  443 (Command Center)  ·  service account in domain                  │
+│  DNS resolution for all CommServe, MediaAgent, and client FQDNs  ·  NTP synced                        │
+│  Commvault licence file (.lic) obtained from support portal before install                            │
+│                                                                                                       │
+│                                        │  install CommServe                                           │
+│                                        ▼                                                              │
+│  Step 2 · CommServe                                                                                   │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Run Commvault installer on Windows  ·  select CommServe role  ·  point to SQL instance               │
+│  Activate licence  ·  login to Command Center at https://<hostname>/commandcenter                     │
+│  Configure CommCell: time zone, email SMTP, security settings, audit log                              │
+│  Add CommServe DR backup destination  ·  enable automatic disaster recovery export                    │
+│  Verify CommServe DB size and SQL maintenance jobs  ·  set SQL backup schedule                        │
+│                                                                                                       │
+│                                        │  add MediaAgent nodes                                        │
+│                                        ▼                                                              │
+│  Step 3 · MediaAgents                                                                                 │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Run installer on each MA host  ·  select MediaAgent role  ·  register to CommServe                   │
+│  Configure index cache path (fast local SSD)  ·  set working directory                                │
+│  Enable deduplication database (DDB) on each MA  ·  assign DDB to a dedicated disk                    │
+│  Verify MA appears Online in CommCell Console under Storage → MediaAgents                             │
+│  Test data path: run a small backup job routing through each new MA                                   │
+│                                                                                                       │
+│                                        │  configure storage libraries                                 │
+│                                        ▼                                                              │
+│  Step 4 · Storage Libraries                                                                           │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Add disk library: local path, NFS/CIFS share, or cloud storage (S3/Azure/GCP)                        │
+│  Create storage policy: select MA, assign library, set retention rules (days + cycles)                │
+│  Enable WORM/immutability on cloud or disk library for ransomware protection                          │
+│  Create global dedup storage policy for large environments to share DDB across MAs                    │
+│  Verify library free space  ·  configure alert at 80% full                                            │
+│                                                                                                       │
+│                                        │  add clients and proxies                                     │
+│                                        ▼                                                              │
+│  Step 5 · Clients & Proxies                                                                           │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Add clients via Command Center → Add Server  ·  push Commvault agent or run locally                  │
+│  Add virtualization proxy: vCenter access node  ·  IntelliSnap proxy for array snaps                  │
+│  Install File System agent on Windows/Linux  ·  add Exchange/SQL/Oracle agents as needed              │
+│  Verify client appears Online  ·  run discovery to populate content (VMs, DB instances)               │
+│                                                                                                       │
+│                                        │  create plans and schedules                                  │
+│                                        ▼                                                              │
+│  Step 6 · Plans & Schedules                                                                           │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Create server backup plan: storage policy, RPO schedule, retention, encryption toggle                │
+│  Assign plan to client groups  ·  override per-client if granular retention needed                    │
+│  Enable SLA compliance view  ·  set alert for missed SLA                                              │
+│  Run first full backup  ·  verify job completes  ·  test restore from Command Center                  │
+│  Schedule reports: capacity, compliance, and missed-backup summary to operations team                 │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="architecture/">

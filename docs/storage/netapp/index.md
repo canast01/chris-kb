@@ -78,6 +78,72 @@ NetApp storage knowledge base covering ONTAP, SnapMirror, SnapCenter, and Keysto
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+
+```text
+┌───────────────────────────── NetApp ONTAP — Cluster Deployment Sequence ──────────────────────────────┐
+│                                                                                                       │
+│  Step 1 · Physical Readiness                                                                          │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Rack nodes  ·  cable cluster interconnect (100 GbE HA and cluster ports)                             │
+│  Expansion shelves: SAS/NVMe cabling per shelf cabling guide  ·  shelf IDs unique                     │
+│  Management network: e0M management port  ·  e0a/b data ports connected to switches                   │
+│  DNS A+PTR records for cluster management LIF and all node management LIFs                            │
+│  NTP servers reachable  ·  NetApp licence keys (base + feature) obtained                              │
+│                                                                                                       │
+│                                        │  run cluster setup wizard                                    │
+│                                        ▼                                                              │
+│  Step 2 · Cluster Initialisation                                                                      │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Boot first node  ·  run cluster setup at console: cluster create -clustername                        │
+│  Set cluster management LIF IP  ·  set admin password  ·  accept EULA                                 │
+│  Join additional nodes: cluster setup on each  ·  set node management LIF                             │
+│  Verify: cluster show  ·  cluster ring show  ·  storage failover show HA status                       │
+│  Apply licences: system licence add -licence-code <keys>  ·  confirm all features                     │
+│                                                                                                       │
+│                                        │  create aggregates and SVMs                                  │
+│                                        ▼                                                              │
+│  Step 3 · Aggregates & SVMs                                                                           │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Create aggregate: aggr create -aggregate <name> -diskcount <n> -raidtype raid_dp                     │
+│  Create SVM: vserver create -vserver <name> -rootvolume <vol> -language C.UTF-8                       │
+│  Configure SVM protocols: nfs enable  ·  cifs setup (join AD)  ·  iscsi start                         │
+│  Assign LIFs to SVM: network interface create per protocol per node (NFS, iSCSI, FC)                  │
+│  Set LIF failover policy  ·  verify LIF placement with network interface show                         │
+│                                                                                                       │
+│                                        │  provision volumes and LUNs                                  │
+│                                        ▼                                                              │
+│  Step 4 · Volumes & LUNs                                                                              │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Create volume: vol create -vserver <svm> -volume <vol> -aggregate <aggr> -size <n>                   │
+│  NFS: export-policy create  ·  set export rule  ·  mount NFS share from client                        │
+│  iSCSI/FC: lun create  ·  igroup create  ·  lun map -igroup  ·  rescan from host                      │
+│  SMB/CIFS: vserver cifs share create  ·  set permissions  ·  test from Windows client                 │
+│  Set volume efficiency: dedup enable  ·  compression enable  ·  verify savings                        │
+│                                                                                                       │
+│                                        │  configure SnapMirror replication                            │
+│                                        ▼                                                              │
+│  Step 5 · SnapMirror & SnapVault                                                                      │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Peer clusters: cluster peer create  ·  SVM peer: vserver peer create                                 │
+│  Create SnapMirror relationship: snapmirror create -type DP (async) or SM (sync)                      │
+│  Initialise: snapmirror initialize  ·  monitor transfer with snapmirror show                          │
+│  Create vault relationship for long-term retention  ·  set schedule and retention                     │
+│  Test failover: snapmirror quiesce  ·  snapmirror break  ·  test DR SVM  ·  resync                    │
+│                                                                                                       │
+│                                        │  deploy SnapCenter                                           │
+│                                        ▼                                                              │
+│  Step 6 · SnapCenter                                                                                  │
+│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+│  Install SnapCenter Server on Windows  ·  point to SQL instance  ·  configure HTTPS                   │
+│  Add storage systems: Settings → Storage Systems → Add ONTAP cluster credentials                      │
+│  Install SnapCenter plug-ins on application hosts (Windows File, SQL, Oracle, VMware)                 │
+│  Create policies: snapshot frequency, retention, replication schedule                                 │
+│  Create resource groups  ·  assign policy  ·  run first backup  ·  test restore                       │
+│  Configure SnapCenter RBAC  ·  integrate with email/SIEM alerting                                     │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="ontap/"><strong>ONTAP</strong><span>NetApp data management OS — NAS, SAN, S3, SnapMirror Active Sync, and MetroCluster.</span></a>
 <a class="kb-card" href="snapmirror/"><strong>SnapMirror</strong><span>Asynchronous and synchronous data replication for DR and data distribution.</span></a>
