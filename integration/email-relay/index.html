@@ -25,7 +25,7 @@
     
     
       
-        <title>Email Relay - Chris KB</title>
+        <title>Index - Chris KB</title>
       
     
     
@@ -67,10 +67,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Email Relay · Chris KB">
+  <meta property="og:title" content="Index · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Email Relay · Chris KB">
+  <meta name="twitter:title" content="Index · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -90,11 +90,6 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
-      
-        
-        <a href="#email-relay" class="md-skip">
-          Skip to content
-        </a>
       
     </div>
     <div data-md-component="announce">
@@ -128,7 +123,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Email Relay
+              Index
             
           </span>
         </div>
@@ -2797,60 +2792,6 @@
   
   
   
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#architecture" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Architecture
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#configuration-etcpostfixmaincf" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Configuration — /etc/postfix/main.cf
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#daily-operational-commands" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Daily Operational Commands
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#troubleshooting" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Troubleshooting
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
   
 </nav>
                   </div>
@@ -2962,7 +2903,7 @@
     
     <a href="../directory-integration/" class="kb-topnav__link kb-topnav__link--prev" id="kb-prev-link">
       <span class="kb-topnav__arrow">&#8592;</span>
-      <span class="kb-topnav__title">Directory Integration</span>
+      <span class="kb-topnav__title">Index</span>
     </a>
     
 
@@ -2984,211 +2925,41 @@
 
 
 
-<h1 id="email-relay">Email Relay<a class="headerlink" href="#email-relay" title="Permanent link">&para;</a></h1>
-<div class="kb-summary">
-> Covers Postfix SMTP relay configuration for outbound application and system mail.
-</div>
+  <h1>Index</h1>
 
-<hr />
-<h2 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h2>
-<p>A typical deployment routes application-generated mail through a local Postfix relay, which forwards to a smarthost or cloud email service (AWS SES, SendGrid). This decouples application SMTP configuration from the upstream provider and centralises authentication and delivery policy.</p>
-<p>Key properties of this pattern:
-- Applications configure a single static SMTP target (the relay) — no per-app credential management
-- The relay handles authentication, TLS negotiation, and retry queuing toward the smarthost
-- All outbound mail is visible in a single log and queue on the relay host</p>
-<hr />
-<h2 id="configuration-etcpostfixmaincf">Configuration — <code>/etc/postfix/main.cf</code><a class="headerlink" href="#configuration-etcpostfixmaincf" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Parameter</th>
-<th>Example Value</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>relayhost</code></td>
-<td><code>[email-smtp.us-east-1.amazonaws.com]:587</code></td>
-<td>Upstream smarthost and port. Brackets suppress MX lookup.</td>
-</tr>
-<tr>
-<td><code>mynetworks</code></td>
-<td><code>127.0.0.0/8 10.0.0.0/8</code></td>
-<td>IP ranges permitted to relay through this Postfix instance. Restrict to loopback and internal app subnets.</td>
-</tr>
-<tr>
-<td><code>smtp_sasl_auth_enable</code></td>
-<td><code>yes</code></td>
-<td>Enable SASL authentication toward the smarthost.</td>
-</tr>
-<tr>
-<td><code>smtp_sasl_password_maps</code></td>
-<td><code>hash:/etc/postfix/sasl_passwd</code></td>
-<td>Path to the credential map file for smarthost authentication.</td>
-</tr>
-<tr>
-<td><code>smtp_sasl_security_options</code></td>
-<td><code>noanonymous</code></td>
-<td>Reject anonymous SASL mechanisms.</td>
-</tr>
-<tr>
-<td><code>smtp_tls_security_level</code></td>
-<td><code>encrypt</code></td>
-<td>Require TLS for all outbound SMTP connections. Use <code>encrypt</code> (mandatory) rather than <code>may</code> (opportunistic).</td>
-</tr>
-<tr>
-<td><code>smtp_tls_note_starttls_offer</code></td>
-<td><code>yes</code></td>
-<td>Log when the smarthost offers STARTTLS, useful for debugging TLS negotiation.</td>
-</tr>
-<tr>
-<td><code>inet_interfaces</code></td>
-<td><code>loopback-only</code></td>
-<td>Accept connections on loopback only when the relay is local. Set to a specific IP if relay serves multiple hosts.</td>
-</tr>
-<tr>
-<td><code>myhostname</code></td>
-<td><code>relay.internal.example.com</code></td>
-<td>FQDN used in EHLO/HELO. Must resolve from the smarthost to avoid rejection.</td>
-</tr>
-<tr>
-<td><code>message_size_limit</code></td>
-<td><code>10240000</code></td>
-<td>Maximum message size in bytes (10 MB shown). Adjust to match smarthost limits.</td>
-</tr>
-</tbody>
-</table>
-<p>After editing <code>main.cf</code>, reload without dropping the queue:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>postfix<span class="w"> </span>reload
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="sb">```</span>text
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>┌──────────────────────────────────<span class="w"> </span>Integration<span class="w"> </span>—<span class="w"> </span>Email<span class="w"> </span>Relay<span class="w"> </span><span class="o">(</span>SMTP<span class="o">)</span><span class="w"> </span>───────────────────────────────────┐
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│<span class="w">                                                                                                       </span>│
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│<span class="w">   </span>┌───────────────────────────────────────────────────────────────────────────────────────────────┐<span class="w">   </span>│
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│<span class="w">   </span>│<span class="w">      </span>Configure<span class="w"> </span>SMTP<span class="w"> </span>relay<span class="w"> </span>so<span class="w"> </span>monitoring,<span class="w"> </span>backup,<span class="w"> </span>and<span class="w"> </span>infrastructure<span class="w"> </span>appliances<span class="w"> </span>send<span class="w"> </span>email<span class="w">     </span>│<span class="w">   </span>│
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│<span class="w">   </span>│<span class="w">           </span>Use<span class="w"> </span>authenticated<span class="w"> </span>SMTP<span class="w"> </span>relay<span class="p">;</span><span class="w"> </span>never<span class="w"> </span>configure<span class="w"> </span>an<span class="w"> </span>open<span class="w"> </span>relay<span class="p">;</span><span class="w"> </span>TLS<span class="w"> </span>required<span class="w">           </span>│<span class="w">   </span>│
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│<span class="w">   </span>│<span class="w">           </span>Test:<span class="w"> </span>telnet/openssl<span class="w"> </span>to<span class="w"> </span>relay<span class="w"> </span>port<span class="p">;</span><span class="w"> </span>send<span class="w"> </span>a<span class="w"> </span><span class="nb">test</span><span class="w"> </span>alert<span class="w"> </span>after<span class="w"> </span>config<span class="w"> </span>change<span class="w">           </span>│<span class="w">   </span>│
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│<span class="w">   </span>└───────────────────────────────────────────────────────────────────────────────────────────────┘<span class="w">   </span>│
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│<span class="w">                                                                                                       </span>│
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│<span class="w">                          </span>▼<span class="w">                                                 </span>▼<span class="w">                          </span>│
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│<span class="w">                                                                                                       </span>│
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│<span class="w">   </span>┌──────────────────────────────────────────────┐<span class="w">  </span>┌─────────────────────────────────────────────┐<span class="w">   </span>│
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│<span class="w">   </span>│<span class="w">                 </span>SMTP<span class="w"> </span>Config<span class="w">                  </span>│<span class="w">  </span>│<span class="w">                </span>Common<span class="w"> </span>Issues<span class="w">                </span>│<span class="w">   </span>│
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│<span class="w">   </span>│<span class="w">      </span>─────────────────────────────────<span class="w">       </span>│<span class="w">  </span>│<span class="w">      </span>─────────────────────────────────<span class="w">      </span>│<span class="w">   </span>│
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│<span class="w">   </span>│<span class="w">          </span>Relay<span class="w"> </span>host:<span class="w"> </span>smtp.internal<span class="w">           </span>│<span class="w">  </span>│<span class="w">         </span>Connection<span class="w"> </span><span class="nv">refused</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>FW/port<span class="w">        </span>│<span class="w">   </span>│
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│<span class="w">   </span>│<span class="w">             </span>Port:<span class="w"> </span><span class="m">587</span><span class="w"> </span><span class="o">(</span>STARTTLS<span class="o">)</span><span class="w">             </span>│<span class="w">  </span>│<span class="w">           </span>Auth<span class="w"> </span><span class="nv">fail</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>check<span class="w"> </span>creds<span class="w">           </span>│<span class="w">   </span>│
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│<span class="w">   </span>│<span class="w">             </span>Auth:<span class="w"> </span>PLAIN<span class="w"> </span>or<span class="w"> </span>LOGIN<span class="w">             </span>│<span class="w">  </span>│<span class="w">           </span>TLS<span class="w"> </span><span class="nv">error</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>add<span class="w"> </span>relay<span class="w"> </span>CA<span class="w">          </span>│<span class="w">   </span>│
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│<span class="w">   </span>│<span class="w">             </span>From:<span class="w"> </span>alerts@domain<span class="w">              </span>│<span class="w">  </span>│<span class="w">          </span>Relay<span class="w"> </span><span class="nv">denied</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>check<span class="w"> </span>allow<span class="w">         </span>│<span class="w">   </span>│
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│<span class="w">   </span>│<span class="w">             </span>Test:<span class="w"> </span>send<span class="w"> </span><span class="nb">test</span><span class="w"> </span>mail<span class="w">             </span>│<span class="w">  </span>│<span class="w">           </span>SPF<span class="w"> </span><span class="nv">fail</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>add<span class="w"> </span>relay<span class="w"> </span>IP<span class="w">           </span>│<span class="w">   </span>│
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│<span class="w">   </span>└──────────────────────────────────────────────┘<span class="w">  </span>└─────────────────────────────────────────────┘<span class="w">   </span>│
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│<span class="w">                                                                                                       </span>│
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│<span class="w">    </span>Key<span class="w"> </span>terms:<span class="w">                                                                                         </span>│
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│<span class="w">                                                                                                       </span>│
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│<span class="w">    </span><span class="nv">STARTTLS</span><span class="w">     </span><span class="o">=</span><span class="w"> </span>Upgrade<span class="w"> </span>plain<span class="w"> </span>SMTP<span class="w"> </span>connection<span class="w"> </span>to<span class="w"> </span>TLS<span class="w"> </span>on<span class="w"> </span>port<span class="w"> </span><span class="m">587</span><span class="p">;</span><span class="w"> </span>required<span class="w"> </span><span class="k">for</span><span class="w"> </span>auth<span class="w">                 </span>│
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│<span class="w">    </span>Open<span class="w"> </span><span class="nv">relay</span><span class="w">   </span><span class="o">=</span><span class="w"> </span>SMTP<span class="w"> </span>server<span class="w"> </span>accepting<span class="w"> </span>mail<span class="w"> </span><span class="k">for</span><span class="w"> </span>any<span class="w"> </span>domain<span class="p">;</span><span class="w"> </span>used<span class="w"> </span><span class="k">for</span><span class="w"> </span>spam<span class="p">;</span><span class="w"> </span>never<span class="w"> </span>configure<span class="w">           </span>│
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│<span class="w">    </span><span class="nv">SPF</span><span class="w">          </span><span class="o">=</span><span class="w"> </span>Sender<span class="w"> </span>Policy<span class="w"> </span>Framework<span class="p">;</span><span class="w"> </span>DNS<span class="w"> </span>TXT<span class="w"> </span>record<span class="w"> </span>listing<span class="w"> </span>authorised<span class="w"> </span>sending<span class="w"> </span>IPs<span class="w">              </span>│
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│<span class="w">    </span>Port<span class="w"> </span><span class="nv">25</span><span class="w">      </span><span class="o">=</span><span class="w"> </span>SMTP<span class="p">;</span><span class="w"> </span>blocked<span class="w"> </span>by<span class="w"> </span>most<span class="w"> </span>cloud<span class="w"> </span>providers<span class="w"> </span><span class="k">for</span><span class="w"> </span>outbound<span class="p">;</span><span class="w"> </span>use<span class="w"> </span><span class="m">587</span><span class="w"> </span>or<span class="w"> </span><span class="m">465</span><span class="w">                  </span>│
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│<span class="w">    </span>Port<span class="w"> </span><span class="nv">587</span><span class="w">     </span><span class="o">=</span><span class="w"> </span>Submission<span class="w"> </span>port<span class="p">;</span><span class="w"> </span>requires<span class="w"> </span>authentication<span class="p">;</span><span class="w"> </span>preferred<span class="w"> </span><span class="k">for</span><span class="w"> </span>relay<span class="w"> </span>config<span class="w">                </span>│
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│<span class="w">    </span>Relay<span class="w"> </span><span class="nv">allow</span><span class="w">  </span><span class="o">=</span><span class="w"> </span>List<span class="w"> </span>of<span class="w"> </span>IPs<span class="w"> </span>permitted<span class="w"> </span>to<span class="w"> </span>relay<span class="w"> </span>through<span class="w"> </span>SMTP<span class="w"> </span>server<span class="w"> </span>without<span class="w"> </span>auth<span class="w"> </span><span class="o">(</span>use<span class="w"> </span>sparingly<span class="o">)</span><span class="w">     </span>│
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│<span class="w">                                                                                                       </span>│
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<hr />
-<h2 id="daily-operational-commands">Daily Operational Commands<a class="headerlink" href="#daily-operational-commands" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Check</th>
-<th>Command</th>
-<th>Notes</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Verify SMTP service running</td>
-<td><code>systemctl status postfix</code></td>
-<td>Expect <code>active (running)</code>. If stopped, check <code>journalctl -u postfix -n 50</code>.</td>
-</tr>
-<tr>
-<td>Check mail queue status</td>
-<td><code>mailq</code></td>
-<td>Empty queue is normal. A growing deferred queue indicates a delivery problem to the smarthost.</td>
-</tr>
-<tr>
-<td>Count queued messages</td>
-<td><code>postqueue -p \| grep -c '^[0-9A-F]'</code></td>
-<td>Quick count of queued message IDs.</td>
-</tr>
-<tr>
-<td>Review recent delivery log</td>
-<td><code>grep postfix /var/log/mail.log \| tail -n 100</code></td>
-<td>Look for <code>status=sent</code>, <code>status=deferred</code>, or <code>status=bounced</code> entries.</td>
-</tr>
-<tr>
-<td>Flush deferred queue</td>
-<td><code>postqueue -f</code></td>
-<td>Force retry of all deferred messages. Use after fixing a delivery issue.</td>
-</tr>
-<tr>
-<td>Test SMTP connectivity to smarthost</td>
-<td><code>openssl s_client -starttls smtp -connect email-smtp.us-east-1.amazonaws.com:587</code></td>
-<td>Validates TLS handshake and certificate.</td>
-</tr>
-<tr>
-<td>Send a test message</td>
-<td><code>echo "Test" \| mail -s "relay test" ops@example.com</code></td>
-<td>End-to-end test from the relay host.</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Symptom</th>
-<th>Check</th>
-<th>Action</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Messages stuck in deferred queue</td>
-<td><code>mailq</code> shows <code>Connection refused</code> or <code>Timeout</code> toward smarthost</td>
-<td>Verify smarthost hostname and port in <code>relayhost</code>. Check firewall rules allow outbound TCP 587 from the relay host.</td>
-</tr>
-<tr>
-<td>Authentication failure to smarthost</td>
-<td>Log shows <code>SASL authentication failed</code></td>
-<td>Confirm credentials in <code>/etc/postfix/sasl_passwd</code> are current. Re-hash with <code>postmap /etc/postfix/sasl_passwd</code> after any edit.</td>
-</tr>
-<tr>
-<td>TLS negotiation error</td>
-<td>Log shows <code>TLS handshake failed</code> or <code>certificate verify failed</code></td>
-<td>Check <code>smtp_tls_security_level</code>. If the smarthost cert has changed, update the CA bundle at <code>/etc/ssl/certs/ca-certificates.crt</code>.</td>
-</tr>
-<tr>
-<td>Relay access denied (550)</td>
-<td>Log shows <code>Relay access denied</code> for a source IP</td>
-<td>The sending host IP is not in <code>mynetworks</code>. Add it and reload Postfix.</td>
-</tr>
-<tr>
-<td>Bounce: unknown user</td>
-<td>Log shows <code>550 5.1.1 user unknown</code> from the upstream MX</td>
-<td>The destination address does not exist. Confirm the recipient address with the requester.</td>
-</tr>
-<tr>
-<td>Messages sent but not received</td>
-<td>No bounce, queue empty, but mail not delivered</td>
-<td>Check smarthost dashboard (SES/SendGrid) for delivery status and suppression list. The message may have been accepted but marked as spam by the destination.</td>
-</tr>
-<tr>
-<td>High queue volume</td>
-<td><code>mailq</code> shows hundreds of messages</td>
-<td>Check for a looping alert or application generating excessive mail. Review sender address in the queue with <code>postqueue -p</code>.</td>
-</tr>
-</tbody>
-</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌────────────────────────────────── Integration — Email Relay (SMTP) ───────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │      Configure SMTP relay so monitoring, backup, and infrastructure appliances send email     │   │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │           Use authenticated SMTP relay; never configure an open relay; TLS required           │   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │           Test: telnet/openssl to relay port; send a test alert after config change           │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│                                                                                                       │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│                                                                                                       │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   │                 SMTP Config                  │  │                Common Issues                │   │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│   │          Relay host: smtp.internal           │  │         Connection refused = FW/port        │   │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│   │             Port: 587 (STARTTLS)             │  │           Auth fail = check creds           │   │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│   │             Auth: PLAIN or LOGIN             │  │           TLS error = add relay CA          │   │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   │             From: alerts@domain              │  │          Relay denied = check allow         │   │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │             Test: send test mail             │  │           SPF fail = add relay IP           │   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│                                                                                                       │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│    Key terms:                                                                                         │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│                                                                                                       │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│    STARTTLS     = Upgrade plain SMTP connection to TLS on port 587; required for auth                 │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│    Open relay   = SMTP server accepting mail for any domain; used for spam; never configure           │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│    SPF          = Sender Policy Framework; DNS TXT record listing authorised sending IPs              │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│    Port 25      = SMTP; blocked by most cloud providers for outbound; use 587 or 465                  │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│    Port 587     = Submission port; requires authentication; preferred for relay config                │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│    Relay allow  = List of IPs permitted to relay through SMTP server without auth (use sparingly)     │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 
 
 
@@ -3208,7 +2979,7 @@
     
     <a href="../directory-integration/" class="kb-topnav__link kb-topnav__link--prev">
       <span class="kb-topnav__arrow">&#8592;</span>
-      <span class="kb-topnav__title">Directory Integration</span>
+      <span class="kb-topnav__title">Index</span>
     </a>
     
 
@@ -3228,7 +2999,7 @@
   
   <nav class="kb-mobile-nav" aria-label="Mobile navigation">
     
-    <a href="../directory-integration/" class="kb-mobile-nav__btn" title="Previous: Directory Integration">
+    <a href="../directory-integration/" class="kb-mobile-nav__btn" title="Previous: Index">
       <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
     </a>
     

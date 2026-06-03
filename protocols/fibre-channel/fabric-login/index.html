@@ -25,7 +25,7 @@
     
     
       
-        <title>Fabric Login - Chris KB</title>
+        <title>Index - Chris KB</title>
       
     
     
@@ -67,10 +67,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Fabric Login · Chris KB">
+  <meta property="og:title" content="Index · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Fabric Login · Chris KB">
+  <meta name="twitter:title" content="Index · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -90,11 +90,6 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
-      
-        
-        <a href="#fabric-login" class="md-skip">
-          Skip to content
-        </a>
       
     </div>
     <div data-md-component="announce">
@@ -128,7 +123,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Fabric Login
+              Index
             
           </span>
         </div>
@@ -3380,99 +3375,6 @@
   
   
   
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#login-sequence" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Login Sequence
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#login-stages" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Login Stages
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#viewing-login-state" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Viewing Login State
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Viewing Login State">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#brocade-fos" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Brocade FOS
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#cisco-mds" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Cisco MDS
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#common-login-failures" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Common Login Failures
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#useful-diagnostic-commands" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Useful Diagnostic Commands
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
   
 </nav>
                   </div>
@@ -3602,7 +3504,7 @@
     
     <a href="../" class="kb-topnav__link kb-topnav__link--prev" id="kb-prev-link">
       <span class="kb-topnav__arrow">&#8592;</span>
-      <span class="kb-topnav__title">Fibre Channel</span>
+      <span class="kb-topnav__title">Index</span>
     </a>
     
 
@@ -3624,43 +3526,18 @@
 
 
 
-<h1 id="fabric-login">Fabric Login<a class="headerlink" href="#fabric-login" title="Permanent link">&para;</a></h1>
-<div class="kb-summary">
-Fabric login is the process by which FC ports register with the fabric and establish communication paths.
-</div>
+  <h1>Index</h1>
 
-<div class="highlight"><pre><span></span><code>    FC LOGIN SEQUENCE
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────┐        ┌───────────┐        ┌───────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│ Host HBA │        │ FC Switch │        │  Storage                                                     │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│          │        │(Name Svr) │        │  Target                                                      │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>└────┬─────┘        └─────┬─────┘        └─────┬─────┘
 </code></pre></div>
-<p><code>text
-┌──────────┐        ┌───────────┐        ┌───────────┐
-│ Host HBA │        │ FC Switch │        │  Storage                                                     │
-│          │        │(Name Svr) │        │  Target                                                      │
-└────┬─────┘        └─────┬─────┘        └─────┬─────┘</code>
-     │  1. FLOGI           │                    │
-     │ ──────────────────► │                    │
-     │  ACC (FC_ID assigned)│                   │
-     │ ◄────────────────── │                    │
-     │  2. PLOGI (to NS)   │                    │
-     │ ──────────────────► │                    │
-     │  ACC                │                    │
-     │ ◄────────────────── │                    │
-     │  3. RFT_ID / RPN_ID │                    │
-     │ ──────────────────► │                    │
-     │                     │  4. PLOGI (port-to-port)
-     │ ───────────────────────────────────────► │
-     │                     │  ACC               │
-     │ ◄─────────────────────────────────────── │
-     │                     │  5. PRLI (SCSI session)
-     │ ───────────────────────────────────────► │
-     │                     │  ACC (target ready) │
-     │ ◄─────────────────────────────────────── │
-     │                     │  I/O can begin     │
-```sql
-Login failures prevent hosts from seeing storage.
-</p>
-<h2 id="login-sequence">Login Sequence<a class="headerlink" href="#login-sequence" title="Permanent link">&para;</a></h2>
-<p><code>mermaid
-sequenceDiagram
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">Login</span><span class="w"> </span><span class="n">failures</span><span class="w"> </span><span class="n">prevent</span><span class="w"> </span><span class="n">hosts</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="n">seeing</span><span class="w"> </span><span class="k">storage</span><span class="p">.</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="o">##</span><span class="w"> </span><span class="n">Login</span><span class="w"> </span><span class="n">Sequence</span>
+</code></pre></div></p>
+<p><pre class="mermaid"><code>sequenceDiagram
     participant HBA as Host HBA
     participant SW as FC Switch
     participant NS as Name Server
@@ -3675,36 +3552,7 @@ sequenceDiagram
     HBA-&gt;&gt;TGT: PLOGI — Port Login to target WWPN
     TGT--&gt;&gt;HBA: ACC
     HBA-&gt;&gt;TGT: PRLI — Process Login (SCSI)
-    TGT--&gt;&gt;HBA: ACC (target ready)</code></p>
-<h2 id="login-stages">Login Stages<a class="headerlink" href="#login-stages" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Stage</th>
-<th>Description</th>
-<th>Failure means</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>FLOGI</strong></td>
-<td>HBA registers with fabric, receives FCID</td>
-<td>No fabric connectivity — check link, SFP, speed</td>
-</tr>
-<tr>
-<td><strong>PLOGI</strong></td>
-<td>Port-to-port login between two FC ports</td>
-<td>Target unreachable — check zoning</td>
-</tr>
-<tr>
-<td><strong>PRLI</strong></td>
-<td>SCSI service parameter exchange</td>
-<td>Upper-layer SCSI issue — driver or firmware</td>
-</tr>
-</tbody>
-</table>
-<h2 id="viewing-login-state">Viewing Login State<a class="headerlink" href="#viewing-login-state" title="Permanent link">&para;</a></h2>
-<h3 id="brocade-fos">Brocade FOS<a class="headerlink" href="#brocade-fos" title="Permanent link">&para;</a></h3>
+    TGT--&gt;&gt;HBA: ACC (target ready)</code></pre>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">## Show fabric logins on this switch</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>nsshow
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
@@ -3717,7 +3565,6 @@ sequenceDiagram
 <a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1">## Per-port FLOGI details</span>
 <a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>portlogshow<span class="w"> </span>&lt;slot/port&gt;
 </code></pre></div>
-<h3 id="cisco-mds">Cisco MDS<a class="headerlink" href="#cisco-mds" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1">## FLOGI database — who is logged in to the fabric</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>show<span class="w"> </span>flogi<span class="w"> </span>database<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
@@ -3730,44 +3577,6 @@ sequenceDiagram
 <a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1">## Detailed port login info</span>
 <a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>show<span class="w"> </span>interface<span class="w"> </span>fc1/1
 </code></pre></div>
-<h2 id="common-login-failures">Common Login Failures<a class="headerlink" href="#common-login-failures" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Symptom</th>
-<th>Probable cause</th>
-<th>Action</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>FLOGI not in <code>nsshow</code></td>
-<td>Physical link down / SFP fault</td>
-<td>Check <code>portshow</code>, clean/reseat SFP</td>
-</tr>
-<tr>
-<td>FLOGI present but PLOGI fails</td>
-<td>Zoning mismatch — target not in same zone</td>
-<td>Verify zone contains both initiator and target WWPN</td>
-</tr>
-<tr>
-<td>PRLI rejected</td>
-<td>Target port in wrong state or driver mismatch</td>
-<td>Check storage array port status and HBA driver version</td>
-</tr>
-<tr>
-<td>FCID conflict after fabric merge</td>
-<td>Duplicate domain IDs</td>
-<td>Resolve domain ID conflict; perform fabric re-merge</td>
-</tr>
-<tr>
-<td>Login loop / repeated FLOGI</td>
-<td>HBA firmware bug or speed mismatch</td>
-<td>Lock port speed on both switch and HBA</td>
-</tr>
-</tbody>
-</table>
-<h2 id="useful-diagnostic-commands">Useful Diagnostic Commands<a class="headerlink" href="#useful-diagnostic-commands" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1">## Brocade — port error counters (CRC, loss-of-sync)</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>porterrshow
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
@@ -3779,7 +3588,7 @@ sequenceDiagram
 <a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
 <a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1">## Verify FCID assigned to a WWPN</span>
 <a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>nsshow<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;wwpn-last-4-chars&gt;
-</code></pre></div>
+</code></pre></div></p>
 
 
 
@@ -3799,7 +3608,7 @@ sequenceDiagram
     
     <a href="../" class="kb-topnav__link kb-topnav__link--prev">
       <span class="kb-topnav__arrow">&#8592;</span>
-      <span class="kb-topnav__title">Fibre Channel</span>
+      <span class="kb-topnav__title">Index</span>
     </a>
     
 
@@ -3819,7 +3628,7 @@ sequenceDiagram
   
   <nav class="kb-mobile-nav" aria-label="Mobile navigation">
     
-    <a href="../" class="kb-mobile-nav__btn" title="Previous: Fibre Channel">
+    <a href="../" class="kb-mobile-nav__btn" title="Previous: Index">
       <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
     </a>
     

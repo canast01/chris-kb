@@ -25,7 +25,7 @@
     
     
       
-        <title>Pure1 CLI Reference - Chris KB</title>
+        <title>Index - Chris KB</title>
       
     
     
@@ -67,10 +67,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Pure1 CLI Reference · Chris KB">
+  <meta property="og:title" content="Index · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Pure1 CLI Reference · Chris KB">
+  <meta name="twitter:title" content="Index · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -90,11 +90,6 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
-      
-        
-        <a href="#pure1-cli-reference" class="md-skip">
-          Skip to content
-        </a>
       
     </div>
     <div data-md-component="announce">
@@ -128,7 +123,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Pure1 CLI Reference
+              Index
             
           </span>
         </div>
@@ -4212,49 +4207,6 @@
   
   
   
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#authentication" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Authentication
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#capacity" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Capacity
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#python-sdk-example" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Python SDK Example
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
   
 </nav>
                   </div>
@@ -4406,14 +4358,8 @@
 
 
 
-<h1 id="pure1-cli-reference">Pure1 CLI Reference<a class="headerlink" href="#pure1-cli-reference" title="Permanent link">&para;</a></h1>
-<div class="kb-summary">
-Pure1 provides a REST API authenticated via OAuth2 client credentials. The `pure1` CLI (if installed) wraps common API calls. All programmatic integrations should use the REST API directly. The API base URL is `https://api.pure1.purestorage.com/api/1.latest`.
-</div>
+  <h1>Index</h1>
 
-<hr />
-<h2 id="authentication">Authentication<a class="headerlink" href="#authentication" title="Permanent link">&para;</a></h2>
-<p>Pure1 uses a self-signed RSA private key and a registered application ID for API access. Register the application at <code>https://pure1.purestorage.com/api-registration</code>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Generate RSA key pair for Pure1 API auth</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>openssl<span class="w"> </span>genrsa<span class="w"> </span>-out<span class="w"> </span>pure1-private.pem<span class="w"> </span><span class="m">2048</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>openssl<span class="w"> </span>rsa<span class="w"> </span>-in<span class="w"> </span>pure1-private.pem<span class="w"> </span>-pubout<span class="w"> </span>-out<span class="w"> </span>pure1-public.pem
@@ -4428,64 +4374,60 @@ Pure1 provides a REST API authenticated via OAuth2 client credentials. The `pure
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Exchange JWT for access token</span>
 <a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span>https://api.pure1.purestorage.com/oauth2/1.0/token<span class="w">   </span>-d<span class="w"> </span><span class="s2">&quot;grant_type=urn:ietf:params:oauth:grant-type:token-exchange&amp;subject_token=&lt;jwt&gt;&amp;subject_token_type=urn:ietf:params:oauth:token-type:jwt&quot;</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="sb">```</span>text
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>┌────────────────────────────────────<span class="w"> </span>Pure1<span class="w"> </span>—<span class="w"> </span>CLI<span class="w"> </span>and<span class="w"> </span>API<span class="w"> </span>Reference<span class="w"> </span>────────────────────────────────────┐
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│<span class="w">                                                                                                       </span>│
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│<span class="w">   </span>┌───────────────────────────────────────────────────────────────────────────────────────────────┐<span class="w">   </span>│
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│<span class="w">   </span>│<span class="w">           </span>Pure1<span class="w"> </span>REST<span class="w"> </span>API<span class="w"> </span>—<span class="w"> </span>Base<span class="w"> </span>URL:<span class="w"> </span>https://api.pure1.purestorage.com/api/1.latest<span class="w">           </span>│<span class="w">   </span>│
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│<span class="w">   </span>│<span class="w">           </span>Auth:<span class="w"> </span>POST<span class="w"> </span>/oauth2/1.0/token<span class="w"> </span><span class="o">(</span>client_id<span class="w"> </span>+<span class="w"> </span>private_key<span class="w"> </span>JWT<span class="o">)</span><span class="w"> </span>→<span class="w"> </span>Bearer<span class="w"> </span>token<span class="w">           </span>│<span class="w">   </span>│
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│<span class="w">   </span>│<span class="w">          </span>Arrays:<span class="w"> </span>GET<span class="w"> </span>/arrays<span class="w"> </span>—<span class="w"> </span>list<span class="w"> </span>all<span class="w"> </span>registered<span class="w"> </span>arrays<span class="w"> </span>with<span class="w"> </span>model,<span class="w"> </span>version,<span class="w"> </span>health<span class="w">         </span>│<span class="w">   </span>│
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│<span class="w">   </span>│<span class="w">            </span>Metrics:<span class="w"> </span>GET<span class="w"> </span>/metrics?names<span class="o">=</span>array_total_capacity<span class="p">&amp;</span><span class="nv">resource_names</span><span class="o">=</span>&lt;array&gt;<span class="w">            </span>│<span class="w">   </span>│
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│<span class="w">   </span>│<span class="w">              </span>Alerts:<span class="w"> </span>GET<span class="w"> </span>/alerts?filter<span class="o">=</span><span class="nv">state</span><span class="o">=</span><span class="s1">&#39;open&#39;</span><span class="w"> </span>—<span class="w"> </span>active<span class="w"> </span>alerts<span class="w"> </span>across<span class="w"> </span>fleet<span class="w">             </span>│<span class="w">   </span>│
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│<span class="w">   </span>│<span class="w">                 </span>Fleet<span class="w"> </span>health:<span class="w"> </span>GET<span class="w"> </span>/arrays?fields<span class="o">=</span>name,model,os,version,health<span class="w">                 </span>│<span class="w">   </span>│
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│<span class="w">   </span>└───────────────────────────────────────────────────────────────────────────────────────────────┘<span class="w">   </span>│
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│<span class="w">                                                                                                       </span>│
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│<span class="w">  </span>Physical<span class="w"> </span>Infrastructure:<span class="w">                                                                             </span>│
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│<span class="w">  </span>Pure1<span class="w"> </span>API<span class="w"> </span>at<span class="w"> </span>api.pure1.purestorage.com<span class="w"> </span>·<span class="w"> </span>client<span class="w"> </span>runs<span class="w"> </span>from<span class="w"> </span>any<span class="w"> </span>internet-connected<span class="w"> </span>host<span class="w">                </span>│
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│<span class="w">                                                                                                       </span>│
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│<span class="w">  </span>Key<span class="w"> </span>terms:<span class="w">                                                                                           </span>│
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│<span class="w">                                                                                                       </span>│
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│<span class="w">  </span>Pure1<span class="w"> </span>REST<span class="w"> </span><span class="nv">API</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Programmatic<span class="w"> </span>access<span class="w"> </span>to<span class="w"> </span>fleet-wide<span class="w"> </span>metrics<span class="w"> </span>and<span class="w"> </span>alert<span class="w"> </span>data<span class="w">                            </span>│
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│<span class="w">  </span>JWT<span class="w"> </span><span class="nv">auth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>JSON<span class="w"> </span>Web<span class="w"> </span>Token<span class="w"> </span>signed<span class="w"> </span>with<span class="w"> </span>RSA<span class="w"> </span>private<span class="w"> </span>key<span class="w"> </span><span class="k">for</span><span class="w"> </span>API<span class="w"> </span>authentication<span class="w">                         </span>│
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│<span class="w">  </span><span class="nv">client_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Application<span class="w"> </span>ID<span class="w"> </span>registered<span class="w"> </span><span class="k">in</span><span class="w"> </span>Pure1<span class="w"> </span>&gt;<span class="w"> </span>API<span class="w"> </span>Registration<span class="w">                                    </span>│
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│<span class="w">  </span>Bearer<span class="w"> </span><span class="nv">token</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Short-lived<span class="w"> </span><span class="o">(</span><span class="m">10</span><span class="w"> </span>min<span class="o">)</span><span class="w"> </span>OAuth2<span class="w"> </span>token<span class="p">;</span><span class="w"> </span>refresh<span class="w"> </span>before<span class="w"> </span>expiry<span class="w">                              </span>│
-<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│<span class="w">  </span>arrays<span class="w"> </span><span class="nv">endpoint</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Returns<span class="w"> </span>all<span class="w"> </span>arrays<span class="w"> </span>with<span class="w"> </span>model,<span class="w"> </span>Purity<span class="w"> </span>version,<span class="w"> </span>and<span class="w"> </span>health<span class="w"> </span>score<span class="w">                    </span>│
-<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│<span class="w">  </span>metrics<span class="w"> </span><span class="nv">endpoint</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Time-series<span class="w"> </span>metric<span class="w"> </span>retrieval<span class="p">;</span><span class="w"> </span>supports<span class="w"> </span>multiple<span class="w"> </span>arrays<span class="w"> </span>and<span class="w"> </span>metrics<span class="w">                </span>│
-<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│<span class="w">  </span>alerts<span class="w"> </span><span class="nv">endpoint</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Returns<span class="w"> </span>active<span class="w"> </span>alerts<span class="p">;</span><span class="w"> </span>filter<span class="w"> </span>by<span class="w"> </span>state,<span class="w"> </span>severity,<span class="w"> </span>or<span class="w"> </span>array<span class="w">                         </span>│
-<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│<span class="w">  </span><span class="nv">resource_names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Array<span class="w"> </span>name<span class="w"> </span>filter<span class="w"> </span><span class="k">for</span><span class="w"> </span>metric<span class="w"> </span>queries<span class="w">                                                </span>│
-<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│<span class="w">  </span>fields<span class="w"> </span><span class="nv">param</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Projection<span class="p">;</span><span class="w"> </span><span class="k">return</span><span class="w"> </span>only<span class="w"> </span>needed<span class="w"> </span>fields<span class="w"> </span>to<span class="w"> </span>reduce<span class="w"> </span>payload<span class="w"> </span>size<span class="w">                          </span>│
-<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│<span class="w">  </span><span class="nv">Pagination</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Pure1<span class="w"> </span>API<span class="w"> </span>uses<span class="w"> </span>continuation_token<span class="w"> </span><span class="k">for</span><span class="w"> </span>large<span class="w"> </span>result<span class="w"> </span>sets<span class="w">                                 </span>│
-<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│<span class="w">  </span>Rate<span class="w"> </span><span class="nv">limit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>API<span class="w"> </span>enforces<span class="w"> </span>per-client<span class="w"> </span>limits<span class="p">;</span><span class="w"> </span>exponential<span class="w"> </span>backoff<span class="w"> </span>on<span class="w"> </span><span class="m">429</span><span class="w">                              </span>│
-<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>│<span class="w">  </span>py-pure-client<span class="w"> </span><span class="o">=</span><span class="w"> </span>Pure-provided<span class="w"> </span>Python<span class="w"> </span>library<span class="w"> </span>wrapping<span class="w"> </span>Pure1<span class="w"> </span>API<span class="w">                                     </span>│
-<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>│<span class="w">                                                                                                       </span>│
-<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<hr />
-<h2 id="capacity">Capacity<a class="headerlink" href="#capacity" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Get capacity metrics for all arrays</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://api.pure1.purestorage.com/api/1.latest/arrays?fields=name,capacity,space&quot;</span><span class="w">   </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;token&gt;&quot;</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Get capacity for a specific array</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>curl<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://api.pure1.purestorage.com/api/1.latest/arrays?filter=name%3D%27&lt;array_name&gt;%27&amp;fields=name,capacity,space&quot;</span><span class="w">   </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;token&gt;&quot;</span>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌──────────────────────────────────── Pure1 — CLI and API Reference ────────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │           Pure1 REST API — Base URL: https://api.pure1.purestorage.com/api/1.latest           │   │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │           Auth: POST /oauth2/1.0/token (client_id + private_key JWT) → Bearer token           │   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │          Arrays: GET /arrays — list all registered arrays with model, version, health         │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │            Metrics: GET /metrics?names=array_total_capacity&amp;resource_names=&lt;array&gt;            │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │              Alerts: GET /alerts?filter=state=&#39;open&#39; — active alerts across fleet             │   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │                 Fleet health: GET /arrays?fields=name,model,os,version,health                 │   │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│                                                                                                       │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│  Physical Infrastructure:                                                                             │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│  Pure1 API at api.pure1.purestorage.com · client runs from any internet-connected host                │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│                                                                                                       │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                                                                                                       │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│  Pure1 REST API = Programmatic access to fleet-wide metrics and alert data                            │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│  JWT auth = JSON Web Token signed with RSA private key for API authentication                         │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│  client_id = Application ID registered in Pure1 &gt; API Registration                                    │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│  Bearer token = Short-lived (10 min) OAuth2 token; refresh before expiry                              │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│  arrays endpoint = Returns all arrays with model, Purity version, and health score                    │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│  metrics endpoint = Time-series metric retrieval; supports multiple arrays and metrics                │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│  alerts endpoint = Returns active alerts; filter by state, severity, or array                         │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│  resource_names = Array name filter for metric queries                                                │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│  fields param = Projection; return only needed fields to reduce payload size                          │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  Pagination = Pure1 API uses continuation_token for large result sets                                 │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  Rate limit = API enforces per-client limits; exponential backoff on 429                              │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  py-pure-client = Pure-provided Python library wrapping Pure1 API                                     │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<hr />
-<h2 id="python-sdk-example">Python SDK Example<a class="headerlink" href="#python-sdk-example" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">py_pure_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">PureOneClient</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">client</span> <span class="o">=</span> <span class="n">PureOneClient</span><span class="p">(</span><span class="n">private_key_file</span><span class="o">=</span><span class="s2">&quot;pure1-private.pem&quot;</span><span class="p">,</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>                       <span class="n">private_key_password</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>                       <span class="n">app_id</span><span class="o">=</span><span class="s2">&quot;&lt;application_id&gt;&quot;</span><span class="p">)</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># List all arrays</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="n">arrays</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_arrays</span><span class="p">()</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">arrays</span><span class="o">.</span><span class="n">items</span><span class="p">:</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">a</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Get active alerts</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="n">alerts</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_alerts</span><span class="p">(</span><span class="nb">filter</span><span class="o">=</span><span class="s2">&quot;state=&#39;open&#39;&quot;</span><span class="p">)</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="k">for</span> <span class="n">alert</span> <span class="ow">in</span> <span class="n">alerts</span><span class="o">.</span><span class="n">items</span><span class="p">:</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">alert</span><span class="o">.</span><span class="n">summary</span><span class="p">,</span> <span class="n">alert</span><span class="o">.</span><span class="n">severity</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Get capacity metrics for all arrays</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>curl<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://api.pure1.purestorage.com/api/1.latest/arrays?fields=name,capacity,space&quot;</span><span class="w">   </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;token&gt;&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Get capacity for a specific array</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>curl<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="s2">&quot;https://api.pure1.purestorage.com/api/1.latest/arrays?filter=name%3D%27&lt;array_name&gt;%27&amp;fields=name,capacity,space&quot;</span><span class="w">   </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;token&gt;&quot;</span>
 </code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">py_pure_client</span><span class="w"> </span><span class="kn">import</span> <span class="n">PureOneClient</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">client</span> <span class="o">=</span> <span class="n">PureOneClient</span><span class="p">(</span><span class="n">private_key_file</span><span class="o">=</span><span class="s2">&quot;pure1-private.pem&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>                       <span class="n">private_key_password</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>                       <span class="n">app_id</span><span class="o">=</span><span class="s2">&quot;&lt;application_id&gt;&quot;</span><span class="p">)</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># List all arrays</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="n">arrays</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_arrays</span><span class="p">()</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">arrays</span><span class="o">.</span><span class="n">items</span><span class="p">:</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">a</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1"># Get active alerts</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="n">alerts</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_alerts</span><span class="p">(</span><span class="nb">filter</span><span class="o">=</span><span class="s2">&quot;state=&#39;open&#39;&quot;</span><span class="p">)</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="k">for</span> <span class="n">alert</span> <span class="ow">in</span> <span class="n">alerts</span><span class="o">.</span><span class="n">items</span><span class="p">:</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">alert</span><span class="o">.</span><span class="n">summary</span><span class="p">,</span> <span class="n">alert</span><span class="o">.</span><span class="n">severity</span><span class="p">)</span>
+</code></pre></div></p>
 
 
 

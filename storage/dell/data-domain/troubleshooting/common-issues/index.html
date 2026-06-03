@@ -25,7 +25,7 @@
     
     
       
-        <title>Data Domain — Common Issues - Chris KB</title>
+        <title>Index - Chris KB</title>
       
     
     
@@ -67,10 +67,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Data Domain — Common Issues · Chris KB">
+  <meta property="og:title" content="Index · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Data Domain — Common Issues · Chris KB">
+  <meta name="twitter:title" content="Index · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -90,11 +90,6 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
-      
-        
-        <a href="#data-domain-common-issues" class="md-skip">
-          Skip to content
-        </a>
       
     </div>
     <div data-md-component="announce">
@@ -128,7 +123,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Data Domain — Common Issues
+              Index
             
           </span>
         </div>
@@ -3962,49 +3957,6 @@
   
   
   
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#issue-reference" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Issue Reference
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#error-code-reference" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Error Code Reference
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#replication-lag-step-by-step-investigation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Replication Lag — Step-by-Step Investigation
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
   
 </nav>
                   </div>
@@ -4192,166 +4144,44 @@
 
 
 
-<h1 id="data-domain-common-issues">Data Domain — Common Issues<a class="headerlink" href="#data-domain-common-issues" title="Permanent link">&para;</a></h1>
-<div class="kb-summary">
-Common Issues reference covering Issue Reference, Error Code Reference, Replication Lag — Step-by-Step Investigation.
-</div>
+  <h1>Index</h1>
 
-<h2 id="issue-reference">Issue Reference<a class="headerlink" href="#issue-reference" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Symptom</th>
-<th>Likely Cause</th>
-<th>First Action</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Dedup ratio dropped significantly</td>
-<td>Encrypted or compressed source data; new data type ingested; DD Boost source-side dedup disabled</td>
-<td><code>filesys show compression</code> — identify which MTree changed; check backup software settings</td>
-</tr>
-<tr>
-<td>Replication context stuck in <code>Replicating</code> or falling behind</td>
-<td>Network bandwidth saturation; high ingest on source; target filesystem full</td>
-<td><code>replication status</code> for lag; <code>filesys show space</code> on target; check network with <code>net show stats</code></td>
-</tr>
-<tr>
-<td>NFS/CIFS mount failure</td>
-<td>Export/share removed or IP restriction changed; network routing issue</td>
-<td><code>nfs show exports</code> / <code>cifs show shares</code>; verify client IP in access list; check <code>net show all</code></td>
-</tr>
-<tr>
-<td>VTL tape import failure</td>
-<td>VTL slot configuration mismatch; FC path not zoned</td>
-<td><code>vtl show slots</code>; check FC zoning from backup media server to DD VTL ports</td>
-</tr>
-<tr>
-<td>Filesystem nearly full (above 90%)</td>
-<td>Cleaning not running; rapid data growth; expired data not deleted by backup software</td>
-<td><code>filesys show space</code>; check <code>filesys clean status</code>; run <code>filesys clean start</code> if not already running</td>
-</tr>
-<tr>
-<td>DDBoost client authentication error</td>
-<td>Expired or mismatched DD Boost credentials</td>
-<td>Re-register storage unit in backup software; verify with <code>ddboost show clients</code></td>
-</tr>
-<tr>
-<td><code>filesys status</code> shows disabled</td>
-<td>Filesystem did not auto-start after reboot; hardware fault</td>
-<td><code>filesys enable</code>; check <code>alerts show current</code> for hardware errors</td>
-</tr>
-<tr>
-<td>Disk in <code>Absent</code> or <code>Failed</code> state</td>
-<td>Physical disk failure or loose connection</td>
-<td><code>disk show state</code>; open Dell support case for disk replacement</td>
-</tr>
-<tr>
-<td>Low restore throughput from DD</td>
-<td>Filesystem cleaning running during restore window; fragmentation</td>
-<td><code>filesys clean status</code>; stop clean if running: <code>filesys clean stop</code>; retry restore</td>
-</tr>
-<tr>
-<td>Replication authentication failure</td>
-<td>DD certificates expired or mismatched between source and target</td>
-<td><code>replication show</code> for error message; <code>adminaccess certificate show</code>; reissue certificates</td>
-</tr>
-<tr>
-<td>CloudIQ showing array offline</td>
-<td>SCG connectivity lost or SCG service down</td>
-<td>Check SCG appliance; verify <code>autosupport status</code> on DD; check <code>net show all</code> for SCG reachability</td>
-</tr>
-<tr>
-<td>Autosupport fails to send</td>
-<td>Network path to Dell support blocked; proxy required</td>
-<td><code>autosupport test</code>; check firewall rules for outbound HTTPS; configure proxy if needed</td>
-</tr>
-</tbody>
-</table>
-<h2 id="error-code-reference">Error Code Reference<a class="headerlink" href="#error-code-reference" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Error</th>
-<th>Meaning</th>
-<th>Action</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>REPL-ERR-001</code></td>
-<td>Replication context authentication failure</td>
-<td>Recheck DD Boost or replication user credentials on both ends</td>
-</tr>
-<tr>
-<td><code>DDFS-ERR-FULL</code></td>
-<td>Filesystem at or above hard capacity limit</td>
-<td>Emergency clean; delete expired backups; add capacity</td>
-</tr>
-<tr>
-<td><code>HW-DISK-FAIL</code></td>
-<td>Physical disk failure detected</td>
-<td>Do not delay — open Dell support case immediately; check <code>disk show state</code></td>
-</tr>
-<tr>
-<td><code>BOOST-ERR-AUTH</code></td>
-<td>DD Boost client authentication rejected</td>
-<td>Re-register storage unit; verify DD Boost user in backup software</td>
-</tr>
-<tr>
-<td><code>NTP-DRIFT</code></td>
-<td>NTP clock drift exceeds threshold</td>
-<td><code>ntp sync</code>; verify NTP server reachability</td>
-</tr>
-</tbody>
-</table>
-<h2 id="replication-lag-step-by-step-investigation">Replication Lag — Step-by-Step Investigation<a class="headerlink" href="#replication-lag-step-by-step-investigation" title="Permanent link">&para;</a></h2>
-<ol>
-<li>Run <code>replication status</code> — note <code>Pre-Comp Remaining</code>, <code>Throughput</code>, and <code>Estimated Completion</code></li>
-<li>If throughput is low, run <code>net show stats</code> — check for packet loss or interface errors</li>
-<li>Run <code>filesys show space</code> on the <strong>target</strong> DD — confirm it is not full</li>
-<li>Check if source ingest rate is higher than replication can drain: <code>filesys show compression</code> shows recent write rate</li>
-<li>If bandwidth is limited, adjust throttle: <code>replication throttle set &lt;schedule&gt; &lt;bandwidth-kbps&gt;</code></li>
-<li>If the context shows <code>Error</code> state: <code>replication show errors</code> — review the specific error code</li>
-<li>For persistent errors, disable and re-enable the replication context:</li>
-</ol>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>replication<span class="w"> </span>disable<span class="w"> </span>&lt;context&gt;
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>replication<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>&lt;context&gt;
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="sb">```</span>text
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>┌───────────────────────────────────<span class="w"> </span>Dell<span class="w"> </span>Data<span class="w"> </span>Domain<span class="w"> </span>Common<span class="w"> </span>Issues<span class="w"> </span>────────────────────────────────────┐
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│<span class="w">                                                                                                       </span>│
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│<span class="w">   </span>┌───────────────────────────────────────────────────────────────────────────────────────────────┐<span class="w">   </span>│
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│<span class="w">   </span>│<span class="w">       </span>Top<span class="w"> </span>issues:<span class="w"> </span>filesystem<span class="w"> </span>full,<span class="w"> </span>replication<span class="w"> </span>broken,<span class="w"> </span>restore<span class="w"> </span>slow,<span class="w"> </span>backup<span class="w"> </span>job<span class="w"> </span>failures<span class="w">      </span>│<span class="w">   </span>│
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│<span class="w">   </span>│<span class="w">           </span>Most<span class="w"> </span>root-cause<span class="w"> </span>to<span class="w"> </span>space<span class="w"> </span>exhaustion,<span class="w"> </span>network<span class="w"> </span>issues,<span class="w"> </span>or<span class="w"> </span>credential<span class="w"> </span>expiry<span class="w">           </span>│<span class="w">   </span>│
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│<span class="w">   </span>└───────────────────────────────────────────────────────────────────────────────────────────────┘<span class="w">   </span>│
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│<span class="w">                                                                                                       </span>│
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│<span class="w">                  </span>▼<span class="w">                                </span>▼<span class="w">                                </span>▼<span class="w">                  </span>│
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│<span class="w">                                                                                                       </span>│
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│<span class="w">   </span>┌─────────────────────────────┐<span class="w">  </span>┌─────────────────────────────┐<span class="w">  </span>┌─────────────────────────────┐<span class="w">   </span>│
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│<span class="w">   </span>│<span class="w">         </span>Space<span class="w"> </span>Issues<span class="w">        </span>│<span class="w">  </span>│<span class="w">      </span>Replication<span class="w"> </span>Issues<span class="w">     </span>│<span class="w">  </span>│<span class="w">        </span>Backup/Restore<span class="w">       </span>│<span class="w">   </span>│
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│<span class="w">   </span>│<span class="w">      </span>─────────────────<span class="w">      </span>│<span class="w">  </span>│<span class="w">      </span>─────────────────<span class="w">      </span>│<span class="w">  </span>│<span class="w">      </span>─────────────────<span class="w">      </span>│<span class="w">   </span>│
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│<span class="w">   </span>│<span class="w">        </span>FS<span class="w"> </span>&gt;<span class="w"> </span><span class="m">80</span>%<span class="w"> </span>full<span class="w">        </span>│<span class="w">  </span>│<span class="w">        </span>Context<span class="w"> </span>broken<span class="w">       </span>│<span class="w">  </span>│<span class="w">         </span>Backup<span class="w"> </span>fails<span class="w">        </span>│<span class="w">   </span>│
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│<span class="w">   </span>│<span class="w">       </span>Cleaning<span class="w"> </span>not<span class="w"> </span>run<span class="w">      </span>│<span class="w">  </span>│<span class="w">        </span>Lag<span class="w"> </span>&gt;<span class="w"> </span><span class="m">4</span><span class="w"> </span>hours<span class="w">        </span>│<span class="w">  </span>│<span class="w">         </span>Restore<span class="w"> </span>slow<span class="w">        </span>│<span class="w">   </span>│
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│<span class="w">   </span>│<span class="w">       </span>MTree<span class="w"> </span>quota<span class="w"> </span>hit<span class="w">       </span>│<span class="w">  </span>│<span class="w">         </span>Auth<span class="w"> </span>failure<span class="w">        </span>│<span class="w">  </span>│<span class="w">       </span>Cannot<span class="w"> </span>mount<span class="w"> </span>NFS<span class="w">      </span>│<span class="w">   </span>│
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│<span class="w">   </span>│<span class="w">       </span>No<span class="w"> </span>space<span class="w"> </span><span class="k">for</span><span class="w"> </span>rep<span class="w">      </span>│<span class="w">  </span>│<span class="w">     </span>Network<span class="w"> </span>packet<span class="w"> </span>drop<span class="w">     </span>│<span class="w">  </span>│<span class="w">       </span>Boost<span class="w"> </span>conn<span class="w"> </span>fail<span class="w">       </span>│<span class="w">   </span>│
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│<span class="w">   </span>│<span class="w">       </span>Cloud<span class="w"> </span>tier<span class="w"> </span>fail<span class="w">       </span>│<span class="w">  </span>│<span class="w">        </span>WAN<span class="w"> </span>bandwidth<span class="w">        </span>│<span class="w">  </span>│<span class="w">        </span>Corrupt<span class="w"> </span>backup<span class="w">       </span>│<span class="w">   </span>│
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│<span class="w">   </span>└─────────────────────────────┘<span class="w">  </span>└─────────────────────────────┘<span class="w">  </span>└─────────────────────────────┘<span class="w">   </span>│
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│<span class="w">                                                                                                       </span>│
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│<span class="w">   </span>│<span class="w">     </span>Problem<span class="w">      </span>│<span class="w">   </span>First<span class="w"> </span>check<span class="w">    </span>│<span class="w">        </span>Fix<span class="w">        </span>│<span class="w">      </span>Verify<span class="w">      </span>│<span class="w">   </span>Escalate<span class="w"> </span><span class="k">if</span><span class="w">    </span>│<span class="w">   </span>│
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│<span class="w">   </span>│<span class="w"> </span>────────────────<span class="w"> </span>│<span class="w"> </span>────────────────<span class="w"> </span>│<span class="w"> </span>─────────────────<span class="w"> </span>│<span class="w"> </span>────────────────<span class="w"> </span>│──────────────────│<span class="w">   </span>│
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│<span class="w">   </span>│<span class="w">     </span>FS<span class="w"> </span>full<span class="w">      </span>│filesys<span class="w"> </span>show<span class="w"> </span>space│<span class="w">   </span>Expire<span class="w"> </span>backups<span class="w">  </span>│<span class="w">   </span>Space<span class="w"> </span>freed<span class="w">    </span>│<span class="w">  </span>No<span class="w"> </span>space<span class="w"> </span>freed<span class="w">  </span>│<span class="w">   </span>│
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│<span class="w">   </span>│<span class="w">    </span>Rep<span class="w"> </span>broken<span class="w">    </span>│<span class="w"> </span>replication<span class="w"> </span>show<span class="w"> </span>│<span class="w">   </span>resync<span class="w"> </span>context<span class="w">  </span>│<span class="w">    </span>Lag<span class="w"> </span>drops<span class="w">     </span>│<span class="w"> </span>Persistent<span class="w"> </span><span class="k">break</span><span class="w"> </span>│<span class="w">   </span>│
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│<span class="w">   </span>│<span class="w">   </span>Backup<span class="w"> </span>fail<span class="w">    </span>│<span class="w"> </span>Backup<span class="w"> </span>app<span class="w"> </span>logs<span class="w">  </span>│<span class="w">   </span>Check<span class="w"> </span>DD<span class="w"> </span>space<span class="w">  </span>│<span class="w">   </span>Job<span class="w"> </span>succeeds<span class="w">   </span>│<span class="w">  </span>Hardware<span class="w"> </span>fault<span class="w">  </span>│<span class="w">   </span>│
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│<span class="w">   </span>│<span class="w">   </span>Slow<span class="w"> </span>restore<span class="w">   </span>│<span class="w"> </span>Disk<span class="w"> </span>show<span class="w"> </span>state<span class="w">  </span>│<span class="w">    </span>Check<span class="w"> </span>disks<span class="w">    </span>│<span class="w">     </span>Speed<span class="w"> </span>OK<span class="w">     </span>│<span class="w">   </span>NVRAM<span class="w"> </span>fault<span class="w">    </span>│<span class="w">   </span>│
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│<span class="w">                                                                                                       </span>│
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│<span class="w">    </span>Key<span class="w"> </span>terms:<span class="w">                                                                                         </span>│
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│<span class="w">                                                                                                       </span>│
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│<span class="w">    </span>Context<span class="w"> </span><span class="nv">broken</span><span class="w">   </span><span class="o">=</span><span class="w"> </span>Replication<span class="w"> </span>context<span class="w"> </span><span class="k">in</span><span class="w"> </span>error<span class="w"> </span>state<span class="p">;</span><span class="w"> </span>typically<span class="w"> </span>network<span class="w"> </span>or<span class="w"> </span>auth<span class="w"> </span>failure<span class="w">           </span>│
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│<span class="w">    </span>replication<span class="w"> </span><span class="nv">resync</span><span class="o">=</span><span class="w"> </span>Re-establish<span class="w"> </span>broken<span class="w"> </span>replication<span class="w"> </span>context<span class="w"> </span>without<span class="w"> </span>full<span class="w"> </span>reinitialisation<span class="w">          </span>│
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│<span class="w">    </span>Expire<span class="w"> </span><span class="nv">backups</span><span class="w">   </span><span class="o">=</span><span class="w"> </span>Delete<span class="w"> </span>old<span class="w"> </span>backup<span class="w"> </span>images<span class="w"> </span>via<span class="w"> </span>backup<span class="w"> </span>application<span class="p">;</span><span class="w"> </span>cleaning<span class="w"> </span><span class="k">then</span><span class="w"> </span>frees<span class="w"> </span>space<span class="w">      </span>│
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│<span class="w">                                                                                                       </span>│
-<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌─────────────────────────────────── Dell Data Domain Common Issues ────────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │       Top issues: filesystem full, replication broken, restore slow, backup job failures      │   │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │           Most root-cause to space exhaustion, network issues, or credential expiry           │   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│                                                                                                       │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│                                                                                                       │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │         Space Issues        │  │      Replication Issues     │  │        Backup/Restore       │   │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│   │        FS &gt; 80% full        │  │        Context broken       │  │         Backup fails        │   │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│   │       Cleaning not run      │  │        Lag &gt; 4 hours        │  │         Restore slow        │   │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│   │       MTree quota hit       │  │         Auth failure        │  │       Cannot mount NFS      │   │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│   │       No space for rep      │  │     Network packet drop     │  │       Boost conn fail       │   │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   │       Cloud tier fail       │  │        WAN bandwidth        │  │        Corrupt backup       │   │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│                                                                                                       │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │     Problem      │   First check    │        Fix        │      Verify      │   Escalate if    │   │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │     FS full      │filesys show space│   Expire backups  │   Space freed    │  No space freed  │   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   │    Rep broken    │ replication show │   resync context  │    Lag drops     │ Persistent break │   │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│   │   Backup fail    │ Backup app logs  │   Check DD space  │   Job succeeds   │  Hardware fault  │   │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│   │   Slow restore   │ Disk show state  │    Check disks    │     Speed OK     │   NVRAM fault    │   │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│                                                                                                       │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│    Key terms:                                                                                         │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│                                                                                                       │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│    Context broken   = Replication context in error state; typically network or auth failure           │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│    replication resync= Re-establish broken replication context without full reinitialisation          │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│    Expire backups   = Delete old backup images via backup application; cleaning then frees space      │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│                                                                                                       │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
 
 

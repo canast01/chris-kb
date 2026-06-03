@@ -25,7 +25,7 @@
     
     
       
-        <title>RecoverPoint — Health Checks - Chris KB</title>
+        <title>Index - Chris KB</title>
       
     
     
@@ -67,10 +67,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="RecoverPoint — Health Checks · Chris KB">
+  <meta property="og:title" content="Index · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="RecoverPoint — Health Checks · Chris KB">
+  <meta name="twitter:title" content="Index · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -90,11 +90,6 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
-      
-        
-        <a href="#recoverpoint-health-checks" class="md-skip">
-          Skip to content
-        </a>
       
     </div>
     <div data-md-component="announce">
@@ -128,7 +123,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              RecoverPoint — Health Checks
+              Index
             
           </span>
         </div>
@@ -3877,71 +3872,6 @@
   
   
   
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Overview
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#daily-checks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Daily Checks
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#daily-health-check-commands" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Daily Health Check Commands
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#journal-utilization-check" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Journal Utilization Check
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#weekly-and-monthly-checks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Weekly and Monthly Checks
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
   
 </nav>
                   </div>
@@ -4111,102 +4041,8 @@
 
 
 
-<h1 id="recoverpoint-health-checks">RecoverPoint — Health Checks<a class="headerlink" href="#recoverpoint-health-checks" title="Permanent link">&para;</a></h1>
-<div class="kb-summary">
-> Part of the [RecoverPoint](../../index.md) > [Operations](../index.md) reference.
-</div>
+  <h1>Index</h1>
 
-<hr />
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>RecoverPoint health checks cover four areas: RPA cluster node health, consistency group (CG) replication state, journal utilization, and inter-site link status. Run these checks daily as a minimum, and before/after any change window.</p>
-<table>
-<thead>
-<tr>
-<th>Area</th>
-<th>Tool</th>
-<th>Frequency</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>RPA cluster nodes</td>
-<td>SSH <code>system status</code></td>
-<td>Daily</td>
-</tr>
-<tr>
-<td>CG replication state</td>
-<td>SSH <code>groups status</code></td>
-<td>Daily</td>
-</tr>
-<tr>
-<td>Journal utilization</td>
-<td>SSH <code>journals list</code></td>
-<td>Daily</td>
-</tr>
-<tr>
-<td>Link statistics</td>
-<td>SSH <code>links statistics</code></td>
-<td>Pre/post change</td>
-</tr>
-<tr>
-<td>RPO compliance</td>
-<td>REST API or RPMA</td>
-<td>Daily (automated)</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Check</th>
-<th>Command</th>
-<th>Expected</th>
-<th>Why</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>[ ] All Consistency Groups (CGs) are in ACTIVE replication state</td>
-<td><code>groups status</code></td>
-<td>All ACTIVE</td>
-<td>Non-active CGs mean data is not being protected</td>
-</tr>
-<tr>
-<td>[ ] All RPA nodes are online and clustered</td>
-<td><code>system status</code></td>
-<td>All nodes running</td>
-<td>Lost RPA node reduces cluster HA headroom</td>
-</tr>
-<tr>
-<td>[ ] Journal capacity</td>
-<td><code>journals list</code></td>
-<td>&lt; 70%</td>
-<td>Journal overflow halts replication without warning</td>
-</tr>
-<tr>
-<td>[ ] Replication lag / RPO is within the acceptable threshold</td>
-<td><code>group status --gname n</code></td>
-<td>Within SLA</td>
-<td>Lag = data exposure window at time of failure</td>
-</tr>
-<tr>
-<td>[ ] No image access sessions are left enabled from a previous DR test</td>
-<td><code>groups status detail</code></td>
-<td>No active image access</td>
-<td>Active image access pauses live replication</td>
-</tr>
-<tr>
-<td>[ ] Confirm both production and DR site RecoverPoint clusters are reachable</td>
-<td><code>network connectivity check</code></td>
-<td>Connected</td>
-<td>Inter-site link health determines replication continuity</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="daily-health-check-commands">Daily Health Check Commands<a class="headerlink" href="#daily-health-check-commands" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># SSH to RPA cluster management IP</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>ssh<span class="w"> </span>admin@&lt;rpa-cluster-ip&gt;
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
@@ -4230,128 +4066,66 @@
 <a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
 <a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="c1"># Cluster quorum state</span>
 <a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>cluster<span class="w"> </span>quorum<span class="w"> </span>check
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="sb">```</span>text
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>┌────────────────────────────────────<span class="w"> </span>RecoverPoint<span class="w"> </span>—<span class="w"> </span>Health<span class="w"> </span>Checks<span class="w"> </span>─────────────────────────────────────┐
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│<span class="w">                                                                                                       </span>│
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│<span class="w">   </span>┌───────────────────────────────────────────────────────────────────────────────────────────────┐<span class="w">   </span>│
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│<span class="w">   </span>│<span class="w">      </span>Health<span class="w"> </span>check<span class="w"> </span>cadence:<span class="w"> </span>daily<span class="w"> </span>CG<span class="w"> </span>lag/journal,<span class="w"> </span>weekly<span class="w"> </span><span class="nb">test</span><span class="w"> </span>copy,<span class="w"> </span>monthly<span class="w"> </span>failover<span class="w"> </span>drill<span class="w">     </span>│<span class="w">   </span>│
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│<span class="w">   </span>│<span class="w">       </span>Critical<span class="w"> </span>alerts:<span class="w"> </span>CG<span class="w"> </span><span class="k">in</span><span class="w"> </span>error<span class="w"> </span>state,<span class="w"> </span>journal<span class="w"> </span>&gt;90%<span class="w"> </span>full,<span class="w"> </span>RPA<span class="w"> </span>node<span class="w"> </span>failure,<span class="w"> </span>link<span class="w"> </span>down<span class="w">      </span>│<span class="w">   </span>│
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│<span class="w">   </span>│<span class="w">         </span>Check<span class="w"> </span>sources:<span class="w"> </span>Unisphere<span class="w"> </span><span class="k">for</span><span class="w"> </span>RP,<span class="w"> </span>vCenter<span class="w"> </span>plugin,<span class="w"> </span>SNMP<span class="w"> </span>traps,<span class="w"> </span>REST<span class="w"> </span>API<span class="w"> </span>polling<span class="w">         </span>│<span class="w">   </span>│
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│<span class="w">   </span>│<span class="w">            </span>Baseline:<span class="w"> </span>all<span class="w"> </span>CGs<span class="w"> </span>Active<span class="p">;</span><span class="w"> </span>lag<span class="w"> </span>&lt;<span class="m">30</span><span class="w"> </span>s<span class="p">;</span><span class="w"> </span>journal<span class="w"> </span>&lt;<span class="m">70</span>%<span class="p">;</span><span class="w"> </span>all<span class="w"> </span>RPA<span class="w"> </span>nodes<span class="w"> </span>Online<span class="w">            </span>│<span class="w">   </span>│
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│<span class="w">   </span>└───────────────────────────────────────────────────────────────────────────────────────────────┘<span class="w">   </span>│
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│<span class="w">                                                                                                       </span>│
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│<span class="w">                  </span>▼<span class="w">                                </span>▼<span class="w">                                </span>▼<span class="w">                  </span>│
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│<span class="w">                                                                                                       </span>│
-<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│<span class="w">   </span>┌─────────────────────────────┐<span class="w">  </span>┌─────────────────────────────┐<span class="w">  </span>┌─────────────────────────────┐<span class="w">   </span>│
-<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│<span class="w">   </span>│<span class="w">          </span>RPA<span class="w"> </span>Health<span class="w">         </span>│<span class="w">  </span>│<span class="w">          </span>CG<span class="w"> </span>Health<span class="w">          </span>│<span class="w">  </span>│<span class="w">         </span>Link<span class="w"> </span>Health<span class="w">         </span>│<span class="w">   </span>│
-<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│<span class="w">   </span>│<span class="w">      </span>Node<span class="w"> </span>state:<span class="w"> </span>Online<span class="w">     </span>│<span class="w">  </span>│<span class="w">        </span>State:<span class="w"> </span>Active<span class="w">        </span>│<span class="w">  </span>│<span class="w">        </span>Link<span class="w"> </span>state:<span class="w"> </span>Up<span class="w">       </span>│<span class="w">   </span>│
-<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│<span class="w">   </span>│<span class="w">          </span>CPU<span class="w"> </span>&lt;<span class="w"> </span><span class="m">80</span>%<span class="w">          </span>│<span class="w">  </span>│<span class="w">         </span>Lag<span class="w"> </span>&lt;<span class="w"> </span><span class="m">30</span><span class="w"> </span>sec<span class="w">        </span>│<span class="w">  </span>│<span class="w">       </span>Latency<span class="w"> </span>&lt;<span class="w"> </span><span class="m">100</span><span class="w"> </span>ms<span class="w">      </span>│<span class="w">   </span>│
-<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│<span class="w">   </span>│<span class="w">         </span>Memory<span class="w"> </span>&lt;<span class="w"> </span><span class="m">85</span>%<span class="w">        </span>│<span class="w">  </span>│<span class="w">        </span>Journal<span class="w"> </span>&lt;<span class="w"> </span><span class="m">70</span>%<span class="w">        </span>│<span class="w">  </span>│<span class="w">        </span>Packet<span class="w"> </span>loss<span class="w"> </span><span class="m">0</span>%<span class="w">       </span>│<span class="w">   </span>│
-<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│<span class="w">   </span>│<span class="w">          </span>Fan/PSU<span class="w"> </span>OK<span class="w">         </span>│<span class="w">  </span>│<span class="w">       </span>Splitter<span class="w"> </span>loaded<span class="w">       </span>│<span class="w">  </span>│<span class="w">        </span>BW<span class="w"> </span>util<span class="w"> </span>&lt;<span class="w"> </span><span class="m">80</span>%<span class="w">        </span>│<span class="w">   </span>│
-<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│<span class="w">   </span>│<span class="w">          </span>NTP<span class="w"> </span>synced<span class="w">         </span>│<span class="w">  </span>│<span class="w">        </span>No<span class="w"> </span>errors<span class="w"> </span><span class="m">24</span><span class="w"> </span>h<span class="w">       </span>│<span class="w">  </span>│<span class="w">        </span>Compression<span class="w"> </span>OK<span class="w">       </span>│<span class="w">   </span>│
-<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>│<span class="w">   </span>└─────────────────────────────┘<span class="w">  </span>└─────────────────────────────┘<span class="w">  </span>└─────────────────────────────┘<span class="w">   </span>│
-<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>│<span class="w">                                                                                                       </span>│
-<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>│<span class="w">    </span>Physical:<span class="w"> </span>RPA<span class="w"> </span>hardware<span class="w"> </span>health<span class="w"> </span>viewable<span class="w"> </span><span class="k">in</span><span class="w"> </span>Unisphere<span class="p">;</span><span class="w"> </span>splitter<span class="w"> </span>state<span class="w"> </span>visible<span class="w"> </span>per<span class="w"> </span>ESXi<span class="w"> </span>host<span class="w">          </span>│
-<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>│<span class="w">                                                                                                       </span>│
-<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>│<span class="w">    </span>Key<span class="w"> </span>terms:<span class="w">                                                                                         </span>│
-<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>│<span class="w">                                                                                                       </span>│
-<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>│<span class="w">    </span>CG<span class="w"> </span>state<span class="w"> </span><span class="nv">Active</span><span class="w">  </span><span class="o">=</span><span class="w"> </span>Replication<span class="w"> </span>is<span class="w"> </span>running<span class="p">;</span><span class="w"> </span>writes<span class="w"> </span>being<span class="w"> </span>journaled<span class="p">;</span><span class="w"> </span>lag<span class="w"> </span>within<span class="w"> </span>RPO<span class="w"> </span>target<span class="w">           </span>│
-<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>│<span class="w">    </span>Lag<span class="w"> </span><span class="o">(</span>RPO<span class="w"> </span>lag<span class="o">)</span><span class="w">    </span><span class="o">=</span><span class="w"> </span>Seconds<span class="w"> </span>between<span class="w"> </span>last<span class="w"> </span><span class="nb">source</span><span class="w"> </span>write<span class="w"> </span>and<span class="w"> </span>journal<span class="w"> </span>apply<span class="w"> </span>on<span class="w"> </span>target<span class="p">;</span><span class="w"> </span>primary<span class="w"> </span>KPI<span class="w">      </span>│
-<a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>│<span class="w">    </span>Journal<span class="w"> </span>fill<span class="w"> </span>%<span class="w">   </span><span class="o">=</span><span class="w"> </span>Consumed<span class="w"> </span>/<span class="w"> </span>allocated<span class="w"> </span>journal<span class="w"> </span>VMDK<span class="p">;</span><span class="w"> </span>&gt;90%<span class="w"> </span>causes<span class="w"> </span>CG<span class="w"> </span>to<span class="w"> </span>pause<span class="w"> </span>replication<span class="w">          </span>│
-<a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>│<span class="w">    </span>Splitter<span class="w"> </span><span class="nv">loaded</span><span class="w">  </span><span class="o">=</span><span class="w"> </span>ESXi<span class="w"> </span>kernel<span class="w"> </span>module<span class="w"> </span>active<span class="p">;</span><span class="w"> </span>check<span class="w"> </span>per<span class="w"> </span>host<span class="w"> </span><span class="k">in</span><span class="w"> </span>Unisphere<span class="w"> </span>splitter<span class="w"> </span>view<span class="w">            </span>│
-<a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a>│<span class="w">    </span>SNMP<span class="w"> </span><span class="nv">traps</span><span class="w">       </span><span class="o">=</span><span class="w"> </span>RPA<span class="w"> </span>sends<span class="w"> </span>traps<span class="w"> </span>to<span class="w"> </span>NMS<span class="w"> </span>on<span class="w"> </span>CG<span class="w"> </span>error,<span class="w"> </span>journal<span class="w"> </span>fill,<span class="w"> </span>and<span class="w"> </span>RPA<span class="w"> </span>node<span class="w"> </span>failure<span class="w">          </span>│
-<a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>│<span class="w">    </span>Link<span class="w"> </span><span class="nv">utilisation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>WAN<span class="w"> </span>replication<span class="w"> </span>bandwidth<span class="p">;</span><span class="w"> </span>sustained<span class="w"> </span>&gt;80%<span class="w"> </span>may<span class="w"> </span>cause<span class="w"> </span>lag<span class="w"> </span>increase<span class="w">                </span>│
-<a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a>│<span class="w">    </span>NTP<span class="w"> </span><span class="nv">sync</span><span class="w">         </span><span class="o">=</span><span class="w"> </span>Critical<span class="w"> </span><span class="k">for</span><span class="w"> </span>journal<span class="w"> </span>timestamps<span class="w"> </span>and<span class="w"> </span>cross-site<span class="w"> </span>consistency<span class="p">;</span><span class="w"> </span>must<span class="w"> </span>be<span class="w"> </span><span class="k">in</span><span class="w"> </span>sync<span class="w">     </span>│
-<a id="__codelineno-0-56" name="__codelineno-0-56" href="#__codelineno-0-56"></a>│<span class="w">    </span>Packet<span class="w"> </span><span class="nv">loss</span><span class="w">      </span><span class="o">=</span><span class="w"> </span>Any<span class="w"> </span>loss<span class="w"> </span>on<span class="w"> </span>replication<span class="w"> </span>link<span class="w"> </span>degrades<span class="w"> </span>throughput<span class="p">;</span><span class="w"> </span>investigate<span class="w"> </span>immediately<span class="w">       </span>│
-<a id="__codelineno-0-57" name="__codelineno-0-57" href="#__codelineno-0-57"></a>│<span class="w">    </span>RPA<span class="w"> </span>node<span class="w"> </span><span class="nv">failure</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Surviving<span class="w"> </span>RPA<span class="w"> </span>takes<span class="w"> </span>over<span class="w"> </span>all<span class="w"> </span>CGs<span class="p">;</span><span class="w"> </span>CGs<span class="w"> </span><span class="k">continue</span><span class="w"> </span>with<span class="w"> </span>reduced<span class="w"> </span>throughput<span class="w">          </span>│
-<a id="__codelineno-0-58" name="__codelineno-0-58" href="#__codelineno-0-58"></a>│<span class="w">    </span>Unisphere<span class="w"> </span><span class="nv">alert</span><span class="w">  </span><span class="o">=</span><span class="w"> </span>Red<span class="w"> </span>badge<span class="w"> </span><span class="k">in</span><span class="w"> </span>Unisphere<span class="w"> </span>dashboard<span class="p">;</span><span class="w"> </span>drill<span class="w"> </span>down<span class="w"> </span>to<span class="w"> </span>CG,<span class="w"> </span>link,<span class="w"> </span>or<span class="w"> </span>hardware<span class="w">           </span>│
-<a id="__codelineno-0-59" name="__codelineno-0-59" href="#__codelineno-0-59"></a>│<span class="w">    </span>REST<span class="w"> </span><span class="nv">poll</span><span class="w">        </span><span class="o">=</span><span class="w"> </span>GET<span class="w"> </span>/system/clusters<span class="p">;</span><span class="w"> </span>/groups<span class="p">;</span><span class="w"> </span>/links<span class="p">;</span><span class="w"> </span>use<span class="w"> </span><span class="k">for</span><span class="w"> </span>monitoring<span class="w"> </span>integration<span class="w">           </span>│
-<a id="__codelineno-0-60" name="__codelineno-0-60" href="#__codelineno-0-60"></a>│<span class="w">    </span>Monthly<span class="w"> </span><span class="nv">drill</span><span class="w">    </span><span class="o">=</span><span class="w"> </span>Full<span class="w"> </span>failover<span class="w"> </span><span class="nb">test</span><span class="w"> </span>with<span class="w"> </span>VM<span class="w"> </span>power-on<span class="w"> </span>at<span class="w"> </span>DR<span class="w"> </span>site<span class="p">;</span><span class="w"> </span>documents<span class="w"> </span>RTO<span class="w"> </span>achieved<span class="w">          </span>│
-<a id="__codelineno-0-61" name="__codelineno-0-61" href="#__codelineno-0-61"></a>│<span class="w">                                                                                                       </span>│
-<a id="__codelineno-0-62" name="__codelineno-0-62" href="#__codelineno-0-62"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<table>
-<thead>
-<tr>
-<th>RPO Tier</th>
-<th>Target</th>
-<th>Alert Threshold</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Tier 1 (Critical)</td>
-<td>&lt; 15 seconds</td>
-<td>&gt; 60 seconds</td>
-</tr>
-<tr>
-<td>Tier 2 (Business)</td>
-<td>&lt; 5 minutes</td>
-<td>&gt; 15 minutes</td>
-</tr>
-<tr>
-<td>Tier 3 (Standard)</td>
-<td>&lt; 30 minutes</td>
-<td>&gt; 60 minutes</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="journal-utilization-check">Journal Utilization Check<a class="headerlink" href="#journal-utilization-check" title="Permanent link">&para;</a></h2>
-<p>Journal overflow causes CG replication to halt. Alert thresholds:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># List journal volumes with utilization</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>journals<span class="w"> </span>list
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Expected output columns:</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1">#   Journal Name   CG Name         Used%   Free%   Status</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1">#   JRN-CG-ORA-DR  CG-ORACLE-PROD  34%     66%     OK</span>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌──────────────────────────────────── RecoverPoint — Health Checks ─────────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │      Health check cadence: daily CG lag/journal, weekly test copy, monthly failover drill     │   │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │       Critical alerts: CG in error state, journal &gt;90% full, RPA node failure, link down      │   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │         Check sources: Unisphere for RP, vCenter plugin, SNMP traps, REST API polling         │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │            Baseline: all CGs Active; lag &lt;30 s; journal &lt;70%; all RPA nodes Online            │   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│                                                                                                       │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│                                                                                                       │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│   │          RPA Health         │  │          CG Health          │  │         Link Health         │   │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│   │      Node state: Online     │  │        State: Active        │  │        Link state: Up       │   │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│   │          CPU &lt; 80%          │  │         Lag &lt; 30 sec        │  │       Latency &lt; 100 ms      │   │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│   │         Memory &lt; 85%        │  │        Journal &lt; 70%        │  │        Packet loss 0%       │   │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   │          Fan/PSU OK         │  │       Splitter loaded       │  │        BW util &lt; 80%        │   │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │          NTP synced         │  │        No errors 24 h       │  │        Compression OK       │   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│                                                                                                       │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│    Physical: RPA hardware health viewable in Unisphere; splitter state visible per ESXi host          │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│                                                                                                       │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│    Key terms:                                                                                         │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│                                                                                                       │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│    CG state Active  = Replication is running; writes being journaled; lag within RPO target           │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│    Lag (RPO lag)    = Seconds between last source write and journal apply on target; primary KPI      │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│    Journal fill %   = Consumed / allocated journal VMDK; &gt;90% causes CG to pause replication          │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│    Splitter loaded  = ESXi kernel module active; check per host in Unisphere splitter view            │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│    SNMP traps       = RPA sends traps to NMS on CG error, journal fill, and RPA node failure          │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│    Link utilisation = WAN replication bandwidth; sustained &gt;80% may cause lag increase                │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│    NTP sync         = Critical for journal timestamps and cross-site consistency; must be in sync     │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│    Packet loss      = Any loss on replication link degrades throughput; investigate immediately       │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│    RPA node failure = Surviving RPA takes over all CGs; CGs continue with reduced throughput          │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│    Unisphere alert  = Red badge in Unisphere dashboard; drill down to CG, link, or hardware           │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│    REST poll        = GET /system/clusters; /groups; /links; use for monitoring integration           │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│    Monthly drill    = Full failover test with VM power-on at DR site; documents RTO achieved          │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│                                                                                                       │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<table>
-<thead>
-<tr>
-<th>Utilization</th>
-<th>Status</th>
-<th>Action</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>0–69%</td>
-<td>OK</td>
-<td>No action</td>
-</tr>
-<tr>
-<td>70–79%</td>
-<td>Warning</td>
-<td>Monitor; investigate write rate spike</td>
-</tr>
-<tr>
-<td>80–89%</td>
-<td>Critical</td>
-<td>Plan journal expansion; check link state</td>
-</tr>
-<tr>
-<td>90%+</td>
-<td>Emergency</td>
-<td>Immediate action — expand or CG will halt</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="weekly-and-monthly-checks">Weekly and Monthly Checks<a class="headerlink" href="#weekly-and-monthly-checks" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Confirm splitter health (for RP4VM software splitters on ESXi)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>rp
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List journal volumes with utilization</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>journals<span class="w"> </span>list
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Confirm RPA software versions are consistent across cluster</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>boxmgmt<span class="w"> </span>verify_rpa_version
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Review audit log for unexpected operations (logins, image access events)</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>get_audit_log<span class="w"> </span>-last<span class="w"> </span><span class="m">500</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Confirm DR site RPA cluster is also healthy</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>ssh<span class="w"> </span>admin@&lt;dr-rpa-cluster-ip&gt;<span class="w"> </span><span class="s2">&quot;system status&quot;</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>ssh<span class="w"> </span>admin@&lt;dr-rpa-cluster-ip&gt;<span class="w"> </span><span class="s2">&quot;groups status&quot;</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Expected output columns:</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1">#   Journal Name   CG Name         Used%   Free%   Status</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1">#   JRN-CG-ORA-DR  CG-ORACLE-PROD  34%     66%     OK</span>
 </code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Confirm splitter health (for RP4VM software splitters on ESXi)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>rp
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Confirm RPA software versions are consistent across cluster</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>boxmgmt<span class="w"> </span>verify_rpa_version
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Review audit log for unexpected operations (logins, image access events)</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>get_audit_log<span class="w"> </span>-last<span class="w"> </span><span class="m">500</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Confirm DR site RPA cluster is also healthy</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>ssh<span class="w"> </span>admin@&lt;dr-rpa-cluster-ip&gt;<span class="w"> </span><span class="s2">&quot;system status&quot;</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>ssh<span class="w"> </span>admin@&lt;dr-rpa-cluster-ip&gt;<span class="w"> </span><span class="s2">&quot;groups status&quot;</span>
+</code></pre></div></p>
 
 
 

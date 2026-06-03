@@ -25,7 +25,7 @@
     
     
       
-        <title>Database Performance Troubleshooting - Chris KB</title>
+        <title>Index - Chris KB</title>
       
     
     
@@ -67,10 +67,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <meta property="og:site_name" content="Chris KB">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Database Performance Troubleshooting · Chris KB">
+  <meta property="og:title" content="Index · Chris KB">
   <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Database Performance Troubleshooting · Chris KB">
+  <meta name="twitter:title" content="Index · Chris KB">
   <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
 
   </head>
@@ -90,11 +90,6 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
-      
-        
-        <a href="#database-performance-troubleshooting" class="md-skip">
-          Skip to content
-        </a>
       
     </div>
     <div data-md-component="announce">
@@ -128,7 +123,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Database Performance Troubleshooting
+              Index
             
           </span>
         </div>
@@ -2797,82 +2792,6 @@
   
   
   
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#triage-identify-the-bottleneck" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Triage — Identify the Bottleneck
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#sql-server-slow-query-analysis" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        SQL Server — Slow Query Analysis
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#buffer-pool-cache-efficiency" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Buffer Pool / Cache Efficiency
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#connection-pool-issues" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Connection Pool Issues
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#troubleshooting-decision-tree" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Troubleshooting Decision Tree
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#immediate-remediation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Immediate Remediation
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
   
 </nav>
                   </div>
@@ -2984,7 +2903,7 @@
     
     <a href="../database-maintenance/" class="kb-topnav__link kb-topnav__link--prev" id="kb-prev-link">
       <span class="kb-topnav__arrow">&#8592;</span>
-      <span class="kb-topnav__title">Database Maintenance Procedure</span>
+      <span class="kb-topnav__title">Index</span>
     </a>
     
 
@@ -2995,7 +2914,7 @@
 
     
     <a href="../database-replication-check/" class="kb-topnav__link kb-topnav__link--next" id="kb-next-link">
-      <span class="kb-topnav__title">Database Replication Check</span>
+      <span class="kb-topnav__title">Index</span>
       <span class="kb-topnav__arrow">&#8594;</span>
     </a>
     
@@ -3006,148 +2925,109 @@
 
 
 
-<h1 id="database-performance-troubleshooting">Database Performance Troubleshooting<a class="headerlink" href="#database-performance-troubleshooting" title="Permanent link">&para;</a></h1>
-<div class="kb-summary">
-Systematic approach to identifying and resolving database performance bottlenecks — from slow queries to I/O saturation and locking.
-</div>
+  <h1>Index</h1>
 
-<h2 id="triage-identify-the-bottleneck">Triage — Identify the Bottleneck<a class="headerlink" href="#triage-identify-the-bottleneck" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># OS resource view</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>top<span class="w"> </span>-b<span class="w"> </span>-n<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>vmstat<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">5</span><span class="w">        </span><span class="c1"># check wa (I/O wait) column</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>iostat<span class="w"> </span>-xz<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">5</span><span class="w">    </span><span class="c1"># %util, await, r/s, w/s on DB disk</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>free<span class="w"> </span>-h<span class="w">           </span><span class="c1"># check swap usage — DB paging = critical</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="sb">```</span>text
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>┌───────────────────────────────<span class="w"> </span>Database<span class="w"> </span>—<span class="w"> </span>Performance<span class="w"> </span>Troubleshooting<span class="w"> </span>────────────────────────────────┐
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│<span class="w">                                                                                                       </span>│
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│<span class="w">   </span>┌───────────────────────────────────────────────────────────────────────────────────────────────┐<span class="w">   </span>│
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│<span class="w">   </span>│<span class="w">    </span>Diagnose<span class="w"> </span>DB<span class="w"> </span>performance:<span class="w"> </span>slow<span class="w"> </span>queries,<span class="w"> </span>blocking<span class="w"> </span>chains,<span class="w"> </span>lock<span class="w"> </span>contention,<span class="w"> </span>I/O<span class="w"> </span>saturation<span class="w">    </span>│<span class="w">   </span>│
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│<span class="w">   </span>│<span class="w">    </span>Start<span class="w"> </span>with<span class="w"> </span><span class="nb">wait</span><span class="w"> </span>events<span class="w"> </span>to<span class="w"> </span>identify<span class="w"> </span>bottleneck<span class="w"> </span><span class="nb">type</span><span class="w"> </span>before<span class="w"> </span>looking<span class="w"> </span>at<span class="w"> </span>individual<span class="w"> </span>queries<span class="w">    </span>│<span class="w">   </span>│
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│<span class="w">   </span>│<span class="w">    </span>Use<span class="w"> </span>EXPLAIN<span class="w"> </span>ANALYZE<span class="w"> </span>to<span class="w"> </span>confirm<span class="w"> </span>query<span class="w"> </span>plan<span class="p">;</span><span class="w"> </span>index<span class="w"> </span>changes<span class="w"> </span>need<span class="w"> </span>testing<span class="w"> </span>before<span class="w"> </span>production<span class="w">    </span>│<span class="w">   </span>│
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│<span class="w">   </span>└───────────────────────────────────────────────────────────────────────────────────────────────┘<span class="w">   </span>│
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│<span class="w">                                                                                                       </span>│
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│<span class="w">                          </span>▼<span class="w">                                                 </span>▼<span class="w">                          </span>│
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│<span class="w">                                                                                                       </span>│
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│<span class="w">   </span>┌──────────────────────────────────────────────┐<span class="w">  </span>┌─────────────────────────────────────────────┐<span class="w">   </span>│
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│<span class="w">   </span>│<span class="w">                   </span>Diagnose<span class="w">                   </span>│<span class="w">  </span>│<span class="w">                   </span>Resolve<span class="w">                   </span>│<span class="w">   </span>│
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│<span class="w">   </span>│<span class="w">      </span>─────────────────────────────────<span class="w">       </span>│<span class="w">  </span>│<span class="w">      </span>─────────────────────────────────<span class="w">      </span>│<span class="w">   </span>│
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│<span class="w">   </span>│<span class="w">           </span>Identify<span class="w"> </span><span class="nb">wait</span><span class="w"> </span>event<span class="w"> </span><span class="nb">type</span><span class="w">           </span>│<span class="w">  </span>│<span class="w">           </span>Kill<span class="w"> </span>blocking<span class="w"> </span>head<span class="w"> </span>query<span class="w">          </span>│<span class="w">   </span>│
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│<span class="w">   </span>│<span class="w">           </span>Find<span class="w"> </span>top<span class="w"> </span>CPU/IO<span class="w"> </span>queries<span class="w">            </span>│<span class="w">  </span>│<span class="w">          </span>Add/rebuild<span class="w"> </span>missing<span class="w"> </span>index<span class="w">          </span>│<span class="w">   </span>│
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│<span class="w">   </span>│<span class="w">          </span>EXPLAIN<span class="w"> </span>ANALYZE<span class="w"> </span>slow<span class="w"> </span>query<span class="w">          </span>│<span class="w">  </span>│<span class="w">          </span>Rewrite<span class="w"> </span>query<span class="w"> </span><span class="o">(</span>avoid<span class="w"> </span>N+1<span class="o">)</span><span class="w">          </span>│<span class="w">   </span>│
-<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│<span class="w">   </span>│<span class="w">          </span>Check<span class="w"> </span>index<span class="w"> </span>usage/missing<span class="w">           </span>│<span class="w">  </span>│<span class="w">          </span>Increase<span class="w"> </span>work_mem<span class="w"> </span>/<span class="w"> </span>buffer<span class="w">         </span>│<span class="w">   </span>│
-<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│<span class="w">   </span>│<span class="w">          </span>Review<span class="w"> </span>I/O<span class="w"> </span><span class="nb">wait</span><span class="w"> </span>on<span class="w"> </span>storage<span class="w">          </span>│<span class="w">  </span>│<span class="w">          </span>Partition<span class="w"> </span>or<span class="w"> </span>archive<span class="w"> </span>data<span class="w">          </span>│<span class="w">   </span>│
-<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│<span class="w">   </span>└──────────────────────────────────────────────┘<span class="w">  </span>└─────────────────────────────────────────────┘<span class="w">   </span>│
-<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│<span class="w">                                                                                                       </span>│
-<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│<span class="w">   </span>│<span class="w">     </span>Symptom<span class="w">      </span>│<span class="w">   </span>Likely<span class="w"> </span>cause<span class="w">   </span>│<span class="w">   </span>Diagnose<span class="w"> </span>with<span class="w">   </span>│<span class="w">    </span>Resolution<span class="w">    </span>│<span class="w">     </span>Validate<span class="w">     </span>│<span class="w">   </span>│
-<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│<span class="w">   </span>│<span class="w"> </span>────────────────<span class="w"> </span>│<span class="w"> </span>────────────────<span class="w"> </span>│<span class="w"> </span>─────────────────<span class="w"> </span>│<span class="w"> </span>────────────────<span class="w"> </span>│──────────────────│<span class="w">   </span>│
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│<span class="w">   </span>│<span class="w">   </span>Slow<span class="w"> </span>SELECT<span class="w">    </span>│<span class="w">  </span>Missing<span class="w"> </span>index<span class="w">   </span>│<span class="w">  </span>EXPLAIN<span class="w"> </span>ANALYZE<span class="w">  </span>│<span class="w">   </span>CREATE<span class="w"> </span>INDEX<span class="w">   </span>│<span class="w"> </span>Query<span class="w"> </span><span class="nb">time</span><span class="w"> </span>drop<span class="w">  </span>│<span class="w">   </span>│
-<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│<span class="w">   </span>│<span class="w">    </span>High<span class="w"> </span><span class="nb">wait</span><span class="w">     </span>│<span class="w"> </span>Lock<span class="w"> </span>contention<span class="w">  </span>│<span class="w">    </span>pg_locks/DMV<span class="w">   </span>│<span class="w">   </span>Kill<span class="w"> </span>blocker<span class="w">   </span>│<span class="w">   </span>Wait<span class="w"> </span>clears<span class="w">    </span>│<span class="w">   </span>│
-<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│<span class="w">   </span>│<span class="w">    </span>I/O<span class="w"> </span>spike<span class="w">     </span>│<span class="w"> </span>Full<span class="w"> </span>table<span class="w"> </span>scan<span class="w">  </span>│<span class="w">  </span>iostat<span class="w"> </span>+<span class="w"> </span>EXPLAIN<span class="w"> </span>│Index<span class="w"> </span>+<span class="w"> </span>partition<span class="w"> </span>│<span class="w">  </span>I/O<span class="w"> </span>normalises<span class="w">  </span>│<span class="w">   </span>│
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│<span class="w">   </span>│<span class="w">    </span>CPU<span class="w"> </span>spike<span class="w">     </span>│<span class="w">  </span>Bad<span class="w"> </span>query<span class="w"> </span>plan<span class="w">  </span>│<span class="w">   </span>AWR<span class="w"> </span>/<span class="w"> </span>top<span class="w"> </span>SQLs<span class="w">  </span>│<span class="w">   </span>Stats<span class="w"> </span>update<span class="w">   </span>│<span class="w">    </span>CPU<span class="w"> </span>drops<span class="w">     </span>│<span class="w">   </span>│
-<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│<span class="w">                                                                                                       </span>│
-<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│<span class="w">    </span>Key<span class="w"> </span>terms:<span class="w">                                                                                         </span>│
-<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│<span class="w">                                                                                                       </span>│
-<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│<span class="w">    </span>Wait<span class="w"> </span><span class="nv">event</span><span class="w">    </span><span class="o">=</span><span class="w"> </span>Reason<span class="w"> </span>a<span class="w"> </span>DB<span class="w"> </span>session<span class="w"> </span>is<span class="w"> </span>idle<span class="p">;</span><span class="w"> </span>lock/IO/CPU<span class="w"> </span>waits<span class="w"> </span>indicate<span class="w"> </span>bottleneck<span class="w"> </span><span class="nb">type</span><span class="w">            </span>│
-<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│<span class="w">    </span>EXPLAIN<span class="w"> </span><span class="nv">ANALYZE</span><span class="o">=</span><span class="w"> </span>PostgreSQL<span class="p">;</span><span class="w"> </span>shows<span class="w"> </span>actual<span class="w"> </span>execution<span class="w"> </span>plan<span class="w"> </span>with<span class="w"> </span>row<span class="w"> </span>counts<span class="w"> </span>and<span class="w"> </span>timings<span class="w">               </span>│
-<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│<span class="w">    </span>N+1<span class="w"> </span><span class="nv">problem</span><span class="w">   </span><span class="o">=</span><span class="w"> </span>Loop<span class="w"> </span>issuing<span class="w"> </span>one<span class="w"> </span>query<span class="w"> </span>per<span class="w"> </span>item<span class="w"> </span>instead<span class="w"> </span>of<span class="w"> </span>one<span class="w"> </span>bulk<span class="w"> </span>query<span class="p">;</span><span class="w"> </span>kills<span class="w"> </span>DB<span class="w">                </span>│
-<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│<span class="w">    </span><span class="nv">work_mem</span><span class="w">      </span><span class="o">=</span><span class="w"> </span>PostgreSQL<span class="w"> </span>per-sort<span class="w"> </span>memory<span class="p">;</span><span class="w"> </span>increase<span class="w"> </span>to<span class="w"> </span>avoid<span class="w"> </span>temp<span class="w"> </span>file<span class="w"> </span>disk<span class="w"> </span>spills<span class="w">                </span>│
-<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│<span class="w">    </span><span class="nv">DMV</span><span class="w">           </span><span class="o">=</span><span class="w"> </span>SQL<span class="w"> </span>Server<span class="w"> </span>Dynamic<span class="w"> </span>Management<span class="w"> </span>View<span class="p">;</span><span class="w"> </span>real-time<span class="w"> </span>query<span class="w"> </span>and<span class="w"> </span>session<span class="w"> </span>stats<span class="w">              </span>│
-<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│<span class="w">    </span>Seq<span class="w"> </span><span class="nv">scan</span><span class="w">      </span><span class="o">=</span><span class="w"> </span>Full<span class="w"> </span>table<span class="w"> </span>scan<span class="p">;</span><span class="w"> </span>normal<span class="w"> </span><span class="k">for</span><span class="w"> </span>small<span class="w"> </span>tables<span class="p">;</span><span class="w"> </span>bad<span class="w"> </span><span class="k">for</span><span class="w"> </span>large<span class="w"> </span>+<span class="w"> </span>OLTP<span class="w"> </span>queries<span class="w">             </span>│
-<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│<span class="w">                                                                                                       </span>│
-<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<h2 id="sql-server-slow-query-analysis">SQL Server — Slow Query Analysis<a class="headerlink" href="#sql-server-slow-query-analysis" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">-- Currently executing requests sorted by CPU</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">r</span><span class="p">.</span><span class="n">session_id</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="p">.</span><span class="n">status</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="p">.</span><span class="n">cpu_time</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="p">.</span><span class="n">total_elapsed_time</span><span class="o">/</span><span class="mi">1000</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">elapsed_sec</span><span class="p">,</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">       </span><span class="n">r</span><span class="p">.</span><span class="n">wait_type</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="p">.</span><span class="n">blocking_session_id</span><span class="p">,</span><span class="w"> </span><span class="k">LEFT</span><span class="p">(</span><span class="n">t</span><span class="p">.</span><span class="nb">text</span><span class="p">,</span><span class="w"> </span><span class="mi">100</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">query_text</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="k">FROM</span><span class="w"> </span><span class="n">sys</span><span class="p">.</span><span class="n">dm_exec_requests</span><span class="w"> </span><span class="n">r</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="k">CROSS</span><span class="w"> </span><span class="n">APPLY</span><span class="w"> </span><span class="n">sys</span><span class="p">.</span><span class="n">dm_exec_sql_text</span><span class="p">(</span><span class="n">r</span><span class="p">.</span><span class="n">sql_handle</span><span class="p">)</span><span class="w"> </span><span class="n">t</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">r</span><span class="p">.</span><span class="n">status</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="s1">&#39;background&#39;</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">r</span><span class="p">.</span><span class="n">cpu_time</span><span class="w"> </span><span class="k">DESC</span><span class="p">;</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1">-- Top queries by total CPU (Query Store — SQL Server 2016+)</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">TOP</span><span class="w"> </span><span class="mi">20</span><span class="w"> </span><span class="n">qt</span><span class="p">.</span><span class="n">query_sql_text</span><span class="p">,</span><span class="w"> </span><span class="n">rs</span><span class="p">.</span><span class="n">avg_cpu_time</span><span class="o">/</span><span class="mi">1000</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">avg_cpu_ms</span><span class="p">,</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">       </span><span class="n">rs</span><span class="p">.</span><span class="n">avg_logical_io_reads</span><span class="p">,</span><span class="w"> </span><span class="n">rs</span><span class="p">.</span><span class="n">count_executions</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="k">FROM</span><span class="w"> </span><span class="n">sys</span><span class="p">.</span><span class="n">query_store_query_text</span><span class="w"> </span><span class="n">qt</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="k">JOIN</span><span class="w"> </span><span class="n">sys</span><span class="p">.</span><span class="n">query_store_query</span><span class="w"> </span><span class="n">q</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">qt</span><span class="p">.</span><span class="n">query_text_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">q</span><span class="p">.</span><span class="n">query_text_id</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="k">JOIN</span><span class="w"> </span><span class="n">sys</span><span class="p">.</span><span class="n">query_store_plan</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">q</span><span class="p">.</span><span class="n">query_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">query_id</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="k">JOIN</span><span class="w"> </span><span class="n">sys</span><span class="p">.</span><span class="n">query_store_runtime_stats</span><span class="w"> </span><span class="n">rs</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">plan_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rs</span><span class="p">.</span><span class="n">plan_id</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">rs</span><span class="p">.</span><span class="n">avg_cpu_time</span><span class="w"> </span><span class="k">DESC</span><span class="p">;</span>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="c1">-- Missing index recommendations</span>
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">mig</span><span class="p">.</span><span class="n">equality_columns</span><span class="p">,</span><span class="w"> </span><span class="n">mig</span><span class="p">.</span><span class="n">inequality_columns</span><span class="p">,</span><span class="w"> </span><span class="n">mig</span><span class="p">.</span><span class="n">included_columns</span><span class="p">,</span>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">       </span><span class="n">mid</span><span class="p">.</span><span class="k">statement</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="k">table_name</span><span class="p">,</span><span class="w"> </span><span class="n">migs</span><span class="p">.</span><span class="n">avg_user_impact</span>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="k">FROM</span><span class="w"> </span><span class="n">sys</span><span class="p">.</span><span class="n">dm_db_missing_index_details</span><span class="w"> </span><span class="n">mid</span>
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="k">JOIN</span><span class="w"> </span><span class="n">sys</span><span class="p">.</span><span class="n">dm_db_missing_index_groups</span><span class="w"> </span><span class="n">mig</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">mid</span><span class="p">.</span><span class="n">index_handle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mig</span><span class="p">.</span><span class="n">index_handle</span>
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="k">JOIN</span><span class="w"> </span><span class="n">sys</span><span class="p">.</span><span class="n">dm_db_missing_index_group_stats</span><span class="w"> </span><span class="n">migs</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">mig</span><span class="p">.</span><span class="n">index_group_handle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">migs</span><span class="p">.</span><span class="n">group_handle</span>
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">migs</span><span class="p">.</span><span class="n">avg_user_impact</span><span class="w"> </span><span class="k">DESC</span><span class="p">;</span>
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="c1">-- Blocking chains</span>
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">blocking_session_id</span><span class="p">,</span><span class="w"> </span><span class="n">session_id</span><span class="p">,</span><span class="w"> </span><span class="n">wait_type</span><span class="p">,</span><span class="w"> </span><span class="n">wait_time</span><span class="o">/</span><span class="mi">1000</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">wait_sec</span>
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="k">FROM</span><span class="w"> </span><span class="n">sys</span><span class="p">.</span><span class="n">dm_exec_requests</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">blocking_session_id</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌─────────────────────────────── Database — Performance Troubleshooting ────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│   │    Diagnose DB performance: slow queries, blocking chains, lock contention, I/O saturation    │   │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   │    Start with wait events to identify bottleneck type before looking at individual queries    │   │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │    Use EXPLAIN ANALYZE to confirm query plan; index changes need testing before production    │   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│                                                                                                       │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│                                                                                                       │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   │                   Diagnose                   │  │                   Resolve                   │   │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│   │      ─────────────────────────────────       │  │      ─────────────────────────────────      │   │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│   │           Identify wait event type           │  │           Kill blocking head query          │   │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│   │           Find top CPU/IO queries            │  │          Add/rebuild missing index          │   │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│   │          EXPLAIN ANALYZE slow query          │  │          Rewrite query (avoid N+1)          │   │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   │          Check index usage/missing           │  │          Increase work_mem / buffer         │   │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │          Review I/O wait on storage          │  │          Partition or archive data          │   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│                                                                                                       │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │     Symptom      │   Likely cause   │   Diagnose with   │    Resolution    │     Validate     │   │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   │   Slow SELECT    │  Missing index   │  EXPLAIN ANALYZE  │   CREATE INDEX   │ Query time drop  │   │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│   │    High wait     │ Lock contention  │    pg_locks/DMV   │   Kill blocker   │   Wait clears    │   │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│   │    I/O spike     │ Full table scan  │  iostat + EXPLAIN │Index + partition │  I/O normalises  │   │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│   │    CPU spike     │  Bad query plan  │   AWR / top SQLs  │   Stats update   │    CPU drops     │   │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│                                                                                                       │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│    Key terms:                                                                                         │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│    Wait event    = Reason a DB session is idle; lock/IO/CPU waits indicate bottleneck type            │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│    EXPLAIN ANALYZE= PostgreSQL; shows actual execution plan with row counts and timings               │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│    N+1 problem   = Loop issuing one query per item instead of one bulk query; kills DB                │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│    work_mem      = PostgreSQL per-sort memory; increase to avoid temp file disk spills                │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│    DMV           = SQL Server Dynamic Management View; real-time query and session stats              │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│    Seq scan      = Full table scan; normal for small tables; bad for large + OLTP queries             │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│                                                                                                       │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<h2 id="buffer-pool-cache-efficiency">Buffer Pool / Cache Efficiency<a class="headerlink" href="#buffer-pool-cache-efficiency" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">-- PostgreSQL: cache hit ratio (target &gt; 99%)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">sum</span><span class="p">(</span><span class="n">heap_blks_hit</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="k">NULLIF</span><span class="p">(</span><span class="k">sum</span><span class="p">(</span><span class="n">heap_blks_hit</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="k">sum</span><span class="p">(</span><span class="n">heap_blks_read</span><span class="p">),</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">100</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">cache_hit_pct</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">pg_statio_user_tables</span><span class="p">;</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1">-- MySQL: InnoDB buffer pool hit ratio</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="k">SHOW</span><span class="w"> </span><span class="n">STATUS</span><span class="w"> </span><span class="k">LIKE</span><span class="w"> </span><span class="s1">&#39;Innodb_buffer_pool_read%&#39;</span><span class="p">;</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1">-- Formula: (read_requests - disk_reads) / read_requests * 100</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">-- Currently executing requests sorted by CPU</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">r</span><span class="p">.</span><span class="n">session_id</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="p">.</span><span class="n">status</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="p">.</span><span class="n">cpu_time</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="p">.</span><span class="n">total_elapsed_time</span><span class="o">/</span><span class="mi">1000</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">elapsed_sec</span><span class="p">,</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">       </span><span class="n">r</span><span class="p">.</span><span class="n">wait_type</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="p">.</span><span class="n">blocking_session_id</span><span class="p">,</span><span class="w"> </span><span class="k">LEFT</span><span class="p">(</span><span class="n">t</span><span class="p">.</span><span class="nb">text</span><span class="p">,</span><span class="w"> </span><span class="mi">100</span><span class="p">)</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">query_text</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="k">FROM</span><span class="w"> </span><span class="n">sys</span><span class="p">.</span><span class="n">dm_exec_requests</span><span class="w"> </span><span class="n">r</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="k">CROSS</span><span class="w"> </span><span class="n">APPLY</span><span class="w"> </span><span class="n">sys</span><span class="p">.</span><span class="n">dm_exec_sql_text</span><span class="p">(</span><span class="n">r</span><span class="p">.</span><span class="n">sql_handle</span><span class="p">)</span><span class="w"> </span><span class="n">t</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">r</span><span class="p">.</span><span class="n">status</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="s1">&#39;background&#39;</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">r</span><span class="p">.</span><span class="n">cpu_time</span><span class="w"> </span><span class="k">DESC</span><span class="p">;</span>
 <a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1">-- SQL Server: page life expectancy (target &gt; 300s per 4GB RAM)</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">object_name</span><span class="p">,</span><span class="w"> </span><span class="n">counter_name</span><span class="p">,</span><span class="w"> </span><span class="n">cntr_value</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="k">FROM</span><span class="w"> </span><span class="n">sys</span><span class="p">.</span><span class="n">dm_os_performance_counters</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">counter_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;Page life expectancy&#39;</span><span class="p">;</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1">-- Top queries by total CPU (Query Store — SQL Server 2016+)</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">TOP</span><span class="w"> </span><span class="mi">20</span><span class="w"> </span><span class="n">qt</span><span class="p">.</span><span class="n">query_sql_text</span><span class="p">,</span><span class="w"> </span><span class="n">rs</span><span class="p">.</span><span class="n">avg_cpu_time</span><span class="o">/</span><span class="mi">1000</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">avg_cpu_ms</span><span class="p">,</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">       </span><span class="n">rs</span><span class="p">.</span><span class="n">avg_logical_io_reads</span><span class="p">,</span><span class="w"> </span><span class="n">rs</span><span class="p">.</span><span class="n">count_executions</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="k">FROM</span><span class="w"> </span><span class="n">sys</span><span class="p">.</span><span class="n">query_store_query_text</span><span class="w"> </span><span class="n">qt</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="k">JOIN</span><span class="w"> </span><span class="n">sys</span><span class="p">.</span><span class="n">query_store_query</span><span class="w"> </span><span class="n">q</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">qt</span><span class="p">.</span><span class="n">query_text_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">q</span><span class="p">.</span><span class="n">query_text_id</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="k">JOIN</span><span class="w"> </span><span class="n">sys</span><span class="p">.</span><span class="n">query_store_plan</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">q</span><span class="p">.</span><span class="n">query_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">query_id</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="k">JOIN</span><span class="w"> </span><span class="n">sys</span><span class="p">.</span><span class="n">query_store_runtime_stats</span><span class="w"> </span><span class="n">rs</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">plan_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rs</span><span class="p">.</span><span class="n">plan_id</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">rs</span><span class="p">.</span><span class="n">avg_cpu_time</span><span class="w"> </span><span class="k">DESC</span><span class="p">;</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="c1">-- Missing index recommendations</span>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">mig</span><span class="p">.</span><span class="n">equality_columns</span><span class="p">,</span><span class="w"> </span><span class="n">mig</span><span class="p">.</span><span class="n">inequality_columns</span><span class="p">,</span><span class="w"> </span><span class="n">mig</span><span class="p">.</span><span class="n">included_columns</span><span class="p">,</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">       </span><span class="n">mid</span><span class="p">.</span><span class="k">statement</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="k">table_name</span><span class="p">,</span><span class="w"> </span><span class="n">migs</span><span class="p">.</span><span class="n">avg_user_impact</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="k">FROM</span><span class="w"> </span><span class="n">sys</span><span class="p">.</span><span class="n">dm_db_missing_index_details</span><span class="w"> </span><span class="n">mid</span>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="k">JOIN</span><span class="w"> </span><span class="n">sys</span><span class="p">.</span><span class="n">dm_db_missing_index_groups</span><span class="w"> </span><span class="n">mig</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">mid</span><span class="p">.</span><span class="n">index_handle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mig</span><span class="p">.</span><span class="n">index_handle</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="k">JOIN</span><span class="w"> </span><span class="n">sys</span><span class="p">.</span><span class="n">dm_db_missing_index_group_stats</span><span class="w"> </span><span class="n">migs</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">mig</span><span class="p">.</span><span class="n">index_group_handle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">migs</span><span class="p">.</span><span class="n">group_handle</span>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">migs</span><span class="p">.</span><span class="n">avg_user_impact</span><span class="w"> </span><span class="k">DESC</span><span class="p">;</span>
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="c1">-- Blocking chains</span>
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">blocking_session_id</span><span class="p">,</span><span class="w"> </span><span class="n">session_id</span><span class="p">,</span><span class="w"> </span><span class="n">wait_type</span><span class="p">,</span><span class="w"> </span><span class="n">wait_time</span><span class="o">/</span><span class="mi">1000</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">wait_sec</span>
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="k">FROM</span><span class="w"> </span><span class="n">sys</span><span class="p">.</span><span class="n">dm_exec_requests</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">blocking_session_id</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
 </code></pre></div>
-<h2 id="connection-pool-issues">Connection Pool Issues<a class="headerlink" href="#connection-pool-issues" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Too many connections exhausting max_connections (PostgreSQL)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>psql<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT count(*), state FROM pg_stat_activity GROUP BY state;&quot;</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>psql<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SHOW max_connections;&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1">-- PostgreSQL: cache hit ratio (target &gt; 99%)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">SELECT</span><span class="w"> </span><span class="k">sum</span><span class="p">(</span><span class="n">heap_blks_hit</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="k">NULLIF</span><span class="p">(</span><span class="k">sum</span><span class="p">(</span><span class="n">heap_blks_hit</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="k">sum</span><span class="p">(</span><span class="n">heap_blks_read</span><span class="p">),</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">100</span><span class="w"> </span><span class="k">AS</span><span class="w"> </span><span class="n">cache_hit_pct</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="k">FROM</span><span class="w"> </span><span class="n">pg_statio_user_tables</span><span class="p">;</span>
 <a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># MySQL threads_connected approaching max_connections</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>mysql<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;SHOW STATUS LIKE &#39;Threads_connected&#39;;&quot;</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>mysql<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;SHOW VARIABLES LIKE &#39;max_connections&#39;;&quot;</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1">-- MySQL: InnoDB buffer pool hit ratio</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="k">SHOW</span><span class="w"> </span><span class="n">STATUS</span><span class="w"> </span><span class="k">LIKE</span><span class="w"> </span><span class="s1">&#39;Innodb_buffer_pool_read%&#39;</span><span class="p">;</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1">-- Formula: (read_requests - disk_reads) / read_requests * 100</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1">-- SQL Server: page life expectancy (target &gt; 300s per 4GB RAM)</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">object_name</span><span class="p">,</span><span class="w"> </span><span class="n">counter_name</span><span class="p">,</span><span class="w"> </span><span class="n">cntr_value</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="k">FROM</span><span class="w"> </span><span class="n">sys</span><span class="p">.</span><span class="n">dm_os_performance_counters</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">counter_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;Page life expectancy&#39;</span><span class="p">;</span>
 </code></pre></div>
-<h2 id="troubleshooting-decision-tree">Troubleshooting Decision Tree<a class="headerlink" href="#troubleshooting-decision-tree" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Query slow?
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  ├─ EXPLAIN shows Seq Scan on large table → add index
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  ├─ EXPLAIN shows correct index but slow → stale statistics → ANALYZE
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  ├─ Waiting on lock → find blocker; kill if necessary
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>  ├─ High I/O wait → buffer pool too small → increase shared_buffers / innodb_buffer_pool_size
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>  └─ CPU spiking → too many connections or parallel queries → check pool; tune work_mem
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Too many connections exhausting max_connections (PostgreSQL)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>psql<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SELECT count(*), state FROM pg_stat_activity GROUP BY state;&quot;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>psql<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;SHOW max_connections;&quot;</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># MySQL threads_connected approaching max_connections</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>mysql<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;SHOW STATUS LIKE &#39;Threads_connected&#39;;&quot;</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>mysql<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;SHOW VARIABLES LIKE &#39;max_connections&#39;;&quot;</span>
 </code></pre></div>
-<h2 id="immediate-remediation">Immediate Remediation<a class="headerlink" href="#immediate-remediation" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Problem</th>
-<th>Action</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Long-running query blocking others</td>
-<td><code>pg_terminate_backend(pid)</code> / <code>KILL QUERY</code></td>
-</tr>
-<tr>
-<td>Missing index causing full scan</td>
-<td><code>CREATE INDEX CONCURRENTLY</code> (PG) / <code>CREATE INDEX</code> (MySQL/MSSQL)</td>
-</tr>
-<tr>
-<td>Stale statistics</td>
-<td><code>ANALYZE</code> (PG) / <code>UPDATE STATISTICS</code> (MSSQL)</td>
-</tr>
-<tr>
-<td>Buffer pool too small</td>
-<td>Increase <code>shared_buffers</code> (PG) / <code>innodb_buffer_pool_size</code> (MySQL)</td>
-</tr>
-<tr>
-<td>Connection pool exhausted</td>
-<td>Restart app pool; lower <code>max_connections</code> per app</td>
-</tr>
-</tbody>
-</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Query slow?
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  ├─ EXPLAIN shows Seq Scan on large table → add index
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  ├─ EXPLAIN shows correct index but slow → stale statistics → ANALYZE
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  ├─ Waiting on lock → find blocker; kill if necessary
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>  ├─ High I/O wait → buffer pool too small → increase shared_buffers / innodb_buffer_pool_size
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>  └─ CPU spiking → too many connections or parallel queries → check pool; tune work_mem
+</code></pre></div></p>
 
 
 
@@ -3167,7 +3047,7 @@ Systematic approach to identifying and resolving database performance bottleneck
     
     <a href="../database-maintenance/" class="kb-topnav__link kb-topnav__link--prev">
       <span class="kb-topnav__arrow">&#8592;</span>
-      <span class="kb-topnav__title">Database Maintenance Procedure</span>
+      <span class="kb-topnav__title">Index</span>
     </a>
     
 
@@ -3178,7 +3058,7 @@ Systematic approach to identifying and resolving database performance bottleneck
 
     
     <a href="../database-replication-check/" class="kb-topnav__link kb-topnav__link--next">
-      <span class="kb-topnav__title">Database Replication Check</span>
+      <span class="kb-topnav__title">Index</span>
       <span class="kb-topnav__arrow">&#8594;</span>
     </a>
     
@@ -3187,7 +3067,7 @@ Systematic approach to identifying and resolving database performance bottleneck
   
   <nav class="kb-mobile-nav" aria-label="Mobile navigation">
     
-    <a href="../database-maintenance/" class="kb-mobile-nav__btn" title="Previous: Database Maintenance Procedure">
+    <a href="../database-maintenance/" class="kb-mobile-nav__btn" title="Previous: Index">
       <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
     </a>
     
@@ -3197,7 +3077,7 @@ Systematic approach to identifying and resolving database performance bottleneck
     </a>
 
     
-    <a href="../database-replication-check/" class="kb-mobile-nav__btn" title="Next: Database Replication Check">
+    <a href="../database-replication-check/" class="kb-mobile-nav__btn" title="Next: Index">
       <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M4 11h12.17l-5.59-5.59L12 4l8 8-8 8-1.41-1.41L16.17 13H4v-2z"/></svg>
     </a>
     
