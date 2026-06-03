@@ -6323,6 +6323,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#key-terms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Terms
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#common-mistakes" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6612,14 +6623,13 @@ assess vSAN component health during the outage, and confirm the cluster is re-ar
 </table>
 <hr />
 <h2 id="1-identify-which-host-failed-and-how">1. Identify Which Host Failed and How<a class="headerlink" href="#1-identify-which-host-failed-and-how" title="Permanent link">&para;</a></h2>
-<p>Open vCenter and go to <strong>Hosts and Clusters</strong>. Look for hosts in a "Disconnected" or "Not Responding" state.</p>
+<p>Go to <strong>Hosts and Clusters</strong> in vCenter and identify any host in a non-connected state before taking any action.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Host states in vCenter:
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  Connected            — normal
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  Disconnected         — vCenter lost management network contact
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  Not Responding       — heartbeat timeout; HA triggers restart evaluation
 <a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  Maintenance Mode     — intentional; HA does not restart VMs here
 </code></pre></div>
-<p>Determine the failure type before taking any action:</p>
 <table>
 <thead>
 <tr>
@@ -6648,7 +6658,7 @@ assess vSAN component health during the outage, and confirm the cluster is re-ar
 </table>
 <hr />
 <h2 id="2-check-ha-restart-status">2. Check HA Restart Status<a class="headerlink" href="#2-check-ha-restart-status" title="Permanent link">&para;</a></h2>
-<p>Before taking manual steps, confirm whether HA has already restarted the affected VMs.</p>
+<p>Before taking manual steps, confirm whether HA has already restarted the affected VMs — manual intervention after HA has acted causes split-brain.</p>
 <p>Navigate to <strong>Cluster → Monitor → vSphere HA → VM Restarts</strong>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Fields to check:
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  Restart Status   — Completed / In Progress / Not Attempted
@@ -6656,16 +6666,16 @@ assess vSAN component health during the outage, and confirm the cluster is re-ar
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>  Restart Time     — timestamp of HA restart
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>  Restart Reason   — host failure / isolation / PDL
 </code></pre></div>
-<p>If HA completed restarts, verify VMs are accessible before doing anything else. Unnecessary manual intervention after HA has already acted is a common source of errors.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check FDM (fault domain manager / HA agent) status on a surviving host</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>/etc/init.d/vmware-fdm<span class="w"> </span>status
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
 <a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Restart FDM if it shows stopped (rare; use only if HA appears stuck)</span>
 <a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>/etc/init.d/vmware-fdm<span class="w"> </span>restart
 </code></pre></div>
+<p>Look for: <code>Restart Status = Completed</code> means HA already acted — verify VMs are accessible before doing anything else.</p>
 <hr />
 <h2 id="3-determine-storage-path-state-apd-vs-pdl">3. Determine Storage Path State — APD vs PDL<a class="headerlink" href="#3-determine-storage-path-state-apd-vs-pdl" title="Permanent link">&para;</a></h2>
-<p>When a host loses access to vSAN or shared storage, the path state determines HA behaviour.</p>
+<p>Check the storage path state on affected hosts to understand whether VMCP will trigger an automatic HA restart.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>APD — All Paths Down (temporary)
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  Storage paths lost but device identity still known.
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  ESXi waits for paths to recover.
@@ -6686,10 +6696,11 @@ assess vSAN component health during the outage, and confirm the cluster is re-ar
 <a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Check which host owns degraded components</span>
 <a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Host|Health|UUID&quot;</span>
 </code></pre></div>
-<p>VMCP (VM Component Protection) policy is set in <strong>Cluster → Configure → vSphere Availability → Failures and Responses → Datastore with PDL / Datastore with APD</strong>. Confirm the policy matches your RTO requirements.</p>
+<p>Look for: <code>State: APD</code> means wait for path recovery; <code>State: PDL</code> means VMCP should trigger immediately — confirm VMCP policy at <strong>Cluster → Configure → vSphere Availability → Failures and Responses</strong>.</p>
 <hr />
 <h2 id="4-check-vsan-resyncing-objects">4. Check vSAN Resyncing Objects<a class="headerlink" href="#4-check-vsan-resyncing-objects" title="Permanent link">&para;</a></h2>
-<p>After a host loss, vSAN immediately begins rebuilding absent components on surviving hosts. Go to <strong>vSAN → Monitor → Resyncing Objects</strong>.</p>
+<p>After a host loss, vSAN begins rebuilding absent components — doing any further maintenance before resync completes risks a second failure.</p>
+<p>Navigate to <strong>vSAN → Monitor → Resyncing Objects</strong>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Columns to check:
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  Bytes to Sync    — total data to rebuild (can be TB on large clusters)
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  ETA              — rebuild time estimate
@@ -6703,9 +6714,10 @@ assess vSAN component health during the outage, and confirm the cluster is re-ar
 <a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1">#   ResyncType      — REPAIR / REBALANCE / POLICY_CHANGE</span>
 <a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1">#   ObjectsToResync — number of VM objects still rebuilding</span>
 </code></pre></div>
-<p>Do not put additional hosts into maintenance mode while the resync queue is non-empty and any VM is at FTT=1 with one component absent. That creates a second failure before the first is healed.</p>
+<p>Look for: any VM showing <code>Policy Status = Non-compliant</code> with <code>ResyncType = REPAIR</code> means it has a live protection gap — do not place additional hosts in maintenance until resync completes.</p>
 <hr />
 <h2 id="5-powercli-validate-post-failover-state">5. PowerCLI — Validate Post-Failover State<a class="headerlink" href="#5-powercli-validate-post-failover-state" title="Permanent link">&para;</a></h2>
+<p>Confirm all VMs are running on surviving hosts and HA is re-armed before closing the incident.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c"># List all VMs on surviving hosts and confirm power state</span>
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">Get-Cluster</span> <span class="s2">&quot;cluster-name&quot;</span> <span class="p">|</span> <span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="nb">Get-VM</span> <span class="p">`</span>
 <a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">PowerState</span> <span class="o">-eq</span> <span class="s2">&quot;PoweredOn&quot;</span> <span class="p">}</span> <span class="p">`</span>
@@ -6730,6 +6742,66 @@ assess vSAN component health during the outage, and confirm the cluster is re-ar
 <a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>[ ] HA admission control is re-armed (cluster has capacity headroom)
 <a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>[ ] Failed host is either repaired/returned or removed from cluster inventory
 </code></pre></div>
+<hr />
+<h2 id="key-terms">Key Terms<a class="headerlink" href="#key-terms" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HA (High Availability)</td>
+<td>vSphere feature that monitors host heartbeats and automatically restarts VMs on surviving cluster hosts when a host failure is detected</td>
+</tr>
+<tr>
+<td>APD</td>
+<td>All Paths Down — transient storage path loss where ESXi still knows the device identity; HA does not immediately restart VMs; waits for path recovery</td>
+</tr>
+<tr>
+<td>PDL</td>
+<td>Permanent Device Loss — storage device signals via SCSI sense code that it is permanently gone; VMCP triggers immediate HA VM restart on surviving hosts</td>
+</tr>
+<tr>
+<td>VMCP</td>
+<td>VM Component Protection — vSphere HA extension that responds to APD and PDL storage path events; configured per cluster under Failures and Responses</td>
+</tr>
+<tr>
+<td>FDM</td>
+<td>Fault Domain Manager — the HA agent process (<code>vmware-fdm</code>) running on each ESXi host; coordinates VM restart decisions and heartbeat monitoring within the cluster</td>
+</tr>
+<tr>
+<td>vmware-fdm</td>
+<td>The ESXi service binary for the HA Fault Domain Manager agent; can be checked and restarted via <code>/etc/init.d/vmware-fdm status</code> if HA appears stuck</td>
+</tr>
+<tr>
+<td>vSAN resync</td>
+<td>Rebuild process that starts automatically when a host or disk is lost; vSAN recreates absent components on surviving hosts to restore the configured FTT level</td>
+</tr>
+<tr>
+<td>FTT</td>
+<td>Failures to Tolerate — the SPBM policy value that determines how many host or disk failures a VM's data can survive; FTT=1 RAID-1 requires at least 3 hosts</td>
+</tr>
+<tr>
+<td>RAID-1</td>
+<td>vSAN mirroring policy; writes two full copies of each object across different hosts; the default FTT=1 protection mechanism</td>
+</tr>
+<tr>
+<td>Admission control</td>
+<td>HA feature that reserves cluster capacity to guarantee VM restarts can complete even after the maximum configured number of host failures</td>
+</tr>
+<tr>
+<td>Isolation response</td>
+<td>Per-cluster HA policy that defines what happens to VMs on a host that loses network heartbeats but has not fully failed: power off, shut down, or leave powered on</td>
+</tr>
+<tr>
+<td>HA agent</td>
+<td>See FDM; runs on every ESXi host in the cluster and is responsible for detecting failures and coordinating restart orchestration with the master node</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h2 id="common-mistakes">Common Mistakes<a class="headerlink" href="#common-mistakes" title="Permanent link">&para;</a></h2>
 <ul>

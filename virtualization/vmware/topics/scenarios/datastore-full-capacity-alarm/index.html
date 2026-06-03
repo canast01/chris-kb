@@ -6345,6 +6345,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#key-terms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Terms
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#related-scenarios" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6609,10 +6620,7 @@ to prevent recurrence.
 </table>
 <hr />
 <h2 id="1-identify-the-alarm-and-affected-datastore">1. Identify the Alarm and Affected Datastore<a class="headerlink" href="#1-identify-the-alarm-and-affected-datastore" title="Permanent link">&para;</a></h2>
-<p>vCenter → <strong>Storage</strong> → <strong>Datastores</strong> → sort by <strong>Free Space</strong> ascending. The lowest-free-space
-datastore is the immediate problem.</p>
-<p>For vSAN: there is one vSAN datastore per cluster. vCenter → Cluster → <strong>Monitor</strong> → <strong>vSAN</strong> →
-<strong>Capacity</strong>. This view shows used vs available and the percentage consumed.</p>
+<p>Sort vCenter → <strong>Storage</strong> → <strong>Datastores</strong> by <strong>Free Space</strong> ascending to find the problem datastore; for vSAN use Cluster → <strong>Monitor</strong> → <strong>vSAN</strong> → <strong>Capacity</strong>.</p>
 <p>vSAN write-stop thresholds (default):</p>
 <table>
 <thead>
@@ -6640,11 +6648,10 @@ datastore is the immediate problem.</p>
 </tr>
 </tbody>
 </table>
-<p>If vSAN is already above 80%: VM recovery is urgent. Proceed directly to Step 3 to find and
-remove snapshots as the fastest way to recover space.</p>
+<p>Look for: vSAN above 80% = urgent; proceed directly to Step 3 to remove snapshots as the fastest path to recovering write I/O.</p>
 <hr />
 <h2 id="2-check-what-is-consuming-space">2. Check What Is Consuming Space<a class="headerlink" href="#2-check-what-is-consuming-space" title="Permanent link">&para;</a></h2>
-<p>The most common causes of sudden capacity consumption, in order of frequency:</p>
+<p>Identify the cause before taking action — in order of frequency:</p>
 <ol>
 <li><strong>Snapshots</strong> — snapshot delta files (.vmdk-delta) grow with every write to the VM while
    the snapshot exists. A busy VM can generate tens of GB per hour in delta files.</li>
@@ -6658,9 +6665,7 @@ remove snapshots as the fastest way to recover space.</p>
 </ol>
 <hr />
 <h2 id="3-find-large-snapshots-powercli">3. Find Large Snapshots — PowerCLI<a class="headerlink" href="#3-find-large-snapshots-powercli" title="Permanent link">&para;</a></h2>
-<p>Snapshots are the fastest path to recovering space. Always get the VM owner's confirmation
-before deleting, but treat snapshots older than your retention policy (typically 7 days) as
-candidates for immediate removal.</p>
+<p>Snapshots are the fastest path to recovering space — confirm with the VM owner before deleting, but treat any snapshot older than your retention policy (typically 7 days) as a removal candidate.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Find all snapshots, sorted by size descending — top 20</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="p">|</span> <span class="p">`</span>
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  <span class="nb">Select-Object</span> <span class="n">VM</span><span class="p">,</span> <span class="n">Name</span><span class="p">,</span> <span class="n">SizeMB</span><span class="p">,</span> <span class="n">Created</span> <span class="p">|</span> <span class="p">`</span>
@@ -6676,63 +6681,41 @@ candidates for immediate removal.</p>
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">Created</span> <span class="o">-lt</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddDays</span><span class="p">(-</span><span class="n">7</span><span class="p">)}</span> <span class="p">|</span> <span class="p">`</span>
 <a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  <span class="nb">Remove-Snapshot</span> <span class="n">-Confirm</span><span class="p">:</span><span class="nv">$false</span>
 </code></pre></div>
-<p>Snapshot consolidation (committing delta files back to the base VMDK) temporarily requires
-additional free space equal to the delta file size. If the datastore is completely full,
-consolidation may fail. In that case, free a small amount of space first (move a VM to another
-datastore via Storage vMotion), then consolidate.</p>
+<p>Look for: snapshots older than 7 days or with SizeMB &gt; 10,000 as priority targets.</p>
+<p>Note: consolidation needs free space equal to the delta size — if the datastore is completely full, svMotion one VM off first, then consolidate.</p>
 <hr />
 <h2 id="4-find-orphaned-vmdks-on-the-datastore">4. Find Orphaned VMDKs on the Datastore<a class="headerlink" href="#4-find-orphaned-vmdks-on-the-datastore" title="Permanent link">&para;</a></h2>
-<p>Orphaned VMDKs are VMDK files on the datastore with no corresponding VM registered in vCenter.
-These are safe to remove but must be confirmed carefully.</p>
+<p>Orphaned VMDKs have no corresponding VM in vCenter — safe to remove but must be confirmed carefully before deletion.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># SSH to ESXi host — list all VMDK files on a datastore</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>find<span class="w"> </span>/vmfs/volumes/&lt;datastore-name&gt;/<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*.vmdk&quot;</span><span class="w"> </span>-not<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*-flat.vmdk&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Find large delta files (snapshot deltas over 10 GB)</span>
 <a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>find<span class="w"> </span>/vmfs/volumes/&lt;datastore-name&gt;/<span class="w"> </span>-name<span class="w"> </span><span class="s2">&quot;*-delta.vmdk&quot;</span><span class="w"> </span>-size<span class="w"> </span>+10G
 </code></pre></div>
-<p>Cross-reference each VMDK path with vCenter. Any VMDK that does not appear in a VM's
-<strong>Edit Settings</strong> → <strong>Hard Disk</strong> list and is not a system snapshot is a candidate orphan.</p>
-<p><strong>Never delete a VMDK from the filesystem directly without confirming it is not registered
-to any VM in vCenter.</strong> If in doubt, move it to a holding folder and monitor for 72 hours
-before permanent deletion.</p>
+<p>Look for: VMDKs absent from every VM's <strong>Edit Settings</strong> → <strong>Hard Disk</strong> list and not a system snapshot = orphan candidate.</p>
+<p><strong>Never delete a VMDK directly without confirming it has no vCenter registration.</strong> If in doubt, move it to a holding folder and monitor for 72 hours before deletion.</p>
 <hr />
 <h2 id="5-expand-capacity-or-storage-vmotion-vms">5. Expand Capacity or Storage vMotion VMs<a class="headerlink" href="#5-expand-capacity-or-storage-vmotion-vms" title="Permanent link">&para;</a></h2>
-<p>If removing snapshots and orphans is not enough:</p>
-<ul>
-<li><strong>Storage vMotion</strong> — move the largest VMs to a datastore with more free space. This frees
-  space on the full datastore without any VM downtime.</li>
-</ul>
+<p>If removing snapshots and orphans is not enough, move VMs or add capacity:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Move a VM&#39;s storage to a different datastore (no downtime)</span>
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Move-VM</span> <span class="n">-VM</span> <span class="s2">&quot;vm-name&quot;</span> <span class="n">-Datastore</span> <span class="s2">&quot;target-datastore&quot;</span> <span class="n">-DiskStorageFormat</span> <span class="n">Thin</span>
 </code></pre></div>
-<ul>
-<li><strong>vSAN capacity expansion</strong> — add a host or additional disk capacity to the vSAN cluster. New
-  capacity is immediately available after the disk is added and the disk group is rebuilt.</li>
-</ul>
+<p>For vSAN: add a host or additional disk capacity — new capacity is available immediately after the disk group rebuilds.</p>
 <hr />
 <h2 id="6-vsan-spbm-policy-compliance">6. vSAN SPBM Policy Compliance<a class="headerlink" href="#6-vsan-spbm-policy-compliance" title="Permanent link">&para;</a></h2>
-<p>When vSAN capacity drops below the threshold required to satisfy storage policies (for example,
-FTT=1 requires enough capacity to hold two copies of each object), vSAN marks affected VMs as
-<strong>Non-Compliant</strong>.</p>
-<p>Check compliance: vCenter → Cluster → <strong>Monitor</strong> → <strong>vSAN</strong> → <strong>Virtual Objects</strong> → filter
-for <strong>Non-Compliant</strong>.</p>
-<p>Non-compliance is automatically resolved once capacity is recovered and vSAN has enough room to
-rebuild the required copies. You do not need to reapply policies manually.</p>
+<p>When capacity drops below what SPBM requires (e.g., FTT=1 needs space for two copies), vSAN marks affected VMs <strong>Non-Compliant</strong> — check via vCenter → Cluster → <strong>Monitor</strong> → <strong>vSAN</strong> → <strong>Virtual Objects</strong> → filter <strong>Non-Compliant</strong>.</p>
+<p>Look for: Non-Compliant VMs; compliance resolves automatically once capacity is recovered — no manual policy reapplication is needed.</p>
 <hr />
 <h2 id="7-aria-ops-capacity-trending-get-ahead-of-the-next-alarm">7. Aria Ops Capacity Trending — Get Ahead of the Next Alarm<a class="headerlink" href="#7-aria-ops-capacity-trending-get-ahead-of-the-next-alarm" title="Permanent link">&para;</a></h2>
-<p>After recovering space, use Aria Operations to project when the datastore will fill again:</p>
-<p>Aria Operations → <strong>Capacity</strong> → <strong>vSAN Cluster</strong> → <strong>Time Remaining</strong>.</p>
-<p>If <strong>Days Remaining to Full</strong> is under 30 days: raise a capacity expansion request immediately.
-If under 7 days: treat it as an urgent incident.</p>
+<p>After recovering space, project the next fill date: Aria Operations → <strong>Capacity</strong> → <strong>vSAN Cluster</strong> → <strong>Time Remaining</strong>.</p>
+<p>Look for: Days Remaining to Full under 30 = expansion request; under 7 = urgent incident.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Aria Ops REST API — get capacity remaining for a specific resource</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="s2">&quot;https://ariaops.domain.local/suite-api/api/resources/&lt;resource-uuid&gt;/stats?statKey=summary|capacity_remaining&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Authorization: Bearer &lt;token&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.values[].statList.stat[] | {timestamp: .timestamps[], value: .data[]}&#39;</span>
 </code></pre></div>
-<p>Set a proactive alarm threshold: vCenter → <strong>Cluster</strong> → <strong>Monitor</strong> → <strong>vSAN</strong> → <strong>Configure</strong> →
-<strong>Advanced Options</strong> — adjust the warning threshold to 60% and the error threshold to 70% for
-production clusters. This gives a wider lead time before hitting the 80% write-stop.</p>
+<p>Set proactive thresholds: vCenter → <strong>Cluster</strong> → <strong>Monitor</strong> → <strong>vSAN</strong> → <strong>Configure</strong> → <strong>Advanced Options</strong> — set warning to 60% and error to 70% for production clusters, giving lead time before the 80% write-stop.</p>
 <hr />
 <h2 id="common-mistakes">Common Mistakes<a class="headerlink" href="#common-mistakes" title="Permanent link">&para;</a></h2>
 <ul>
@@ -6748,6 +6731,66 @@ production clusters. This gives a wider lead time before hitting the 80% write-s
   needs working space. Free a few GB first (Storage vMotion one VM off the datastore), then
   consolidate.</li>
 </ul>
+<hr />
+<h2 id="key-terms">Key Terms<a class="headerlink" href="#key-terms" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>vSAN datastore</td>
+<td>The single logical datastore per vSAN cluster; backed by the distributed object storage across all cluster hosts rather than a shared array</td>
+</tr>
+<tr>
+<td>SPBM (Storage Policy-Based Management)</td>
+<td>The vSphere framework that assigns storage requirements (FTT, stripe width, cache reservation) to VMs as a named policy; vSAN enforces these requirements per object</td>
+</tr>
+<tr>
+<td>Thin provisioning</td>
+<td>A disk allocation method where a VMDK occupies only the space actually written by the guest OS, growing up to its configured maximum over time</td>
+</tr>
+<tr>
+<td>Snapshot delta</td>
+<td>A <code>-delta.vmdk</code> file that accumulates all writes to a VM while a snapshot is active; grows at the VM's write rate and can consume tens of GB per hour for busy VMs</td>
+</tr>
+<tr>
+<td>VMDK</td>
+<td>Virtual Machine Disk — the file format used to store a VM's guest OS disk on the datastore; each virtual disk appears as one or more <code>.vmdk</code> files on the datastore</td>
+</tr>
+<tr>
+<td>Slack space</td>
+<td>The free capacity reserved in a vSAN cluster for object rebuilds, resync operations, and policy re-compliance; vSAN stops writes at 80% to preserve sufficient slack</td>
+</tr>
+<tr>
+<td>FTT</td>
+<td>Failures to Tolerate — the SPBM parameter specifying how many host, disk, or site failures a VM's storage can withstand; FTT=1 requires capacity for 2 full copies</td>
+</tr>
+<tr>
+<td>Policy compliance</td>
+<td>Whether a VM's actual storage configuration meets its assigned SPBM policy; drops to Non-Compliant when there is insufficient capacity to maintain the required number of copies</td>
+</tr>
+<tr>
+<td>svMotion</td>
+<td>Storage vMotion — live migration of a VM's VMDK files from one datastore to another with no guest OS downtime; used here to free space on the full datastore</td>
+</tr>
+<tr>
+<td>Aria Ops capacity</td>
+<td>The Aria Operations capacity analytics module that tracks historical growth and projects Days Remaining to Full for each datastore or vSAN cluster</td>
+</tr>
+<tr>
+<td>Orphaned VMDK</td>
+<td>A VMDK file present on the datastore filesystem with no corresponding VM registration in vCenter; left behind by deleted or improperly migrated VMs</td>
+</tr>
+<tr>
+<td>vSAN capacity threshold (70%/80%)</td>
+<td>The two built-in vSAN capacity watermarks — 70% fires a warning alarm; 80% immediately stops all write I/O to protect cluster integrity</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h2 id="related-scenarios">Related Scenarios<a class="headerlink" href="#related-scenarios" title="Permanent link">&para;</a></h2>
 <ul>

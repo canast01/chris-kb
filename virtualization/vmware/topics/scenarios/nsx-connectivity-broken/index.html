@@ -6334,6 +6334,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#key-terms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Terms
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#common-mistakes" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6608,7 +6619,7 @@ exact commands and UI paths to isolate and resolve each layer.
 </table>
 <hr />
 <h2 id="1-scope-the-problem-before-touching-anything">1. Scope the Problem Before Touching Anything<a class="headerlink" href="#1-scope-the-problem-before-touching-anything" title="Permanent link">&para;</a></h2>
-<p>Determine the blast radius first. The scope tells you where to look:</p>
+<p>Determine the blast radius first — scope tells you which layer to investigate.</p>
 <table>
 <thead>
 <tr>
@@ -6647,7 +6658,7 @@ exact commands and UI paths to isolate and resolve each layer.
 </table>
 <hr />
 <h2 id="2-aria-networks-path-trace-first-tool-to-use">2. Aria Networks Path Trace — First Tool to Use<a class="headerlink" href="#2-aria-networks-path-trace-first-tool-to-use" title="Permanent link">&para;</a></h2>
-<p>Do not guess at DFW rules manually. Use Aria Operations for Networks to run a path trace.</p>
+<p>Run a path trace before touching any DFW rules or routing config — it pinpoints the exact hop and rule ID causing the drop.</p>
 <p>Navigate to <strong>Aria Networks → Path Analysis → enter source IP and destination IP → Run</strong>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Path trace output shows each hop:
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  VM NIC → DFW (per vNIC) → Logical Switch → T1 Gateway → T0 Gateway → Physical
@@ -6662,8 +6673,8 @@ exact commands and UI paths to isolate and resolve each layer.
 </code></pre></div>
 <hr />
 <h2 id="3-dfw-rule-investigation">3. DFW Rule Investigation<a class="headerlink" href="#3-dfw-rule-investigation" title="Permanent link">&para;</a></h2>
-<p>DFW rules are evaluated top-to-bottom within each category. First match wins. A correct rule lower in the list can be shadowed by a deny rule above it.</p>
-<p>Navigate to <strong>NSX Manager → Security → Distributed Firewall</strong>. Search by rule ID found in path trace.</p>
+<p>DFW evaluates rules top-to-bottom within each category — a correct allow rule lower in the list can be shadowed by a deny rule above it.</p>
+<p>Navigate to <strong>NSX Manager → Security → Distributed Firewall</strong> and search by the rule ID from path trace.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>DFW Rule Evaluation Order (top to bottom within each category):
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  ┌─────────────────┬────────────────────────────────────────────────────────┐
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  │ Category        │ Typical Use                                            │
@@ -6686,15 +6697,15 @@ exact commands and UI paths to isolate and resolve each layer.
 <a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># Count total rules applied to this VM&#39;s vNIC (high count = performance overhead)</span>
 <a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>vsipioctl<span class="w"> </span>getrules<span class="w"> </span>-f<span class="w"> </span>/&lt;world-id&gt;/0<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;rule&quot;</span>
 </code></pre></div>
-<p>Check DFW rule statistics from NSX Manager REST API:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Get hit count for a specific DFW rule — confirms if rule is actively matching traffic</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="s2">&quot;https://&lt;nsx-manager&gt;/api/v1/firewall/stats/rules/&lt;rule-id&gt;&quot;</span><span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div>
+<p>Look for: a high-hit-count deny rule in a higher category (Emergency/Infrastructure) that matches the source or destination — this shadows any allow rule lower in the list.</p>
 <hr />
 <h2 id="4-segment-and-transport-node-check">4. Segment and Transport Node Check<a class="headerlink" href="#4-segment-and-transport-node-check" title="Permanent link">&para;</a></h2>
-<p>If Aria Networks shows the segment is unreachable or the VM's MAC is unknown:</p>
+<p>If Aria Networks shows the segment unreachable or the VM's MAC is unknown, verify the segment is bound to the affected host.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># NSX Manager REST API — check transport node status for the segment (logical switch)</span>
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># First get the logical switch ID from NSX Manager UI → Networking → Segments</span>
 <a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
@@ -6704,20 +6715,15 @@ exact commands and UI paths to isolate and resolve each layer.
 <a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
 <a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Expected: all transport nodes for the segment show &quot;UP&quot;</span>
 </code></pre></div>
-<p>From vCenter, go to <strong>NSX → System → Fabric → Nodes → Host Transport Nodes</strong>. The ESXi host should show "Success" configuration state. If it shows "Failed" or "Pending":</p>
-<ol>
-<li>Check NSX VIBs installed on the host:</li>
-</ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>nsx
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># All NSX VIBs should show the same version</span>
+<p>From vCenter, go to <strong>NSX → System → Fabric → Nodes → Host Transport Nodes</strong> and check configuration state. If the host shows "Failed" or "Pending":</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check NSX VIBs installed on the host — all should match the same version</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>nsx
 </code></pre></div>
-<ol>
-<li>Re-apply the transport node profile from NSX Manager if VIBs are missing or version-mismatched.</li>
-</ol>
+<p>Look for: any NSX VIB at a different version than the rest indicates a partial upgrade or failed re-apply — re-apply the transport node profile from NSX Manager.</p>
 <hr />
 <h2 id="5-t1t0-routing-check">5. T1/T0 Routing Check<a class="headerlink" href="#5-t1t0-routing-check" title="Permanent link">&para;</a></h2>
-<p>For inter-segment routing failures, check the T1 gateway route table.</p>
-<p>Navigate to <strong>NSX Manager → Networking → Tier-1 Gateways → select T1 → Route Table</strong> (or use the CLI from edge node).</p>
+<p>For inter-segment routing failures, check the T1 route table and T1→T0 uplink from the edge node CLI.</p>
+<p>Navigate to <strong>NSX Manager → Networking → Tier-1 Gateways → select T1 → Route Table</strong>, or SSH to the edge node:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># SSH to the NSX edge node (via vCenter console or direct SSH)</span>
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># List logical routers on the edge node</span>
 <a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>get<span class="w"> </span>logical-routers
@@ -6736,7 +6742,7 @@ exact commands and UI paths to isolate and resolve each layer.
 <a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="c1"># If the connected subnet for the source or destination segment is missing:</span>
 <a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="c1"># the T1 is not connected to that segment — verify segment is attached to this T1</span>
 </code></pre></div>
-<p>Check the T1 → T0 uplink:</p>
+<p>Check the T1 → T0 uplink and BGP state:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Enter the T0 VRF</span>
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>vrf<span class="w"> </span>&lt;t0-vrf-id&gt;
 <a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
@@ -6750,10 +6756,11 @@ exact commands and UI paths to isolate and resolve each layer.
 <a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c1"># If BGP is down with upstream router: check IP reachability from edge to router</span>
 <a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>ping<span class="w"> </span>&lt;upstream-router-ip&gt;<span class="w"> </span><span class="nb">source</span><span class="w"> </span>&lt;t0-uplink-ip&gt;
 </code></pre></div>
+<p>Look for: <code>State = Active</code> or <code>Connect</code> on any BGP neighbor means the session is down — check IP reachability and AS/password configuration on both sides.</p>
 <hr />
 <h2 id="6-edge-node-health-check">6. Edge Node Health Check<a class="headerlink" href="#6-edge-node-health-check" title="Permanent link">&para;</a></h2>
-<p>If north-south traffic is broken and T0 BGP is down, check the edge node itself.</p>
-<p>In vCenter, verify the edge VM is powered on: <strong>NSX → Fabric → Nodes → Edge Transport Nodes</strong>.</p>
+<p>If north-south traffic is broken and T0 BGP is down, verify the edge VM itself is healthy and its TEP connectivity is intact.</p>
+<p>In vCenter, confirm the edge VM is powered on: <strong>NSX → Fabric → Nodes → Edge Transport Nodes</strong>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># From edge node CLI — check overall system status</span>
 <a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>get<span class="w"> </span>system<span class="w"> </span>health<span class="w"> </span>status
 <a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
@@ -6764,14 +6771,13 @@ exact commands and UI paths to isolate and resolve each layer.
 <a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>get<span class="w"> </span>tunnel-port<span class="w"> </span>interface
 <a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>ping<span class="w"> </span>&lt;esxi-tep-ip&gt;<span class="w"> </span><span class="nb">source</span><span class="w"> </span>&lt;edge-tep-ip&gt;
 </code></pre></div>
-<p>If the edge node VM was recently migrated or the host it runs on had a network event, the TEP may have a stale ARP or VTEP entry:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Clear ARP on the edge node</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># If edge TEP has a stale ARP entry after a recent migration or network event:</span>
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>clear<span class="w"> </span>arp
 <a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="c1"># Then re-test BGP and TEP connectivity</span>
 </code></pre></div>
 <hr />
 <h2 id="7-tep-tunnel-endpoint-connectivity-from-esxi">7. TEP (Tunnel Endpoint) Connectivity from ESXi<a class="headerlink" href="#7-tep-tunnel-endpoint-connectivity-from-esxi" title="Permanent link">&para;</a></h2>
-<p>GENEVE tunnels between ESXi hosts use TEP VMkernel interfaces (typically vmk10). If TEP is unreachable, all overlay traffic between affected hosts is broken.</p>
+<p>GENEVE tunnels between ESXi hosts use TEP VMkernel interfaces — if TEP is unreachable, all overlay traffic between affected hosts is broken.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Identify the TEP VMkernel IP on the source host</span>
 <a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>vmk10
 <a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
@@ -6784,6 +6790,67 @@ exact commands and UI paths to isolate and resolve each layer.
 <a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="c1"># Confirm GENEVE firewall rule is enabled on both hosts</span>
 <a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>esxcli<span class="w"> </span>network<span class="w"> </span>firewall<span class="w"> </span>ruleset<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>geneve
 </code></pre></div>
+<p>Look for: <code>vmkping -I vmk10 -d -s 1572</code> success to all remote TEPs confirms the GENEVE underlay is healthy; failure points to VLAN, MTU, or routing issues in the physical network.</p>
+<hr />
+<h2 id="key-terms">Key Terms<a class="headerlink" href="#key-terms" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DFW (Distributed Firewall)</td>
+<td>NSX kernel-level stateful firewall enforced per vNIC on every ESXi host; rules follow the VM at vMotion; evaluated top-to-bottom by category with first-match-wins logic</td>
+</tr>
+<tr>
+<td>T0 (Tier-0 Gateway)</td>
+<td>The NSX north-south router that connects the overlay network to the physical underlay; runs BGP with upstream physical routers; deployed on edge nodes</td>
+</tr>
+<tr>
+<td>T1 (Tier-1 Gateway)</td>
+<td>The NSX inter-segment router that connects logical segments to each other and uplinks to the T0; can be distributed (runs on ESXi hosts) or centralized (runs on edge nodes)</td>
+</tr>
+<tr>
+<td>TEP</td>
+<td>Tunnel Endpoint — VMkernel interface (typically vmk10 on ESXi, vmk0 on edge nodes) used to originate and terminate GENEVE overlay tunnels between transport nodes</td>
+</tr>
+<tr>
+<td>GENEVE</td>
+<td>Generic Network Virtualization Encapsulation — UDP-based tunnel protocol (port 6081) used by NSX-T to carry overlay traffic between TEPs; requires MTU ~1600 in the underlay</td>
+</tr>
+<tr>
+<td>BGP</td>
+<td>Border Gateway Protocol — routing protocol used between NSX T0 gateways and physical routers to advertise VM subnet prefixes north-south; session state is key to external connectivity</td>
+</tr>
+<tr>
+<td>Segment</td>
+<td>An NSX logical Layer-2 network backed by GENEVE tunnels; VMs on the same segment communicate without routing; must be bound to each host transport node that runs its VMs</td>
+</tr>
+<tr>
+<td>Transport node</td>
+<td>An ESXi host or NSX edge node that has been configured with NSX VIBs and TEP VMkernel interfaces; only transport nodes can carry overlay traffic</td>
+</tr>
+<tr>
+<td>Path analysis</td>
+<td>Aria Networks feature that traces the forwarding path between two IPs hop-by-hop through DFW, logical switches, T1, and T0; returns the exact rule ID causing a block</td>
+</tr>
+<tr>
+<td>Aria Networks</td>
+<td>VMware network observability product (formerly vRealize Network Insight); used here for path trace, flow analysis, and DFW rule lookup</td>
+</tr>
+<tr>
+<td>Edge node</td>
+<td>Dedicated NSX VM or bare-metal appliance that hosts the T0 and T1 service router (SR) components; required for stateful north-south services and BGP peering</td>
+</tr>
+<tr>
+<td>Rule priority</td>
+<td>The position of a DFW rule within its category; lower position = evaluated first; a high-priority deny in Emergency or Infrastructure shadows allow rules in Application</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h2 id="common-mistakes">Common Mistakes<a class="headerlink" href="#common-mistakes" title="Permanent link">&para;</a></h2>
 <ul>

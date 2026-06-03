@@ -6323,6 +6323,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#key-terms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Terms
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#common-mistakes" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6595,7 +6606,7 @@ cause and apply the correct fix — CPU, memory, storage, or network.
 </table>
 <hr />
 <h2 id="1-start-in-aria-operations-triage-the-alert">1. Start in Aria Operations — Triage the Alert<a class="headerlink" href="#1-start-in-aria-operations-triage-the-alert" title="Permanent link">&para;</a></h2>
-<p>Open Aria Operations and navigate to the affected VM's alert. Check these four metrics first:</p>
+<p>Open the affected VM's alert in Aria Operations and note which metric is elevated — it determines where to dig next.</p>
 <table>
 <thead>
 <tr>
@@ -6627,10 +6638,9 @@ cause and apply the correct fix — CPU, memory, storage, or network.
 </tr>
 </tbody>
 </table>
-<p>Note which metric is elevated. That determines where to dig next.</p>
 <hr />
 <h2 id="2-esxi-layer-run-esxtop-on-the-host">2. ESXi Layer — Run esxtop on the Host<a class="headerlink" href="#2-esxi-layer-run-esxtop-on-the-host" title="Permanent link">&para;</a></h2>
-<p>SSH to the ESXi host where the VM is running and use esxtop for real-time host metrics.</p>
+<p>SSH to the ESXi host and run esxtop to get real-time ground-truth metrics before acting.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Batch mode — 3 samples, 50 lines of output; good for capture</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>esxtop<span class="w"> </span>-b<span class="w"> </span>-n<span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-50
 </code></pre></div>
@@ -6647,10 +6657,10 @@ cause and apply the correct fix — CPU, memory, storage, or network.
 <a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Check which VMs are consuming physical CPUs on the host</span>
 <a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>esxcli<span class="w"> </span>vm<span class="w"> </span>process<span class="w"> </span>list
 </code></pre></div>
-<p>If %RDY is high across many VMs on the same host, the host is CPU-overcommitted. If it is only one VM, check resource pool limits and reservations.</p>
+<p>Look for: <code>%RDY</code> high across many VMs = host overcommitted; <code>%RDY</code> high on one VM only = check resource pool limits.</p>
 <hr />
 <h2 id="3-vsan-layer-check-storage-performance">3. vSAN Layer — Check Storage Performance<a class="headerlink" href="#3-vsan-layer-check-storage-performance" title="Permanent link">&para;</a></h2>
-<p>Navigate in vCenter to <strong>Cluster → Monitor → vSAN → Performance Service</strong> to view per-VM IOPS, throughput, and latency. Then check health.</p>
+<p>Navigate to <strong>Cluster → Monitor → vSAN → Performance Service</strong> and check per-VM IOPS, throughput, and latency.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List all vSAN objects and their health on the host</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
@@ -6660,38 +6670,26 @@ cause and apply the correct fix — CPU, memory, storage, or network.
 <a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Show per-VM vSAN performance counters (if performance service enabled)</span>
 <a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>vmdk<span class="w"> </span>list
 </code></pre></div>
-<p>In vCenter, also check <strong>vSAN → Monitor → Skyline Health</strong>. Look for:</p>
-<ul>
-<li>Disk capacity imbalance (hot disk)</li>
-<li>Component state: "Absent" or "Degraded"</li>
-<li>Resync queue — active resync adds latency for all VMs on the disk group</li>
-</ul>
+<p>Look for:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>vSAN Latency Tiers (DAVG from esxtop):
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  &lt; 5 ms   — healthy
 <a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  5–20 ms  — monitor closely
 <a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  &gt; 20 ms  — investigate disk group / resync
 <a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>  &gt; 50 ms  — critical; likely degraded component or disk failure
 </code></pre></div>
+<p>In vCenter also check <strong>vSAN → Monitor → Skyline Health</strong> for capacity imbalance, absent/degraded components, and active resync queue (resync adds latency for all VMs on the disk group).</p>
 <hr />
 <h2 id="4-nsx-dfw-layer-rule-overhead-on-network-traffic">4. NSX DFW Layer — Rule Overhead on Network Traffic<a class="headerlink" href="#4-nsx-dfw-layer-rule-overhead-on-network-traffic" title="Permanent link">&para;</a></h2>
-<p>If the network path is the bottleneck, use Aria Operations for Networks (Aria Networks) to trace the path.</p>
-<p>From Aria Networks, run <strong>Path Analysis</strong> (source VM → destination VM). If a DFW rule ID is flagged:</p>
+<p>If network is the bottleneck, run <strong>Path Analysis</strong> in Aria Networks (source VM → destination VM) to identify the blocking DFW rule ID.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># From NSX Manager REST API — get hit count for a specific rule</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># GET https://&lt;nsx-manager&gt;/api/v1/firewall/stats/rules/&lt;rule-id&gt;</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span>https://&lt;nsx-manager&gt;/api/v1/firewall/stats/rules/&lt;rule-id&gt;<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>https://&lt;nsx-manager&gt;/api/v1/firewall/stats/rules/&lt;rule-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div>
-<p>High hit-count rules on east-west traffic cause per-packet overhead. Reduce by:</p>
-<ul>
-<li>Consolidating rules with the same action and source/destination groups</li>
-<li>Adding a service exception for high-throughput backup or replication VMs</li>
-<li>Checking if a stateful DFW rule is logging every packet (disable logging if not needed)</li>
-</ul>
+<p>Look for: high hit-count rules on east-west flows. Reduce overhead by consolidating rules with the same action and groups, adding a service exception for high-throughput backup VMs, or disabling packet logging on stateful rules.</p>
 <hr />
 <h2 id="5-powercli-pull-historical-performance-stats">5. PowerCLI — Pull Historical Performance Stats<a class="headerlink" href="#5-powercli-pull-historical-performance-stats" title="Permanent link">&para;</a></h2>
-<p>Use PowerCLI to pull stats for the past hour without needing Aria Operations access.</p>
+<p>Pull the past hour of stats without needing Aria Operations access.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># CPU ready — high sustained values confirm host-level contention</span>
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">Get-VM</span> <span class="s2">&quot;vm-name&quot;</span> <span class="p">|</span> <span class="nb">Get-Stat</span> <span class="n">-Stat</span> <span class="n">cpu</span><span class="p">.</span><span class="n">ready</span><span class="p">.</span><span class="n">summation</span> <span class="p">`</span>
 <a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  <span class="n">-Start</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddHours</span><span class="p">(-</span><span class="n">1</span><span class="p">)</span> <span class="n">-IntervalMins</span> <span class="n">5</span> <span class="p">|</span> <span class="nb">Format-Table</span> <span class="n">-AutoSize</span>
@@ -6739,6 +6737,66 @@ cause and apply the correct fix — CPU, memory, storage, or network.
 <td>East-west latency spike</td>
 <td>DFW stateful tracking overhead</td>
 <td>Profile DFW rules with Aria Networks; add exclusion for high-throughput flows</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="key-terms">Key Terms<a class="headerlink" href="#key-terms" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Aria Operations</td>
+<td>VMware observability platform; used here to receive the initial performance alert and surface CPU ready %, balloon, and latency metrics per VM</td>
+</tr>
+<tr>
+<td>esxtop</td>
+<td>ESXi CLI tool that shows real-time host-level metrics — CPU, memory, disk, network — at the individual VM and physical device level</td>
+</tr>
+<tr>
+<td>CPU Ready (%RDY)</td>
+<td>Time a VM spends waiting for physical CPU time; measured in esxtop; &gt; 5% indicates the host is overcommitted and the VM is being starved</td>
+</tr>
+<tr>
+<td>DAVG</td>
+<td>Disk average latency (milliseconds) as reported by esxtop at the device driver layer; &gt; 20 ms on vSAN indicates storage contention or a degraded component</td>
+</tr>
+<tr>
+<td>DRS</td>
+<td>Distributed Resource Scheduler; vCenter feature that automatically migrates VMs via vMotion to balance CPU and memory load across cluster hosts</td>
+</tr>
+<tr>
+<td>vSAN</td>
+<td>VMware's hyperconverged storage layer; aggregates local host disks into a shared datastore; performance degrades during component rebuild (resync)</td>
+</tr>
+<tr>
+<td>DFW</td>
+<td>Distributed Firewall; NSX kernel-level firewall enforced per vNIC on every ESXi host; high rule counts or stateful logging add per-packet overhead to east-west traffic</td>
+</tr>
+<tr>
+<td>PCPU</td>
+<td>Physical CPU; a single logical processor core on the ESXi host; %RDY in esxtop reflects how many PCPU cycles a VM is waiting to receive</td>
+</tr>
+<tr>
+<td>Memory balloon</td>
+<td>Hypervisor memory reclamation technique where ESXi inflates a balloon driver inside the guest to reclaim pages; any sustained balloon value means the host is under memory pressure</td>
+</tr>
+<tr>
+<td>vmnic</td>
+<td>Physical NIC on the ESXi host; %DRPD in the esxtop network view shows dropped packets per vmnic; saturation here causes VM network degradation</td>
+</tr>
+<tr>
+<td>IOPS</td>
+<td>Input/output operations per second; the throughput metric for storage; monitored via vSAN Performance Service per VM to distinguish storage bottlenecks from CPU/memory issues</td>
+</tr>
+<tr>
+<td>vNIC</td>
+<td>Virtual NIC presented to the guest VM; DFW rules are enforced at the vNIC kernel layer, so overhead is incurred even for traffic between VMs on the same host</td>
 </tr>
 </tbody>
 </table>

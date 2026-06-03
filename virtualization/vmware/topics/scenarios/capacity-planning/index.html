@@ -6345,21 +6345,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-mistakes" class="md-nav__link">
+  <a href="#key-terms" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common Mistakes
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#related-scenarios" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Related Scenarios
+        Key Terms
       
     </span>
   </a>
@@ -6567,10 +6556,10 @@ procurement decision.
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌──────────────────────────────────────────────────────────────────────────────────────────────────────────┐│
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │  START: Scheduled capacity review, or approaching threshold alert from Aria Operations                   ││
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   └─────────────────────────────────────┬────────────────────────────────────────────────────────────────────┘│
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│                                         │                                                             │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│                    ┌────────────────────┼────────────────────┐                                        │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│                    ▼                    ▼                    ▼                                        │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   └─────────────────────────────────────────┬────────────────────────────────────────────────────────────────┘│
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│                                             │                                                         │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│                    ┌────────────────────────┼────────────────────┐                                    │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│                    ▼                        ▼                    ▼                                    │
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   ┌────────────────────────┐  ┌──────────────────────┐  ┌────────────────────────┐                    │
 <a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   │  vSAN storage headroom │  │  Compute headroom    │  │  Aria Ops time-        │                    │
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   │  — check used vs total │  │  — CPU and RAM after │  │  remaining projections │                    │
@@ -6619,14 +6608,14 @@ procurement decision.
 </table>
 <hr />
 <h2 id="1-check-vsan-storage-headroom">1. Check vSAN Storage Headroom<a class="headerlink" href="#1-check-vsan-storage-headroom" title="Permanent link">&para;</a></h2>
-<p>The hard rule for vSAN production clusters: <strong>never exceed 70% used capacity</strong>. At 80%, vSAN stops
-accepting new writes. At 100%, the datastore is read-only and VMs freeze.</p>
+<p>Never exceed 70% used capacity on a vSAN production cluster — at 80% vSAN stops accepting writes.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Get vSAN datastore capacity via PowerCLI</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-Datastore</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="nb">Type </span><span class="o">-eq</span> <span class="s2">&quot;vsan&quot;</span><span class="p">}</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span>
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;CapacityGB&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">CapacityGB</span><span class="p">,</span><span class="n">1</span><span class="p">)}},</span>
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;FreeSpaceGB&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">FreeSpaceGB</span><span class="p">,</span><span class="n">1</span><span class="p">)}},</span>
 <a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;UsedPct&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(((</span><span class="nv">$_</span><span class="p">.</span><span class="n">CapacityGB</span> <span class="p">-</span> <span class="nv">$_</span><span class="p">.</span><span class="n">FreeSpaceGB</span><span class="p">)</span> <span class="p">/</span> <span class="nv">$_</span><span class="p">.</span><span class="n">CapacityGB</span><span class="p">)</span> <span class="p">*</span> <span class="n">100</span><span class="p">,</span> <span class="n">1</span><span class="p">)}}</span>
 </code></pre></div>
+<p>Expected: UsedPct below 70%; if 70–80%, hardware procurement should already be in progress.</p>
 <p>From the vCenter UI: <strong>Cluster → Monitor → vSAN → Capacity</strong>. Review:</p>
 <ul>
 <li><strong>Used</strong>: current capacity consumed including mirror/parity overhead</li>
@@ -6661,9 +6650,7 @@ accepting new writes. At 100%, the datastore is read-only and VMs freeze.</p>
 </table>
 <hr />
 <h2 id="2-check-compute-headroom-cpu-and-ram">2. Check Compute Headroom (CPU and RAM)<a class="headerlink" href="#2-check-compute-headroom-cpu-and-ram" title="Permanent link">&para;</a></h2>
-<p>HA admission control reserves a portion of cluster CPU and RAM for failover. The effective capacity
-reported by vCenter already accounts for this reservation — compare effective capacity against
-actual usage to find real headroom.</p>
+<p>Compare effective cluster capacity (after HA reservation) against actual usage to find real headroom.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Cluster effective CPU and memory after HA reservation</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Get-Cluster</span> <span class="s2">&quot;cluster-name&quot;</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;EffectiveCPUMHz&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={(</span><span class="nv">$_</span> <span class="p">|</span> <span class="nb">Get-View</span><span class="p">).</span><span class="n">Summary</span><span class="p">.</span><span class="n">EffectiveCpu</span><span class="p">}},</span>
@@ -6674,25 +6661,21 @@ actual usage to find real headroom.</p>
 <a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>  <span class="nb">Measure-Object</span> <span class="n">-Property</span> <span class="n">CpuUsageMhz</span><span class="p">,</span> <span class="n">MemoryUsageMB</span> <span class="n">-Sum</span> <span class="p">|</span>
 <a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>  <span class="nb">Select </span><span class="n">Property</span><span class="p">,</span> <span class="n">Sum</span>
 </code></pre></div>
-<p>If current usage exceeds 80% of effective capacity on either CPU or memory, the cluster is at risk
-of resource contention during a host failure (HA failover reduces available capacity further).</p>
+<p>Expected: actual usage below 80% of effective capacity on both CPU and memory.</p>
 <hr />
 <h2 id="3-aria-operations-capacity-view">3. Aria Operations Capacity View<a class="headerlink" href="#3-aria-operations-capacity-view" title="Permanent link">&para;</a></h2>
-<p>Aria Operations provides the most actionable capacity view because it combines current usage,
-growth trending, and reclaimable waste in one place.</p>
-<p>Navigate to: <strong>Aria Operations → Capacity → Clusters → select cluster → Capacity Remaining</strong>.</p>
+<p>Navigate to <strong>Aria Operations → Capacity → Clusters → select cluster → Capacity Remaining</strong> for the most actionable combined view.</p>
 <p>Key metrics to review:</p>
 <ul>
 <li><strong>Time Remaining</strong>: days until the cluster runs out of CPU, RAM, or storage at the current growth
   rate. Below 90 days is a trigger to start hardware procurement.</li>
 <li><strong>Reclaimable Waste</strong>: capacity that can be recovered without purchasing hardware — oversized VMs,
   idle VMs, reclaimed snapshots.</li>
-<li><strong>What-If Analysis</strong>: models the impact of adding a workload (how many days does adding 10 new
-  VMs reduce time remaining?) or a node (how much headroom does a new host add?).</li>
+<li><strong>What-If Analysis</strong>: models the impact of adding a workload or a node on time remaining.</li>
 </ul>
 <hr />
 <h2 id="4-trending-90-day-growth-analysis">4. Trending — 90-Day Growth Analysis<a class="headerlink" href="#4-trending-90-day-growth-analysis" title="Permanent link">&para;</a></h2>
-<p>A single point-in-time reading is not enough. Look at the slope of growth over 90 days.</p>
+<p>Review 90-day growth slope to determine whether point-in-time readings are representative.</p>
 <p>Aria Operations → <strong>Capacity</strong> → select the vSAN datastore → <strong>Historical</strong> → set time range to
 90 days. Compare the growth slope:</p>
 <ul>
@@ -6703,8 +6686,7 @@ growth trending, and reclaimable waste in one place.</p>
 </ul>
 <hr />
 <h2 id="5-check-reclaimable-resources-before-ordering-hardware">5. Check Reclaimable Resources Before Ordering Hardware<a class="headerlink" href="#5-check-reclaimable-resources-before-ordering-hardware" title="Permanent link">&para;</a></h2>
-<p>Before submitting a hardware request, check Aria Operations for waste. Reclaimable capacity is
-free — it does not require procurement or a change window.</p>
+<p>Before submitting a hardware request, check Aria Operations for waste that can be recovered at zero cost.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Find powered-off VMs still consuming VMDK space</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">PowerState</span> <span class="o">-eq</span> <span class="s2">&quot;PoweredOff&quot;</span><span class="p">}</span> <span class="p">|</span>
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span> <span class="n">ProvisionedSpaceGB</span><span class="p">,</span>
@@ -6713,7 +6695,7 @@ free — it does not require procurement or a change window.</p>
 <a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c"># Find VMs with snapshots (snapshots consume storage continuously)</span>
 <a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Get-Snapshot</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">VM</span><span class="p">,</span> <span class="n">Name</span><span class="p">,</span> <span class="n">SizeGB</span><span class="p">,</span> <span class="n">Created</span>
 </code></pre></div>
-<p>Common sources of reclaimable waste:</p>
+<p>Expected: Aria Ops reclaimable waste report and PowerCLI output identify candidates for cleanup before any procurement request.</p>
 <table>
 <thead>
 <tr>
@@ -6747,7 +6729,7 @@ free — it does not require procurement or a change window.</p>
 </table>
 <hr />
 <h2 id="6-node-expansion-decision">6. Node Expansion Decision<a class="headerlink" href="#6-node-expansion-decision" title="Permanent link">&para;</a></h2>
-<p>Use these trigger points to decide when a node expansion is justified:</p>
+<p>Use these trigger points to decide when a node expansion is justified.</p>
 <table>
 <thead>
 <tr>
@@ -6793,7 +6775,7 @@ free — it does not require procurement or a change window.</p>
 and capacity data, not just "the cluster is getting full."</p>
 <hr />
 <h2 id="7-vxrail-node-expansion">7. VxRail Node Expansion<a class="headerlink" href="#7-vxrail-node-expansion" title="Permanent link">&para;</a></h2>
-<p>For VxRail HCI clusters, all node additions must go through <strong>VxRail Manager</strong>:</p>
+<p>For VxRail HCI clusters, all node additions must go through <strong>VxRail Manager</strong>.</p>
 <p>VxRail Manager → <strong>Cluster</strong> → <strong>Expand Cluster</strong> → follow the node expansion wizard.</p>
 <p>VxRail Manager validates that the new node matches the cluster's VxRail bundle (ESXi version,
 firmware, driver stack), adds the node to vSAN with the correct disk claim policy, and verifies
@@ -6840,24 +6822,61 @@ the supportability of the cluster.</p>
 </tbody>
 </table>
 <hr />
-<h2 id="common-mistakes">Common Mistakes<a class="headerlink" href="#common-mistakes" title="Permanent link">&para;</a></h2>
-<ul>
-<li><strong>Reacting at 80% instead of 70%.</strong> vSAN stops writes at 80%. By the time the alert fires at 80%,
-  there is no buffer remaining. Monitor at 70% and act before reaching 80%.</li>
-<li><strong>Ordering hardware before checking waste.</strong> Aria Ops reclaimable waste recommendations frequently
-  recover 10–20% of cluster capacity at zero cost. Always check waste first.</li>
-<li><strong>Adding a VxRail node via vCenter.</strong> VxRail nodes added outside VxRail Manager miss firmware
-  alignment, break the validated bundle, and may cause vSAN instability.</li>
-<li><strong>Using point-in-time capacity readings.</strong> A cluster at 65% today with accelerating growth hits
-  80% in weeks. Always review the 90-day trend, not just the current percentage.</li>
-</ul>
-<hr />
-<h2 id="related-scenarios">Related Scenarios<a class="headerlink" href="#related-scenarios" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Host Maintenance and Patching</li>
-<li>VxRail LCM Upgrade Failure</li>
-<li>Provision a New Workload</li>
-</ul>
+<h2 id="key-terms">Key Terms<a class="headerlink" href="#key-terms" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Aria Operations capacity analytics</td>
+<td>The capacity module within Aria Operations that aggregates current usage, growth trends, reclaimable waste, and what-if modelling into a single view per cluster or datastore</td>
+</tr>
+<tr>
+<td>vSAN slack space</td>
+<td>The buffer of free capacity vSAN requires to perform resyncs, repairs, and policy re-satisfaction; the 70% warning and 80% write-stop thresholds define the operating window</td>
+</tr>
+<tr>
+<td>HA admission control</td>
+<td>vCenter HA mechanism that reserves a portion of cluster CPU and RAM to guarantee capacity for VM restarts after a host failure; reduces effective usable capacity</td>
+</tr>
+<tr>
+<td>effective CPU/RAM</td>
+<td>The cluster compute capacity reported by vCenter after subtracting HA admission control reserves — the real headroom available for running workloads</td>
+</tr>
+<tr>
+<td>reclaimable waste</td>
+<td>Capacity identified by Aria Operations that can be recovered without hardware — powered-off VMs, oversized VMs, old snapshots, and orphaned VMDKs</td>
+</tr>
+<tr>
+<td>thin provisioning</td>
+<td>A disk allocation mode where a VMDK only consumes datastore space as data is written, rather than pre-allocating the full disk size; inflates apparent free space until actual writes occur</td>
+</tr>
+<tr>
+<td>Time Remaining</td>
+<td>An Aria Operations metric that projects the number of days until a cluster exhausts CPU, RAM, or storage at the current consumption growth rate — the primary procurement trigger</td>
+</tr>
+<tr>
+<td>DRS</td>
+<td>Distributed Resource Scheduler — automatically rebalances VM placement across hosts; also rebalances after a new node is added to the cluster following expansion</td>
+</tr>
+<tr>
+<td>VxRail Manager</td>
+<td>Dell-provided management layer for VxRail HCI clusters that orchestrates node expansion, ensuring firmware/driver/ESXi bundle alignment before adding a node to vSAN</td>
+</tr>
+<tr>
+<td>svMotion</td>
+<td>Storage vMotion — live migration of a VM's VMDK files from one datastore to another without VM downtime; used during capacity reclamation to move VMs off full datastores</td>
+</tr>
+<tr>
+<td>powered-off VM</td>
+<td>A VM that is shut down but still has VMDK files consuming datastore space; a common source of reclaimable waste identified by Aria Operations</td>
+</tr>
+</tbody>
+</table>
 
 
 

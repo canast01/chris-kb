@@ -6356,6 +6356,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#key-terms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Terms
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#related-scenarios" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6620,7 +6631,7 @@ the physical network — and restoring connectivity with minimal downtime.
 </table>
 <hr />
 <h2 id="1-determine-scope-all-vms-or-specific-vms">1. Determine Scope — All VMs or Specific VMs<a class="headerlink" href="#1-determine-scope-all-vms-or-specific-vms" title="Permanent link">&para;</a></h2>
-<p>The scope of the outage determines where to start:</p>
+<p>Use the symptom to identify the failure layer before diving deeper:</p>
 <table>
 <thead>
 <tr>
@@ -6652,14 +6663,11 @@ the physical network — and restoring connectivity with minimal downtime.
 </tr>
 </tbody>
 </table>
-<p>If the outage is global (all external traffic), proceed to Step 2. For partial outages, check the
-T1 gateway for that tenant and the relevant DFW rules first.</p>
+<p>Look for: global outage → proceed to Step 2; partial outage → check the T1 gateway for that tenant and the relevant DFW rules first.</p>
 <hr />
 <h2 id="2-check-edge-cluster-health-in-nsx-manager">2. Check Edge Cluster Health in NSX Manager<a class="headerlink" href="#2-check-edge-cluster-health-in-nsx-manager" title="Permanent link">&para;</a></h2>
-<p>NSX Manager → <strong>System</strong> → <strong>Fabric</strong> → <strong>Nodes</strong> → <strong>Edge Transport Nodes</strong>.</p>
-<p>Each edge node has a status indicator. Green means healthy. If one node is <strong>Degraded</strong> or
-<strong>Down</strong>: the other node in an active-standby pair should have taken over. Confirm which node is
-currently active on the T0 gateway.</p>
+<p>Navigate to NSX Manager → <strong>System</strong> → <strong>Fabric</strong> → <strong>Nodes</strong> → <strong>Edge Transport Nodes</strong> and check each node's status indicator.</p>
+<p>Look for: any node showing <strong>Degraded</strong> or <strong>Down</strong> — the standby should have taken over; confirm which node is currently active on the T0 gateway.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># NSX Manager REST API — list all edge nodes and their status</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="s2">&quot;https://nsx-manager.domain.local/api/v1/transport-nodes?node_type=EdgeNode&quot;</span><span class="w"> </span><span class="se">\</span>
@@ -6667,9 +6675,8 @@ currently active on the T0 gateway.</p>
 </code></pre></div>
 <hr />
 <h2 id="3-check-bgp-neighbor-state-on-the-t0-gateway">3. Check BGP Neighbor State on the T0 Gateway<a class="headerlink" href="#3-check-bgp-neighbor-state-on-the-t0-gateway" title="Permanent link">&para;</a></h2>
-<p>NSX Manager → <strong>Networking</strong> → <strong>Tier-0 Gateways</strong> → select the T0 → <strong>BGP</strong> → <strong>Neighbors</strong>.</p>
-<p>Each BGP neighbor (upstream router) should show state <strong>Established</strong>. If the state is <strong>Idle</strong>,
-<strong>Active</strong>, or <strong>Connect</strong>: the BGP session is down and routes are not being exchanged.</p>
+<p>Navigate to NSX Manager → <strong>Networking</strong> → <strong>Tier-0 Gateways</strong> → select T0 → <strong>BGP</strong> → <strong>Neighbors</strong>.</p>
+<p>Look for: each upstream router peer showing <strong>Established</strong>; any other state means the BGP session is down and routes are not being exchanged.</p>
 <table>
 <thead>
 <tr>
@@ -6698,6 +6705,7 @@ currently active on the T0 gateway.</p>
 </table>
 <hr />
 <h2 id="4-ssh-to-the-edge-node-check-bgp-and-routes">4. SSH to the Edge Node — Check BGP and Routes<a class="headerlink" href="#4-ssh-to-the-edge-node-check-bgp-and-routes" title="Permanent link">&para;</a></h2>
+<p>SSH to the edge node and run the BGP and route commands in sequence:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># From NSX edge node CLI — list logical routers (VRFs)</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>get<span class="w"> </span>logical-routers
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
@@ -6710,8 +6718,7 @@ currently active on the T0 gateway.</p>
 <a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Check the route table for default route (0.0.0.0/0) and uplink prefixes</span>
 <a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>get<span class="w"> </span>route
 </code></pre></div>
-<p>A healthy BGP summary shows the upstream router IP, state <strong>Established</strong>, and a non-zero
-count under <strong>PfxRcd</strong> (prefixes received from the upstream router).</p>
+<p>Look for: <strong>Established</strong> state and a non-zero <strong>PfxRcd</strong> (prefixes received from upstream router).</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Ping the upstream router from the edge node uplink interface</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ping<span class="w"> </span>&lt;upstream-router-ip&gt;<span class="w"> </span>interface<span class="w"> </span>&lt;uplink-interface-name&gt;
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
@@ -6720,9 +6727,7 @@ count under <strong>PfxRcd</strong> (prefixes received from the upstream router)
 </code></pre></div>
 <hr />
 <h2 id="5-check-tep-connectivity-edge-to-esxi-host-tunnels">5. Check TEP Connectivity — Edge to ESXi Host Tunnels<a class="headerlink" href="#5-check-tep-connectivity-edge-to-esxi-host-tunnels" title="Permanent link">&para;</a></h2>
-<p>Edge nodes communicate with ESXi hosts via GENEVE tunnels over their TEP (Tunnel Endpoint)
-VMkernel interfaces. If TEP tunnels are down, overlay traffic cannot reach VMs even if the
-edge node itself is up and BGP is established.</p>
+<p>TEP tunnels carry overlay traffic between edge nodes and ESXi hosts via GENEVE; broken TEPs mean VMs cannot be reached even if the edge node and BGP are healthy.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># From edge node — list all tunnel ports and their state</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>get<span class="w"> </span>tunnel-ports
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
@@ -6734,42 +6739,24 @@ edge node itself is up and BGP is established.</p>
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk10<span class="w"> </span>&lt;edge-tep-ip&gt;<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span>
 <a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># vmk10 = TEP VMkernel interface (check your environment for the correct vmk)</span>
 </code></pre></div>
-<p>If TEP pings fail between the ESXi hosts and the edge node, the underlay network (VLAN carrying
-TEP traffic) has a problem. Check the physical switch port carrying the TEP VLAN.</p>
+<p>Look for: failed large-packet pings between ESXi hosts and the edge node TEP IPs — this points to the underlay VLAN carrying TEP traffic; check the physical switch port.</p>
 <hr />
 <h2 id="6-check-the-edge-vm-in-vcenter">6. Check the Edge VM in vCenter<a class="headerlink" href="#6-check-the-edge-vm-in-vcenter" title="Permanent link">&para;</a></h2>
-<p>Edge nodes run as VMs on ESXi hosts. If the edge VM is powered off, suspended, or on a host
-that is itself degraded, the edge node goes down entirely.</p>
-<p>In vCenter: navigate to the edge VM (typically named <code>edge-&lt;uuid&gt;</code>). Verify:</p>
-<ul>
-<li>Power state: should be <strong>Powered On</strong></li>
-<li>Host: which ESXi host is running the edge VM? Is that host healthy?</li>
-<li>Network adapter: are the edge VM's vNICs connected to the correct port groups?</li>
-</ul>
+<p>Edge nodes run as VMs; a powered-off or mis-placed edge VM takes down the node entirely.</p>
+<p>In vCenter navigate to the edge VM (typically named <code>edge-&lt;uuid&gt;</code>) and verify power state, host placement, and vNIC port group assignments.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># PowerCLI — find edge VMs and their host placement</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Get-VM</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">Name</span> <span class="o">-like</span> <span class="s2">&quot;edge-*&quot;</span><span class="p">}</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">PowerState</span><span class="p">,</span> <span class="n">VMHost</span>
 </code></pre></div>
-<p>If the edge VM is on a host that has failed or been put into maintenance mode, vSphere HA will
-restart the edge VM on another host. Wait for HA to complete, then recheck BGP state.</p>
+<p>Look for: edge VM on a failed or maintenance-mode host — vSphere HA will restart it elsewhere; wait for HA to complete, then recheck BGP state.</p>
 <hr />
 <h2 id="7-verify-failover-active-standby-edge-pair">7. Verify Failover — Active-Standby Edge Pair<a class="headerlink" href="#7-verify-failover-active-standby-edge-pair" title="Permanent link">&para;</a></h2>
-<p>NSX edge clusters default to <strong>active-standby</strong> for T0 gateways. When the active edge node
-fails, the standby takes over in approximately 1 second. BGP reconverges with the upstream router
-shortly after (BFD-assisted convergence if BFD is configured).</p>
-<p>Check which node is currently active:</p>
-<p>NSX Manager → <strong>Networking</strong> → <strong>Tier-0 Gateways</strong> → select T0 → <strong>Configuration</strong> →
-<strong>Edge Cluster Member</strong> column shows which edge node is <strong>Active</strong> for each service router.</p>
-<p>If failover did not occur (standby did not take over): check the edge cluster configuration and
-confirm BFD is enabled on the uplink interfaces.</p>
+<p>When the active edge node fails, the standby should take over in ~1 second with BFD-assisted BGP reconvergence.</p>
+<p>Check which node is active: NSX Manager → <strong>Networking</strong> → <strong>Tier-0 Gateways</strong> → T0 → <strong>Configuration</strong> → <strong>Edge Cluster Member</strong> column.</p>
+<p>Look for: if failover did not occur, verify BFD is enabled on the T0 uplink interfaces and the edge cluster configuration is correct.</p>
 <hr />
 <h2 id="8-physical-switch-upstream-bgp-peer">8. Physical Switch — Upstream BGP Peer<a class="headerlink" href="#8-physical-switch-upstream-bgp-peer" title="Permanent link">&para;</a></h2>
-<p>If both edge nodes report BGP in a non-Established state and the edge VMs and TEPs are healthy,
-the problem is the upstream physical switch or router.</p>
-<p>Check on the ToR switch:
-- BGP neighbor state for the NSX T0 uplink IPs
-- Port state for the ports connecting to the edge VM uplinks (trunk VLAN)
-- MTU — NSX GENEVE requires MTU 1600 or higher on the underlay; mismatched MTU causes intermittent
-  tunnel failures that can destabilise BGP</p>
+<p>If both edge nodes show non-Established BGP and TEPs and edge VMs are healthy, the problem is the upstream physical switch or router.</p>
+<p>Check on the ToR switch: BGP neighbor state for the NSX T0 uplink IPs, port state for edge uplink ports, and MTU (GENEVE requires MTU 1600 or higher — mismatched MTU causes intermittent tunnel failures that destabilise BGP).</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># On Cisco Nexus — check BGP summary for NSX edge peers</span>
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>show<span class="w"> </span>bgp<span class="w"> </span>ipv4<span class="w"> </span>unicast<span class="w"> </span>summary<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;edge-uplink-ip&gt;
 <a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
@@ -6791,6 +6778,66 @@ the problem is the upstream physical switch or router.</p>
   seconds (standard BGP keepalive timer). With BFD, convergence is sub-second. If failover is slow,
   check whether BFD is enabled on the T0 uplinks.</li>
 </ul>
+<hr />
+<h2 id="key-terms">Key Terms<a class="headerlink" href="#key-terms" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Edge node</td>
+<td>An NSX-T VM that provides gateway services — routing, NAT, load balancing, and VPN — at the boundary between the NSX overlay and the physical network</td>
+</tr>
+<tr>
+<td>Edge cluster</td>
+<td>A logical group of one or more edge nodes; T0 gateways are bound to an edge cluster and use active-standby failover between its members</td>
+</tr>
+<tr>
+<td>T0 (Tier-0 Gateway)</td>
+<td>The NSX gateway that connects the overlay network to the physical network; runs eBGP with upstream routers and handles all north-south traffic</td>
+</tr>
+<tr>
+<td>BGP (Border Gateway Protocol)</td>
+<td>The routing protocol used between the NSX T0 gateway and the upstream physical router to exchange reachable prefixes; session state must be Established for traffic to flow</td>
+</tr>
+<tr>
+<td>TEP (Tunnel Endpoint)</td>
+<td>VMkernel IP address on each ESXi host and edge node used to originate and terminate GENEVE overlay tunnels; TEP reachability is required for overlay traffic</td>
+</tr>
+<tr>
+<td>GENEVE</td>
+<td>Generic Network Virtualization Encapsulation — the overlay protocol used by NSX to carry VM traffic over the physical underlay between TEPs (replaces VXLAN)</td>
+</tr>
+<tr>
+<td>Active-standby</td>
+<td>NSX edge cluster failover mode where one edge node handles all traffic; the standby takes over in ~1 second when the active node fails</td>
+</tr>
+<tr>
+<td>VRF (Virtual Routing and Forwarding)</td>
+<td>A separate routing table instance on the edge node; each T0 uplink uses a dedicated VRF — use <code>vrf &lt;uuid&gt;</code> on the edge CLI to switch context</td>
+</tr>
+<tr>
+<td>eBGP</td>
+<td>External BGP — the BGP session type between the NSX T0 gateway and the upstream physical router; used because they are in different autonomous systems</td>
+</tr>
+<tr>
+<td>BGP neighbor</td>
+<td>A router peer configured to exchange routes via BGP; in this scenario the T0 gateway's BGP neighbors are the upstream ToR switches</td>
+</tr>
+<tr>
+<td>Uplink</td>
+<td>The edge node network interface that connects the NSX overlay to the physical network; carries BGP and routed north-south traffic to the ToR switch</td>
+</tr>
+<tr>
+<td>North-south traffic</td>
+<td>Traffic between VMs inside the NSX overlay and destinations outside the datacenter (internet, WAN, or other networks); all flows through the T0 gateway edge node</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h2 id="related-scenarios">Related Scenarios<a class="headerlink" href="#related-scenarios" title="Permanent link">&para;</a></h2>
 <ul>

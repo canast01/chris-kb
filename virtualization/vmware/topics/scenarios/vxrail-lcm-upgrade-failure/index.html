@@ -6334,6 +6334,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#key-terms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Terms
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#common-mistakes" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6607,8 +6618,7 @@ pre-check failures, handling mid-upgrade node failures, and safely retrying afte
 </table>
 <hr />
 <h2 id="1-identify-the-failure-phase">1. Identify the Failure Phase<a class="headerlink" href="#1-identify-the-failure-phase" title="Permanent link">&para;</a></h2>
-<p>Open VxRail Manager UI and navigate to <strong>LCM → Upgrade History</strong>. The history entry shows which node
-failed and at which phase:</p>
+<p>Open VxRail Manager → <strong>LCM → Upgrade History</strong> and identify which node failed and at which phase.</p>
 <table>
 <thead>
 <tr>
@@ -6650,20 +6660,17 @@ failed and at which phase:</p>
 </tr>
 </tbody>
 </table>
-<p>Note the failure phase and which node was being processed. This determines the investigation path.</p>
+<p>Note the failure phase and which node was being processed — this determines the investigation path.</p>
 <hr />
 <h2 id="2-pre-check-failures">2. Pre-check Failures<a class="headerlink" href="#2-pre-check-failures" title="Permanent link">&para;</a></h2>
-<p>Pre-checks run before any change is made and are the safest failure mode — the cluster is unmodified.
-Check each failure category in the LCM log:</p>
+<p>Pre-checks run before any change is made — the cluster is unmodified and safe to investigate.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ssh<span class="w"> </span>mystic@&lt;vxm-ip&gt;
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/mystic/lcm.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;pre-check|precheck|ERROR|FAIL&quot;</span>
 </code></pre></div>
-<p>Common pre-check failures and their fixes:</p>
+<p>Look for: the specific pre-check name that failed. Common failures and fixes:</p>
 <p><strong>vSAN health not green:</strong> Navigate to <strong>Cluster → Monitor → vSAN → Skyline Health</strong> and resolve all
-red or yellow items. The most common blocking items are disk capacity imbalance, component rebuild in
-progress, and network health warnings. LCM will not proceed with any vSAN health warning outstanding.</p>
-<p><strong>Host not in correct state:</strong> Check for any host stuck in maintenance mode in vCenter. A host that was
-manually put into maintenance mode and never exited blocks LCM. Exit maintenance mode and retry.</p>
+red or yellow items. LCM will not proceed with any vSAN health warning outstanding.</p>
+<p><strong>Host stuck in maintenance mode:</strong> A host manually put into maintenance mode blocks LCM. Exit maintenance mode in vCenter and retry.</p>
 <p><strong>Unsupported customisation — non-LCM VIBs:</strong> Check for VIBs installed outside of VxRail LCM:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;VMware\|Dell\|Broadcom\|QLogic&quot;</span>
 </code></pre></div>
@@ -6673,26 +6680,21 @@ manually put into maintenance mode and never exited blocks LCM. Exit maintenance
 pre-check after NTP is corrected.</p>
 <hr />
 <h2 id="3-bundle-download-failure">3. Bundle Download Failure<a class="headerlink" href="#3-bundle-download-failure" title="Permanent link">&para;</a></h2>
-<p>If the bundle download fails, check:</p>
+<p>If the bundle download fails, check proxy and connectivity settings before retrying.</p>
 <ul>
-<li><strong>Proxy settings:</strong> VxRail Manager → <strong>Settings → Proxy</strong>. If a proxy is required in the environment,
-  confirm the proxy address and credentials are correct and that the proxy allows HTTPS to
-  <code>downloads.dell.com</code> and VMware download endpoints.</li>
-<li><strong>Manual bundle upload:</strong> Download the bundle from Dell support portal on a machine with internet
-  access and upload it directly to VxRail Manager via the <strong>LCM → Upload Bundle</strong> option.</li>
+<li><strong>Proxy settings:</strong> VxRail Manager → <strong>Settings → Proxy</strong>. Confirm the proxy address and credentials are correct and that the proxy allows HTTPS to <code>downloads.dell.com</code> and VMware download endpoints.</li>
+<li><strong>Manual bundle upload:</strong> Download the bundle from Dell support portal and upload directly to VxRail Manager via <strong>LCM → Upload Bundle</strong>.</li>
 </ul>
 <p>After resolving the download issue, retry the upgrade — VxRail Manager resumes from the download phase.</p>
 <hr />
 <h2 id="4-mid-upgrade-node-failure">4. Mid-Upgrade Node Failure<a class="headerlink" href="#4-mid-upgrade-node-failure" title="Permanent link">&para;</a></h2>
-<p>If a node fails during the ESXi upgrade or firmware update phase, the cluster is in a mixed-version
-state. Do not reboot other nodes or attempt manual changes.</p>
-<p>Check the failed node's iDRAC for firmware update status and hardware events:</p>
+<p>If a node fails during the ESXi upgrade or firmware update phase, the cluster is in a mixed-version state — do not reboot other nodes or attempt manual changes.</p>
+<p>Check the failed node's iDRAC for firmware update status:</p>
 <ul>
-<li>iDRAC → <strong>System Event Log</strong> — look for firmware update failures or hardware events during the
-  upgrade window.</li>
+<li>iDRAC → <strong>System Event Log</strong> — look for firmware update failures or hardware events during the upgrade window.</li>
 <li>iDRAC → <strong>Job Queue</strong> — confirm whether the firmware job completed, failed, or is still queued.</li>
 </ul>
-<p>Check ESXi installation logs on the affected host if it is accessible:</p>
+<p>Check ESXi installation logs on the affected host if accessible:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>cat<span class="w"> </span>/var/log/esxi_install.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
 </code></pre></div>
 <p>Look for:</p>
@@ -6702,41 +6704,32 @@ state. Do not reboot other nodes or attempt manual changes.</p>
 </code></pre></div>
 <hr />
 <h2 id="5-use-rest-api-to-check-status-and-generate-support-bundle">5. Use REST API to Check Status and Generate Support Bundle<a class="headerlink" href="#5-use-rest-api-to-check-status-and-generate-support-bundle" title="Permanent link">&para;</a></h2>
-<p>Query VxRail Manager REST API for current upgrade status:</p>
+<p>Query VxRail Manager REST API for current upgrade status and generate a support bundle for Dell support.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>curl<span class="w"> </span>-k<span class="w"> </span>-u<span class="w"> </span>mystic:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span>https://&lt;vxm-ip&gt;/rest/vxm/v1/lcm/upgrade/bundle/status
 </code></pre></div>
-<p>Generate a support bundle for submission to Dell support:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>curl<span class="w"> </span>-k<span class="w"> </span>-u<span class="w"> </span>mystic:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>https://&lt;vxm-ip&gt;/rest/vxm/v1/system/support-bundle
 </code></pre></div>
-<p>The support bundle includes LCM logs, cluster health snapshots, iDRAC data, and vSAN status at the
-time of failure. Dell support requires this bundle before proceeding with escalation.</p>
-<p>Check current cluster and VxRail node versions:</p>
+<p>Check current cluster and node versions:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>curl<span class="w"> </span>-k<span class="w"> </span>-u<span class="w"> </span>mystic:&lt;password&gt;<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span>https://&lt;vxm-ip&gt;/rest/vxm/v1/hosts<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div>
+<p>Look for: bundle status showing <code>FAILED</code> with a phase name; support bundle creation returning a bundle ID that you can download and attach to a Dell support case.</p>
 <hr />
 <h2 id="6-rollback-and-re-image-considerations">6. Rollback and Re-image Considerations<a class="headerlink" href="#6-rollback-and-re-image-considerations" title="Permanent link">&para;</a></h2>
-<p>VxRail LCM does not provide a rollback option for a partially completed upgrade. If a node fails
-mid-upgrade and LCM's automatic recovery also fails:</p>
+<p>VxRail LCM does not provide a rollback option for a partially completed upgrade.</p>
 <ol>
-<li><strong>Do not manually reinstall ESXi on the node.</strong> Contact Dell support first. A Dell-guided
-   re-image procedure maintains the node's VxRail identity and allows LCM to re-adopt it.</li>
-<li><strong>Collect the LCM support bundle before any re-image.</strong> The bundle is required for root cause
-   analysis and warranty support.</li>
-<li><strong>The cluster continues operating on remaining nodes</strong> while the failed node is offline, provided
-   vSAN can maintain object redundancy with the remaining nodes.</li>
+<li><strong>Do not manually reinstall ESXi on the node.</strong> Contact Dell support first — a Dell-guided re-image maintains the node's VxRail identity and allows LCM to re-adopt it.</li>
+<li><strong>Collect the LCM support bundle before any re-image.</strong> Required for root cause analysis and warranty support.</li>
+<li><strong>The cluster continues operating on remaining nodes</strong> provided vSAN can maintain object redundancy with the nodes still available.</li>
 </ol>
 <hr />
 <h2 id="7-retry-after-root-cause-is-fixed">7. Retry After Root Cause Is Fixed<a class="headerlink" href="#7-retry-after-root-cause-is-fixed" title="Permanent link">&para;</a></h2>
-<p>Once the root cause is resolved, use the Retry function in VxRail Manager:</p>
+<p>Use the Retry function in VxRail Manager once the root cause is resolved.</p>
 <p><strong>VxRail Manager → LCM → [current upgrade] → Retry Upgrade</strong></p>
-<p>The retry does not restart the upgrade from scratch. It resumes from the failed node and phase,
-applying the bundle to nodes that were not yet upgraded. This is safe to use after any pre-check
-failure or after a single-node mid-upgrade failure is resolved.</p>
-<p>Verify before retrying:</p>
+<p>The retry resumes from the failed node and phase — it does not restart from scratch. Verify before retrying:</p>
 <ul>
 <li>vSAN health is green (all items)</li>
 <li>All hosts show "Connected" in vCenter</li>
@@ -6744,6 +6737,66 @@ failure or after a single-node mid-upgrade failure is resolved.</p>
 <li>NTP is synchronised on all nodes</li>
 <li>vSAN resync queue is empty (no pending resyncs from the partial upgrade)</li>
 </ul>
+<hr />
+<h2 id="key-terms">Key Terms<a class="headerlink" href="#key-terms" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VxRail Manager</td>
+<td>The Dell appliance management VM that runs the LCM engine, holds upgrade history and logs, and exposes the REST API used to trigger and monitor upgrades</td>
+</tr>
+<tr>
+<td>LCM</td>
+<td>Lifecycle Manager — the VxRail upgrade engine that orchestrates ESXi, vCenter, vSAN, driver, and firmware upgrades as a single validated bundle across all cluster nodes</td>
+</tr>
+<tr>
+<td>Bundle</td>
+<td>The versioned upgrade package distributed by Dell that contains specific validated versions of ESXi, vSAN, vCenter, drivers, and firmware for a given VxRail release</td>
+</tr>
+<tr>
+<td>mystic</td>
+<td>The service account used to SSH into VxRail Manager for log access and REST API authentication; primary account for LCM diagnostics</td>
+</tr>
+<tr>
+<td>iDRAC</td>
+<td>Integrated Dell Remote Access Controller — the out-of-band management interface on each VxRail node; used during LCM to apply firmware updates and accessible via the Job Queue to check firmware job status</td>
+</tr>
+<tr>
+<td>OMIVV</td>
+<td>OpenManage Integration for VMware vCenter — the Dell plugin for vCenter that manages VxRail inventory and firmware visibility; a PSOD after an OMIVV-triggered update indicates LCM bypass</td>
+</tr>
+<tr>
+<td>Pre-check</td>
+<td>The LCM phase that validates cluster health before any node is touched; the safest failure mode as no changes have been applied to the cluster</td>
+</tr>
+<tr>
+<td>SupportAssist</td>
+<td>Dell's automated support data collection service that can generate and upload diagnostic bundles directly to Dell; used alongside the VxRail REST API support bundle for escalation</td>
+</tr>
+<tr>
+<td>VIB</td>
+<td>vSphere Installation Bundle — the package format for ESXi drivers and components; non-LCM VIBs installed manually on VxRail nodes are a common pre-check failure that blocks upgrades</td>
+</tr>
+<tr>
+<td>vSAN resync</td>
+<td>The background process where vSAN rebuilds component redundancy after a node enters or exits maintenance mode; an active resync during LCM means reduced redundancy and risks data unavailability</td>
+</tr>
+<tr>
+<td>REST API</td>
+<td>The HTTP API exposed by VxRail Manager on port 443 at <code>/rest/vxm/v1/</code>; used to query upgrade status, trigger support bundle generation, and check node versions</td>
+</tr>
+<tr>
+<td>VxRail Manager log path</td>
+<td>Primary LCM log location: <code>/var/log/mystic/lcm.log</code> inside the VxRail Manager VM; contains phase-by-phase upgrade events, pre-check results, and error details</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h2 id="common-mistakes">Common Mistakes<a class="headerlink" href="#common-mistakes" title="Permanent link">&para;</a></h2>
 <ul>

@@ -6345,6 +6345,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#key-terms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Terms
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#common-mistakes" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6624,44 +6635,35 @@ and identifying driver/firmware mismatch as the most common production cause.
 </table>
 <hr />
 <h2 id="1-confirm-ha-is-restarting-vms">1. Confirm HA Is Restarting VMs<a class="headerlink" href="#1-confirm-ha-is-restarting-vms" title="Permanent link">&para;</a></h2>
-<p>The first 60 seconds after a PSOD are for confirming VM restart — not diagnosing the cause. VMs on
-the affected host are gone and cannot be recovered without a reboot. Verify HA is working:</p>
-<p>In vCenter navigate to <strong>Cluster → Monitor → vSphere HA → VM Restarts</strong>. You should see the affected
-VMs listed with a restart timestamp and the target host where they are restarting.</p>
+<p>The first 60 seconds after a PSOD are for confirming VM restart, not diagnosing the cause — VMs on the affected host are gone and cannot be recovered without a reboot.</p>
+<p>In vCenter navigate to <strong>Cluster → Monitor → vSphere HA → VM Restarts</strong> and confirm affected VMs are listed with a restart timestamp and target host.</p>
 <p>If VMs are not restarting, check:</p>
 <ul>
 <li>HA is enabled on the cluster (<strong>Cluster → Configure → vSphere HA → Turn On</strong>)</li>
-<li>Cluster has sufficient failover capacity (sufficient CPU and memory on remaining hosts)</li>
+<li>Cluster has sufficient failover capacity (CPU and memory on remaining hosts)</li>
 <li>HA admission control policy is not blocking restarts</li>
 </ul>
 <hr />
 <h2 id="2-capture-the-psod-screen">2. Capture the PSOD Screen<a class="headerlink" href="#2-capture-the-psod-screen" title="Permanent link">&para;</a></h2>
-<p>The purple screen contains the crash module name, error code, and backtrace — the primary diagnostic
-data. It is visible for only a few minutes before the host auto-reboots (if configured).</p>
-<p>Capture it immediately using:</p>
+<p>The purple screen contains the crash module name, error code, and backtrace — capture it immediately before the host auto-reboots.</p>
+<p>Capture using:</p>
 <ul>
 <li>iDRAC/iLO <strong>Virtual Console → Screenshot</strong> function</li>
 <li>IPMI remote console screenshot</li>
-<li>Physical photograph of the screen if necessary</li>
+<li>Physical photograph if necessary</li>
 </ul>
-<p>The critical elements to record:</p>
+<p>Critical elements to record:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>#PF Exception 14 in world XXXX:vmm0:&lt;vmname&gt;  → page fault in VMM world (driver or VM issue)
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>#GP Exception 13 in world XXXX:helper          → general protection fault in helper world
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>@BlueScreen: ASSERT bora/vmkernel/...          → assertion failure with source file and line
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Backtrace: 0x...  vmw_pvscsi.o                 → module name = vmw_pvscsi (PVSCSI driver issue)
 <a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Backtrace: 0x...  nmlx5_core.o                 → module name = nmlx5_core (Mellanox NIC driver)
 </code></pre></div>
-<p>The module name in the backtrace is the most actionable piece of data. Note it exactly.</p>
+<p>The module name in the backtrace is the most actionable piece of data — note it exactly.</p>
 <hr />
 <h2 id="3-check-idrac-ilo-hardware-event-log">3. Check iDRAC / iLO Hardware Event Log<a class="headerlink" href="#3-check-idrac-ilo-hardware-event-log" title="Permanent link">&para;</a></h2>
-<p>A PSOD often follows a hardware event by seconds or minutes. Correlating the hardware event timeline
-with the PSOD timestamp narrows the root cause significantly.</p>
-<p>Access iDRAC (Dell) or iLO (HPE) for the affected host and navigate to:</p>
-<ul>
-<li><strong>iDRAC → System Event Log (SEL)</strong></li>
-<li>Look for events timestamped within 5 minutes before the PSOD</li>
-</ul>
-<p>Critical hardware events to look for:</p>
+<p>A PSOD often follows a hardware event by seconds or minutes — correlating the SEL timeline with the PSOD timestamp narrows root cause significantly.</p>
+<p>Access iDRAC (Dell) or iLO (HPE) → <strong>System Event Log (SEL)</strong> and look for events timestamped within 5 minutes before the PSOD:</p>
 <table>
 <thead>
 <tr>
@@ -6692,36 +6694,28 @@ with the PSOD timestamp narrows the root cause significantly.</p>
 </tr>
 </tbody>
 </table>
-<p>A hardware event immediately before the PSOD strongly suggests hardware replacement is required
-alongside any driver/firmware fix.</p>
+<p>A hardware event immediately before the PSOD indicates hardware replacement is required alongside any driver/firmware fix.</p>
 <hr />
 <h2 id="4-retrieve-logs-after-host-reboots">4. Retrieve Logs After Host Reboots<a class="headerlink" href="#4-retrieve-logs-after-host-reboots" title="Permanent link">&para;</a></h2>
-<p>After the host reboots and SSH is accessible, collect the key log files:</p>
+<p>After the host reboots and SSH is accessible, collect the key log files.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>cat<span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;PSOD|panic|backtrace|oops&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>cat<span class="w"> </span>/var/log/vmksummary.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-20
 </code></pre></div>
-<p>The vmksummary.log contains a concise summary of the last crash including timestamp, panic type,
-and the initiating world. The vmkernel.log contains the full backtrace.</p>
-<p>Check hostd for any events in the seconds before the crash:</p>
+<p>Look for: the vmksummary.log gives a concise summary of the crash (timestamp, panic type, initiating world). The vmkernel.log contains the full backtrace.</p>
+<p>Check hostd for precursor events in the seconds before the crash:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>cat<span class="w"> </span>/var/log/hostd.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;ERROR|WARNING&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
 </code></pre></div>
-<p>Look for recurring errors in the minutes before the crash timestamp — these are often the
-precursor events that indicate a driver entering a bad state before the final panic.</p>
 <hr />
 <h2 id="5-generate-a-vm-support-bundle">5. Generate a vm-support Bundle<a class="headerlink" href="#5-generate-a-vm-support-bundle" title="Permanent link">&para;</a></h2>
-<p>Attach a vm-support bundle to any VMware GSS case or keep it for internal diagnosis. Generate it
-after the host reboots:</p>
+<p>Generate a support bundle after the host reboots — transfer it off the host before any further reboots as subsequent boots may overwrite logs.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>vm-support<span class="w"> </span>-w<span class="w"> </span>/tmp/
 </code></pre></div>
-<p>This creates a compressed archive in <code>/tmp/</code> containing all logs, configuration, and system state.
-Transfer it off the host with SCP before any further reboots (subsequent boots may overwrite logs).</p>
-<p>Alternatively, generate from vCenter: right-click the host → <strong>Export System Logs</strong>. This is
-equivalent but generates the bundle remotely and saves it to your local machine.</p>
+<p>This creates a compressed archive in <code>/tmp/</code> containing all logs, configuration, and system state. Transfer with SCP.</p>
+<p>Alternatively, generate from vCenter: right-click the host → <strong>Export System Logs</strong> — equivalent but saves directly to your local machine.</p>
 <hr />
 <h2 id="6-match-module-name-to-vmware-kb">6. Match Module Name to VMware KB<a class="headerlink" href="#6-match-module-name-to-vmware-kb" title="Permanent link">&para;</a></h2>
-<p>The module name from the PSOD backtrace almost always maps to a known VMware KB article or community
-post. Search the VMware Knowledge Base at <code>kb.vmware.com</code> using:</p>
+<p>The backtrace module name almost always maps to a known VMware KB article — search <code>kb.vmware.com</code> using the module name and ESXi version.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>&lt;module-name&gt; PSOD &lt;esxi-version&gt;
 </code></pre></div>
 <p>Example searches:</p>
@@ -6762,32 +6756,85 @@ post. Search the VMware Knowledge Base at <code>kb.vmware.com</code> using:</p>
 </table>
 <hr />
 <h2 id="7-check-the-vmware-hcl-for-driver-and-firmware-versions">7. Check the VMware HCL for Driver and Firmware Versions<a class="headerlink" href="#7-check-the-vmware-hcl-for-driver-and-firmware-versions" title="Permanent link">&para;</a></h2>
-<p>The majority of PSODs in production environments are caused by a mismatch between the NIC or HBA
-driver version installed on ESXi and the firmware version on the hardware. The VMware HCL lists the
-exact validated combinations.</p>
-<p>Navigate to <code>www.vmware.com/resources/compatibility</code> and search for your hardware model and ESXi
-version. The HCL entry shows:</p>
+<p>Most production PSODs are caused by a mismatch between NIC or HBA driver version on ESXi and the firmware on the hardware — the HCL lists validated combinations.</p>
+<p>Navigate to <code>www.vmware.com/resources/compatibility</code> and search for your hardware model and ESXi version. The HCL entry shows:</p>
 <ul>
 <li>Supported firmware versions for the device</li>
 <li>Supported driver versions for that firmware</li>
 <li>Any known issues with specific combinations</li>
 </ul>
-<p>If the host is running a driver/firmware combination not in the HCL, update to a validated pair.
-For standalone ESXi hosts, update using VUM (vSphere Lifecycle Manager). For VxRail, see Step 8.</p>
+<p>Look for: the currently installed driver and firmware versions matching an HCL-validated pair. If not, update to a validated combination via vSphere Lifecycle Manager (standalone) or VxRail LCM (VxRail).</p>
 <hr />
 <h2 id="8-vxrail-hosts-only-update-through-vxrail-lcm">8. VxRail Hosts — Only Update Through VxRail LCM<a class="headerlink" href="#8-vxrail-hosts-only-update-through-vxrail-lcm" title="Permanent link">&para;</a></h2>
-<p>VxRail validates ESXi, driver, and firmware versions together as a bundle. Any out-of-band driver
-update on a VxRail node — installing a driver directly via esxcli or vendor tools without going
-through VxRail LCM — results in a combination that is outside VxRail's validated matrix.</p>
-<p>A PSOD on a VxRail host after a manually applied driver update is a strong indicator that the update
-bypassed VxRail LCM. To resolve:</p>
-<ol>
-<li>Verify the manually installed driver version: <code>esxcli software vib list | grep &lt;module&gt;</code></li>
-<li>Remove the non-LCM VIB: <code>esxcli software vib remove --vibname &lt;vib-name&gt;</code></li>
-<li>Use VxRail Manager → LCM to apply the correct validated driver as part of a bundle upgrade.</li>
-</ol>
-<p>For the full VxRail LCM upgrade procedure, see the
+<p>A PSOD on a VxRail host after a manually applied driver update is a strong indicator that the update bypassed VxRail LCM and is now outside the validated matrix.</p>
+<p>To resolve:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Verify the manually installed driver version</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>&lt;module&gt;
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1"># Remove the non-LCM VIB</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>esxcli<span class="w"> </span>software<span class="w"> </span>vib<span class="w"> </span>remove<span class="w"> </span>--vibname<span class="w"> </span>&lt;vib-name&gt;
+</code></pre></div>
+<p>Then use VxRail Manager → LCM to apply the correct validated driver as part of a bundle upgrade. For the full VxRail LCM upgrade procedure, see the
 <a href="../vxrail-lcm-upgrade-failure/">VxRail LCM Upgrade Failure</a> scenario.</p>
+<hr />
+<h2 id="key-terms">Key Terms<a class="headerlink" href="#key-terms" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PSOD</td>
+<td>Purple Screen of Death — ESXi's kernel panic display; the host halts immediately, showing a purple screen with a backtrace identifying the crashing module and exception type</td>
+</tr>
+<tr>
+<td>vmkernel.log</td>
+<td>The primary ESXi kernel log file; contains the full backtrace from the most recent PSOD and all kernel-level driver and hardware events leading up to the crash</td>
+</tr>
+<tr>
+<td>vmksummary</td>
+<td>A condensed crash summary log written by ESXi on reboot; contains the PSOD timestamp, panic type, and initiating world — faster to read than the full vmkernel.log</td>
+</tr>
+<tr>
+<td>vm-support</td>
+<td>VMware CLI tool that generates a compressed diagnostic bundle containing all logs, configuration, and system state; required by VMware GSS and Dell support for case escalation</td>
+</tr>
+<tr>
+<td>VIB</td>
+<td>vSphere Installation Bundle — the package format used to install drivers and components on ESXi; VIBs installed outside of VxRail LCM break the validated driver/firmware matrix</td>
+</tr>
+<tr>
+<td>HCL</td>
+<td>Hardware Compatibility List — VMware's database of validated hardware models, driver versions, and firmware combinations for each ESXi release; the reference for confirming whether a driver/firmware pair is supported</td>
+</tr>
+<tr>
+<td>iDRAC</td>
+<td>Integrated Dell Remote Access Controller — the out-of-band management interface on Dell servers; used to capture the PSOD screen via Virtual Console and read the System Event Log for hardware faults</td>
+</tr>
+<tr>
+<td>SEL</td>
+<td>System Event Log — the hardware event log stored in iDRAC (Dell) or iLO (HPE); records uncorrectable memory errors, PCIe faults, and CPU machine checks that may trigger a PSOD</td>
+</tr>
+<tr>
+<td>HA</td>
+<td>vSphere High Availability — the cluster feature that monitors ESXi hosts and automatically restarts VMs on surviving hosts when a host fails due to PSOD or other crash</td>
+</tr>
+<tr>
+<td>DIMM</td>
+<td>Dual In-line Memory Module — a physical RAM stick; uncorrectable memory errors on a DIMM are a leading hardware cause of PSOD as the kernel halts rather than continue with corrupted memory</td>
+</tr>
+<tr>
+<td>Backtrace</td>
+<td>The stack trace printed on the PSOD screen showing the sequence of function calls that led to the panic; the module name at the bottom identifies the driver or component responsible</td>
+</tr>
+<tr>
+<td>Panic frame</td>
+<td>The register state and memory dump captured at the moment of the PSOD; used by VMware engineering and GSS to identify the exact code path that caused the kernel halt</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h2 id="common-mistakes">Common Mistakes<a class="headerlink" href="#common-mistakes" title="Permanent link">&para;</a></h2>
 <ul>

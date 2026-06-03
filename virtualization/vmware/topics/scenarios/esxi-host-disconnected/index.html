@@ -6356,6 +6356,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#key-terms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Terms
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#common-mistakes" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6634,17 +6645,12 @@ diagnosing NTP and DNS as silent causes, and identifying the impact on NSX trans
 </table>
 <hr />
 <h2 id="1-confirm-vm-status-before-doing-anything-else">1. Confirm VM Status Before Doing Anything Else<a class="headerlink" href="#1-confirm-vm-status-before-doing-anything-else" title="Permanent link">&para;</a></h2>
-<p>Before touching the host, determine whether VMs are still running. If the host lost only its management
-network, all VMs on it continue operating normally — guests have no idea vCenter lost contact.</p>
-<p>In vCenter, check the host's VM list for last-known power state. Check <strong>Recent Tasks</strong> for any HA events
-(HA-triggered restarts indicate the host truly became unavailable, not just disconnected from management).</p>
-<p>Check the cluster <strong>Monitor → vSphere HA → VM Restarts</strong> tab for restart attempts in the last 10 minutes.</p>
+<p>Before touching the host, confirm whether VMs are still running — if only the management network dropped, guests are unaffected.</p>
+<p>Check the host's VM list in vCenter for last-known power state, then check <strong>Recent Tasks</strong> for HA events and <strong>Monitor → vSphere HA → VM Restarts</strong> for restart attempts in the last 10 minutes.</p>
 <hr />
 <h2 id="2-attempt-reconnect-from-vcenter">2. Attempt Reconnect from vCenter<a class="headerlink" href="#2-attempt-reconnect-from-vcenter" title="Permanent link">&para;</a></h2>
-<p>Right-click the host in vCenter → <strong>Connection → Reconnect</strong>. If it succeeds within 30 seconds, the
-disconnect was a temporary management network blip and no further action is needed — monitor for
-recurrence.</p>
-<p>If reconnect fails with an error, note the error message. Common errors:</p>
+<p>Right-click the host → <strong>Connection → Reconnect</strong> to rule out a transient management blip.</p>
+<p>If reconnect fails, note the error:</p>
 <table>
 <thead>
 <tr>
@@ -6669,89 +6675,134 @@ recurrence.</p>
 </table>
 <hr />
 <h2 id="3-test-management-network-reachability">3. Test Management Network Reachability<a class="headerlink" href="#3-test-management-network-reachability" title="Permanent link">&para;</a></h2>
-<p>From a jump host on the management VLAN, ping the host's vmk0 IP address:</p>
+<p>Ping the host's vmk0 IP from a jump host on the management VLAN to determine whether the issue is network or agent.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ping<span class="w"> </span>&lt;esxi-mgmt-ip&gt;
 </code></pre></div>
 <ul>
-<li><strong>Reachable</strong> → host is up; the issue is an agent (vpxa or hostd) or SSL/certificate problem.</li>
-<li><strong>Unreachable</strong> → management network is down, or the host has crashed. Use iDRAC/iLO remote console
-  to check whether the host is responsive.</li>
+<li><strong>Reachable</strong> → host is up; issue is vpxa/hostd or SSL.</li>
+<li><strong>Unreachable</strong> → network is down or host crashed; use iDRAC/iLO console.</li>
 </ul>
 <hr />
 <h2 id="4-check-and-restart-vpxa-and-hostd-agents">4. Check and Restart vpxa and hostd Agents<a class="headerlink" href="#4-check-and-restart-vpxa-and-hostd-agents" title="Permanent link">&para;</a></h2>
-<p>If the host is reachable via SSH, log in and check the two agents vCenter depends on:</p>
+<p>Read the logs before restarting — the lines immediately before a crash identify the disconnect reason.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>/etc/init.d/vpxa<span class="w"> </span>status
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>/etc/init.d/hostd<span class="w"> </span>status
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>tail<span class="w"> </span>-50<span class="w"> </span>/var/log/vpxa.log
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>tail<span class="w"> </span>-50<span class="w"> </span>/var/log/hostd.log
 </code></pre></div>
-<p>Read the logs before restarting — the last error lines explain the disconnect reason. Restarting without
-reading destroys that context.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>tail<span class="w"> </span>-50<span class="w"> </span>/var/log/vpxa.log
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>tail<span class="w"> </span>-50<span class="w"> </span>/var/log/hostd.log
+<p>If an agent is stopped or crashed, restart it:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>/etc/init.d/vpxa<span class="w"> </span>restart
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>/etc/init.d/hostd<span class="w"> </span>restart
 </code></pre></div>
-<p>If an agent is stopped or crashed:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>/etc/init.d/vpxa<span class="w"> </span>restart
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>/etc/init.d/hostd<span class="w"> </span>restart
-</code></pre></div>
-<p>After restarting, wait 60–90 seconds then attempt the vCenter Reconnect action again.</p>
+<p>Wait 60–90 seconds, then attempt the vCenter Reconnect action again.</p>
 <hr />
 <h2 id="5-verify-management-network-configuration">5. Verify Management Network Configuration<a class="headerlink" href="#5-verify-management-network-configuration" title="Permanent link">&para;</a></h2>
-<p>Confirm vmk0 IP, gateway, and DNS have not drifted (this can happen after a failed configuration change
-or after PXE/DHCP interference):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>ipv4<span class="w"> </span>get
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>route<span class="w"> </span>ipv4<span class="w"> </span>list
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>esxcli<span class="w"> </span>system<span class="w"> </span>hostname<span class="w"> </span>get
+<p>Confirm vmk0 IP, gateway, and DNS have not drifted after a failed configuration change or DHCP interference.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>ipv4<span class="w"> </span>get
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>route<span class="w"> </span>ipv4<span class="w"> </span>list
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>esxcli<span class="w"> </span>system<span class="w"> </span>hostname<span class="w"> </span>get
 </code></pre></div>
-<p>Expected output: vmk0 shows the correct static IP, default gateway is present, FQDN matches what vCenter
-has registered for this host. Any mismatch here will prevent vCenter from reconnecting even after agent
-restarts.</p>
+<p>Look for: vmk0 shows the correct static IP, default gateway is present, FQDN matches what vCenter has registered. Any mismatch prevents reconnection even after agent restarts.</p>
 <hr />
 <h2 id="6-verify-dns-resolution">6. Verify DNS Resolution<a class="headerlink" href="#6-verify-dns-resolution" title="Permanent link">&para;</a></h2>
-<p>ESXi must be able to resolve the vCenter FQDN. If DNS is broken, vpxa cannot reach vCenter even when the
-IP network is working:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>nslookup<span class="w"> </span>vcenter.domain.local
-</code></pre></div>
-<p>If DNS resolution fails, check <code>/etc/resolv.conf</code> for correct nameserver entries:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>cat<span class="w"> </span>/etc/resolv.conf
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>dns<span class="w"> </span>server<span class="w"> </span>list
+<p>ESXi must resolve the vCenter FQDN — a broken DNS lookup blocks vpxa even when IP connectivity is fine.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>nslookup<span class="w"> </span>vcenter.domain.local
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>cat<span class="w"> </span>/etc/resolv.conf
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>dns<span class="w"> </span>server<span class="w"> </span>list
 </code></pre></div>
 <p>Correct a missing DNS server:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>dns<span class="w"> </span>server<span class="w"> </span>add<span class="w"> </span>--server<span class="w"> </span>&lt;dns-ip&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>dns<span class="w"> </span>server<span class="w"> </span>add<span class="w"> </span>--server<span class="w"> </span>&lt;dns-ip&gt;
 </code></pre></div>
+<p>Look for: <code>nslookup</code> returns the correct vCenter IP; no "NXDOMAIN" or timeout errors.</p>
 <hr />
 <h2 id="7-check-ntp-time-drift-causes-ssl-failures">7. Check NTP — Time Drift Causes SSL Failures<a class="headerlink" href="#7-check-ntp-time-drift-causes-ssl-failures" title="Permanent link">&para;</a></h2>
-<p>A time difference of more than 60 seconds between the ESXi host and vCenter causes SSL certificate
-handshake failures. The connection attempt appears to succeed at the network layer but fails at TLS
-negotiation — logs show certificate errors, not network errors.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>esxcli<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span>get
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>ntpq<span class="w"> </span>-p
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>date
+<p>A time difference of more than 60 seconds between the host and vCenter causes TLS handshake failures that look identical to certificate errors.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>esxcli<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span>get
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>ntpq<span class="w"> </span>-p
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>date
 </code></pre></div>
-<p>The <code>ntpq -p</code> output shows offset in milliseconds. An offset of more than 60,000 ms (60 seconds) from
-the reference server is the threshold for vCenter disconnection. Compare <code>date</code> output on the host with
-the vCenter system time to confirm drift.</p>
+<p>Look for: offset column in <code>ntpq -p</code> output beyond ±60,000 ms (60 seconds) from the reference server. Compare <code>date</code> output on the host with vCenter system time to confirm drift.</p>
 <p>Fix NTP if drifted — see the
 <a href="../ntp-drift-sso-certificate/">NTP Drift Scenario</a> for the full remediation procedure.</p>
 <hr />
 <h2 id="8-read-logs-for-root-cause">8. Read Logs for Root Cause<a class="headerlink" href="#8-read-logs-for-root-cause" title="Permanent link">&para;</a></h2>
-<p>After any restarts, read the logs to confirm the error is resolved and to document the root cause:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/hostd.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;error|ssl|certificate|timeout|refused&quot;</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/vpxa.log<span class="w">  </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;error|ssl|certificate|timeout|refused&quot;</span>
+<p>After any restarts, read logs to confirm the error is resolved and document the root cause.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/hostd.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;error|ssl|certificate|timeout|refused&quot;</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/vpxa.log<span class="w">  </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;error|ssl|certificate|timeout|refused&quot;</span>
 </code></pre></div>
-<p>The log lines before the first restart attempt are the most valuable. Common patterns:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>[error] SSL Exception: error:14090086 — certificate verify failed → NTP drift or cert expiry
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>[error] Connection refused on port 902              → firewall blocking vCenter → host traffic
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>[error] vpxa failed to connect: timeout             → network path issue between host and vCenter
+<p>Common patterns:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>[error] SSL Exception: error:14090086 — certificate verify failed → NTP drift or cert expiry
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>[error] Connection refused on port 902              → firewall blocking vCenter → host traffic
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>[error] vpxa failed to connect: timeout             → network path issue between host and vCenter
 </code></pre></div>
 <hr />
 <h2 id="9-nsx-transport-node-impact">9. NSX Transport Node Impact<a class="headerlink" href="#9-nsx-transport-node-impact" title="Permanent link">&para;</a></h2>
-<p>If the disconnected host is registered as an NSX transport node, NSX Manager loses its control channel
-to that host. Overlay segments hosted on that node lose configuration updates (new flows still work via
-cached TEP table entries, but new segment or policy pushes will queue until the host reconnects).</p>
-<p>Check NSX Manager → <strong>Fabric → Transport Nodes → select host</strong>. State should show "Up" once the host
-reconnects to vCenter. If it remains "Down" after vCenter reconnect, restart the NSX agent on the host:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>/etc/init.d/nsx-opsagent<span class="w"> </span>restart
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>/etc/init.d/nsx-mpa<span class="w"> </span>restart
+<p>If the disconnected host is an NSX transport node, NSX Manager loses its control channel and new policy pushes queue until the host reconnects.</p>
+<p>Check NSX Manager → <strong>Fabric → Transport Nodes → select host</strong>. If state remains "Down" after vCenter reconnect:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>/etc/init.d/nsx-opsagent<span class="w"> </span>restart
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>/etc/init.d/nsx-mpa<span class="w"> </span>restart
 </code></pre></div>
+<p>Look for: transport node state transitions to "Up" in NSX Manager within 60–90 seconds.</p>
+<hr />
+<h2 id="key-terms">Key Terms<a class="headerlink" href="#key-terms" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>vpxa</td>
+<td>VMware vCenter Agent — the ESXi daemon that maintains the persistent connection to vCenter; if it crashes, vCenter shows the host as Disconnected</td>
+</tr>
+<tr>
+<td>hostd</td>
+<td>Host Management Daemon — the primary ESXi management service that handles local host operations and API calls; must be running for vpxa to function</td>
+</tr>
+<tr>
+<td>vmware-fdm</td>
+<td>vSphere HA Fault Domain Manager — the HA agent on each ESXi host; monitors cluster membership and triggers VM restarts when a host disconnects</td>
+</tr>
+<tr>
+<td>DCUI</td>
+<td>Direct Console User Interface — the local console accessible via physical keyboard or iDRAC/iLO used to diagnose and recover a host without network access</td>
+</tr>
+<tr>
+<td>vmk0</td>
+<td>Management VMkernel port — the primary network interface ESXi uses for management traffic including vCenter communication, SSH, and vSAN</td>
+</tr>
+<tr>
+<td>vCenter</td>
+<td>VMware vCenter Server — the centralised management platform that monitors host connectivity, runs HA orchestration, and provides the vSphere UI</td>
+</tr>
+<tr>
+<td>Lockdown mode</td>
+<td>ESXi security feature that restricts management access to vCenter only; if vCenter is unreachable while lockdown is enabled, SSH and DCUI access may also be blocked</td>
+</tr>
+<tr>
+<td>DNS PTR record</td>
+<td>Reverse DNS record mapping an IP address back to a hostname; ESXi uses PTR lookups to verify its own identity with vCenter during reconnection</td>
+</tr>
+<tr>
+<td>NTP drift</td>
+<td>Time difference between a host and a reference server; drift beyond 60 seconds causes TLS certificate validation failures that appear as SSL errors</td>
+</tr>
+<tr>
+<td>SSH</td>
+<td>Secure Shell — the remote shell protocol used to log into ESXi for CLI-level diagnosis of vpxa, hostd, NTP, and log files</td>
+</tr>
+<tr>
+<td>Management network</td>
+<td>The dedicated VLAN and vmk0 interface used for vCenter-to-ESXi control traffic; separate from VM traffic and vSAN traffic</td>
+</tr>
+<tr>
+<td>Transport node</td>
+<td>NSX term for an ESXi host that runs the NSX data plane (TEP interfaces, Geneve encapsulation); losing vCenter connectivity also impacts NSX control channel on that node</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h2 id="common-mistakes">Common Mistakes<a class="headerlink" href="#common-mistakes" title="Permanent link">&para;</a></h2>
 <ul>

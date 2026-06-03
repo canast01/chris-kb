@@ -6345,6 +6345,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#key-terms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Terms
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#related-scenarios" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6610,11 +6621,8 @@ source — then tuning alert definitions to prevent recurrence.
 </table>
 <hr />
 <h2 id="1-triage-by-root-cause-sort-by-triggered-time">1. Triage by Root Cause — Sort by Triggered Time<a class="headerlink" href="#1-triage-by-root-cause-sort-by-triggered-time" title="Permanent link">&para;</a></h2>
-<p>Open Aria Operations → <strong>Alerts</strong> → sort the alert list by <strong>Triggered Time</strong> ascending. Look for a cluster
-of alerts that all start at the same timestamp or within a 30-second window. That timestamp is the
-incident start. Every alert that fired after that point is likely a cascade from the same event.</p>
-<p>Note the object types of the first alerts to fire. If the first alert is on a host, all subsequent
-VM alerts on that host are children of the host event.</p>
+<p>Open Aria Operations → <strong>Alerts</strong> → sort by <strong>Triggered Time</strong> ascending to identify the incident start timestamp.</p>
+<p>Look for: a cluster of alerts starting within a 30-second window — every alert after that point is likely a cascade. Check which object type carries the first alert; if it is a host, all subsequent VM alerts on that host are children.</p>
 <hr />
 <h2 id="2-group-by-object-type">2. Group by Object Type<a class="headerlink" href="#2-group-by-object-type" title="Permanent link">&para;</a></h2>
 <p>Examine which object types are carrying the bulk of alerts:</p>
@@ -6646,10 +6654,7 @@ VM alerts on that host are children of the host event.</p>
 </table>
 <hr />
 <h2 id="3-use-the-relationship-view-to-find-the-parent-object">3. Use the Relationship View to Find the Parent Object<a class="headerlink" href="#3-use-the-relationship-view-to-find-the-parent-object" title="Permanent link">&para;</a></h2>
-<p>In Aria Operations, select the host or cluster where the earliest alerts fired. Navigate to
-<strong>Relationships</strong> in the object detail pane. The relationship graph shows which child objects (VMs,
-datastores, NICs) also have active alerts. This surfaces the cascade visually — the parent object
-with the most children alerting is the root cause node.</p>
+<p>Select the earliest-alerting host or cluster in Aria Operations → <strong>Relationships</strong> to surface the cascade visually.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Aria Ops REST API — get all active critical alerts sorted by start time</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>GET<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="s2">&quot;https://ariaops.domain.local/suite-api/api/alerts?alertStatus=ACTIVE&amp;alertCriticality=CRITICAL&quot;</span><span class="w"> </span><span class="se">\</span>
@@ -6664,7 +6669,7 @@ with the most children alerting is the root cause node.</p>
 </code></pre></div>
 <hr />
 <h2 id="4-identify-common-root-causes">4. Identify Common Root Causes<a class="headerlink" href="#4-identify-common-root-causes" title="Permanent link">&para;</a></h2>
-<p>These four events produce the most frequent alert storms in VMware environments:</p>
+<p>These four events produce the most frequent alert storms in VMware environments — confirm in the source shown:</p>
 <table>
 <thead>
 <tr>
@@ -6698,26 +6703,16 @@ with the most children alerting is the root cause node.</p>
 </table>
 <hr />
 <h2 id="5-cancel-vs-suppress-do-the-right-thing">5. Cancel vs Suppress — Do the Right Thing<a class="headerlink" href="#5-cancel-vs-suppress-do-the-right-thing" title="Permanent link">&para;</a></h2>
-<p>Once the root cause is confirmed and a fix is underway, clear the alert storm correctly:</p>
+<p>Choose the correct action once the root cause is confirmed:</p>
 <ul>
-<li><strong>Cancel</strong> — marks alerts as resolved. Use when the root cause is identified and being fixed. Alerts
-  will not return once the underlying condition clears.</li>
-<li><strong>Suppress</strong> — silences alerts without resolving them. Use only as a deliberate temporary measure
-  (for example, during a planned maintenance window). Suppress leaves the root cause unaddressed.</li>
+<li><strong>Cancel</strong> — marks alerts resolved; use when the fix is underway. Alerts will not re-fire once the condition clears.</li>
+<li><strong>Suppress</strong> — silences without resolving; use only for planned maintenance windows.</li>
 </ul>
-<p>To cancel all alerts in the storm: Aria Operations → <strong>Alerts</strong> → filter to the affected cluster or
-host → select all → <strong>Cancel</strong>. Add a note referencing the incident ticket number.</p>
+<p>To cancel: Aria Operations → <strong>Alerts</strong> → filter to the affected cluster → select all → <strong>Cancel</strong> → add the incident ticket number.</p>
 <hr />
 <h2 id="6-correlate-with-aria-operations-for-logs">6. Correlate with Aria Operations for Logs<a class="headerlink" href="#6-correlate-with-aria-operations-for-logs" title="Permanent link">&para;</a></h2>
-<p>If the root cause is not immediately obvious from the alert list, correlate with Aria Logs:</p>
-<ol>
-<li>Aria Operations → open any alert from the storm → <strong>Details</strong> → <strong>Related Logs</strong>
-   (only available if Aria Logs integration is configured).</li>
-<li>The Related Logs pane shows log entries from the same object within ±5 minutes of the alert
-   trigger time.</li>
-<li>Look for <code>WARN</code> or <code>ERROR</code> entries that predate the first alert by 30–120 seconds. The event that
-   appears just before the first alert is the originating cause.</li>
-</ol>
+<p>If the root cause is not obvious from alerts, open any storm alert → <strong>Details</strong> → <strong>Related Logs</strong> to query Aria Logs within ±5 minutes of the trigger time.</p>
+<p>Look for: <code>WARN</code> or <code>ERROR</code> entries that predate the first alert by 30–120 seconds — the event just before the first alert is the originating cause.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Aria Logs REST API — query logs for a specific host around the incident time</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># epoch_start and epoch_end in milliseconds</span>
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
@@ -6735,9 +6730,7 @@ host → select all → <strong>Cancel</strong>. Add a note referencing the inci
 </code></pre></div>
 <hr />
 <h2 id="7-tune-noisy-alert-definitions-after-the-storm">7. Tune Noisy Alert Definitions After the Storm<a class="headerlink" href="#7-tune-noisy-alert-definitions-after-the-storm" title="Permanent link">&para;</a></h2>
-<p>After the incident: adjust alert definitions that fired en masse. In Aria Operations →
-<strong>Alerts</strong> → <strong>Configuration</strong> → <strong>Alert Definitions</strong> → find the definition with the highest
-trigger count during the incident. Edit the symptom thresholds to reduce noise.</p>
+<p>After the incident, find the definition with the highest trigger count: Aria Operations → <strong>Alerts</strong> → <strong>Configuration</strong> → <strong>Alert Definitions</strong> → edit symptom thresholds.</p>
 <table>
 <thead>
 <tr>
@@ -6788,6 +6781,70 @@ signal-to-noise improvement, not permanent suppression.</p>
 <li><strong>Tuning thresholds too aggressively.</strong> Raising every threshold by 2× after a noisy event means a
   future real problem may not alert until it is already critical.</li>
 </ul>
+<hr />
+<h2 id="key-terms">Key Terms<a class="headerlink" href="#key-terms" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Aria Operations</td>
+<td>VMware observability platform — collects metrics from vSphere, NSX, and storage; evaluates symptom definitions to generate alerts</td>
+</tr>
+<tr>
+<td>Symptom definition</td>
+<td>A threshold or condition rule in Aria Operations that, when triggered, contributes to an alert firing (e.g., CPU ready &gt; 10% for 5 min)</td>
+</tr>
+<tr>
+<td>Alert definition</td>
+<td>A named rule in Aria Operations combining one or more symptom definitions; the unit shown in the Alerts list</td>
+</tr>
+<tr>
+<td>Alert criticality</td>
+<td>Severity level assigned to an alert — Critical, Warning, Immediate, or Information; determines colour and sort order in the Alerts view</td>
+</tr>
+<tr>
+<td>Object relationship</td>
+<td>Parent-child link between monitored objects (e.g., cluster → host → VM); used in the Relationship view to trace cascade origin</td>
+</tr>
+<tr>
+<td>Aria Logs (Aria Operations for Logs)</td>
+<td>VMware log analytics product — ingests syslog and structured events; integrated with Aria Operations via the Related Logs pane</td>
+</tr>
+<tr>
+<td>IPFIX</td>
+<td>IP Flow Information Export — a network flow protocol; Aria Logs can ingest IPFIX records from NSX to correlate network events with alert storms</td>
+</tr>
+<tr>
+<td>Root cause</td>
+<td>The single originating event that triggered all subsequent cascade alerts; identified by sorting alerts by Triggered Time ascending</td>
+</tr>
+<tr>
+<td>Cascading alert</td>
+<td>A secondary alert fired because a parent object's failure propagated to child objects (e.g., host failure → all VMs on that host alert)</td>
+</tr>
+<tr>
+<td>REST API bearer token</td>
+<td>Short-lived token returned by the Aria Operations <code>/suite-api/api/auth/token/acquire</code> endpoint; passed as <code>Authorization: Bearer &lt;token&gt;</code> on all subsequent API calls</td>
+</tr>
+<tr>
+<td>Cancel (alert action)</td>
+<td>Marks an active alert as resolved in Aria Operations; used when the underlying condition has been fixed or the root cause is confirmed</td>
+</tr>
+<tr>
+<td>Suppress (alert action)</td>
+<td>Silences an alert without resolving it; intended for planned maintenance windows only — suppressed alerts mask real future problems if left in place</td>
+</tr>
+<tr>
+<td>Alert threshold</td>
+<td>The numeric limit in a symptom definition at which a metric is considered anomalous; tuned post-incident to reduce noise without masking real problems</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h2 id="related-scenarios">Related Scenarios<a class="headerlink" href="#related-scenarios" title="Permanent link">&para;</a></h2>
 <ul>

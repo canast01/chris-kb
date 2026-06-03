@@ -6378,6 +6378,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#key-terms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Terms
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#related-scenarios" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6661,10 +6672,7 @@ are difficult to diagnose after the fact.
 </table>
 <hr />
 <h2 id="1-hardware-firmware-and-esxi-installation">1. Hardware Firmware and ESXi Installation<a class="headerlink" href="#1-hardware-firmware-and-esxi-installation" title="Permanent link">&para;</a></h2>
-<p>Before installing ESXi, update BIOS, HBA, and NIC firmware to the vendor-minimum supported version
-for your ESXi build. Installing ESXi on out-of-date firmware causes driver compatibility issues that
-are difficult to trace post-install.</p>
-<p>Use the correct ISO for your environment:</p>
+<p>Update BIOS, HBA, and NIC firmware to the vendor-minimum version before installing ESXi, then boot the correct ISO for your environment.</p>
 <table>
 <thead>
 <tr>
@@ -6687,44 +6695,34 @@ are difficult to trace post-install.</p>
 </tr>
 </tbody>
 </table>
-<p>Boot from the ISO, accept the EULA, select the target disk, and complete the install. On first boot,
-press <strong>F2</strong> at the DCUI to configure:</p>
+<p>On first boot, press <strong>F2</strong> at the DCUI to configure:</p>
 <ul>
 <li>Management IP, subnet mask, and default gateway</li>
-<li>Hostname — must be a fully qualified domain name (FQDN) matching both the DNS A record and PTR
-  record. Example: <code>esxi-prod-07.domain.local</code></li>
+<li>Hostname — FQDN matching both the DNS A record and PTR record (e.g. <code>esxi-prod-07.domain.local</code>)</li>
 <li>DNS server addresses</li>
 <li>Enable SSH temporarily for the configuration steps that follow</li>
 </ul>
 <hr />
 <h2 id="2-dns-pre-check">2. DNS Pre-Check<a class="headerlink" href="#2-dns-pre-check" title="Permanent link">&para;</a></h2>
-<p>DNS must resolve in both directions before the host is added to vCenter. vCenter and vSAN use the
-FQDN internally for inter-host communication. A missing PTR record causes HA agent registration
-failures.</p>
+<p>DNS must resolve in both directions before the host is added to vCenter — a missing PTR record causes HA agent registration failures.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># From a jump host — verify forward resolution</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>nslookup<span class="w"> </span>esxi-new-host.domain.local
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Verify reverse resolution</span>
 <a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>nslookup<span class="w"> </span>&lt;esxi-management-ip&gt;
 </code></pre></div>
-<p>Both lookups must return the correct result before proceeding. Fix DNS if either fails — do not
-proceed and rely on <code>/etc/hosts</code> workarounds.</p>
+<p>Expected: both lookups return the correct name/IP. Fix DNS if either fails — do not use <code>/etc/hosts</code> workarounds.</p>
 <hr />
 <h2 id="3-ntp-configuration">3. NTP Configuration<a class="headerlink" href="#3-ntp-configuration" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># SSH to the new host</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--server<span class="w"> </span>ntp1.domain.local<span class="w"> </span>--server<span class="w"> </span>ntp2.domain.local
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>esxcli<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enabled<span class="w"> </span><span class="nb">true</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Verify NTP is syncing — look for * or + next to a server indicating a good source</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>ntpq<span class="w"> </span>-p
+<p>Configure NTP before the host joins vCenter — SSO certificate validation fails if the host clock differs from vCenter by more than 5 minutes.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>esxcli<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--server<span class="w"> </span>ntp1.domain.local<span class="w"> </span>--server<span class="w"> </span>ntp2.domain.local
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enabled<span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>ntpq<span class="w"> </span>-p
 </code></pre></div>
-<p>NTP must be synchronised before the host joins vCenter. SSO certificate validation fails if the
-host clock differs from vCenter by more than 5 minutes.</p>
+<p>Look for: <code>*</code> or <code>+</code> next to a server in the <code>ntpq -p</code> output, indicating an active sync source.</p>
 <hr />
 <h2 id="4-vmkernel-port-configuration">4. VMkernel Port Configuration<a class="headerlink" href="#4-vmkernel-port-configuration" title="Permanent link">&para;</a></h2>
-<p>Configure vMotion and vSAN VMkernel ports before adding the host to vCenter. If the host joins
-vCenter first and the VMkernel ports are added later, vSAN disk claim may target the wrong VMkernel
-and vMotion will silently fail for VMs placed on this host.</p>
+<p>Configure vMotion and vSAN VMkernel ports before adding the host to vCenter, then test vSAN MTU across the network.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># vMotion VMkernel (vmk1)</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>add<span class="w"> </span>--interface-name<span class="w"> </span>vmk1<span class="w"> </span>--portgroup-name<span class="w"> </span><span class="s2">&quot;vMotion&quot;</span>
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>ipv4<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--interface-name<span class="w"> </span>vmk1<span class="w"> </span>--type<span class="w"> </span>static<span class="w"> </span><span class="se">\</span>
@@ -6736,70 +6734,44 @@ and vMotion will silently fail for VMs placed on this host.</p>
 <a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>ipv4<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--interface-name<span class="w"> </span>vmk2<span class="w"> </span>--type<span class="w"> </span>static<span class="w"> </span><span class="se">\</span>
 <a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span>--ipv4<span class="w"> </span><span class="m">10</span>.20.1.X<span class="w"> </span>--netmask<span class="w"> </span><span class="m">255</span>.255.255.0
 <a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>esxcli<span class="w"> </span>network<span class="w"> </span>ip<span class="w"> </span>interface<span class="w"> </span>tag<span class="w"> </span>add<span class="w"> </span>--interface-name<span class="w"> </span>vmk2<span class="w"> </span>--tagname<span class="w"> </span>VSAN
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># MTU test — -d disables fragmentation, -s 8972 is the vSAN jumbo frame test size</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk2<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span><span class="w"> </span>&lt;existing-host-vSAN-vmk-ip&gt;
 </code></pre></div>
-<p>Test vSAN MTU before joining the cluster. Silent packet loss on the vSAN VMkernel causes IO errors
-that only surface under load, not during basic connectivity checks.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># MTU test — -d disables fragmentation, -s 8972 is the vSAN jumbo frame test size</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>vmkping<span class="w"> </span>-I<span class="w"> </span>vmk2<span class="w"> </span>-d<span class="w"> </span>-s<span class="w"> </span><span class="m">8972</span><span class="w"> </span>&lt;existing-host-vSAN-vmk-ip&gt;
-</code></pre></div>
-<p>The ping must succeed. If it fails: check MTU settings on the switch port and VDS port group.
-vSAN requires end-to-end MTU 9000 on the vSAN VMkernel path.</p>
+<p>Expected: vmkping returns 0% packet loss. If it fails, check MTU on the switch port and VDS portgroup — vSAN requires end-to-end MTU 9000.</p>
 <hr />
 <h2 id="5-add-host-to-vcenter">5. Add Host to vCenter<a class="headerlink" href="#5-add-host-to-vcenter" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># PowerCLI — add host to the target cluster</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Add-VMHost</span> <span class="n">-Name</span> <span class="s2">&quot;esxi-new-host.domain.local&quot;</span> <span class="p">`</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>           <span class="n">-Location</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">&quot;cluster-name&quot;</span><span class="p">)</span> <span class="p">`</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>           <span class="n">-User</span> <span class="n">root</span> <span class="n">-Password</span> <span class="s2">&quot;&lt;password&gt;&quot;</span> <span class="p">`</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>           <span class="n">-Force</span>
+<p>Add the host to the cluster via PowerCLI, then immediately assign a licence to avoid evaluation mode expiry.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">Add-VMHost</span> <span class="n">-Name</span> <span class="s2">&quot;esxi-new-host.domain.local&quot;</span> <span class="p">`</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>           <span class="n">-Location</span> <span class="p">(</span><span class="nb">Get-Cluster</span> <span class="s2">&quot;cluster-name&quot;</span><span class="p">)</span> <span class="p">`</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>           <span class="n">-User</span> <span class="n">root</span> <span class="n">-Password</span> <span class="s2">&quot;&lt;password&gt;&quot;</span> <span class="p">`</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>           <span class="n">-Force</span>
 </code></pre></div>
-<p>After the host appears in vCenter as <strong>Connected</strong>: assign an ESXi licence. Without a licence, the
-host will enter evaluation mode and after 60 days all features become unavailable.</p>
-<p>vCenter → <strong>Administration</strong> → <strong>Licences</strong> → <strong>Assets</strong> → <strong>Hosts</strong> → select the new host →
-<strong>Assign Licence Key</strong>.</p>
+<p>Expected: host appears in vCenter as <strong>Connected</strong>. Then assign the licence: vCenter → <strong>Administration</strong> → <strong>Licences</strong> → <strong>Assets</strong> → <strong>Hosts</strong> → select the new host → <strong>Assign Licence Key</strong>.</p>
 <hr />
 <h2 id="6-vsan-disk-claim">6. vSAN Disk Claim<a class="headerlink" href="#6-vsan-disk-claim" title="Permanent link">&para;</a></h2>
-<p>If the cluster uses vSAN, vCenter automatically presents eligible disks on the new host for
-claiming. Eligible disks: any disk not containing a system partition and not already part of a
-disk group on another host.</p>
-<p>vCenter → <strong>vSAN</strong> → <strong>Disk Management</strong> → select the new host.</p>
-<p>Expected state: the host's cache and capacity disks appear and are claimed into a new disk group
-automatically (if vSAN EZ-Claim is enabled on the cluster). If manual claiming is required:
-select the disks, click <strong>Claim Disks</strong>, and assign cache and capacity roles.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Verify disk group is healthy from ESXi CLI</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list
+<p>If the cluster uses vSAN, claim disks via vCenter → <strong>vSAN</strong> → <strong>Disk Management</strong> → select the new host, then verify the disk group is healthy.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list
 </code></pre></div>
-<p>The disk group must show all disks in a healthy state before the next step.</p>
+<p>Expected: all disks shown as claimed and healthy in the disk group. If EZ-Claim is not enabled, manually select disks, click <strong>Claim Disks</strong>, and assign cache and capacity roles.</p>
 <hr />
 <h2 id="7-nsx-transport-node-configuration">7. NSX Transport Node Configuration<a class="headerlink" href="#7-nsx-transport-node-configuration" title="Permanent link">&para;</a></h2>
-<p>If the cluster uses NSX, the new host must be registered as a transport node before any VMs on it
-can use NSX segments. Without this step, VMs placed on the new host by DRS will lose NSX network
-connectivity.</p>
+<p>Register the host as an NSX transport node so VMs placed on it by DRS can reach NSX overlay segments.</p>
 <p>NSX Manager → <strong>System</strong> → <strong>Fabric</strong> → <strong>Hosts</strong> → locate the new host → <strong>Configure NSX</strong>.</p>
-<p>The configuration process:</p>
-<ol>
-<li>NSX Manager pushes NSX VIBs to the host (installs NSX kernel modules)</li>
-<li>vCenter and the host reboot the NSX services (no host reboot required)</li>
-<li>NSX creates the Tunnel Endpoint (TEP) VMkernel port for overlay traffic</li>
-<li>The transport node status changes to <strong>Success</strong></li>
-</ol>
-<p>Monitor: NSX Manager → <strong>Fabric</strong> → <strong>Hosts</strong> → watch <strong>NSX Configuration</strong> column. Configuration
-typically completes within 5-10 minutes.</p>
+<p>NSX Manager pushes VIBs to the host, creates the TEP VMkernel port for overlay traffic, and updates the transport node status — no host reboot required.</p>
+<p>Expected: NSX Manager → <strong>Fabric</strong> → <strong>Hosts</strong> → <strong>NSX Configuration</strong> column shows <strong>Success</strong> within 5–10 minutes.</p>
 <hr />
 <h2 id="8-lcm-patch-baseline">8. LCM Patch Baseline<a class="headerlink" href="#8-lcm-patch-baseline" title="Permanent link">&para;</a></h2>
-<p>After the host is joined and configured, ensure it matches the cluster's current patch level.
-vCenter → <strong>Lifecycle Manager</strong> → <strong>Hosts</strong> → select the new host → <strong>Check Compliance</strong>.</p>
-<p>If the host shows <strong>Non-Compliant</strong>: click <strong>Remediate</strong>. LCM places the host into maintenance mode,
-applies the baseline, and reboots. The host must be in maintenance mode for remediation — LCM will
-do this automatically.</p>
-<p>For VxRail clusters: do not use vCenter LCM directly. Run LCM through VxRail Manager to maintain
-the validated hardware-software bundle.</p>
+<p>Check the new host's patch compliance and remediate if it does not match the cluster baseline.</p>
+<p>vCenter → <strong>Lifecycle Manager</strong> → <strong>Hosts</strong> → select the new host → <strong>Check Compliance</strong>.</p>
+<p>If <strong>Non-Compliant</strong>, click <strong>Remediate</strong> — LCM places the host into maintenance mode, applies the baseline, and reboots automatically.</p>
+<p>Expected: host shows <strong>Compliant</strong> after remediation. Note: for VxRail clusters, run LCM through VxRail Manager only — never vCenter LCM directly.</p>
 <hr />
 <h2 id="9-disable-ssh">9. Disable SSH<a class="headerlink" href="#9-disable-ssh" title="Permanent link">&para;</a></h2>
-<p>Once all configuration is complete, disable SSH on the new host.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>vim-cmd<span class="w"> </span>hostsvc/disable_ssh
+<p>Disable SSH once all configuration steps are complete.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>vim-cmd<span class="w"> </span>hostsvc/disable_ssh
 </code></pre></div>
-<p>Or from the vCenter UI: select the host → <strong>Configure</strong> → <strong>Services</strong> → <strong>SSH</strong> → <strong>Stop</strong>.
-Set SSH startup policy to <strong>Start and stop manually</strong> to prevent it restarting on reboot.</p>
+<p>Expected: SSH service stops. Set startup policy to <strong>Start and stop manually</strong> (vCenter → Host → <strong>Configure</strong> → <strong>Services</strong> → <strong>SSH</strong>) to prevent it restarting on reboot.</p>
 <hr />
 <h2 id="post-task-validation">Post-Task Validation<a class="headerlink" href="#post-task-validation" title="Permanent link">&para;</a></h2>
 <table>
@@ -6867,6 +6839,74 @@ Set SSH startup policy to <strong>Start and stop manually</strong> to prevent it
   maintain the validated firmware-driver-ESXi bundle.</li>
 </ul>
 <hr />
+<hr />
+<h2 id="key-terms">Key Terms<a class="headerlink" href="#key-terms" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DCUI</td>
+<td>Direct Console User Interface — the local F2 menu on an ESXi host used to set management IP, hostname, and DNS before the host is reachable over the network</td>
+</tr>
+<tr>
+<td>vmnic</td>
+<td>Physical NIC presented to ESXi; the underlying uplink that VMkernel ports and VM portgroups share via the virtual switch</td>
+</tr>
+<tr>
+<td>VMkernel (vmk)</td>
+<td>A virtual network interface on ESXi used for host-originated traffic such as management, vMotion, vSAN, and TEP; not used by VM guest traffic</td>
+</tr>
+<tr>
+<td>MTU</td>
+<td>Maximum Transmission Unit — the largest frame size a network path will carry; vSAN requires end-to-end MTU 9000 (jumbo frames) to avoid silent packet fragmentation loss</td>
+</tr>
+<tr>
+<td>vmkping</td>
+<td>ESXi CLI tool for testing VMkernel-to-VMkernel connectivity; the <code>-d</code> flag disables fragmentation so MTU issues cause visible failure rather than silent fragmentation</td>
+</tr>
+<tr>
+<td>DNS A/PTR record</td>
+<td>A record maps hostname to IP; PTR record maps IP back to hostname — both must resolve correctly before vCenter and vSAN can register the host successfully</td>
+</tr>
+<tr>
+<td>NTP</td>
+<td>Network Time Protocol — keeps host clock in sync with vCenter; a drift of more than 5 minutes causes SSO certificate validation failures during cluster join</td>
+</tr>
+<tr>
+<td>VIB</td>
+<td>vSphere Installation Bundle — the package format used to install kernel modules and drivers on ESXi, including NSX kernel modules pushed during transport node configuration</td>
+</tr>
+<tr>
+<td>LCM baseline</td>
+<td>A defined patch level managed by vCenter Lifecycle Manager; hosts are checked for compliance against the baseline and remediated (patched + rebooted) if they do not match</td>
+</tr>
+<tr>
+<td>NSX transport node</td>
+<td>An ESXi host registered with NSX and configured to carry overlay (GENEVE-encapsulated) traffic; required before any VM on the host can connect to NSX logical segments</td>
+</tr>
+<tr>
+<td>TEP</td>
+<td>Tunnel Endpoint — a VMkernel port created by NSX on each transport node; carries GENEVE-encapsulated overlay traffic between hosts over the physical underlay network</td>
+</tr>
+<tr>
+<td>FDM</td>
+<td>Fault Domain Manager — the vSphere HA agent that runs on each ESXi host; coordinates VM restart decisions when a host failure is detected</td>
+</tr>
+<tr>
+<td>vSAN disk group</td>
+<td>A logical grouping of one cache disk and one or more capacity disks on a single ESXi host; the basic storage unit vSAN uses to contribute capacity to the shared datastore</td>
+</tr>
+<tr>
+<td>iDRAC</td>
+<td>Integrated Dell Remote Access Controller — Dell's out-of-band management interface for hardware-level access (power, console, firmware) independent of the ESXi OS state</td>
+</tr>
+</tbody>
+</table>
 <h2 id="related-scenarios">Related Scenarios<a class="headerlink" href="#related-scenarios" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Expand VxRail Cluster (Add Node)</li>

@@ -6367,6 +6367,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#key-terms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Terms
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#common-mistakes" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6647,8 +6658,7 @@ and recovering SSO and certificate services after time is fixed.
 </table>
 <hr />
 <h2 id="1-understand-why-ntp-matters-in-vmware">1. Understand Why NTP Matters in VMware<a class="headerlink" href="#1-understand-why-ntp-matters-in-vmware" title="Permanent link">&para;</a></h2>
-<p>Every VMware product validates time before accepting connections. The three mechanisms that break
-with time drift are:</p>
+<p>Every VMware product validates time before accepting connections — the 60-second threshold comes from the SAML token validity window used by SSO.</p>
 <table>
 <thead>
 <tr>
@@ -6675,15 +6685,13 @@ with time drift are:</p>
 </tr>
 </tbody>
 </table>
-<p>All products must agree on time within approximately 60 seconds of each other and of a common NTP
-reference. The 60-second threshold comes from the SAML token validity window used by SSO.</p>
 <hr />
 <h2 id="2-check-time-on-vcenter-vcsa">2. Check Time on vCenter VCSA<a class="headerlink" href="#2-check-time-on-vcenter-vcsa" title="Permanent link">&para;</a></h2>
-<p>SSH to the VCSA and check current time status:</p>
+<p>SSH to the VCSA and check current synchronisation state.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>timedatectl<span class="w"> </span>status
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>chronyc<span class="w"> </span>tracking
 </code></pre></div>
-<p>The <code>chronyc tracking</code> output shows:</p>
+<p>Expected output:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Reference ID    : 10.0.0.1 (ntp1.domain.local)
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>Stratum         : 3
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>System time     : 0.000123456 seconds fast of NTP time
@@ -6695,90 +6703,77 @@ reference. The 60-second threshold comes from the SAML token validity window use
 <a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>Root delay      : 0.003456 seconds
 <a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>Root dispersion : 0.001234 seconds
 </code></pre></div>
-<p>A System time offset beyond ±60 seconds indicates a problem. An offset beyond ±300 seconds means chrony
-will not correct automatically and <code>chronyc makestep</code> is required.</p>
+<p>Look for: System time offset beyond ±60 seconds. An offset beyond ±300 seconds means chrony will not self-correct and <code>chronyc makestep</code> is required.</p>
 <hr />
 <h2 id="3-check-time-on-esxi-hosts">3. Check Time on ESXi Hosts<a class="headerlink" href="#3-check-time-on-esxi-hosts" title="Permanent link">&para;</a></h2>
-<p>Check each ESXi host that vCenter reports as "Not Responding" or that shows vSAN time warnings:</p>
+<p>Check each ESXi host that vCenter reports as "Not Responding" or that shows vSAN time warnings.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>esxcli<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span>get
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>ntpq<span class="w"> </span>-p
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>date
 </code></pre></div>
-<p>The <code>ntpq -p</code> output shows one line per NTP peer. The <code>offset</code> column is in milliseconds:</p>
+<p>Expected <code>ntpq -p</code> output:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>     remote           refid      st t when poll reach   delay   offset  jitter
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>==============================================================================
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>*ntp1.domain.loca .GPS.            1 u   45   64  377    0.832   -0.245   0.187
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>+ntp2.domain.loca .GPS.            1 u   47   64  377    1.123    0.398   0.211
 </code></pre></div>
-<p>An offset beyond ±60,000 ms (60 seconds) in the offset column is the threshold for vCenter
-disconnection. The <code>*</code> prefix marks the currently selected NTP peer.</p>
+<p>Look for: offset column beyond ±60,000 ms (60 seconds). The <code>*</code> prefix marks the currently selected NTP peer; if no peer has <code>*</code>, the host has no active time source.</p>
 <hr />
 <h2 id="4-check-time-on-nsx-manager">4. Check Time on NSX Manager<a class="headerlink" href="#4-check-time-on-nsx-manager" title="Permanent link">&para;</a></h2>
-<p>SSH to NSX Manager (admin credentials) and check current time and NTP configuration:</p>
+<p>SSH to NSX Manager (admin credentials) and check current time and NTP configuration.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>get<span class="w"> </span>system<span class="w"> </span>clock
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>get<span class="w"> </span>ntp-server
 </code></pre></div>
-<p>Verify the NTP servers listed match the environment's authoritative NTP sources and that the system
-clock output matches vCenter time.</p>
+<p>Look for: system clock time matching vCenter within 60 seconds, and NTP servers matching the environment's authoritative sources.</p>
 <hr />
 <h2 id="5-fix-ntp-on-esxi-hosts">5. Fix NTP on ESXi Hosts<a class="headerlink" href="#5-fix-ntp-on-esxi-hosts" title="Permanent link">&para;</a></h2>
-<p>If an ESXi host has drifted or has no NTP configured:</p>
+<p>Configure NTP and force an immediate sync on each drifted host.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>esxcli<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enabled<span class="w"> </span><span class="nb">false</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--server<span class="w"> </span>ntp1.domain.local<span class="w"> </span>--server<span class="w"> </span>ntp2.domain.local
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>esxcli<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--enabled<span class="w"> </span><span class="nb">true</span>
-</code></pre></div>
-<p>Force an immediate time synchronisation instead of waiting for gradual drift correction:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>ntpdate<span class="w"> </span>-u<span class="w"> </span>ntp1.domain.local
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>ntpdate<span class="w"> </span>-u<span class="w"> </span>ntp1.domain.local
 </code></pre></div>
 <p>Confirm the fix:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>ntpq<span class="w"> </span>-p
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>date
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>ntpq<span class="w"> </span>-p
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>date
 </code></pre></div>
-<p>Repeat for every ESXi host in the cluster. NTP configuration must be applied to each host individually
-unless a Host Profile enforces NTP settings cluster-wide.</p>
+<p>Repeat for every ESXi host in the cluster — NTP must be applied per host unless a Host Profile enforces it cluster-wide.</p>
 <hr />
 <h2 id="6-fix-ntp-on-vcsa">6. Fix NTP on VCSA<a class="headerlink" href="#6-fix-ntp-on-vcsa" title="Permanent link">&para;</a></h2>
-<p>Configure NTP via VAMI (<code>https://vcenter-fqdn:5480</code> → <strong>Time → Edit NTP Servers</strong>) for a persistent
-configuration that survives appliance reboots.</p>
-<p>To fix via SSH immediately:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>timedatectl<span class="w"> </span>set-ntp<span class="w"> </span><span class="nb">true</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>chronyc<span class="w"> </span>makestep
+<p>Configure NTP via VAMI (<code>https://vcenter-fqdn:5480</code> → <strong>Time → Edit NTP Servers</strong>) for persistence across reboots.</p>
+<p>To fix immediately via SSH:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>timedatectl<span class="w"> </span>set-ntp<span class="w"> </span><span class="nb">true</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>chronyc<span class="w"> </span>makestep
 </code></pre></div>
-<p><code>chronyc makestep</code> forces an immediate step adjustment to the correct time, bypassing the gradual
-slew correction that chrony normally applies. Without this, a large drift can take minutes or hours
-to correct naturally — during which SSL failures continue.</p>
+<p><code>chronyc makestep</code> forces an immediate step adjustment rather than the gradual slew — without this, SSL failures continue for minutes or hours while drift corrects naturally.</p>
 <p>Confirm:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>chronyc<span class="w"> </span>tracking
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>timedatectl<span class="w"> </span>status
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>chronyc<span class="w"> </span>tracking
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>timedatectl<span class="w"> </span>status
 </code></pre></div>
 <hr />
 <h2 id="7-fix-ntp-on-nsx-manager">7. Fix NTP on NSX Manager<a class="headerlink" href="#7-fix-ntp-on-nsx-manager" title="Permanent link">&para;</a></h2>
-<p>SSH to NSX Manager and reconfigure NTP:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nb">set</span><span class="w"> </span>ntp-server<span class="w"> </span>ntp1.domain.local
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nb">set</span><span class="w"> </span>ntp-server<span class="w"> </span>ntp2.domain.local
-</code></pre></div>
-<p>Force time synchronisation:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>restart<span class="w"> </span>service<span class="w"> </span>ntpd
+<p>SSH to NSX Manager and reconfigure NTP, then force synchronisation.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nb">set</span><span class="w"> </span>ntp-server<span class="w"> </span>ntp1.domain.local
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nb">set</span><span class="w"> </span>ntp-server<span class="w"> </span>ntp2.domain.local
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>restart<span class="w"> </span>service<span class="w"> </span>ntpd
 </code></pre></div>
 <p>Verify:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>get<span class="w"> </span>system<span class="w"> </span>clock
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>get<span class="w"> </span>system<span class="w"> </span>clock
 </code></pre></div>
+<p>Look for: clock time within 60 seconds of vCenter after <code>ntpd</code> restarts.</p>
 <hr />
 <h2 id="8-restart-sso-after-time-is-fixed">8. Restart SSO After Time Is Fixed<a class="headerlink" href="#8-restart-sso-after-time-is-fixed" title="Permanent link">&para;</a></h2>
-<p>If SSO token errors persist after NTP is corrected, stale tokens in memory remain invalid. Restart
-the STS (Security Token Service) component:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>service-control<span class="w"> </span>--restart<span class="w"> </span>vmware-stsd
+<p>If SSO token errors persist after NTP is corrected, stale tokens remain invalid until the STS service is restarted.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>service-control<span class="w"> </span>--restart<span class="w"> </span>vmware-stsd
 </code></pre></div>
-<p>Wait 60–90 seconds after restart before attempting login. The STS service generates new signing keys
-on startup, which invalidates any cached tokens — this is expected behaviour.</p>
+<p>Wait 60–90 seconds after restart before attempting login — STS generates new signing keys on startup, which invalidates all cached tokens; this is expected behaviour.</p>
 <hr />
 <h2 id="9-verify-vsan-time-skew-health-check">9. Verify vSAN Time Skew Health Check<a class="headerlink" href="#9-verify-vsan-time-skew-health-check" title="Permanent link">&para;</a></h2>
-<p>vSAN's built-in health check detects time skew between cluster members. After fixing NTP on all hosts,
-navigate in vCenter to <strong>Cluster → Monitor → vSAN → Skyline Health</strong> and re-run the
+<p>Re-run the vSAN health check after fixing NTP on all hosts to confirm the cluster is clean.</p>
+<p>Navigate in vCenter to <strong>Cluster → Monitor → vSAN → Skyline Health</strong> and re-run the
 <strong>"vSAN cluster member hosts time divergence"</strong> check.</p>
-<p>The check passes when all hosts are within ±60 seconds of each other. If a host still fails after NTP
-is configured, force a sync on that host:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>ntpdate<span class="w"> </span>-u<span class="w"> </span>ntp1.domain.local
+<p>If a host still fails after NTP is configured, force a sync:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>ntpdate<span class="w"> </span>-u<span class="w"> </span>ntp1.domain.local
 </code></pre></div>
 <p>Then re-run the health check from vCenter.</p>
 <hr />
@@ -6816,6 +6811,66 @@ is configured, force a sync on that host:</p>
 <td>Aria Operations</td>
 <td>60 seconds from vCenter</td>
 <td>Metric collection gaps; false-positive alerts</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="key-terms">Key Terms<a class="headerlink" href="#key-terms" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NTP</td>
+<td>Network Time Protocol — the standard protocol used to synchronise clocks across hosts, appliances, and network devices to a common time source</td>
+</tr>
+<tr>
+<td>chronyc</td>
+<td>Command-line client for the chrony NTP daemon used on the VCSA; <code>chronyc tracking</code> shows current offset and <code>chronyc makestep</code> forces an immediate clock correction</td>
+</tr>
+<tr>
+<td>timedatectl</td>
+<td>Linux systemd utility on the VCSA for displaying and configuring the system clock, NTP status, and timezone</td>
+</tr>
+<tr>
+<td>SSO</td>
+<td>Single Sign-On — VMware's authentication service that issues SAML tokens for all vSphere and NSX logins; token validity is clock-bound, so any time skew invalidates active sessions</td>
+</tr>
+<tr>
+<td>STS</td>
+<td>Security Token Service — the component within SSO (vmware-stsd) that generates and validates SAML tokens; must be restarted after large time corrections to clear stale in-memory token state</td>
+</tr>
+<tr>
+<td>vmware-stsd</td>
+<td>The systemd service name for the VMware Security Token Service on the VCSA; restarting it forces new signing key generation and clears invalid token caches</td>
+</tr>
+<tr>
+<td>Time skew</td>
+<td>The measured difference between a system's local clock and the NTP reference time; skew beyond 60 seconds breaks VMware TLS and SSO validation</td>
+</tr>
+<tr>
+<td>ntpdate</td>
+<td>Command-line tool used on ESXi hosts to force an immediate one-shot time synchronisation, bypassing the gradual correction that the NTP daemon applies</td>
+</tr>
+<tr>
+<td>NTP stratum</td>
+<td>A number indicating how many hops away a time source is from a hardware reference clock; stratum 1 = GPS/atomic clock, stratum 2 = synced to stratum 1; lower stratum = higher accuracy</td>
+</tr>
+<tr>
+<td>Certificate validity window</td>
+<td>The time range between a certificate's notBefore and notAfter fields; if the system clock is outside this window, TLS handshakes fail with "not yet valid" or "expired" errors</td>
+</tr>
+<tr>
+<td>Aria Operations</td>
+<td>VMware's observability and monitoring platform; also an NTP client — if its clock drifts, metric timestamps diverge from vCenter and trigger false-positive connectivity alerts</td>
+</tr>
+<tr>
+<td>NSX Manager</td>
+<td>The NSX control plane appliance that manages overlay networking and security policy; NTP drift on NSX Manager causes API authentication failures and control plane instability</td>
 </tr>
 </tbody>
 </table>

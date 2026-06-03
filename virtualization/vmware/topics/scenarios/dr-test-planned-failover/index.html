@@ -6412,21 +6412,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-mistakes" class="md-nav__link">
+  <a href="#key-terms" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common Mistakes
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#related-scenarios" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Related Scenarios
+        Key Terms
       
     </span>
   </a>
@@ -6697,21 +6686,18 @@ them to fail.
 </table>
 <hr />
 <h2 id="dr-test-non-disruptive-recovery-validation">DR Test — Non-Disruptive Recovery Validation<a class="headerlink" href="#dr-test-non-disruptive-recovery-validation" title="Permanent link">&para;</a></h2>
-<p>A DR test is designed to be run regularly (at minimum annually, often quarterly) without any impact
-to production. SRM boots replicated VM snapshots in an isolated test network at the DR site.
-Production VMs at the primary site continue running throughout.</p>
+<p>A DR test boots replicated VM snapshots in an isolated test network at the DR site while production VMs at the primary site continue running throughout.</p>
 <h3 id="1-verify-replication-health-before-the-test">1. Verify Replication Health Before the Test<a class="headerlink" href="#1-verify-replication-health-before-the-test" title="Permanent link">&para;</a></h3>
+<p>Confirm all VMs in the recovery plan are within their RPO before starting the test.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Confirm all VMs in the recovery plan are at RPO — must show OK, not Warning or Error</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c"># SRM → Site Recovery → Replication → review status column for all protected VMs</span>
 </code></pre></div>
-<p>From the SRM UI: <strong>Site Recovery → Replication</strong>. Every VM in the recovery plan must show status
-<strong>OK</strong> and the last sync time must be within the configured RPO window. A VM showing <strong>RPO
-Violated</strong> or <strong>Not Responding</strong> will fail to power on during the test.</p>
+<p>Expected: every VM shows status <strong>OK</strong> and last sync time within the configured RPO window. A VM showing <strong>RPO Violated</strong> or <strong>Not Responding</strong> will fail to power on during the test.</p>
 <h3 id="2-run-the-dr-test">2. Run the DR Test<a class="headerlink" href="#2-run-the-dr-test" title="Permanent link">&para;</a></h3>
 <p>SRM → <strong>Recovery Plans</strong> → select the plan → <strong>Test</strong>.</p>
-<p>SRM creates a temporary test network (isolated — no routing to production) and powers on the
-replicated VM snapshots at the DR site. The test network uses a separate IP range or a bubble
-network with NAT so there are no IP conflicts with production.</p>
+<p>SRM creates a temporary isolated test network (bubble network) and powers on the replicated VM
+snapshots at the DR site. The test network uses a separate IP range or NAT so there are no IP
+conflicts with production.</p>
 <h3 id="3-validate-application-functionality">3. Validate Application Functionality<a class="headerlink" href="#3-validate-application-functionality" title="Permanent link">&para;</a></h3>
 <p>Log into each test VM and run application smoke tests:
 - Can the application start and respond?
@@ -6720,19 +6706,12 @@ network with NAT so there are no IP conflicts with production.</p>
 <p>Document any failures — the DR test is only valuable if results are recorded and acted on.</p>
 <h3 id="4-clean-up-after-the-test">4. Clean Up After the Test<a class="headerlink" href="#4-clean-up-after-the-test" title="Permanent link">&para;</a></h3>
 <p>SRM → <strong>Recovery Plans</strong> → select the plan → <strong>Cleanup</strong>.</p>
-<p>SRM powers off all test VMs and removes the isolated test network. The production environment
-is completely unaffected throughout. <strong>Do not skip the cleanup step.</strong> If test VMs are left
-running, they consume DR site compute and storage capacity, and they may interfere with a real
-failover if one is needed before the next test.</p>
+<p>SRM powers off all test VMs and removes the isolated test network. <strong>Do not skip the cleanup step.</strong> Test VMs left running consume DR site capacity and may interfere with a real failover.</p>
 <hr />
 <h2 id="planned-failover-graceful-production-migration-to-dr-site">Planned Failover — Graceful Production Migration to DR Site<a class="headerlink" href="#planned-failover-graceful-production-migration-to-dr-site" title="Permanent link">&para;</a></h2>
-<p>A planned failover gracefully migrates all protected workloads from the primary to the DR site.
-The primary site is shut down cleanly, the final changed blocks are synced, and the VMs power on
-at the DR site with their production IP addresses. Data loss is typically zero if replication
-is current at the time of failover.</p>
-<p>Use planned failover for: scheduled site maintenance, data centre migrations, or hardware refresh
-at the primary site.</p>
+<p>A planned failover gracefully migrates all protected workloads from the primary to the DR site with typically zero data loss if replication is current at the time of failover.</p>
 <h3 id="1-pre-failover-checks">1. Pre-Failover Checks<a class="headerlink" href="#1-pre-failover-checks" title="Permanent link">&para;</a></h3>
+<p>Confirm DR site capacity and replication currency before initiating failover.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Check replication status — all VMs must be at RPO before initiating planned failover</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c"># SRM → Replication → confirm all statuses show OK</span>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
@@ -6741,8 +6720,7 @@ at the primary site.</p>
 <a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>  <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;EffectiveCPUMHz&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={(</span><span class="nv">$_</span> <span class="p">|</span> <span class="nb">Get-View</span><span class="p">).</span><span class="n">Summary</span><span class="p">.</span><span class="n">EffectiveCpu</span><span class="p">}},</span>
 <a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>  <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;EffectiveMemMB&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={(</span><span class="nv">$_</span> <span class="p">|</span> <span class="nb">Get-View</span><span class="p">).</span><span class="n">Summary</span><span class="p">.</span><span class="n">EffectiveMemory</span><span class="p">}}</span>
 </code></pre></div>
-<p>Confirm the DR site cluster has sufficient effective CPU and memory headroom to run all VMs in
-the recovery plan simultaneously. Factor in the DR cluster's own HA admission control reservation.</p>
+<p>Expected: all VMs at RPO; DR cluster effective CPU and memory headroom sufficient for all recovery plan VMs plus HA admission control reservation.</p>
 <h3 id="2-initiate-planned-failover">2. Initiate Planned Failover<a class="headerlink" href="#2-initiate-planned-failover" title="Permanent link">&para;</a></h3>
 <p>SRM → <strong>Recovery Plans</strong> → select the plan → <strong>Run</strong> → select <strong>Planned Migration</strong>.</p>
 <p>What SRM does during a planned migration (in order):
@@ -6751,45 +6729,34 @@ the recovery plan simultaneously. Factor in the DR cluster's own HA admission co
 3. Powers on DR site VMs in the order defined by the recovery plan (priority groups)
 4. Applies network customisation: maps primary site networks to DR site networks using the
    Network Mapping configured in SRM</p>
-<p>Unlike an emergency failover (which skips the graceful shutdown and accepts potential data loss),
-planned migration waits for the final sync to complete before powering on DR VMs.</p>
 <h3 id="3-nsx-network-configuration-at-the-dr-site">3. NSX Network Configuration at the DR Site<a class="headerlink" href="#3-nsx-network-configuration-at-the-dr-site" title="Permanent link">&para;</a></h3>
-<p>If primary site VMs use NSX segments, the DR site NSX Manager must have the matching segments
-configured before failover. SRM integrates with NSX to apply these mappings, but the segments
-themselves must already exist.</p>
+<p>Verify all required NSX segments exist and are mapped in SRM before initiating failover.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Verify required segments exist at DR site NSX Manager before failover</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># NSX Manager (DR site) → Networking → Segments → confirm all required segments are present</span>
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># SRM → Site Recovery → Network Mappings → confirm all primary segments have a DR mapping</span>
 </code></pre></div>
-<p>If a segment mapping is missing, VMs power on at the DR site but their NICs connect to nothing —
-they have no network connectivity.</p>
+<p>Expected: every primary segment has a corresponding DR segment and an SRM network mapping entry. Missing mappings cause VMs to power on with disconnected NICs.</p>
 <h3 id="4-dns-after-planned-failover">4. DNS After Planned Failover<a class="headerlink" href="#4-dns-after-planned-failover" title="Permanent link">&para;</a></h3>
-<p>SRM maps IP addresses from the primary network to the DR network. If VMs retain their original
-production IP addresses (same subnet exists at DR — stretched L2 or NSX-T), DNS records do not
-need to change.</p>
-<p>If IP addresses change at DR (different subnet):</p>
+<p>Update DNS only if VMs receive new IP addresses at the DR site (different subnet — no stretched L2).</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Update DNS A records to point to the new DR IP for each application FQDN</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># If using Active Directory DNS:</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># Run this on a DC at the DR site after VMs are up:</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># dnscmd /recorddelete &lt;zone&gt; &lt;hostname&gt; A &lt;old-IP&gt;</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># dnscmd /recordadd &lt;zone&gt; &lt;hostname&gt; A &lt;new-DR-IP&gt;</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Verify resolution from a DR site client after DNS update</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>nslookup<span class="w"> </span>app.domain.local<span class="w"> </span>&lt;DR-DNS-server-IP&gt;
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># If using Active Directory DNS — run on a DC at the DR site after VMs are up:</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1"># dnscmd /recorddelete &lt;zone&gt; &lt;hostname&gt; A &lt;old-IP&gt;</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># dnscmd /recordadd &lt;zone&gt; &lt;hostname&gt; A &lt;new-DR-IP&gt;</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1"># Verify resolution from a DR site client after DNS update</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>nslookup<span class="w"> </span>app.domain.local<span class="w"> </span>&lt;DR-DNS-server-IP&gt;
 </code></pre></div>
+<p>Expected: <code>nslookup</code> returns the DR site IP for each application FQDN.</p>
 <h3 id="5-post-failover-validation">5. Post-Failover Validation<a class="headerlink" href="#5-post-failover-validation" title="Permanent link">&para;</a></h3>
+<p>Confirm all VMs are powered on and connect Aria Operations to the DR site vCenter.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Verify all VMs in the recovery plan are powered on at the DR site</span>
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Get-Cluster</span> <span class="s2">&quot;DR-Cluster&quot;</span> <span class="p">|</span> <span class="nb">Get-VM</span> <span class="p">|</span>
 <a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">PowerState</span> <span class="o">-ne</span> <span class="s2">&quot;PoweredOn&quot;</span><span class="p">}</span> <span class="p">|</span>
 <a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span> <span class="n">PowerState</span>
 </code></pre></div>
-<p>Connect Aria Operations to the DR site vCenter and run a manual data collection to populate the
-dashboard with the DR site VMs. Check for any critical alerts.</p>
+<p>Expected: zero VMs returned (all are PoweredOn). Aria Operations manual collection returns no critical alerts.</p>
 <h3 id="6-failback-to-primary-site">6. Failback to Primary Site<a class="headerlink" href="#6-failback-to-primary-site" title="Permanent link">&para;</a></h3>
-<p>When the primary site is ready to resume (maintenance complete, hardware replaced), reverse the
-replication and run another planned migration in the opposite direction.</p>
-<p>SRM supports <strong>reverse replication</strong>: the DR site becomes the new source, replicating changes
-back to the primary site. This ensures zero data loss on failback.</p>
+<p>When the primary site is ready to resume, run Reprotect to reverse replication, then execute a planned migration back.</p>
 <p>SRM → <strong>Recovery Plans</strong> → <strong>Reprotect</strong> — this reconfigures the recovery plan for DR-to-Primary
 direction. Then run the plan as a planned migration from DR back to primary.</p>
 <p>Confirm that primary site hosts, storage, and networking are fully healthy before initiating
@@ -6838,29 +6805,65 @@ failback. A failback to a site still under maintenance causes an immediate secon
 </tbody>
 </table>
 <hr />
-<h2 id="common-mistakes">Common Mistakes<a class="headerlink" href="#common-mistakes" title="Permanent link">&para;</a></h2>
-<ul>
-<li><strong>Not cleaning up after a DR test.</strong> Test VMs remain running at the DR site, consuming capacity
-  and potentially conflicting with a real failover. Always run the SRM Cleanup step.</li>
-<li><strong>Failing over without checking DR site capacity.</strong> If the DR cluster cannot host all failed-over
-  VMs simultaneously, VMs fail to power on or get constrained. Check effective capacity before
-  initiating failover.</li>
-<li><strong>Missing NSX segment configuration at the DR site.</strong> Segments must exist and be mapped in SRM's
-  Network Mappings before failover. VMs power on with disconnected NICs if the mapping is absent.</li>
-<li><strong>Initiating failback to a site still under maintenance.</strong> The primary site must be fully
-  operational before failback. A return to a degraded site causes an immediate second failover
-  and potential data loss.</li>
-<li><strong>Skipping reprotect after planned failover.</strong> Without running Reprotect, replication does not
-  reverse. If a failure then occurs at the DR site (now the production site), there is no
-  replicated copy at the primary site to recover from.</li>
-</ul>
-<hr />
-<h2 id="related-scenarios">Related Scenarios<a class="headerlink" href="#related-scenarios" title="Permanent link">&para;</a></h2>
-<ul>
-<li>SRM Replication Lag and RPO Violation</li>
-<li>Certificate Expiry and Rotation</li>
-<li>Aria Ops Alert Storm</li>
-</ul>
+<h2 id="key-terms">Key Terms<a class="headerlink" href="#key-terms" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SRM</td>
+<td>Site Recovery Manager — the VMware product that orchestrates DR tests, planned failovers, and failbacks by executing recovery plans that define VM startup order, network mappings, and IP customisation</td>
+</tr>
+<tr>
+<td>vSR</td>
+<td>vSphere Replication — the VMware-native replication engine that continuously replicates VM changed blocks from the primary site to the DR site at a configured RPO interval</td>
+</tr>
+<tr>
+<td>RPO</td>
+<td>Recovery Point Objective — the maximum acceptable age of data at the DR site after a failure; a 15-minute RPO means replication must transfer changed blocks at least every 15 minutes</td>
+</tr>
+<tr>
+<td>RTO</td>
+<td>Recovery Time Objective — the maximum acceptable time from a failure event to workloads being accessible at the DR site; RTO is reduced by pre-staging VMs and having tested recovery plans</td>
+</tr>
+<tr>
+<td>bubble network</td>
+<td>An isolated test network created by SRM during a DR test that has no routing to production; allows DR-site VMs to power on and be tested without creating IP conflicts with their running production counterparts</td>
+</tr>
+<tr>
+<td>test recovery</td>
+<td>The SRM execution mode that powers on replicated VM snapshots in an isolated bubble network at the DR site without disrupting production — used for regular DR testing</td>
+</tr>
+<tr>
+<td>planned migration</td>
+<td>The SRM execution mode that gracefully shuts down primary site VMs, performs a final replication sync, then powers on VMs at the DR site with production IPs — used for scheduled maintenance or migrations</td>
+</tr>
+<tr>
+<td>reprotect</td>
+<td>The SRM operation that reverses the replication direction after a failover, making the DR site the new replication source so that changes made at DR are replicated back to the primary site before failback</td>
+</tr>
+<tr>
+<td>failback</td>
+<td>The process of returning workloads from the DR site back to the primary site after a failover; requires a Reprotect operation to reverse replication first</td>
+</tr>
+<tr>
+<td>NSX stretched network</td>
+<td>An NSX-T configuration where the same logical segment (same IP subnet) spans both primary and DR sites, allowing VMs to retain their IP addresses after failover without DNS changes</td>
+</tr>
+<tr>
+<td>recovery plan</td>
+<td>An SRM object that defines which VMs are protected, their startup order and priority groups, network mappings, and any pre/post-power-on scripts — the unit of execution for both DR tests and failovers</td>
+</tr>
+<tr>
+<td>HA admission control</td>
+<td>vCenter HA mechanism that reserves cluster capacity for VM restarts after a host failure; the DR site cluster's effective capacity after HA reservation must be checked before failover to confirm it can host all failed-over VMs</td>
+</tr>
+</tbody>
+</table>
 
 
 

@@ -6367,6 +6367,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#key-terms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Terms
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#related-scenarios" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6637,7 +6648,7 @@ ensure the cluster has at least 30% free space before enabling.
 </table>
 <hr />
 <h2 id="1-choose-the-key-provider">1. Choose the Key Provider<a class="headerlink" href="#1-choose-the-key-provider" title="Permanent link">&para;</a></h2>
-<p>Two options — choose based on compliance requirements:</p>
+<p>Select NKP for general use or an external KMS only when FIPS compliance or independent key management is a hard requirement.</p>
 <table>
 <thead>
 <tr>
@@ -6659,47 +6670,30 @@ ensure the cluster has at least 30% free space before enabling.
 </tr>
 </tbody>
 </table>
-<p>If unsure: use NKP. The external KMS path adds operational complexity (KMS appliance HA, certificate
-management, firewall rules) that is only warranted for specific compliance requirements.</p>
+<p>If unsure: use NKP. The external KMS path adds operational complexity (KMS HA, certificate management, firewall rules) that is only warranted for specific compliance requirements.</p>
 <hr />
 <h2 id="2-configure-native-key-provider-nkp">2. Configure Native Key Provider (NKP)<a class="headerlink" href="#2-configure-native-key-provider-nkp" title="Permanent link">&para;</a></h2>
-<p>vCenter → select the vSAN cluster → <strong>Configure</strong> → <strong>Key Providers</strong> → <strong>Add</strong> → <strong>Native Key
-Provider</strong> → give it a name (e.g., <code>vSAN-NKP-prod</code>).</p>
-<p><strong>Immediately back up the NKP.</strong> This is the most critical step in the entire procedure. The NKP
-backup is a password-protected file that is the only recovery path if the vCenter database is lost
-while encrypted data is on disk.</p>
-<p>vCenter → <strong>Key Providers</strong> → select the NKP → <strong>Back Up</strong> → enter a strong backup password →
-download the backup file.</p>
+<p>Create the NKP in vCenter, then immediately export and store the backup — losing the key means losing access to all encrypted data permanently.</p>
+<p>vCenter → select the vSAN cluster → <strong>Configure</strong> → <strong>Key Providers</strong> → <strong>Add</strong> → <strong>Native Key Provider</strong> → name it (e.g., <code>vSAN-NKP-prod</code>).</p>
+<p>vCenter → <strong>Key Providers</strong> → select the NKP → <strong>Back Up</strong> → set a strong password → download the file.</p>
 <p>Store the backup:</p>
 <ul>
 <li><strong>Not on the vCenter VM</strong> — if vCenter is lost, you cannot access the backup</li>
 <li><strong>Not on the vSAN datastore</strong> — if encryption is the problem, the datastore may be inaccessible</li>
-<li><strong>On an offline secure medium</strong> — USB drive or file share outside the VMware environment, with
-  access restricted to backup administrators</li>
+<li><strong>On an offline secure medium</strong> — USB drive or file share outside the VMware environment, access restricted to backup administrators</li>
 </ul>
+<p>Expected: backup file downloaded and stored off-system before proceeding to the next step.</p>
 <hr />
 <h2 id="3-configure-external-kms-if-using-external">3. Configure External KMS (If Using External)<a class="headerlink" href="#3-configure-external-kms-if-using-external" title="Permanent link">&para;</a></h2>
-<p>vCenter → select the cluster → <strong>Configure</strong> → <strong>Key Providers</strong> → <strong>Add</strong> → <strong>Standard Key
-Provider</strong>.</p>
-<p>Provide:</p>
-<ul>
-<li>KMS server name and IP address</li>
-<li>KMS port (default: TCP 5696 — the KMIP standard port)</li>
-<li>KMS credentials (client certificate or username/password depending on KMS vendor)</li>
-</ul>
-<p>After adding the KMS: <strong>Test Connection</strong> must return green before proceeding. Import the KMS server
-TLS certificate into vCenter to establish trust.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Verify KMS port is reachable from vCenter appliance</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Run from vCenter appliance shell</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;kms-server-ip&gt;<span class="w"> </span><span class="m">5696</span>
+<p>Add the KMS server to vCenter and verify connectivity before proceeding — the Test Connection check must return green.</p>
+<p>vCenter → select the cluster → <strong>Configure</strong> → <strong>Key Providers</strong> → <strong>Add</strong> → <strong>Standard Key Provider</strong>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Verify KMS port is reachable from vCenter appliance shell</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>nc<span class="w"> </span>-zv<span class="w"> </span>&lt;kms-server-ip&gt;<span class="w"> </span><span class="m">5696</span>
 </code></pre></div>
-<p>If the KMS is clustered for HA: add both KMS nodes to vCenter. vCenter will use the first
-available node.</p>
+<p>Expected: connection succeeds on TCP 5696 (KMIP standard port). Import the KMS TLS certificate into vCenter to establish trust. If the KMS is clustered, add both nodes — vCenter uses the first available.</p>
 <hr />
 <h2 id="4-pre-encryption-checks">4. Pre-Encryption Checks<a class="headerlink" href="#4-pre-encryption-checks" title="Permanent link">&para;</a></h2>
-<p>vSAN health must be completely green before enabling encryption. A partially degraded cluster
-combined with a full encryption rebuild can reduce vSAN below minimum fault tolerance, causing
-object unavailability.</p>
+<p>Confirm all five requirements are met before enabling encryption — the rebuild cannot be paused once started.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Check vSAN cluster health — all tests must be green</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Get-VsanView</span> <span class="n">-Id</span> <span class="s2">&quot;VsanVcClusterHealthSystem-vsan-cluster-health-system&quot;</span> <span class="p">|</span> <span class="p">`</span>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  <span class="nb">Select </span><span class="n">-ExpandProperty</span> <span class="n">OverallHealth</span>
@@ -6710,7 +6704,6 @@ object unavailability.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Check resync queue — must be 0 before enabling encryption</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>summary<span class="w"> </span>get
 </code></pre></div>
-<p>Requirements before proceeding:</p>
 <table>
 <thead>
 <tr>
@@ -6741,26 +6734,18 @@ object unavailability.</p>
 </tr>
 </tbody>
 </table>
-<p>Do not proceed if any check fails. The encryption rebuild cannot be paused once started.</p>
 <hr />
 <h2 id="5-enable-encryption">5. Enable Encryption<a class="headerlink" href="#5-enable-encryption" title="Permanent link">&para;</a></h2>
-<p>vCenter → select the vSAN cluster → <strong>Configure</strong> → <strong>vSAN</strong> → <strong>Services</strong> → <strong>Data-At-Rest
-Encryption</strong> → <strong>Edit</strong> → toggle <strong>Encryption</strong> to enabled → select the Key Provider →
-<strong>Apply</strong>.</p>
-<p>vCenter will display a warning that enabling encryption triggers a full data rebuild and that this
-operation cannot be paused. Confirm the warning.</p>
-<p>The rebuild begins immediately on all hosts in the cluster. All VMs continue running during the
-rebuild — this is not a maintenance window in the sense of VM downtime, but it is a maintenance
-window in the sense that no other storage maintenance should be performed.</p>
+<p>Enable data-at-rest encryption via the cluster vSAN configuration — a full rebuild begins immediately on all hosts.</p>
+<p>vCenter → select the vSAN cluster → <strong>Configure</strong> → <strong>vSAN</strong> → <strong>Services</strong> → <strong>Data-At-Rest Encryption</strong> → <strong>Edit</strong> → toggle <strong>Encryption</strong> enabled → select the Key Provider → <strong>Apply</strong>.</p>
+<p>Expected: vCenter displays a warning that the rebuild cannot be paused — confirm to proceed. All VMs continue running during the rebuild, but no other storage maintenance should be performed concurrently.</p>
 <hr />
 <h2 id="6-monitor-the-rebuild">6. Monitor the Rebuild<a class="headerlink" href="#6-monitor-the-rebuild" title="Permanent link">&para;</a></h2>
-<p>vCenter → <strong>vSAN</strong> → <strong>Monitor</strong> → <strong>Resyncing Objects</strong>.</p>
-<p>The resyncing objects view shows total bytes remaining and per-object status. This view updates
-every few minutes.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Monitor from ESXi CLI — shows bytes to resync and estimated completion</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>summary<span class="w"> </span>get
+<p>Monitor the resyncing objects queue until it reaches 0 — do not perform any storage maintenance operations while the rebuild is in progress.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>summary<span class="w"> </span>get
 </code></pre></div>
-<p>Reference rebuild times (approximate — varies significantly with cluster I/O load):</p>
+<p>Also monitor: vCenter → <strong>vSAN</strong> → <strong>Monitor</strong> → <strong>Resyncing Objects</strong> (updates every few minutes).</p>
+<p>Reference rebuild times:</p>
 <table>
 <thead>
 <tr>
@@ -6787,41 +6772,22 @@ every few minutes.</p>
 </tr>
 </tbody>
 </table>
-<p>During the rebuild — do not do any of the following:</p>
-<ul>
-<li>Put any host in maintenance mode</li>
-<li>Add or remove disks from any host</li>
-<li>Remove any host from the cluster</li>
-<li>Run any other vSAN resync operations (e.g., policy changes on large VMs)</li>
-<li>Run Storage vMotion operations on large VMDKs</li>
-</ul>
-<p>Any of these operations adds to the resync queue and extends the rebuild time. In the worst case,
-concurrent operations can saturate the vSAN rebuild bandwidth and cause the rebuild to stall.</p>
+<p>During the rebuild, do not: put any host in maintenance mode, add or remove disks, run policy changes on large VMs, or run svMotion on large VMDKs. Any concurrent resync operation extends rebuild time and may stall the rebuild entirely.</p>
 <hr />
 <h2 id="7-verify-encryption-status-after-rebuild">7. Verify Encryption Status After Rebuild<a class="headerlink" href="#7-verify-encryption-status-after-rebuild" title="Permanent link">&para;</a></h2>
-<p>Once the resyncing objects count reaches 0, verify that encryption is fully applied.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># From any ESXi host in the cluster</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># Check that vSAN objects show encrypted state</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>encrypt
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Or query encryption status directly</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>encryption<span class="w"> </span>get
+<p>Once the resync queue reaches 0, confirm encryption is active and vSAN health is all green.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>encrypt
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>encryption<span class="w"> </span>get
 </code></pre></div>
-<p>From vCenter: <strong>Cluster</strong> → <strong>Configure</strong> → <strong>vSAN</strong> → <strong>Services</strong> → <strong>Data-At-Rest Encryption</strong>
-should show <strong>Enabled</strong> with the key provider name and status <strong>Active</strong>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Confirm vSAN health is still all green after rebuild</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Get-VsanView</span> <span class="n">-Id</span> <span class="s2">&quot;VsanVcClusterHealthSystem-vsan-cluster-health-system&quot;</span> <span class="p">|</span> <span class="p">`</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  <span class="nb">Select </span><span class="n">-ExpandProperty</span> <span class="n">OverallHealth</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">Get-VsanView</span> <span class="n">-Id</span> <span class="s2">&quot;VsanVcClusterHealthSystem-vsan-cluster-health-system&quot;</span> <span class="p">|</span> <span class="p">`</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  <span class="nb">Select </span><span class="n">-ExpandProperty</span> <span class="n">OverallHealth</span>
 </code></pre></div>
+<p>Expected: vCenter → <strong>Cluster</strong> → <strong>Configure</strong> → <strong>vSAN</strong> → <strong>Services</strong> → <strong>Data-At-Rest Encryption</strong> shows <strong>Enabled</strong> with key provider status <strong>Active</strong>, and all Skyline Health tests return green.</p>
 <hr />
 <h2 id="8-post-encryption-key-backup">8. Post-Encryption Key Backup<a class="headerlink" href="#8-post-encryption-key-backup" title="Permanent link">&para;</a></h2>
-<p>After encryption is confirmed active, export the NKP backup again. The first backup (taken before
-enabling encryption) captured the key before it was in active use. The post-encryption backup
-captures the key in its current active state and should replace the pre-encryption backup.</p>
-<p>vCenter → <strong>Key Providers</strong> → select the NKP → <strong>Back Up</strong> → download and store as per the
-backup storage guidance in Step 2.</p>
-<p>Label the backup file with the date and cluster name. Establish a schedule to refresh the NKP
-backup whenever the key is rotated.</p>
+<p>Export a fresh NKP backup now that encryption is active — this replaces the pre-encryption backup and captures the key in its current in-use state.</p>
+<p>vCenter → <strong>Key Providers</strong> → select the NKP → <strong>Back Up</strong> → download and store per the guidance in Step 2.</p>
+<p>Expected: backup file labelled with date and cluster name, stored off-system. Establish a schedule to refresh the backup whenever the key is rotated.</p>
 <hr />
 <h2 id="post-task-validation">Post-Task Validation<a class="headerlink" href="#post-task-validation" title="Permanent link">&para;</a></h2>
 <table>
@@ -6883,6 +6849,66 @@ backup whenever the key is rotated.</p>
   Storage Policy instead of vSAN cluster-level encryption.</li>
 </ul>
 <hr />
+<hr />
+<h2 id="key-terms">Key Terms<a class="headerlink" href="#key-terms" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NKP</td>
+<td>Native Key Provider — a vCenter-managed key provider introduced in vSphere 7.0 U2 that stores encryption keys in the vCenter database; no external KMS appliance required</td>
+</tr>
+<tr>
+<td>KMS</td>
+<td>Key Management Server — an external appliance that stores and serves encryption keys to vCenter via the KMIP protocol; required for FIPS-compliant environments</td>
+</tr>
+<tr>
+<td>KMIP</td>
+<td>Key Management Interoperability Protocol — the OASIS standard protocol (default port TCP 5696) used for communication between vCenter and an external KMS</td>
+</tr>
+<tr>
+<td>FIPS</td>
+<td>Federal Information Processing Standard — US government cryptographic standard (FIPS 140-2) that mandates specific approved algorithms and independent key management; requires an external KMS, not NKP</td>
+</tr>
+<tr>
+<td>Data-at-rest encryption</td>
+<td>Encryption applied to data stored on disk so that physically removed drives cannot be read without the key; vSAN data-at-rest encryption protects all objects on all disk groups in the cluster</td>
+</tr>
+<tr>
+<td>vSAN full rebuild</td>
+<td>The process triggered by enabling vSAN encryption where every object is re-encrypted on disk end-to-end; all data is read, encrypted, and written back — cannot be paused once started</td>
+</tr>
+<tr>
+<td>SPBM encryption policy</td>
+<td>A storage policy that includes an encryption rule, applied per-VM to enforce VM Encryption at the VMDK level; separate from and not a substitute for vSAN cluster-level encryption</td>
+</tr>
+<tr>
+<td>VM Encryption</td>
+<td>A per-VM encryption feature (distinct from vSAN encryption) that encrypts VM home files and VMDKs individually via a storage policy; used when per-VM key isolation is required</td>
+</tr>
+<tr>
+<td>Key backup</td>
+<td>The password-protected export of the NKP or KMS credentials used to recover encrypted data if vCenter is rebuilt; must be stored offline, not on the vSAN datastore or vCenter VM</td>
+</tr>
+<tr>
+<td>Resync queue</td>
+<td>The set of vSAN object components that need to be rebuilt or relocated; must be 0 before enabling encryption and is monitored throughout the rebuild to track progress</td>
+</tr>
+<tr>
+<td>vSAN slack space</td>
+<td>The free capacity vSAN reserves for rebuild operations; at least 30% free space is required before enabling encryption so the rebuild has room to create re-encrypted copies before removing originals</td>
+</tr>
+<tr>
+<td>vCenter Key Provider</td>
+<td>The umbrella vCenter feature that manages both NKP and external KMS configurations; accessed at cluster level under Configure → Key Providers</td>
+</tr>
+</tbody>
+</table>
 <h2 id="related-scenarios">Related Scenarios<a class="headerlink" href="#related-scenarios" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Host Maintenance and Patching</li>

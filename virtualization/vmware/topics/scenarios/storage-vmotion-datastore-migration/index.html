@@ -6345,6 +6345,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#key-terms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Terms
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#related-scenarios" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6615,37 +6626,27 @@ large VMDKs and always verify destination capacity and storage policy before sta
 </table>
 <hr />
 <h2 id="1-pre-migration-checks">1. Pre-Migration Checks<a class="headerlink" href="#1-pre-migration-checks" title="Permanent link">&para;</a></h2>
-<p>Before initiating any svMotion, verify destination capacity and understand the VMDK format. Thin
-disks inflate to their provisioned size during migration — a 500 GB thin-provisioned disk consuming
-only 100 GB of actual space will consume up to 500 GB on the destination during the migration
-process.</p>
+<p>Verify destination free space and VMDK format before starting — thin-provisioned disks inflate to their full provisioned size during migration.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Check destination datastore free space</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-Datastore</span> <span class="s2">&quot;destination-datastore&quot;</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span> <span class="n">FreeSpaceGB</span><span class="p">,</span> <span class="n">CapacityGB</span>
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># Check source VM disk sizes and current format</span>
 <a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">Get-VM</span> <span class="s2">&quot;vm-name&quot;</span> <span class="p">|</span> <span class="nb">Get-HardDisk</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span> <span class="n">CapacityGB</span><span class="p">,</span> <span class="n">StorageFormat</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c"># List available storage policies (required if destination is vSAN)</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nb">Get-SpbmStoragePolicy</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span> <span class="n">Description</span>
 </code></pre></div>
-<p><strong>Required free space on destination:</strong> at least 1.5× the total provisioned VMDK capacity of all
-disks being migrated. The 0.5× overhead covers the swap file, snapshot delta disks that may be
-active during migration, and the temporary delta created by the mirror copy process.</p>
-<p>If migrating to a vSAN datastore, confirm the target storage policy exists:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># List available storage policies</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Get-SpbmStoragePolicy</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span> <span class="n">Description</span>
-</code></pre></div>
+<p>Expected: destination free space ≥ 1.5× total provisioned VMDK capacity. The 0.5× overhead covers swap file, snapshot delta files, and the temporary mirror copy delta.</p>
 <hr />
 <h2 id="2-choose-storage-policy-for-destination">2. Choose Storage Policy for Destination<a class="headerlink" href="#2-choose-storage-policy-for-destination" title="Permanent link">&para;</a></h2>
-<p>If migrating to vSAN, always select an explicit storage policy. Migrating without specifying a
-policy applies the vSAN default policy, which may not match what the VM requires.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Store target policy in a variable for use in the migration command</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">$policy</span> <span class="p">=</span> <span class="nb">Get-SpbmStoragePolicy</span> <span class="s2">&quot;Production-Standard&quot;</span>
+<p>Always select an explicit SPBM storage policy when migrating to vSAN — omitting one applies the vSAN default policy, which may not match the VM's requirements.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Store target policy in a variable for use in the migration command</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">$policy</span> <span class="p">=</span> <span class="nb">Get-SpbmStoragePolicy</span> <span class="s2">&quot;Production-Standard&quot;</span>
 </code></pre></div>
-<p><strong>Special case — migrating within the same vSAN datastore for a policy change:</strong> svMotion is not
-needed. vSAN can apply a new storage policy to an existing VMDK without moving data. Right-click
-the VM → <strong>VM Policies</strong> → <strong>Edit VM Storage Policies</strong> → select the new policy → <strong>Apply to All</strong>.
-vSAN will resync components to satisfy the new policy in the background.</p>
+<p><strong>Special case — policy change within the same vSAN datastore:</strong> svMotion is not needed. Right-click the VM → <strong>VM Policies</strong> → <strong>Edit VM Storage Policies</strong> → select the new policy → <strong>Apply to All</strong>. vSAN resyncs components in the background to satisfy the new policy.</p>
 <hr />
 <h2 id="3-initiate-svmotion-via-vcenter-ui">3. Initiate svMotion via vCenter UI<a class="headerlink" href="#3-initiate-svmotion-via-vcenter-ui" title="Permanent link">&para;</a></h2>
-<p>Right-click the VM → <strong>Migrate</strong> → select the migration type:</p>
+<p>Right-click the VM → <strong>Migrate</strong> → select the migration type, then choose the destination datastore and storage policy.</p>
 <table>
 <thead>
 <tr>
@@ -6668,26 +6669,26 @@ vSAN will resync components to satisfy the new policy in the background.</p>
 </tr>
 </tbody>
 </table>
-<p>For storage-only migration: select <strong>Change storage only</strong> → select the destination datastore →
-select the storage policy → <strong>Finish</strong>.</p>
+<p>Expected: migration task appears in vCenter Recent Tasks as <strong>Relocate virtual machine</strong> with a progress percentage.</p>
 <hr />
 <h2 id="4-initiate-svmotion-via-powercli">4. Initiate svMotion via PowerCLI<a class="headerlink" href="#4-initiate-svmotion-via-powercli" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Migrate VMDK to a different datastore (keep same disk format)</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Move-VM</span> <span class="n">-VM</span> <span class="s2">&quot;vm-name&quot;</span> <span class="p">`</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>        <span class="n">-Datastore</span> <span class="p">(</span><span class="nb">Get-Datastore</span> <span class="s2">&quot;destination-datastore&quot;</span><span class="p">)</span> <span class="p">`</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>        <span class="n">-DiskStorageFormat</span> <span class="n">Thin</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c"># Migrate to vSAN datastore and apply a specific storage policy</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="nb">Move-VM</span> <span class="n">-VM</span> <span class="s2">&quot;vm-name&quot;</span> <span class="p">`</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>        <span class="n">-Datastore</span> <span class="p">(</span><span class="nb">Get-Datastore</span> <span class="s2">&quot;vsanDatastore&quot;</span><span class="p">)</span> <span class="p">`</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>        <span class="n">-StoragePolicy</span> <span class="p">(</span><span class="nb">Get-SpbmStoragePolicy</span> <span class="s2">&quot;Production-Standard&quot;</span><span class="p">)</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c"># Migrate multiple VMs to a destination datastore in sequence</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="nb">Get-Datastore</span> <span class="s2">&quot;source-datastore&quot;</span> <span class="p">|</span> <span class="nb">Get-VM</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>    <span class="nb">Move-VM</span> <span class="n">-VM</span> <span class="nv">$_</span> <span class="n">-Datastore</span> <span class="p">(</span><span class="nb">Get-Datastore</span> <span class="s2">&quot;destination-datastore&quot;</span><span class="p">)</span> <span class="n">-DiskStorageFormat</span> <span class="n">Thin</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="p">}</span>
+<p>Use <code>Move-VM</code> to migrate via PowerCLI, including bulk migrations of all VMs on a source datastore.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Migrate VMDK to a different datastore (keep same disk format)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Move-VM</span> <span class="n">-VM</span> <span class="s2">&quot;vm-name&quot;</span> <span class="p">`</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>        <span class="n">-Datastore</span> <span class="p">(</span><span class="nb">Get-Datastore</span> <span class="s2">&quot;destination-datastore&quot;</span><span class="p">)</span> <span class="p">`</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>        <span class="n">-DiskStorageFormat</span> <span class="n">Thin</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="c"># Migrate to vSAN datastore and apply a specific storage policy</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="nb">Move-VM</span> <span class="n">-VM</span> <span class="s2">&quot;vm-name&quot;</span> <span class="p">`</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>        <span class="n">-Datastore</span> <span class="p">(</span><span class="nb">Get-Datastore</span> <span class="s2">&quot;vsanDatastore&quot;</span><span class="p">)</span> <span class="p">`</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>        <span class="n">-StoragePolicy</span> <span class="p">(</span><span class="nb">Get-SpbmStoragePolicy</span> <span class="s2">&quot;Production-Standard&quot;</span><span class="p">)</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c"># Migrate multiple VMs to a destination datastore in sequence</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="nb">Get-Datastore</span> <span class="s2">&quot;source-datastore&quot;</span> <span class="p">|</span> <span class="nb">Get-VM</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>    <span class="nb">Move-VM</span> <span class="n">-VM</span> <span class="nv">$_</span> <span class="n">-Datastore</span> <span class="p">(</span><span class="nb">Get-Datastore</span> <span class="s2">&quot;destination-datastore&quot;</span><span class="p">)</span> <span class="n">-DiskStorageFormat</span> <span class="n">Thin</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="p">}</span>
 </code></pre></div>
-<p>Migration speed depends on VMDK size and the I/O load on both datastores. Reference:</p>
+<p>Reference migration times:</p>
 <table>
 <thead>
 <tr>
@@ -6712,48 +6713,28 @@ select the storage policy → <strong>Finish</strong>.</p>
 </table>
 <hr />
 <h2 id="5-monitor-migration-progress">5. Monitor Migration Progress<a class="headerlink" href="#5-monitor-migration-progress" title="Permanent link">&para;</a></h2>
-<p>vCenter → <strong>Recent Tasks</strong> → look for <strong>Relocate virtual machine</strong>. The progress percentage and
-estimated time remaining are shown in the task pane.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># From the ESXi host running the VM — monitor disk latency during migration</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># Press &#39;u&#39; in esxtop to switch to disk view</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># DAVG column: average device latency in ms</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>esxtop
+<p>Watch disk latency during migration to detect storage pressure that affects other VMs on the same datastore.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Press &#39;u&#39; in esxtop to switch to disk view; DAVG = average device latency in ms</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>esxtop
 </code></pre></div>
-<p>If DAVG exceeds 30 ms consistently during migration, the storage I/O path is under excessive
-pressure. Options:</p>
-<ul>
-<li>Throttle: pause other storage-intensive workloads on the same datastore</li>
-<li>Reschedule: run the migration during off-peak hours (nights or weekends)</li>
-<li>Stagger: if migrating multiple VMs, run them sequentially rather than in parallel</li>
-</ul>
-<p>Aria Operations → <strong>Workload</strong> → <strong>VMs</strong> → watch the source VM's <strong>Disk Read Latency</strong> and
-<strong>Disk Write Latency</strong> metrics. Alerts on other VMs on the same datastore during migration
-indicate storage contention.</p>
+<p>Look for: DAVG stays below 30 ms. If DAVG exceeds 30 ms consistently: throttle concurrent workloads, reschedule to off-peak hours, or stagger multi-VM migrations to run sequentially. Monitor Aria Operations → <strong>Workload</strong> → <strong>VMs</strong> for disk latency alerts on neighbouring VMs.</p>
 <hr />
 <h2 id="6-decommission-the-old-datastore-if-applicable">6. Decommission the Old Datastore (if Applicable)<a class="headerlink" href="#6-decommission-the-old-datastore-if-applicable" title="Permanent link">&para;</a></h2>
-<p>Once all VMs and VMDKs have been migrated off a datastore, verify it is truly empty before
-unmounting or decommissioning.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Verify no VMs remain on the old datastore</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Get-Datastore</span> <span class="s2">&quot;old-datastore&quot;</span> <span class="p">|</span> <span class="nb">Get-VM</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c"># Check for orphaned VMDKs not attached to any VM</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nb">Get-Datastore</span> <span class="s2">&quot;old-datastore&quot;</span> <span class="p">|</span> <span class="nb">Get-HardDisk</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c"># Check for VM swap files (.vswp) — these are not returned by Get-HardDisk</span>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c"># Browse datastore in vCenter and look for any remaining files</span>
+<p>Verify the source datastore is completely empty before unmounting — orphaned VMDKs and swap files are not visible in standard inventory views.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Verify no VMs remain on the old datastore</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Get-Datastore</span> <span class="s2">&quot;old-datastore&quot;</span> <span class="p">|</span> <span class="nb">Get-VM</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c"># Check for orphaned VMDKs not attached to any VM</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nb">Get-Datastore</span> <span class="s2">&quot;old-datastore&quot;</span> <span class="p">|</span> <span class="nb">Get-HardDisk</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c"># Unmount datastore from all hosts</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="nv">$ds</span> <span class="p">=</span> <span class="nb">Get-Datastore</span> <span class="s2">&quot;old-datastore&quot;</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="nv">$ds</span> <span class="p">|</span> <span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>    <span class="nv">$storSys</span> <span class="p">=</span> <span class="nb">Get-View</span> <span class="n">-Id</span> <span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">ConfigManager</span><span class="p">.</span><span class="n">DatastoreSystem</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>    <span class="nv">$storSys</span><span class="p">.</span><span class="n">RemoveDatastore</span><span class="p">(</span><span class="nv">$ds</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">MoRef</span><span class="p">)</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="p">}</span>
 </code></pre></div>
-<p>All three checks must return empty results. Orphaned VMDKs and swap files are the most commonly
-missed items — they are not attached to any VM in inventory but still occupy space and will prevent
-datastore decommission.</p>
-<p>After verification: unmount the datastore from all hosts before decommissioning the underlying
-storage.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># Unmount datastore from all hosts</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nv">$ds</span> <span class="p">=</span> <span class="nb">Get-Datastore</span> <span class="s2">&quot;old-datastore&quot;</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="nv">$ds</span> <span class="p">|</span> <span class="nb">Get-VMHost</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    <span class="nv">$storSys</span> <span class="p">=</span> <span class="nb">Get-View</span> <span class="n">-Id</span> <span class="nv">$_</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">ConfigManager</span><span class="p">.</span><span class="n">DatastoreSystem</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>    <span class="nv">$storSys</span><span class="p">.</span><span class="n">RemoveDatastore</span><span class="p">(</span><span class="nv">$ds</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">MoRef</span><span class="p">)</span>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="p">}</span>
-</code></pre></div>
+<p>Expected: all three checks return empty results. Also browse the datastore in vCenter to confirm no <code>.vswp</code> swap files remain — <code>Get-HardDisk</code> does not return swap files.</p>
 <hr />
 <h2 id="post-task-validation">Post-Task Validation<a class="headerlink" href="#post-task-validation" title="Permanent link">&para;</a></h2>
 <table>
@@ -6815,6 +6796,66 @@ storage.</p>
   that datastore, not just the ones being migrated.</li>
 </ul>
 <hr />
+<hr />
+<h2 id="key-terms">Key Terms<a class="headerlink" href="#key-terms" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>svMotion</td>
+<td>Storage vMotion — the vSphere feature that migrates a VM's VMDKs between datastores while the VM remains powered on and serving workloads without interruption</td>
+</tr>
+<tr>
+<td>SPBM</td>
+<td>Storage Policy-Based Management — the vSphere framework that defines and enforces VM storage requirements (redundancy, caching, encryption) via named policies assigned to VMDKs</td>
+</tr>
+<tr>
+<td>Thin provisioning</td>
+<td>A VMDK format that allocates disk space on demand as data is written, rather than reserving the full provisioned size upfront; inflates toward full provisioned size during svMotion</td>
+</tr>
+<tr>
+<td>Thick eager zeroed</td>
+<td>A VMDK format where the full provisioned size is allocated and zeroed at creation time; required for some workloads (e.g. VMware Fault Tolerance); migrates as-is, not inflated</td>
+</tr>
+<tr>
+<td>VMDK</td>
+<td>Virtual Machine Disk — the file format that stores a VM's disk data on a datastore; each virtual hard disk attached to a VM is a VMDK file</td>
+</tr>
+<tr>
+<td>Delta file</td>
+<td>A snapshot delta disk that captures writes made to a VMDK after a snapshot is taken; active delta files are included in the space overhead during svMotion</td>
+</tr>
+<tr>
+<td>Datastore decommission</td>
+<td>The process of unmounting a datastore from all hosts and removing the underlying LUN or NFS export after all VMs and files have been migrated off</td>
+</tr>
+<tr>
+<td>DAVG</td>
+<td>Device Average latency — the average I/O completion time in milliseconds for a storage device, visible in esxtop disk view; a value above 30 ms during svMotion indicates storage pressure</td>
+</tr>
+<tr>
+<td>vSAN policy compliance</td>
+<td>The state of a VM's storage policy requirements being met by vSAN component placement; a non-compliant state means vSAN cannot fulfil the requested redundancy or caching settings</td>
+</tr>
+<tr>
+<td>Orphaned VMDK</td>
+<td>A VMDK file that exists on a datastore but is not registered to any VM in vCenter inventory; invisible to <code>Get-VM</code> but still consumes space and blocks datastore decommission</td>
+</tr>
+<tr>
+<td>NFC</td>
+<td>Network File Copy — the ESXi protocol used to transfer VMDK data between datastores during svMotion; operates over the management or vMotion VMkernel network</td>
+</tr>
+<tr>
+<td>Datastore browser</td>
+<td>The vCenter UI view (right-click datastore → Browse Files) that shows all files on a datastore regardless of whether they are attached to a VM — the only view that reveals orphaned VMDKs and swap files</td>
+</tr>
+</tbody>
+</table>
 <h2 id="related-scenarios">Related Scenarios<a class="headerlink" href="#related-scenarios" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Host Maintenance and Patching</li>

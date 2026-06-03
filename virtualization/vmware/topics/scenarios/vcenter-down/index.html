@@ -6345,6 +6345,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#key-terms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Terms
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#common-mistakes" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6618,7 +6629,7 @@ continue operating without vCenter — VMs keep running throughout.
 </table>
 <hr />
 <h2 id="1-confirm-the-scope-of-the-outage">1. Confirm the Scope of the Outage<a class="headerlink" href="#1-confirm-the-scope-of-the-outage" title="Permanent link">&para;</a></h2>
-<p>Before starting recovery, determine what is and is not reachable:</p>
+<p>Check each access path in sequence to narrow down whether the VM, OS, or application layer has failed.</p>
 <table>
 <thead>
 <tr>
@@ -6650,100 +6661,84 @@ continue operating without vCenter — VMs keep running throughout.
 </tr>
 </tbody>
 </table>
-<p>If the VCSA VM is powered off, power it on through iDRAC/iLO or a second vCenter instance (if one exists
-in the environment). Wait 5–10 minutes for all services to start before proceeding.</p>
+<p>If the VCSA VM is powered off, power it on through iDRAC/iLO or a second vCenter instance. Wait 5–10 minutes for all services to start before proceeding.</p>
 <hr />
 <h2 id="2-check-vcsa-services-via-ssh">2. Check VCSA Services via SSH<a class="headerlink" href="#2-check-vcsa-services-via-ssh" title="Permanent link">&para;</a></h2>
-<p>If SSH is accessible, check which services are stopped:</p>
+<p>List stopped services to identify which component is failing before touching anything.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>service-control<span class="w"> </span>--status<span class="w"> </span>--all
-</code></pre></div>
-<p>Filter for stopped services:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>service-control<span class="w"> </span>--status<span class="w"> </span>--all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>stopped
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>service-control<span class="w"> </span>--status<span class="w"> </span>--all<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>stopped
 </code></pre></div>
 <p>Start an individual stopped service first before attempting a full restart:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>service-control<span class="w"> </span>--start<span class="w"> </span>vmware-vpxd
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>service-control<span class="w"> </span>--start<span class="w"> </span>vmware-vpostgres
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>service-control<span class="w"> </span>--start<span class="w"> </span>vmware-sso
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>service-control<span class="w"> </span>--start<span class="w"> </span>vmware-vpxd
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>service-control<span class="w"> </span>--start<span class="w"> </span>vmware-vpostgres
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>service-control<span class="w"> </span>--start<span class="w"> </span>vmware-sso
 </code></pre></div>
 <p>Full restart (last resort — do not use until you have read logs, as it masks root cause):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>service-control<span class="w"> </span>--stop<span class="w"> </span>--all
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>service-control<span class="w"> </span>--start<span class="w"> </span>--all
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>service-control<span class="w"> </span>--stop<span class="w"> </span>--all
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>service-control<span class="w"> </span>--start<span class="w"> </span>--all
 </code></pre></div>
 <hr />
 <h2 id="3-check-disk-space-the-most-common-cause">3. Check Disk Space — the Most Common Cause<a class="headerlink" href="#3-check-disk-space-the-most-common-cause" title="Permanent link">&para;</a></h2>
-<p>Full disk partitions are the single most common cause of vCenter service failures. Check before anything
-else:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>df<span class="w"> </span>-h
+<p>Full disk partitions are the single most common cause of vCenter service failures — check this before anything else.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>df<span class="w"> </span>-h
 </code></pre></div>
-<p>The partition most frequently responsible is <code>/storage/log</code>. Any partition at 100% will cause vCenter
-services to crash or refuse to start.</p>
-<p>Clean old logs using the VMware-provided cleanup script:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>/usr/lib/vmware-vpx/scripts/cleanup_appliance_logs.py
+<p>Look for: any partition at 100% utilisation, especially <code>/storage/log</code>. Clean old logs using the VMware-provided script:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>/usr/lib/vmware-vpx/scripts/cleanup_appliance_logs.py
 </code></pre></div>
 <p>After freeing space, start services and confirm:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>service-control<span class="w"> </span>--start<span class="w"> </span>vmware-vpxd
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>service-control<span class="w"> </span>--status<span class="w"> </span>vmware-vpxd
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>service-control<span class="w"> </span>--start<span class="w"> </span>vmware-vpxd
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>service-control<span class="w"> </span>--status<span class="w"> </span>vmware-vpxd
 </code></pre></div>
-<p>If the partition fills again within hours, a service is logging at excessive verbosity. Check
-<code>/var/log/vmware/vpxd/</code> for log files larger than expected and reduce log level via VAMI.</p>
 <hr />
 <h2 id="4-use-vami-for-health-overview">4. Use VAMI for Health Overview<a class="headerlink" href="#4-use-vami-for-health-overview" title="Permanent link">&para;</a></h2>
-<p>If VAMI at <code>https://vcenter-fqdn:5480</code> is reachable even when the UI is not, use it for a quick health
-overview before touching the CLI. Navigate to:</p>
+<p>VAMI at <code>https://vcenter-fqdn:5480</code> is a lightweight separate process that often remains up when vpxd has crashed — use it as the fastest first check.</p>
+<p>Navigate to:</p>
 <ul>
 <li><strong>Monitor → Health</strong> — CPU, memory, disk, and network at a glance.</li>
 <li><strong>Services</strong> tab — lists all VCSA services with start/stop controls.</li>
 <li><strong>Disk</strong> — shows partition utilisation per mount point.</li>
 </ul>
-<p>VAMI is a separate lightweight process from the vCenter services. It often remains available when
-vpxd has crashed, making it the fastest first check.</p>
 <hr />
 <h2 id="5-check-the-postgresql-embedded-database">5. Check the PostgreSQL Embedded Database<a class="headerlink" href="#5-check-the-postgresql-embedded-database" title="Permanent link">&para;</a></h2>
-<p>vCenter stores all inventory, configuration, and task history in an embedded PostgreSQL database. If
-the database is down, vpxd cannot start:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>/usr/lib/vmware-vpostgres/current/bin/pg_isready<span class="w"> </span>-h<span class="w"> </span>localhost
+<p>vCenter's embedded database must be accepting connections before vpxd can start.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>/usr/lib/vmware-vpostgres/current/bin/pg_isready<span class="w"> </span>-h<span class="w"> </span>localhost
 </code></pre></div>
 <p>Expected output when healthy:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>localhost:5432 - accepting connections
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>localhost:5432 - accepting connections
 </code></pre></div>
-<p>If the database is not accepting connections, check its log:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>tail<span class="w"> </span>-50<span class="w"> </span>/var/log/vmware/vpostgres/postgresql*.log
+<p>If the database is not accepting connections, read its log:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>tail<span class="w"> </span>-50<span class="w"> </span>/var/log/vmware/vpostgres/postgresql*.log
 </code></pre></div>
-<p>Common database failures: disk full (database cannot write WAL), corrupt data files after ungraceful
-shutdown, connection limit exhausted. A full disk is by far the most frequent cause.</p>
+<p>Look for: disk full errors (cannot write WAL), corrupt data files after ungraceful shutdown, or connection limit exhausted messages.</p>
 <hr />
 <h2 id="6-read-vpxdlog-for-startup-errors">6. Read vpxd.log for Startup Errors<a class="headerlink" href="#6-read-vpxdlog-for-startup-errors" title="Permanent link">&para;</a></h2>
-<p>If services fail to start, vpxd.log contains the startup sequence and the exact failure:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/vmware/vpxd/vpxd.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;error|fatal|failed|exception&quot;</span>
+<p>If services fail to start, vpxd.log contains the startup sequence and the exact failure point.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/vmware/vpxd/vpxd.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-iE<span class="w"> </span><span class="s2">&quot;error|fatal|failed|exception&quot;</span>
 </code></pre></div>
 <p>Common fatal startup errors:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Failed to connect to database          → PostgreSQL down or credentials mismatch
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>SSL handshake failed                   → certificate expired or NTP drift
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>Address already in use: port 443       → previous vpxd process still running (kill it)
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>VMOMI::Exception: timeout             → SSO service not yet ready; wait and retry
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Failed to connect to database          → PostgreSQL down or credentials mismatch
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>SSL handshake failed                   → certificate expired or NTP drift
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>Address already in use: port 443       → previous vpxd process still running (kill it)
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>VMOMI::Exception: timeout             → SSO service not yet ready; wait and retry
 </code></pre></div>
 <p>For the "address in use" error, find and kill the stale process:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>ps<span class="w"> </span>aux<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>vpxd
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="nb">kill</span><span class="w"> </span>-9<span class="w"> </span>&lt;pid&gt;
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>service-control<span class="w"> </span>--start<span class="w"> </span>vmware-vpxd
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>ps<span class="w"> </span>aux<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>vpxd
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nb">kill</span><span class="w"> </span>-9<span class="w"> </span>&lt;pid&gt;
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>service-control<span class="w"> </span>--start<span class="w"> </span>vmware-vpxd
 </code></pre></div>
 <hr />
 <h2 id="7-certificate-failures-aria-suitelc-or-certificate-manager">7. Certificate Failures — Aria SuiteLC or certificate-manager<a class="headerlink" href="#7-certificate-failures-aria-suitelc-or-certificate-manager" title="Permanent link">&para;</a></h2>
-<p>If vCenter fails due to an expired SSL certificate, the symptom in vpxd.log is:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>SSL Exception: certificate has expired
+<p>If vpxd.log shows a certificate expiry error, use the appropriate renewal tool — never both at once.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>SSL Exception: certificate has expired
 </code></pre></div>
-<p>Use the VMware certificate-manager CLI to renew or replace the certificate:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>/usr/lib/vmware-vmca/bin/certificate-manager
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>/usr/lib/vmware-vmca/bin/certificate-manager
 </code></pre></div>
-<p>If Aria SuiteLC is deployed and managing certificates, initiate the renewal from Aria SuiteLC →
+<p>If Aria SuiteLC is deployed and managing certificates, initiate renewal from Aria SuiteLC →
 <strong>Certificate Management → vCenter → Renew</strong>. Do not run certificate-manager and Aria SuiteLC on the
-same VCSA at the same time — they will conflict.</p>
+same VCSA simultaneously — they will conflict and leave the certificate chain broken.</p>
 <hr />
 <h2 id="8-restore-from-file-based-backup">8. Restore from File-Based Backup<a class="headerlink" href="#8-restore-from-file-based-backup" title="Permanent link">&para;</a></h2>
-<p>If the VCSA cannot be recovered in place (filesystem corruption, failed upgrade, unrecoverable service
-crash), restore from a VAMI file-based backup.</p>
-<p>Prerequisite: VAMI file-based backup must have been configured before the incident. If no backup exists,
-you must rebuild vCenter from scratch and manually reconnect hosts.</p>
+<p>If the VCSA cannot be recovered in place (filesystem corruption, failed upgrade, unrecoverable crash), restore from a VAMI file-based backup.</p>
 <p>Restore procedure:</p>
 <ol>
 <li>Deploy a fresh VCSA of the same version as the backup using the VCSA installer ISO.</li>
@@ -6752,7 +6747,63 @@ you must rebuild vCenter from scratch and manually reconnect hosts.</p>
 <li>Complete the restore — all inventory, permissions, and configuration are recovered.</li>
 <li>ESXi hosts reconnect automatically after restore (they retain vCenter connection details).</li>
 </ol>
-<p>After restore, verify all hosts show "Connected" in vCenter within 10 minutes.</p>
+<p>Look for: all hosts showing "Connected" in vCenter within 10 minutes of restore completion.</p>
+<hr />
+<h2 id="key-terms">Key Terms<a class="headerlink" href="#key-terms" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VCSA</td>
+<td>vCenter Server Appliance — the Linux-based virtual appliance that runs vCenter; all services (vpxd, SSO, vpostgres) run inside this VM</td>
+</tr>
+<tr>
+<td>VAMI</td>
+<td>vCenter Appliance Management Interface — the lightweight web UI on port 5480 for appliance health, disk, services, and NTP; often available even when the main UI is down</td>
+</tr>
+<tr>
+<td>PSC</td>
+<td>Platform Services Controller — the component that hosts SSO, VMCA, and identity services; in modern VCSA deployments it is embedded inside the same appliance rather than deployed separately</td>
+</tr>
+<tr>
+<td>SSO</td>
+<td>Single Sign-On — VMware's identity federation service; all vCenter and NSX logins are authenticated through SSO; if SSO is down, no users can log in regardless of network connectivity</td>
+</tr>
+<tr>
+<td>vpostgres</td>
+<td>VMware-embedded PostgreSQL database that stores all vCenter inventory, tasks, events, and configuration; vpxd cannot start if vpostgres is down or full</td>
+</tr>
+<tr>
+<td>service-control</td>
+<td>VMware CLI tool on the VCSA used to start, stop, restart, and check status of individual VCSA services without a full appliance reboot</td>
+</tr>
+<tr>
+<td>VMCA</td>
+<td>VMware Certificate Authority — the internal CA embedded in the VCSA that issues SSL certificates to ESXi hosts and vCenter services; expired VMCA certificates cause cascading SSL failures</td>
+</tr>
+<tr>
+<td>vpxd</td>
+<td>vCenter Server daemon — the primary vCenter process that handles all API requests, inventory, task scheduling, and host communication; its log (vpxd.log) is the main diagnostic source</td>
+</tr>
+<tr>
+<td>File-based backup</td>
+<td>VAMI-configured backup of the VCSA to a network location (FTP/SCP/NFS); the only supported restore path if the appliance cannot be recovered in place</td>
+</tr>
+<tr>
+<td>certificate-manager</td>
+<td>VMware CLI tool at <code>/usr/lib/vmware-vmca/bin/certificate-manager</code> used to regenerate or replace VCSA certificates when they expire or become invalid</td>
+</tr>
+<tr>
+<td>Embedded PSC</td>
+<td>Architecture where Platform Services Controller runs inside the VCSA VM rather than as a separate appliance; standard since vCenter 7.0; simplifies deployment but means SSO and VMCA are co-located with vpxd</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h2 id="common-mistakes">Common Mistakes<a class="headerlink" href="#common-mistakes" title="Permanent link">&para;</a></h2>
 <ul>

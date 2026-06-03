@@ -6356,21 +6356,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#common-mistakes" class="md-nav__link">
+  <a href="#key-terms" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common Mistakes
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#related-scenarios" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Related Scenarios
+        Key Terms
       
     </span>
   </a>
@@ -6634,9 +6623,7 @@ segment assignment, tagging, and post-provision compliance verification.
 </table>
 <hr />
 <h2 id="1-right-size-the-vm">1. Right-Size the VM<a class="headerlink" href="#1-right-size-the-vm" title="Permanent link">&para;</a></h2>
-<p>Get workload requirements from the application team before creating the VM. The goal is to match
-allocated resources to the application's actual working requirements — not to be generous.
-Over-allocation wastes cluster capacity and degrades NUMA locality on large VMs.</p>
+<p>Match allocated resources to the application's actual working requirements — not to be generous.</p>
 <table>
 <thead>
 <tr>
@@ -6672,9 +6659,7 @@ Over-allocation wastes cluster capacity and degrades NUMA locality on large VMs.
 operation.</p>
 <hr />
 <h2 id="2-choose-the-vsan-storage-policy">2. Choose the vSAN Storage Policy<a class="headerlink" href="#2-choose-the-vsan-storage-policy" title="Permanent link">&para;</a></h2>
-<p>Every VM disk stored on a vSAN datastore must have an explicit Storage Policy-Based Management
-(SPBM) policy assigned. A VM with no policy assigned gets the default policy — which in most
-environments has no redundancy (FTT=0). A single disk failure destroys that VM's data.</p>
+<p>Every VM disk on vSAN must have an explicit SPBM policy — a VM with no policy gets the default, which is typically FTT=0 (no redundancy).</p>
 <p>Standard production policies:</p>
 <table>
 <thead>
@@ -6710,11 +6695,11 @@ environments has no redundancy (FTT=0). A single disk failure destroys that VM's
 than the minimum host count for a policy tier, vSAN will not be able to satisfy it.</p>
 <hr />
 <h2 id="3-assign-the-nsx-network-segment">3. Assign the NSX Network Segment<a class="headerlink" href="#3-assign-the-nsx-network-segment" title="Permanent link">&para;</a></h2>
-<p>Before creating the VM, confirm the correct NSX logical segment for the workload tier. NSX
-segments are the network equivalent of VLANs, but enforced in software with DFW rules attached.</p>
+<p>Confirm the correct NSX logical segment for the workload tier before creating the VM.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Verify the target segment exists in NSX Manager before VM creation</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># NSX Manager → Networking → Segments → confirm segment name, VLAN binding, and connected T1 gateway</span>
 </code></pre></div>
+<p>Expected: segment appears in NSX Manager with correct VLAN binding and T1 gateway attachment.</p>
 <p>Each tier of a multi-tier application should use a separate segment:</p>
 <table>
 <thead>
@@ -6744,6 +6729,7 @@ segments are the network equivalent of VLANs, but enforced in software with DFW 
 </table>
 <hr />
 <h2 id="4-create-the-vm">4. Create the VM<a class="headerlink" href="#4-create-the-vm" title="Permanent link">&para;</a></h2>
+<p>Create the VM on the target host and vSAN datastore with the right-sized resources.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># PowerCLI — create VM on target host and vSAN datastore</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">New-VM</span> <span class="n">-Name</span> <span class="s2">&quot;vm-name&quot;</span> <span class="p">`</span>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>  <span class="n">-VMHost</span> <span class="p">(</span><span class="nb">Get-VMHost</span> <span class="s2">&quot;esxi-host.domain.local&quot;</span><span class="p">)</span> <span class="p">`</span>
@@ -6762,8 +6748,7 @@ segments are the network equivalent of VLANs, but enforced in software with DFW 
 </code></pre></div>
 <hr />
 <h2 id="5-apply-spbm-storage-policy-to-all-disks">5. Apply SPBM Storage Policy to All Disks<a class="headerlink" href="#5-apply-spbm-storage-policy-to-all-disks" title="Permanent link">&para;</a></h2>
-<p>Applying the storage policy at creation time through the wizard is preferred, but when creating
-via PowerCLI or when adjusting after creation, use:</p>
+<p>Apply the correct storage policy to every hard disk on the VM and verify compliance status.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nv">$vm</span> <span class="p">=</span> <span class="nb">Get-VM</span> <span class="s2">&quot;vm-name&quot;</span>
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">$policy</span> <span class="p">=</span> <span class="nb">Get-SpbmStoragePolicy</span> <span class="s2">&quot;Production-Standard&quot;</span>
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
@@ -6774,12 +6759,11 @@ via PowerCLI or when adjusting after creation, use:</p>
 <a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="nb">Get-HardDisk</span> <span class="n">-VM</span> <span class="nv">$vm</span> <span class="p">|</span> <span class="nb">Get-SpbmEntityConfiguration</span> <span class="p">|</span>
 <a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>  <span class="nb">Select </span><span class="n">Entity</span><span class="p">,</span> <span class="n">StoragePolicy</span><span class="p">,</span> <span class="n">ComplianceStatus</span>
 </code></pre></div>
-<p>The <code>ComplianceStatus</code> field must show <code>Compliant</code>. A status of <code>NonCompliant</code> means vSAN cannot
-currently satisfy the policy requirements — commonly caused by insufficient hosts or disk capacity.</p>
+<p>Expected: <code>ComplianceStatus</code> shows <code>Compliant</code> for every disk. <code>NonCompliant</code> means vSAN cannot
+currently satisfy the policy — commonly caused by insufficient hosts or disk capacity.</p>
 <hr />
 <h2 id="6-tag-the-vm-in-vcenter-for-aria-operations">6. Tag the VM in vCenter for Aria Operations<a class="headerlink" href="#6-tag-the-vm-in-vcenter-for-aria-operations" title="Permanent link">&para;</a></h2>
-<p>Aria Operations reads vCenter tags to group VMs into application objects for dashboards, alert
-routing, and capacity tracking. Tags must be applied at VM creation time.</p>
+<p>Apply tags at VM creation time so the VM is immediately visible in Aria Operations dashboards and alert routing.</p>
 <p>Assign the following tag categories at minimum:</p>
 <table>
 <thead>
@@ -6811,9 +6795,7 @@ routing, and capacity tracking. Tags must be applied at VM creation time.</p>
 <p>Aria Operations picks up tag changes within the next collection cycle (typically 5 minutes).</p>
 <hr />
 <h2 id="7-add-the-vm-to-the-nsx-security-group">7. Add the VM to the NSX Security Group<a class="headerlink" href="#7-add-the-vm-to-the-nsx-security-group" title="Permanent link">&para;</a></h2>
-<p>NSX Distributed Firewall rules apply to security groups, not to individual VMs. A new VM that is
-not a member of the correct group has no DFW rules applied — it is effectively unrestricted on
-east-west traffic.</p>
+<p>A new VM not in the correct security group has no DFW rules applied — east-west traffic is unrestricted.</p>
 <p>NSX Manager → <strong>Inventory</strong> → <strong>Groups</strong> → select the appropriate group → <strong>Members</strong> → add the VM.</p>
 <p>Security group membership can also be dynamic (automatic) based on VM tags or name patterns:</p>
 <ul>
@@ -6824,6 +6806,7 @@ east-west traffic.</p>
 </ul>
 <hr />
 <h2 id="8-post-provision-validation">8. Post-Provision Validation<a class="headerlink" href="#8-post-provision-validation" title="Permanent link">&para;</a></h2>
+<p>Verify storage policy compliance, NSX segment assignment, and tag application in one pass.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Verify storage policy compliance</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-VM</span> <span class="s2">&quot;vm-name&quot;</span> <span class="p">|</span> <span class="nb">Get-HardDisk</span> <span class="p">|</span>
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  <span class="nb">Get-SpbmEntityConfiguration</span> <span class="p">|</span>
@@ -6837,6 +6820,7 @@ east-west traffic.</p>
 <a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="nb">Get-VM</span> <span class="s2">&quot;vm-name&quot;</span> <span class="p">|</span> <span class="nb">Get-TagAssignment</span> <span class="p">|</span>
 <a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>  <span class="nb">Select </span><span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;Category&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">Tag</span><span class="p">.</span><span class="n">Category</span><span class="p">.</span><span class="n">Name</span><span class="p">}},</span> <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;Tag&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">Tag</span><span class="p">.</span><span class="n">Name</span><span class="p">}}</span>
 </code></pre></div>
+<p>Expected: ComplianceStatus=Compliant, NetworkName matches target segment, all three tag categories present.</p>
 <p>Confirm in NSX Manager that the VM appears as a member of the expected security groups under
 <strong>Inventory → Groups</strong> before handing off to the application team.</p>
 <hr />
@@ -6878,25 +6862,69 @@ east-west traffic.</p>
 </tbody>
 </table>
 <hr />
-<h2 id="common-mistakes">Common Mistakes<a class="headerlink" href="#common-mistakes" title="Permanent link">&para;</a></h2>
-<ul>
-<li><strong>Accepting the default storage policy.</strong> In most environments the default policy is FTT=0 — no
-  redundancy. A single disk failure on the vSAN host destroys the VM's data.</li>
-<li><strong>Not adding the VM to the NSX security group.</strong> The VM has more network access than intended
-  because no DFW rules apply. This is a security misconfiguration, not just a monitoring gap.</li>
-<li><strong>Oversizing vCPU.</strong> A VM with more vCPUs than the host has physical CPUs per NUMA node forces
-  cross-NUMA scheduling, adding latency to every memory access. Start conservatively and scale up
-  if monitoring shows CPU saturation.</li>
-<li><strong>Skipping tagging.</strong> An untagged VM is invisible to Aria Operations application-level dashboards
-  and alert routing. Capacity is consumed but not tracked against any application owner.</li>
-</ul>
-<hr />
-<h2 id="related-scenarios">Related Scenarios<a class="headerlink" href="#related-scenarios" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Capacity Planning</li>
-<li>Host Maintenance and Patching</li>
-<li>Certificate Expiry and Rotation</li>
-</ul>
+<h2 id="key-terms">Key Terms<a class="headerlink" href="#key-terms" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SPBM</td>
+<td>Storage Policy-Based Management — the vSAN framework that lets you define storage requirements (FTT, RAID level, encryption) as named policies and enforce them per VM disk, rather than configuring storage per-datastore</td>
+</tr>
+<tr>
+<td>FTT</td>
+<td>Failures to Tolerate — the SPBM policy parameter that sets how many simultaneous host or disk failures vSAN can absorb while keeping the VM's data accessible; FTT=1 tolerates one failure</td>
+</tr>
+<tr>
+<td>RAID-1</td>
+<td>vSAN data protection method that mirrors each data component to N+1 hosts; requires 3 hosts minimum for FTT=1; uses more raw capacity than RAID-5 but has lower write latency</td>
+</tr>
+<tr>
+<td>RAID-5</td>
+<td>vSAN erasure coding method that stripes data with parity across hosts; requires 4 hosts minimum for FTT=1; more storage-efficient than RAID-1 but higher CPU overhead on writes</td>
+</tr>
+<tr>
+<td>NSX segment</td>
+<td>A logical Layer-2 network boundary enforced in software by NSX; replaces VLANs for VM networking and serves as the attachment point for Distributed Firewall rules</td>
+</tr>
+<tr>
+<td>DFW security group</td>
+<td>An NSX Distributed Firewall construct that groups VMs by criteria (tags, names, IP ranges); firewall rules are applied to groups, not individual VMs — a VM outside the group receives no DFW rules</td>
+</tr>
+<tr>
+<td>vCenter tag</td>
+<td>A label applied to a vCenter object (VM, host, datastore) used to control group membership in NSX and Aria Operations; tag categories (Environment, Application, Owner) drive automated grouping</td>
+</tr>
+<tr>
+<td>Aria Operations tagging</td>
+<td>The mechanism by which Aria Operations discovers and groups VMs into application objects using vCenter tag assignments; tags must exist before the next collection cycle for dashboards to populate</td>
+</tr>
+<tr>
+<td>thin provisioning</td>
+<td>Disk format that allocates datastore space only as data is written rather than at creation time; inflates apparent free capacity — actual usage grows over time as the guest OS writes data</td>
+</tr>
+<tr>
+<td>NUMA</td>
+<td>Non-Uniform Memory Access — the physical topology of multi-socket servers where each CPU socket has its own local memory; VM vCPU counts that exceed one NUMA node's core count force cross-socket memory access and add latency</td>
+</tr>
+<tr>
+<td>VMDK</td>
+<td>Virtual Machine Disk — the file format for a VM's hard disk stored on a vSAN or VMFS datastore; each VMDK must have an SPBM policy assigned on vSAN</td>
+</tr>
+<tr>
+<td>vNIC</td>
+<td>Virtual Network Interface Card — the software-emulated NIC inside a VM; each vNIC connects to one NSX segment or portgroup and should map to a single network tier</td>
+</tr>
+<tr>
+<td>dynamic group membership</td>
+<td>NSX security group configuration where VMs are added or removed automatically based on matching criteria such as vCenter tags, VM names, or IP addresses — eliminating the need for manual group updates after provisioning</td>
+</tr>
+</tbody>
+</table>
 
 
 

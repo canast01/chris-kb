@@ -6323,6 +6323,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#key-terms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Terms
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#common-mistakes" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6616,7 +6627,7 @@ on HCI deployments.
 </table>
 <hr />
 <h2 id="1-identify-the-alarm-skyline-health">1. Identify the Alarm — Skyline Health<a class="headerlink" href="#1-identify-the-alarm-skyline-health" title="Permanent link">&para;</a></h2>
-<p>Navigate to <strong>vCenter → Cluster → Monitor → vSAN → Skyline Health</strong>. A failing disk or absent component produces one or more red checks:</p>
+<p>Navigate to <strong>vCenter → Cluster → Monitor → vSAN → Skyline Health</strong> to find the specific failing check before touching any disk.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Common red health checks and their meaning:
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  Disk capacity utilisation  — overall capacity above threshold (&gt;70% warn, &gt;80% crit)
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  vSAN disk balance          — uneven data distribution across disk groups
@@ -6624,15 +6635,10 @@ on HCI deployments.
 <a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  Disk group health          — disk group error; possible disk failure on cache or capacity tier
 <a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  Physical disk health       — SMART errors or disk returned hardware error
 </code></pre></div>
-<p>The <strong>Virtual Objects</strong> view (<strong>vSAN → Monitor → Virtual Objects</strong>) shows the per-VM impact. Filter by "Non-compliant" to see which VMs have a protection gap.</p>
+<p>Look for: the <strong>Virtual Objects</strong> view (<strong>vSAN → Monitor → Virtual Objects</strong>) filtered by "Non-compliant" shows exactly which VMs have a live protection gap.</p>
 <hr />
 <h2 id="2-identify-the-failed-component">2. Identify the Failed Component<a class="headerlink" href="#2-identify-the-failed-component" title="Permanent link">&para;</a></h2>
-<p>From Virtual Objects, expand a non-compliant VM to see its component map. Note:</p>
-<ul>
-<li>Which <strong>host</strong> the absent component lives on</li>
-<li>Which <strong>disk group</strong> (cache or capacity disk)</li>
-<li>Whether the component is <strong>Absent</strong> (disk gone) or <strong>Degraded</strong> (component needs rebuild but disk is present)</li>
-</ul>
+<p>Expand a non-compliant VM in Virtual Objects to see its component map, then correlate with CLI output to confirm which disk.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># List all vSAN objects and their health on the host</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>object<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;UUID|Health|Host|Disk&quot;</span>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
@@ -6642,9 +6648,10 @@ on HCI deployments.
 <a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Identify which disk group is affected</span>
 <a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>storage<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;DiskGroupUUID|SSD|Capacity|State&quot;</span>
 </code></pre></div>
+<p>Look for: note which host the absent component lives on, which disk group it belongs to, and whether the state is <code>Absent</code> (disk gone) or <code>Degraded</code> (disk present but component needs rebuild).</p>
 <hr />
 <h2 id="3-assess-the-risk-window">3. Assess the Risk Window<a class="headerlink" href="#3-assess-the-risk-window" title="Permanent link">&para;</a></h2>
-<p>Before touching anything, determine whether the cluster can tolerate another failure.</p>
+<p>Before touching anything, determine whether the cluster can survive another failure during the rebuild.</p>
 <table>
 <thead>
 <tr>
@@ -6692,7 +6699,7 @@ on HCI deployments.
 </code></pre></div>
 <hr />
 <h2 id="4-check-physical-disk-health">4. Check Physical Disk Health<a class="headerlink" href="#4-check-physical-disk-health" title="Permanent link">&para;</a></h2>
-<p>SSH to the affected ESXi host and interrogate the disk.</p>
+<p>SSH to the affected ESXi host to confirm whether the disk has truly failed or is merely disconnected before ordering a replacement.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># List all storage devices visible to ESXi</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>device<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Display|State|Device&quot;</span>
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
@@ -6706,16 +6713,14 @@ on HCI deployments.
 <a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># SSD Wear Indicator &lt; 5%         — flash near end of life</span>
 <a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c1"># Drive Temperature &gt; 55°C        — thermal issue</span>
 </code></pre></div>
-<p>For <strong>VxRail</strong> deployments, check iDRAC for hardware events before acting:</p>
+<p>For VxRail deployments, check iDRAC before acting — OMIVV surfaces hardware events as vCenter alarms:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># SSH to iDRAC (or use web UI at https://&lt;idrac-ip&gt;)</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># Check storage controller and physical disk alerts</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>racadm<span class="w"> </span>getsel<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;storage\|disk\|drive&quot;</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>racadm<span class="w"> </span>getsel<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;storage\|disk\|drive&quot;</span>
 </code></pre></div>
-<p>OMIVV (OpenManage Integration for VMware vCenter) surfaces these as vCenter alarms. Check <strong>vCenter → Alarms → Triggered Alarms</strong> for any Dell hardware events correlated with the vSAN alert.</p>
+<p>Look for: cross-reference <strong>vCenter → Alarms → Triggered Alarms</strong> for any Dell OMIVV alarm correlated with the vSAN alert to confirm the physical disk identity.</p>
 <hr />
 <h2 id="5-initiate-or-monitor-rebuild">5. Initiate or Monitor Rebuild<a class="headerlink" href="#5-initiate-or-monitor-rebuild" title="Permanent link">&para;</a></h2>
-<p><strong>If the disk is physically failed:</strong> replace it. vSAN automatically detects the new disk, adds it to the disk group, and begins rebuilding absent components.</p>
-<p><strong>Do not manually re-add the disk</strong> unless vSAN fails to claim it automatically (rare). Let vSAN handle discovery.</p>
+<p>Replace the failed disk — vSAN automatically detects the new disk and begins rebuilding absent components; do not manually re-add it.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Monitor resync progress from ESXi CLI</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>esxcli<span class="w"> </span>vsan<span class="w"> </span>debug<span class="w"> </span>resync<span class="w"> </span>summary<span class="w"> </span>get
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
@@ -6725,15 +6730,10 @@ on HCI deployments.
 <a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1">#   ObjectsToResync   — number of VM disk objects still rebuilding</span>
 <a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1">#   ActiveResyncETA   — estimated completion time</span>
 </code></pre></div>
-<p>In vCenter, go to <strong>vSAN → Monitor → Resyncing Objects</strong> for a visual view of the queue.</p>
-<p>For VxRail, use <strong>VxRail Manager → Maintenance → Disk Replacement</strong> wizard. It:</p>
-<ol>
-<li>Verifies the cluster has sufficient capacity before replacement</li>
-<li>Guides through safe removal without triggering a second failure</li>
-<li>Monitors rebuild progress post-replacement</li>
-</ol>
+<p>Look for: <code>ResyncType = REPAIR</code> with decreasing <code>BytesToResync</code> confirms rebuild is in progress. For VxRail, use <strong>VxRail Manager → Maintenance → Disk Replacement</strong> wizard — it verifies cluster capacity before removal and monitors rebuild post-replacement.</p>
 <hr />
 <h2 id="6-powercli-disk-group-and-health-queries">6. PowerCLI — Disk Group and Health Queries<a class="headerlink" href="#6-powercli-disk-group-and-health-queries" title="Permanent link">&para;</a></h2>
+<p>Pull disk group and cluster health state programmatically for post-replacement validation.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># Get all disk groups for a specific ESXi host</span>
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">Get-VsanDiskGroup</span> <span class="n">-VMHost</span> <span class="p">(</span><span class="nb">Get-VMHost</span> <span class="s2">&quot;esxi-host.domain.local&quot;</span><span class="p">)</span> <span class="p">`</span>
 <a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>  <span class="p">|</span> <span class="nb">Format-List</span>
@@ -6747,6 +6747,70 @@ on HCI deployments.
 <a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="nv">$spec</span> <span class="p">=</span> <span class="nb">New-Object</span> <span class="n">VMware</span><span class="p">.</span><span class="n">Vimautomation</span><span class="p">.</span><span class="n">Storage</span><span class="p">.</span><span class="n">Impl</span><span class="p">.</span><span class="n">V1</span><span class="p">.</span><span class="n">VsanQueryVcClusterHealthSummarySpec</span>
 <a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="nv">$vsanHealth</span><span class="p">.</span><span class="n">VsanQueryVcClusterHealthSummary</span><span class="p">(</span><span class="nv">$cluster</span><span class="p">.</span><span class="n">ExtensionData</span><span class="p">.</span><span class="n">MoRef</span><span class="p">,</span> <span class="nv">$null</span><span class="p">,</span> <span class="nv">$null</span><span class="p">,</span> <span class="nv">$true</span><span class="p">,</span> <span class="nv">$null</span><span class="p">,</span> <span class="nv">$null</span><span class="p">,</span> <span class="s2">&quot;defaultView&quot;</span><span class="p">)</span>
 </code></pre></div>
+<hr />
+<h2 id="key-terms">Key Terms<a class="headerlink" href="#key-terms" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>vSAN</td>
+<td>VMware's hyperconverged storage layer that pools local disks across cluster hosts into a shared datastore; data is distributed as objects and components across hosts</td>
+</tr>
+<tr>
+<td>OSA</td>
+<td>Original Storage Architecture — the vSAN disk group model using a dedicated cache disk (SSD) plus capacity disks; used in vSAN 7 and earlier by default</td>
+</tr>
+<tr>
+<td>ESA</td>
+<td>Express Storage Architecture — vSAN 8+ all-NVMe model that eliminates the cache tier; each disk contributes directly to both capacity and performance</td>
+</tr>
+<tr>
+<td>FTT</td>
+<td>Failures to Tolerate — the SPBM policy attribute that defines how many simultaneous host or disk failures a VM's data can survive; determines the minimum host count required</td>
+</tr>
+<tr>
+<td>RAID-1</td>
+<td>vSAN mirroring protection; writes N+1 full copies of each object across different fault domains; FTT=1 RAID-1 requires 3 hosts and uses 2x capacity overhead</td>
+</tr>
+<tr>
+<td>RAID-5</td>
+<td>vSAN erasure coding for FTT=1; distributes data + parity across 4 hosts; uses 1.33x capacity overhead compared to RAID-1's 2x</td>
+</tr>
+<tr>
+<td>Disk group</td>
+<td>OSA grouping of one cache SSD plus 1–7 capacity disks on a single ESXi host; all capacity disks in the group share the cache tier</td>
+</tr>
+<tr>
+<td>Component</td>
+<td>The smallest unit of a vSAN object; a single VM disk (VMDK) is split into one or more components distributed across different hosts according to the FTT policy</td>
+</tr>
+<tr>
+<td>Resync</td>
+<td>The rebuild process vSAN runs after a disk or host failure to recreate absent components on surviving hosts and restore the configured FTT level</td>
+</tr>
+<tr>
+<td>SPBM</td>
+<td>Storage Policy-Based Management — vSphere framework where VM storage rules (FTT, RAID level, encryption) are defined as policies and applied per VM or VMDK</td>
+</tr>
+<tr>
+<td>Skyline Health</td>
+<td>The vSAN health monitoring dashboard in vCenter; runs continuous health checks across disk, capacity, network, and cluster configuration categories</td>
+</tr>
+<tr>
+<td>OMIVV</td>
+<td>OpenManage Integration for VMware vCenter — Dell plugin that forwards iDRAC hardware alerts (disk failures, SMART errors) into vCenter as native alarms</td>
+</tr>
+<tr>
+<td>iDRAC</td>
+<td>Integrated Dell Remote Access Controller — out-of-band management interface on Dell servers; provides hardware-level disk and controller event logs independent of the OS</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h2 id="common-mistakes">Common Mistakes<a class="headerlink" href="#common-mistakes" title="Permanent link">&para;</a></h2>
 <ul>

@@ -6367,6 +6367,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#key-terms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Terms
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#related-scenarios" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -6641,16 +6652,12 @@ projects.
 </table>
 <hr />
 <h2 id="1-enable-ipfix-flow-collection">1. Enable IPFIX Flow Collection<a class="headerlink" href="#1-enable-ipfix-flow-collection" title="Permanent link">&para;</a></h2>
-<p>Aria Networks needs to see real traffic flows before any rules are written. IPFIX is the protocol
-that NSX uses to export flow records to Aria Networks.</p>
-<p>NSX Manager → <strong>Networking</strong> → <strong>IPFIX</strong> → <strong>Flows</strong> → <strong>Add Collector</strong> → enter the Aria Networks
-proxy node IP address and port (default: UDP 2055). Then enable IPFIX on the VDS:</p>
-<p>NSX Manager → <strong>Networking</strong> → <strong>IPFIX</strong> → <strong>Switch IPFIX</strong> → select the VDS → <strong>Enable</strong>.</p>
-<p>Verify flows are arriving: Aria Networks → <strong>Network Map</strong> → select a VM group → <strong>Flows</strong> tab.
-If flows appear, IPFIX is working. Allow at least 24 hours before beginning analysis — you need
-enough flow data to distinguish regular traffic from noise.</p>
+<p>Configure IPFIX to export VDS flow records to Aria Networks before any rules are written.</p>
+<p>NSX Manager → <strong>Networking</strong> → <strong>IPFIX</strong> → <strong>Flows</strong> → <strong>Add Collector</strong> → enter the Aria Networks proxy node IP and port (default: UDP 2055). Then: <strong>Switch IPFIX</strong> → select the VDS → <strong>Enable</strong>.</p>
+<p>Look for: flows appearing in Aria Networks → <strong>Network Map</strong> → VM group → <strong>Flows</strong> tab within 15 minutes. Allow at least 24 hours before analysis to separate regular traffic from noise.</p>
 <hr />
 <h2 id="2-observe-traffic-flows-phase-1-2-4-weeks">2. Observe Traffic Flows (Phase 1: 2-4 Weeks)<a class="headerlink" href="#2-observe-traffic-flows-phase-1-2-4-weeks" title="Permanent link">&para;</a></h2>
+<p>Document every observed east-west and north-south flow pattern from Aria Networks before writing any rules.</p>
 <p>Aria Networks → <strong>Network Map</strong> → select the application or VM group being segmented → <strong>Flows</strong>.</p>
 <p>Document every observed flow pattern:</p>
 <table>
@@ -6694,14 +6701,11 @@ enough flow data to distinguish regular traffic from noise.</p>
 </tr>
 </tbody>
 </table>
-<p>The 2-4 week observation window captures infrequent but legitimate traffic: month-end batch jobs,
-weekly backup agents, quarterly maintenance scripts. Rules written from a single day of flows
-will block these when they next run.</p>
+<p>The 2–4 week window captures infrequent but legitimate flows: month-end batch jobs, weekly backup agents, quarterly maintenance scripts — rules built from a single day's data will block these when they next run.</p>
 <hr />
 <h2 id="3-create-nsx-security-groups">3. Create NSX Security Groups<a class="headerlink" href="#3-create-nsx-security-groups" title="Permanent link">&para;</a></h2>
+<p>Create one group per application tier using dynamic membership so new VMs automatically inherit the correct group.</p>
 <p>NSX → <strong>Security</strong> → <strong>Inventory</strong> → <strong>Groups</strong> → <strong>Add Group</strong>.</p>
-<p>Create one group per application tier. Use dynamic membership criteria so new VMs automatically
-inherit the correct group without manual intervention.</p>
 <p>Preferred membership criteria (in order of preference):</p>
 <table>
 <thead>
@@ -6740,13 +6744,10 @@ inherit the correct group without manual intervention.</p>
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Group: DBTier        — Membership: VM Tag = &quot;Tier:DB&quot;
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Group: Monitoring    — Membership: VM Tag = &quot;Role:Monitoring&quot;
 </code></pre></div>
-<p>After creating groups, verify membership: select each group → <strong>Members</strong> → confirm the expected
-VMs appear. A misconfigured group that excludes VMs will produce unexpected DFW blocks when
-enforce mode is enabled.</p>
+<p>Expected: each group → <strong>Members</strong> shows the correct VMs. A misconfigured group that excludes VMs will produce unexpected DFW blocks when enforce mode is enabled.</p>
 <hr />
 <h2 id="4-tag-vms-in-vcenter">4. Tag VMs in vCenter<a class="headerlink" href="#4-tag-vms-in-vcenter" title="Permanent link">&para;</a></h2>
-<p>NSX security groups reference vCenter tags. Tags must be applied to VMs before the groups will
-have members.</p>
+<p>Apply vCenter tags to VMs so NSX security groups have members before any rules are evaluated.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Create tag categories and tags in vCenter</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">New-TagCategory</span> <span class="n">-Name</span> <span class="s2">&quot;Tier&quot;</span> <span class="n">-Cardinality</span> <span class="n">Single</span> <span class="n">-EntityType</span> <span class="n">VirtualMachine</span>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nb">New-Tag</span> <span class="n">-Name</span> <span class="s2">&quot;Web&quot;</span> <span class="n">-Category</span> <span class="p">(</span><span class="nb">Get-TagCategory</span> <span class="s2">&quot;Tier&quot;</span><span class="p">)</span>
@@ -6758,15 +6759,11 @@ have members.</p>
 <a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="nb">Get-VM</span> <span class="s2">&quot;app-vm-01&quot;</span><span class="p">,</span> <span class="s2">&quot;app-vm-02&quot;</span> <span class="p">|</span> <span class="nb">New-TagAssignment</span> <span class="n">-Tag</span> <span class="p">(</span><span class="nb">Get-Tag</span> <span class="s2">&quot;App&quot;</span><span class="p">)</span>
 <a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="nb">Get-VM</span> <span class="s2">&quot;db-vm-01&quot;</span>               <span class="p">|</span> <span class="nb">New-TagAssignment</span> <span class="n">-Tag</span> <span class="p">(</span><span class="nb">Get-Tag</span> <span class="s2">&quot;DB&quot;</span><span class="p">)</span>
 </code></pre></div>
-<p>NSX reads vCenter tag assignments in near-real-time. After applying tags, return to NSX and
-verify the group membership updated correctly.</p>
+<p>Expected: NSX group membership updates in near-real-time — return to NSX and verify the groups show the correct VMs.</p>
 <hr />
 <h2 id="5-define-dfw-policy-in-monitor-mode">5. Define DFW Policy in Monitor Mode<a class="headerlink" href="#5-define-dfw-policy-in-monitor-mode" title="Permanent link">&para;</a></h2>
-<p>NSX → <strong>Security</strong> → <strong>Distributed Firewall</strong> → <strong>Add Policy</strong>.</p>
-<p>Name the policy to reflect the application (e.g., <code>ThreeTierApp-Microseg</code>). Before adding any
-rules, set the policy mode to <strong>Monitor</strong>. In monitor mode, rules are evaluated against traffic
-but no traffic is blocked — violations are logged only. This is the safety net that prevents
-outages during rollout.</p>
+<p>Create the DFW policy in monitor mode so rules log violations without blocking traffic — the safety net that prevents outages during rollout.</p>
+<p>NSX → <strong>Security</strong> → <strong>Distributed Firewall</strong> → <strong>Add Policy</strong> → set mode to <strong>Monitor</strong> before adding any rules.</p>
 <p>Add rules based on the flows documented in Phase 1:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Rule 1: Allow WebTier  → AppTier    TCP 8080   Action: Allow
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Rule 2: Allow AppTier  → DBTier     TCP 3306   Action: Allow
@@ -6775,17 +6772,13 @@ outages during rollout.</p>
 <a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Rule 5: Allow Any      → DNS        UDP 53     Action: Allow
 <a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>Rule 6: Default catch-all           Any        Action: Drop (log)
 </code></pre></div>
-<p>The default Drop rule at the bottom is required — it defines what happens to traffic that matches
-no explicit rule. Without it, the implicit DFW default (allow) applies and the policy has no effect.</p>
+<p>The default Drop rule at the bottom is required — without it the implicit DFW default (allow) applies and the policy has no enforcement effect.</p>
 <hr />
 <h2 id="6-review-monitor-mode-logs-phase-2-1-2-weeks">6. Review Monitor Mode Logs (Phase 2: 1-2 Weeks)<a class="headerlink" href="#6-review-monitor-mode-logs-phase-2-1-2-weeks" title="Permanent link">&para;</a></h2>
-<p>With the policy in monitor mode, all traffic that would be blocked by the default Drop rule is
-logged to the DFW packet log on each ESXi host.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Review MONITOR DROP events on an ESXi host — identifies missing allow rules</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>cat<span class="w"> </span>/var/log/dfwpktlogs.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;MONITOR DROP&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-50
+<p>Review the DFW packet log on each host to find traffic that the default Drop rule would block, then add missing allow rules.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>cat<span class="w"> </span>/var/log/dfwpktlogs.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;MONITOR DROP&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-50
 </code></pre></div>
-<p>For each MONITOR DROP entry: determine if the flow is legitimate and add an allow rule, or confirm
-it is unwanted traffic that should be blocked. Common legitimate flows that are frequently missed:</p>
+<p>Look for: MONITOR DROP entries with legitimate source/destination pairs. For each entry, either add an allow rule or confirm it is traffic that should be blocked. Common legitimate flows frequently missed:</p>
 <ul>
 <li>Windows activation (TCP 1688)</li>
 <li>SNMP polling from monitoring (UDP 161)</li>
@@ -6793,27 +6786,20 @@ it is unwanted traffic that should be blocked. Common legitimate flows that are 
 <li>Kerberos (TCP/UDP 88)</li>
 <li>RPC dynamic ports (TCP 49152-65535) for Windows services</li>
 </ul>
-<p>Aria Networks → <strong>Security</strong> → <strong>Security Groups</strong> → <strong>Recommended Rules</strong> also generates rule
-suggestions based on observed IPFIX flows. Import these as a second validation pass.</p>
+<p>Also run: Aria Networks → <strong>Security</strong> → <strong>Security Groups</strong> → <strong>Recommended Rules</strong> as a second validation pass against the manually created rules.</p>
 <hr />
 <h2 id="7-import-aria-networks-recommended-rules">7. Import Aria Networks Recommended Rules<a class="headerlink" href="#7-import-aria-networks-recommended-rules" title="Permanent link">&para;</a></h2>
+<p>Export Aria Networks rule recommendations to NSX and reconcile them against manually created rules before enforcing.</p>
 <p>Aria Networks → <strong>Security</strong> → select the application → <strong>Recommended Rules</strong> → <strong>Export to NSX</strong>.</p>
-<p>Aria Networks generates DFW rules derived from the actual IPFIX flow data. These rules reflect what
-traffic was observed — not what was assumed. Compare the Aria Networks recommendations against the
-manually created rules and reconcile any differences before enforcing.</p>
+<p>Expected: Aria Networks rule set covers all observed IPFIX flows; any gaps versus manually created rules are resolved before switching to enforce mode.</p>
 <hr />
 <h2 id="8-switch-to-enforce-mode">8. Switch to Enforce Mode<a class="headerlink" href="#8-switch-to-enforce-mode" title="Permanent link">&para;</a></h2>
-<p>Once monitor mode produces zero unexpected MONITOR DROP events for at least 5 business days:</p>
-<p>NSX → <strong>Security</strong> → <strong>Distributed Firewall</strong> → select the policy → <strong>Edit</strong> → change mode from
-<strong>Monitor</strong> to <strong>Enforce</strong> → <strong>Save</strong>.</p>
-<p>Enforce mode is applied to all ESXi hosts in the transport zone immediately. Traffic that matches
-no allow rule is now actively blocked.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># After switching to enforce: immediately check DFW logs for unexpected blocks</span>
+<p>Switch to enforce mode only after monitor mode produces zero unexpected MONITOR DROP events for at least 5 business days.</p>
+<p>NSX → <strong>Security</strong> → <strong>Distributed Firewall</strong> → select the policy → <strong>Edit</strong> → change mode from <strong>Monitor</strong> to <strong>Enforce</strong> → <strong>Save</strong>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Immediately after switching — check for unexpected real DFW blocks</span>
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>cat<span class="w"> </span>/var/log/dfwpktlogs.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;DROP&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;MONITOR&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-50
 </code></pre></div>
-<p>Have an application owner verify application functionality within 15 minutes of switching to
-enforce mode. If an unexpected application break occurs, switch the policy back to monitor mode
-immediately — this is non-disruptive and restores full connectivity.</p>
+<p>Expected: no application-breaking DROP entries. Have an application owner verify functionality within 15 minutes. If an unexpected break occurs, revert to monitor mode immediately — this restores full connectivity in under 30 seconds.</p>
 <hr />
 <h2 id="post-task-validation">Post-Task Validation<a class="headerlink" href="#post-task-validation" title="Permanent link">&para;</a></h2>
 <table>
@@ -6874,6 +6860,66 @@ immediately — this is non-disruptive and restores full connectivity.</p>
   connectivity immediately.</li>
 </ul>
 <hr />
+<hr />
+<h2 id="key-terms">Key Terms<a class="headerlink" href="#key-terms" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DFW</td>
+<td>Distributed Firewall — the NSX stateful firewall implemented in the ESXi hypervisor kernel on every host; enforces rules on VM traffic at the vNIC level before it enters or leaves the virtual switch</td>
+</tr>
+<tr>
+<td>Microsegmentation</td>
+<td>A security model that applies granular east-west firewall rules between workloads at the hypervisor level, without requiring physical firewall changes or network re-architecture</td>
+</tr>
+<tr>
+<td>IPFIX</td>
+<td>IP Flow Information Export — the protocol NSX uses to send VDS flow records to Aria Networks; each record describes a traffic flow between two endpoints with protocol, port, and byte count</td>
+</tr>
+<tr>
+<td>NSX security group</td>
+<td>A logical container for VMs used as DFW rule source or destination; membership can be dynamic (by tag, folder, or IP range) so new VMs inherit rules automatically</td>
+</tr>
+<tr>
+<td>Dynamic membership</td>
+<td>NSX group membership criteria that evaluates VMs continuously — when a VM receives a matching vCenter tag it is added to the group in near-real-time without manual intervention</td>
+</tr>
+<tr>
+<td>Monitor mode vs enforce mode</td>
+<td>Monitor mode evaluates DFW rules and logs would-be violations but does not block traffic; enforce mode actively blocks traffic that matches no allow rule</td>
+</tr>
+<tr>
+<td>Policy priority</td>
+<td>The order in which DFW policies are evaluated top-to-bottom; a rule in a higher-priority policy overrides matching rules in lower-priority policies</td>
+</tr>
+<tr>
+<td>East-west traffic</td>
+<td>VM-to-VM traffic flowing within the same data centre, typically between application tiers; DFW intercepts this traffic at the hypervisor before it reaches any physical switch</td>
+</tr>
+<tr>
+<td>Aria Networks</td>
+<td>VMware Aria Operations for Networks — the network observability product that collects IPFIX flows, maps application dependencies, and generates DFW rule recommendations based on observed traffic</td>
+</tr>
+<tr>
+<td>Application discovery</td>
+<td>The Aria Networks process of building a traffic-flow map for an application by analysing IPFIX data; used to identify all east-west connections before writing microsegmentation rules</td>
+</tr>
+<tr>
+<td>Rule recommendation</td>
+<td>An Aria Networks feature that generates DFW allow rules derived directly from observed IPFIX flows; exported to NSX to supplement or validate manually created rules</td>
+</tr>
+<tr>
+<td>dfwpktlogs</td>
+<td>The DFW packet log file on each ESXi host (<code>/var/log/dfwpktlogs.log</code>) that records flows matching logged DFW rules; MONITOR DROP entries identify missing allow rules during the monitor phase</td>
+</tr>
+</tbody>
+</table>
 <h2 id="related-scenarios">Related Scenarios<a class="headerlink" href="#related-scenarios" title="Permanent link">&para;</a></h2>
 <ul>
 <li>NSX Edge Failure / BGP Down</li>
