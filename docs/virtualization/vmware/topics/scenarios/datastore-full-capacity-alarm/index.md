@@ -51,11 +51,7 @@ to prevent recurrence.
 
 ## 1. Identify the Alarm and Affected Datastore
 
-vCenter → **Storage** → **Datastores** → sort by **Free Space** ascending. The lowest-free-space
-datastore is the immediate problem.
-
-For vSAN: there is one vSAN datastore per cluster. vCenter → Cluster → **Monitor** → **vSAN** →
-**Capacity**. This view shows used vs available and the percentage consumed.
+Sort vCenter → **Storage** → **Datastores** by **Free Space** ascending to find the problem datastore; for vSAN use Cluster → **Monitor** → **vSAN** → **Capacity**.
 
 vSAN write-stop thresholds (default):
 
@@ -66,14 +62,13 @@ vSAN write-stop thresholds (default):
 | 80% | vSAN stops accepting new write I/O — VMs pause immediately |
 | 80%+ | No new VMs can be created; no snapshot creation possible |
 
-If vSAN is already above 80%: VM recovery is urgent. Proceed directly to Step 3 to find and
-remove snapshots as the fastest way to recover space.
+Look for: vSAN above 80% = urgent; proceed directly to Step 3 to remove snapshots as the fastest path to recovering write I/O.
 
 ---
 
 ## 2. Check What Is Consuming Space
 
-The most common causes of sudden capacity consumption, in order of frequency:
+Identify the cause before taking action — in order of frequency:
 
 1. **Snapshots** — snapshot delta files (.vmdk-delta) grow with every write to the VM while
    the snapshot exists. A busy VM can generate tens of GB per hour in delta files.
@@ -89,9 +84,7 @@ The most common causes of sudden capacity consumption, in order of frequency:
 
 ## 3. Find Large Snapshots — PowerCLI
 
-Snapshots are the fastest path to recovering space. Always get the VM owner's confirmation
-before deleting, but treat snapshots older than your retention policy (typically 7 days) as
-candidates for immediate removal.
+Snapshots are the fastest path to recovering space — confirm with the VM owner before deleting, but treat any snapshot older than your retention policy (typically 7 days) as a removal candidate.
 
 ```powershell
 # Find all snapshots, sorted by size descending — top 20
@@ -114,17 +107,15 @@ Get-VM "vm-name" | Get-Snapshot | `
   Remove-Snapshot -Confirm:$false
 ```
 
-Snapshot consolidation (committing delta files back to the base VMDK) temporarily requires
-additional free space equal to the delta file size. If the datastore is completely full,
-consolidation may fail. In that case, free a small amount of space first (move a VM to another
-datastore via Storage vMotion), then consolidate.
+Look for: snapshots older than 7 days or with SizeMB > 10,000 as priority targets.
+
+Note: consolidation needs free space equal to the delta size — if the datastore is completely full, svMotion one VM off first, then consolidate.
 
 ---
 
 ## 4. Find Orphaned VMDKs on the Datastore
 
-Orphaned VMDKs are VMDK files on the datastore with no corresponding VM registered in vCenter.
-These are safe to remove but must be confirmed carefully.
+Orphaned VMDKs have no corresponding VM in vCenter — safe to remove but must be confirmed carefully before deletion.
 
 ```bash
 # SSH to ESXi host — list all VMDK files on a datastore
@@ -134,54 +125,38 @@ find /vmfs/volumes/<datastore-name>/ -name "*.vmdk" -not -name "*-flat.vmdk" | s
 find /vmfs/volumes/<datastore-name>/ -name "*-delta.vmdk" -size +10G
 ```
 
-Cross-reference each VMDK path with vCenter. Any VMDK that does not appear in a VM's
-**Edit Settings** → **Hard Disk** list and is not a system snapshot is a candidate orphan.
+Look for: VMDKs absent from every VM's **Edit Settings** → **Hard Disk** list and not a system snapshot = orphan candidate.
 
-**Never delete a VMDK from the filesystem directly without confirming it is not registered
-to any VM in vCenter.** If in doubt, move it to a holding folder and monitor for 72 hours
-before permanent deletion.
+**Never delete a VMDK directly without confirming it has no vCenter registration.** If in doubt, move it to a holding folder and monitor for 72 hours before deletion.
 
 ---
 
 ## 5. Expand Capacity or Storage vMotion VMs
 
-If removing snapshots and orphans is not enough:
-
-- **Storage vMotion** — move the largest VMs to a datastore with more free space. This frees
-  space on the full datastore without any VM downtime.
+If removing snapshots and orphans is not enough, move VMs or add capacity:
 
 ```powershell
 # Move a VM's storage to a different datastore (no downtime)
 Move-VM -VM "vm-name" -Datastore "target-datastore" -DiskStorageFormat Thin
 ```
 
-- **vSAN capacity expansion** — add a host or additional disk capacity to the vSAN cluster. New
-  capacity is immediately available after the disk is added and the disk group is rebuilt.
+For vSAN: add a host or additional disk capacity — new capacity is available immediately after the disk group rebuilds.
 
 ---
 
 ## 6. vSAN SPBM Policy Compliance
 
-When vSAN capacity drops below the threshold required to satisfy storage policies (for example,
-FTT=1 requires enough capacity to hold two copies of each object), vSAN marks affected VMs as
-**Non-Compliant**.
+When capacity drops below what SPBM requires (e.g., FTT=1 needs space for two copies), vSAN marks affected VMs **Non-Compliant** — check via vCenter → Cluster → **Monitor** → **vSAN** → **Virtual Objects** → filter **Non-Compliant**.
 
-Check compliance: vCenter → Cluster → **Monitor** → **vSAN** → **Virtual Objects** → filter
-for **Non-Compliant**.
-
-Non-compliance is automatically resolved once capacity is recovered and vSAN has enough room to
-rebuild the required copies. You do not need to reapply policies manually.
+Look for: Non-Compliant VMs; compliance resolves automatically once capacity is recovered — no manual policy reapplication is needed.
 
 ---
 
 ## 7. Aria Ops Capacity Trending — Get Ahead of the Next Alarm
 
-After recovering space, use Aria Operations to project when the datastore will fill again:
+After recovering space, project the next fill date: Aria Operations → **Capacity** → **vSAN Cluster** → **Time Remaining**.
 
-Aria Operations → **Capacity** → **vSAN Cluster** → **Time Remaining**.
-
-If **Days Remaining to Full** is under 30 days: raise a capacity expansion request immediately.
-If under 7 days: treat it as an urgent incident.
+Look for: Days Remaining to Full under 30 = expansion request; under 7 = urgent incident.
 
 ```bash
 # Aria Ops REST API — get capacity remaining for a specific resource
@@ -191,9 +166,7 @@ curl -sk -X GET \
   | jq '.values[].statList.stat[] | {timestamp: .timestamps[], value: .data[]}'
 ```
 
-Set a proactive alarm threshold: vCenter → **Cluster** → **Monitor** → **vSAN** → **Configure** →
-**Advanced Options** — adjust the warning threshold to 60% and the error threshold to 70% for
-production clusters. This gives a wider lead time before hitting the 80% write-stop.
+Set proactive thresholds: vCenter → **Cluster** → **Monitor** → **vSAN** → **Configure** → **Advanced Options** — set warning to 60% and error to 70% for production clusters, giving lead time before the 80% write-stop.
 
 ---
 
@@ -210,6 +183,25 @@ production clusters. This gives a wider lead time before hitting the 80% write-s
 - **Attempting snapshot consolidation when the datastore is completely full.** Consolidation
   needs working space. Free a few GB first (Storage vMotion one VM off the datastore), then
   consolidate.
+
+---
+
+## Key Terms
+
+| Term | Definition |
+|---|---|
+| vSAN datastore | The single logical datastore per vSAN cluster; backed by the distributed object storage across all cluster hosts rather than a shared array |
+| SPBM (Storage Policy-Based Management) | The vSphere framework that assigns storage requirements (FTT, stripe width, cache reservation) to VMs as a named policy; vSAN enforces these requirements per object |
+| Thin provisioning | A disk allocation method where a VMDK occupies only the space actually written by the guest OS, growing up to its configured maximum over time |
+| Snapshot delta | A `-delta.vmdk` file that accumulates all writes to a VM while a snapshot is active; grows at the VM's write rate and can consume tens of GB per hour for busy VMs |
+| VMDK | Virtual Machine Disk — the file format used to store a VM's guest OS disk on the datastore; each virtual disk appears as one or more `.vmdk` files on the datastore |
+| Slack space | The free capacity reserved in a vSAN cluster for object rebuilds, resync operations, and policy re-compliance; vSAN stops writes at 80% to preserve sufficient slack |
+| FTT | Failures to Tolerate — the SPBM parameter specifying how many host, disk, or site failures a VM's storage can withstand; FTT=1 requires capacity for 2 full copies |
+| Policy compliance | Whether a VM's actual storage configuration meets its assigned SPBM policy; drops to Non-Compliant when there is insufficient capacity to maintain the required number of copies |
+| svMotion | Storage vMotion — live migration of a VM's VMDK files from one datastore to another with no guest OS downtime; used here to free space on the full datastore |
+| Aria Ops capacity | The Aria Operations capacity analytics module that tracks historical growth and projects Days Remaining to Full for each datastore or vSAN cluster |
+| Orphaned VMDK | A VMDK file present on the datastore filesystem with no corresponding VM registration in vCenter; left behind by deleted or improperly migrated VMs |
+| vSAN capacity threshold (70%/80%) | The two built-in vSAN capacity watermarks — 70% fires a warning alarm; 80% immediately stops all write I/O to protect cluster integrity |
 
 ---
 

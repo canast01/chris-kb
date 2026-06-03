@@ -53,8 +53,7 @@ and recovering SSO and certificate services after time is fixed.
 
 ## 1. Understand Why NTP Matters in VMware
 
-Every VMware product validates time before accepting connections. The three mechanisms that break
-with time drift are:
+Every VMware product validates time before accepting connections — the 60-second threshold comes from the SAML token validity window used by SSO.
 
 | Mechanism | Time dependency | Symptom of drift |
 |---|---|---|
@@ -62,21 +61,18 @@ with time drift are:
 | TLS certificates | notBefore / notAfter fields are clock-checked | SSL handshake failure; "certificate not yet valid" |
 | vSAN component heartbeats | Reconciliation uses timestamps | vSAN health "time divergence" warning; resync anomalies |
 
-All products must agree on time within approximately 60 seconds of each other and of a common NTP
-reference. The 60-second threshold comes from the SAML token validity window used by SSO.
-
 ---
 
 ## 2. Check Time on vCenter VCSA
 
-SSH to the VCSA and check current time status:
+SSH to the VCSA and check current synchronisation state.
 
 ```bash
 timedatectl status
 chronyc tracking
 ```
 
-The `chronyc tracking` output shows:
+Expected output:
 
 ```text
 Reference ID    : 10.0.0.1 (ntp1.domain.local)
@@ -91,14 +87,13 @@ Root delay      : 0.003456 seconds
 Root dispersion : 0.001234 seconds
 ```
 
-A System time offset beyond ±60 seconds indicates a problem. An offset beyond ±300 seconds means chrony
-will not correct automatically and `chronyc makestep` is required.
+Look for: System time offset beyond ±60 seconds. An offset beyond ±300 seconds means chrony will not self-correct and `chronyc makestep` is required.
 
 ---
 
 ## 3. Check Time on ESXi Hosts
 
-Check each ESXi host that vCenter reports as "Not Responding" or that shows vSAN time warnings:
+Check each ESXi host that vCenter reports as "Not Responding" or that shows vSAN time warnings.
 
 ```bash
 esxcli system ntp get
@@ -106,7 +101,7 @@ ntpq -p
 date
 ```
 
-The `ntpq -p` output shows one line per NTP peer. The `offset` column is in milliseconds:
+Expected `ntpq -p` output:
 
 ```text
      remote           refid      st t when poll reach   delay   offset  jitter
@@ -115,38 +110,31 @@ The `ntpq -p` output shows one line per NTP peer. The `offset` column is in mill
 +ntp2.domain.loca .GPS.            1 u   47   64  377    1.123    0.398   0.211
 ```
 
-An offset beyond ±60,000 ms (60 seconds) in the offset column is the threshold for vCenter
-disconnection. The `*` prefix marks the currently selected NTP peer.
+Look for: offset column beyond ±60,000 ms (60 seconds). The `*` prefix marks the currently selected NTP peer; if no peer has `*`, the host has no active time source.
 
 ---
 
 ## 4. Check Time on NSX Manager
 
-SSH to NSX Manager (admin credentials) and check current time and NTP configuration:
+SSH to NSX Manager (admin credentials) and check current time and NTP configuration.
 
 ```bash
 get system clock
 get ntp-server
 ```
 
-Verify the NTP servers listed match the environment's authoritative NTP sources and that the system
-clock output matches vCenter time.
+Look for: system clock time matching vCenter within 60 seconds, and NTP servers matching the environment's authoritative sources.
 
 ---
 
 ## 5. Fix NTP on ESXi Hosts
 
-If an ESXi host has drifted or has no NTP configured:
+Configure NTP and force an immediate sync on each drifted host.
 
 ```bash
 esxcli system ntp set --enabled false
 esxcli system ntp set --server ntp1.domain.local --server ntp2.domain.local
 esxcli system ntp set --enabled true
-```
-
-Force an immediate time synchronisation instead of waiting for gradual drift correction:
-
-```bash
 ntpdate -u ntp1.domain.local
 ```
 
@@ -157,26 +145,22 @@ ntpq -p
 date
 ```
 
-Repeat for every ESXi host in the cluster. NTP configuration must be applied to each host individually
-unless a Host Profile enforces NTP settings cluster-wide.
+Repeat for every ESXi host in the cluster — NTP must be applied per host unless a Host Profile enforces it cluster-wide.
 
 ---
 
 ## 6. Fix NTP on VCSA
 
-Configure NTP via VAMI (`https://vcenter-fqdn:5480` → **Time → Edit NTP Servers**) for a persistent
-configuration that survives appliance reboots.
+Configure NTP via VAMI (`https://vcenter-fqdn:5480` → **Time → Edit NTP Servers**) for persistence across reboots.
 
-To fix via SSH immediately:
+To fix immediately via SSH:
 
 ```bash
 timedatectl set-ntp true
 chronyc makestep
 ```
 
-`chronyc makestep` forces an immediate step adjustment to the correct time, bypassing the gradual
-slew correction that chrony normally applies. Without this, a large drift can take minutes or hours
-to correct naturally — during which SSL failures continue.
+`chronyc makestep` forces an immediate step adjustment rather than the gradual slew — without this, SSL failures continue for minutes or hours while drift corrects naturally.
 
 Confirm:
 
@@ -189,16 +173,11 @@ timedatectl status
 
 ## 7. Fix NTP on NSX Manager
 
-SSH to NSX Manager and reconfigure NTP:
+SSH to NSX Manager and reconfigure NTP, then force synchronisation.
 
 ```bash
 set ntp-server ntp1.domain.local
 set ntp-server ntp2.domain.local
-```
-
-Force time synchronisation:
-
-```bash
 restart service ntpd
 ```
 
@@ -208,30 +187,30 @@ Verify:
 get system clock
 ```
 
+Look for: clock time within 60 seconds of vCenter after `ntpd` restarts.
+
 ---
 
 ## 8. Restart SSO After Time Is Fixed
 
-If SSO token errors persist after NTP is corrected, stale tokens in memory remain invalid. Restart
-the STS (Security Token Service) component:
+If SSO token errors persist after NTP is corrected, stale tokens remain invalid until the STS service is restarted.
 
 ```bash
 service-control --restart vmware-stsd
 ```
 
-Wait 60–90 seconds after restart before attempting login. The STS service generates new signing keys
-on startup, which invalidates any cached tokens — this is expected behaviour.
+Wait 60–90 seconds after restart before attempting login — STS generates new signing keys on startup, which invalidates all cached tokens; this is expected behaviour.
 
 ---
 
 ## 9. Verify vSAN Time Skew Health Check
 
-vSAN's built-in health check detects time skew between cluster members. After fixing NTP on all hosts,
-navigate in vCenter to **Cluster → Monitor → vSAN → Skyline Health** and re-run the
+Re-run the vSAN health check after fixing NTP on all hosts to confirm the cluster is clean.
+
+Navigate in vCenter to **Cluster → Monitor → vSAN → Skyline Health** and re-run the
 **"vSAN cluster member hosts time divergence"** check.
 
-The check passes when all hosts are within ±60 seconds of each other. If a host still fails after NTP
-is configured, force a sync on that host:
+If a host still fails after NTP is configured, force a sync:
 
 ```bash
 ntpdate -u ntp1.domain.local
@@ -250,6 +229,25 @@ Then re-run the health check from vCenter.
 | vSAN | 60 seconds between nodes | Component health warnings; resync anomalies |
 | NSX Manager | 60 seconds from controllers | Control plane instability; API auth failures |
 | Aria Operations | 60 seconds from vCenter | Metric collection gaps; false-positive alerts |
+
+---
+
+## Key Terms
+
+| Term | Definition |
+|---|---|
+| NTP | Network Time Protocol — the standard protocol used to synchronise clocks across hosts, appliances, and network devices to a common time source |
+| chronyc | Command-line client for the chrony NTP daemon used on the VCSA; `chronyc tracking` shows current offset and `chronyc makestep` forces an immediate clock correction |
+| timedatectl | Linux systemd utility on the VCSA for displaying and configuring the system clock, NTP status, and timezone |
+| SSO | Single Sign-On — VMware's authentication service that issues SAML tokens for all vSphere and NSX logins; token validity is clock-bound, so any time skew invalidates active sessions |
+| STS | Security Token Service — the component within SSO (vmware-stsd) that generates and validates SAML tokens; must be restarted after large time corrections to clear stale in-memory token state |
+| vmware-stsd | The systemd service name for the VMware Security Token Service on the VCSA; restarting it forces new signing key generation and clears invalid token caches |
+| Time skew | The measured difference between a system's local clock and the NTP reference time; skew beyond 60 seconds breaks VMware TLS and SSO validation |
+| ntpdate | Command-line tool used on ESXi hosts to force an immediate one-shot time synchronisation, bypassing the gradual correction that the NTP daemon applies |
+| NTP stratum | A number indicating how many hops away a time source is from a hardware reference clock; stratum 1 = GPS/atomic clock, stratum 2 = synced to stratum 1; lower stratum = higher accuracy |
+| Certificate validity window | The time range between a certificate's notBefore and notAfter fields; if the system clock is outside this window, TLS handshakes fail with "not yet valid" or "expired" errors |
+| Aria Operations | VMware's observability and monitoring platform; also an NTP client — if its clock drifts, metric timestamps diverge from vCenter and trigger false-positive connectivity alerts |
+| NSX Manager | The NSX control plane appliance that manages overlay networking and security policy; NTP drift on NSX Manager causes API authentication failures and control plane instability |
 
 ---
 

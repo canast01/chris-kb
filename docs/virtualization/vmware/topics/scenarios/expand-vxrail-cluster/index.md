@@ -59,29 +59,20 @@ LCM upgrades and voids the support configuration.
 
 ## 1. Hardware Pre-Checks and iDRAC
 
-Rack and cable the new node following the same physical configuration as existing nodes in the
-cluster (same switch ports, same VLAN assignments, same cable types). Assign the iDRAC IP address
-via the DCUI before doing anything else — VxRail Manager discovery uses the management network,
-but iDRAC gives out-of-band visibility throughout the expansion.
+Rack and cable the new node identically to existing nodes, then assign the iDRAC IP via the DCUI and confirm hardware health before proceeding.
 
 ```bash
 # Confirm iDRAC is reachable on the management network
 ping <new-node-idrac-ip>
-
-# iDRAC web UI should be accessible at https://<idrac-ip>
-# Default credentials: root / Calvin — change immediately after expansion
 ```
 
-Confirm iDRAC shows the node in a healthy hardware state: all PSUs present, no drive faults, BIOS
-POST completed successfully. Do not proceed if iDRAC shows hardware faults.
+Expected: iDRAC web UI accessible at `https://<idrac-ip>` with all PSUs present, no drive faults, and BIOS POST completed. Do not proceed if iDRAC shows hardware faults. Default credentials: root / Calvin — change immediately after expansion.
 
 ---
 
 ## 2. Network Pre-Checks
 
-The new node must have layer-2 connectivity on all required VLANs before VxRail Manager can
-discover it. VxRail Manager will not proceed with expansion if the node cannot reach the
-management network broadcast domain.
+Verify layer-2 connectivity on all required VLANs and confirm DNS A+PTR records are created before starting the expansion wizard.
 
 | Network | MTU requirement | Verification |
 |---|---|---|
@@ -89,26 +80,21 @@ management network broadcast domain.
 | vMotion | 1500 or 9000 (match cluster) | check switch port VLAN assignment |
 | vSAN | 9000 (jumbo frames required) | MTU configured on switch port and VDS |
 
-DNS records must be created before running the expansion wizard. VxRail Manager validates the
-FQDN during the wizard and will fail if the A record or PTR record is missing.
-
 ```bash
 # Verify DNS from the VxRail Manager VM or jump host
 nslookup new-node-hostname.domain.local
 nslookup <new-node-management-ip>
 ```
 
-Both directions must resolve correctly before starting the wizard.
+Expected: both directions resolve correctly. VxRail Manager validates the FQDN during the wizard and will fail if either record is missing.
 
 ---
 
 ## 3. Discover the New Node in VxRail Manager
 
-VxRail Manager → **Cluster Expansion** → **Discover Nodes**.
+Trigger node discovery to confirm the new node is visible on the management network before running the expansion wizard.
 
-VxRail Manager scans the management network broadcast domain for unconfigured VxRail nodes — nodes
-that have factory ESXi installed but have not yet been configured or joined a cluster. The new node
-must appear in the discovery list.
+VxRail Manager → **Cluster Expansion** → **Discover Nodes**.
 
 If the node does not appear:
 
@@ -122,15 +108,14 @@ If the node does not appear:
 
 ## 4. Run the Expansion Wizard
 
-Select the discovered node and click **Next** to start the expansion wizard. Provide:
+Select the discovered node and click **Next**, then supply the four required network values — all pre-checks must pass before expansion begins.
 
 - **Management IP** — new node's management VMkernel IP
 - **vMotion IP** — new node's vMotion VMkernel IP
 - **vSAN IP** — new node's vSAN VMkernel IP
 - **Hostname** — FQDN that matches the pre-created DNS records
 
-VxRail Manager runs a pre-check validation before committing. All checks must pass (green) before
-expansion begins. Common pre-check failures:
+Common pre-check failures:
 
 | Pre-check failure | Resolution |
 |---|---|
@@ -143,22 +128,15 @@ expansion begins. Common pre-check failures:
 
 ## 5. Firmware Bundle Check and Update
 
-VxRail Manager compares the new node's firmware (BIOS, HBA, NIC, iDRAC) and ESXi version against
-the cluster's current LCM bundle. If any component is below the cluster bundle version, VxRail
-Manager automatically stages and applies the firmware before joining the node. This is not
-optional — it runs automatically.
+VxRail Manager automatically compares the new node's firmware against the cluster's LCM bundle and updates any mismatched component — no manual action required.
 
-This step adds significant time: a full firmware update pass typically takes 30-60 minutes. The
-node will reboot during firmware updates. This is expected and requires no intervention.
-
-Do not power off the node or disconnect cables during this phase.
+A full firmware update pass typically takes 30–60 minutes and involves a node reboot. Do not power off the node or disconnect cables during this phase.
 
 ---
 
 ## 6. Expansion Runs Automatically
 
-Once the wizard is confirmed, VxRail Manager orchestrates the full expansion sequence without
-further input:
+After wizard confirmation, VxRail Manager runs the full join sequence without further input — monitor progress in VxRail Manager → **Cluster Expansion** → **Status**.
 
 1. Applies firmware (if required)
 2. Configures ESXi: hostname, management IP, VMkernel ports
@@ -167,18 +145,15 @@ further input:
 5. Configures the NSX transport node (if NSX is deployed on the cluster)
 6. Claims vSAN disks and creates a disk group on the new node
 
-Monitor progress in VxRail Manager → **Cluster Expansion** → **Status**. The full expansion
-typically takes 45-90 minutes from wizard confirmation to completion.
+Expected: VxRail Manager reports expansion complete within 45–90 minutes.
 
 ---
 
 ## 7. vSAN Rebalance Monitoring
 
-After the new node joins and its disks are claimed, vSAN automatically rebalances data across all
-nodes to distribute the load across the new capacity. This is a background operation and does not
-require manual triggering.
+Monitor the automatic vSAN rebalance until 0 bytes remain — do not put any host in maintenance mode while it is in progress.
 
-Monitor the rebalance: vCenter → **vSAN** → **Monitor** → **Resyncing Objects**.
+vCenter → **vSAN** → **Monitor** → **Resyncing Objects**.
 
 ```powershell
 # Check resyncing state via PowerCLI
@@ -188,21 +163,17 @@ Get-VsanView -Id "VsanVcClusterHealthSystem-vsan-cluster-health-system"
 Get-VMHost "new-node.domain.local" | Get-VsanDiskGroup
 ```
 
-Do not put any other host in maintenance mode while rebalancing is in progress. A second host in
-maintenance mode during rebalance can reduce vSAN redundancy below the policy requirement.
+Expected: resyncing objects count reaches 0 and the new node's disk group shows all disks healthy.
 
 ---
 
 ## 8. OMIVV Hardware Inventory Verification
 
-After expansion completes, OMIVV should automatically inventory the new node and add it to the
-hardware overview. Allow 10-15 minutes for the automatic discovery to complete.
+Confirm the new node appears in OMIVV after expansion — allow 10–15 minutes for automatic discovery, then trigger a manual scan if needed.
 
-Verify: vCenter → **Menu** → **Dell** → **OpenManage Integration for VMware vCenter** →
-**Infrastructure Overview** → confirm the new node appears.
+vCenter → **Menu** → **Dell** → **OpenManage Integration for VMware vCenter** → **Infrastructure Overview**.
 
-If the node does not appear automatically: OMIVV → **Settings** → **Discovery** → **Run Discovery**
-to force an immediate inventory scan.
+If the node does not appear: OMIVV → **Settings** → **Discovery** → **Run Discovery**.
 
 ```powershell
 # Confirm new host appears in vCenter cluster
@@ -211,6 +182,8 @@ Get-Cluster "vxrail-cluster" | Get-VMHost | Select Name, ConnectionState, Versio
 # Confirm vSAN disk group on new node
 Get-VMHost "new-node.domain.local" | Get-VsanDiskGroup
 ```
+
+Expected: new node visible in OMIVV infrastructure overview and disk group showing healthy.
 
 ---
 
@@ -243,6 +216,24 @@ Get-VMHost "new-node.domain.local" | Get-VsanDiskGroup
   Change it immediately after expansion.
 
 ---
+
+---
+
+## Key Terms
+
+| Term | Definition |
+|---|---|
+| VxRail Manager | Dell's appliance lifecycle management service that orchestrates VxRail cluster operations — the only supported entry point for adding nodes, running upgrades, and managing the hardware-software bundle |
+| iDRAC | Integrated Dell Remote Access Controller — out-of-band management interface used throughout expansion for hardware health checks, console access, and firmware visibility independent of ESXi |
+| OMIVV | OpenManage Integration for VMware vCenter — Dell plugin that surfaces hardware health and firmware inventory for VxRail nodes directly inside the vCenter UI |
+| vSAN rebalance | Automatic background process triggered when a new node joins a vSAN cluster; redistributes object components across all nodes to use the new capacity evenly |
+| Node discovery | VxRail Manager's scan of the management network broadcast domain to find unconfigured VxRail nodes; nodes must be factory-state (not previously configured) to appear in discovery |
+| LCM bundle | The validated firmware-driver-ESXi combination for a specific VxRail hardware generation; VxRail Manager enforces bundle version consistency across all nodes in the cluster |
+| TEP | Tunnel Endpoint — VMkernel port created by NSX on each transport node to carry GENEVE-encapsulated east-west overlay traffic between hosts |
+| Firmware bundle | The collection of BIOS, HBA, NIC, and iDRAC firmware versions that VxRail Manager applies during node expansion to bring a new node up to the cluster's current LCM bundle level |
+| GENEVE | Generic Network Virtualization Encapsulation — the overlay protocol NSX uses to encapsulate VM traffic between TEP endpoints across the physical network underlay |
+| vSAN disk group | One cache disk plus one or more capacity disks on a single host; created automatically by VxRail Manager on the new node during expansion |
+| mystic account | The local service account on VxRail nodes used by VxRail Manager for internal orchestration; not a user-accessible account — any changes to it break VxRail Manager communication |
 
 ## Related Scenarios
 

@@ -50,7 +50,7 @@ exact commands and UI paths to isolate and resolve each layer.
 
 ## 1. Scope the Problem Before Touching Anything
 
-Determine the blast radius first. The scope tells you where to look:
+Determine the blast radius first — scope tells you which layer to investigate.
 
 | Scope | Most Likely Cause | First Check |
 |---|---|---|
@@ -64,7 +64,7 @@ Determine the blast radius first. The scope tells you where to look:
 
 ## 2. Aria Networks Path Trace — First Tool to Use
 
-Do not guess at DFW rules manually. Use Aria Operations for Networks to run a path trace.
+Run a path trace before touching any DFW rules or routing config — it pinpoints the exact hop and rule ID causing the drop.
 
 Navigate to **Aria Networks → Path Analysis → enter source IP and destination IP → Run**.
 
@@ -85,9 +85,9 @@ If the path shows "Segment not found" or "MAC not in forwarding table":
 
 ## 3. DFW Rule Investigation
 
-DFW rules are evaluated top-to-bottom within each category. First match wins. A correct rule lower in the list can be shadowed by a deny rule above it.
+DFW evaluates rules top-to-bottom within each category — a correct allow rule lower in the list can be shadowed by a deny rule above it.
 
-Navigate to **NSX Manager → Security → Distributed Firewall**. Search by rule ID found in path trace.
+Navigate to **NSX Manager → Security → Distributed Firewall** and search by the rule ID from path trace.
 
 ```text
 DFW Rule Evaluation Order (top to bottom within each category):
@@ -115,8 +115,6 @@ vsipioctl getrules -f /<world-id>/0
 vsipioctl getrules -f /<world-id>/0 | grep -c "rule"
 ```
 
-Check DFW rule statistics from NSX Manager REST API:
-
 ```bash
 # Get hit count for a specific DFW rule — confirms if rule is actively matching traffic
 curl -sk -u admin:<password> \
@@ -124,11 +122,13 @@ curl -sk -u admin:<password> \
   | python3 -m json.tool
 ```
 
+Look for: a high-hit-count deny rule in a higher category (Emergency/Infrastructure) that matches the source or destination — this shadows any allow rule lower in the list.
+
 ---
 
 ## 4. Segment and Transport Node Check
 
-If Aria Networks shows the segment is unreachable or the VM's MAC is unknown:
+If Aria Networks shows the segment unreachable or the VM's MAC is unknown, verify the segment is bound to the affected host.
 
 ```bash
 # NSX Manager REST API — check transport node status for the segment (logical switch)
@@ -141,24 +141,22 @@ curl -sk -u admin:<password> \
 # Expected: all transport nodes for the segment show "UP"
 ```
 
-From vCenter, go to **NSX → System → Fabric → Nodes → Host Transport Nodes**. The ESXi host should show "Success" configuration state. If it shows "Failed" or "Pending":
-
-1. Check NSX VIBs installed on the host:
+From vCenter, go to **NSX → System → Fabric → Nodes → Host Transport Nodes** and check configuration state. If the host shows "Failed" or "Pending":
 
 ```bash
+# Check NSX VIBs installed on the host — all should match the same version
 esxcli software vib list | grep -i nsx
-# All NSX VIBs should show the same version
 ```
 
-2. Re-apply the transport node profile from NSX Manager if VIBs are missing or version-mismatched.
+Look for: any NSX VIB at a different version than the rest indicates a partial upgrade or failed re-apply — re-apply the transport node profile from NSX Manager.
 
 ---
 
 ## 5. T1/T0 Routing Check
 
-For inter-segment routing failures, check the T1 gateway route table.
+For inter-segment routing failures, check the T1 route table and T1→T0 uplink from the edge node CLI.
 
-Navigate to **NSX Manager → Networking → Tier-1 Gateways → select T1 → Route Table** (or use the CLI from edge node).
+Navigate to **NSX Manager → Networking → Tier-1 Gateways → select T1 → Route Table**, or SSH to the edge node:
 
 ```bash
 # SSH to the NSX edge node (via vCenter console or direct SSH)
@@ -180,7 +178,7 @@ get route
 # the T1 is not connected to that segment — verify segment is attached to this T1
 ```
 
-Check the T1 → T0 uplink:
+Check the T1 → T0 uplink and BGP state:
 
 ```bash
 # Enter the T0 VRF
@@ -197,13 +195,15 @@ get bgp neighbor summary
 ping <upstream-router-ip> source <t0-uplink-ip>
 ```
 
+Look for: `State = Active` or `Connect` on any BGP neighbor means the session is down — check IP reachability and AS/password configuration on both sides.
+
 ---
 
 ## 6. Edge Node Health Check
 
-If north-south traffic is broken and T0 BGP is down, check the edge node itself.
+If north-south traffic is broken and T0 BGP is down, verify the edge VM itself is healthy and its TEP connectivity is intact.
 
-In vCenter, verify the edge VM is powered on: **NSX → Fabric → Nodes → Edge Transport Nodes**.
+In vCenter, confirm the edge VM is powered on: **NSX → Fabric → Nodes → Edge Transport Nodes**.
 
 ```bash
 # From edge node CLI — check overall system status
@@ -217,10 +217,8 @@ get tunnel-port interface
 ping <esxi-tep-ip> source <edge-tep-ip>
 ```
 
-If the edge node VM was recently migrated or the host it runs on had a network event, the TEP may have a stale ARP or VTEP entry:
-
 ```bash
-# Clear ARP on the edge node
+# If edge TEP has a stale ARP entry after a recent migration or network event:
 clear arp
 # Then re-test BGP and TEP connectivity
 ```
@@ -229,7 +227,7 @@ clear arp
 
 ## 7. TEP (Tunnel Endpoint) Connectivity from ESXi
 
-GENEVE tunnels between ESXi hosts use TEP VMkernel interfaces (typically vmk10). If TEP is unreachable, all overlay traffic between affected hosts is broken.
+GENEVE tunnels between ESXi hosts use TEP VMkernel interfaces — if TEP is unreachable, all overlay traffic between affected hosts is broken.
 
 ```bash
 # Identify the TEP VMkernel IP on the source host
@@ -244,6 +242,27 @@ vmkping -I vmk10 <remote-tep-ip> -d -s 1572
 # Confirm GENEVE firewall rule is enabled on both hosts
 esxcli network firewall ruleset list | grep -i geneve
 ```
+
+Look for: `vmkping -I vmk10 -d -s 1572` success to all remote TEPs confirms the GENEVE underlay is healthy; failure points to VLAN, MTU, or routing issues in the physical network.
+
+---
+
+## Key Terms
+
+| Term | Definition |
+|---|---|
+| DFW (Distributed Firewall) | NSX kernel-level stateful firewall enforced per vNIC on every ESXi host; rules follow the VM at vMotion; evaluated top-to-bottom by category with first-match-wins logic |
+| T0 (Tier-0 Gateway) | The NSX north-south router that connects the overlay network to the physical underlay; runs BGP with upstream physical routers; deployed on edge nodes |
+| T1 (Tier-1 Gateway) | The NSX inter-segment router that connects logical segments to each other and uplinks to the T0; can be distributed (runs on ESXi hosts) or centralized (runs on edge nodes) |
+| TEP | Tunnel Endpoint — VMkernel interface (typically vmk10 on ESXi, vmk0 on edge nodes) used to originate and terminate GENEVE overlay tunnels between transport nodes |
+| GENEVE | Generic Network Virtualization Encapsulation — UDP-based tunnel protocol (port 6081) used by NSX-T to carry overlay traffic between TEPs; requires MTU ~1600 in the underlay |
+| BGP | Border Gateway Protocol — routing protocol used between NSX T0 gateways and physical routers to advertise VM subnet prefixes north-south; session state is key to external connectivity |
+| Segment | An NSX logical Layer-2 network backed by GENEVE tunnels; VMs on the same segment communicate without routing; must be bound to each host transport node that runs its VMs |
+| Transport node | An ESXi host or NSX edge node that has been configured with NSX VIBs and TEP VMkernel interfaces; only transport nodes can carry overlay traffic |
+| Path analysis | Aria Networks feature that traces the forwarding path between two IPs hop-by-hop through DFW, logical switches, T1, and T0; returns the exact rule ID causing a block |
+| Aria Networks | VMware network observability product (formerly vRealize Network Insight); used here for path trace, flow analysis, and DFW rule lookup |
+| Edge node | Dedicated NSX VM or bare-metal appliance that hosts the T0 and T1 service router (SR) components; required for stateful north-south services and BGP peering |
+| Rule priority | The position of a DFW rule within its category; lower position = evaluated first; a high-priority deny in Emergency or Infrastructure shadows allow rules in Application |
 
 ---
 

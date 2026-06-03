@@ -62,8 +62,7 @@ scenario covers the full procedure from pre-flight checks through post-patch val
 
 ## 1. Pre-Maintenance Checks
 
-Before touching any host, confirm the cluster is in a healthy baseline state. Starting maintenance
-on a degraded cluster can cause vSAN data unavailability or stacked failures.
+Confirm the cluster is in a healthy baseline state before touching any host.
 
 ```powershell
 # Check cluster DRS and HA state
@@ -75,14 +74,10 @@ Get-VsanClusterConfiguration -Cluster (Get-Cluster "cluster-name")
 
 ```bash
 # Check current vSAN resync queue — must be 0 bytes before entering maintenance
-# Run from ESXi shell on any host in the cluster
 esxcli vsan debug resync summary get
 ```
 
-Check Aria Operations for any active critical or warning alerts on this host or its VMs before
-proceeding. Any existing vSAN degradation, storage latency, or HA fault must be resolved first.
-
-Minimum requirements to proceed:
+Expected: resync queue output shows 0 bytes remaining on all components.
 
 | Check | Requirement |
 |---|---|
@@ -96,16 +91,14 @@ Minimum requirements to proceed:
 
 ## 2. Evacuate VMs
 
-Put the host into maintenance mode with full VM evacuation. DRS will vMotion all running VMs to
-other hosts in the cluster automatically if DRS is at least Partially Automated.
+Put the host into maintenance mode — DRS will vMotion all running VMs off automatically.
 
 ```powershell
 # PowerCLI — evacuate all VMs and enter maintenance mode
 Get-VMHost "esxi-host.domain.local" | Set-VMHost -State Maintenance
 ```
 
-From the vCenter UI: right-click the host → **Maintenance Mode** → **Enter Maintenance Mode** →
-select **Move powered-off and suspended VMs to other hosts in the cluster** if applicable.
+Expected: host transitions to Maintenance state with zero powered-on VMs remaining.
 
 If DRS is Manual: vMotion each running VM individually before entering maintenance mode. Check
 vCenter → Host → VMs tab to confirm zero powered-on VMs remain on the host before proceeding.
@@ -114,9 +107,7 @@ vCenter → Host → VMs tab to confirm zero powered-on VMs remain on the host b
 
 ## 3. vSAN Maintenance Mode — Choose the Right Data Migration Option
 
-When a host enters maintenance mode on a vSAN cluster, you must choose how vSAN handles the data
-stored on that host's disk groups. The choice has a direct impact on data safety and how long
-the maintenance mode transition takes.
+When entering maintenance mode on a vSAN cluster, select the data migration option that matches the maintenance type.
 
 | Option | Data movement | Time to enter | When to use |
 |---|---|---|---|
@@ -132,9 +123,9 @@ that window causes data unavailability.
 
 ## 4. Apply Patches via Lifecycle Manager
 
-In vCenter: **Lifecycle Manager** → select the host → **Remediate**. LCM places the host into
-maintenance mode automatically (if not already there), applies the patch baseline, reboots, and
-exits maintenance mode.
+Remediate the host through vCenter LCM — it handles maintenance mode entry, patch application, and reboot automatically.
+
+In vCenter: **Lifecycle Manager** → select the host → **Remediate**.
 
 For VxRail nodes: use **VxRail Manager LCM**, not vCenter LCM directly. VxRail Manager ensures
 the new ESXi version matches the VxRail bundle and that firmware, drivers, and vSAN configuration
@@ -144,8 +135,7 @@ are applied in the correct order. Using vCenter LCM directly on VxRail breaks th
 
 ## 5. Manual Patch via esxcli (When LCM Is Not Available)
 
-Upload the patch ZIP to a datastore first (via SFTP or vCenter datastore browser), then run from
-the ESXi shell:
+Upload the patch ZIP to a datastore first, then apply from the ESXi shell.
 
 ```bash
 # Apply patch from a datastore path
@@ -159,28 +149,26 @@ esxcli system maintenanceMode set --enable true
 reboot
 ```
 
-After reboot, the host will reconnect to vCenter. Confirm the host shows **Connected** and no
-maintenance mode banner before proceeding.
+Expected: host reconnects to vCenter after reboot showing **Connected** with no maintenance mode banner.
 
 ---
 
 ## 6. Exit Maintenance Mode
 
-After the reboot completes and the host reconnects to vCenter:
+After reboot and vCenter reconnection, exit maintenance mode to allow DRS to rebalance VMs.
 
 ```powershell
 # Exit maintenance mode via PowerCLI
 Get-VMHost "esxi-host.domain.local" | Set-VMHost -State Connected
 ```
 
-Or from the vCenter UI: right-click the host → **Maintenance Mode** → **Exit Maintenance Mode**.
-
-DRS will rebalance VMs back to the host automatically if the cluster is Fully Automated. If DRS is
-Partially Automated or Manual, review the DRS recommendations and apply them manually.
+Expected: host state changes to Connected; DRS begins rebalancing VMs back to the host.
 
 ---
 
 ## 7. Post-Patch Validation
+
+Confirm version, vSAN disk groups, HA agent, and resync queue after returning the host to service.
 
 ```bash
 # Verify ESXi version matches the target patch level
@@ -198,6 +186,8 @@ esxcli vsan storage list
 esxcli vsan debug resync summary get
 ```
 
+Expected: version string matches target patch, all disk groups listed, fdm reports running, resync = 0 bytes.
+
 ---
 
 ## Post-Task Validation
@@ -213,24 +203,19 @@ esxcli vsan debug resync summary get
 
 ---
 
-## Common Mistakes
+## Key Terms
 
-- **Entering maintenance mode with No Data Migration before a reboot.** This leaves vSAN with zero
-  redundancy on affected objects for the duration of the reboot. A second concurrent host failure
-  causes data unavailability. Always use Ensure Accessibility for patching.
-- **Starting maintenance with an active vSAN resync queue.** If the cluster is already resyncing
-  when you enter maintenance, the resync will slow further or stall. Resolve any existing
-  degradation before adding another host to maintenance.
-- **Using vCenter LCM on VxRail nodes.** VxRail nodes must be patched through VxRail Manager to
-  keep firmware, drivers, and ESXi in the validated bundle. LCM outside VxRail Manager breaks
-  the support configuration.
-- **Forgetting to check DRS mode.** If DRS is Manual, no automatic vMotion occurs. The host enters
-  maintenance mode with VMs still running on it, which triggers HA failovers unnecessarily.
-
----
-
-## Related Scenarios
-
-- Capacity Planning
-- vSAN Disk or Component Failure
-- VxRail LCM Upgrade Failure
+| Term | Definition |
+|---|---|
+| DRS | Distributed Resource Scheduler — vCenter feature that automatically vMotions VMs across hosts to balance CPU and memory load; required for automated VM evacuation during maintenance mode |
+| HA | High Availability — vCenter cluster feature that restarts VMs on surviving hosts after a host failure; must be enabled before entering maintenance to ensure protection during the patching window |
+| vSAN maintenance mode | A vSAN-specific state layered on top of ESXi maintenance mode that governs how vSAN handles data stored on the host's disk groups before the host goes offline |
+| Ensure Accessibility | vSAN data migration option that moves enough data components off the host so every object retains at least one accessible copy on the remaining hosts — recommended for standard patching |
+| Full Data Migration | vSAN data migration option that moves all data off the host to other hosts before entering maintenance; slowest option but safest for extended maintenance or suspected disk faults |
+| No Data Migration | vSAN data migration option that leaves all data in place; instant entry but leaves zero redundancy for affected objects during a reboot — unsafe for any patching that requires a reboot |
+| FDM | Fault Domain Manager — the HA agent process running on each ESXi host that communicates host liveness to vCenter; must be running post-patch for HA to protect VMs on that host |
+| LCM | Lifecycle Manager — vCenter component (formerly vSphere Update Manager/VUM) that manages patch baselines, desired state images, and orchestrates host remediation including maintenance mode entry and reboot |
+| VUM | vSphere Update Manager — the legacy name for Lifecycle Manager prior to vSphere 7; functionally equivalent for patch baseline management and remediation |
+| VxRail LCM | Dell VxRail-specific lifecycle management workflow embedded in VxRail Manager that validates firmware, driver, and ESXi bundle alignment before applying patches to VxRail nodes |
+| resync queue | The backlog of vSAN data components that need to be rebuilt or resynced across hosts after a failure or maintenance event; must be 0 bytes before entering maintenance on any additional host |
+| vMotion | Live migration of a running VM from one ESXi host to another with no downtime; the mechanism DRS uses to evacuate VMs from a host entering maintenance mode |

@@ -48,7 +48,7 @@ the exact CLI commands and vCenter checks to isolate and fix each one.
 
 ## 1. Read the Error Message First
 
-Go to **vCenter → Recent Tasks**, find the failed vMotion and expand the error details. The error string is the fastest path to the root cause.
+Go to **vCenter → Recent Tasks**, find the failed vMotion, and note the exact error string — it is the fastest path to the root cause.
 
 ```text
 Common vMotion error messages:
@@ -75,7 +75,7 @@ Common vMotion error messages:
 
 ## 2. EVC Mode Check (CPU Incompatibility Errors)
 
-If the error references CPU compatibility, check the cluster's Enhanced vMotion Compatibility (EVC) setting.
+If the error references CPU compatibility, check and set the cluster EVC baseline so all hosts present an identical CPU feature set.
 
 Navigate to **Cluster → Configure → VMware EVC**.
 
@@ -99,7 +99,7 @@ If EVC is disabled or the destination host is below the baseline:
 
 ## 3. VMkernel MTU Check (Most Common Cause)
 
-MTU mismatch between the vMotion VMkernel port and the physical switch is the most frequent cause of the generic "system error".
+MTU mismatch between the vMotion VMkernel and the physical switch causes the generic "system error" — test with a jumbo-frame ping before checking anything else.
 
 ```bash
 # On source host — identify vMotion VMkernel port
@@ -129,11 +129,13 @@ esxcli network vswitch standard list | grep -E "Name|MTU"
 # vCenter → Networking → VDS → Configure → Properties → MTU
 ```
 
+Look for: `vmkping -d -s 8972` succeeds = MTU is correct end-to-end; failure with large frame but success with 1472-byte frame = switch or vDS MTU set to 1500.
+
 ---
 
 ## 4. VMkernel Routing Check
 
-The vMotion VMkernel must have a route to the destination host's vMotion VMkernel IP. If they are on different subnets, a gateway or static route is required.
+The vMotion VMkernel must have a route to the destination host's vMotion VMkernel IP — missing routes silently block vMotion on multi-subnet designs.
 
 ```bash
 # List all IPv4 routes on the host
@@ -151,6 +153,8 @@ esxcli network firewall ruleset list | grep -i vmotion
 
 ## 5. NIC and Driver Validation
 
+Check the physical NIC backing the vMotion VMkernel for speed, duplex, and error counters before investigating higher layers.
+
 ```bash
 # Check NIC driver, link speed, and duplex on the vMotion uplink
 esxcli network nic get -n vmnic1
@@ -164,19 +168,19 @@ esxcli network nic get -n vmnic1
 esxcli network nic stats get -n vmnic1 | grep -E "Rx|Tx|Drop|Error"
 ```
 
+Look for: any non-zero `Drop` or `Error` counter on the vMotion uplink vmnic indicates NIC or cable issues that will cause vMotion timeouts.
+
 ---
 
 ## 6. NSX Segment Check (VM on NSX-T Overlay Network)
 
-If the VM is connected to an NSX segment, the segment must be instantiated on the destination host's transport node. The DFW policy follows the VM automatically, but if the segment itself is not bound to the destination host, vMotion will fail.
+If the VM is on an NSX segment, confirm the segment is bound to the destination host's transport node — missing binding silently fails vMotion.
 
 ```bash
 # From NSX Manager UI: Networking → Segments → select the segment
 # Check "Transport Nodes" tab — destination host must appear as bound
 
 # From NSX Manager CLI or API — list transport nodes for a segment
-# GET https://<nsx-manager>/api/v1/logical-switches/<ls-id>/transport-node-status
-
 curl -sk -u admin:<password> \
   "https://<nsx-manager>/api/v1/logical-switches/<ls-id>/transport-node-status" \
   | python3 -m json.tool | grep -E "status|transport_node_id"
@@ -196,11 +200,13 @@ vmkping -I vmk10 <remote-tep-ip> -d -s 1572
 # 1572 = 1600 byte GENEVE frame minus headers
 ```
 
+Look for: all NSX VIBs at matching versions; `vmkping -I vmk10 -d -s 1572` succeeds to all remote TEP IPs.
+
 ---
 
 ## 7. Large VM / Memory Bandwidth Timeout
 
-If the VM has more than 32 GB of RAM and vMotion times out during the memory copy phase:
+For VMs over 32 GB RAM that time out during the memory copy phase, verify the vMotion network can outpace the VM's memory write rate.
 
 ```text
 vMotion memory copy phases:
@@ -212,8 +218,6 @@ Timeout occurs when the VM writes memory faster than the network can copy it.
 Requirement: vMotion network bandwidth > VM memory write rate.
 ```
 
-Check available bandwidth on the vMotion VMkernel:
-
 ```bash
 # Test actual throughput between hosts using iperf (if available)
 # On destination host (as server):
@@ -223,7 +227,26 @@ iperf -s -B <destination-vmk1-ip> -p 5201
 iperf -c <destination-vmk1-ip> -B <source-vmk1-ip> -p 5201 -t 30
 ```
 
-If bandwidth is insufficient, dedicate a higher-speed uplink to the vMotion VMkernel or increase the number of vMotion streams in **Cluster → Configure → vSphere DRS → Advanced Options**.
+Look for: throughput well below expected link speed (e.g., 2 Gbps on a 10 Gbps link) indicates a shared uplink with insufficient bandwidth — dedicate a higher-speed uplink to vMotion or increase streams in **Cluster → Configure → vSphere DRS → Advanced Options**.
+
+---
+
+## Key Terms
+
+| Term | Definition |
+|---|---|
+| vMotion | Live migration feature that moves a powered-on VM between ESXi hosts with no downtime; requires compatible VMkernel networking, CPU baseline, and licensing |
+| EVC | Enhanced vMotion Compatibility — cluster-level CPU masking that hides newer CPU features so VMs remain compatible with the oldest host in the cluster |
+| VMkernel (vmk) | ESXi logical network interface used for host services; vmk0 = management, vmk1 = vMotion, vmk2 = vSAN, vmk10 = NSX TEP; each tagged for its role |
+| MTU | Maximum Transmission Unit — frame size in bytes; vMotion with jumbo frames requires MTU 9000 end-to-end (vSwitch, vDS, physical switch); mismatch silently drops frames |
+| vmkping | ESXi CLI tool to test connectivity from a specific VMkernel interface; `-d -s 8972` tests jumbo frame path without fragmentation |
+| DFW | Distributed Firewall — NSX kernel-level firewall; follows the VM after vMotion by re-enforcing rules on the destination host's vNIC automatically |
+| NSX segment | An overlay logical network backed by GENEVE tunnels; the destination host must be a transport node with the segment bound before vMotion can complete |
+| TEP | Tunnel Endpoint — VMkernel interface (typically vmk10) used by NSX to encapsulate overlay traffic in GENEVE tunnels between ESXi hosts |
+| vmnic | Physical NIC on the ESXi host; the vmnic backing the vMotion VMkernel must have sufficient speed, full duplex, and no error counters |
+| vDS | vSphere Distributed Switch — cluster-wide virtual switch managed from vCenter; MTU and port group settings here affect all hosts connected to it |
+| VMotion tag | The network service tag assigned to a VMkernel port that marks it as eligible for vMotion traffic; missing tag produces "No VMkernel adapter" error |
+| thumbprint | SSL certificate fingerprint; vMotion uses certificate validation between hosts; a mismatched or expired thumbprint can block migration in secure environments |
 
 ---
 

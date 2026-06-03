@@ -66,7 +66,7 @@ on HCI deployments.
 
 ## 1. Identify the Alarm — Skyline Health
 
-Navigate to **vCenter → Cluster → Monitor → vSAN → Skyline Health**. A failing disk or absent component produces one or more red checks:
+Navigate to **vCenter → Cluster → Monitor → vSAN → Skyline Health** to find the specific failing check before touching any disk.
 
 ```text
 Common red health checks and their meaning:
@@ -77,17 +77,13 @@ Common red health checks and their meaning:
   Physical disk health       — SMART errors or disk returned hardware error
 ```
 
-The **Virtual Objects** view (**vSAN → Monitor → Virtual Objects**) shows the per-VM impact. Filter by "Non-compliant" to see which VMs have a protection gap.
+Look for: the **Virtual Objects** view (**vSAN → Monitor → Virtual Objects**) filtered by "Non-compliant" shows exactly which VMs have a live protection gap.
 
 ---
 
 ## 2. Identify the Failed Component
 
-From Virtual Objects, expand a non-compliant VM to see its component map. Note:
-
-- Which **host** the absent component lives on
-- Which **disk group** (cache or capacity disk)
-- Whether the component is **Absent** (disk gone) or **Degraded** (component needs rebuild but disk is present)
+Expand a non-compliant VM in Virtual Objects to see its component map, then correlate with CLI output to confirm which disk.
 
 ```bash
 # List all vSAN objects and their health on the host
@@ -100,11 +96,13 @@ esxcli vsan storage list
 esxcli vsan storage list | grep -E "DiskGroupUUID|SSD|Capacity|State"
 ```
 
+Look for: note which host the absent component lives on, which disk group it belongs to, and whether the state is `Absent` (disk gone) or `Degraded` (disk present but component needs rebuild).
+
 ---
 
 ## 3. Assess the Risk Window
 
-Before touching anything, determine whether the cluster can tolerate another failure.
+Before touching anything, determine whether the cluster can survive another failure during the rebuild.
 
 | FTT | Policy | Failures Tolerated | VM State with 1 Absent Component | Action |
 |---|---|---|---|---|
@@ -123,7 +121,7 @@ Do NOT put other hosts into maintenance mode during an active risk window.
 
 ## 4. Check Physical Disk Health
 
-SSH to the affected ESXi host and interrogate the disk.
+SSH to the affected ESXi host to confirm whether the disk has truly failed or is merely disconnected before ordering a replacement.
 
 ```bash
 # List all storage devices visible to ESXi
@@ -140,23 +138,20 @@ esxcli storage core device smart get -d naa.<device-id>
 # Drive Temperature > 55°C        — thermal issue
 ```
 
-For **VxRail** deployments, check iDRAC for hardware events before acting:
+For VxRail deployments, check iDRAC before acting — OMIVV surfaces hardware events as vCenter alarms:
 
 ```bash
 # SSH to iDRAC (or use web UI at https://<idrac-ip>)
-# Check storage controller and physical disk alerts
 racadm getsel | grep -i "storage\|disk\|drive"
 ```
 
-OMIVV (OpenManage Integration for VMware vCenter) surfaces these as vCenter alarms. Check **vCenter → Alarms → Triggered Alarms** for any Dell hardware events correlated with the vSAN alert.
+Look for: cross-reference **vCenter → Alarms → Triggered Alarms** for any Dell OMIVV alarm correlated with the vSAN alert to confirm the physical disk identity.
 
 ---
 
 ## 5. Initiate or Monitor Rebuild
 
-**If the disk is physically failed:** replace it. vSAN automatically detects the new disk, adds it to the disk group, and begins rebuilding absent components.
-
-**Do not manually re-add the disk** unless vSAN fails to claim it automatically (rare). Let vSAN handle discovery.
+Replace the failed disk — vSAN automatically detects the new disk and begins rebuilding absent components; do not manually re-add it.
 
 ```bash
 # Monitor resync progress from ESXi CLI
@@ -169,17 +164,13 @@ esxcli vsan debug resync summary get
 #   ActiveResyncETA   — estimated completion time
 ```
 
-In vCenter, go to **vSAN → Monitor → Resyncing Objects** for a visual view of the queue.
-
-For VxRail, use **VxRail Manager → Maintenance → Disk Replacement** wizard. It:
-
-1. Verifies the cluster has sufficient capacity before replacement
-2. Guides through safe removal without triggering a second failure
-3. Monitors rebuild progress post-replacement
+Look for: `ResyncType = REPAIR` with decreasing `BytesToResync` confirms rebuild is in progress. For VxRail, use **VxRail Manager → Maintenance → Disk Replacement** wizard — it verifies cluster capacity before removal and monitors rebuild post-replacement.
 
 ---
 
 ## 6. PowerCLI — Disk Group and Health Queries
+
+Pull disk group and cluster health state programmatically for post-replacement validation.
 
 ```powershell
 # Get all disk groups for a specific ESXi host
@@ -195,6 +186,26 @@ $vsanHealth = Get-VsanView -Id "VsanVcClusterHealthSystem-vsan-cluster-health-sy
 $spec = New-Object VMware.Vimautomation.Storage.Impl.V1.VsanQueryVcClusterHealthSummarySpec
 $vsanHealth.VsanQueryVcClusterHealthSummary($cluster.ExtensionData.MoRef, $null, $null, $true, $null, $null, "defaultView")
 ```
+
+---
+
+## Key Terms
+
+| Term | Definition |
+|---|---|
+| vSAN | VMware's hyperconverged storage layer that pools local disks across cluster hosts into a shared datastore; data is distributed as objects and components across hosts |
+| OSA | Original Storage Architecture — the vSAN disk group model using a dedicated cache disk (SSD) plus capacity disks; used in vSAN 7 and earlier by default |
+| ESA | Express Storage Architecture — vSAN 8+ all-NVMe model that eliminates the cache tier; each disk contributes directly to both capacity and performance |
+| FTT | Failures to Tolerate — the SPBM policy attribute that defines how many simultaneous host or disk failures a VM's data can survive; determines the minimum host count required |
+| RAID-1 | vSAN mirroring protection; writes N+1 full copies of each object across different fault domains; FTT=1 RAID-1 requires 3 hosts and uses 2x capacity overhead |
+| RAID-5 | vSAN erasure coding for FTT=1; distributes data + parity across 4 hosts; uses 1.33x capacity overhead compared to RAID-1's 2x |
+| Disk group | OSA grouping of one cache SSD plus 1–7 capacity disks on a single ESXi host; all capacity disks in the group share the cache tier |
+| Component | The smallest unit of a vSAN object; a single VM disk (VMDK) is split into one or more components distributed across different hosts according to the FTT policy |
+| Resync | The rebuild process vSAN runs after a disk or host failure to recreate absent components on surviving hosts and restore the configured FTT level |
+| SPBM | Storage Policy-Based Management — vSphere framework where VM storage rules (FTT, RAID level, encryption) are defined as policies and applied per VM or VMDK |
+| Skyline Health | The vSAN health monitoring dashboard in vCenter; runs continuous health checks across disk, capacity, network, and cluster configuration categories |
+| OMIVV | OpenManage Integration for VMware vCenter — Dell plugin that forwards iDRAC hardware alerts (disk failures, SMART errors) into vCenter as native alarms |
+| iDRAC | Integrated Dell Remote Access Controller — out-of-band management interface on Dell servers; provides hardware-level disk and controller event logs independent of the OS |
 
 ---
 

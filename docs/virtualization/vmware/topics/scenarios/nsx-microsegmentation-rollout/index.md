@@ -61,21 +61,17 @@ projects.
 
 ## 1. Enable IPFIX Flow Collection
 
-Aria Networks needs to see real traffic flows before any rules are written. IPFIX is the protocol
-that NSX uses to export flow records to Aria Networks.
+Configure IPFIX to export VDS flow records to Aria Networks before any rules are written.
 
-NSX Manager → **Networking** → **IPFIX** → **Flows** → **Add Collector** → enter the Aria Networks
-proxy node IP address and port (default: UDP 2055). Then enable IPFIX on the VDS:
+NSX Manager → **Networking** → **IPFIX** → **Flows** → **Add Collector** → enter the Aria Networks proxy node IP and port (default: UDP 2055). Then: **Switch IPFIX** → select the VDS → **Enable**.
 
-NSX Manager → **Networking** → **IPFIX** → **Switch IPFIX** → select the VDS → **Enable**.
-
-Verify flows are arriving: Aria Networks → **Network Map** → select a VM group → **Flows** tab.
-If flows appear, IPFIX is working. Allow at least 24 hours before beginning analysis — you need
-enough flow data to distinguish regular traffic from noise.
+Look for: flows appearing in Aria Networks → **Network Map** → VM group → **Flows** tab within 15 minutes. Allow at least 24 hours before analysis to separate regular traffic from noise.
 
 ---
 
 ## 2. Observe Traffic Flows (Phase 1: 2-4 Weeks)
+
+Document every observed east-west and north-south flow pattern from Aria Networks before writing any rules.
 
 Aria Networks → **Network Map** → select the application or VM group being segmented → **Flows**.
 
@@ -88,18 +84,15 @@ Document every observed flow pattern:
 | Monitoring server | All VMs | TCP | 5672 | North-South |
 | All VMs | AD servers | TCP/UDP | 389, 53 | North-South |
 
-The 2-4 week observation window captures infrequent but legitimate traffic: month-end batch jobs,
-weekly backup agents, quarterly maintenance scripts. Rules written from a single day of flows
-will block these when they next run.
+The 2–4 week window captures infrequent but legitimate flows: month-end batch jobs, weekly backup agents, quarterly maintenance scripts — rules built from a single day's data will block these when they next run.
 
 ---
 
 ## 3. Create NSX Security Groups
 
-NSX → **Security** → **Inventory** → **Groups** → **Add Group**.
+Create one group per application tier using dynamic membership so new VMs automatically inherit the correct group.
 
-Create one group per application tier. Use dynamic membership criteria so new VMs automatically
-inherit the correct group without manual intervention.
+NSX → **Security** → **Inventory** → **Groups** → **Add Group**.
 
 Preferred membership criteria (in order of preference):
 
@@ -119,16 +112,13 @@ Group: DBTier        — Membership: VM Tag = "Tier:DB"
 Group: Monitoring    — Membership: VM Tag = "Role:Monitoring"
 ```
 
-After creating groups, verify membership: select each group → **Members** → confirm the expected
-VMs appear. A misconfigured group that excludes VMs will produce unexpected DFW blocks when
-enforce mode is enabled.
+Expected: each group → **Members** shows the correct VMs. A misconfigured group that excludes VMs will produce unexpected DFW blocks when enforce mode is enabled.
 
 ---
 
 ## 4. Tag VMs in vCenter
 
-NSX security groups reference vCenter tags. Tags must be applied to VMs before the groups will
-have members.
+Apply vCenter tags to VMs so NSX security groups have members before any rules are evaluated.
 
 ```powershell
 # Create tag categories and tags in vCenter
@@ -143,19 +133,15 @@ Get-VM "app-vm-01", "app-vm-02" | New-TagAssignment -Tag (Get-Tag "App")
 Get-VM "db-vm-01"               | New-TagAssignment -Tag (Get-Tag "DB")
 ```
 
-NSX reads vCenter tag assignments in near-real-time. After applying tags, return to NSX and
-verify the group membership updated correctly.
+Expected: NSX group membership updates in near-real-time — return to NSX and verify the groups show the correct VMs.
 
 ---
 
 ## 5. Define DFW Policy in Monitor Mode
 
-NSX → **Security** → **Distributed Firewall** → **Add Policy**.
+Create the DFW policy in monitor mode so rules log violations without blocking traffic — the safety net that prevents outages during rollout.
 
-Name the policy to reflect the application (e.g., `ThreeTierApp-Microseg`). Before adding any
-rules, set the policy mode to **Monitor**. In monitor mode, rules are evaluated against traffic
-but no traffic is blocked — violations are logged only. This is the safety net that prevents
-outages during rollout.
+NSX → **Security** → **Distributed Firewall** → **Add Policy** → set mode to **Monitor** before adding any rules.
 
 Add rules based on the flows documented in Phase 1:
 
@@ -168,23 +154,19 @@ Rule 5: Allow Any      → DNS        UDP 53     Action: Allow
 Rule 6: Default catch-all           Any        Action: Drop (log)
 ```
 
-The default Drop rule at the bottom is required — it defines what happens to traffic that matches
-no explicit rule. Without it, the implicit DFW default (allow) applies and the policy has no effect.
+The default Drop rule at the bottom is required — without it the implicit DFW default (allow) applies and the policy has no enforcement effect.
 
 ---
 
 ## 6. Review Monitor Mode Logs (Phase 2: 1-2 Weeks)
 
-With the policy in monitor mode, all traffic that would be blocked by the default Drop rule is
-logged to the DFW packet log on each ESXi host.
+Review the DFW packet log on each host to find traffic that the default Drop rule would block, then add missing allow rules.
 
 ```bash
-# Review MONITOR DROP events on an ESXi host — identifies missing allow rules
 cat /var/log/dfwpktlogs.log | grep "MONITOR DROP" | head -50
 ```
 
-For each MONITOR DROP entry: determine if the flow is legitimate and add an allow rule, or confirm
-it is unwanted traffic that should be blocked. Common legitimate flows that are frequently missed:
+Look for: MONITOR DROP entries with legitimate source/destination pairs. For each entry, either add an allow rule or confirm it is traffic that should be blocked. Common legitimate flows frequently missed:
 
 - Windows activation (TCP 1688)
 - SNMP polling from monitoring (UDP 161)
@@ -192,39 +174,32 @@ it is unwanted traffic that should be blocked. Common legitimate flows that are 
 - Kerberos (TCP/UDP 88)
 - RPC dynamic ports (TCP 49152-65535) for Windows services
 
-Aria Networks → **Security** → **Security Groups** → **Recommended Rules** also generates rule
-suggestions based on observed IPFIX flows. Import these as a second validation pass.
+Also run: Aria Networks → **Security** → **Security Groups** → **Recommended Rules** as a second validation pass against the manually created rules.
 
 ---
 
 ## 7. Import Aria Networks Recommended Rules
 
+Export Aria Networks rule recommendations to NSX and reconcile them against manually created rules before enforcing.
+
 Aria Networks → **Security** → select the application → **Recommended Rules** → **Export to NSX**.
 
-Aria Networks generates DFW rules derived from the actual IPFIX flow data. These rules reflect what
-traffic was observed — not what was assumed. Compare the Aria Networks recommendations against the
-manually created rules and reconcile any differences before enforcing.
+Expected: Aria Networks rule set covers all observed IPFIX flows; any gaps versus manually created rules are resolved before switching to enforce mode.
 
 ---
 
 ## 8. Switch to Enforce Mode
 
-Once monitor mode produces zero unexpected MONITOR DROP events for at least 5 business days:
+Switch to enforce mode only after monitor mode produces zero unexpected MONITOR DROP events for at least 5 business days.
 
-NSX → **Security** → **Distributed Firewall** → select the policy → **Edit** → change mode from
-**Monitor** to **Enforce** → **Save**.
-
-Enforce mode is applied to all ESXi hosts in the transport zone immediately. Traffic that matches
-no allow rule is now actively blocked.
+NSX → **Security** → **Distributed Firewall** → select the policy → **Edit** → change mode from **Monitor** to **Enforce** → **Save**.
 
 ```bash
-# After switching to enforce: immediately check DFW logs for unexpected blocks
+# Immediately after switching — check for unexpected real DFW blocks
 cat /var/log/dfwpktlogs.log | grep "DROP" | grep -v "MONITOR" | head -50
 ```
 
-Have an application owner verify application functionality within 15 minutes of switching to
-enforce mode. If an unexpected application break occurs, switch the policy back to monitor mode
-immediately — this is non-disruptive and restores full connectivity.
+Expected: no application-breaking DROP entries. Have an application owner verify functionality within 15 minutes. If an unexpected break occurs, revert to monitor mode immediately — this restores full connectivity in under 30 seconds.
 
 ---
 
@@ -257,6 +232,25 @@ immediately — this is non-disruptive and restores full connectivity.
   connectivity immediately.
 
 ---
+
+---
+
+## Key Terms
+
+| Term | Definition |
+|---|---|
+| DFW | Distributed Firewall — the NSX stateful firewall implemented in the ESXi hypervisor kernel on every host; enforces rules on VM traffic at the vNIC level before it enters or leaves the virtual switch |
+| Microsegmentation | A security model that applies granular east-west firewall rules between workloads at the hypervisor level, without requiring physical firewall changes or network re-architecture |
+| IPFIX | IP Flow Information Export — the protocol NSX uses to send VDS flow records to Aria Networks; each record describes a traffic flow between two endpoints with protocol, port, and byte count |
+| NSX security group | A logical container for VMs used as DFW rule source or destination; membership can be dynamic (by tag, folder, or IP range) so new VMs inherit rules automatically |
+| Dynamic membership | NSX group membership criteria that evaluates VMs continuously — when a VM receives a matching vCenter tag it is added to the group in near-real-time without manual intervention |
+| Monitor mode vs enforce mode | Monitor mode evaluates DFW rules and logs would-be violations but does not block traffic; enforce mode actively blocks traffic that matches no allow rule |
+| Policy priority | The order in which DFW policies are evaluated top-to-bottom; a rule in a higher-priority policy overrides matching rules in lower-priority policies |
+| East-west traffic | VM-to-VM traffic flowing within the same data centre, typically between application tiers; DFW intercepts this traffic at the hypervisor before it reaches any physical switch |
+| Aria Networks | VMware Aria Operations for Networks — the network observability product that collects IPFIX flows, maps application dependencies, and generates DFW rule recommendations based on observed traffic |
+| Application discovery | The Aria Networks process of building a traffic-flow map for an application by analysing IPFIX data; used to identify all east-west connections before writing microsegmentation rules |
+| Rule recommendation | An Aria Networks feature that generates DFW allow rules derived directly from observed IPFIX flows; exported to NSX to supplement or validate manually created rules |
+| dfwpktlogs | The DFW packet log file on each ESXi host (`/var/log/dfwpktlogs.log`) that records flows matching logged DFW rules; MONITOR DROP entries identify missing allow rules during the monitor phase |
 
 ## Related Scenarios
 

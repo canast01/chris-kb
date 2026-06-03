@@ -48,7 +48,7 @@ cause and apply the correct fix — CPU, memory, storage, or network.
 
 ## 1. Start in Aria Operations — Triage the Alert
 
-Open Aria Operations and navigate to the affected VM's alert. Check these four metrics first:
+Open the affected VM's alert in Aria Operations and note which metric is elevated — it determines where to dig next.
 
 | Metric | Threshold | Meaning |
 |---|---|---|
@@ -57,13 +57,11 @@ Open Aria Operations and navigate to the affected VM's alert. Check these four m
 | Storage Latency (ms) | > 20 ms (DAVG) | Disk I/O contention at datastore layer |
 | Network Dropped Packets | > 0.1% | NIC saturation or DFW overhead |
 
-Note which metric is elevated. That determines where to dig next.
-
 ---
 
 ## 2. ESXi Layer — Run esxtop on the Host
 
-SSH to the ESXi host where the VM is running and use esxtop for real-time host metrics.
+SSH to the ESXi host and run esxtop to get real-time ground-truth metrics before acting.
 
 ```bash
 # Batch mode — 3 samples, 50 lines of output; good for capture
@@ -88,13 +86,13 @@ esxtop -b -n 1 | grep -A2 "vmx-vcpu"
 esxcli vm process list
 ```
 
-If %RDY is high across many VMs on the same host, the host is CPU-overcommitted. If it is only one VM, check resource pool limits and reservations.
+Look for: `%RDY` high across many VMs = host overcommitted; `%RDY` high on one VM only = check resource pool limits.
 
 ---
 
 ## 3. vSAN Layer — Check Storage Performance
 
-Navigate in vCenter to **Cluster → Monitor → vSAN → Performance Service** to view per-VM IOPS, throughput, and latency. Then check health.
+Navigate to **Cluster → Monitor → vSAN → Performance Service** and check per-VM IOPS, throughput, and latency.
 
 ```bash
 # List all vSAN objects and their health on the host
@@ -107,11 +105,7 @@ esxcli vsan storage list
 esxcli vsan debug vmdk list
 ```
 
-In vCenter, also check **vSAN → Monitor → Skyline Health**. Look for:
-
-- Disk capacity imbalance (hot disk)
-- Component state: "Absent" or "Degraded"
-- Resync queue — active resync adds latency for all VMs on the disk group
+Look for:
 
 ```text
 vSAN Latency Tiers (DAVG from esxtop):
@@ -121,34 +115,28 @@ vSAN Latency Tiers (DAVG from esxtop):
   > 50 ms  — critical; likely degraded component or disk failure
 ```
 
+In vCenter also check **vSAN → Monitor → Skyline Health** for capacity imbalance, absent/degraded components, and active resync queue (resync adds latency for all VMs on the disk group).
+
 ---
 
 ## 4. NSX DFW Layer — Rule Overhead on Network Traffic
 
-If the network path is the bottleneck, use Aria Operations for Networks (Aria Networks) to trace the path.
-
-From Aria Networks, run **Path Analysis** (source VM → destination VM). If a DFW rule ID is flagged:
+If network is the bottleneck, run **Path Analysis** in Aria Networks (source VM → destination VM) to identify the blocking DFW rule ID.
 
 ```bash
 # From NSX Manager REST API — get hit count for a specific rule
-# GET https://<nsx-manager>/api/v1/firewall/stats/rules/<rule-id>
-
 curl -sk -u admin:<password> \
   https://<nsx-manager>/api/v1/firewall/stats/rules/<rule-id> \
   | python3 -m json.tool
 ```
 
-High hit-count rules on east-west traffic cause per-packet overhead. Reduce by:
-
-- Consolidating rules with the same action and source/destination groups
-- Adding a service exception for high-throughput backup or replication VMs
-- Checking if a stateful DFW rule is logging every packet (disable logging if not needed)
+Look for: high hit-count rules on east-west flows. Reduce overhead by consolidating rules with the same action and groups, adding a service exception for high-throughput backup VMs, or disabling packet logging on stateful rules.
 
 ---
 
 ## 5. PowerCLI — Pull Historical Performance Stats
 
-Use PowerCLI to pull stats for the past hour without needing Aria Operations access.
+Pull the past hour of stats without needing Aria Operations access.
 
 ```powershell
 # CPU ready — high sustained values confirm host-level contention
@@ -175,6 +163,25 @@ Get-VM "vm-name" | Get-Stat -Stat disk.totalLatency.average `
 | vSAN DAVG > 20 ms | Disk group contention or component rebuild | Check resync queue; replace failed disk; rebalance capacity |
 | Network dropped packets | NIC saturation or DFW overhead | Check vmnic utilisation; reduce DFW rule count; disable rule logging |
 | East-west latency spike | DFW stateful tracking overhead | Profile DFW rules with Aria Networks; add exclusion for high-throughput flows |
+
+---
+
+## Key Terms
+
+| Term | Definition |
+|---|---|
+| Aria Operations | VMware observability platform; used here to receive the initial performance alert and surface CPU ready %, balloon, and latency metrics per VM |
+| esxtop | ESXi CLI tool that shows real-time host-level metrics — CPU, memory, disk, network — at the individual VM and physical device level |
+| CPU Ready (%RDY) | Time a VM spends waiting for physical CPU time; measured in esxtop; > 5% indicates the host is overcommitted and the VM is being starved |
+| DAVG | Disk average latency (milliseconds) as reported by esxtop at the device driver layer; > 20 ms on vSAN indicates storage contention or a degraded component |
+| DRS | Distributed Resource Scheduler; vCenter feature that automatically migrates VMs via vMotion to balance CPU and memory load across cluster hosts |
+| vSAN | VMware's hyperconverged storage layer; aggregates local host disks into a shared datastore; performance degrades during component rebuild (resync) |
+| DFW | Distributed Firewall; NSX kernel-level firewall enforced per vNIC on every ESXi host; high rule counts or stateful logging add per-packet overhead to east-west traffic |
+| PCPU | Physical CPU; a single logical processor core on the ESXi host; %RDY in esxtop reflects how many PCPU cycles a VM is waiting to receive |
+| Memory balloon | Hypervisor memory reclamation technique where ESXi inflates a balloon driver inside the guest to reclaim pages; any sustained balloon value means the host is under memory pressure |
+| vmnic | Physical NIC on the ESXi host; %DRPD in the esxtop network view shows dropped packets per vmnic; saturation here causes VM network degradation |
+| IOPS | Input/output operations per second; the throughput metric for storage; monitored via vSAN Performance Service per VM to distinguish storage bottlenecks from CPU/memory issues |
+| vNIC | Virtual NIC presented to the guest VM; DFW rules are enforced at the vNIC kernel layer, so overhead is incurred even for traffic between VMs on the same host |
 
 ---
 

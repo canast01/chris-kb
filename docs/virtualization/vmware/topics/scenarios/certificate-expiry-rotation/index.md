@@ -59,8 +59,7 @@ again. This scenario covers identification, rotation order, and validation acros
 
 ## 1. Identify Expiring Certificates
 
-Run this audit against every VMware product in the environment. Certificates expiring within
-60 days should be scheduled for rotation immediately.
+Certificates expiring within 60 days should be scheduled for rotation immediately — run this audit against every VMware product.
 
 ```bash
 # vCenter certificate expiry
@@ -93,12 +92,13 @@ for host in vcenter.domain.local nsxmanager.domain.local ariaops.domain.local ar
 done
 ```
 
+Expected: each line prints the hostname and a `notAfter` date; any date within 60 days requires rotation.
+
 ---
 
 ## 2. Rotate vCenter VMCA Certificate
 
-Two approaches. Option A (CA-signed) is recommended for all production environments. Option B
-(renew self-signed) is acceptable for isolated lab environments.
+Option A (CA-signed) is recommended for all production environments; Option B (self-signed renewal) is acceptable for isolated lab environments only.
 
 **Option A — Replace with CA-signed certificate (recommended):**
 
@@ -122,16 +122,13 @@ In the certificate manager menu:
 # Select Option 8: Regenerate all certificates
 ```
 
-Option 8 regenerates the VMCA root and all solution user certificates. This is fast but the cert
-remains self-signed — browsers will still show trust warnings unless you distribute the new VMCA
-root to all clients manually.
+Expected: VCSA services restart; `openssl s_client` against vCenter returns a `notAfter` date beyond 1 year from today.
 
 ---
 
 ## 3. Rotate ESXi Host Certificates
 
-ESXi host certificates are provisioned by the vCenter VMCA. After replacing the VMCA cert in
-step 2, regenerate all ESXi host certificates so they are signed by the new VMCA root.
+After replacing the VMCA cert, regenerate all ESXi host certificates so they are signed by the new VMCA root.
 
 ```powershell
 # PowerCLI — renew ESXi certificates from vCenter for all hosts in a cluster
@@ -142,23 +139,24 @@ foreach ($vmhost in Get-Cluster "cluster-name" | Get-VMHost) {
 }
 ```
 
+Expected: thumbprint warning banner on each host in vCenter clears after renewal.
+
 Alternatively via the vCenter UI: **Administration → Certificate Management → Renew**. This
 triggers vCenter to push a new VMCA-signed cert to every connected ESXi host.
-
-After renewal, the thumbprint warning banner on each host in vCenter should clear.
 
 ---
 
 ## 4. Rotate NSX Manager Certificate
 
-NSX uses its own TLS certificate, independent from vCenter VMCA. Replace it through the NSX
-Manager UI:
+NSX uses its own TLS certificate, independent from VMCA — replace it through the NSX Manager UI.
 
 1. NSX Manager → **System** → **Certificates** → **Import Certificate**
 2. Paste the signed certificate and private key
 3. After import, go to **Service Certificates** → **Edit** next to the API/Manager certificate
 4. Select the newly imported certificate and save
 5. NSX Manager UI and API will restart — the new cert is active after the restart
+
+Expected: `openssl s_client` against NSX Manager returns the new certificate with updated `notAfter` date.
 
 NSX edge node certificates (used for BGP and load balancer TLS) are managed separately under
 **System → Certificates → Node Certificates**.
@@ -167,8 +165,7 @@ NSX edge node certificates (used for BGP and load balancer TLS) are managed sepa
 
 ## 5. Rotate Aria Suite Product Certificates via Aria SuiteLC
 
-Aria Suite Lifecycle manages certificate rotation for all registered Aria products (Aria Operations,
-Aria Ops for Logs, Aria Networks, Aria Automation) as a coordinated operation.
+Aria SuiteLC coordinates certificate rotation for all registered Aria products as a single sequenced operation.
 
 Aria SuiteLC → **Lifecycle Operations** → **Environments** → select the Aria environment →
 **Certificates** → **Replace**.
@@ -189,11 +186,6 @@ mutual trust with each other and with vCenter.
 
 The rotation order must be: CA trust store → vCenter VMCA → ESXi hosts → NSX → Aria Suite products.
 
-The reason: every Aria product and every ESXi host trusts the vCenter VMCA as an authority.
-If you replace an Aria product cert before replacing the VMCA root, the Aria product receives a
-cert signed by the new VMCA root, but the product's trust store still contains only the old VMCA
-root. The new cert is immediately untrusted, breaking product-to-vCenter communication.
-
 | Stage | What trusts what | Must come before |
 |---|---|---|
 | Internal CA / SuiteLC store | Root of all trust chains | Everything else |
@@ -201,6 +193,10 @@ root. The new cert is immediately untrusted, breaking product-to-vCenter communi
 | ESXi host certs | Signed by VMCA | — |
 | NSX cert | Independent; trusts external CA | — |
 | Aria Suite certs | Trust vCenter VMCA | vCenter VMCA rotated first |
+
+If you replace an Aria product cert before replacing the VMCA root, the Aria product receives a
+cert signed by the new VMCA root, but the product's trust store still contains only the old VMCA
+root — the new cert is immediately untrusted, breaking product-to-vCenter communication.
 
 ---
 
@@ -225,22 +221,19 @@ done
 
 ---
 
-## Common Mistakes
+## Key Terms
 
-- **Replacing Aria product certs before vCenter VMCA.** Aria products immediately distrust the new
-  root CA and lose connectivity to vCenter. Always rotate vCenter VMCA first.
-- **Forgetting ESXi host certs after VMCA rotation.** Hosts continue presenting certs signed by
-  the old VMCA root. vCenter shows thumbprint warnings and HA communication degrades over time.
-- **Not updating the SuiteLC trust store before rotating.** If SuiteLC's trust store still
-  contains the old CA root when new certs are deployed, SuiteLC validation fails and the rotation
-  operation rolls back.
-- **Manually replacing Aria certs outside SuiteLC.** Individual product cert replacement breaks the
-  inter-product trust chain. Always use Aria SuiteLC for the Aria Suite.
-
----
-
-## Related Scenarios
-
-- NTP Drift and SSO Certificate Issues
-- Provision a New Workload
-- DR Test and Planned Failover
+| Term | Definition |
+|---|---|
+| VMCA | VMware Certificate Authority — the internal CA embedded in vCenter Server that signs ESXi host certificates and vCenter solution user certificates; acts as the root of trust for all managed hosts |
+| CSR | Certificate Signing Request — a file generated by the VMCA certificate-manager or openssl containing the public key and identity information that an external CA signs to produce a trusted certificate |
+| SAN | Subject Alternative Name — the X.509 certificate extension that lists all hostnames and IP addresses the certificate is valid for; vCenter and NSX certificates must include all FQDNs used to reach the service |
+| Aria SuiteLC | Aria Suite Lifecycle — the Dell/Broadcom lifecycle management product that handles installation, upgrades, and certificate rotation for all Aria Suite products in a coordinated sequence |
+| Locker | The credential and certificate store within Aria SuiteLC where imported CA certificates and product certificates are stored and referenced during rotation operations |
+| TLS/SSL | Transport Layer Security (formerly SSL) — the cryptographic protocol that secures HTTPS connections; all VMware product UIs and APIs communicate over TLS and fail if the certificate is expired or untrusted |
+| certificate-manager CLI | The `/usr/lib/vmware-vmca/bin/certificate-manager` command-line tool on the vCenter VCSA appliance used to generate CSRs, replace Machine SSL certificates, and regenerate solution user certificates |
+| trust store | The collection of CA certificates that a product uses to validate the certificates presented by other services; the SuiteLC trust store must contain the current CA root before new product certificates are deployed |
+| thumbprint | A hash fingerprint of a certificate used by vCenter to identify ESXi host certificates; a stale thumbprint warning appears in vCenter when the host's certificate no longer matches the recorded fingerprint |
+| SSO STS | Single Sign-On Security Token Service — the vCenter component that issues SAML tokens for inter-product authentication; SSO STS has its own signing certificate that must be renewed separately if it expires |
+| intermediate CA | A certificate authority that is itself signed by a root CA and in turn signs leaf certificates; VMware environments using a PKI hierarchy often use an intermediate CA so the offline root CA is never exposed |
+| vIDM | VMware Identity Manager — the identity and access management service used by Aria Suite products for SSO; vIDM has its own TLS certificate that Aria SuiteLC manages during rotation |

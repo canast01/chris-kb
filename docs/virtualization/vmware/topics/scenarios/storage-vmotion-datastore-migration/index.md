@@ -57,10 +57,7 @@ large VMDKs and always verify destination capacity and storage policy before sta
 
 ## 1. Pre-Migration Checks
 
-Before initiating any svMotion, verify destination capacity and understand the VMDK format. Thin
-disks inflate to their provisioned size during migration — a 500 GB thin-provisioned disk consuming
-only 100 GB of actual space will consume up to 500 GB on the destination during the migration
-process.
+Verify destination free space and VMDK format before starting — thin-provisioned disks inflate to their full provisioned size during migration.
 
 ```powershell
 # Check destination datastore free space
@@ -68,41 +65,31 @@ Get-Datastore "destination-datastore" | Select Name, FreeSpaceGB, CapacityGB
 
 # Check source VM disk sizes and current format
 Get-VM "vm-name" | Get-HardDisk | Select Name, CapacityGB, StorageFormat
-```
 
-**Required free space on destination:** at least 1.5× the total provisioned VMDK capacity of all
-disks being migrated. The 0.5× overhead covers the swap file, snapshot delta disks that may be
-active during migration, and the temporary delta created by the mirror copy process.
-
-If migrating to a vSAN datastore, confirm the target storage policy exists:
-
-```powershell
-# List available storage policies
+# List available storage policies (required if destination is vSAN)
 Get-SpbmStoragePolicy | Select Name, Description
 ```
+
+Expected: destination free space ≥ 1.5× total provisioned VMDK capacity. The 0.5× overhead covers swap file, snapshot delta files, and the temporary mirror copy delta.
 
 ---
 
 ## 2. Choose Storage Policy for Destination
 
-If migrating to vSAN, always select an explicit storage policy. Migrating without specifying a
-policy applies the vSAN default policy, which may not match what the VM requires.
+Always select an explicit SPBM storage policy when migrating to vSAN — omitting one applies the vSAN default policy, which may not match the VM's requirements.
 
 ```powershell
 # Store target policy in a variable for use in the migration command
 $policy = Get-SpbmStoragePolicy "Production-Standard"
 ```
 
-**Special case — migrating within the same vSAN datastore for a policy change:** svMotion is not
-needed. vSAN can apply a new storage policy to an existing VMDK without moving data. Right-click
-the VM → **VM Policies** → **Edit VM Storage Policies** → select the new policy → **Apply to All**.
-vSAN will resync components to satisfy the new policy in the background.
+**Special case — policy change within the same vSAN datastore:** svMotion is not needed. Right-click the VM → **VM Policies** → **Edit VM Storage Policies** → select the new policy → **Apply to All**. vSAN resyncs components in the background to satisfy the new policy.
 
 ---
 
 ## 3. Initiate svMotion via vCenter UI
 
-Right-click the VM → **Migrate** → select the migration type:
+Right-click the VM → **Migrate** → select the migration type, then choose the destination datastore and storage policy.
 
 | Migration type | When to use |
 |---|---|
@@ -110,12 +97,13 @@ Right-click the VM → **Migrate** → select the migration type:
 | Change compute resource and storage | Move VM to a different host AND different datastore simultaneously |
 | Change compute resource only | Standard vMotion — compute only, no disk movement |
 
-For storage-only migration: select **Change storage only** → select the destination datastore →
-select the storage policy → **Finish**.
+Expected: migration task appears in vCenter Recent Tasks as **Relocate virtual machine** with a progress percentage.
 
 ---
 
 ## 4. Initiate svMotion via PowerCLI
+
+Use `Move-VM` to migrate via PowerCLI, including bulk migrations of all VMs on a source datastore.
 
 ```powershell
 # Migrate VMDK to a different datastore (keep same disk format)
@@ -134,7 +122,7 @@ Get-Datastore "source-datastore" | Get-VM | ForEach-Object {
 }
 ```
 
-Migration speed depends on VMDK size and the I/O load on both datastores. Reference:
+Reference migration times:
 
 | VMDK size | Typical migration time |
 |---|---|
@@ -146,33 +134,20 @@ Migration speed depends on VMDK size and the I/O load on both datastores. Refere
 
 ## 5. Monitor Migration Progress
 
-vCenter → **Recent Tasks** → look for **Relocate virtual machine**. The progress percentage and
-estimated time remaining are shown in the task pane.
+Watch disk latency during migration to detect storage pressure that affects other VMs on the same datastore.
 
 ```bash
-# From the ESXi host running the VM — monitor disk latency during migration
-# Press 'u' in esxtop to switch to disk view
-# DAVG column: average device latency in ms
+# Press 'u' in esxtop to switch to disk view; DAVG = average device latency in ms
 esxtop
 ```
 
-If DAVG exceeds 30 ms consistently during migration, the storage I/O path is under excessive
-pressure. Options:
-
-- Throttle: pause other storage-intensive workloads on the same datastore
-- Reschedule: run the migration during off-peak hours (nights or weekends)
-- Stagger: if migrating multiple VMs, run them sequentially rather than in parallel
-
-Aria Operations → **Workload** → **VMs** → watch the source VM's **Disk Read Latency** and
-**Disk Write Latency** metrics. Alerts on other VMs on the same datastore during migration
-indicate storage contention.
+Look for: DAVG stays below 30 ms. If DAVG exceeds 30 ms consistently: throttle concurrent workloads, reschedule to off-peak hours, or stagger multi-VM migrations to run sequentially. Monitor Aria Operations → **Workload** → **VMs** for disk latency alerts on neighbouring VMs.
 
 ---
 
 ## 6. Decommission the Old Datastore (if Applicable)
 
-Once all VMs and VMDKs have been migrated off a datastore, verify it is truly empty before
-unmounting or decommissioning.
+Verify the source datastore is completely empty before unmounting — orphaned VMDKs and swap files are not visible in standard inventory views.
 
 ```powershell
 # Verify no VMs remain on the old datastore
@@ -181,18 +156,6 @@ Get-Datastore "old-datastore" | Get-VM
 # Check for orphaned VMDKs not attached to any VM
 Get-Datastore "old-datastore" | Get-HardDisk
 
-# Check for VM swap files (.vswp) — these are not returned by Get-HardDisk
-# Browse datastore in vCenter and look for any remaining files
-```
-
-All three checks must return empty results. Orphaned VMDKs and swap files are the most commonly
-missed items — they are not attached to any VM in inventory but still occupy space and will prevent
-datastore decommission.
-
-After verification: unmount the datastore from all hosts before decommissioning the underlying
-storage.
-
-```powershell
 # Unmount datastore from all hosts
 $ds = Get-Datastore "old-datastore"
 $ds | Get-VMHost | ForEach-Object {
@@ -200,6 +163,8 @@ $ds | Get-VMHost | ForEach-Object {
     $storSys.RemoveDatastore($ds.ExtensionData.MoRef)
 }
 ```
+
+Expected: all three checks return empty results. Also browse the datastore in vCenter to confirm no `.vswp` swap files remain — `Get-HardDisk` does not return swap files.
 
 ---
 
@@ -233,6 +198,25 @@ $ds | Get-VMHost | ForEach-Object {
   that datastore, not just the ones being migrated.
 
 ---
+
+---
+
+## Key Terms
+
+| Term | Definition |
+|---|---|
+| svMotion | Storage vMotion — the vSphere feature that migrates a VM's VMDKs between datastores while the VM remains powered on and serving workloads without interruption |
+| SPBM | Storage Policy-Based Management — the vSphere framework that defines and enforces VM storage requirements (redundancy, caching, encryption) via named policies assigned to VMDKs |
+| Thin provisioning | A VMDK format that allocates disk space on demand as data is written, rather than reserving the full provisioned size upfront; inflates toward full provisioned size during svMotion |
+| Thick eager zeroed | A VMDK format where the full provisioned size is allocated and zeroed at creation time; required for some workloads (e.g. VMware Fault Tolerance); migrates as-is, not inflated |
+| VMDK | Virtual Machine Disk — the file format that stores a VM's disk data on a datastore; each virtual hard disk attached to a VM is a VMDK file |
+| Delta file | A snapshot delta disk that captures writes made to a VMDK after a snapshot is taken; active delta files are included in the space overhead during svMotion |
+| Datastore decommission | The process of unmounting a datastore from all hosts and removing the underlying LUN or NFS export after all VMs and files have been migrated off |
+| DAVG | Device Average latency — the average I/O completion time in milliseconds for a storage device, visible in esxtop disk view; a value above 30 ms during svMotion indicates storage pressure |
+| vSAN policy compliance | The state of a VM's storage policy requirements being met by vSAN component placement; a non-compliant state means vSAN cannot fulfil the requested redundancy or caching settings |
+| Orphaned VMDK | A VMDK file that exists on a datastore but is not registered to any VM in vCenter inventory; invisible to `Get-VM` but still consumes space and blocks datastore decommission |
+| NFC | Network File Copy — the ESXi protocol used to transfer VMDK data between datastores during svMotion; operates over the management or vMotion VMkernel network |
+| Datastore browser | The vCenter UI view (right-click datastore → Browse Files) that shows all files on a datastore regardless of whether they are attached to a VM — the only view that reveals orphaned VMDKs and swap files |
 
 ## Related Scenarios
 

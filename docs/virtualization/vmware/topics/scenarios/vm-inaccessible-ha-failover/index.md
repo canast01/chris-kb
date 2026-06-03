@@ -62,7 +62,7 @@ assess vSAN component health during the outage, and confirm the cluster is re-ar
 
 ## 1. Identify Which Host Failed and How
 
-Open vCenter and go to **Hosts and Clusters**. Look for hosts in a "Disconnected" or "Not Responding" state.
+Go to **Hosts and Clusters** in vCenter and identify any host in a non-connected state before taking any action.
 
 ```text
 Host states in vCenter:
@@ -71,8 +71,6 @@ Host states in vCenter:
   Not Responding       — heartbeat timeout; HA triggers restart evaluation
   Maintenance Mode     — intentional; HA does not restart VMs here
 ```
-
-Determine the failure type before taking any action:
 
 | Failure Type | Signs | HA Behaviour |
 |---|---|---|
@@ -84,7 +82,7 @@ Determine the failure type before taking any action:
 
 ## 2. Check HA Restart Status
 
-Before taking manual steps, confirm whether HA has already restarted the affected VMs.
+Before taking manual steps, confirm whether HA has already restarted the affected VMs — manual intervention after HA has acted causes split-brain.
 
 Navigate to **Cluster → Monitor → vSphere HA → VM Restarts**.
 
@@ -96,8 +94,6 @@ Fields to check:
   Restart Reason   — host failure / isolation / PDL
 ```
 
-If HA completed restarts, verify VMs are accessible before doing anything else. Unnecessary manual intervention after HA has already acted is a common source of errors.
-
 ```bash
 # Check FDM (fault domain manager / HA agent) status on a surviving host
 /etc/init.d/vmware-fdm status
@@ -106,11 +102,13 @@ If HA completed restarts, verify VMs are accessible before doing anything else. 
 /etc/init.d/vmware-fdm restart
 ```
 
+Look for: `Restart Status = Completed` means HA already acted — verify VMs are accessible before doing anything else.
+
 ---
 
 ## 3. Determine Storage Path State — APD vs PDL
 
-When a host loses access to vSAN or shared storage, the path state determines HA behaviour.
+Check the storage path state on affected hosts to understand whether VMCP will trigger an automatic HA restart.
 
 ```text
 APD — All Paths Down (temporary)
@@ -136,13 +134,15 @@ esxcli vsan debug object list | grep -i degraded
 esxcli vsan debug object list | grep -E "Host|Health|UUID"
 ```
 
-VMCP (VM Component Protection) policy is set in **Cluster → Configure → vSphere Availability → Failures and Responses → Datastore with PDL / Datastore with APD**. Confirm the policy matches your RTO requirements.
+Look for: `State: APD` means wait for path recovery; `State: PDL` means VMCP should trigger immediately — confirm VMCP policy at **Cluster → Configure → vSphere Availability → Failures and Responses**.
 
 ---
 
 ## 4. Check vSAN Resyncing Objects
 
-After a host loss, vSAN immediately begins rebuilding absent components on surviving hosts. Go to **vSAN → Monitor → Resyncing Objects**.
+After a host loss, vSAN begins rebuilding absent components — doing any further maintenance before resync completes risks a second failure.
+
+Navigate to **vSAN → Monitor → Resyncing Objects**.
 
 ```text
 Columns to check:
@@ -161,11 +161,13 @@ esxcli vsan debug resync summary get
 #   ObjectsToResync — number of VM objects still rebuilding
 ```
 
-Do not put additional hosts into maintenance mode while the resync queue is non-empty and any VM is at FTT=1 with one component absent. That creates a second failure before the first is healed.
+Look for: any VM showing `Policy Status = Non-compliant` with `ResyncType = REPAIR` means it has a live protection gap — do not place additional hosts in maintenance until resync completes.
 
 ---
 
 ## 5. PowerCLI — Validate Post-Failover State
+
+Confirm all VMs are running on surviving hosts and HA is re-armed before closing the incident.
 
 ```powershell
 # List all VMs on surviving hosts and confirm power state
@@ -196,6 +198,25 @@ Get-Cluster "cluster-name" | Get-VM `
 [ ] HA admission control is re-armed (cluster has capacity headroom)
 [ ] Failed host is either repaired/returned or removed from cluster inventory
 ```
+
+---
+
+## Key Terms
+
+| Term | Definition |
+|---|---|
+| HA (High Availability) | vSphere feature that monitors host heartbeats and automatically restarts VMs on surviving cluster hosts when a host failure is detected |
+| APD | All Paths Down — transient storage path loss where ESXi still knows the device identity; HA does not immediately restart VMs; waits for path recovery |
+| PDL | Permanent Device Loss — storage device signals via SCSI sense code that it is permanently gone; VMCP triggers immediate HA VM restart on surviving hosts |
+| VMCP | VM Component Protection — vSphere HA extension that responds to APD and PDL storage path events; configured per cluster under Failures and Responses |
+| FDM | Fault Domain Manager — the HA agent process (`vmware-fdm`) running on each ESXi host; coordinates VM restart decisions and heartbeat monitoring within the cluster |
+| vmware-fdm | The ESXi service binary for the HA Fault Domain Manager agent; can be checked and restarted via `/etc/init.d/vmware-fdm status` if HA appears stuck |
+| vSAN resync | Rebuild process that starts automatically when a host or disk is lost; vSAN recreates absent components on surviving hosts to restore the configured FTT level |
+| FTT | Failures to Tolerate — the SPBM policy value that determines how many host or disk failures a VM's data can survive; FTT=1 RAID-1 requires at least 3 hosts |
+| RAID-1 | vSAN mirroring policy; writes two full copies of each object across different hosts; the default FTT=1 protection mechanism |
+| Admission control | HA feature that reserves cluster capacity to guarantee VM restarts can complete even after the maximum configured number of host failures |
+| Isolation response | Per-cluster HA policy that defines what happens to VMs on a host that loses network heartbeats but has not fully failed: power off, shut down, or leave powered on |
+| HA agent | See FDM; runs on every ESXi host in the cluster and is responsible for detecting failures and coordinating restart orchestration with the master node |
 
 ---
 

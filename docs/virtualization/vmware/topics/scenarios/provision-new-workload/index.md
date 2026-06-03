@@ -54,9 +54,7 @@ segment assignment, tagging, and post-provision compliance verification.
 
 ## 1. Right-Size the VM
 
-Get workload requirements from the application team before creating the VM. The goal is to match
-allocated resources to the application's actual working requirements — not to be generous.
-Over-allocation wastes cluster capacity and degrades NUMA locality on large VMs.
+Match allocated resources to the application's actual working requirements — not to be generous.
 
 | Resource | Sizing guideline |
 |---|---|
@@ -74,9 +72,7 @@ operation.
 
 ## 2. Choose the vSAN Storage Policy
 
-Every VM disk stored on a vSAN datastore must have an explicit Storage Policy-Based Management
-(SPBM) policy assigned. A VM with no policy assigned gets the default policy — which in most
-environments has no redundancy (FTT=0). A single disk failure destroys that VM's data.
+Every VM disk on vSAN must have an explicit SPBM policy — a VM with no policy gets the default, which is typically FTT=0 (no redundancy).
 
 Standard production policies:
 
@@ -93,13 +89,14 @@ than the minimum host count for a policy tier, vSAN will not be able to satisfy 
 
 ## 3. Assign the NSX Network Segment
 
-Before creating the VM, confirm the correct NSX logical segment for the workload tier. NSX
-segments are the network equivalent of VLANs, but enforced in software with DFW rules attached.
+Confirm the correct NSX logical segment for the workload tier before creating the VM.
 
 ```bash
 # Verify the target segment exists in NSX Manager before VM creation
 # NSX Manager → Networking → Segments → confirm segment name, VLAN binding, and connected T1 gateway
 ```
+
+Expected: segment appears in NSX Manager with correct VLAN binding and T1 gateway attachment.
 
 Each tier of a multi-tier application should use a separate segment:
 
@@ -113,6 +110,8 @@ Each tier of a multi-tier application should use a separate segment:
 ---
 
 ## 4. Create the VM
+
+Create the VM on the target host and vSAN datastore with the right-sized resources.
 
 ```powershell
 # PowerCLI — create VM on target host and vSAN datastore
@@ -136,8 +135,7 @@ New-VM -Name "vm-name" -ResourcePool (Get-ResourcePool "Production") `
 
 ## 5. Apply SPBM Storage Policy to All Disks
 
-Applying the storage policy at creation time through the wizard is preferred, but when creating
-via PowerCLI or when adjusting after creation, use:
+Apply the correct storage policy to every hard disk on the VM and verify compliance status.
 
 ```powershell
 $vm = Get-VM "vm-name"
@@ -151,15 +149,14 @@ Get-HardDisk -VM $vm | Get-SpbmEntityConfiguration |
   Select Entity, StoragePolicy, ComplianceStatus
 ```
 
-The `ComplianceStatus` field must show `Compliant`. A status of `NonCompliant` means vSAN cannot
-currently satisfy the policy requirements — commonly caused by insufficient hosts or disk capacity.
+Expected: `ComplianceStatus` shows `Compliant` for every disk. `NonCompliant` means vSAN cannot
+currently satisfy the policy — commonly caused by insufficient hosts or disk capacity.
 
 ---
 
 ## 6. Tag the VM in vCenter for Aria Operations
 
-Aria Operations reads vCenter tags to group VMs into application objects for dashboards, alert
-routing, and capacity tracking. Tags must be applied at VM creation time.
+Apply tags at VM creation time so the VM is immediately visible in Aria Operations dashboards and alert routing.
 
 Assign the following tag categories at minimum:
 
@@ -177,9 +174,7 @@ Aria Operations picks up tag changes within the next collection cycle (typically
 
 ## 7. Add the VM to the NSX Security Group
 
-NSX Distributed Firewall rules apply to security groups, not to individual VMs. A new VM that is
-not a member of the correct group has no DFW rules applied — it is effectively unrestricted on
-east-west traffic.
+A new VM not in the correct security group has no DFW rules applied — east-west traffic is unrestricted.
 
 NSX Manager → **Inventory** → **Groups** → select the appropriate group → **Members** → add the VM.
 
@@ -193,6 +188,8 @@ Security group membership can also be dynamic (automatic) based on VM tags or na
 ---
 
 ## 8. Post-Provision Validation
+
+Verify storage policy compliance, NSX segment assignment, and tag application in one pass.
 
 ```powershell
 # Verify storage policy compliance
@@ -208,6 +205,8 @@ Get-VM "vm-name" | Get-NetworkAdapter |
 Get-VM "vm-name" | Get-TagAssignment |
   Select @{N="Category";E={$_.Tag.Category.Name}}, @{N="Tag";E={$_.Tag.Name}}
 ```
+
+Expected: ComplianceStatus=Compliant, NetworkName matches target segment, all three tag categories present.
 
 Confirm in NSX Manager that the VM appears as a member of the expected security groups under
 **Inventory → Groups** before handing off to the application team.
@@ -226,22 +225,20 @@ Confirm in NSX Manager that the VM appears as a member of the expected security 
 
 ---
 
-## Common Mistakes
+## Key Terms
 
-- **Accepting the default storage policy.** In most environments the default policy is FTT=0 — no
-  redundancy. A single disk failure on the vSAN host destroys the VM's data.
-- **Not adding the VM to the NSX security group.** The VM has more network access than intended
-  because no DFW rules apply. This is a security misconfiguration, not just a monitoring gap.
-- **Oversizing vCPU.** A VM with more vCPUs than the host has physical CPUs per NUMA node forces
-  cross-NUMA scheduling, adding latency to every memory access. Start conservatively and scale up
-  if monitoring shows CPU saturation.
-- **Skipping tagging.** An untagged VM is invisible to Aria Operations application-level dashboards
-  and alert routing. Capacity is consumed but not tracked against any application owner.
-
----
-
-## Related Scenarios
-
-- Capacity Planning
-- Host Maintenance and Patching
-- Certificate Expiry and Rotation
+| Term | Definition |
+|---|---|
+| SPBM | Storage Policy-Based Management — the vSAN framework that lets you define storage requirements (FTT, RAID level, encryption) as named policies and enforce them per VM disk, rather than configuring storage per-datastore |
+| FTT | Failures to Tolerate — the SPBM policy parameter that sets how many simultaneous host or disk failures vSAN can absorb while keeping the VM's data accessible; FTT=1 tolerates one failure |
+| RAID-1 | vSAN data protection method that mirrors each data component to N+1 hosts; requires 3 hosts minimum for FTT=1; uses more raw capacity than RAID-5 but has lower write latency |
+| RAID-5 | vSAN erasure coding method that stripes data with parity across hosts; requires 4 hosts minimum for FTT=1; more storage-efficient than RAID-1 but higher CPU overhead on writes |
+| NSX segment | A logical Layer-2 network boundary enforced in software by NSX; replaces VLANs for VM networking and serves as the attachment point for Distributed Firewall rules |
+| DFW security group | An NSX Distributed Firewall construct that groups VMs by criteria (tags, names, IP ranges); firewall rules are applied to groups, not individual VMs — a VM outside the group receives no DFW rules |
+| vCenter tag | A label applied to a vCenter object (VM, host, datastore) used to control group membership in NSX and Aria Operations; tag categories (Environment, Application, Owner) drive automated grouping |
+| Aria Operations tagging | The mechanism by which Aria Operations discovers and groups VMs into application objects using vCenter tag assignments; tags must exist before the next collection cycle for dashboards to populate |
+| thin provisioning | Disk format that allocates datastore space only as data is written rather than at creation time; inflates apparent free capacity — actual usage grows over time as the guest OS writes data |
+| NUMA | Non-Uniform Memory Access — the physical topology of multi-socket servers where each CPU socket has its own local memory; VM vCPU counts that exceed one NUMA node's core count force cross-socket memory access and add latency |
+| VMDK | Virtual Machine Disk — the file format for a VM's hard disk stored on a vSAN or VMFS datastore; each VMDK must have an SPBM policy assigned on vSAN |
+| vNIC | Virtual Network Interface Card — the software-emulated NIC inside a VM; each vNIC connects to one NSX segment or portgroup and should map to a single network tier |
+| dynamic group membership | NSX security group configuration where VMs are added or removed automatically based on matching criteria such as vCenter tags, VM names, or IP addresses — eliminating the need for manual group updates after provisioning |

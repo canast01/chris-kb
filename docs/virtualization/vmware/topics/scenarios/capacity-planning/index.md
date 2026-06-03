@@ -13,10 +13,10 @@ procurement decision.
 │                                                                                                       │
 │   ┌──────────────────────────────────────────────────────────────────────────────────────────────────────────┐│
 │   │  START: Scheduled capacity review, or approaching threshold alert from Aria Operations                   ││
-│   └─────────────────────────────────────┬────────────────────────────────────────────────────────────────────┘│
-│                                         │                                                             │
-│                    ┌────────────────────┼────────────────────┐                                        │
-│                    ▼                    ▼                    ▼                                        │
+│   └─────────────────────────────────────────┬────────────────────────────────────────────────────────────────┘│
+│                                             │                                                         │
+│                    ┌────────────────────────┼────────────────────┐                                    │
+│                    ▼                        ▼                    ▼                                    │
 │   ┌────────────────────────┐  ┌──────────────────────┐  ┌────────────────────────┐                    │
 │   │  vSAN storage headroom │  │  Compute headroom    │  │  Aria Ops time-        │                    │
 │   │  — check used vs total │  │  — CPU and RAM after │  │  remaining projections │                    │
@@ -50,8 +50,7 @@ procurement decision.
 
 ## 1. Check vSAN Storage Headroom
 
-The hard rule for vSAN production clusters: **never exceed 70% used capacity**. At 80%, vSAN stops
-accepting new writes. At 100%, the datastore is read-only and VMs freeze.
+Never exceed 70% used capacity on a vSAN production cluster — at 80% vSAN stops accepting writes.
 
 ```powershell
 # Get vSAN datastore capacity via PowerCLI
@@ -60,6 +59,8 @@ Get-Datastore | Where-Object {$_.Type -eq "vsan"} | Select Name,
   @{N="FreeSpaceGB";E={[math]::Round($_.FreeSpaceGB,1)}},
   @{N="UsedPct";E={[math]::Round((($_.CapacityGB - $_.FreeSpaceGB) / $_.CapacityGB) * 100, 1)}}
 ```
+
+Expected: UsedPct below 70%; if 70–80%, hardware procurement should already be in progress.
 
 From the vCenter UI: **Cluster → Monitor → vSAN → Capacity**. Review:
 
@@ -77,9 +78,7 @@ From the vCenter UI: **Cluster → Monitor → vSAN → Capacity**. Review:
 
 ## 2. Check Compute Headroom (CPU and RAM)
 
-HA admission control reserves a portion of cluster CPU and RAM for failover. The effective capacity
-reported by vCenter already accounts for this reservation — compare effective capacity against
-actual usage to find real headroom.
+Compare effective cluster capacity (after HA reservation) against actual usage to find real headroom.
 
 ```powershell
 # Cluster effective CPU and memory after HA reservation
@@ -93,17 +92,13 @@ Get-Cluster "cluster-name" | Get-VMHost |
   Select Property, Sum
 ```
 
-If current usage exceeds 80% of effective capacity on either CPU or memory, the cluster is at risk
-of resource contention during a host failure (HA failover reduces available capacity further).
+Expected: actual usage below 80% of effective capacity on both CPU and memory.
 
 ---
 
 ## 3. Aria Operations Capacity View
 
-Aria Operations provides the most actionable capacity view because it combines current usage,
-growth trending, and reclaimable waste in one place.
-
-Navigate to: **Aria Operations → Capacity → Clusters → select cluster → Capacity Remaining**.
+Navigate to **Aria Operations → Capacity → Clusters → select cluster → Capacity Remaining** for the most actionable combined view.
 
 Key metrics to review:
 
@@ -111,14 +106,13 @@ Key metrics to review:
   rate. Below 90 days is a trigger to start hardware procurement.
 - **Reclaimable Waste**: capacity that can be recovered without purchasing hardware — oversized VMs,
   idle VMs, reclaimed snapshots.
-- **What-If Analysis**: models the impact of adding a workload (how many days does adding 10 new
-  VMs reduce time remaining?) or a node (how much headroom does a new host add?).
+- **What-If Analysis**: models the impact of adding a workload or a node on time remaining.
 
 ---
 
 ## 4. Trending — 90-Day Growth Analysis
 
-A single point-in-time reading is not enough. Look at the slope of growth over 90 days.
+Review 90-day growth slope to determine whether point-in-time readings are representative.
 
 Aria Operations → **Capacity** → select the vSAN datastore → **Historical** → set time range to
 90 days. Compare the growth slope:
@@ -132,8 +126,7 @@ Aria Operations → **Capacity** → select the vSAN datastore → **Historical*
 
 ## 5. Check Reclaimable Resources Before Ordering Hardware
 
-Before submitting a hardware request, check Aria Operations for waste. Reclaimable capacity is
-free — it does not require procurement or a change window.
+Before submitting a hardware request, check Aria Operations for waste that can be recovered at zero cost.
 
 ```powershell
 # Find powered-off VMs still consuming VMDK space
@@ -145,7 +138,7 @@ Get-VM | Where-Object {$_.PowerState -eq "PoweredOff"} |
 Get-VM | Get-Snapshot | Select VM, Name, SizeGB, Created
 ```
 
-Common sources of reclaimable waste:
+Expected: Aria Ops reclaimable waste report and PowerCLI output identify candidates for cleanup before any procurement request.
 
 | Waste type | How to find | Action |
 |---|---|---|
@@ -158,7 +151,7 @@ Common sources of reclaimable waste:
 
 ## 6. Node Expansion Decision
 
-Use these trigger points to decide when a node expansion is justified:
+Use these trigger points to decide when a node expansion is justified.
 
 | Metric | Warning threshold | Action required threshold |
 |---|---|---|
@@ -176,7 +169,7 @@ and capacity data, not just "the cluster is getting full."
 
 ## 7. VxRail Node Expansion
 
-For VxRail HCI clusters, all node additions must go through **VxRail Manager**:
+For VxRail HCI clusters, all node additions must go through **VxRail Manager**.
 
 VxRail Manager → **Cluster** → **Expand Cluster** → follow the node expansion wizard.
 
@@ -202,21 +195,18 @@ After adding capacity (hardware or reclamation), verify the following:
 
 ---
 
-## Common Mistakes
+## Key Terms
 
-- **Reacting at 80% instead of 70%.** vSAN stops writes at 80%. By the time the alert fires at 80%,
-  there is no buffer remaining. Monitor at 70% and act before reaching 80%.
-- **Ordering hardware before checking waste.** Aria Ops reclaimable waste recommendations frequently
-  recover 10–20% of cluster capacity at zero cost. Always check waste first.
-- **Adding a VxRail node via vCenter.** VxRail nodes added outside VxRail Manager miss firmware
-  alignment, break the validated bundle, and may cause vSAN instability.
-- **Using point-in-time capacity readings.** A cluster at 65% today with accelerating growth hits
-  80% in weeks. Always review the 90-day trend, not just the current percentage.
-
----
-
-## Related Scenarios
-
-- Host Maintenance and Patching
-- VxRail LCM Upgrade Failure
-- Provision a New Workload
+| Term | Definition |
+|---|---|
+| Aria Operations capacity analytics | The capacity module within Aria Operations that aggregates current usage, growth trends, reclaimable waste, and what-if modelling into a single view per cluster or datastore |
+| vSAN slack space | The buffer of free capacity vSAN requires to perform resyncs, repairs, and policy re-satisfaction; the 70% warning and 80% write-stop thresholds define the operating window |
+| HA admission control | vCenter HA mechanism that reserves a portion of cluster CPU and RAM to guarantee capacity for VM restarts after a host failure; reduces effective usable capacity |
+| effective CPU/RAM | The cluster compute capacity reported by vCenter after subtracting HA admission control reserves — the real headroom available for running workloads |
+| reclaimable waste | Capacity identified by Aria Operations that can be recovered without hardware — powered-off VMs, oversized VMs, old snapshots, and orphaned VMDKs |
+| thin provisioning | A disk allocation mode where a VMDK only consumes datastore space as data is written, rather than pre-allocating the full disk size; inflates apparent free space until actual writes occur |
+| Time Remaining | An Aria Operations metric that projects the number of days until a cluster exhausts CPU, RAM, or storage at the current consumption growth rate — the primary procurement trigger |
+| DRS | Distributed Resource Scheduler — automatically rebalances VM placement across hosts; also rebalances after a new node is added to the cluster following expansion |
+| VxRail Manager | Dell-provided management layer for VxRail HCI clusters that orchestrates node expansion, ensuring firmware/driver/ESXi bundle alignment before adding a node to vSAN |
+| svMotion | Storage vMotion — live migration of a VM's VMDK files from one datastore to another without VM downtime; used during capacity reclamation to move VMs off full datastores |
+| powered-off VM | A VM that is shut down but still has VMDK files consuming datastore space; a common source of reclaimable waste identified by Aria Operations |

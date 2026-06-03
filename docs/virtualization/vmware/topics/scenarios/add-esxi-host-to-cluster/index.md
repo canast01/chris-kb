@@ -64,11 +64,7 @@ are difficult to diagnose after the fact.
 
 ## 1. Hardware Firmware and ESXi Installation
 
-Before installing ESXi, update BIOS, HBA, and NIC firmware to the vendor-minimum supported version
-for your ESXi build. Installing ESXi on out-of-date firmware causes driver compatibility issues that
-are difficult to trace post-install.
-
-Use the correct ISO for your environment:
+Update BIOS, HBA, and NIC firmware to the vendor-minimum version before installing ESXi, then boot the correct ISO for your environment.
 
 | Environment | ISO to use |
 |---|---|
@@ -76,12 +72,10 @@ Use the correct ISO for your environment:
 | Standalone Dell host | Dell EMC custom ESXi ISO — includes iDRAC and PERC drivers |
 | Generic / other vendor | VMware stock ESXi ISO |
 
-Boot from the ISO, accept the EULA, select the target disk, and complete the install. On first boot,
-press **F2** at the DCUI to configure:
+On first boot, press **F2** at the DCUI to configure:
 
 - Management IP, subnet mask, and default gateway
-- Hostname — must be a fully qualified domain name (FQDN) matching both the DNS A record and PTR
-  record. Example: `esxi-prod-07.domain.local`
+- Hostname — FQDN matching both the DNS A record and PTR record (e.g. `esxi-prod-07.domain.local`)
 - DNS server addresses
 - Enable SSH temporarily for the configuration steps that follow
 
@@ -89,9 +83,7 @@ press **F2** at the DCUI to configure:
 
 ## 2. DNS Pre-Check
 
-DNS must resolve in both directions before the host is added to vCenter. vCenter and vSAN use the
-FQDN internally for inter-host communication. A missing PTR record causes HA agent registration
-failures.
+DNS must resolve in both directions before the host is added to vCenter — a missing PTR record causes HA agent registration failures.
 
 ```bash
 # From a jump host — verify forward resolution
@@ -101,32 +93,27 @@ nslookup esxi-new-host.domain.local
 nslookup <esxi-management-ip>
 ```
 
-Both lookups must return the correct result before proceeding. Fix DNS if either fails — do not
-proceed and rely on `/etc/hosts` workarounds.
+Expected: both lookups return the correct name/IP. Fix DNS if either fails — do not use `/etc/hosts` workarounds.
 
 ---
 
 ## 3. NTP Configuration
 
+Configure NTP before the host joins vCenter — SSO certificate validation fails if the host clock differs from vCenter by more than 5 minutes.
+
 ```bash
-# SSH to the new host
 esxcli system ntp set --server ntp1.domain.local --server ntp2.domain.local
 esxcli system ntp set --enabled true
-
-# Verify NTP is syncing — look for * or + next to a server indicating a good source
 ntpq -p
 ```
 
-NTP must be synchronised before the host joins vCenter. SSO certificate validation fails if the
-host clock differs from vCenter by more than 5 minutes.
+Look for: `*` or `+` next to a server in the `ntpq -p` output, indicating an active sync source.
 
 ---
 
 ## 4. VMkernel Port Configuration
 
-Configure vMotion and vSAN VMkernel ports before adding the host to vCenter. If the host joins
-vCenter first and the VMkernel ports are added later, vSAN disk claim may target the wrong VMkernel
-and vMotion will silently fail for VMs placed on this host.
+Configure vMotion and vSAN VMkernel ports before adding the host to vCenter, then test vSAN MTU across the network.
 
 ```bash
 # vMotion VMkernel (vmk1)
@@ -140,104 +127,75 @@ esxcli network ip interface add --interface-name vmk2 --portgroup-name "vSAN"
 esxcli network ip interface ipv4 set --interface-name vmk2 --type static \
   --ipv4 10.20.1.X --netmask 255.255.255.0
 esxcli network ip interface tag add --interface-name vmk2 --tagname VSAN
-```
 
-Test vSAN MTU before joining the cluster. Silent packet loss on the vSAN VMkernel causes IO errors
-that only surface under load, not during basic connectivity checks.
-
-```bash
 # MTU test — -d disables fragmentation, -s 8972 is the vSAN jumbo frame test size
 vmkping -I vmk2 -d -s 8972 <existing-host-vSAN-vmk-ip>
 ```
 
-The ping must succeed. If it fails: check MTU settings on the switch port and VDS port group.
-vSAN requires end-to-end MTU 9000 on the vSAN VMkernel path.
+Expected: vmkping returns 0% packet loss. If it fails, check MTU on the switch port and VDS portgroup — vSAN requires end-to-end MTU 9000.
 
 ---
 
 ## 5. Add Host to vCenter
 
+Add the host to the cluster via PowerCLI, then immediately assign a licence to avoid evaluation mode expiry.
+
 ```powershell
-# PowerCLI — add host to the target cluster
 Add-VMHost -Name "esxi-new-host.domain.local" `
            -Location (Get-Cluster "cluster-name") `
            -User root -Password "<password>" `
            -Force
 ```
 
-After the host appears in vCenter as **Connected**: assign an ESXi licence. Without a licence, the
-host will enter evaluation mode and after 60 days all features become unavailable.
-
-vCenter → **Administration** → **Licences** → **Assets** → **Hosts** → select the new host →
-**Assign Licence Key**.
+Expected: host appears in vCenter as **Connected**. Then assign the licence: vCenter → **Administration** → **Licences** → **Assets** → **Hosts** → select the new host → **Assign Licence Key**.
 
 ---
 
 ## 6. vSAN Disk Claim
 
-If the cluster uses vSAN, vCenter automatically presents eligible disks on the new host for
-claiming. Eligible disks: any disk not containing a system partition and not already part of a
-disk group on another host.
-
-vCenter → **vSAN** → **Disk Management** → select the new host.
-
-Expected state: the host's cache and capacity disks appear and are claimed into a new disk group
-automatically (if vSAN EZ-Claim is enabled on the cluster). If manual claiming is required:
-select the disks, click **Claim Disks**, and assign cache and capacity roles.
+If the cluster uses vSAN, claim disks via vCenter → **vSAN** → **Disk Management** → select the new host, then verify the disk group is healthy.
 
 ```bash
-# Verify disk group is healthy from ESXi CLI
 esxcli vsan storage list
 ```
 
-The disk group must show all disks in a healthy state before the next step.
+Expected: all disks shown as claimed and healthy in the disk group. If EZ-Claim is not enabled, manually select disks, click **Claim Disks**, and assign cache and capacity roles.
 
 ---
 
 ## 7. NSX Transport Node Configuration
 
-If the cluster uses NSX, the new host must be registered as a transport node before any VMs on it
-can use NSX segments. Without this step, VMs placed on the new host by DRS will lose NSX network
-connectivity.
+Register the host as an NSX transport node so VMs placed on it by DRS can reach NSX overlay segments.
 
 NSX Manager → **System** → **Fabric** → **Hosts** → locate the new host → **Configure NSX**.
 
-The configuration process:
+NSX Manager pushes VIBs to the host, creates the TEP VMkernel port for overlay traffic, and updates the transport node status — no host reboot required.
 
-1. NSX Manager pushes NSX VIBs to the host (installs NSX kernel modules)
-2. vCenter and the host reboot the NSX services (no host reboot required)
-3. NSX creates the Tunnel Endpoint (TEP) VMkernel port for overlay traffic
-4. The transport node status changes to **Success**
-
-Monitor: NSX Manager → **Fabric** → **Hosts** → watch **NSX Configuration** column. Configuration
-typically completes within 5-10 minutes.
+Expected: NSX Manager → **Fabric** → **Hosts** → **NSX Configuration** column shows **Success** within 5–10 minutes.
 
 ---
 
 ## 8. LCM Patch Baseline
 
-After the host is joined and configured, ensure it matches the cluster's current patch level.
+Check the new host's patch compliance and remediate if it does not match the cluster baseline.
+
 vCenter → **Lifecycle Manager** → **Hosts** → select the new host → **Check Compliance**.
 
-If the host shows **Non-Compliant**: click **Remediate**. LCM places the host into maintenance mode,
-applies the baseline, and reboots. The host must be in maintenance mode for remediation — LCM will
-do this automatically.
+If **Non-Compliant**, click **Remediate** — LCM places the host into maintenance mode, applies the baseline, and reboots automatically.
 
-For VxRail clusters: do not use vCenter LCM directly. Run LCM through VxRail Manager to maintain
-the validated hardware-software bundle.
+Expected: host shows **Compliant** after remediation. Note: for VxRail clusters, run LCM through VxRail Manager only — never vCenter LCM directly.
 
 ---
 
 ## 9. Disable SSH
 
-Once all configuration is complete, disable SSH on the new host.
+Disable SSH once all configuration steps are complete.
 
 ```bash
 vim-cmd hostsvc/disable_ssh
 ```
 
-Or from the vCenter UI: select the host → **Configure** → **Services** → **SSH** → **Stop**.
-Set SSH startup policy to **Start and stop manually** to prevent it restarting on reboot.
+Expected: SSH service stops. Set startup policy to **Start and stop manually** (vCenter → Host → **Configure** → **Services** → **SSH**) to prevent it restarting on reboot.
 
 ---
 
@@ -269,6 +227,27 @@ Set SSH startup policy to **Start and stop manually** to prevent it restarting o
   maintain the validated firmware-driver-ESXi bundle.
 
 ---
+
+---
+
+## Key Terms
+
+| Term | Definition |
+|---|---|
+| DCUI | Direct Console User Interface — the local F2 menu on an ESXi host used to set management IP, hostname, and DNS before the host is reachable over the network |
+| vmnic | Physical NIC presented to ESXi; the underlying uplink that VMkernel ports and VM portgroups share via the virtual switch |
+| VMkernel (vmk) | A virtual network interface on ESXi used for host-originated traffic such as management, vMotion, vSAN, and TEP; not used by VM guest traffic |
+| MTU | Maximum Transmission Unit — the largest frame size a network path will carry; vSAN requires end-to-end MTU 9000 (jumbo frames) to avoid silent packet fragmentation loss |
+| vmkping | ESXi CLI tool for testing VMkernel-to-VMkernel connectivity; the `-d` flag disables fragmentation so MTU issues cause visible failure rather than silent fragmentation |
+| DNS A/PTR record | A record maps hostname to IP; PTR record maps IP back to hostname — both must resolve correctly before vCenter and vSAN can register the host successfully |
+| NTP | Network Time Protocol — keeps host clock in sync with vCenter; a drift of more than 5 minutes causes SSO certificate validation failures during cluster join |
+| VIB | vSphere Installation Bundle — the package format used to install kernel modules and drivers on ESXi, including NSX kernel modules pushed during transport node configuration |
+| LCM baseline | A defined patch level managed by vCenter Lifecycle Manager; hosts are checked for compliance against the baseline and remediated (patched + rebooted) if they do not match |
+| NSX transport node | An ESXi host registered with NSX and configured to carry overlay (GENEVE-encapsulated) traffic; required before any VM on the host can connect to NSX logical segments |
+| TEP | Tunnel Endpoint — a VMkernel port created by NSX on each transport node; carries GENEVE-encapsulated overlay traffic between hosts over the physical underlay network |
+| FDM | Fault Domain Manager — the vSphere HA agent that runs on each ESXi host; coordinates VM restart decisions when a host failure is detected |
+| vSAN disk group | A logical grouping of one cache disk and one or more capacity disks on a single ESXi host; the basic storage unit vSAN uses to contribute capacity to the shared datastore |
+| iDRAC | Integrated Dell Remote Access Controller — Dell's out-of-band management interface for hardware-level access (power, console, firmware) independent of the ESXi OS state |
 
 ## Related Scenarios
 

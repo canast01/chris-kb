@@ -53,8 +53,7 @@ replication to within RPO before verifying with an SRM test recovery.
 
 ## 1. Identify Which VMs Are Lagging
 
-vCenter (production site) → **Site Recovery** → **Replication** → select **vSphere Replication** →
-**Outgoing** tab. Sort by **RPO Status** or **Last Sync**.
+Navigate to vCenter (production site) → **Site Recovery** → **Replication** → **vSphere Replication** → **Outgoing** tab → sort by **RPO Status**.
 
 | RPO status | Meaning | Priority |
 |---|---|---|
@@ -63,19 +62,15 @@ vCenter (production site) → **Site Recovery** → **Replication** → select *
 | Exceeded | Replication behind RPO window | Investigate now |
 | Error | Replication stopped | Urgent — check vSR appliance |
 
-Note the VM names and which ESXi hosts they run on. If all lagging VMs are on the same host,
-the problem may be host-level (NIC saturation, VMkernel routing issue). If lagging VMs are
-spread across hosts, the inter-site link is likely the cause.
+Look for: all lagging VMs on the same ESXi host = host-level NIC or VMkernel issue; lagging VMs spread across hosts = inter-site link is the cause.
 
 ---
 
 ## 2. Check vSphere Replication Appliance Health
 
-Both the production site vSR appliance and the DR site vSR appliance must be healthy.
+Both the production and DR vSR appliances must be healthy — check via vCenter → **Site Recovery** → **Configure** → **vSphere Replication Servers**.
 
-vCenter → **Site Recovery** → **Configure** → **vSphere Replication Servers**.
-
-All appliances should show a green status. If an appliance shows a fault:
+If an appliance shows a fault:
 
 ```bash
 # SSH to vSR appliance — check service status
@@ -86,18 +81,13 @@ systemctl status vmware-hbr-cloudagent
 tail -100 /var/log/vmware/hbr/hbrServer.log | grep -i error
 ```
 
-A common vSR appliance failure is certificate mismatch after a vCenter SSL certificate renewal.
-If the appliance shows a certificate error, re-register the vSR appliance with the vCenter:
-vCenter → Site Recovery → Configure → vSphere Replication Servers → select appliance →
-**Reconnect**.
+Look for: certificate mismatch errors after a vCenter SSL renewal — fix by re-registering: vCenter → Site Recovery → Configure → vSphere Replication Servers → select appliance → **Reconnect**.
 
 ---
 
 ## 3. Check Inter-Site Replication Network
 
-vSphere Replication traffic flows from the production ESXi host (on the VMkernel interface
-tagged for vSphere Replication) to the vSR appliance at the DR site. Traffic volume equals
-the changed-block rate of all replicating VMs combined.
+Replication traffic flows from the production ESXi host VMkernel (tagged for vSphere Replication) to the DR vSR appliance — total bandwidth equals the combined changed-block rate of all replicating VMs.
 
 ```bash
 # From ESXi host — check which VMkernel is used for vSphere Replication
@@ -107,25 +97,17 @@ esxcli network ip interface list | grep -A5 "vSphereReplication"
 esxcli network nic stats get -n <vmnic-name>
 ```
 
-If the replication NIC is at or near 100% utilisation, the inter-site link is saturated.
-Options:
-- Enable **network compression** on vSphere Replication (reduces bandwidth by 20–40%)
-- Throttle specific VMs to prioritise the most critical (highest RPO tolerance VMs can wait)
-- Request a bandwidth increase from the network team for the inter-site circuit
+Look for: replication NIC at or near 100% utilisation = link saturated; options: enable network compression (20–40% reduction), throttle low-priority VMs, or request a bandwidth increase.
 
 ---
 
 ## 4. Check VM Change Rate
 
-High write VMs — databases, transaction logs, large file servers — can outrun the available
-replication bandwidth. vSphere Replication tracks the current change rate per VM.
+High-write VMs — databases, transaction logs, large file servers — can outrun available replication bandwidth.
 
-vCenter → Site Recovery → Replication → select a lagging VM → **Details** →
-**Current replication rate** vs **Average replication rate**.
+Check: vCenter → Site Recovery → Replication → select the lagging VM → **Details** → compare **Current replication rate** vs **Average replication rate**.
 
-If the current rate is significantly above the average: a recent backup job, database log
-flush, or application burst is the cause. If elevated rates are persistent: the VM needs
-a higher RPO target or dedicated bandwidth.
+Look for: rate significantly above average = recent backup/log flush/app burst (transient); persistently elevated = VM needs a higher RPO target or dedicated bandwidth.
 
 ```bash
 # Check replication rate from vSR appliance
@@ -139,27 +121,17 @@ curl -sk -u admin:<password> \
 
 ## 5. Enable Compression or Adjust Throttle Settings
 
-For VMs with persistently high change rates:
+For VMs with persistently high change rates, edit the replication settings: vCenter → Site Recovery → Replication → select VM → **Edit** → enable **Network Compression** or set a **Bandwidth Throttle** (Mbps limit per VM).
 
-1. vCenter → Site Recovery → Replication → select VM → **Edit**
-2. Enable **Network Compression** — compresses changed blocks before transmitting
-3. Or set a **Bandwidth Throttle** (Mbps limit per VM) — lower-priority VMs get throttled,
-   freeing bandwidth for critical replicating VMs
-
-For VMs where the RPO target is genuinely unachievable given the change rate and link capacity:
-adjust the RPO target to a realistic value (e.g., from 15 minutes to 30 minutes). This is a
-formal change and requires SLA review.
+For VMs where the RPO target is genuinely unachievable given change rate and link capacity, adjust the RPO target to a realistic value — this is a formal change requiring SLA review.
 
 ---
 
 ## 6. Force a Manual Sync to Catch Up
 
-If a specific VM has a large accumulated lag that needs to catch up quickly:
+Force an immediate changed-block sync for a specific lagging VM: vCenter → Site Recovery → Replication → select the VM → **Sync Now**.
 
-vCenter → Site Recovery → Replication → select the lagging VM → **Sync Now**.
-
-This forces an immediate full changed-block sync, prioritised over the scheduled replication
-cycle. Monitor the status until it returns to **Met** state.
+Look for: status returning to **Met** after the sync completes — monitor until confirmed.
 
 ```bash
 # Verify replication status via vSR REST API after manual sync
@@ -172,32 +144,21 @@ curl -sk -u admin:<password> \
 
 ## 7. Verify NSX Inter-Site Management Connectivity
 
-If VMs use NSX overlay segments stretched between sites, the NSX management plane must also
-have connectivity between the production and DR vCenter. A broken NSX management connection
-does not stop replication directly, but it prevents SRM from reconfiguring network mappings
-during a real failover.
+If VMs use NSX stretched overlay segments, a broken NSX management connection does not stop replication but prevents SRM from reconfiguring network mappings during failover.
 
-NSX Manager → **System** → **Fabric** → check that both site's transport nodes are visible
-and green. If the DR site NSX Manager is isolated, resolve the management plane connectivity
-issue before running any SRM test or real failover.
+Check: NSX Manager → **System** → **Fabric** — both sites' transport nodes must be visible and green before running any SRM test or real failover.
 
 ---
 
 ## 8. Run an SRM Test Recovery to Validate RPO Is Met
 
-After resolving the replication lag, validate recovery with a non-disruptive SRM test:
+After resolving the lag, validate with a non-disruptive test: SRM → **Recovery Plans** → select the plan → **Test**.
 
-SRM → **Recovery Plans** → select the plan → **Test**.
+SRM powers on DR replicas in an isolated bubble network — no production traffic is affected.
 
-SRM powers on the DR replicas in an **isolated network** (bubble network) at the DR site.
-No production traffic is affected. Verify:
-- All VMs in the plan power on successfully
-- RPO status is **Met** for all VMs before the test
-- Application connectivity (web, database) is verified inside the test bubble
+Look for: all VMs powering on, RPO status **Met**, and application connectivity confirmed inside the bubble.
 
-After validation: SRM → Recovery Plan → **Cleanup Test**. This powers down the test replicas
-and removes the test network. **Always run Cleanup** — leaving test replicas running consumes
-DR site resources and can interfere with real replication.
+After validation run **Cleanup Test** immediately — leaving test replicas running consumes DR resources and can interfere with real replication.
 
 ---
 
@@ -218,6 +179,25 @@ DR site resources and can interfere with real replication.
   is near full, vSphere Replication cannot write replicated data. Always verify DR site capacity
   before troubleshooting replication lag — the lag may be caused by a full DR datastore, not the
   inter-site network.
+
+---
+
+## Key Terms
+
+| Term | Definition |
+|---|---|
+| SRM (Site Recovery Manager) | VMware DR orchestration product that automates failover and failback of VMs between sites; manages recovery plans and integrates with vSphere Replication for RPO tracking |
+| vSphere Replication (vSR) | The VMware replication engine built into vCenter; tracks changed blocks on production VMs and transfers them to a vSR appliance at the DR site on a configurable sync interval |
+| RPO (Recovery Point Objective) | The maximum acceptable data loss expressed as time — if RPO is 15 minutes, the DR copy must never be more than 15 minutes behind the production VM |
+| RTO (Recovery Time Objective) | The maximum acceptable time for recovery to complete after a failure; vSphere Replication manages RPO, while SRM recovery plan execution determines whether RTO is met |
+| Replication appliance | The vSR virtual appliance deployed at each site that receives changed-block data from ESXi hosts and writes it to the DR datastore; must be healthy on both production and DR sides |
+| Changed block tracking | The vSphere mechanism that records which disk sectors have been written since the last replication sync; allows vSR to send only the delta rather than the full disk each cycle |
+| Sync interval | The configured frequency at which vSphere Replication performs a changed-block transfer; must be equal to or shorter than the VM's RPO target |
+| Replication lag | The time gap between the last completed sync and the current time; exceeds RPO when bandwidth, change rate, or appliance health prevents syncs from completing on schedule |
+| Test recovery | An SRM operation that powers on DR replicas in an isolated bubble network without impacting production; used to validate that recovery plans and RPO are working correctly |
+| Bubble network | The isolated network created by SRM during a test recovery; DR replicas communicate only within this network so production traffic is unaffected |
+| Failback | The process of replicating VMs back from the DR site to the production site after a failover; requires re-enabling vSphere Replication in the reverse direction |
+| Reprotect | The SRM operation that reverses the replication direction after a failover — makes the DR site the new source and the original production site the new DR target |
 
 ---
 

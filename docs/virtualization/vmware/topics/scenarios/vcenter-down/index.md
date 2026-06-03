@@ -49,7 +49,7 @@ continue operating without vCenter — VMs keep running throughout.
 
 ## 1. Confirm the Scope of the Outage
 
-Before starting recovery, determine what is and is not reachable:
+Check each access path in sequence to narrow down whether the VM, OS, or application layer has failed.
 
 | Target | URL / Command | Expected when healthy |
 |---|---|---|
@@ -58,22 +58,16 @@ Before starting recovery, determine what is and is not reachable:
 | SSH | `ssh root@vcenter-fqdn` | Shell prompt |
 | VCSA VM console | iDRAC / iLO / second vCenter | VM powered on, OS running |
 
-If the VCSA VM is powered off, power it on through iDRAC/iLO or a second vCenter instance (if one exists
-in the environment). Wait 5–10 minutes for all services to start before proceeding.
+If the VCSA VM is powered off, power it on through iDRAC/iLO or a second vCenter instance. Wait 5–10 minutes for all services to start before proceeding.
 
 ---
 
 ## 2. Check VCSA Services via SSH
 
-If SSH is accessible, check which services are stopped:
+List stopped services to identify which component is failing before touching anything.
 
 ```bash
 service-control --status --all
-```
-
-Filter for stopped services:
-
-```bash
 service-control --status --all | grep -i stopped
 ```
 
@@ -96,17 +90,13 @@ service-control --start --all
 
 ## 3. Check Disk Space — the Most Common Cause
 
-Full disk partitions are the single most common cause of vCenter service failures. Check before anything
-else:
+Full disk partitions are the single most common cause of vCenter service failures — check this before anything else.
 
 ```bash
 df -h
 ```
 
-The partition most frequently responsible is `/storage/log`. Any partition at 100% will cause vCenter
-services to crash or refuse to start.
-
-Clean old logs using the VMware-provided cleanup script:
+Look for: any partition at 100% utilisation, especially `/storage/log`. Clean old logs using the VMware-provided script:
 
 ```bash
 /usr/lib/vmware-vpx/scripts/cleanup_appliance_logs.py
@@ -119,29 +109,23 @@ service-control --start vmware-vpxd
 service-control --status vmware-vpxd
 ```
 
-If the partition fills again within hours, a service is logging at excessive verbosity. Check
-`/var/log/vmware/vpxd/` for log files larger than expected and reduce log level via VAMI.
-
 ---
 
 ## 4. Use VAMI for Health Overview
 
-If VAMI at `https://vcenter-fqdn:5480` is reachable even when the UI is not, use it for a quick health
-overview before touching the CLI. Navigate to:
+VAMI at `https://vcenter-fqdn:5480` is a lightweight separate process that often remains up when vpxd has crashed — use it as the fastest first check.
+
+Navigate to:
 
 - **Monitor → Health** — CPU, memory, disk, and network at a glance.
 - **Services** tab — lists all VCSA services with start/stop controls.
 - **Disk** — shows partition utilisation per mount point.
 
-VAMI is a separate lightweight process from the vCenter services. It often remains available when
-vpxd has crashed, making it the fastest first check.
-
 ---
 
 ## 5. Check the PostgreSQL Embedded Database
 
-vCenter stores all inventory, configuration, and task history in an embedded PostgreSQL database. If
-the database is down, vpxd cannot start:
+vCenter's embedded database must be accepting connections before vpxd can start.
 
 ```bash
 /usr/lib/vmware-vpostgres/current/bin/pg_isready -h localhost
@@ -153,20 +137,19 @@ Expected output when healthy:
 localhost:5432 - accepting connections
 ```
 
-If the database is not accepting connections, check its log:
+If the database is not accepting connections, read its log:
 
 ```bash
 tail -50 /var/log/vmware/vpostgres/postgresql*.log
 ```
 
-Common database failures: disk full (database cannot write WAL), corrupt data files after ungraceful
-shutdown, connection limit exhausted. A full disk is by far the most frequent cause.
+Look for: disk full errors (cannot write WAL), corrupt data files after ungraceful shutdown, or connection limit exhausted messages.
 
 ---
 
 ## 6. Read vpxd.log for Startup Errors
 
-If services fail to start, vpxd.log contains the startup sequence and the exact failure:
+If services fail to start, vpxd.log contains the startup sequence and the exact failure point.
 
 ```bash
 tail -100 /var/log/vmware/vpxd/vpxd.log | grep -iE "error|fatal|failed|exception"
@@ -193,31 +176,25 @@ service-control --start vmware-vpxd
 
 ## 7. Certificate Failures — Aria SuiteLC or certificate-manager
 
-If vCenter fails due to an expired SSL certificate, the symptom in vpxd.log is:
+If vpxd.log shows a certificate expiry error, use the appropriate renewal tool — never both at once.
 
 ```text
 SSL Exception: certificate has expired
 ```
 
-Use the VMware certificate-manager CLI to renew or replace the certificate:
-
 ```bash
 /usr/lib/vmware-vmca/bin/certificate-manager
 ```
 
-If Aria SuiteLC is deployed and managing certificates, initiate the renewal from Aria SuiteLC →
+If Aria SuiteLC is deployed and managing certificates, initiate renewal from Aria SuiteLC →
 **Certificate Management → vCenter → Renew**. Do not run certificate-manager and Aria SuiteLC on the
-same VCSA at the same time — they will conflict.
+same VCSA simultaneously — they will conflict and leave the certificate chain broken.
 
 ---
 
 ## 8. Restore from File-Based Backup
 
-If the VCSA cannot be recovered in place (filesystem corruption, failed upgrade, unrecoverable service
-crash), restore from a VAMI file-based backup.
-
-Prerequisite: VAMI file-based backup must have been configured before the incident. If no backup exists,
-you must rebuild vCenter from scratch and manually reconnect hosts.
+If the VCSA cannot be recovered in place (filesystem corruption, failed upgrade, unrecoverable crash), restore from a VAMI file-based backup.
 
 Restore procedure:
 
@@ -227,7 +204,25 @@ Restore procedure:
 4. Complete the restore — all inventory, permissions, and configuration are recovered.
 5. ESXi hosts reconnect automatically after restore (they retain vCenter connection details).
 
-After restore, verify all hosts show "Connected" in vCenter within 10 minutes.
+Look for: all hosts showing "Connected" in vCenter within 10 minutes of restore completion.
+
+---
+
+## Key Terms
+
+| Term | Definition |
+|---|---|
+| VCSA | vCenter Server Appliance — the Linux-based virtual appliance that runs vCenter; all services (vpxd, SSO, vpostgres) run inside this VM |
+| VAMI | vCenter Appliance Management Interface — the lightweight web UI on port 5480 for appliance health, disk, services, and NTP; often available even when the main UI is down |
+| PSC | Platform Services Controller — the component that hosts SSO, VMCA, and identity services; in modern VCSA deployments it is embedded inside the same appliance rather than deployed separately |
+| SSO | Single Sign-On — VMware's identity federation service; all vCenter and NSX logins are authenticated through SSO; if SSO is down, no users can log in regardless of network connectivity |
+| vpostgres | VMware-embedded PostgreSQL database that stores all vCenter inventory, tasks, events, and configuration; vpxd cannot start if vpostgres is down or full |
+| service-control | VMware CLI tool on the VCSA used to start, stop, restart, and check status of individual VCSA services without a full appliance reboot |
+| VMCA | VMware Certificate Authority — the internal CA embedded in the VCSA that issues SSL certificates to ESXi hosts and vCenter services; expired VMCA certificates cause cascading SSL failures |
+| vpxd | vCenter Server daemon — the primary vCenter process that handles all API requests, inventory, task scheduling, and host communication; its log (vpxd.log) is the main diagnostic source |
+| File-based backup | VAMI-configured backup of the VCSA to a network location (FTP/SCP/NFS); the only supported restore path if the appliance cannot be recovered in place |
+| certificate-manager | VMware CLI tool at `/usr/lib/vmware-vmca/bin/certificate-manager` used to regenerate or replace VCSA certificates when they expire or become invalid |
+| Embedded PSC | Architecture where Platform Services Controller runs inside the VCSA VM rather than as a separate appliance; standard since vCenter 7.0; simplifies deployment but means SSO and VMCA are co-located with vpxd |
 
 ---
 

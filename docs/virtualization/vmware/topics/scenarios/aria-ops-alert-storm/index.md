@@ -52,12 +52,9 @@ source — then tuning alert definitions to prevent recurrence.
 
 ## 1. Triage by Root Cause — Sort by Triggered Time
 
-Open Aria Operations → **Alerts** → sort the alert list by **Triggered Time** ascending. Look for a cluster
-of alerts that all start at the same timestamp or within a 30-second window. That timestamp is the
-incident start. Every alert that fired after that point is likely a cascade from the same event.
+Open Aria Operations → **Alerts** → sort by **Triggered Time** ascending to identify the incident start timestamp.
 
-Note the object types of the first alerts to fire. If the first alert is on a host, all subsequent
-VM alerts on that host are children of the host event.
+Look for: a cluster of alerts starting within a 30-second window — every alert after that point is likely a cascade. Check which object type carries the first alert; if it is a host, all subsequent VM alerts on that host are children.
 
 ---
 
@@ -76,10 +73,7 @@ Examine which object types are carrying the bulk of alerts:
 
 ## 3. Use the Relationship View to Find the Parent Object
 
-In Aria Operations, select the host or cluster where the earliest alerts fired. Navigate to
-**Relationships** in the object detail pane. The relationship graph shows which child objects (VMs,
-datastores, NICs) also have active alerts. This surfaces the cascade visually — the parent object
-with the most children alerting is the root cause node.
+Select the earliest-alerting host or cluster in Aria Operations → **Relationships** to surface the cascade visually.
 
 ```bash
 # Aria Ops REST API — get all active critical alerts sorted by start time
@@ -101,7 +95,7 @@ curl -sk -X GET \
 
 ## 4. Identify Common Root Causes
 
-These four events produce the most frequent alert storms in VMware environments:
+These four events produce the most frequent alert storms in VMware environments — confirm in the source shown:
 
 | Root cause | Signature in alert list | Where to confirm |
 |---|---|---|
@@ -114,28 +108,20 @@ These four events produce the most frequent alert storms in VMware environments:
 
 ## 5. Cancel vs Suppress — Do the Right Thing
 
-Once the root cause is confirmed and a fix is underway, clear the alert storm correctly:
+Choose the correct action once the root cause is confirmed:
 
-- **Cancel** — marks alerts as resolved. Use when the root cause is identified and being fixed. Alerts
-  will not return once the underlying condition clears.
-- **Suppress** — silences alerts without resolving them. Use only as a deliberate temporary measure
-  (for example, during a planned maintenance window). Suppress leaves the root cause unaddressed.
+- **Cancel** — marks alerts resolved; use when the fix is underway. Alerts will not re-fire once the condition clears.
+- **Suppress** — silences without resolving; use only for planned maintenance windows.
 
-To cancel all alerts in the storm: Aria Operations → **Alerts** → filter to the affected cluster or
-host → select all → **Cancel**. Add a note referencing the incident ticket number.
+To cancel: Aria Operations → **Alerts** → filter to the affected cluster → select all → **Cancel** → add the incident ticket number.
 
 ---
 
 ## 6. Correlate with Aria Operations for Logs
 
-If the root cause is not immediately obvious from the alert list, correlate with Aria Logs:
+If the root cause is not obvious from alerts, open any storm alert → **Details** → **Related Logs** to query Aria Logs within ±5 minutes of the trigger time.
 
-1. Aria Operations → open any alert from the storm → **Details** → **Related Logs**
-   (only available if Aria Logs integration is configured).
-2. The Related Logs pane shows log entries from the same object within ±5 minutes of the alert
-   trigger time.
-3. Look for `WARN` or `ERROR` entries that predate the first alert by 30–120 seconds. The event that
-   appears just before the first alert is the originating cause.
+Look for: `WARN` or `ERROR` entries that predate the first alert by 30–120 seconds — the event just before the first alert is the originating cause.
 
 ```bash
 # Aria Logs REST API — query logs for a specific host around the incident time
@@ -158,9 +144,7 @@ curl -sk -X POST \
 
 ## 7. Tune Noisy Alert Definitions After the Storm
 
-After the incident: adjust alert definitions that fired en masse. In Aria Operations →
-**Alerts** → **Configuration** → **Alert Definitions** → find the definition with the highest
-trigger count during the incident. Edit the symptom thresholds to reduce noise.
+After the incident, find the definition with the highest trigger count: Aria Operations → **Alerts** → **Configuration** → **Alert Definitions** → edit symptom thresholds.
 
 | Alert type | Default threshold | Suggested production tuning |
 |---|---|---|
@@ -185,6 +169,26 @@ signal-to-noise improvement, not permanent suppression.
   identify one root cause. Working each alert in isolation wastes time and misses the pattern.
 - **Tuning thresholds too aggressively.** Raising every threshold by 2× after a noisy event means a
   future real problem may not alert until it is already critical.
+
+---
+
+## Key Terms
+
+| Term | Definition |
+|---|---|
+| Aria Operations | VMware observability platform — collects metrics from vSphere, NSX, and storage; evaluates symptom definitions to generate alerts |
+| Symptom definition | A threshold or condition rule in Aria Operations that, when triggered, contributes to an alert firing (e.g., CPU ready > 10% for 5 min) |
+| Alert definition | A named rule in Aria Operations combining one or more symptom definitions; the unit shown in the Alerts list |
+| Alert criticality | Severity level assigned to an alert — Critical, Warning, Immediate, or Information; determines colour and sort order in the Alerts view |
+| Object relationship | Parent-child link between monitored objects (e.g., cluster → host → VM); used in the Relationship view to trace cascade origin |
+| Aria Logs (Aria Operations for Logs) | VMware log analytics product — ingests syslog and structured events; integrated with Aria Operations via the Related Logs pane |
+| IPFIX | IP Flow Information Export — a network flow protocol; Aria Logs can ingest IPFIX records from NSX to correlate network events with alert storms |
+| Root cause | The single originating event that triggered all subsequent cascade alerts; identified by sorting alerts by Triggered Time ascending |
+| Cascading alert | A secondary alert fired because a parent object's failure propagated to child objects (e.g., host failure → all VMs on that host alert) |
+| REST API bearer token | Short-lived token returned by the Aria Operations `/suite-api/api/auth/token/acquire` endpoint; passed as `Authorization: Bearer <token>` on all subsequent API calls |
+| Cancel (alert action) | Marks an active alert as resolved in Aria Operations; used when the underlying condition has been fixed or the root cause is confirmed |
+| Suppress (alert action) | Silences an alert without resolving it; intended for planned maintenance windows only — suppressed alerts mask real future problems if left in place |
+| Alert threshold | The numeric limit in a symptom definition at which a metric is considered anomalous; tuned post-incident to reduce noise without masking real problems |
 
 ---
 

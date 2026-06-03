@@ -49,30 +49,19 @@ is restored.
 
 ## 1. Identify the Failure — What Does vCenter Show?
 
-Check these two indicators first:
+Check two indicators first: vCenter host list for **Disconnected/Not Responding** hosts, and vCenter → Cluster → **Monitor** → **vSAN** → **Skyline Health** for partition alerts.
 
-- **vCenter host list**: are hosts at one or both sites showing **Disconnected** or
-  **Not Responding**?
-- **vSAN Skyline Health**: vCenter → Cluster → **Monitor** → **vSAN** → **Skyline Health** →
-  look for **"vSAN cluster partition detected"** or **"Stretched cluster health"** failures.
-
-If hosts are disconnected and vSAN health shows a partition, inter-site connectivity is down.
-If hosts appear connected but vSAN health shows a partition, the vSAN VMkernel network has an
-issue independent of the management network.
+Look for: hosts disconnected + vSAN partition = inter-site link down; hosts connected + vSAN partition = vSAN VMkernel network issue independent of management.
 
 ---
 
 ## 2. Check Witness Appliance Reachability
 
-The witness appliance is the tiebreaker. It holds a vote that determines which site retains
-quorum when inter-site communication is lost.
+The witness appliance holds the tiebreaker vote — it determines which site retains quorum when inter-site communication is lost.
 
-In vCenter: locate the **witness host** object (it appears as a host, not a VM). Is it:
-- **Connected** — the witness is reachable and voting
-- **Disconnected** — the witness is unreachable; quorum decision depends on preferred site config
+In vCenter, locate the **witness host** object and check its state: **Connected** = voting; **Disconnected** = quorum falls back to preferred site config.
 
-The witness votes for the site it can still reach. If the witness can reach Site A but not Site B:
-Site A keeps quorum and VMs continue running. Site B VMs are stopped by vSphere HA.
+Look for: which site the witness can still reach — that site keeps quorum and its VMs keep running; the other site's VMs are stopped by vSphere HA.
 
 ```bash
 # From Site A ESXi host — ping witness vSAN VMkernel IP
@@ -86,19 +75,15 @@ vmkping -I vmk2 <witness-vsan-vmk-ip>
 
 ## 3. Confirm the Preferred Site Configuration
 
-The preferred site is the tiebreaker when the witness vote does not resolve the partition. In a
-50/50 network split where the witness is also unreachable, the preferred site keeps quorum.
+The preferred site retains quorum when the witness is also unreachable and neither site can reach the other.
 
-vCenter → Cluster → **Configure** → **vSAN** → **Fault Domains**.
-
-The fault domain labelled **Preferred** is the site that retains quorum when no witness vote is
-available. Confirm this is documented and matches your DR runbook.
+Check: vCenter → Cluster → **Configure** → **vSAN** → **Fault Domains** — the fault domain labelled **Preferred** must match your DR runbook.
 
 ---
 
 ## 4. Determine Current Quorum State
 
-Use the quorum decision table to understand what the cluster should be doing right now:
+Use the table to determine expected cluster behaviour and compare with what vCenter is showing:
 
 | Site A reachable | Site B reachable | Witness reachable | Expected outcome |
 |---|---|---|---|
@@ -108,15 +93,13 @@ Use the quorum decision table to understand what the cluster should be doing rig
 | No | No | Yes | Neither site has quorum — all VMs stopped |
 | Yes | Yes | No | Both sites run — split-brain risk; monitor closely |
 
-If the actual behaviour does not match this table, there is a configuration error in the fault
-domain or preferred site settings.
+Look for: actual behaviour that does not match the table — indicates a configuration error in the fault domain or preferred site settings.
 
 ---
 
 ## 5. Check Inter-Site vSAN Network Path
 
-vSAN inter-site replication traffic uses the vSAN VMkernel interface (tagged vmk2 or equivalent
-in your environment). Test reachability and MTU:
+Test reachability and MTU on the vSAN VMkernel interface (tagged vmk2 or equivalent) used for inter-site replication traffic:
 
 ```bash
 # From a Site A ESXi host — ping a Site B host's vSAN vmk IP
@@ -127,8 +110,7 @@ vmkping -I vmk2 <site-b-vsan-vmk-ip> -d -s 8972
 esxcli network ip interface ipv4 get
 ```
 
-A failed large-packet ping (8972 bytes) with a successful small-packet ping indicates an MTU
-mismatch on the inter-site link. vSAN requires MTU 9000 on the inter-site network.
+Look for: failed 8972-byte ping with successful small-packet ping = MTU mismatch on the inter-site link (vSAN requires MTU 9000).
 
 ```bash
 # Check vSAN cluster membership — which hosts are in the cluster from this host's view
@@ -142,11 +124,9 @@ esxcli vsan debug vmdk list
 
 ## 6. Forced Recovery — Full Isolation (Last Resort)
 
-If ALL inter-site and witness connectivity is lost simultaneously, no site has quorum and all
-VMs across both sites stop. This is a full datacenter isolation scenario.
+Use only when all inter-site and witness connectivity is confirmed lost and all VMs have stopped — contact VMware/Dell GSS before proceeding.
 
-**Contact VMware/Dell GSS before proceeding with forced quorum.** Forcing quorum incorrectly
-when both sites are actually running creates data divergence that requires manual reconciliation.
+**Forcing quorum incorrectly when both sites are still running creates data divergence requiring manual reconciliation.**
 
 ```bash
 # LAST RESORT ONLY — force master election on the surviving site
@@ -155,19 +135,15 @@ when both sites are actually running creates data divergence that requires manua
 esxcli vsan cluster forcemasterelection
 ```
 
-After forced election, VMs on the surviving site can be started. The secondary site must be
-treated as potentially diverged and should not be started until vSAN resync completes after
-connectivity is restored.
+After forced election, start VMs on the surviving site only; treat the secondary site as potentially diverged and do not start it until vSAN resync completes after connectivity is restored.
 
 ---
 
 ## 7. After Connectivity Restores — Monitor Resync
 
-When inter-site network connectivity comes back, vSAN automatically begins resyncing objects
-between sites. This process can take minutes to hours depending on how many objects changed
-during the partition.
+When inter-site connectivity comes back, vSAN automatically resyncs objects — this can take minutes to hours depending on change volume during the partition.
 
-Monitor resync progress: vCenter → **vSAN** → **Monitor** → **Resyncing Objects**.
+Monitor: vCenter → **vSAN** → **Monitor** → **Resyncing Objects**.
 
 ```bash
 # Check resync queue from ESXi host
@@ -177,18 +153,13 @@ esxcli vsan debug object list | grep -i resync
 esxcli vsan debug resync list
 ```
 
-**Do not perform host maintenance, storage policy changes, or vSAN upgrades until resync
-completes.** Resyncing adds I/O overhead. Any additional disruption during resync risks
-further object degradation.
+**Do not perform host maintenance, storage policy changes, or vSAN upgrades until resync completes** — resync adds I/O overhead, and any disruption risks further object degradation.
 
 ---
 
 ## 8. Post-Incident — Stretched Cluster Health Check
 
-After full recovery, run a complete vSAN stretched cluster health validation:
-
-vCenter → **vSAN** → **Skyline Health** → **All Checks** → filter for the
-**Stretched cluster** category.
+After full recovery, run a complete vSAN Skyline Health validation: vCenter → **vSAN** → **Skyline Health** → **All Checks** → filter for the **Stretched cluster** category.
 
 Key checks to verify:
 
@@ -212,6 +183,25 @@ Key checks to verify:
 - **Placing the witness on the same network as one of the sites.** If Site A's network fails and
   the witness is on Site A's subnet, the witness goes unreachable at the same time — eliminating
   the tiebreaker. The witness must be on a truly independent network path.
+
+---
+
+## Key Terms
+
+| Term | Definition |
+|---|---|
+| Stretched cluster | A vSAN cluster whose hosts are distributed across two physical sites (fault domains), providing cross-site HA and data mirroring between locations |
+| Witness appliance | A lightweight VM deployed at a third site that holds one vote per vSAN object; acts as tiebreaker when the two data sites cannot reach each other |
+| Preferred site | The fault domain configured to retain quorum when the witness is also unreachable; if both sites are isolated from the witness, the preferred site keeps running |
+| Fault domain | A logical grouping in vSAN that maps to a physical failure boundary — in a stretched cluster, each site is a separate fault domain |
+| Split-brain | The condition where both sites believe they have quorum and attempt to write to the same vSAN objects simultaneously; the witness prevents this under normal conditions |
+| Quorum | The minimum number of votes required for a vSAN object to accept write I/O; requires more than half of the total votes (data components + witness component) |
+| vSAN resync | The process by which vSAN re-mirrors object components that fell out of sync during a partition; runs automatically after connectivity restores |
+| Inter-site link | The dedicated WAN or dark-fibre connection between the two stretched cluster sites; carries vSAN replication traffic, management, and overlay data |
+| GENEVE | The overlay encapsulation protocol used by NSX for inter-site stretched segments; loss of the inter-site link disrupts both vSAN and NSX overlay traffic simultaneously |
+| Site partition | The network isolation event that splits the two fault domains; vSAN detects this as a cluster partition and invokes the quorum/witness decision |
+| forcemasterelection | An ESXi CLI command (`esxcli vsan cluster forcemasterelection`) used as a last resort to force a vSAN master election on the surviving site when normal quorum is impossible |
+| vSAN Skyline Health | The built-in health check framework for vSAN accessible via vCenter; includes stretched-cluster-specific checks for partition state, witness connectivity, and unicast agent config |
 
 ---
 
