@@ -1,7 +1,7 @@
 # Aria Operations for Networks
 
 <div class="kb-summary">
-Aria Operations for Networks knowledge base — architecture, operations, CLI references, security, and troubleshooting. Content being built out.
+Technical and operational reference for VMware Aria Operations for Networks. Covers network visibility, flow analytics, topology mapping, path analysis, and security exposure analysis.
 </div>
 
 ```text
@@ -131,6 +131,11 @@ Aria Operations for Networks knowledge base — architecture, operations, CLI re
 <a class="kb-card" href="architecture/">
   <strong>Architecture</strong>
   <span>How it works, integrations, and design standards.</span>
+</a>
+
+<a class="kb-card" href="deploy/">
+  <strong>Deploy</strong>
+  <span>Step-by-step initial deployment: platform OVA, collector nodes, data sources, and IPFIX flow collection.</span>
 </a>
 
 <a class="kb-card" href="operations/">

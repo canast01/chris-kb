@@ -1,7 +1,7 @@
 # Horizon (VDI)
 
 <div class="kb-summary">
-Horizon knowledge base — architecture, operations, CLI references, security, and troubleshooting. Content being built out.
+Horizon knowledge base — architecture, operations, deploy, CLI references, security, and troubleshooting.
 </div>
 
 ```text
@@ -131,6 +131,11 @@ Horizon knowledge base — architecture, operations, CLI references, security, a
 <a class="kb-card" href="architecture/">
   <strong>Architecture</strong>
   <span>How it works, integrations, and design standards.</span>
+</a>
+
+<a class="kb-card" href="deploy/">
+  <strong>Deploy</strong>
+  <span>Phase-by-phase deployment from Connection Server install through UAG, desktop pools, and App Volumes.</span>
 </a>
 
 <a class="kb-card" href="operations/">

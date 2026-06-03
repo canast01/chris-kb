@@ -133,6 +133,11 @@ Technical and operational reference for VMware vCenter Server (VCSA). Covers arc
   <span>How it works, integrations, and design standards.</span>
 </a>
 
+<a class="kb-card" href="deploy/">
+  <strong>Deploy</strong>
+  <span>VCSA Stage 1 OVA deploy, Stage 2 SSO config, AD integration, and inventory build.</span>
+</a>
+
 <a class="kb-card" href="operations/">
   <strong>Operations</strong>
   <span>CLI reference, health checks, procedures, lifecycle, backup, and scripts.</span>

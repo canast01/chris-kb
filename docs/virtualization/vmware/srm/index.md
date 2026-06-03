@@ -5,7 +5,7 @@ title: SRM (VMware Platform)
 # SRM (VMware Platform)
 
 <div class="kb-summary">
-Site Recovery Manager knowledge base — architecture, operations, CLI references, security, and troubleshooting. Content being built out.
+Site Recovery Manager knowledge base — architecture, operations, deploy, CLI references, security, and troubleshooting.
 </div>
 
 ```text
@@ -135,6 +135,11 @@ Site Recovery Manager knowledge base — architecture, operations, CLI reference
 <a class="kb-card" href="architecture/">
   <strong>Architecture</strong>
   <span>How it works, integrations, and design standards.</span>
+</a>
+
+<a class="kb-card" href="deploy/">
+  <strong>Deploy</strong>
+  <span>Phase-by-phase deployment from SRM appliance install through site pairing, protection groups, and recovery plan testing.</span>
 </a>
 
 <a class="kb-card" href="operations/">

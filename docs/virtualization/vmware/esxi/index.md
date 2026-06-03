@@ -137,6 +137,11 @@ Technical and operational reference for VMware ESXi. Covers host architecture, n
   <span>How it works, integrations, and design standards.</span>
 </a>
 
+<a class="kb-card" href="deploy/">
+  <strong>Deploy</strong>
+  <span>Step-by-step initial ESXi host deployment and vCenter join.</span>
+</a>
+
 <a class="kb-card" href="operations/">
   <strong>Operations</strong>
   <span>CLI reference, health checks, procedures, lifecycle, backup, and scripts.</span>

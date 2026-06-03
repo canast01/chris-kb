@@ -1,7 +1,7 @@
 # vSphere Replication
 
 <div class="kb-summary">
-vSphere Replication knowledge base — architecture, operations, CLI references, security, and troubleshooting. Content being built out.
+vSphere Replication knowledge base — deploy, architecture, operations, CLI references, security, and troubleshooting for VM-level asynchronous replication between vCenter sites.
 </div>
 
 ```text
@@ -131,6 +131,11 @@ vSphere Replication knowledge base — architecture, operations, CLI references,
 <a class="kb-card" href="architecture/">
   <strong>Architecture</strong>
   <span>How it works, integrations, and design standards.</span>
+</a>
+
+<a class="kb-card" href="deploy/">
+  <strong>Deploy</strong>
+  <span>VRA OVA deployment, vCenter registration, site pairing, VM replication config, and RPO validation.</span>
 </a>
 
 <a class="kb-card" href="operations/">

@@ -133,6 +133,11 @@ Technical and operational reference for VMware Aria Operations for Logs. Covers 
   <span>How it works, integrations, and design standards.</span>
 </a>
 
+<a class="kb-card" href="deploy/">
+  <strong>Deploy</strong>
+  <span>OVA deployment, worker cluster setup, syslog and CFAPI agent configuration, and content pack install.</span>
+</a>
+
 <a class="kb-card" href="operations/">
   <strong>Operations</strong>
   <span>CLI reference, health checks, procedures, lifecycle, backup, and scripts.</span>

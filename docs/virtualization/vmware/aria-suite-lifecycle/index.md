@@ -133,6 +133,11 @@ Technical and operational reference for VMware Aria Suite Lifecycle Manager. Cov
   <span>How it works, integrations, and design standards.</span>
 </a>
 
+<a class="kb-card" href="deploy/">
+  <strong>Deploy</strong>
+  <span>Step-by-step initial LCM deployment: OVA, Locker, depot sync, and first product environment.</span>
+</a>
+
 <a class="kb-card" href="operations/">
   <strong>Operations</strong>
   <span>CLI reference, health checks, procedures, lifecycle, backup, and scripts.</span>

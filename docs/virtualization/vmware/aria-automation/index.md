@@ -133,6 +133,11 @@ Technical and operational reference for VMware Aria Automation. Covers infrastru
   <span>How it works, integrations, and design standards.</span>
 </a>
 
+<a class="kb-card" href="deploy/">
+  <strong>Deploy</strong>
+  <span>LCM deployment, cloud account setup, blueprint authoring, and end-to-end validation.</span>
+</a>
+
 <a class="kb-card" href="operations/">
   <strong>Operations</strong>
   <span>CLI reference, health checks, procedures, lifecycle, backup, and scripts.</span>

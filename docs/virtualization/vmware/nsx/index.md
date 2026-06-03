@@ -137,6 +137,11 @@ Technical and operational reference for VMware NSX. Covers segments, gateways, d
   <span>How it works, integrations, and design standards.</span>
 </a>
 
+<a class="kb-card" href="deploy/">
+  <strong>Deploy</strong>
+  <span>Phase-by-phase deployment from NSX Manager cluster through host transport nodes, Edge cluster, and T0/T1 gateways.</span>
+</a>
+
 <a class="kb-card" href="operations/">
   <strong>Operations</strong>
   <span>CLI reference, health checks, procedures, lifecycle, backup, and scripts.</span>

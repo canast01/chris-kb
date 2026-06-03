@@ -1,7 +1,7 @@
 # Tanzu
 
 <div class="kb-summary">
-Tanzu knowledge base — architecture, operations, CLI references, security, and troubleshooting. Content being built out.
+Tanzu knowledge base — deploy, architecture, operations, CLI references, security, and troubleshooting for VMware Tanzu Kubernetes Grid on vSphere.
 </div>
 
 ```text
@@ -131,6 +131,11 @@ Tanzu knowledge base — architecture, operations, CLI references, security, and
 <a class="kb-card" href="architecture/">
   <strong>Architecture</strong>
   <span>How it works, integrations, and design standards.</span>
+</a>
+
+<a class="kb-card" href="deploy/">
+  <strong>Deploy</strong>
+  <span>Workload Management enablement, Supervisor init, namespace config, and TKG cluster provisioning.</span>
 </a>
 
 <a class="kb-card" href="operations/">

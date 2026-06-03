@@ -133,6 +133,11 @@ Technical and operational reference for VMware Cloud Foundation (VCF). Covers SD
   <span>How it works, integrations, and design standards.</span>
 </a>
 
+<a class="kb-card" href="deploy/">
+  <strong>Deploy</strong>
+  <span>Cloud Builder OVA bringup, management domain deployment, SDDC Manager setup, and workload domain creation.</span>
+</a>
+
 <a class="kb-card" href="operations/">
   <strong>Operations</strong>
   <span>CLI reference, health checks, procedures, lifecycle, backup, and scripts.</span>
