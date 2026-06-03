@@ -50,6 +50,50 @@ How It Works reference covering Overview, Cluster Topology, Node Roles, Sizing, 
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+
+```text
+┌─────────────────────── Aria Operations — Alert Evaluation and Symptom Pipeline ───────────────────────┐
+│                                                                                                       │
+│    Aria Operations processes metrics into symptoms, combines symptoms into alerts,                    │
+│    and generates recommendations. Alerts trigger notifications and actions.                           │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Symptom Evaluation              │  │               Alert Generation              │   │
+│   │     Metric collected by adapter (5 min)      │  │    Alert definition: 1+ symptoms = alert    │   │
+│   │   Symptom definition: condition on metric    │  │    Criticality: Info / Warning / Critical   │   │
+│   │      Threshold: static value or dynamic      │  │     Active alert: condition is true now     │   │
+│   │       Dynamic: learns normal baseline        │  │     Cancelled: condition no longer true     │   │
+│   │    Symptom active → contributes to alert     │  │       Impact badge: affects N VMs/apps      │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    One alert can aggregate symptoms from CPU, memory, storage, and network metrics.                   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │            Recommendation Engine             │  │           Notification and Action           │   │
+│   │     Alert triggers recommendation lookup     │  │       Outbound: email · SNMP · webhook      │   │
+│   │     Recommendation: action to fix cause      │  │      ServiceNow ITSM: auto-open ticket      │   │
+│   │   Automated action: run script / call API    │  │      Aria Automation: trigger blueprint     │   │
+│   │      Rightsizing: CPU/mem resize advice      │  │        Log Insight: launch in context       │   │
+│   │    Capacity forecast: days to exhaustion     │  │    Suppress: maintenance window silences    │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical Infrastructure (the hardware everything above runs on):                                   │
+│    Aria Ops cluster (master + replicas) · remote collectors per site · vCenter/NSX                    │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    Symptom         = a single metric condition (e.g. CPU > 90% for 10 min)                            │
+│    Alert           = one or more symptoms combined into a named problem state                         │
+│    Dynamic threshold= learned baseline per-object; flags anomalies vs. peers                          │
+│    Recommendation  = prescribed remediation step linked to an alert definition                        │
+│    Automated action= script or API call Aria Ops runs when alert fires                                │
+│    Criticality     = severity tier: Info (blue) / Warning (yellow) / Critical (red)                   │
+│    Rightsizing     = Aria Ops advice to reduce or increase VM vCPU/RAM allocation                     │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
 ## Overview
 
 Aria Operations (formerly vRealize Operations) is an analytics cluster that collects metrics, events, and properties from vSphere, NSX, storage, and cloud endpoints. Adapters (solutions/management packs) feed data into the cluster. Remote collectors extend monitoring reach into remote sites or DMZs without requiring firewall holes back to the primary cluster.

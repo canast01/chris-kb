@@ -68,3 +68,47 @@ graph TB
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+
+```text
+┌───────────────────── Aria Ops for Logs — Log Event Ingestion and Query Pipeline ──────────────────────┐
+│                                                                                                       │
+│    A log event flows from its source through ingestion, parsing, and indexing before                  │
+│    it becomes searchable. Alerts fire on query patterns; events can be forwarded.                     │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │               Ingestion Layer                │  │             Parsing and Indexing            │   │
+│   │       Syslog UDP 514 (fire-and-forget)       │  │      Timestamp extraction (event time)      │   │
+│   │          Syslog TCP 601 / TLS 6514           │  │        Hostname / source field mapped       │   │
+│   │      vSphere agent: ESXi + vCenter push      │  │     Auto field extraction from known src    │   │
+│   │        REST ingest API: JSON payload         │  │      Custom regex fields: user-defined      │   │
+│   │       CF/vRLI agent: application logs        │  │    Full-text index (Lucene/Elasticsearch)   │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Indexed events are stored per retention policy (default 30 days on-disk).                          │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Query and Alerting              │  │            Forwarding and Archive           │   │
+│   │    Interactive search: free-text + fields    │  │       Syslog forward: to Splunk / SIEM      │   │
+│   │         Saved query: reusable filter         │  │      Webhook forward: JSON to endpoint      │   │
+│   │       Alert: query fires if count > N        │  │     Email: alert notification per query     │   │
+│   │       Dashboard: pinned query widgets        │  │      S3/NFS archive: compliance export      │   │
+│   │      Launch-in-context: Aria Ops → vRLI      │  │     Content pack: pre-built alert rules     │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical Infrastructure (the hardware everything above runs on):                                   │
+│    vRLI master VM + worker VMs · NIC for syslog · disk for index · NTP for timestamps                 │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    vRLI            = vRealize Log Insight; former product name; same as Aria Logs                     │
+│    vSphere agent   = vRLI agent installed on ESXi and vCenter; pushes structured logs                 │
+│    Field extraction= vRLI parses raw text to create queryable named fields                            │
+│    Content pack    = bundle of pre-built dashboards + alerts for one product                          │
+│    Launch-in-context= Aria Ops alert deeplinks to vRLI filtered to same object/time                   │
+│    Retention       = on-disk retention period; default 30 days; expand with disk/NFS                  │
+│    Worker node     = additional vRLI VM; master load-balances ingestion across workers                │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```

@@ -1,8 +1,8 @@
 ---
-title: VxRail
+title: VxRail Appliance
 ---
 
-# VxRail
+# VxRail Appliance
 
 <div class="kb-summary">
 Technical and operational reference for Dell VxRail. Covers VxRail Manager, the First Run Wizard, vSAN auto-configuration, lifecycle upgrades via LCM, iDRAC hardware management, OMIVV integration, and cluster troubleshooting for VxRail HCI deployments.

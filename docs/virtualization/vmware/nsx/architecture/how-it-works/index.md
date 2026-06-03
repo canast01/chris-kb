@@ -60,6 +60,51 @@ How It Works reference covering API Surfaces, Transport Nodes, Geneve Encapsulat
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+```text
+┌──────────────────────────── NSX — Distributed Firewall Packet Processing ─────────────────────────────┐
+│                                                                                                       │
+│    DFW enforces policy at every vNIC on every ESXi host. Rules are kernel-level;                      │
+│    no external firewall appliance is in the data path for east-west traffic.                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │       Ingress (arriving at dest vNIC)        │  │         Egress (leaving source vNIC)        │   │
+│   │       Packet arrives from network/TEP        │  │        Guest OS sends TCP/UDP packet        │   │
+│   │       DFW intercepts before guest recv       │  │       DFW intercepts at vNIC in kernel      │   │
+│   │     Connection table: established → pass     │  │     Connection table: established → pass    │   │
+│   │        New flow → evaluate rule table        │  │        New flow → evaluate rule table       │   │
+│   │         Permit → deliver to guest OS         │  │          Permit → send to DLR / TEP         │   │
+│   │       Drop → discard (silent / logged)       │  │       Drop → discard (silent / logged)      │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Rule table is evaluated top-down; first match wins; implicit deny at the bottom.                   │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Rule Table Structure             │  │             Connection Tracking             │   │
+│   │       Applied-to: VM / group / segment       │  │    5-tuple key: src IP:port, dst IP:port,   │   │
+│   │      Match: src group + dst group + svc      │  │         proto → connection table entry      │   │
+│   │        Actions: allow · drop · reject        │  │      ESTABLISHED flow: fast path bypass     │   │
+│   │     Per-rule logging: optional (costly)      │  │     TCP FIN/RST: removes entry promptly     │   │
+│   │       Default rule: deny all (bottom)        │  │       UDP: idle timeout removes entry       │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical Infrastructure (the hardware everything above runs on):                                   │
+│    ESXi hosts with N-VDS · NSX Manager cluster (×3) · TEP vmknic on each host                         │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    DFW rule table    = ordered list of rules pushed by NSX Manager to each ESXi host                  │
+│    Applied-to        = scope of the rule: individual VM, group, segment, or cluster                   │
+│    Connection table  = per-host stateful table; avoids rule re-eval for open flows                    │
+│    Group             = dynamic or static set of VMs/IPs used as src/dst in DFW rules                  │
+│    Reject            = drop packet AND send TCP RST or ICMP unreachable to sender                     │
+│    N-VDS             = NSX-managed vSwitch; required for DFW to function on a host                    │
+│    Fast path         = established flow matched in connection table, skips rule table                 │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 ### Edge Node Transport Nodes
 
 Edge nodes are NSX-deployed VMs or bare-metal appliances hosting north-south gateway functions.

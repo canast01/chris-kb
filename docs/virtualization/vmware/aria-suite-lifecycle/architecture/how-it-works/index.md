@@ -72,6 +72,50 @@ graph TB
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+```text
+┌────────────────────────────── Aria Suite LCM — Product Upgrade Workflow ──────────────────────────────┐
+│                                                                                                       │
+│    LCM orchestrates rolling upgrades across all Aria products in an environment.                      │
+│    Each upgrade has a pre-check gate and a VM snapshot rollback point.                                │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Pre-Upgrade Phase               │  │           Upgrade Execution Phase           │   │
+│   │       1. LCM syncs PAK from depot/NFS        │  │       5. LCM deploys PAK to product VM      │   │
+│   │       2. Pre-check: disk space + certs       │  │        6. Services restarted in order       │   │
+│   │      3. Pre-check: product health green      │  │      7. LCM polls health API until pass     │   │
+│   │      4. VM snapshot taken (rollback pt)      │  │      8. Post-upgrade health validation      │   │
+│   │        Pre-check fail → abort, no change     │  │      9. Snapshots removed after N days      │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Rollback: if upgrade fails post-snapshot, revert VM snapshot to prior state.                       │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │         Upgrade Order in Environment         │  │          Cert and Password Rotation         │   │
+│   │   vIDM upgraded first (identity provider)    │  │       LCM renews certs before upgrade       │   │
+│   │        Aria Operations upgraded next         │  │     Locker vault holds product passwords    │   │
+│   │           Aria Operations for Logs           │  │         Passwords rotated via LCM UI        │   │
+│   │        Aria Automation upgraded last         │  │    Certificate expiry check in pre-check    │   │
+│   │      Order enforced by dependency graph      │  │      vIDM cert must be valid before all     │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Physical Infrastructure (the hardware everything above runs on):                                   │
+│    LCM VM · vCenter for snapshot/deploy · NFS or online depot for PAK files                           │
+│                                                                                                       │
+│    Key terms:                                                                                         │
+│                                                                                                       │
+│    PAK file        = Product Activation Key; binary package for deploy or upgrade                     │
+│    Depot           = binary store: VMware online (SFTP) or local NFS with PAK files                   │
+│    Environment     = LCM grouping: one vCenter + one vIDM + associated Aria products                  │
+│    Pre-check       = automated validation gate before any upgrade begins                              │
+│    Snapshot        = VM-level rollback point taken immediately before upgrade                         │
+│    Locker          = LCM vault storing product passwords and certificates securely                    │
+│    vIDM            = VMware Identity Manager; SSO provider for all Aria products                      │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 | API Path | Purpose |
 |---|---|
 | `/lcm/authz/api/v2` | Authentication — login and token management |

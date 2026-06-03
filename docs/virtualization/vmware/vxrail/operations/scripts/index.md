@@ -1,4 +1,4 @@
-# VxRail — Scripts
+# VxRail Appliance — Scripts
 
 <div class="kb-summary">
 PowerCLI and bash scripts for VxRail automation. Includes vSAN health summary, cluster capacity report, pre-upgrade validation, node firmware version report, and a configurable vSAN capacity alert script.
