@@ -1,10 +1,10 @@
 # VxRail — Security
 
 <div class="kb-summary">
-Security reference for VxRail in the VMware product context. Covers iDRAC LDAP authentication, ESXi lockdown mode, vSAN encryption, Secure Boot, and audit logging.
+Security reference for VxRail in the VMware product context. Covers iDRAC LDAP authentication, ESXi lockdown mode, vSAN encryption, Secure Boot, and access control.
 </div>
 
-```powershell
+```text
 ┌────────────────────────────────────────── VxRail — Security ──────────────────────────────────────────┐
 │                                                                                                       │
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
@@ -62,149 +62,26 @@ Security reference for VxRail in the VMware product context. Covers iDRAC LDAP a
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-iDRAC access should be restricted to a dedicated OOB management network — not reachable from VM subnets.
+<div class="kb-grid">
 
----
+<div class="kb-card">
+<h3><a href="authentication/">Authentication</a></h3>
+<p>iDRAC LDAP/AD, VxRail Manager accounts, vCenter SSO, and service account policy.</p>
+</div>
 
-## Access Control
+<div class="kb-card">
+<h3><a href="access-control/">Access Control</a></h3>
+<p>RBAC roles, lockdown mode, exception users, and network access scoping.</p>
+</div>
 
-### VxRail Manager Roles
+<div class="kb-card">
+<h3><a href="encryption/">Encryption</a></h3>
+<p>vSAN at-rest and in-transit encryption, iDRAC HTTPS, Secure Boot, and TLS.</p>
+</div>
 
-| Role | Permissions |
-|---|---|
-| Admin (mystic) | Full VxRail Manager access including LCM |
-| Read-only (if LDAP configured) | View cluster health, no changes |
+<div class="kb-card">
+<h3><a href="hardening/">Hardening</a></h3>
+<p>Full hardening checklist for VxRail Manager, iDRAC, vSphere, and network.</p>
+</div>
 
-LDAP group-based role assignment allows mapping AD groups to VxRail Manager access levels.
-
-### vSphere RBAC for VxRail Operations
-
-Define vCenter roles for VxRail-specific operational tasks:
-
-| Team | vCenter Role | Scope |
-|---|---|---|
-| VxRail Administrators | Administrator | VxRail Cluster object |
-| Storage Operations | Custom (vSAN ops) | Cluster level |
-| Application / VM Owners | VM Operator (custom) | VM Folder / Resource Pool |
-| Read-only / Monitoring | Read-only | Datacenter |
-
-### Host Lockdown Mode
-
-Apply Normal Lockdown mode to all VxRail ESXi hosts. VxRail Manager requires connectivity to the hosts for LCM operations — this is handled via the vCenter API path, which is permitted under Normal Lockdown.
-
-```powershell
-# Enable Normal Lockdown on all VxRail hosts
-Get-Cluster "VxRail-Cluster" | Get-VMHost | ForEach-Object {
-    $_.ExtensionData.EnterLockdownMode()
-    Write-Host "Lockdown enabled: $($_.Name)"
-}
-```
-
-**Exception users**: Add the VxRail Manager service account to the ESXi exception list if VxRail Manager needs direct host access (required for certain LCM operations). Review VxRail documentation for the specific version.
-
----
-
-## Encryption
-
-### vSAN Data-at-Rest Encryption
-
-Enable vSAN encryption to protect data stored on node disks. Requires a Key Management Server (KMS) or vCenter Native Key Provider.
-
-**vCenter → Cluster → Configure → vSAN → Services → Encryption → Enable**
-
-```powershell
-# Enable vSAN encryption (PowerCLI)
-# Ensure a KMS or NKP is already configured in vCenter
-Set-VsanClusterConfiguration -Cluster "VxRail-Cluster" -EncryptionEnabled $true
-```
-
-**Warning**: Enabling vSAN encryption on an existing cluster triggers a full disk reformat (data rebuild). This takes several hours depending on the amount of data. Ensure the cluster has sufficient capacity to tolerate nodes being in rebuild state.
-
-Before enabling:
-- Confirm VxRail cluster has enough available capacity (>25% free)
-- Schedule a maintenance window
-- Back up all critical VMs
-- Confirm the KMS/NKP is healthy and accessible
-
-### vSAN Data-in-Transit Encryption
-
-Encrypts vSAN network traffic between nodes. Does not require a KMS. Enables without a full data rebuild.
-
-**vCenter → Cluster → Configure → vSAN → Services → In-Transit Encryption → Enable**
-
-Enable this on all production VxRail clusters — the overhead is minimal on modern hardware (AES-NI accelerated).
-
-### iDRAC Secure Boot and Firmware Verification
-
-Ensure iDRAC Secure Boot is enabled to verify firmware signatures:
-
-```bash
-# Check Secure Boot status via RACADM
-racadm get BIOS.SysProfileSettings.SecureBoot
-# Expected: Enabled
-
-# Check iDRAC firmware version
-racadm getversion -f idrac
-```
-
-Keep iDRAC firmware current — Dell includes iDRAC firmware updates in VxRail LCM bundles, so staying on current LCM versions addresses iDRAC CVEs automatically.
-
----
-
-## Hardening Checklist
-
-### VxRail Manager
-
-- [ ] `mystic` default password changed; password stored in vault
-- [ ] LDAP configured; AD groups mapped to VxRail Manager roles
-- [ ] API access restricted to admin jump hosts at network layer
-- [ ] SSH to VxRail Manager VM restricted to admin jump hosts (port 22)
-- [ ] VxRail Manager VM backed up (not just snapshot)
-
-### iDRAC (Per Node)
-
-- [ ] Default `root`/`Calvin` credentials changed on all iDRAC interfaces
-- [ ] iDRAC IP reachable only from OOB management network (not from VM subnets)
-- [ ] iDRAC LDAP configured for centralised authentication
-- [ ] iDRAC firmware current (managed via VxRail LCM bundles)
-- [ ] iDRAC Secure Boot enabled
-
-### vSphere / ESXi
-
-- [ ] Normal Lockdown Mode enabled on all VxRail hosts
-- [ ] SSH disabled on all hosts (`TSM-SSH` service stopped)
-- [ ] ESXi Shell disabled (`TSM` service stopped)
-- [ ] Host profiles applied and all hosts compliant
-- [ ] vSAN data-at-rest encryption enabled (if required by data classification)
-- [ ] vSAN in-transit encryption enabled
-- [ ] vCenter backup current (VAMI, daily)
-- [ ] NKP backup downloaded and stored securely (if using Native Key Provider)
-
-### Network
-
-- [ ] Management network segregated from VM networks (separate VLANs)
-- [ ] vSAN network not reachable from VM subnets
-- [ ] iDRAC on dedicated OOB VLAN
-- [ ] vCenter VAMI port 5480 restricted to admin subnets
-- [ ] NSX DFW rules applied if NSX is deployed on the VxRail cluster
-
----
-
-## Dell SupportAssist / Secure Remote Services
-
-Dell SupportAssist provides proactive monitoring and automated case creation for VxRail hardware faults. When enabled, Dell receives hardware telemetry from iDRAC and can proactively dispatch parts.
-
-Enable SupportAssist: **VxRail Plugin → Support → SupportAssist → Enable**
-
-Security considerations:
-- SupportAssist communicates outbound to Dell's cloud (no inbound connection required)
-- All data is transmitted over TLS
-- Limit the types of data shared to hardware health only (not application-level data)
-- Review and confirm data sharing scope before enabling in regulated environments (PCI, HIPAA)
-
-```bash
-# Check SupportAssist status via API
-curl -sk \
-  -H "Authorization: Basic $(echo -n 'mystic:password' | base64)" \
-  "https://<vxrail-manager-ip>/rest/vxm/v1/support-assist/status"
-```
+</div>
