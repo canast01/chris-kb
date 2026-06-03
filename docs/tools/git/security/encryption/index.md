@@ -1,3 +1,5 @@
+# Git — Encryption
+
 ```bash
 # Verify SSH cipher negotiated for a Git host
 ssh -vvv git@github.com 2>&1 | grep -E "kex|cipher|mac"

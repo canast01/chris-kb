@@ -1,3 +1,5 @@
+# Confluence — Authentication
+
 ```yaml
 Recommended SAML configuration:
 - Sign Authentication Requests: Enabled

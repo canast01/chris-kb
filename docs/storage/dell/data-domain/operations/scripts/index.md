@@ -1,3 +1,5 @@
+# Dell Data Domain Scripts
+
 ```bash
 #!/bin/bash
 # dd_health_check.sh — Daily health check for a Dell Data Domain appliance

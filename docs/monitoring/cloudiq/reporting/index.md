@@ -1,3 +1,5 @@
+# CloudIQ — Reporting
+
 ```bash
 # Trigger an on-demand health report via CloudIQ API
 curl -sk -X POST \

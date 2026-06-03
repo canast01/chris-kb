@@ -1,3 +1,5 @@
+# GitHub Actions — Scripts
+
 ```bash
 #!/bin/bash
 # rotate-secrets.sh — Rotate GitHub secrets from HashiCorp Vault

@@ -1,3 +1,5 @@
+# Jira — Install and Upgrade
+
 ```bash
 # List all installed apps and versions
 curl -s -u "${JIRA_USER}:${JIRA_TOKEN}" \

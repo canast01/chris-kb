@@ -1,3 +1,5 @@
+# Windows Server — Hardening
+
 ```powershell
 # Import Microsoft Security Baseline GPO backup
 # 1. Download SCT from Microsoft Download Center

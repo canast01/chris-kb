@@ -1,3 +1,5 @@
+# Git — Health Checks
+
 ```bash
 # Basic integrity check
 git fsck

@@ -1,3 +1,5 @@
+# GitHub Actions — Authentication
+
 ```yaml
 # Default token usage
 jobs:

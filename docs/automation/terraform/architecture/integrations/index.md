@@ -1,3 +1,5 @@
+# Terraform — Integrations
+
 ```hcl
 terraform {
   required_providers {

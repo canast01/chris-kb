@@ -1,3 +1,5 @@
+# Performance — Failure Testing
+
 ```bash
 # Kill a process (simulate crash)
 kill -9 $(pgrep nginx)

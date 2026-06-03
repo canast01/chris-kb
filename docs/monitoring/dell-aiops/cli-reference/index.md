@@ -1,3 +1,5 @@
+# Dell AIOps — CLI and API Reference
+
 ```bash
 # Obtain access token
 curl -s -X POST "https://api.cloudiq.dell.com/auth/oauth/v2/token" \

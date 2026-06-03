@@ -1,3 +1,5 @@
+# Confluence — Hardening
+
 ```yaml
 Administrator account policy:
 - Maximum 3–4 accounts in confluence-administrators

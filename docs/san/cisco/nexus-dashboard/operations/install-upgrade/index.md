@@ -1,3 +1,5 @@
+# Cisco Nexus Dashboard — Operations Install & Upgrade
+
 ```bash
 # SSH to node 1 (the designated primary)
 ssh ndadmin@nd-dc1-1.corp.example.com

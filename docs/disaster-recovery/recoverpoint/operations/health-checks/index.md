@@ -1,3 +1,5 @@
+# RecoverPoint — Health Checks
+
 ```bash
 # SSH to RPA cluster management IP
 ssh admin@<rpa-cluster-ip>

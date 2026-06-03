@@ -1,3 +1,5 @@
+# AWS Troubleshooting — Common Issues
+
 ```bash
 # View the stack events to identify the failed resource
 aws cloudformation describe-stack-events \

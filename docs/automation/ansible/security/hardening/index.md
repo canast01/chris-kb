@@ -1,3 +1,5 @@
+# Ansible — Hardening
+
 ```bash
 # Dedicated control node — no shared use
 # RHEL/Rocky 9 minimal install

@@ -1,3 +1,5 @@
+# Confluence — Encryption
+
 ```nginx
 # /etc/nginx/conf.d/confluence.conf
 server {

@@ -1,3 +1,5 @@
+# Aria Automation — Scripts Reference
+
 ```powershell
 # Get-FailedDeployments.ps1
 # Returns all deployments that failed in the last 24 hours.

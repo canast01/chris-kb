@@ -1,3 +1,5 @@
+# AWS Encryption — At Rest & In Transit
+
 ```bash
 # Create a CMK with key rotation enabled
 aws kms create-key \

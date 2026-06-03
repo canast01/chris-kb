@@ -1,3 +1,5 @@
+# vRNI Health Checks
+
 ```bash
 TOKEN=$(curl -sk -X POST "https://aon.example.local/api/ni/auth/token" \
   -H "Content-Type: application/json" \

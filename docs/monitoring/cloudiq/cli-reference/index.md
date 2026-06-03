@@ -1,3 +1,5 @@
+# CloudIQ — CLI and API Reference
+
 ```bash
 # Request an access token
 curl -X POST https://cloudiq.apis.dell.com/auth/oauth/v2/token   -H "Content-Type: application/x-www-form-urlencoded"   -d "grant_type=client_credentials&client_id=<client_id>&client_secret=<client_secret>"

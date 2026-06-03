@@ -1,3 +1,5 @@
+# vSphere Replication — Common Issues
+
 ```text
 ┌─────────────────────────────────────────────────────────────────┐
 │  Symptom                  Check                  Fix                                                  │

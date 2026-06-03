@@ -1,3 +1,5 @@
+# RASR — Encryption
+
 ```bash
 # Unity — check Data at Rest Encryption status
 uemcli /sys/security/encryption show

@@ -1,3 +1,5 @@
+# RASR — Authentication
+
 ```yaml
 Authentication requirements:
 - Minimum: local accounts with strong passwords (20+ character)

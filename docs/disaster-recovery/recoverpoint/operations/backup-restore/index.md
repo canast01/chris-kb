@@ -1,3 +1,5 @@
+# RecoverPoint — Backup & Restore
+
 ```bash
 # Connect to RecoverPoint appliance
 ssh admin@rpa01.example.com

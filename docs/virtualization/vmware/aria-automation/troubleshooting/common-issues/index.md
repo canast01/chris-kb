@@ -1,3 +1,5 @@
+# Aria Automation — Common Issues
+
 ```bash
 # Validate a blueprint via API before publishing
 TOKEN=<your-token>

@@ -1,3 +1,5 @@
+# Pure1 — CLI and API Reference
+
 ```bash
 # Generate RSA key pair for Pure1 API auth
 openssl genrsa -out pure1-private.pem 2048

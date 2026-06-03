@@ -1,3 +1,5 @@
+# Brocade SANnav — Authentication
+
 ```bash
 # Copy CA cert to SANnav appliance
 scp corp-ca.crt admin@sannav-dc1.corp.example.com:/tmp/

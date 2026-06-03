@@ -1,3 +1,5 @@
+# Nexus Dashboard — CLI Reference
+
 ```bash
 # SSH to Nexus Dashboard
 ssh rescue-user@<nd_fqdn>

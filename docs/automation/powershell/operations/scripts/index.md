@@ -1,3 +1,5 @@
+# PowerShell — Scripts (Operations)
+
 ```powershell
 # vm-health-report.ps1
 # Usage: .\vm-health-report.ps1 -vCenter <hostname> -OutputPath .\report.csv

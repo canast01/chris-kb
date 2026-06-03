@@ -1,3 +1,5 @@
+# Nexus Dashboard — Integrations
+
 ```bash
 # List installed services on Nexus Dashboard
 curl -sk -X GET \

@@ -1,3 +1,5 @@
+# Dell Data Domain Escalation
+
 ```bash
 # 1. System identification
 system show  # DDOS version, serial number, model

@@ -1,3 +1,5 @@
+# Integration — Time Synchronization (NTP)
+
 ```bash
 # Status overview
 chronyc tracking

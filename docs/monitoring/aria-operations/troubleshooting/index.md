@@ -1,3 +1,5 @@
+# Aria Operations — Troubleshooting (Monitoring)
+
 ```bash
 # Check adapter instance status via API
 curl -sk -X GET \

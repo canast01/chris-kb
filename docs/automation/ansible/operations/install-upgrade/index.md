@@ -1,3 +1,5 @@
+# Ansible — Install & Upgrade
+
 ```bash
 dnf install -y epel-release
 dnf install -y ansible-core    # minimal, no bundled collections

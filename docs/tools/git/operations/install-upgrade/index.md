@@ -1,3 +1,5 @@
+# Git — Install and Upgrade
+
 ```bash
 # Install from distro repo
 sudo apt-get update && sudo apt-get install -y git

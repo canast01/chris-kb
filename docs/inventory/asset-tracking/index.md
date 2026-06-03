@@ -1,3 +1,5 @@
+# Inventory — Asset Tracking
+
 ```bash
 # Linux — server hardware info
 dmidecode -t system | grep -E "Manufacturer|Product|Serial|UUID"

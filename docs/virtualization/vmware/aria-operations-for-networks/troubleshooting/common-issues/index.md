@@ -1,3 +1,5 @@
+# vRNI Common Issues
+
 ```bash
 # From Collector VM — test connectivity to Platform VM
 curl -sk https://<platform-vm-ip>/api/ni/auth/token

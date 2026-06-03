@@ -1,3 +1,5 @@
+# NetApp Keystone — CLI Reference
+
 ```bash
 # Exchange client credentials for a bearer token
 TOKEN=$(curl -s -X POST "https://netapp-cloud-account.auth0.com/oauth/token" \

@@ -1,3 +1,5 @@
+# Networking — Troubleshooting
+
 ```bash
 nslookup <hostname>
 dig <hostname>

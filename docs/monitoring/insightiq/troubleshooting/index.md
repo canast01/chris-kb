@@ -1,3 +1,5 @@
+# InsightIQ — Troubleshooting
+
 ```bash
 # Verify InsightIQ can reach the PowerScale API from the appliance
 ssh admin@insightiq.example.com

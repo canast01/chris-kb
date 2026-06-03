@@ -1,3 +1,5 @@
+# Inventory — Support Contracts
+
 ```bash
 # Query contract CSV for near-expiry items
 # Columns: Vendor,Product,ContractNumber,ExpiryDate,RenewalOwner,SLATier

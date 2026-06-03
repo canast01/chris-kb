@@ -1,3 +1,5 @@
+# GitHub Actions — Escalation
+
 ```bash
 # Check GitHub's status page
 open https://githubstatus.com

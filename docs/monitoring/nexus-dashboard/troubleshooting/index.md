@@ -1,3 +1,5 @@
+# Nexus Dashboard — Troubleshooting (Monitoring)
+
 ```bash
 # SSH to the Nexus Dashboard primary node
 ssh rescue-user@nexus-dashboard.example.com

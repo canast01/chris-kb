@@ -1,3 +1,5 @@
+# Cisco Nexus Dashboard — Operations Scripts
+
 ```bash
 #!/usr/bin/env bash
 # nd-auth.sh — obtain a Nexus Dashboard API token

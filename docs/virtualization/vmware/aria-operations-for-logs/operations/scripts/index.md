@@ -1,3 +1,5 @@
+# Aria Operations for Logs — Scripts Reference
+
 ```bash
 #!/usr/bin/env bash
 # Usage: ./vrli-health.sh <vrli-fqdn> <username> <password>

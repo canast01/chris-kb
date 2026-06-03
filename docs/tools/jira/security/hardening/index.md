@@ -1,3 +1,5 @@
+# Jira — Hardening
+
 ```bash
 # Audit current Jira administrators
 curl -u "admin:TOKEN" \

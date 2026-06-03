@@ -1,3 +1,5 @@
+# Ansible — Authentication
+
 ```bash
 # ED25519 — preferred (faster, smaller, equally secure)
 ssh-keygen -t ed25519 -C "ansible-control@prod" -f ~/.ssh/ansible_ed25519 -N ""

@@ -1,3 +1,5 @@
+# Aria Operations for Logs — Health Checks
+
 ```bash
 # Check all cluster nodes via API
 curl -sk -u 'admin:<password>' \

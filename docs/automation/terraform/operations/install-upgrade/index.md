@@ -1,3 +1,5 @@
+# Terraform — Install & Upgrade
+
 ```bash
 # Ubuntu / Debian — via HashiCorp apt repo
 sudo apt-get update && sudo apt-get install -y gnupg software-properties-common curl

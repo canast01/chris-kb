@@ -1,3 +1,5 @@
+# Inventory — License Management
+
 ```bash
 # Debian / Ubuntu — list installed packages
 dpkg -l | awk '{print $2, $3}' | grep -v "^ii"  # filter to installed only

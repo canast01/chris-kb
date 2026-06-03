@@ -1,3 +1,5 @@
+# NSX — Diagnostics
+
 ```bash
 # SSH to NSX Manager node
 # Live log tail

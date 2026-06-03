@@ -1,3 +1,5 @@
+# Aria Operations for Logs — Install and Upgrade
+
 ```bash
 # From master node — confirm all cluster members
 curl -sk -u 'admin:<password>' \

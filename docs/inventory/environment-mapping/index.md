@@ -1,3 +1,5 @@
+# Inventory — Environment Mapping
+
 ```markdown
 ## Application: Payments API
 

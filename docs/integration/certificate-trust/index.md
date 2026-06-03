@@ -1,3 +1,5 @@
+# Integration — Certificate Trust
+
 ```bash
 # Ubuntu / Debian
 cp internal-ca.crt /usr/local/share/ca-certificates/internal-ca.crt

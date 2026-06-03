@@ -1,3 +1,5 @@
+# PowerShell — Install & Upgrade
+
 ```powershell
 # Using winget (Windows 10/11)
 winget install --id Microsoft.PowerShell --source winget

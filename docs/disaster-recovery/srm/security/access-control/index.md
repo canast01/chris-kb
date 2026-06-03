@@ -1,4 +1,4 @@
-# SRM — Access Control
+# SRM — Access Control (Disaster Recovery)
 
 ```yaml
 Privileges to include:

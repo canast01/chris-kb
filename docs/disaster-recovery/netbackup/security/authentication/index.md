@@ -1,3 +1,5 @@
+# NetBackup — Authentication
+
 ```bash
 # List all certificates in the NetBackup CA
 nbcertcmd -listCACertDetails

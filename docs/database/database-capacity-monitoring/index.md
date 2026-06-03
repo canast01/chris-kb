@@ -1,3 +1,5 @@
+# Database — Capacity Monitoring
+
 ```sql
 -- Database sizes
 SELECT datname AS database,

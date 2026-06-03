@@ -1,3 +1,5 @@
+# Aria Automation — Diagnostics
+
 ```yaml
 formatVersion: 1
 inputs:

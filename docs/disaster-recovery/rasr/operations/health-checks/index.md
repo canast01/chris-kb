@@ -1,3 +1,5 @@
+# RASR — Health Checks
+
 ```powershell
 # Collect all key indicators in one pass
 $rasrKey = "HKLM:\SOFTWARE\Dell\RASR"

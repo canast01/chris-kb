@@ -1,3 +1,5 @@
+# Inventory — Hardware Lifecycle
+
 ```bash
 # Dell — check and update firmware via iDRAC
 racadm getversion                        # current firmware versions

@@ -1,3 +1,5 @@
+# Jira — Common Issues
+
 ```bash
 # Check for OOM events in the last 24h
 grep -i "OutOfMemoryError\|Java heap space\|GC overhead\|heap dump" \

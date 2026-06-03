@@ -1,3 +1,5 @@
+# NSX — Health Checks
+
 ```bash
 # SSH to any NSX Manager node
 nsxcli

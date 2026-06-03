@@ -1,3 +1,5 @@
+# Brocade SANnav — Troubleshooting Common Issues
+
 ```bash
 # Step 1: Confirm SANnav IP is the trap destination on the switch (FOS CLI)
 snmpconfig --show trapdest

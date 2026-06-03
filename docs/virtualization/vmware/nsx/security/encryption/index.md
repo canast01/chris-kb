@@ -1,3 +1,5 @@
+# NSX — Encryption
+
 ```bash
 # From a client machine — test TLS negotiation
 openssl s_client -connect nsx-manager.example.local:443 -tls1   # Should fail (TLS 1.0 rejected)

@@ -1,3 +1,5 @@
+# Brocade SANnav — Encryption
+
 ```bash
 ssh admin@sannav-dc1.corp.example.com
 

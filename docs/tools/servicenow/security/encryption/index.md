@@ -1,3 +1,5 @@
+# ServiceNow Encryption
+
 ```javascript
 // Verify TLS certificate validation is enforced for outbound calls
 // System Properties → glide.http.ssl_check_cert = true (default)

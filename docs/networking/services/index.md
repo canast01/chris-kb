@@ -1,3 +1,5 @@
+# Networking — Network Services
+
 ```bash
 nslookup <hostname>
 dig <hostname>

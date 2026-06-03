@@ -1,3 +1,5 @@
+# Cisco MDS 9000 — CLI Reference
+
 ```bash
 show version           # NX-OS version, uptime, hardware model
 show inventory         # chassis, modules, transceivers with serial numbers

@@ -1,3 +1,5 @@
+# SRDF/S — Procedures
+
 ```bash
 # Capture baseline state before the window
 symrdf query -g <dgname> > /tmp/srdf_s_prechange_$(date +%Y%m%d_%H%M).txt

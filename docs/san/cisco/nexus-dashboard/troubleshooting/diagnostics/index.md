@@ -1,3 +1,5 @@
+# Cisco Nexus Dashboard — Troubleshooting Diagnostics
+
 ```bash
 ssh ndadmin@nd-dc1-1.corp.example.com
 

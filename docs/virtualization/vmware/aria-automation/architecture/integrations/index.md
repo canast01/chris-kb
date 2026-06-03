@@ -1,3 +1,5 @@
+# Aria Automation — Integrations
+
 ```bash
 # Add vCenter cloud account via API
 curl -sk -X POST -H "Authorization: Bearer $TOKEN" \

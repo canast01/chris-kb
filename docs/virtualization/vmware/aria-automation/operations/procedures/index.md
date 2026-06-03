@@ -1,3 +1,5 @@
+# Aria Automation — Operational Procedures
+
 ```bash
 # List expired deployments via API
 TOKEN=<your-token>

@@ -1,3 +1,5 @@
+# Dell COD Diagnostics
+
 ```bash
 # Check current license status for the array
 symlicense -sid <SID> list

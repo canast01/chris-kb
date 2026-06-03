@@ -1,3 +1,5 @@
+# Pure1 — Integration Guide
+
 ```bash
 # Verify array connectivity from Purity CLI
 purearray list --connection

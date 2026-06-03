@@ -1,3 +1,5 @@
+# Confluence — CLI Reference
+
 ```bash
 # Set common variables to avoid repetition
 export CF_URL="https://confluence.example.com"

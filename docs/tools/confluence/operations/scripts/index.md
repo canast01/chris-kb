@@ -1,3 +1,5 @@
+# Confluence — Operations Scripts
+
 ```bash
 # Common variables — set these in your shell or CI/CD environment
 export CF_URL="https://confluence.example.com"

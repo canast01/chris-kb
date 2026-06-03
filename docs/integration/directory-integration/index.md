@@ -1,3 +1,5 @@
+# Integration — Directory Integration (LDAP / Active Directory)
+
 ```bash
 # Install required packages (RHEL/Rocky)
 dnf install -y realmd sssd adcli samba-common-tools krb5-workstation

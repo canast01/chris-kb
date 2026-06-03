@@ -1,3 +1,5 @@
+# Aria Automation — Escalation
+
 ```bash
 # SSH to the Aria Automation appliance
 ssh root@vra-prod-01.example.local

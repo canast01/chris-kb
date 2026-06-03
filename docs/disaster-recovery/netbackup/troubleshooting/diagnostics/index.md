@@ -1,3 +1,5 @@
+# NetBackup — Diagnostics
+
 ```bash
 # VxUL logs are stored under:
 /usr/openv/logs/

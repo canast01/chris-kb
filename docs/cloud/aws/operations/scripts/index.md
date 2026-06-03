@@ -1,3 +1,5 @@
+# AWS Operations — Scripts & Automation
+
 ```bash
 #!/bin/bash
 set -euo pipefail

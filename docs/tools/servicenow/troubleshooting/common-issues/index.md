@@ -1,3 +1,5 @@
+# ServiceNow Common Issues
+
 ```javascript
 // To find long-running transactions, run in Background Scripts:
 var gr = new GlideRecord('sys_running_transaction');

@@ -1,3 +1,5 @@
+# Confluence — Common Issues
+
 ```bash
 # Check heap size in setenv.sh
 grep -E "(Xmx|Xms)" /opt/atlassian/confluence/bin/setenv.sh

@@ -1,3 +1,5 @@
+# ServiceNow Authentication
+
 ```javascript
 // Test LDAP configuration from ServiceNow Script Editor
 var ldap = new GlideLDAP();

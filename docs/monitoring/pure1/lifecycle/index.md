@@ -1,3 +1,5 @@
+# Pure1 — Lifecycle Management
+
 ```bash
 # From Purity CLI — verify Pure1 connectivity
 purearray list --connection

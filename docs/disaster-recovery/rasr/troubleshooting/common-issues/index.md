@@ -1,3 +1,5 @@
+# RASR — Common Issues
+
 ```powershell
 # Check service status
 Get-Service RASRAgent

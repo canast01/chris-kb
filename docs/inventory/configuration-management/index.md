@@ -1,3 +1,5 @@
+# Inventory — Configuration Management (CMDB)
+
 ```bash
 # Run playbook against all servers to enforce baseline
 ansible-playbook -i inventory/ site.yml --check   # dry-run first

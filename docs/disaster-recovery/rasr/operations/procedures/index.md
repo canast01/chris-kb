@@ -1,3 +1,5 @@
+# RASR — Procedures
+
 ```powershell
 # Step 1: Verify agent is running
 Get-Service RASRAgent   # must be Running

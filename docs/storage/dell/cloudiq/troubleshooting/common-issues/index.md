@@ -1,3 +1,5 @@
+# Dell CloudIQ Common Issues
+
 ```bash
 # SSH to the SCG appliance
 ssh admin@<scg-mgmt-ip>

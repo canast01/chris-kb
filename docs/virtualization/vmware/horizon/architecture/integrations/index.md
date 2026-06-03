@@ -1,3 +1,5 @@
+# VMware Horizon — Integrations
+
 ```powershell
 # Verify domain join before CS install
 [System.DirectoryServices.ActiveDirectory.Domain]::GetCurrentDomain()

@@ -1,3 +1,5 @@
+# Confluence — Install and Upgrade
+
 ```bash
 # Record current version
 curl -s -H "Authorization: Bearer $CF_TOKEN" \

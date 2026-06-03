@@ -1,3 +1,5 @@
+# FlashArray — Encryption
+
 ```text
 ┌────────────────────────────────────────────────────────────┐
 │  Data at Rest (always-on, no config required)                                                         │

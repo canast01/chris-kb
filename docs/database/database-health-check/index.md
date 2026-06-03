@@ -1,3 +1,5 @@
+# Database — Daily Health Check
+
 ```bash
 # PostgreSQL
 systemctl status postgresql

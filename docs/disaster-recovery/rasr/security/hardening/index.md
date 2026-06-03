@@ -1,3 +1,5 @@
+# RASR — Hardening
+
 ```bash
 # Disable unused management interfaces
 # Only HTTPS (443) should be allowed for web management

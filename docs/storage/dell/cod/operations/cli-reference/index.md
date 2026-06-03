@@ -1,3 +1,5 @@
+# Dell COD CLI Reference
+
 ```bash
 # --- Discover all arrays reachable from this host ---
 symcfg discover

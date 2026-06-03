@@ -1,3 +1,5 @@
+# Linux — Encryption
+
 ```bash
 # Install cryptsetup
 dnf install -y cryptsetup   # RHEL

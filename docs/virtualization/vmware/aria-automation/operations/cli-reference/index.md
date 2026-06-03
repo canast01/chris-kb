@@ -1,3 +1,5 @@
+# Aria Automation — CLI Reference
+
 ```bash
 # List all pods in the prelude namespace
 kubectl get pods -n prelude

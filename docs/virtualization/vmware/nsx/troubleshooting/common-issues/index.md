@@ -1,3 +1,5 @@
+# NSX — Common Issues
+
 ```bash
 # Step 1 — Confirm the VM's segment and gateway IP
 # Check segment config in NSX Manager UI or API

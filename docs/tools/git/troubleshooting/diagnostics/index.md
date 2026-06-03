@@ -1,3 +1,5 @@
+# Git — Diagnostics
+
 ```bash
 # Output to stderr (default)
 GIT_TRACE=1 git fetch origin

@@ -1,3 +1,5 @@
+# NSX — Access Control
+
 ```bash
 # List all role bindings (users and groups with assigned roles)
 curl -sk -u 'admin:password' \

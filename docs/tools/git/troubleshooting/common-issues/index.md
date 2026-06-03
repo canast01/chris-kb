@@ -1,3 +1,5 @@
+# Git — Common Issues
+
 ```bash
 # See which files are conflicted
 git status

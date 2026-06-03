@@ -1,3 +1,5 @@
+# Cisco DCNM — Diagnostics
+
 ```bash
 ssh root@dcnm-dc1.corp.example.com
 

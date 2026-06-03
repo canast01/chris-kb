@@ -1,3 +1,5 @@
+# RecoverPoint — Diagnostics
+
 ```bash
 # Via boxmgmt
 boxmgmt support collect_bundle

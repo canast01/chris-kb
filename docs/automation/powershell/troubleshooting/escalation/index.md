@@ -1,3 +1,5 @@
+# PowerShell — Escalation
+
 ```powershell
 # Run on the affected host and attach output to the ticket
 $PSVersionTable | ConvertTo-Json

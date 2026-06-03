@@ -1,3 +1,5 @@
+# RecoverPoint — Common Issues
+
 ```bash
 # Via boxmgmt SSH to RPA
 boxmgmt cg check_cg <CG-name>

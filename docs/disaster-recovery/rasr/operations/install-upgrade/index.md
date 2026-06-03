@@ -1,3 +1,5 @@
+# RASR — Install & Upgrade
+
 ```powershell
 # Install silently with logging
 Start-Process -FilePath ".\Dell_RASR_2.5.0_Setup.exe" `

@@ -1,3 +1,5 @@
+# Cisco DCNM — Operations Scripts
+
 ```bash
 #!/usr/bin/env bash
 # dcnm-auth.sh — obtain a DCNM session cookie

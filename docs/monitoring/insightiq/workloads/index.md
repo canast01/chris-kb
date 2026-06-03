@@ -1,3 +1,5 @@
+# InsightIQ — Workload Analysis
+
 ```bash
 # On PowerScale OneFS — real-time top clients by total throughput
 ssh admin@powerscale.example.com

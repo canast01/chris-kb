@@ -1,3 +1,5 @@
+# Jira — Authentication
+
 ```xml
 <!-- atlassian-user.xml snippet for LDAP (Data Center) -->
 <directory type="com.atlassian.crowd.directory.ActiveDirectory">

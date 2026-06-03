@@ -1,3 +1,5 @@
+# Dell AIOps — Reporting
+
 ```bash
 # Generate an executive health summary report
 curl -sk -X POST \

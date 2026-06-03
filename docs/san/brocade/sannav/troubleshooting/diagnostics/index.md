@@ -1,3 +1,5 @@
+# Brocade SANnav — Diagnostics
+
 ```bash
 # Temporarily set log level (resets on restart)
 sudo sed -i 's/level="INFO"/level="DEBUG"/' /opt/sannav/conf/log4j2.xml

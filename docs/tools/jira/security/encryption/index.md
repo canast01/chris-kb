@@ -1,3 +1,5 @@
+# Jira — Encryption
+
 ```nginx
 # /etc/nginx/sites-available/jira
 server {

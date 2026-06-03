@@ -1,3 +1,5 @@
+# NetBackup — Common Issues
+
 ```bash
 # Check bpcd is running on the client
 bpps -a | grep bpcd

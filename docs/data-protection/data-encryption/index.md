@@ -1,3 +1,5 @@
+# Data Protection — Data Encryption
+
 ```bash
 # Check if encrypted
 cryptsetup isLuks /dev/sdb && echo "LUKS" || echo "Not encrypted"

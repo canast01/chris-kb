@@ -1,3 +1,5 @@
+# Git — CLI Reference
+
 ```bash
 # Identity (required — used in every commit you make)
 git config --global user.name "Your Name"

@@ -1,3 +1,5 @@
+# Aria Operations Security Hardening
+
 ```bash
 # Verify current certificate subject and expiry
 echo | openssl s_client -connect vrops-prod-01.example.local:443 2>/dev/null | \

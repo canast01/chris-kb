@@ -1,3 +1,5 @@
+# Brocade Fabric OS — CLI Reference
+
 ```bash
 switchshow         # ports, state, speed, and connected WWNs — most useful daily command
 switchstatusshow   # overall switch health status (expected: HEALTHY)

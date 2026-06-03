@@ -1,3 +1,5 @@
+# Cisco Nexus Dashboard — Architecture Integrations
+
 ```bash
 # SSH to any ND cluster node
 ssh ndadmin@nd-node1.corp.example.com

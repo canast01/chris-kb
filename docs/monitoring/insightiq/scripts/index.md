@@ -1,3 +1,5 @@
+# InsightIQ — Scripts Reference
+
 ```python
 import requests
 from requests.auth import HTTPBasicAuth

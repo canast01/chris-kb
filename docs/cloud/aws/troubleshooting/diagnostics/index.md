@@ -1,3 +1,5 @@
+# AWS Diagnostics — Investigation Toolset
+
 ```bash
 aws sts get-caller-identity
 # Returns: UserId, Account, Arn — confirm you are in the correct account and role

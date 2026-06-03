@@ -1,3 +1,5 @@
+# Pure1 — Troubleshooting
+
 ```bash
 # Step 1: Check array connectivity from Purity CLI
 purearray list --connection

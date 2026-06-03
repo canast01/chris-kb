@@ -1,3 +1,5 @@
+# GitHub Actions — CLI Reference
+
 ```bash
 # macOS
 brew install gh

@@ -1,3 +1,5 @@
+# Integration — Service Integrations
+
 ```bash
 # Prometheus: check scrape targets
 curl -s http://prometheus:9090/api/v1/targets | jq '.data.activeTargets[] | {job:.labels.job, health:.health, error:.lastError}'

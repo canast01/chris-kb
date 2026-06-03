@@ -1,3 +1,5 @@
+# Database — Replication Check
+
 ```sql
 -- On PRIMARY: show connected replicas and lag
 SELECT client_addr, application_name, state,

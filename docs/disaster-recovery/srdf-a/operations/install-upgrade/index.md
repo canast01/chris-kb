@@ -1,3 +1,5 @@
+# SRDF/A — Install & Upgrade
+
 ```bash
 # Step 1 — Suspend SRDF/A replication on the device group
 symrdf -g <dgname> -sid <r1_sid> suspend -noprompt

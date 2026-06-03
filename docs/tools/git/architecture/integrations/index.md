@@ -1,3 +1,5 @@
+# Git — Integrations
+
 ```yaml
 # .github/workflows/ci.yml
 name: CI

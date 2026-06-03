@@ -1,3 +1,5 @@
+# Aria Operations Common Issues
+
 ```bash
 # SSH to primary node and inspect adapter state
 ssh admin@vrops-prod-01.example.local

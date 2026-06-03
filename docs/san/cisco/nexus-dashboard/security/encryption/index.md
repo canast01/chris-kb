@@ -1,3 +1,5 @@
+# Cisco Nexus Dashboard — Security Encryption
+
 ```bash
 # Check TLS version accepted
 openssl s_client -tls1 -connect nd-dc1.corp.example.com:443 </dev/null 2>&1 | grep "alert\|Cipher"

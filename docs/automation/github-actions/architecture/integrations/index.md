@@ -1,3 +1,5 @@
+# GitHub Actions — Integrations
+
 ```yaml
 permissions:
   id-token: write

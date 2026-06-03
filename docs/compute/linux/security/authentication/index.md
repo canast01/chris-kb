@@ -1,3 +1,5 @@
+# Linux — Authentication
+
 ```bash
 # Create a service account (no login shell, no home directory)
 useradd -r -s /sbin/nologin -M svcaccount

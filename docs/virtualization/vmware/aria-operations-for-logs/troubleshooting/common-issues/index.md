@@ -1,3 +1,5 @@
+# Aria Operations for Logs — Common Issues
+
 ```bash
 # Check ingestion stats from master node
 curl -sk -u 'admin:<password>' \

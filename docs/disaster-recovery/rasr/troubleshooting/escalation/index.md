@@ -1,3 +1,5 @@
+# RASR — Escalation
+
 ```powershell
 # RASR logs default location
 $logDir = "C:\Logs\RASR"

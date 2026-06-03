@@ -1,3 +1,5 @@
+# ServiceNow Hardening
+
 ```javascript
 // Bulk verify critical properties via Script Editor
 var criticalProps = {

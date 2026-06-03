@@ -1,3 +1,5 @@
+# Jira — CLI Reference
+
 ```bash
 export JIRA_URL="https://jira.example.com"
 export JIRA_USER="admin@example.com"

@@ -1,3 +1,5 @@
+# InsightIQ — CLI Reference
+
 ```bash
 # SSH to the InsightIQ appliance
 ssh administrator@<insightiq_fqdn>

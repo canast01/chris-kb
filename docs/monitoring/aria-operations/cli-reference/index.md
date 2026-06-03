@@ -1,3 +1,5 @@
+# Aria Operations — CLI Reference (Monitoring)
+
 ```bash
 # SSH to Aria Operations node
 ssh root@<ariaops_fqdn>

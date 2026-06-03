@@ -1,3 +1,5 @@
+# Dell COD Scripts
+
 ```bash
 #!/bin/bash
 # cod_capacity_report.sh — Report COD activated vs. reserve capacity on a PowerMax array

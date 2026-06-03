@@ -1,3 +1,5 @@
+# Git — Authentication
+
 ```bash
 # Generate Ed25519 key (preferred)
 ssh-keygen -t ed25519 -C "user@corp.example.com" -f ~/.ssh/id_ed25519_git

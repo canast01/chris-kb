@@ -1,3 +1,5 @@
+# RASR — Diagnostics
+
 ```powershell
 # View most recent RASR logs
 $logDir = "C:\Logs\RASR"

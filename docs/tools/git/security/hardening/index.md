@@ -1,3 +1,5 @@
+# Git — Hardening
+
 ```bash
 # Install pre-commit
 pip install pre-commit

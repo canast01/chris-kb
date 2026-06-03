@@ -1,3 +1,5 @@
+# PowerShell — Backup & Restore
+
 ```powershell
 # Locate and back up PowerShell profiles
 $ProfilePaths = @(

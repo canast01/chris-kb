@@ -1,3 +1,5 @@
+# Aria Operations for Logs — Diagnostics
+
 ```bash
 # Watch main application log in real time
 tail -f /var/log/loginsight/runtime.log

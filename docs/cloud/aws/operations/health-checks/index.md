@@ -1,3 +1,5 @@
+# AWS Operations — Health Checks
+
 ```bash
 # Check AWS Health for active issues affecting your account
 aws health describe-events \

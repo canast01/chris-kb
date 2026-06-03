@@ -1,3 +1,5 @@
+# AWS Security Hardening — CIS Baseline
+
 ```bash
 # Check root account has no access keys
 aws iam get-account-summary \

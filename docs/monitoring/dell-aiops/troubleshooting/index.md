@@ -1,3 +1,5 @@
+# Dell AIOps — Troubleshooting
+
 ```bash
 # List recent AI alerts with confidence scores
 curl -sk -X GET \

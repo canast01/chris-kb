@@ -1,3 +1,5 @@
+# Cisco MDS — Troubleshooting Diagnostics
+
 ```bash
 # Detailed single port status
 show interface fc1/1

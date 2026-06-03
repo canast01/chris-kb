@@ -1,3 +1,5 @@
+# Aria Operations for Logs — CLI Reference
+
 ```bash
 # SSH to the Log Insight appliance
 ssh admin@<li-appliance-fqdn>

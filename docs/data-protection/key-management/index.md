@@ -1,3 +1,5 @@
+# Data Protection — Key Management
+
 ```bash
 # Create a key
 aws kms create-key --description "prod-data-key" --key-usage ENCRYPT_DECRYPT

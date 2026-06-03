@@ -1,3 +1,5 @@
+# Integration — API Connectivity
+
 ```bash
 # HTTP status check
 curl -o /dev/null -sw "%{http_code} %{time_total}s\n" https://api.example.com/health

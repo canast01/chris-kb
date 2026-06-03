@@ -1,3 +1,5 @@
+# Cisco DCNM — Troubleshooting Common Issues
+
 ```bash
 # Step 1: Test SSH from DCNM to the switch
 ssh -o ConnectTimeout=5 -o BatchMode=yes dcnm_mgmt@<switch-ip> 'show version' 2>&1
