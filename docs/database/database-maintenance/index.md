@@ -1,3 +1,5 @@
+# Database — Maintenance Procedures
+
 ```sql
 -- Update statistics (safe at any time)
 ANALYZE;

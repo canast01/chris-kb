@@ -1,3 +1,5 @@
+# VMware Cloud Foundation — Install & Upgrade
+
 ```text
 ┌───────────────────────────── VMware Cloud Foundation — Install & Upgrade ─────────────────────────────┐
 │                                                                                                       │
@@ -110,8 +112,6 @@
 │         ▼                                                                                             │
 │  ⑤ vSAN firmware/driver (HCL-validated)                                                               │
 └──────────────────────────┬──────────────────────────┘
-```
-```text
 ```
 ```text
 ┌─────────────────────────────────────────────────────┐

@@ -1,3 +1,5 @@
+# VMware Horizon — Common Issues
+
 ```text
 ┌─────────────────────────────────── VMware Horizon — Common Issues ────────────────────────────────────┐
 │                                                                                                       │

@@ -1,3 +1,5 @@
+# VxRail — Upgrade Planning
+
 ```text
 ┌─────────────────────────────────────────────────────────────┐
 │  Phase 1: Plan          Phase 2: Pre-checks                                                           │

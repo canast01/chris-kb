@@ -1,3 +1,5 @@
+# VMware Cloud Foundation — Operational Scripts
+
 ```text
 ┌──────────────────────────── VMware Cloud Foundation — Operational Scripts ────────────────────────────┐
 │                                                                                                       │
@@ -91,8 +93,6 @@
 │  Task ID       = async operation ID; poll with Get-VCFTask until complete                             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-```text
 ```
 ```text
 ┌─────────────────────────────────────────────────────┐

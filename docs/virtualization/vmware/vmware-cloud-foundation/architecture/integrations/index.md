@@ -1,3 +1,5 @@
+# VMware Cloud Foundation — Integrations
+
 ```text
 ┌─────────────────────────────── VMware Cloud Foundation — Integrations ────────────────────────────────┐
 │                                                                                                       │
@@ -91,8 +93,6 @@
 │  SIEM       = Security Information and Event Management; log receiver                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-```text
 ```
 ```text
 ┌──────────────────────────────────────────────────────┐

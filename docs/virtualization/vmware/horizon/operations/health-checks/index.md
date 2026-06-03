@@ -1,3 +1,5 @@
+# VMware Horizon — Health Checks
+
 ```text
 ┌─────────────────────────────────── VMware Horizon — Health Checks ────────────────────────────────────┐
 │                                                                                                       │
@@ -91,8 +93,6 @@
 │  Session count = active + disconnected; both consume licence                                          │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-```text
 ```
 ```text
 ┌──────────────────┐

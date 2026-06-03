@@ -1,3 +1,5 @@
+# VMware Horizon — Encryption
+
 ```text
 ┌───────────────────────────────────── VMware Horizon — Encryption ─────────────────────────────────────┐
 │                                                                                                       │

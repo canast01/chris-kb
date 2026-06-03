@@ -112,9 +112,6 @@ Protected Site                        Recovery Site
 ```
          │                                      │
          └──── Replication (ABR or VR) ─────────┘
-```text
-```
-
 **Per-VM customization** — define exact IP, netmask, gateway, DNS per NIC per VM. Used when target IPs don't follow a simple subnet mapping.
 
 IP customization is applied using the Guest OS customization engine (VMware Tools required). If the VM does not have VMware Tools running, customization is skipped and the VM retains its protected-site IP (may cause routing issues at recovery site).

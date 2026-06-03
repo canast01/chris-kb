@@ -1,3 +1,5 @@
+# VMware Cloud Foundation — Authentication
+
 ```text
 ┌────────────────────────────── VMware Cloud Foundation — Authentication ───────────────────────────────┐
 │                                                                                                       │
@@ -91,8 +93,6 @@
 │  SAML to Aria = vIDM provides SAML assertions to Aria Operations/Logs                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-```text
 ```
 ```text
 ┌──────────────┐ ┌──────────────┐ ┌──────────────────┐

@@ -1,3 +1,5 @@
+# GitHub Actions — Access Control
+
 ```mermaid
 flowchart TD
     wfTrigger(["Workflow triggered"])

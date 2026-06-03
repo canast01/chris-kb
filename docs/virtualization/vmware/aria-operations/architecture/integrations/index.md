@@ -1,3 +1,5 @@
+# Aria Operations Integrations
+
 ```text
 ┌──────────────────────────────────── Aria Operations Integrations ─────────────────────────────────────┐
 │                                                                                                       │
@@ -94,8 +96,6 @@
 │  (email      │  │  (ITSM       │  │  (Slack, Teams,                                                   │
 │   alerts)    │  │   incidents) │  │   custom ITSM)                                                    │
 └──────────────┘  └──────────────┘  └────────────────┘
-```
-```text
 ```
 ```text
 ┌─────────────────────────────────────────────────────┐

@@ -1,3 +1,5 @@
+# Integration — Email Relay (SMTP)
+
 ```bash
 postfix reload
 ```

@@ -1,3 +1,5 @@
+# Aria Operations Backup & Restore
+
 ```text
 ┌────────────────────────────────── Aria Operations Backup & Restore ───────────────────────────────────┐
 │                                                                                                       │
@@ -87,8 +89,6 @@
 │  Metric Data         = Historical metrics NOT in CaSA backup; starts fresh on restore                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-```text
 ```
 ```text
 ┌─────────────────────────────────────────────────────┐

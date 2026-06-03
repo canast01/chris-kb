@@ -1,3 +1,5 @@
+# RASR — Architecture Integrations
+
 ```powershell
 Get-Service -Name "DellRASR" | Select-Object Status, StartType
 ```

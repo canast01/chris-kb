@@ -1,3 +1,5 @@
+# Windows Server — Authentication
+
 ```mermaid
 sequenceDiagram
     participant client as Client\n(workstation)

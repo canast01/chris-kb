@@ -1,3 +1,5 @@
+# VMware SRM — Common Issues
+
 ```text
 ┌───────────────────────────────────── VMware SRM — Common Issues ──────────────────────────────────────┐
 │                                                                                                       │

@@ -1,5 +1,5 @@
-```text
-```
+# FlashBlade — Encryption
+
 ```text
 ┌────────────────────────────────────────────────────────────┐
 │  Data at Rest (always-on)                                                                             │

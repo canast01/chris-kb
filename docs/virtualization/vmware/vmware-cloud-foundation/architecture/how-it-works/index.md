@@ -1,3 +1,5 @@
+# VMware Cloud Foundation — How It Works
+
 ```text
 ┌─────────────────────────────── VMware Cloud Foundation — How It Works ────────────────────────────────┐
 │                                                                                                       │
@@ -103,8 +105,6 @@
 │  4. Schedule window → SDDC Manager applies BOM                                                        │
 │  5. Post-upgrade validation                                                                           │
 └─────────────────────────────────────────────────────┘
-```
-```text
 ```
 ```text
 ┌─────────────────────────────────────────────────────┐

@@ -1,3 +1,5 @@
+# SRDF/A — Design Standards
+
 ```bash
 symrdf -g <rdfg> query -v | grep "Minimum Cycle Time"
 ```

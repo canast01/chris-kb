@@ -1,3 +1,5 @@
+# VMware Cloud Foundation — Access Control
+
 ```text
 ┌────────────────────────────── VMware Cloud Foundation — Access Control ───────────────────────────────┐
 │                                                                                                       │
@@ -91,8 +93,6 @@
 │  Service accounts= SDDC Mgr manages all component service credentials                                 │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-```text
 ```
 ```text
 ┌─────────────────────────────────────────────────────┐

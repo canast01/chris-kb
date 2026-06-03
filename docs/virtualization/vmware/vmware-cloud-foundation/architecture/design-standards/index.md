@@ -1,3 +1,5 @@
+# VMware Cloud Foundation — Design Standards
+
 ```text
 ┌───────────────────────────── VMware Cloud Foundation — Design Standards ──────────────────────────────┐
 │                                                                                                       │
@@ -91,8 +93,6 @@
 │  Upgrade order = VCF prescribes sequence; SDDC Mgr → vCenter → ESXi → NSX                             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-```text
 ```
 ```text
 ┌─────────────────────────────────────────────────────┐

@@ -1,6 +1,4 @@
 ```text
-```
-```text
 ┌─────────────────────────────────────────────────────────────┐
 │  Dell Support Portal / Offline Source                                                                 │
 │  Download VxRail Composite Bundle (.zip)                                                              │

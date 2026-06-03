@@ -1,3 +1,5 @@
+# SMB — Sessions
+
 ```text
 ┌────────────┐                              ┌─────────────────┐
 │  Client    │                              │   SMB Server                                              │

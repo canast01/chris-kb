@@ -1,3 +1,5 @@
+# VMware Cloud Foundation — Encryption
+
 ```text
 ┌──────────────────────────────── VMware Cloud Foundation — Encryption ─────────────────────────────────┐
 │                                                                                                       │
