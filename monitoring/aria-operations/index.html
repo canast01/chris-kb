@@ -4323,6 +4323,69 @@ VMware Aria Operations monitoring platform — architecture, health checks, capa
 <a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│                                                                                                       │
 <a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌──────────────────────────────── Aria Operations — Deployment Sequence ────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  Step 1 · Prerequisites                                                                               │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│  vCenter service account: read-only + deploy VM + push metrics permission                             │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│  Sizing: primary node 8 vCPU / 32 GB RAM / 512 GB disk (scale to cluster for &gt;500 VMs)                │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│  DNS A+PTR records for all Aria Ops nodes  ·  NTP sources reachable  ·  NTP synced                    │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│  Ports: 443 (HTTPS UI)  ·  443 (adapter to vCenter)  ·  514/udp (syslog in)                           │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│  Licence key for Aria Operations Advanced or Enterprise from Customer Connect                         │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│                                                                                                       │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│                                        │  deploy primary node OVA                                     │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│                                        ▼                                                              │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│  Step 2 · Primary Node                                                                                │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│  Deploy Aria Operations OVA to vCenter  ·  set IP, gateway, DNS, NTP during deployment                │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│  Power on  ·  open https://&lt;node-ip&gt;  ·  run initial setup wizard                                     │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│  Set admin password  ·  accept EULA  ·  activate licence (paste licence key)                          │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│  Wait for primary node to reach Running state  ·  takes 15–20 minutes on first boot                   │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│  Verify: Admin → Cluster Management  ·  primary node shows Online + Running                           │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│                                                                                                       │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│                                        │  add replica and data nodes                                  │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│                                        ▼                                                              │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│  Step 3 · Replica &amp; Data Nodes                                                                        │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│  Deploy additional OVAs for replica nodes (minimum 2 for HA cluster)                                  │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  During OVA deployment: set role to Data and set primary node IP as master                            │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  Nodes auto-register  ·  Admin → Cluster Management shows all nodes joining                           │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  Expand cluster to add analytics nodes for larger deployments (&gt;1000 VMs)                             │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│  Verify all nodes Online  ·  cluster quorum established  ·  metrics processing active                 │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│                                                                                                       │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│                                        │  deploy remote collectors                                    │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│                                        ▼                                                              │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  Step 4 · Remote Collectors                                                                           │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  Deploy Remote Collector OVA at each remote site or DMZ segment                                       │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  During deploy: set role to Remote Collector  ·  set primary node FQDN + shared key                   │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  RC registers to primary  ·  Admin → Remote Collectors shows RC Online                                │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  Assign data sources to RC to route collection through local collector (reduces WAN)                  │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  Verify RC health  ·  confirm data flowing from remote vCenter through RC                             │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│                                                                                                       │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│                                        │  add data sources and adapters                               │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│                                        ▼                                                              │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  Step 5 · Adapters &amp; Data Sources                                                                     │
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>│  Add vCenter adapter: Data Sources → Add → VMware vSphere  ·  enter vCenter FQDN + creds              │
+<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>│  Add NSX-T adapter  ·  vSAN adapter  ·  storage adapters (PowerStore, Pure, NetApp)                   │
+<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>│  Management packs: install from Marketplace for non-vSphere targets (AWS, Azure, SQL)                 │
+<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>│  Verify adapter collection status  ·  all adapters should show Collecting                             │
+<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>│  Allow 30 minutes for initial inventory walk  ·  verify VMs and hosts appear in dashboard             │
+<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>│                                                                                                       │
+<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>│                                        │  configure alerts and dashboards                             │
+<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>│                                        ▼                                                              │
+<a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a>│  Step 6 · Alerts &amp; Dashboards                                                                         │
+<a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+<a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a>│  Import management pack content  ·  activate relevant alert definitions per environment               │
+<a id="__codelineno-1-56" name="__codelineno-1-56" href="#__codelineno-1-56"></a>│  Configure notification plugins: SMTP  ·  ServiceNow  ·  Slack  ·  PagerDuty webhook                  │
+<a id="__codelineno-1-57" name="__codelineno-1-57" href="#__codelineno-1-57"></a>│  Tune noisy alerts: suppress known environment deviations  ·  set alert criticality                   │
+<a id="__codelineno-1-58" name="__codelineno-1-58" href="#__codelineno-1-58"></a>│  Create custom dashboards for: vSAN health, cluster capacity, VM rightsizing                          │
+<a id="__codelineno-1-59" name="__codelineno-1-59" href="#__codelineno-1-59"></a>│  Enable Continuous Availability (CA) if dual-site deployment  ·  configure witness node               │
+<a id="__codelineno-1-60" name="__codelineno-1-60" href="#__codelineno-1-60"></a>│  Baseline: document capacity headroom and first rightsizing recommendations                           │
+<a id="__codelineno-1-61" name="__codelineno-1-61" href="#__codelineno-1-61"></a>│                                                                                                       │
+<a id="__codelineno-1-62" name="__codelineno-1-62" href="#__codelineno-1-62"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <div class="kb-grid kb-grid-5">
 <a class="kb-card" href="architecture/"><strong>Architecture</strong><span>Deployment topology, cluster sizing, adapter configuration, and vCenter integration.</span></a>
 <a class="kb-card" href="design-standards/"><strong>Standards</strong><span>Naming conventions, build baseline, and configuration checklist.</span></a>

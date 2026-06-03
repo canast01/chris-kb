@@ -2929,6 +2929,69 @@ Cisco SAN knowledge base covering MDS switches, DCNM, and Nexus Dashboard. Inclu
 <a id="__codelineno-0-67" name="__codelineno-0-67" href="#__codelineno-0-67"></a>│                                                                                                       │
 <a id="__codelineno-0-68" name="__codelineno-0-68" href="#__codelineno-0-68"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌──────────────────────────────── Cisco MDS SAN — Fabric Build Sequence ────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  Step 1 · Physical Readiness                                                                          │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│  Rack MDS 9000 directors or fabric switches  ·  dual power feeds to separate PDUs                     │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│  ISL cables between directors  ·  SFP type must match (SWL/LWL/ELWL per distance)                     │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│  Management: OOB GigE port  ·  assign IP via console (serial cable, 9600 baud)                        │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│  Upgrade NX-OS to target version  ·  verify supervisor and line card firmware                         │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│  DNS A-records for all switch management FQDNs  ·  NTP reachable from management VRF                  │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│                                                                                                       │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│                                        │  complete NX-OS initial configuration                        │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│                                        ▼                                                              │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│  Step 2 · NX-OS Initialisation                                                                        │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│  Initial setup script on first boot  ·  hostname, admin password, management IP                       │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│  Configure management VRF: ip route 0.0.0.0/0 vrf management &lt;gateway&gt;                                │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│  Enable SSH  ·  disable Telnet  ·  configure AAA to RADIUS/TACACS+ for production                     │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│  Set NTP server  ·  set timezone  ·  verify with show clock and show ntp status                       │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│  Install and activate Feature Set: feature fport-channel-trunk  ·  feature npv if needed              │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│                                                                                                       │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│                                        │  configure VSANs and port channels                           │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│                                        ▼                                                              │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│  Step 3 · VSANs &amp; Port Channels                                                                       │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│  Create VSANs: vsan database  ·  vsan &lt;id&gt; name &lt;name&gt;  ·  assign to interfaces                       │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  Create port channels for ISLs: interface port-channel &lt;n&gt;  ·  channel-group &lt;id&gt; force               │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  Assign F-ports (host) and E-ports (ISL) per VSAN  ·  no switchport on FC interfaces                  │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  Verify VSAN membership with show vsan membership  ·  check ISL state with show topology              │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│  Enable FSPF load balancing on port channels for multi-path ISL traffic distribution                  │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│                                                                                                       │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│                                        │  build device-alias database and zones                       │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│                                        ▼                                                              │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  Step 4 · Device Aliases + Zoning                                                                     │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  Create device-alias database: device-alias name &lt;alias&gt; pwwn &lt;wwn&gt;  ·  commit                        │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  Create zones using device-alias names (not raw WWNs) for maintainability                             │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  zone name &lt;zone&gt;  ·  member device-alias &lt;alias&gt;  ·  one initiator per zone                          │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  Create zoneset  ·  add all zones  ·  zoneset activate name &lt;set&gt; vsan &lt;id&gt;                           │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  Verify: show zoneset active  ·  show fcns database  ·  no stale entries                              │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│                                                                                                       │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│                                        │  validate host and array logins                              │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│                                        ▼                                                              │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  Step 5 · Host + Array Login                                                                          │
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>│  Connect host HBAs  ·  confirm FLOGI in show flogi database  ·  per-VSAN scope                        │
+<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>│  Confirm device-alias auto-learnt or manually bound to PWWN                                           │
+<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>│  Connect array front-end ports  ·  verify target FLOGI and PLOGI exchange                             │
+<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>│  Run show fcns database vsan &lt;id&gt; to confirm full N-port visibility                                   │
+<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>│  Validate LUN masking scope matches zone  ·  run I/O test from host                                   │
+<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>│                                                                                                       │
+<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>│                                        │  deploy Nexus Dashboard Fabric Controller                    │
+<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>│                                        ▼                                                              │
+<a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a>│  Step 6 · Nexus Dashboard &amp; NDFC                                                                      │
+<a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+<a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a>│  Deploy Nexus Dashboard OVA (3 master nodes or 1 for lab)  ·  assign management IP                    │
+<a id="__codelineno-1-56" name="__codelineno-1-56" href="#__codelineno-1-56"></a>│  Install NDFC (formerly DCNM) service on Nexus Dashboard  ·  enable SAN controller                    │
+<a id="__codelineno-1-57" name="__codelineno-1-57" href="#__codelineno-1-57"></a>│  Add MDS fabrics via Discover  ·  SSH credentials required  ·  topology auto-builds                   │
+<a id="__codelineno-1-58" name="__codelineno-1-58" href="#__codelineno-1-58"></a>│  Configure SNMP trap and syslog forwarding from all switches to NDFC                                  │
+<a id="__codelineno-1-59" name="__codelineno-1-59" href="#__codelineno-1-59"></a>│  Enable performance monitoring  ·  configure fabric health and zoning drift alerts                    │
+<a id="__codelineno-1-60" name="__codelineno-1-60" href="#__codelineno-1-60"></a>│  Export zone config backups to NDFC  ·  document port inventory for CMDB                              │
+<a id="__codelineno-1-61" name="__codelineno-1-61" href="#__codelineno-1-61"></a>│                                                                                                       │
+<a id="__codelineno-1-62" name="__codelineno-1-62" href="#__codelineno-1-62"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="mds/"><strong>Cisco MDS</strong><span>MDS 9000 series switches — zoning, fabric configuration, CLI, health checks, and troubleshooting.</span></a>
 <a class="kb-card" href="cisco-dcnm/"><strong>DCNM</strong><span>Data Center Network Manager — SAN management, discovery, and monitoring.</span></a>

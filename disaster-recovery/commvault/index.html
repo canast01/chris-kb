@@ -3692,6 +3692,67 @@ Commvault enterprise backup and recovery — CommServe command and control, Medi
 <a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>│  CommCell DR    = Disaster recovery copy of the CommServe for failover continuity                     │
 <a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌────────────────────────────────── Commvault — Installation Sequence ──────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  Step 1 · Prerequisites                                                                               │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│  Windows Server 2019/2022  ·  16 vCPU  ·  64 GB RAM  ·  SQL Server 2019+ for CommServe DB             │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│  Separate Windows or Linux MediaAgent nodes  ·  10 GbE data path to storage                           │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│  TCP 8400/8401 (client comms)  ·  443 (Command Center)  ·  service account in domain                  │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│  DNS resolution for all CommServe, MediaAgent, and client FQDNs  ·  NTP synced                        │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│  Commvault licence file (.lic) obtained from support portal before install                            │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│                                                                                                       │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│                                        │  install CommServe                                           │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│                                        ▼                                                              │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│  Step 2 · CommServe                                                                                   │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│  Run Commvault installer on Windows  ·  select CommServe role  ·  point to SQL instance               │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│  Activate licence  ·  login to Command Center at https://&lt;hostname&gt;/commandcenter                     │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│  Configure CommCell: time zone, email SMTP, security settings, audit log                              │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│  Add CommServe DR backup destination  ·  enable automatic disaster recovery export                    │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│  Verify CommServe DB size and SQL maintenance jobs  ·  set SQL backup schedule                        │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│                                                                                                       │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│                                        │  add MediaAgent nodes                                        │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│                                        ▼                                                              │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│  Step 3 · MediaAgents                                                                                 │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│  Run installer on each MA host  ·  select MediaAgent role  ·  register to CommServe                   │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  Configure index cache path (fast local SSD)  ·  set working directory                                │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  Enable deduplication database (DDB) on each MA  ·  assign DDB to a dedicated disk                    │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  Verify MA appears Online in CommCell Console under Storage → MediaAgents                             │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│  Test data path: run a small backup job routing through each new MA                                   │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│                                                                                                       │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│                                        │  configure storage libraries                                 │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│                                        ▼                                                              │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  Step 4 · Storage Libraries                                                                           │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  Add disk library: local path, NFS/CIFS share, or cloud storage (S3/Azure/GCP)                        │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  Create storage policy: select MA, assign library, set retention rules (days + cycles)                │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  Enable WORM/immutability on cloud or disk library for ransomware protection                          │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  Create global dedup storage policy for large environments to share DDB across MAs                    │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  Verify library free space  ·  configure alert at 80% full                                            │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│                                                                                                       │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│                                        │  add clients and proxies                                     │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│                                        ▼                                                              │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  Step 5 · Clients &amp; Proxies                                                                           │
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>│  Add clients via Command Center → Add Server  ·  push Commvault agent or run locally                  │
+<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>│  Add virtualization proxy: vCenter access node  ·  IntelliSnap proxy for array snaps                  │
+<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>│  Install File System agent on Windows/Linux  ·  add Exchange/SQL/Oracle agents as needed              │
+<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>│  Verify client appears Online  ·  run discovery to populate content (VMs, DB instances)               │
+<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>│                                                                                                       │
+<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>│                                        │  create plans and schedules                                  │
+<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>│                                        ▼                                                              │
+<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>│  Step 6 · Plans &amp; Schedules                                                                           │
+<a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+<a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a>│  Create server backup plan: storage policy, RPO schedule, retention, encryption toggle                │
+<a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a>│  Assign plan to client groups  ·  override per-client if granular retention needed                    │
+<a id="__codelineno-1-56" name="__codelineno-1-56" href="#__codelineno-1-56"></a>│  Enable SLA compliance view  ·  set alert for missed SLA                                              │
+<a id="__codelineno-1-57" name="__codelineno-1-57" href="#__codelineno-1-57"></a>│  Run first full backup  ·  verify job completes  ·  test restore from Command Center                  │
+<a id="__codelineno-1-58" name="__codelineno-1-58" href="#__codelineno-1-58"></a>│  Schedule reports: capacity, compliance, and missed-backup summary to operations team                 │
+<a id="__codelineno-1-59" name="__codelineno-1-59" href="#__codelineno-1-59"></a>│                                                                                                       │
+<a id="__codelineno-1-60" name="__codelineno-1-60" href="#__codelineno-1-60"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="architecture/">

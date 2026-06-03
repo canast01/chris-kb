@@ -3681,6 +3681,69 @@ Dell PowerMax SRDF/S synchronous replication — every host write committed to b
 <a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>│                                                                                                       │
 <a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌─────────────────────────── SRDF/S Synchronous Replication — Setup Sequence ───────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  Step 1 · Prerequisites                                                                               │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│  PowerMax / VMAX arrays at R1 and R2  ·  RTT ≤ 10 ms between sites (hard requirement)                 │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│  Measure RTT: ping from R1 director to R2 director management port  ·  must be &lt; 10 ms                │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│  SRDF licence active  ·  dedicated GigE or 16/32 GbE FC RDF links provisioned                         │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│  Bandwidth: provision 1.5× peak write throughput on RDF link for headroom                             │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│  R2 device capacity ≥ R1 capacity  ·  same device emulation type required                             │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│                                                                                                       │
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│                                        │  configure SRDF groups                                       │
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│                                        ▼                                                              │
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│  Step 2 · SRDF Group Configuration                                                                    │
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│  Create synchronous RDF group: symrdf addgrp -rdfg &lt;id&gt; -type RDF1                                    │
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│  Set mode to synchronous: symrdf -rdfg &lt;id&gt; set synchronous                                           │
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│  Assign RA director ports to group  ·  verify port assignment with symrdf -rdfg query                 │
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│  MaxTimeDiffAllowed: default 200 ms  ·  sets max acceptable write-acknowledge latency                 │
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│  Verify link state: symrdf -rdfg &lt;id&gt; -dir &lt;dir&gt; query → link state = Ready                           │
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│                                                                                                       │
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│                                        │  create and synchronise device pairs                         │
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│                                        ▼                                                              │
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│  Step 3 · Device Pairs &amp; Initial Sync                                                                 │
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│  Create SRDF/S pairs: symrdf -sid &lt;R1&gt; -f &lt;devfile&gt; createpair -rdfg &lt;id&gt; -type R1                    │
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  Initial full sweep: source data copied to R2  ·  may take hours for large volumes                    │
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  Monitor sync progress: symrdf -sid &lt;R1&gt; query  ·  state = SyncInProg then Synchronized               │
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  Once Synchronized: every host write is committed to both R1 and R2 before ACK                        │
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│  Confirm: symrdf -sid &lt;R1&gt; -dev &lt;range&gt; verify -consistency → clean output                            │
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│                                                                                                       │
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│                                        │  tune and validate write performance                         │
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│                                        ▼                                                              │
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  Step 4 · Performance Tuning                                                                          │
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  Baseline write latency: measure before SRDF/S  ·  SRDF/S adds 1× RTT to each write                   │
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  Monitor write latency impact: symstat -type rdf on R1  ·  acceptable if &lt; 5 ms added                 │
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  Adaptive Copy (STAR): option for planned maintenance  ·  temporarily reduces to async                │
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  SRDF/S Consistency Groups: multiple device groups committed atomically                               │
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  WAN optimisation: enable SRDF data compression if link bandwidth is constrained                      │
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│                                                                                                       │
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│                                        │  monitor and maintain                                        │
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│                                        ▼                                                              │
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  Step 5 · Monitoring &amp; Health                                                                         │
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>│  symrdf query: state = Synchronized means R2 is in-sync  ·  alert on any other state                  │
+<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>│  symrdf -cg &lt;name&gt; query for consistency group state  ·  all groups must be Synchronized              │
+<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>│  RDF link utilisation: symrdf -rdfg &lt;id&gt; -dir &lt;d&gt; query  ·  check bandwidth metrics                   │
+<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>│  Alert thresholds: link RDF error count &gt; 0  ·  state not Synchronized &gt; 60 s                         │
+<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>│  SRDF/S Audit: repadmin equivalent  ·  use Unisphere for PowerMax health dashboard                    │
+<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>│                                                                                                       │
+<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>│                                        │  failover testing                                            │
+<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>│                                        ▼                                                              │
+<a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a>│  Step 6 · Failover Testing                                                                            │
+<a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a>│  ─────────────────────────────────────────────────────────────────────────────────────────            │
+<a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a>│  Planned failover: symrdf -sid &lt;R1&gt; -dev &lt;range&gt; failover -establish  ·  graceful                     │
+<a id="__codelineno-1-56" name="__codelineno-1-56" href="#__codelineno-1-56"></a>│  Unplanned: symrdf -sid &lt;R2&gt; -dev &lt;range&gt; failover -force  ·  if R1 unreachable                       │
+<a id="__codelineno-1-57" name="__codelineno-1-57" href="#__codelineno-1-57"></a>│  Test R2 application: RPO = 0 (no writes lost)  ·  RTO = time to bring up app stack                   │
+<a id="__codelineno-1-58" name="__codelineno-1-58" href="#__codelineno-1-58"></a>│  Failback: symrdf -sid &lt;R2&gt; failback  ·  R1 resyncs from R2  ·  monitor with query                    │
+<a id="__codelineno-1-59" name="__codelineno-1-59" href="#__codelineno-1-59"></a>│  Full resync back to Synchronized state  ·  confirm both sites clean in Unisphere                     │
+<a id="__codelineno-1-60" name="__codelineno-1-60" href="#__codelineno-1-60"></a>│  Document: RTO achieved  ·  failback duration  ·  confirm RPO=0 from host perspective                 │
+<a id="__codelineno-1-61" name="__codelineno-1-61" href="#__codelineno-1-61"></a>│                                                                                                       │
+<a id="__codelineno-1-62" name="__codelineno-1-62" href="#__codelineno-1-62"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <div class="kb-grid kb-grid-3">
 
 <a class="kb-card" href="architecture/">
