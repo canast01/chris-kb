@@ -38,6 +38,8 @@ flowchart TD
     class reprotect,reprotect2,failback action
     class assess decision
     class start,pm,fo terminal
+```
+
 ```text
 ┌────────────────────────────────────────── SRM — Procedures ───────────────────────────────────────────┐
 │                                                                                                       │

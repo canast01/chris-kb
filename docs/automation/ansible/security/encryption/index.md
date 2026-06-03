@@ -24,6 +24,8 @@ graph LR
     mainYml --> playbook["Playbook\n(uses db_password)"]
     vcKeyFile -->|decrypt at runtime| playbook
     playbook -->|over SSH| managedHost["Managed Host"]
+```
+
 ```text
 ┌──────────────────────────────────────── Ansible — Encryption ─────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

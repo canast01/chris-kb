@@ -31,6 +31,8 @@ flowchart TD
     L -- No --> L1[Investigate offline node\nCheck Hazelcast logs]
     L -- Yes --> M[Review scheduled jobs\nfor failures]
     M --> N([Health Check Complete\nLog result])
+```
+
 ```text
 ┌───────────────────────────────────── Confluence — Health Checks ──────────────────────────────────────┐
 │                                                                                                       │

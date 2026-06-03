@@ -19,6 +19,8 @@ flowchart LR
     running["VM Running\nProvisioning State: Succeeded"]
 
     request --> rbacCheck --> policyCheck --> resourceGroup --> vnetPlace --> nsgApply --> diskAttach --> extensions --> running
+```
+
 ```text
 ┌────────────────────────────────── Azure Architecture — Integrations ──────────────────────────────────┐
 │                                                                                                       │

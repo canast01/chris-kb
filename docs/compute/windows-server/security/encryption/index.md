@@ -38,6 +38,8 @@ flowchart TD
     networkUnlock -- No --> vmkRelease
     vmkRelease --> fvekDecrypt --> driveUnlocked
     recoveryPrompt --> adEscrow --> driveUnlocked
+```
+
 ```text
 ┌───────────────────────────────────── Windows Server — Encryption ─────────────────────────────────────┐
 │                                                                                                       │

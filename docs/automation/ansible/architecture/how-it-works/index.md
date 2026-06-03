@@ -27,6 +27,8 @@ flowchart LR
     CN -->|WinRM or SSH| MN3[Windows Host]
     CN -->|HTTPS API| MN4[Cloud API\nAWS / Azure / vSphere]
     CN -->|SSH| MN5[Linux Host]
+```
+
 ```text
 ┌─────────────────────────────────────── Ansible — How It Works ────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

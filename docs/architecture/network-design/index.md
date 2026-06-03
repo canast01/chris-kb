@@ -40,6 +40,8 @@ graph TD
     Access_A <-->|"vPC"| Access_B
     Access_A --> Hosts
     Access_B --> Hosts
+```
+
 ```text
 ┌──────────────────────────────────── Architecture — Network Design ────────────────────────────────────┐
 │                                                                                                       │

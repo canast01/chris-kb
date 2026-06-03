@@ -21,6 +21,8 @@ flowchart LR
     dev --> ghSettings --> ghEncrypted
     ghEncrypted -->|"injected at runtime\nnot stored on disk"| wfRun
     wfRun --> step --> logs
+```
+
 ```text
 ┌───────────────────────────────────── GitHub Actions — Encryption ─────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

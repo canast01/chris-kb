@@ -14,6 +14,8 @@ flowchart LR
     BIZ --> DRTEST["DR Test\n(simulated failover)"]
     DRTEST --> SIGNOFF["DR Lead Sign-Off\n(written approval)"]
     SIGNOFF --> PROD["Reintroduce to Production"]
+```
+
 ```text
 ┌─────────────────────────────────────────── IRE Validation ────────────────────────────────────────────┐
 │                                                                                                       │

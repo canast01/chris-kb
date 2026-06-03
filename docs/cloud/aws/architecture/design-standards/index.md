@@ -59,6 +59,8 @@ flowchart LR
     ia -->|"Transition rule\n≥ 90 days"| glacier
     glacier -->|"Transition rule\n≥ 180 days"| deepArchive
     deepArchive -->|"Expiration rule"| expire
+```
+
 ```text
 ┌───────────────────────────────── AWS Architecture — Design Standards ─────────────────────────────────┐
 │                                                                                                       │

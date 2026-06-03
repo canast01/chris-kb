@@ -19,6 +19,8 @@ flowchart TD
 
     serviceStatus --> apiConn --> syncLog --> dnsLog --> foLog
     foLog --> resolved(["Root cause identified\nRemediate or escalate"])
+```
+
 ```text
 ┌─────────────────────────────────── Superna Eyeglass — Diagnostics ────────────────────────────────────┐
 │                                                                                                       │

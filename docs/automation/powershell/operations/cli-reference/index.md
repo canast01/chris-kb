@@ -23,6 +23,8 @@ graph LR
     processLogic --> exportCsv
     exportCsv --> sendEmail
     processLogic --> logResult
+```
+
 ```text
 ┌───────────────────────────────────── PowerShell — CLI Reference ──────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

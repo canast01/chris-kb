@@ -18,6 +18,8 @@ flowchart TD
     services["Services\nsshd · chronyd · rsyslog · app"]
 
     bios --> grub --> kernelInit --> initrd --> systemdInit --> targets --> services
+```
+
 ```text
 ┌────────────────────────────────────── Linux — Install & Upgrade ──────────────────────────────────────┐
 │                                                                                                       │

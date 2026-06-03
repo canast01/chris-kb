@@ -32,6 +32,8 @@ flowchart LR
         adCmds["Get-ADComputer\nGet-ADUser"]
         gpoCmds["gpresult\ngpupdate"]
     end
+```
+
 ```text
 ┌─────────────────────────────────── Windows Server — CLI Reference ────────────────────────────────────┐
 │                                                                                                       │

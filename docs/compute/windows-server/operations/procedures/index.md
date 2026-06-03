@@ -22,6 +22,8 @@ flowchart TD
     ntds --> dns
     w32time --> netlogon
     bfe --> winrm
+```
+
 ```text
 ┌─────────────────────────────── Windows Server — Operations Procedures ────────────────────────────────┐
 │                                                                                                       │

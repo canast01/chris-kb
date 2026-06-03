@@ -60,6 +60,8 @@ flowchart TD
     style monitorRecovery fill:#15803d,color:#fff
     style throttleIO fill:#b45309,color:#fff
     style checkNetOps fill:#b45309,color:#fff
+```
+
 ```text
 ┌─────────────────────────────────────── SRDF/A — Common Issues ────────────────────────────────────────┐
 │                                                                                                       │

@@ -49,6 +49,8 @@ flowchart TD
     P --> Q{Resolves correctly?}
     Q -- No --> R[See DNS Resolution guide]
     Q -- Yes --> S[Application-layer issue\nCheck service on destination\nopenssl s_client / curl -v]
+```
+
 ```text
 ┌──────────────────────────────── Network Connectivity Troubleshooting ─────────────────────────────────┐
 │                                                                                                       │

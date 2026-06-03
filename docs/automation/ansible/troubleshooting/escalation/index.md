@@ -23,6 +23,8 @@ flowchart LR
     L1[L1 Ops\nRun diagnostics\nCheck logs] --> L2[L2 Automation Engineering\nModule-level debug\nvvv trace + stack trace]
     L2 --> L3[Platform Team / SME\nAWX admin access\nExecution environment rebuild]
     L3 --> Vendor[Red Hat Support\nor GitHub issue]
+```
+
 ```text
 ┌──────────────────────────────────────── Ansible — Escalation ─────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

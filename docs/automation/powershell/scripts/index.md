@@ -31,6 +31,8 @@ graph TD
     collectResults --> formatTable
     collectResults --> exportCsv
     collectResults --> flagIssues
+```
+
 ```text
 ┌──────────────────────────────────── PowerShell — Scripts Library ─────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -89,6 +89,8 @@ flowchart TD
     sendAlert --> finallyBlock
     success --> finallyBlock
     finallyBlock --> exitCode
+```
+
 ```text
 ┌─────────────────────────────────────── PowerShell — Procedures ───────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

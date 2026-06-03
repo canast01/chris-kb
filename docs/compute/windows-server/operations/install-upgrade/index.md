@@ -18,6 +18,8 @@ flowchart LR
 
     patchTuesday --> devRing --> preRing --> prodRing --> report
     preRing --> dcRing --> report
+```
+
 ```text
 ┌──────────────────────────────── Windows Server — Install and Upgrade ─────────────────────────────────┐
 │                                                                                                       │
