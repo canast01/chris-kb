@@ -2,7 +2,7 @@
 
 
 <div class="kb-summary">
-Deep-dive reference articles on specific VMware behaviors, edge cases, and troubleshooting scenarios.
+Deep-dive reference articles on specific VMware behaviors, edge cases, and troubleshooting scenarios — plus a structured learning path, cross-product scenarios, and 25 reactive and planned workflows.
 </div>
 
 ```text
@@ -14,6 +14,7 @@ Deep-dive reference articles on specific VMware behaviors, edge cases, and troub
 │   │    Network packet loss, recovery behavior, resource contention, snapshot impact on storage    │   │
 │   │     Storage latency troubleshooting: APD/PDL response, VMFS locking, datastore I/O queues     │   │
 │   │        Time/DNS validation: NTP sync required for HA, vSAN, and certificate operations        │   │
+│   │   Learning path · Cross-product scenarios · 25 reactive + planned workflows across products   │   │
 │   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
 │                                                                                                       │
 │    Cluster topics cover HA design · performance topics isolate bottlenecks                            │
@@ -63,6 +64,16 @@ Deep-dive reference articles on specific VMware behaviors, edge cases, and troub
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 <div class="kb-grid kb-grid-5">
+
+<a class="kb-card" href="learning-path/">
+  <strong>Learning Path</strong>
+  <span>Recommended reading order: vCenter → ESXi → vSAN → NSX → Aria Suite → VxRail.</span>
+</a>
+
+<a class="kb-card" href="scenarios/">
+  <strong>Scenarios</strong>
+  <span>25 cross-product scenarios: reactive troubleshooting and planned operational workflows.</span>
+</a>
 
 <a class="kb-card" href="cluster-failure-domains/">
   <strong>Cluster Failure Domains</strong>
