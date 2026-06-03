@@ -4089,53 +4089,53 @@
     standard --&gt;|"Transition rule\n≥ 30 days"| ia
     ia --&gt;|"Transition rule\n≥ 90 days"| glacier
     glacier --&gt;|"Transition rule\n≥ 180 days"| deepArchive
-    deepArchive --&gt;|"Expiration rule"| expire
-```text
-┌───────────────────────────────── AWS Architecture — Design Standards ─────────────────────────────────┐
-│                                                                                                       │
-│  Standards covering account structure, tagging, naming, networking, and security baseline.            │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Account Standards               │  │              Tagging Standards              │   │
-│   │           One workload per account           │  │          Required: env, owner, team         │   │
-│   │          No production in mgmt acct          │  │          Required: cost-centre, app         │   │
-│   │           OU hierarchy: env-based            │  │          Enforce: SCP deny untagged         │   │
-│   │          Separate audit + log accts          │  │         Naming: kebab-case standard         │   │
-│   │           Email alias per account            │  │          Automation: tag on create          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Account and tagging standards enforced via SCPs and AWS Config rules                                 │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Networking Standards             │  │              Security Baseline              │   │
-│   │          Non-overlapping VPC CIDRs           │  │             MFA: enforced by SCP            │   │
-│   │        Private subnets for workloads         │  │          Root: no programmatic keys         │   │
-│   │           Public: only LB + NAT GW           │  │            CloudTrail: always on            │   │
-│   │            VPC flow logs: enabled            │  │            GuardDuty: org-wide on           │   │
-│   │           TGW: centralised egress            │  │          CIS AWS Benchmark: target          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  AWS Regions · Availability Zones · data centres · DirectConnect · internet edge                      │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  CIS AWS Benchmark= Center for Internet Security prescriptive AWS security controls                   │
-│  Non-overlapping CIDR= VPC address ranges that do not conflict; required for TGW                      │
-│  Private subnet = No internet gateway route; workloads access internet via NAT GW                     │
-│  Public subnet  = Has internet gateway route; only load balancers and NAT GW placed here              │
-│  Centralised egress= All internet-bound traffic routed through shared inspection VPC                  │
-│  Email alias    = Shared mailbox per account; avoids personal email ownership                         │
-│  Kebab-case     = Naming convention using lowercase words separated by hyphens                        │
-│  SCP deny untagged= Preventive control blocking resource creation without required tags               │
-│  Cost-centre tag= Tag linking resources to financial cost allocation unit                             │
-│  VPC flow logs  = Network traffic metadata logs; required for security investigations                 │
-│  Audit account  = Dedicated account for security tooling (Security Hub, Config agg.)                  │
-│  OU hierarchy   = Organizational Unit tree: Root → Security → Workloads → env OUs                     │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</code></pre>
+    deepArchive --&gt;|"Expiration rule"| expire</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────── AWS Architecture — Design Standards ─────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Standards covering account structure, tagging, naming, networking, and security baseline.            │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│                                                                                                       │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │              Account Standards               │  │              Tagging Standards              │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │           One workload per account           │  │          Required: env, owner, team         │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │          No production in mgmt acct          │  │          Required: cost-centre, app         │   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   │           OU hierarchy: env-based            │  │          Enforce: SCP deny untagged         │   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   │          Separate audit + log accts          │  │         Naming: kebab-case standard         │   │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   │           Email alias per account            │  │          Automation: tag on create          │   │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                                                                                                       │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  Account and tagging standards enforced via SCPs and AWS Config rules                                 │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│                                                                                                       │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│                                                                                                       │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │             Networking Standards             │  │              Security Baseline              │   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │          Non-overlapping VPC CIDRs           │  │             MFA: enforced by SCP            │   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   │        Private subnets for workloads         │  │          Root: no programmatic keys         │   │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   │           Public: only LB + NAT GW           │  │            CloudTrail: always on            │   │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│   │            VPC flow logs: enabled            │  │            GuardDuty: org-wide on           │   │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│   │           TGW: centralised egress            │  │          CIS AWS Benchmark: target          │   │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│                                                                                                       │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  AWS Regions · Availability Zones · data centres · DirectConnect · internet edge                      │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│                                                                                                       │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│                                                                                                       │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  CIS AWS Benchmark= Center for Internet Security prescriptive AWS security controls                   │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│  Non-overlapping CIDR= VPC address ranges that do not conflict; required for TGW                      │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│  Private subnet = No internet gateway route; workloads access internet via NAT GW                     │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│  Public subnet  = Has internet gateway route; only load balancers and NAT GW placed here              │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│  Centralised egress= All internet-bound traffic routed through shared inspection VPC                  │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│  Email alias    = Shared mailbox per account; avoids personal email ownership                         │
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│  Kebab-case     = Naming convention using lowercase words separated by hyphens                        │
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│  SCP deny untagged= Preventive control blocking resource creation without required tags               │
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│  Cost-centre tag= Tag linking resources to financial cost allocation unit                             │
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│  VPC flow logs  = Network traffic metadata logs; required for security investigations                 │
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│  Audit account  = Dedicated account for security tooling (Security Hub, Config agg.)                  │
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>│  OU hierarchy   = Organizational Unit tree: Root → Security → Workloads → env OUs                     │
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>│                                                                                                       │
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <h2 id="security-standards">Security Standards<a class="headerlink" href="#security-standards" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

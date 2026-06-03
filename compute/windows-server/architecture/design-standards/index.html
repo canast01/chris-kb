@@ -3315,59 +3315,59 @@ Sizing guidelines, design standards, and best practices.
     ouChildGPO["Child OU GPO\nProduction\\SQL OU"]
     applied["Final Applied\nEffective Policy\n(last writer wins)"]
 
-    localGPO --&gt; siteGPO --&gt; domainGPO --&gt; ouParentGPO --&gt; ouChildGPO --&gt; applied
-```text
-┌────────────────────────────────── Windows Server — Design Standards ──────────────────────────────────┐
-│                                                                                                       │
-│  Design standards: naming conventions, OU structure, GPO hierarchy, and server hardening baseline.    │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Naming Conventions              │  │               AD OU Structure               │   │
-│   │            Server: SITE-ROLE-NNN             │  │         Domain → Servers → Role OUs         │   │
-│   │           Domain: corp.example.com           │  │       Tier: T0 DC / T1 server / T2 WS       │   │
-│   │         GPO: ROLE-SETTING-POL format         │  │        Admin Groups: per tier + role        │   │
-│   │        Service accounts: svc-appname         │  │          LAPS: local admin pwd mgmt         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Tiered admin model prevents lateral movement; LAPS eliminates shared local passwords               │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                  GPO Design                  │  │               Server Baseline               │   │
-│   │       Default Domain Policy: password        │  │        Server Core preferred over GUI       │   │
-│   │        Workstation / Server baselines        │  │         SMB signing: required on all        │   │
-│   │        Role-specific: IIS / SQL / DC         │  │       Audit: logon, object, privilege       │   │
-│   │       Link order: lower = higher prio        │  │          Windows Defender: AV + EDR         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Physical or virtual server · Domain Controllers · AD replication · PKI                               │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Tiered admin = Tier 0 (DCs), Tier 1 (servers), Tier 2 (workstations); no cross-tier                  │
-│  LAPS         = Local Administrator Password Solution; unique pwd per machine                         │
-│  OU           = Organisational Unit; container for GPO linking and delegation                         │
-│  GPO link order= lowest link order number = highest priority in OU                                    │
-│  SMB signing  = cryptographic signing of SMB packets; prevents relay attacks                          │
-│  Server Core  = no GUI; managed via PowerShell/WAC; reduced attack surface                            │
-│  svc- prefix  = service account naming prefix; helps identify in audit logs                           │
-│  Default Domain Policy= must only contain password and account lockout settings                       │
-│  EDR          = Endpoint Detection and Response; Microsoft Defender for Endpoint                      │
-│  Privilege audit= logs use of user rights assignments; required for compliance                        │
-│  Object audit  = logs file/folder access; apply selectively to avoid log flood                        │
-│  Logon audit   = logs interactive, network, and Kerberos logons                                       │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</code></pre>
+    localGPO --&gt; siteGPO --&gt; domainGPO --&gt; ouParentGPO --&gt; ouChildGPO --&gt; applied</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌────────────────────────────────── Windows Server — Design Standards ──────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  Design standards: naming conventions, OU structure, GPO hierarchy, and server hardening baseline.    │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│                                                                                                       │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │              Naming Conventions              │  │               AD OU Structure               │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │            Server: SITE-ROLE-NNN             │  │         Domain → Servers → Role OUs         │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │           Domain: corp.example.com           │  │       Tier: T0 DC / T1 server / T2 WS       │   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   │         GPO: ROLE-SETTING-POL format         │  │        Admin Groups: per tier + role        │   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   │        Service accounts: svc-appname         │  │          LAPS: local admin pwd mgmt         │   │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                                                                                                       │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│    Tiered admin model prevents lateral movement; LAPS eliminates shared local passwords               │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│                                                                                                       │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│                                                                                                       │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │                  GPO Design                  │  │               Server Baseline               │   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │       Default Domain Policy: password        │  │        Server Core preferred over GUI       │   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │        Workstation / Server baselines        │  │         SMB signing: required on all        │   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   │        Role-specific: IIS / SQL / DC         │  │       Audit: logon, object, privilege       │   │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   │       Link order: lower = higher prio        │  │          Windows Defender: AV + EDR         │   │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│                                                                                                       │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  Physical or virtual server · Domain Controllers · AD replication · PKI                               │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│                                                                                                       │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│                                                                                                       │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  Tiered admin = Tier 0 (DCs), Tier 1 (servers), Tier 2 (workstations); no cross-tier                  │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│  LAPS         = Local Administrator Password Solution; unique pwd per machine                         │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  OU           = Organisational Unit; container for GPO linking and delegation                         │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│  GPO link order= lowest link order number = highest priority in OU                                    │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│  SMB signing  = cryptographic signing of SMB packets; prevents relay attacks                          │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│  Server Core  = no GUI; managed via PowerShell/WAC; reduced attack surface                            │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│  svc- prefix  = service account naming prefix; helps identify in audit logs                           │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│  Default Domain Policy= must only contain password and account lockout settings                       │
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│  EDR          = Endpoint Detection and Response; Microsoft Defender for Endpoint                      │
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│  Privilege audit= logs use of user rights assignments; required for compliance                        │
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│  Object audit  = logs file/folder access; apply selectively to avoid log flood                        │
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│  Logon audit   = logs interactive, network, and Kerberos logons                                       │
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│                                                                                                       │
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <p>WinRM listener configuration:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># View WinRM listeners</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">winrm</span> <span class="n">enumerate</span> <span class="n">winrm</span><span class="p">/</span><span class="n">config</span><span class="p">/</span><span class="n">listener</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># Configure HTTPS listener (requires certificate)</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">New-WSManInstance</span> <span class="n">-ResourceURI</span> <span class="n">winrm</span><span class="p">/</span><span class="n">config</span><span class="p">/</span><span class="n">Listener</span> <span class="p">`</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>  <span class="n">-SelectorSet</span> <span class="p">@{</span><span class="n">Address</span><span class="p">=</span><span class="s2">&quot;*&quot;</span><span class="p">;</span> <span class="n">Transport</span><span class="p">=</span><span class="s2">&quot;HTTPS&quot;</span><span class="p">}</span> <span class="p">`</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>  <span class="n">-ValueSet</span> <span class="p">@{</span><span class="n">Hostname</span><span class="p">=</span><span class="s2">&quot;&lt;fqdn&gt;&quot;</span><span class="p">;</span> <span class="n">CertificateThumbprint</span><span class="p">=</span><span class="s2">&quot;&lt;thumbprint&gt;&quot;</span><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># View WinRM listeners</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">winrm</span> <span class="n">enumerate</span> <span class="n">winrm</span><span class="p">/</span><span class="n">config</span><span class="p">/</span><span class="n">listener</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># Configure HTTPS listener (requires certificate)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nb">New-WSManInstance</span> <span class="n">-ResourceURI</span> <span class="n">winrm</span><span class="p">/</span><span class="n">config</span><span class="p">/</span><span class="n">Listener</span> <span class="p">`</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  <span class="n">-SelectorSet</span> <span class="p">@{</span><span class="n">Address</span><span class="p">=</span><span class="s2">&quot;*&quot;</span><span class="p">;</span> <span class="n">Transport</span><span class="p">=</span><span class="s2">&quot;HTTPS&quot;</span><span class="p">}</span> <span class="p">`</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>  <span class="n">-ValueSet</span> <span class="p">@{</span><span class="n">Hostname</span><span class="p">=</span><span class="s2">&quot;&lt;fqdn&gt;&quot;</span><span class="p">;</span> <span class="n">CertificateThumbprint</span><span class="p">=</span><span class="s2">&quot;&lt;thumbprint&gt;&quot;</span><span class="p">}</span>
 </code></pre></div>
 <h2 id="winrm-configuration-baseline">WinRM Configuration Baseline<a class="headerlink" href="#winrm-configuration-baseline" title="Permanent link">&para;</a></h2>
 <table>
@@ -3504,15 +3504,15 @@ Sizing guidelines, design standards, and best practices.
 </table>
 <p>Full example: <code>dc1wsqlprd01</code> (12 chars — within limit).</p>
 <p>Domain join must be completed before any application installation. All Windows servers join <code>corp.example.com</code>. The join is performed using the <code>svc-domainjoin</code> service account, which has rights scoped to a specific OU. After join, move the computer object to the correct OU immediately.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Verify domain membership</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="p">(</span><span class="nb">Get-WmiObject</span> <span class="n">-Class</span> <span class="n">Win32_ComputerSystem</span><span class="p">).</span><span class="n">Domain</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">nltest</span> <span class="p">/</span><span class="n">dsgetdc</span><span class="p">:</span><span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Verify domain membership</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="p">(</span><span class="nb">Get-WmiObject</span> <span class="n">-Class</span> <span class="n">Win32_ComputerSystem</span><span class="p">).</span><span class="n">Domain</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">nltest</span> <span class="p">/</span><span class="n">dsgetdc</span><span class="p">:</span><span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span>
 </code></pre></div>
 <h2 id="ntp-configuration">NTP Configuration<a class="headerlink" href="#ntp-configuration" title="Permanent link">&para;</a></h2>
 <p>Windows domain members automatically use the domain hierarchy for time. The PDC emulator synchronises to the internal NTP infrastructure. Do not configure external NTP sources on domain members.</p>
 <p>Verify time sync:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">w32tm</span> <span class="p">/</span><span class="n">query</span> <span class="p">/</span><span class="n">status</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">w32tm</span> <span class="p">/</span><span class="n">query</span> <span class="p">/</span><span class="n">source</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">w32tm</span> <span class="p">/</span><span class="n">query</span> <span class="p">/</span><span class="n">status</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">w32tm</span> <span class="p">/</span><span class="n">query</span> <span class="p">/</span><span class="n">source</span>
 </code></pre></div>
 <p>Expected output: source is the domain PDC or a DC. If <code>Local CMOS Clock</code> appears, the domain time sync is broken — re-run <code>w32tm /resync /force</code>.</p>
 <table>
@@ -3543,12 +3543,12 @@ Sizing guidelines, design standards, and best practices.
 </table>
 <h2 id="windows-update-and-patch-policy">Windows Update and Patch Policy<a class="headerlink" href="#windows-update-and-patch-policy" title="Permanent link">&para;</a></h2>
 <p>Windows Update is managed via WSUS or Windows Update for Business, not via direct internet access. Servers must be pointed at the internal WSUS server within 1 hour of domain join.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Confirm WSUS server is configured</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="p">(</span><span class="nb">Get-ItemProperty</span> <span class="s2">&quot;HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate&quot;</span><span class="p">).</span><span class="n">WUServer</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c"># Force update detection</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="n">wuauclt</span> <span class="p">/</span><span class="n">detectnow</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="n">UsoClient</span> <span class="n">StartScan</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Confirm WSUS server is configured</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="p">(</span><span class="nb">Get-ItemProperty</span> <span class="s2">&quot;HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate&quot;</span><span class="p">).</span><span class="n">WUServer</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c"># Force update detection</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="n">wuauclt</span> <span class="p">/</span><span class="n">detectnow</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="n">UsoClient</span> <span class="n">StartScan</span>
 </code></pre></div>
 <p>Patching schedule:</p>
 <table>
@@ -3580,11 +3580,11 @@ Sizing guidelines, design standards, and best practices.
 <p>Security-only patches with CVSS 9.0+ are applied out-of-band within 72 hours, regardless of environment.</p>
 <h2 id="local-administrator-and-accounts">Local Administrator and Accounts<a class="headerlink" href="#local-administrator-and-accounts" title="Permanent link">&para;</a></h2>
 <p>The built-in <code>Administrator</code> account must be renamed and a strong random password set via LAPS (Local Administrator Password Solution). LAPS must be deployed and reporting to AD before build sign-off.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Verify LAPS is installed and reporting</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">Get-AdmPwdPassword</span> <span class="n">-ComputerName</span> <span class="n">dc1wsqlprd01</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c"># Check LAPS client is installed</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nb">Get-WmiObject</span> <span class="n">-Namespace</span> <span class="n">root</span><span class="p">\</span><span class="n">cimv2</span> <span class="n">-Class</span> <span class="n">Win32_Product</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span> <span class="o">-like</span> <span class="s2">&quot;*LAPS*&quot;</span> <span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Verify LAPS is installed and reporting</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Get-AdmPwdPassword</span> <span class="n">-ComputerName</span> <span class="n">dc1wsqlprd01</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c"># Check LAPS client is installed</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nb">Get-WmiObject</span> <span class="n">-Namespace</span> <span class="n">root</span><span class="p">\</span><span class="n">cimv2</span> <span class="n">-Class</span> <span class="n">Win32_Product</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span> <span class="o">-like</span> <span class="s2">&quot;*LAPS*&quot;</span> <span class="p">}</span>
 </code></pre></div>
 <p>Additional local accounts:
 - No shared local accounts permitted
@@ -3645,11 +3645,11 @@ Sizing guidelines, design standards, and best practices.
 </tbody>
 </table>
 <p>Security event log size must be set to a minimum of 1 GB. Logs are forwarded to the SIEM via Windows Event Forwarding (WEF) or the Elastic/Splunk agent.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c"># Confirm audit policy</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="n">auditpol</span> <span class="p">/</span><span class="n">get</span> <span class="p">/</span><span class="n">category</span><span class="p">:*</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c"># Check event log size</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nb">Get-EventLog</span> <span class="n">-LogName</span> <span class="n">Security</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-ExpandProperty</span> <span class="n">MaximumKilobytes</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Confirm audit policy</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">auditpol</span> <span class="p">/</span><span class="n">get</span> <span class="p">/</span><span class="n">category</span><span class="p">:*</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c"># Check event log size</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nb">Get-EventLog</span> <span class="n">-LogName</span> <span class="n">Security</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-ExpandProperty</span> <span class="n">MaximumKilobytes</span>
 </code></pre></div>
 <h2 id="build-completion-checklist">Build Completion Checklist<a class="headerlink" href="#build-completion-checklist" title="Permanent link">&para;</a></h2>
 <ul>
