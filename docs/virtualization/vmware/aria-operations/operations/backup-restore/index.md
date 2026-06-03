@@ -132,14 +132,14 @@ Recommended settings:
 ```bash
 ssh admin@vrops-prod-01.example.local
 
-# Trigger an immediate backup using the vracli tool
+## Trigger an immediate backup using the vracli tool
 vracli backup --location <backup-id>
-# <backup-id> is the ID of the configured external location (visible in UI)
+## <backup-id> is the ID of the configured external location (visible in UI)
 
-# List configured backup locations
+## List configured backup locations
 vracli backup list-locations
 
-# Check backup status
+## Check backup status
 vracli backup status
 ```
 
@@ -148,17 +148,17 @@ vracli backup status
 ## Backup via REST API
 
 ```bash
-# Authenticate
+## Authenticate
 TOKEN=$(curl -sk -X POST "https://vrops-prod-01.example.local/suite-api/api/auth/token/acquire" \
   -H "Content-Type: application/json" \
   -d '{"username":"admin","password":"<password>","authSource":"Local"}' | \
   jq -r '.token')
 
-# List backup configurations
+## List backup configurations
 curl -sk -H "Authorization: vRealizeOpsToken $TOKEN" \
   "https://vrops-prod-01.example.local/suite-api/api/backups" | jq '.'
 
-# Trigger an immediate backup
+## Trigger an immediate backup
 curl -sk -X POST -H "Authorization: vRealizeOpsToken $TOKEN" \
   "https://vrops-prod-01.example.local/suite-api/api/backups/<backup-config-id>/actions/backup" | \
   jq '.'
@@ -231,8 +231,8 @@ For full disaster recovery (including metric data), use a VM-level backup of all
 - Recovery from VM backup restores metric history but may require Cassandra consistency repair:
 
 ```bash
-# After restoring all nodes from VM backup, run Cassandra repair on the primary node
+## After restoring all nodes from VM backup, run Cassandra repair on the primary node
 ssh admin@vrops-prod-01.example.local
 vracli cluster cassandra repair
-# This can take hours on large deployments — monitor progress in /storage/log/cassandra.log
+## This can take hours on large deployments — monitor progress in /storage/log/cassandra.log
 ```

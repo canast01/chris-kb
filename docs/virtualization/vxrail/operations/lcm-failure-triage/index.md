@@ -76,9 +76,9 @@ VxRail LCM Failure Triage reference covering Symptoms, Likely Causes, Commands, 
 
 ## Commands
 
-~~~bash
+```bash
 # Add environment-specific commands here
-~~~
+```
 
 ## Troubleshooting Workflow
 

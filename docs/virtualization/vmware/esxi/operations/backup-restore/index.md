@@ -6,7 +6,7 @@ ESXi Backup & Restore reference covering VM-Level Backup.
 </div>
 
 ESXi Backup & Restore Flow
-```powershell
+```text
 ┌────────────────────────────────────────────────────────┐
 │  ESXi Host Configuration Backup                                                                       │
 │  ├── PowerCLI: Get-VMHostFirmware -BackupConfiguration                                                │

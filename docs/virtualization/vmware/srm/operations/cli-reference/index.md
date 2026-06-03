@@ -6,7 +6,7 @@ CLI Reference reference covering SRM REST API — Recovery Plans, PowerCLI for S
 </div>
 
   SRM CLI / API Access
-```powershell
+```text
 ┌──────────────────────────────────────────────────────────────┐
 │  SRM REST API (vCenter SSO token)                                                                     │
 │  ┌──────────────────────────────────────────────────────┐                                             │

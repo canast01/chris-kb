@@ -123,13 +123,13 @@ VxRail is a Dell integrated HCI platform built on VMware vSphere and vSAN with D
 
 ## Useful Commands
 
-~~~bash
+```bash
 df -h
 systemctl --failed
 systemctl status vmware-marvin
 journalctl -xe
 curl -k https://localhost/rest/vxm/internal/system
-~~~
+```
 
 ## Common Failure Points
 

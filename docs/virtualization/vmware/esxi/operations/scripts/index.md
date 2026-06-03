@@ -6,7 +6,7 @@ ESXi Scripts reference covering Storage Path Health Check (Bash / esxcli), ESXi 
 </div>
 
 ESXi Automation Scripts — Tool Selection
-```powershell
+```text
 ┌───────────────────────────────────────────────────────┐
 │  Task                         Recommended Tool                                                        │
 │  ─────────────────────────────────────────────────                                                    │
@@ -168,7 +168,7 @@ ESXi Automation Scripts — Tool Selection
 
 Run on an ESXi host via SSH. Report per-device path counts (active / standby / dead) and exit non-zero if any dead paths exist.
 
-~~~bash
+```bash
 #!/bin/bash
 # esxi_path_health.sh
 # Usage: ssh root@esxi-host 'bash -s' < esxi_path_health.sh
@@ -222,7 +222,7 @@ else
     echo "RESULT: PASS — all paths healthy"
 fi
 exit $CRIT
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -245,7 +245,7 @@ ssh root@192.168.1.100 'bash -s' < ~/Desktop/esxi_path_health.sh
 
 Connect to vCenter via pyVmomi, retrieve events from the last 24 hours filtered by severity, and report NMP/storage errors.
 
-~~~python
+```python
 #!/usr/bin/env python3
 """
 esxi_event_collector.py
@@ -320,7 +320,7 @@ else:
 
 Disconnect(si)
 sys.exit(1 if issues else 0)
-~~~
+```
 
 **Before you start:** Python 3.8+ and `pip install pyVmomi`. Set `VCENTER_HOST`, `VC_USER`, `VC_PASS` as environment variables then run `python3 esxi_event_collector.py`.
 
@@ -330,7 +330,7 @@ sys.exit(1 if issues else 0)
 
 SSH to each ESXi host (or run locally), verify NTP service state, configured servers, and time offset.
 
-~~~bash
+```bash
 #!/bin/bash
 # esxi_ntp_audit.sh
 # Usage: ESXI_HOSTS="host1 host2 host3" ./esxi_ntp_audit.sh
@@ -385,7 +385,7 @@ case $overall in
     2) echo "Overall: CRITICAL";;
 esac
 exit $overall
-~~~
+```
 
 **Usage:** `ESXI_HOSTS="192.168.1.101 192.168.1.102" ./esxi_ntp_audit.sh`
 
@@ -395,7 +395,7 @@ exit $overall
 
 Use the `community.vmware` collection to verify NTP, DNS, syslog, and SSH security profile compliance across all ESXi hosts in a cluster.
 
-~~~yaml
+```yaml
 ---
 # esxi_compliance.yml
 # Usage: ansible-playbook -i inventory esxi_compliance.yml
@@ -469,7 +469,7 @@ Use the `community.vmware` collection to verify NTP, DNS, syslog, and SSH securi
           - host_facts.hosts_facts | length > 0
         fail_msg: "No hosts found in cluster {{ cluster_name }}"
         success_msg: "Compliance check complete for {{ host_facts.hosts_facts | length }} hosts"
-~~~
+```
 
 **Before you start:** Install Ansible via WSL (`sudo apt install -y ansible`), then `ansible-galaxy collection install community.vmware` and `pip3 install pyVmomi requests`. Set `VC_USER` and `VC_PASS` environment variables before running.
 
@@ -479,7 +479,7 @@ Use the `community.vmware` collection to verify NTP, DNS, syslog, and SSH securi
 
 Use the ESXi Embedded Host Client REST API (available on ESXi 6.x and newer) to check system health and list services — no extra modules needed.
 
-~~~powershell
+```powershell
 # esxi_rest_health.ps1
 param(
     [string]$EsxiHost = "192.168.1.100",
@@ -515,7 +515,7 @@ foreach ($svc in ($services.value | Sort-Object { $_.key })) {
 }
 
 Invoke-RestMethod -Uri "$BaseUrl/com/vmware/cis/session" -Method DELETE -Headers $apiHeaders | Out-Null
-~~~
+```
 
 **Usage:** Update `$EsxiHost`, `$EsxiUser`, `$EsxiPass` then run `.\esxi_rest_health.ps1` from an elevated PowerShell prompt.
 
@@ -523,7 +523,7 @@ Invoke-RestMethod -Uri "$BaseUrl/com/vmware/cis/session" -Method DELETE -Headers
 
 ## Windows: ESXi ESXCLI Commands via Plink (CMD)
 
-~~~batch
+```batch
 @echo off
 REM esxi_esxcli_check.bat — ESXi diagnostic commands via SSH (plink)
 REM Download plink from https://www.putty.org
@@ -547,6 +547,6 @@ echo --- System Uptime ---
 %PLINK% -ssh -l %SSH_USER% -batch %ESXI_HOST% "esxcli system stats uptime get"
 echo.
 echo === Diagnostic check complete ===
-~~~
+```
 
 **Before first use:** Accept the SSH fingerprint once by running `plink.exe -ssh root@<esxi-ip>` and typing `y`.

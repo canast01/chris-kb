@@ -156,7 +156,7 @@ Aria Operations identifies idle and oversized VMs through its capacity analytics
 6. After reclamation, run **Capacity → Recalculate** to update baselines
 
 ```bash
-# Query idle VMs via API
+## Query idle VMs via API
 curl -sk -H "Authorization: vRealizeOpsToken $TOKEN" \
   "https://vrops-prod-01.example.local/suite-api/api/resources/query" \
   -H "Content-Type: application/json" \
@@ -243,7 +243,7 @@ Alerts → Notifications → Add Notification Rule
 Test the notification rule by manually triggering a test alert:
 
 ```bash
-# Trigger a test notification
+## Trigger a test notification
 curl -sk -X POST -H "Authorization: vRealizeOpsToken $TOKEN" \
   "https://vrops-prod-01.example.local/suite-api/api/notifications/test" \
   -H "Content-Type: application/json" \
@@ -255,16 +255,16 @@ curl -sk -X POST -H "Authorization: vRealizeOpsToken $TOKEN" \
 ## Support Bundle Generation
 
 ```bash
-# Via UI: Administration → Support → Generate Support Bundle
-# Bundle is downloaded directly from the UI
+## Via UI: Administration → Support → Generate Support Bundle
+## Bundle is downloaded directly from the UI
 
-# Via CLI
+## Via CLI
 ssh admin@vrops-prod-01.example.local
 vracli support bundle generate
 
-# The bundle is placed at:
+## The bundle is placed at:
 ls -lh /storage/log/support-bundle/
-# Download to local machine
+## Download to local machine
 scp admin@vrops-prod-01.example.local:/storage/log/support-bundle/*.zip .
 ```
 

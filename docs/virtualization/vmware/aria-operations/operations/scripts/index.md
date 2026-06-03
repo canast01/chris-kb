@@ -119,13 +119,13 @@ Aria Operations API — Script Interaction Pattern
 ## Capacity Report (PowerShell)
 
 ```powershell
-# Export cluster capacity summary via REST API
+## Export cluster capacity summary via REST API
 $AriaOpsHost = "aria-ops.domain.local"
 $Token       = "your-token-here"
 
 $Headers = @{ Authorization = "vRealizeOpsToken $Token" }
 
-# Get all cluster compute resources
+## Get all cluster compute resources
 $Uri = "https://$AriaOpsHost/suite-api/api/resources?resourceKind=ClusterComputeResource"
 $Response = Invoke-RestMethod -Uri $Uri -Headers $Headers -SkipCertificateCheck
 
@@ -140,7 +140,7 @@ foreach ($cluster in $Response.resourceList) {
 
 ```bash
 #!/usr/bin/env bash
-# Quick Aria Operations cluster health check
+## Quick Aria Operations cluster health check
 HOST="aria-ops.domain.local"
 
 echo "=== Aria Operations Cluster Health ==="
@@ -165,7 +165,7 @@ HOST="aria-ops.domain.local"
 USER="admin"
 PASS="changeme"
 
-# Get token
+## Get token
 TOKEN=$(curl -sk -X POST "https://$HOST/suite-api/api/auth/token/acquire" \
   -H "Content-Type: application/json" \
   -d "{\"username\":\"$USER\",\"authSource\":\"LOCAL\",\"password\":\"$PASS\"}" \
@@ -173,7 +173,7 @@ TOKEN=$(curl -sk -X POST "https://$HOST/suite-api/api/auth/token/acquire" \
 
 echo "Token acquired"
 
-# Export active alerts
+## Export active alerts
 curl -sk -H "Authorization: vRealizeOpsToken $TOKEN" \
   "https://$HOST/suite-api/api/alerts?activeOnly=true" \
   | python3 -m json.tool > /tmp/aria-ops-alerts-$(date +%Y%m%d).json

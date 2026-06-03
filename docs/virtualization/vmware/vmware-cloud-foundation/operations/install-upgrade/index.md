@@ -141,7 +141,7 @@ VCF Upgrade Flow — SDDC Manager Orchestration
 ### SDDC Manager Pre-Check Execution
 
 ```bash
-# Run pre-check for a workload domain upgrade
+## Run pre-check for a workload domain upgrade
 curl -sk -X POST -u admin:<password> \
   https://localhost/v1/upgrades \
   -H "Content-Type: application/json" \
@@ -152,12 +152,12 @@ curl -sk -X POST -u admin:<password> \
     "requestType": "PRECHECK"
   }'
 
-# Retrieve pre-check results
+## Retrieve pre-check results
 curl -sk -u admin:<password> \
   https://localhost/v1/upgrades/<precheck-id> \
   | python3 -m json.tool
 
-# Check SDDC Manager logs for pre-check detail
+## Check SDDC Manager logs for pre-check detail
 tail -200 /var/log/vmware/vcf/sddc-manager/vcf-sddc-manager.log | grep -i "precheck"
 ```
 
@@ -173,12 +173,12 @@ VCF BOM (Bill of Materials) defines the exact component versions per VCF release
 | 4.4 | 7.0 U3f | 7.0 U3f | 3.2.1 | 4.4 |
 
 ```bash
-# Check current component versions in SDDC Manager
+## Check current component versions in SDDC Manager
 curl -sk -u admin:<password> \
   https://localhost/v1/system/inventory/components \
   | python3 -m json.tool
 
-# Verify NSX version compatibility
+## Verify NSX version compatibility
 curl -sk -u admin:<password> \
   https://localhost/v1/nsxt-clusters \
   | python3 -m json.tool | grep -E "version|id"
@@ -187,18 +187,18 @@ curl -sk -u admin:<password> \
 ### Snapshot and Backup Verification
 
 ```bash
-# Verify SDDC Manager backup is current
+## Verify SDDC Manager backup is current
 curl -sk -u admin:<password> \
   https://localhost/v1/backups/tasks \
   | python3 -m json.tool | grep -E "status|completionTimestamp" | head -20
 
-# Trigger an on-demand SDDC Manager backup
+## Trigger an on-demand SDDC Manager backup
 curl -sk -X POST -u admin:<password> \
   https://localhost/v1/backups \
   -H "Content-Type: application/json" \
   -d '{"elements": [{"resourceType": "SDDC_MANAGER"}]}'
 
-# Check for existing VM snapshots that must be removed pre-upgrade
+## Check for existing VM snapshots that must be removed pre-upgrade
 curl -sk -u admin:<password> \
   https://localhost/v1/system/inventory/snapshots \
   | python3 -m json.tool
@@ -217,13 +217,13 @@ Required network connectivity for VCF upgrade operations:
 | All ESXi hosts | NFS mount | 2049 | Bundle staging |
 
 ```bash
-# Test connectivity from SDDC Manager to VMware depot
+## Test connectivity from SDDC Manager to VMware depot
 curl -sk -o /dev/null -w "%{http_code}" https://depot.vmware.com
 
-# Test vCenter reachability
+## Test vCenter reachability
 curl -sk -o /dev/null -w "%{http_code}" https://<vcenter-fqdn>/sdk
 
-# Test NSX Manager reachability
+## Test NSX Manager reachability
 curl -sk -o /dev/null -w "%{http_code}" https://<nsx-manager-fqdn>/api/v1/node
 ```
 
@@ -246,7 +246,7 @@ VCF bring-up planning, prerequisites, validation, and early lifecycle notes.
 ### Health Commands
 
 ```bash
-# Add environment-specific commands here
+## Add environment-specific commands here
 ```
 
 ### Common Issues

@@ -57,7 +57,7 @@ Scripts reference covering VM Health and Inventory Report (PowerShell / PowerCLI
 
 Connect to vCenter, enumerate all VMs, flag hygiene issues (stale snapshots, outdated Tools, missing backup tag), and export to CSV.
 
-~~~powershell
+```powershell
 #Requires -Modules VMware.PowerCLI
 # vcenter_vm_inventory.ps1
 # Usage: pwsh -File vcenter_vm_inventory.ps1
@@ -118,7 +118,7 @@ Write-Host "CSV saved : $CsvOutput"
 
 Disconnect-VIServer -Confirm:$false
 exit ($flagged -gt 0 ? 1 : 0)
-~~~
+```
 
 ---
 
@@ -126,7 +126,7 @@ exit ($flagged -gt 0 ? 1 : 0)
 
 Print a formatted table of CPU and memory utilization per cluster, including HA overhead and VM density, and warn above 80%.
 
-~~~powershell
+```powershell
 #Requires -Modules VMware.PowerCLI
 # vcenter_cluster_capacity.ps1
 # Usage: pwsh -File vcenter_cluster_capacity.ps1
@@ -177,7 +177,7 @@ foreach ($cluster in (Get-Cluster | Sort-Object Name)) {
 Write-Host $divider
 Disconnect-VIServer -Confirm:$false
 exit $overallExit
-~~~
+```
 
 ---
 
@@ -185,7 +185,7 @@ exit $overallExit
 
 Connect to vCenter and run daily operational checks: host connection states, datastore capacity, stale snapshots, active alarms, and vCenter service health.
 
-~~~powershell
+```powershell
 #Requires -Modules VMware.PowerCLI
 # vc_daily_check.ps1
 # Usage: pwsh -File vc_daily_check.ps1
@@ -254,7 +254,7 @@ Disconnect-VIServer -Confirm:$false
 if ($exit -eq 0) { Write-Host "RESULT: PASS" -ForegroundColor Green }
 else             { Write-Host "RESULT: FAIL" -ForegroundColor Red }
 exit $exit
-~~~
+```
 
 ---
 
@@ -262,7 +262,7 @@ exit $exit
 
 Run before any maintenance window. Confirms no disconnected hosts, no inaccessible datastores, no critical alarms, no running migrations, healthy vCenter services, and NTP in sync.
 
-~~~powershell
+```powershell
 #Requires -Modules VMware.PowerCLI
 # vc_precheck.ps1
 # Usage: pwsh -File vc_precheck.ps1
@@ -308,7 +308,7 @@ Disconnect-VIServer -Confirm:$false
 if ($exit -eq 0) { Write-Host "VERDICT: GO" -ForegroundColor Green }
 else             { Write-Host "VERDICT: NO-GO" -ForegroundColor Red }
 exit $exit
-~~~
+```
 
 ---
 
@@ -316,7 +316,7 @@ exit $exit
 
 Capture disconnected hosts, inaccessible datastores, powered-off VMs, active alarms, recent tasks with errors, and vCenter service health to a timestamped file.
 
-~~~powershell
+```powershell
 #Requires -Modules VMware.PowerCLI
 # vc_incident_triage.ps1
 # Usage: pwsh -File vc_incident_triage.ps1
@@ -363,4 +363,4 @@ Get-Task -Status Error -ErrorAction SilentlyContinue | Select-Object -First 20 |
 Log "Triage data saved to: $OUT"
 Disconnect-VIServer -Confirm:$false
 Write-Host "Triage data saved to: $OUT" -ForegroundColor Cyan
-~~~
+```

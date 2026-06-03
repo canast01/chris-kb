@@ -77,9 +77,9 @@ Use this page for daily, pre-change, and post-change VxRail cluster validation.
 
 ## Health Commands
 
-~~~bash
+```bash
 # Add environment-specific commands here
-~~~
+```
 
 ## Common Issues
 

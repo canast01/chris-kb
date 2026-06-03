@@ -77,9 +77,9 @@ Use this page for support case prep, evidence gathering, and vendor handoff note
 
 ## Health Commands
 
-~~~bash
+```bash
 # Add environment-specific commands here
-~~~
+```
 
 ## Common Issues
 

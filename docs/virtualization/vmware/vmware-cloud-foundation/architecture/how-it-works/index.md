@@ -157,14 +157,14 @@ SDDC Manager → Security → Password Management
 Managed accounts include: vCenter SSO admin, NSX admin, ESXi root, SDDC Manager admin, vSAN iSCSI accounts.
 
 ```bash
-# API — rotate a single credential
+## API — rotate a single credential
 curl -sk -u 'admin@local:password' \
   -X POST \
   -H "Content-Type: application/json" \
   -d '{"credentialType": "SSH", "resourceType": "ESXI"}' \
   "https://sddc-manager.example.local/v1/credentials/rotate"
 
-# Check credential rotation status
+## Check credential rotation status
 curl -sk -u 'admin@local:password' \
   "https://sddc-manager.example.local/v1/credentials" | python3 -m json.tool
 ```
@@ -187,7 +187,7 @@ SDDC Manager → Security → Certificate Management
 4. ESXi hosts (via vCenter)
 
 ```bash
-# Check certificate expiry across all components (API)
+## Check certificate expiry across all components (API)
 curl -sk -u 'admin@local:password' \
   "https://sddc-manager.example.local/v1/certificates" | \
   python3 -m json.tool | grep -E "expirationDate|resourceFqdn"
@@ -245,7 +245,7 @@ New hosts are onboarded into SDDC Manager before being assigned to a workload do
 **Key SDDC Manager log paths:**
 
 ```bash
-# SSH to SDDC Manager appliance (vcf user → sudo)
+## SSH to SDDC Manager appliance (vcf user → sudo)
 /var/log/vmware/vcf/sddc-manager/vcfops.log     # LCM and orchestration
 /var/log/vmware/vcf/sddc-manager/sddc-svc.log   # core SDDC Manager service
 /var/log/vmware/vcf/lcm/lcm-debug.log           # Lifecycle Management detail

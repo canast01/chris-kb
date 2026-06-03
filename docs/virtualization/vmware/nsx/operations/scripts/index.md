@@ -11,7 +11,7 @@ Scripts reference covering NSX-T System Health Check (Python), Transport Node St
 
 Query key NSX-T REST API endpoints to assess cluster, transport node, and edge cluster health, and report any open alarms.
 
-~~~python
+```python
 #!/usr/bin/env python3
 """
 nsxt_health_check.py
@@ -107,7 +107,7 @@ except Exception as e:
 
 print(f"\nOverall: {'PASS' if overall == 0 else 'WARNING' if overall == 1 else 'CRITICAL'}")
 sys.exit(overall)
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -218,7 +218,7 @@ The script exits with code 1 if any issues are found.
 
 Authenticate to the NSX-T Policy API and retrieve all DFW security policies and rules, flagging overly permissive allow-any rules.
 
-~~~bash
+```bash
 #!/bin/bash
 # nsxt_dfw_audit.sh
 # Usage: NSX_HOST=nsx.local NSX_USER=admin NSX_PASS=secret ./nsxt_dfw_audit.sh
@@ -288,7 +288,7 @@ PYEOF
 done <<< "$policy_ids"
 
 echo "Audit complete."
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -352,7 +352,7 @@ Rules flagged as ALLOW ANY->ANY are marked `*** OVERLY_PERMISSIVE`.
 
 Query NSX-T Policy API for all segments, Tier-0/Tier-1 gateways, and BGP neighbor state, and report connectivity health.
 
-~~~python
+```python
 #!/usr/bin/env python3
 """
 nsxt_gateway_health.py
@@ -448,7 +448,7 @@ except Exception as e:
 
 print(f"\nOverall: {'PASS' if overall == 0 else 'WARNING' if overall == 1 else 'CRITICAL'}")
 sys.exit(overall)
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -516,7 +516,7 @@ Any down BGP neighbor appears in red. The script exits with code 2 on critical f
 
 Check NSX-T cluster, transport node, and edge health using the `uri` module, and assert no open critical alarms.
 
-~~~yaml
+```yaml
 ---
 # nsxt_operational.yml
 # Usage: ansible-playbook nsxt_operational.yml
@@ -617,7 +617,7 @@ Check NSX-T cluster, transport node, and edge health using the `uri` module, and
           - "Cluster: {{ cluster_status.json.mgmt_cluster_status.status }}"
           - "Transport nodes up: {{ tn_status.json.up_count }}/{{ tn_status.json.total_count }}"
           - "Critical alarms: {{ critical_alarms.json.result_count }}"
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -676,7 +676,7 @@ Each task prints `ok` (assertion passed) or `fatal` (assertion failed). A non-ST
 
 Use the NSX-T REST API with built-in PowerShell to check cluster status, transport node health, and active alarms — no extra modules needed.
 
-~~~powershell
+```powershell
 # nsxt_rest_health.ps1
 # Uses the NSX-T REST API — no extra modules required.
 # Requires PowerShell 5.1+ (already on Windows 10/11).
@@ -804,7 +804,7 @@ $overallColour = if ($overallExit -eq 0) { "Green" } elseif ($overallExit -eq 1)
 Write-Host "Overall: " -NoNewline
 Write-Host $overallText -ForegroundColor $overallColour
 exit $overallExit
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -879,7 +879,7 @@ Any cluster instability or transport nodes that are down appear in red. MEDIUM a
 
 Connect to NSX Manager via SSH using plink (from PuTTY) and run NSX-specific CLI commands to check cluster and transport node health.
 
-~~~batch
+```batch
 @echo off
 REM nsxt_plink_check.bat — NSX-T Manager health check via SSH (plink)
 REM Connects to NSX Manager using plink (PuTTY command-line SSH tool).
@@ -921,7 +921,7 @@ echo --- Active Alarms ---
 
 echo.
 echo === NSX-T check complete ===
-~~~
+```
 
 ### How to run this script — step by step
 

@@ -6,7 +6,7 @@ CLI Reference reference covering Session Management, vdmexport / vdmimport, UAG 
 </div>
 
   Horizon CLI Tools
-```powershell
+```text
 ┌──────────────────────────────────────────────────────────────────┐
 │  vdmadmin.exe          │  vdmexport / vdmimport                                                       │
 │  ┌────────────────┐    │  ┌──────────────────────────────────┐                                        │

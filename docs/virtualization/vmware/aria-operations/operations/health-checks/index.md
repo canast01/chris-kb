@@ -125,15 +125,15 @@ Aria Operations — Health Check Coverage Map
 3. Last collection time should be within 5 minutes
 
 ```bash
-# List adapters with verbose collection state
+## List adapters with verbose collection state
 vracli adapter list --verbose
 
-# Check the collector service log for adapter errors
+## Check the collector service log for adapter errors
 tail -200 /data/vcops/log/collector.log | grep -i "error\|exception\|fail"
 
-# Restart an adapter that is stuck in "Not Collecting"
-# UI: Administration → Solutions → select adapter → Restart Instance
-# Or via API:
+## Restart an adapter that is stuck in "Not Collecting"
+## UI: Administration → Solutions → select adapter → Restart Instance
+## Or via API:
 curl -sk -X POST -H "Authorization: vRealizeOpsToken $TOKEN" \
   "https://vrops-prod-01.example.local/suite-api/api/adapters/<adapter-id>/monitoringstatedescriptor" \
   -H "Content-Type: application/json" \
@@ -147,13 +147,13 @@ curl -sk -X POST -H "Authorization: vRealizeOpsToken $TOKEN" \
 ```bash
 ssh admin@vrops-prod-01.example.local
 
-# Check disk usage on primary node
+## Check disk usage on primary node
 df -h /storage/db /storage/log /storage/core
 
-# Check Cassandra data directory sizes (main metrics store)
+## Check Cassandra data directory sizes (main metrics store)
 du -sh /storage/db/cassandra/data/*
 
-# Check available inodes — can cause "disk full" errors even with space remaining
+## Check available inodes — can cause "disk full" errors even with space remaining
 df -i /storage/db
 ```
 
@@ -170,21 +170,21 @@ Thresholds:
 ## Service Health Commands
 
 ```bash
-# Check all vmware services on the primary node
+## Check all vmware services on the primary node
 systemctl list-units 'vmware-*' --state=active
 
-# Check a specific service that appears failed
+## Check a specific service that appears failed
 systemctl status vmware-vcops-analytics
 journalctl -u vmware-vcops-analytics --since "1 hour ago" | tail -100
 
-# Key services and expected states
-# vmware-vcops-analytics   — active (running)
-# vmware-vcops-cassandra   — active (running)
-# vmware-vcops-postgres    — active (running)
-# vmware-vcops-gemfire     — active (running)
-# vmware-casa              — active (running)
-# nginx                    — active (running)
-# vmware-vcops-watchdog    — active (running)
+## Key services and expected states
+## vmware-vcops-analytics   — active (running)
+## vmware-vcops-cassandra   — active (running)
+## vmware-vcops-postgres    — active (running)
+## vmware-vcops-gemfire     — active (running)
+## vmware-casa              — active (running)
+## nginx                    — active (running)
+## vmware-vcops-watchdog    — active (running)
 ```
 
 ---
@@ -194,16 +194,16 @@ journalctl -u vmware-vcops-analytics --since "1 hour ago" | tail -100
 Time drift causes SSO token validation failures and certificate errors across all Aria Suite products. All cluster nodes must be synchronised.
 
 ```bash
-# Check NTP sync on each cluster node
+## Check NTP sync on each cluster node
 for node in vrops-prod-01 vrops-prod-02 vrops-prod-03; do
   echo -n "$node.example.local: "
   ssh admin@"$node.example.local" "chronyc tracking 2>/dev/null | grep 'System time'"
 done
 
-# Force sync if drift is detected
+## Force sync if drift is detected
 chronyc makestep
 
-# Verify NTP sources
+## Verify NTP sources
 chronyc sources -v
 ```
 
@@ -216,12 +216,12 @@ Acceptable drift: < 1 second within the cluster. LCM pre-checks fail if drift ex
 Regularly review the alert landscape to identify noise and catch real problems:
 
 ```bash
-# Get all active alerts grouped by criticality via API
+## Get all active alerts grouped by criticality via API
 curl -sk -H "Authorization: vRealizeOpsToken $TOKEN" \
   "https://vrops-prod-01.example.local/suite-api/api/alerts?activeOnly=true" | \
   jq '[.alerts[] | .criticality] | group_by(.) | map({criticality: .[0], count: length})'
 
-# Get all CRITICAL alerts with their object and alert name
+## Get all CRITICAL alerts with their object and alert name
 curl -sk -H "Authorization: vRealizeOpsToken $TOKEN" \
   "https://vrops-prod-01.example.local/suite-api/api/alerts?activeOnly=true&criticality=CRITICAL" | \
   jq '.alerts[] | {alert: .type.name, object: .resourceName, since: .startTimeUTC}'
@@ -250,7 +250,7 @@ Run before any upgrade (via LCM or in-product):
 ### Capacity Review
 
 ```bash
-# Check cluster-level capacity summary via API
+## Check cluster-level capacity summary via API
 curl -sk -H "Authorization: vRealizeOpsToken $TOKEN" \
   "https://vrops-prod-01.example.local/suite-api/api/resources?resourceKind=ClusterComputeResource" | \
   jq '.resourceList[] | {name: .resourceKey.name}'

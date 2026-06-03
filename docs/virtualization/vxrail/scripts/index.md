@@ -63,7 +63,7 @@
 
 Connect to vCenter managing VxRail and query the VxRail Manager REST API to report cluster health, node states, and active faults.
 
-~~~powershell
+```powershell
 #!/usr/bin/env pwsh
 # vxrail-cluster-health.ps1
 # Usage: ./vxrail-cluster-health.ps1 -VxRailMgrHost <host> -VxRailUser <user> -VxRailPass <pass>
@@ -154,7 +154,7 @@ if ($faultCount -gt 0) {
     Write-Host "RESULT: HEALTHY" -ForegroundColor Green
     exit 0
 }
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -208,7 +208,7 @@ A table listing each VxRail node (by serial number) with colour-coded health sta
 
 Query the VxRail Manager REST API to determine the current version, available updates, and whether all nodes are healthy before an LCM upgrade.
 
-~~~bash
+```bash
 #!/usr/bin/env bash
 # vxrail-lcm-readiness.sh
 # Usage: VXRAIL_MGR_HOST=<host> VXRAIL_USER=<user> VXRAIL_PASS=<pass> ./vxrail-lcm-readiness.sh
@@ -302,7 +302,7 @@ else
     echo "PRE-CHECK RESULT : PASS — Ready to upgrade from ${CURRENT_VERSION} to ${AVAILABLE_VERSION}."
     exit 0
 fi
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -350,7 +350,7 @@ Current VxRail version, available upgrade version (or "none" if already up to da
 
 Retrieve per-node hardware health from the VxRail Manager REST API and flag any component not in a Healthy state.
 
-~~~bash
+```bash
 #!/usr/bin/env bash
 # vxrail-node-hardware.sh
 # Usage: VXRAIL_MGR_HOST=<host> VXRAIL_USER=<user> VXRAIL_PASS=<pass> ./vxrail-node-hardware.sh
@@ -435,7 +435,7 @@ else
     echo "OVERALL: All nodes hardware Healthy."
     exit 0
 fi
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -479,7 +479,7 @@ A section for each VxRail node showing PSU, Fan, Disk, and NIC health status. An
 
 Use the Ansible `uri` module to authenticate against VxRail Manager, collect cluster and host health, retrieve system faults, assert no critical faults, and print a structured summary.
 
-~~~yaml
+```yaml
 ---
 # vxrail-health.yml
 # Usage: ansible-playbook vxrail-health.yml -e "vxrail_mgr=192.0.2.10 vxrail_user=admin vxrail_pass=secret"
@@ -582,7 +582,7 @@ Use the Ansible `uri` module to authenticate against VxRail Manager, collect clu
       loop_control:
         label: "{{ item.severity }}"
       when: system_faults | length > 0
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -629,7 +629,7 @@ Ansible will print task-by-task output. The `debug` tasks will display cluster v
 
 Query the VxRail Manager REST API from a Windows machine to report cluster version, number of nodes, any unhealthy nodes, and alert count.
 
-~~~powershell
+```powershell
 # vxrail-health-windows.ps1
 # Usage: .\vxrail-health-windows.ps1 -VxrailMgr <IP> -VxUser <user> -VxPass <pass>
 # Requires: PowerShell 5.1 or later (built into Windows 10/11)
@@ -722,7 +722,7 @@ try {
 
 Write-Host ""
 Write-Host "Done." -ForegroundColor Cyan
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -776,7 +776,7 @@ Cluster version and health state, number of nodes, a table showing each node's h
 
 Use plink.exe (PuTTY's command-line SSH tool) to connect to the VxRail Manager appliance and run CLI commands to check system version and cluster health.
 
-~~~batch
+```batch
 @echo off
 REM vxrail-node-status.bat — VxRail node status via SSH (plink)
 REM Uses plink.exe (from PuTTY) for SSH. Download: https://www.putty.org
@@ -813,7 +813,7 @@ echo --- Node List ---
 
 echo.
 echo Done.
-~~~
+```
 
 ### How to run this script — step by step
 

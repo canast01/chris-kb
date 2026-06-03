@@ -6,7 +6,7 @@ Diagnostics reference covering Collect Horizon Support Bundle, Windows Event Log
 </div>
 
   Diagnostic Data Sources
-```powershell
+```text
 ┌──────────────────────────────────────────────────────────────┐
 │  Connection Server                UAG                                                                 │
 │  ┌────────────────────────────┐   ┌────────────────────────┐                                          │

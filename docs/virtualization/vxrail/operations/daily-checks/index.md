@@ -67,9 +67,9 @@ Use this page for VxRail operations, support checks, lifecycle work, troubleshoo
 
 ## Health Commands
 
-~~~bash
+```bash
 # Add environment-specific commands here
-~~~
+```
 
 ## Common Issues
 

@@ -179,7 +179,7 @@ SDDC Manager → Administration → Syslog → Add Syslog Server
 **vCenter syslog per workload domain (PowerCLI):**
 
 ```powershell
-# Configure syslog forwarding on all ESXi hosts in a cluster
+## Configure syslog forwarding on all ESXi hosts in a cluster
 Get-Cluster "ClusterName" | Get-VMHost | ForEach-Object {
   Set-VMHostSysLogServer -VMHost $_ -SysLogServer "udp://<siem-ip>:514"
   Restart-VMHostService -VMHost $_ -Key "syslog" -Confirm:$false

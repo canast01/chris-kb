@@ -6,7 +6,7 @@ Scripts reference covering Get Session Count by Pool, Force Logoff Disconnected 
 </div>
 
   Automation via PowerCLI / REST API
-```powershell
+```text
 ┌──────────────────────────────────────────────────────────┐
 │  Connect-HVServer ──► token/session                                                                   │
 │                                                                                                       │

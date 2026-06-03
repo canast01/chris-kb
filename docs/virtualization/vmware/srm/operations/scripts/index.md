@@ -6,7 +6,7 @@ Scripts reference covering Get All Protected VMs and RPO Compliance, Get Last Te
 </div>
 
   SRM Automation via PowerCLI + REST API
-```powershell
+```text
 ┌──────────────────────────────────────────────────────────────┐
 │  Connect-SrmServer ──► $srm.ExtensionData.*                                                           │
 │                                                                                                       │

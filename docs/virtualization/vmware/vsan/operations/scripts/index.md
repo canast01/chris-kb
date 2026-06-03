@@ -112,7 +112,7 @@ Any test in yellow appears in yellow text, red tests in red. The script exits wi
 
 Print a per-host, per-disk-group capacity table showing cache and capacity tier details, sorted by utilization.
 
-~~~powershell
+```powershell
 #Requires -Modules VMware.PowerCLI
 # vsan_diskgroup_report.ps1
 # Usage: pwsh -File vsan_diskgroup_report.ps1
@@ -173,7 +173,7 @@ $warnCount = ($sorted | Where-Object { $_.Status -eq 'WARNING' }).Count
 Write-Host "`nDisk groups above ${WarnPercent}%: $warnCount"
 Disconnect-VIServer -Confirm:$false
 exit ($warnCount -gt 0 ? 1 : 0)
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -241,7 +241,7 @@ Disk groups above 70% appear in yellow. The script exits with code 1 if any disk
 
 Connect to vCenter via pyVmomi, query all vSAN objects, and report any that are not in a healthy state.
 
-~~~python
+```python
 #!/usr/bin/env python3
 """
 vsan_object_health.py
@@ -349,7 +349,7 @@ else:
     print("All vSAN-backed VM objects appear accessible.")
     Disconnect(si)
     sys.exit(0)
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -415,7 +415,7 @@ The script exits with code 1 if any inaccessible objects are found.
 
 Collect 24-hour vSAN performance statistics via `Get-VsanStat` and compare key metrics against configurable baselines.
 
-~~~powershell
+```powershell
 #Requires -Modules VMware.PowerCLI
 # vsan_perf_baseline.ps1
 # Usage: pwsh -File vsan_perf_baseline.ps1
@@ -479,7 +479,7 @@ foreach ($metric in $baselines.Keys | Sort-Object) {
 Write-Host "`nOverall: $(if ($overallExit -eq 0){'PASS'} elseif ($overallExit -eq 1){'WARNING'} else{'CRITICAL'})"
 Disconnect-VIServer -Confirm:$false
 exit $overallExit
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -552,7 +552,7 @@ Metrics more than 20% above baseline appear in yellow (WARNING), more than 50% a
 
 Use `community.vmware` to gather vSAN cluster info, run health checks, inspect disk groups, and assert all health tests pass.
 
-~~~yaml
+```yaml
 ---
 # vsan_health.yml
 # Usage: ansible-playbook -i inventory vsan_health.yml
@@ -622,7 +622,7 @@ Use `community.vmware` to gather vSAN cluster info, run health checks, inspect d
       ansible.builtin.debug:
         msg: "ALERT: vSAN health issue detected on {{ cluster_name }}"
       when: yellow_assert is failed
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -683,7 +683,7 @@ Each task prints `ok` or `failed`. A RED health test causes a hard failure. YELL
 
 Use PowerCLI to connect to vCenter, retrieve vSAN cluster configuration and health summary, and highlight any tests in warning or critical state.
 
-~~~powershell
+```powershell
 # vsan_health_windows.ps1
 # Requires PowerCLI: Install-Module VMware.PowerCLI -Scope CurrentUser -Force
 # Requires PowerShell 5.1+ (already on Windows 10/11).
@@ -777,7 +777,7 @@ foreach ($cluster in $clusters) {
 Write-Host "Overall: $(if ($overallExit -eq 0){'PASS'} elseif ($overallExit -eq 1){'WARNING'} else{'CRITICAL'})"
 Disconnect-VIServer -Confirm:$false
 exit $overallExit
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -859,7 +859,7 @@ Any test in yellow status appears in yellow text, red tests in red.
 
 Connect to an ESXi host that is part of your vSAN cluster via SSH using plink (from PuTTY) and run vSAN ESXCLI commands.
 
-~~~batch
+```batch
 @echo off
 REM vsan_diskgroup_check.bat — vSAN disk group status via SSH (plink)
 REM Connects to an ESXi host in the vSAN cluster using plink (PuTTY SSH tool).
@@ -901,7 +901,7 @@ echo --- vSAN Health Check Summary ---
 
 echo.
 echo === vSAN check complete ===
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -983,7 +983,7 @@ vsan_diskgroup_check.bat
 
 Lists every VM in the cluster with its assigned storage policy, FTT setting, and compliance status. Exports to CSV for quarterly audits and capacity planning.
 
-~~~powershell
+```powershell
 #Requires -Modules VMware.PowerCLI
 # vsan_policy_audit.ps1
 # Usage: pwsh -File vsan_policy_audit.ps1 [-OutputPath report.csv]
@@ -1046,7 +1046,7 @@ $results | Export-Csv -Path $OutputPath -NoTypeInformation
 Write-Host "`nReport saved to: $OutputPath"
 
 Disconnect-VIServer -Confirm:$false
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -1098,7 +1098,7 @@ Report saved to: vsan_policy_audit_20260601.csv
 
 Finds all non-compliant VMs, re-applies their assigned storage policy, and logs each action. Safe to run on production clusters — re-applying an existing policy only triggers rebuilds if components are missing.
 
-~~~powershell
+```powershell
 #Requires -Modules VMware.PowerCLI
 # vsan_remediate_noncompliant.ps1
 # Usage: pwsh -File vsan_remediate_noncompliant.ps1 [-DryRun]
@@ -1152,7 +1152,7 @@ Write-Host "`n${mode}Remediation complete. Monitor resync:"
 Write-Host "  esxcli vsan debug resync summary get"
 
 Disconnect-VIServer -Confirm:$false
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -1198,7 +1198,7 @@ Remediation complete. Monitor resync:
 
 Queries vSAN capacity usage and projects the date at which the cluster will reach 70% and 80% utilisation based on the last 30 days of growth. Requires the vSAN Performance Service to be enabled.
 
-~~~powershell
+```powershell
 #Requires -Modules VMware.PowerCLI
 # vsan_capacity_forecast.ps1
 # Usage: pwsh -File vsan_capacity_forecast.ps1
@@ -1274,7 +1274,7 @@ if ($stats -and $stats.Count -ge 2) {
 }
 
 Disconnect-VIServer -Confirm:$false
-~~~
+```
 
 ### How to run this script — step by step
 
@@ -1324,7 +1324,7 @@ Forecast (at current growth rate):
 
 Polls resync status every 30 seconds and prints a running summary until the queue is empty or a timeout is reached. Useful during maintenance windows to track rebuild progress.
 
-~~~powershell
+```powershell
 #Requires -Modules VMware.PowerCLI
 # vsan_resync_monitor.ps1
 # Usage: pwsh -File vsan_resync_monitor.ps1 [-TimeoutMinutes 120]
@@ -1378,7 +1378,7 @@ Write-Host "`nTimeout reached — resync still in progress." -ForegroundColor Re
 Write-Host "Run 'esxcli vsan debug resync summary get' from an ESXi host to check current state."
 Disconnect-VIServer -Confirm:$false
 exit 1
-~~~
+```
 
 ### How to run this script — step by step
 

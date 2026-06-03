@@ -125,15 +125,15 @@ Acceptable ratio: Available desktops should be ≥ 10% of pool size to handle bu
 ## Active Session Count vs License
 
 ```powershell
-# Using VMware.Hv.Helper PowerShell module
+## Using VMware.Hv.Helper PowerShell module
 Connect-HVServer -Server horizon-cs01.example.local -Credential (Get-Credential)
 
-# Get current active session count
+## Get current active session count
 $sessions = Get-HVLocalSession
 Write-Host "Active sessions: $($sessions.Count)"
 
-# Get licensed session count from License page
-# Horizon Console → Settings → Product Licensing and Usage
+## Get licensed session count from License page
+## Horizon Console → Settings → Product Licensing and Usage
 ```
 
 ---
@@ -141,15 +141,15 @@ Write-Host "Active sessions: $($sessions.Count)"
 ## UAG Health Check
 
 ```bash
-# UAG exposes a health API endpoint
+## UAG exposes a health API endpoint
 curl -sk https://uag.example.local/favicon.ico  # should return 200
 curl -sk https://uag.example.local:9443/rest/v1/monitor/health \
   -u admin:<password> | python3 -m json.tool
-# Look for "RUNNING" status on all services
+## Look for "RUNNING" status on all services
 
-# Test Blast gateway reachability from external network
-# Blast: TCP 8443 (HTTPS)
-# PCoIP: TCP/UDP 4172
+## Test Blast gateway reachability from external network
+## Blast: TCP 8443 (HTTPS)
+## PCoIP: TCP/UDP 4172
 nc -vz uag.example.local 8443
 nc -vz uag.example.local 4172
 ```
@@ -166,7 +166,7 @@ App Volumes Manager UI → Infrastructure → Managers
 ```
 
 ```bash
-# Test App Volumes Manager API
+## Test App Volumes Manager API
 curl -sk https://appvol-mgr.example.local/cv_api/status
 ```
 
@@ -177,11 +177,11 @@ curl -sk https://appvol-mgr.example.local/cv_api/status
 Dynamic Environment Manager reads GPO config from a UNC share. Verify accessibility:
 
 ```powershell
-# On a desktop VM or Connection Server:
+## On a desktop VM or Connection Server:
 Test-Path "\\fileserver.example.local\DEM-Config\General"
-# Should return True
+## Should return True
 
-# Check DEM Agent service in a desktop VM
+## Check DEM Agent service in a desktop VM
 Get-Service -ComputerName <desktop-vm> -Name "User Environment Manager Agent"
 ```
 
@@ -190,15 +190,15 @@ Get-Service -ComputerName <desktop-vm> -Name "User Environment Manager Agent"
 ## Certificate Expiry
 
 ```bash
-# Check Connection Server SSL certificate
+## Check Connection Server SSL certificate
 echo | openssl s_client -connect horizon-cs01.example.local:443 -servername horizon-cs01.example.local 2>/dev/null \
   | openssl x509 -noout -dates
 
-# Check UAG certificate
+## Check UAG certificate
 echo | openssl s_client -connect uag.example.local:443 -servername uag.example.local 2>/dev/null \
   | openssl x509 -noout -dates
 
-# Check UAG Blast gateway cert (port 8443)
+## Check UAG Blast gateway cert (port 8443)
 echo | openssl s_client -connect uag.example.local:8443 2>/dev/null \
   | openssl x509 -noout -dates
 ```
@@ -210,12 +210,12 @@ echo | openssl s_client -connect uag.example.local:8443 2>/dev/null \
 ```powershell
 Connect-HVServer -Server horizon-cs01.example.local -Credential (Get-Credential)
 
-# Get desktops in error state
+## Get desktops in error state
 Get-HVDesktop | Where-Object { $_.Base.BasicState -eq "ERROR" } | 
   Select-Object -ExpandProperty Base | 
   Select-Object Name, BasicState, DesktopSummaryData
 
-# Delete error-state desktops (they will be reprovisioned automatically)
+## Delete error-state desktops (they will be reprovisioned automatically)
 Get-HVDesktop | Where-Object { $_.Base.BasicState -eq "ERROR" } |
   Remove-HVDesktop -Confirm:$false
 ```
@@ -227,13 +227,13 @@ Get-HVDesktop | Where-Object { $_.Base.BasicState -eq "ERROR" } |
 From an external network (outside the corporate LAN):
 
 ```bash
-# Blast Extreme — TCP 8443 to UAG
+## Blast Extreme — TCP 8443 to UAG
 nc -vz uag.public.corp.com 8443
 
-# PCoIP — TCP 4172 and UDP 4172 to UAG
+## PCoIP — TCP 4172 and UDP 4172 to UAG
 nc -vz uag.public.corp.com 4172
 
-# HTTPS Tunnel — TCP 443 to UAG
+## HTTPS Tunnel — TCP 443 to UAG
 nc -vz uag.public.corp.com 443
 ```
 
