@@ -3396,17 +3396,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#runner-health" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Runner Health
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#workflow-failures" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3693,29 +3682,43 @@ Health Checks reference covering Runner Health, Workflow Failures, Secrets and C
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
 <a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># 6. Workflow run minutes (billed plan)</span>
 <a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>gh<span class="w"> </span>api<span class="w"> </span>/repos/&lt;owner&gt;/&lt;repo&gt;/actions/billing/minutes
-</code></pre></div>
-<blockquote>
-<p><strong>Stuck runs:</strong> Any queued run older than 30 minutes without a runner pickup indicates a runner availability problem. Check runner status and labels before investigating the workflow itself.</p>
-</blockquote>
-<hr />
-<h2 id="runner-health">Runner Health<a class="headerlink" href="#runner-health" title="Permanent link">&para;</a></h2>
-<p>Self-hosted runners must be online, registered, and correctly labelled to pick up workflow jobs. GitHub-hosted runners are managed by GitHub but capacity and queue depth still require monitoring.</p>
-<p><strong>List all runners for a repository</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>gh<span class="w"> </span>api<span class="w"> </span>/repos/&lt;owner&gt;/&lt;repo&gt;/actions/runners<span class="w"> </span>--jq<span class="w"> </span><span class="s1">&#39;.runners[] | {name,status,busy,labels}&#39;</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="sb">```</span>text
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>┌───────────────────────────────────<span class="w"> </span>GitHub<span class="w"> </span>Actions<span class="w"> </span>—<span class="w"> </span>Health<span class="w"> </span>Checks<span class="w"> </span>────────────────────────────────────┐
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│<span class="w">   </span>┌───────────────────────────────────────────────────────────────────────────────────────────────┐<span class="w">   </span>│
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│<span class="w">   </span>│<span class="w"> </span>Health<span class="w"> </span>checks<span class="w"> </span><span class="k">for</span><span class="w"> </span>GitHub<span class="w"> </span>Actions:<span class="w"> </span>runner<span class="w"> </span>availability,<span class="w"> </span>job<span class="w"> </span>queue<span class="w"> </span>depth,<span class="w"> </span>workflow<span class="w"> </span>failure<span class="w"> </span>rate<span class="w"> </span>│<span class="w">   </span>│
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│<span class="w">   </span>│<span class="w">          </span>Monitor:<span class="w"> </span>Org<span class="w"> </span>Settings<span class="w"> </span>→<span class="w"> </span>Actions<span class="w"> </span>→<span class="w"> </span>Runners<span class="w"> </span>—<span class="w"> </span>check<span class="w"> </span>idle/active/offline<span class="w"> </span>count<span class="w">          </span>│<span class="w">   </span>│
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│<span class="w">   </span>│<span class="w">    </span>Alert<span class="w"> </span>conditions:<span class="w"> </span>self-hosted<span class="w"> </span>runner<span class="w"> </span>offline<span class="w"> </span>&gt;5<span class="w"> </span>min,<span class="w"> </span>queue<span class="w"> </span>depth<span class="w"> </span>&gt;10,<span class="w"> </span>failure<span class="w"> </span>rate<span class="w"> </span>&gt;10%<span class="w">    </span>│<span class="w">   </span>│
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│<span class="w">   </span>└───────────────────────────────────────────────────────────────────────────────────────────────┘<span class="w">   </span>│
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│<span class="w">                                                                                                       </span>│
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│<span class="w">   </span>┌──────────────────────────────────────────────┐<span class="w">  </span>┌─────────────────────────────────────────────┐<span class="w">   </span>│
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│<span class="w">   </span>│<span class="w">                </span>Runner<span class="w"> </span>Health<span class="w">                 </span>│<span class="w">  </span>│<span class="w">               </span>Workflow<span class="w"> </span>Health<span class="w">               </span>│<span class="w">   </span>│
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│<span class="w">   </span>│<span class="w">          </span>gh<span class="w"> </span>api<span class="w"> </span>/orgs/<span class="o">{</span>org<span class="o">}</span>/runners<span class="w">          </span>│<span class="w">  </span>│<span class="w">         </span>gh<span class="w"> </span>run<span class="w"> </span>list<span class="w"> </span>--status<span class="w"> </span>failure<span class="w">        </span>│<span class="w">   </span>│
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│<span class="w">   </span>│<span class="w">        </span>Runner<span class="w"> </span>status:<span class="w"> </span>online/offline<span class="w">         </span>│<span class="w">  </span>│<span class="w">         </span>Workflow<span class="w"> </span>failure<span class="w"> </span>rate<span class="w"> </span>trend<span class="w">         </span>│<span class="w">   </span>│
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│<span class="w">   </span>│<span class="w">      </span>Runner<span class="w"> </span>version:<span class="w"> </span>check<span class="w"> </span><span class="k">for</span><span class="w"> </span>updates<span class="w">       </span>│<span class="w">  </span>│<span class="w">          </span>Queue<span class="w"> </span><span class="nb">wait</span><span class="w"> </span><span class="nb">time</span><span class="w"> </span><span class="o">(</span>Insights<span class="o">)</span><span class="w">         </span>│<span class="w">   </span>│
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│<span class="w">   </span>│<span class="w">         </span>Runner<span class="w"> </span>disk<span class="w"> </span>and<span class="w"> </span>CPU<span class="w"> </span>on<span class="w"> </span>host<span class="w">          </span>│<span class="w">  </span>│<span class="w">           </span>Billing<span class="w"> </span>minutes<span class="w"> </span>consumed<span class="w">          </span>│<span class="w">   </span>│
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│<span class="w">   </span>│<span class="w">         </span>Runner<span class="w"> </span>labels<span class="w"> </span>match<span class="w"> </span>workflow<span class="w">         </span>│<span class="w">  </span>│<span class="w">             </span>Secrets<span class="w"> </span>expiry<span class="w"> </span>dates<span class="w">            </span>│<span class="w">   </span>│
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│<span class="w">   </span>└──────────────────────────────────────────────┘<span class="w">  </span>└─────────────────────────────────────────────┘<span class="w">   </span>│
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│<span class="w">                                                                                                       </span>│
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│<span class="w">   </span>┌───────────────────────────────────────────────────────────────────────────────────────────────┐<span class="w">   </span>│
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│<span class="w">   </span>│<span class="w">  </span>Runner<span class="w"> </span><span class="nv">labels</span><span class="w">   </span><span class="o">=</span><span class="w"> </span>tags<span class="w"> </span>assigned<span class="w"> </span>to<span class="w"> </span>self-hosted<span class="w"> </span>runners<span class="p">;</span><span class="w"> </span>workflows<span class="w"> </span><span class="k">select</span><span class="w"> </span>runner<span class="w"> </span>via<span class="w"> </span>runs-on:<span class="w"> </span>│<span class="w">   </span>│
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│<span class="w">   </span>│<span class="w">   </span>Insights<span class="w"> </span><span class="nv">tab</span><span class="w">    </span><span class="o">=</span><span class="w"> </span>repo/org-level:<span class="w"> </span>workflow<span class="w"> </span>run<span class="w"> </span>history,<span class="w"> </span>duration<span class="w"> </span>trends,<span class="w"> </span>billing<span class="w"> </span>breakdown<span class="w">  </span>│<span class="w">   </span>│
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│<span class="w">   </span>│<span class="w">     </span>Queue<span class="w"> </span><span class="nb">wait</span><span class="w"> </span><span class="nb">time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">time</span><span class="w"> </span>from<span class="w"> </span>trigger<span class="w"> </span>to<span class="w"> </span>job<span class="w"> </span>start<span class="p">;</span><span class="w"> </span>high<span class="w"> </span><span class="nv">values</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>runner<span class="w"> </span>pool<span class="w"> </span>undersized<span class="w">    </span>│<span class="w">   </span>│
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│<span class="w">   </span>└───────────────────────────────────────────────────────────────────────────────────────────────┘<span class="w">   </span>│
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
 <p><strong>List runners at the organisation level</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>gh<span class="w"> </span>api<span class="w"> </span>/orgs/&lt;org&gt;/actions/runners<span class="w"> </span>--jq<span class="w"> </span><span class="s1">&#39;.runners[] | {name,status,busy}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>gh<span class="w"> </span>api<span class="w"> </span>/orgs/&lt;org&gt;/actions/runners<span class="w"> </span>--jq<span class="w"> </span><span class="s1">&#39;.runners[] | {name,status,busy}&#39;</span>
 </code></pre></div>
 <p><strong>Check runner version (outdated runners may stop receiving jobs)</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>gh<span class="w"> </span>api<span class="w"> </span>/repos/&lt;owner&gt;/&lt;repo&gt;/actions/runners<span class="w"> </span>--jq<span class="w"> </span><span class="s1">&#39;.runners[] | {name,runner_version}&#39;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>gh<span class="w"> </span>api<span class="w"> </span>/repos/&lt;owner&gt;/&lt;repo&gt;/actions/runners<span class="w"> </span>--jq<span class="w"> </span><span class="s1">&#39;.runners[] | {name,runner_version}&#39;</span>
 </code></pre></div>
 <p><strong>Remove a stale offline runner</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>gh<span class="w"> </span>api<span class="w"> </span>--method<span class="w"> </span>DELETE<span class="w"> </span>/repos/&lt;owner&gt;/&lt;repo&gt;/actions/runners/&lt;runner-id&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>gh<span class="w"> </span>api<span class="w"> </span>--method<span class="w"> </span>DELETE<span class="w"> </span>/repos/&lt;owner&gt;/&lt;repo&gt;/actions/runners/&lt;runner-id&gt;
 </code></pre></div>
 <p><strong>Verify runner labels match workflow <code>runs-on</code> values</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Compare runner labels from API output against runs-on values in workflow files</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>gh<span class="w"> </span>api<span class="w"> </span>/repos/&lt;owner&gt;/&lt;repo&gt;/actions/runners<span class="w"> </span>--jq<span class="w"> </span><span class="s1">&#39;.runners[] | .labels[].name&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-u
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>grep<span class="w"> </span>-r<span class="w"> </span><span class="s2">&quot;runs-on:&quot;</span><span class="w"> </span>.github/workflows/<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $NF}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-u
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Compare runner labels from API output against runs-on values in workflow files</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>gh<span class="w"> </span>api<span class="w"> </span>/repos/&lt;owner&gt;/&lt;repo&gt;/actions/runners<span class="w"> </span>--jq<span class="w"> </span><span class="s1">&#39;.runners[] | .labels[].name&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-u
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>grep<span class="w"> </span>-r<span class="w"> </span><span class="s2">&quot;runs-on:&quot;</span><span class="w"> </span>.github/workflows/<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">&#39;{print $NF}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-u
 </code></pre></div>
 <p><strong>Key health indicators</strong></p>
 <table>
@@ -3758,19 +3761,19 @@ Health Checks reference covering Runner Health, Workflow Failures, Secrets and C
 <h2 id="workflow-failures">Workflow Failures<a class="headerlink" href="#workflow-failures" title="Permanent link">&para;</a></h2>
 <p>Workflow failures should be investigated promptly. Recurring failures in the same workflow indicate a systemic issue rather than a transient one.</p>
 <p><strong>List recent failed runs</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>gh<span class="w"> </span>run<span class="w"> </span>list<span class="w"> </span>--status<span class="w"> </span>failure<span class="w"> </span>--limit<span class="w"> </span><span class="m">20</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>gh<span class="w"> </span>run<span class="w"> </span>list<span class="w"> </span>--status<span class="w"> </span>failure<span class="w"> </span>--limit<span class="w"> </span><span class="m">20</span>
 </code></pre></div>
 <p><strong>View details of a specific failed run</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>gh<span class="w"> </span>run<span class="w"> </span>view<span class="w"> </span>&lt;run-id&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>gh<span class="w"> </span>run<span class="w"> </span>view<span class="w"> </span>&lt;run-id&gt;
 </code></pre></div>
 <p><strong>View logs for a failed run</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>gh<span class="w"> </span>run<span class="w"> </span>view<span class="w"> </span>&lt;run-id&gt;<span class="w"> </span>--log-failed
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>gh<span class="w"> </span>run<span class="w"> </span>view<span class="w"> </span>&lt;run-id&gt;<span class="w"> </span>--log-failed
 </code></pre></div>
 <p><strong>List failed runs for a specific workflow</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>gh<span class="w"> </span>run<span class="w"> </span>list<span class="w"> </span>--workflow<span class="w"> </span>&lt;workflow-filename.yml&gt;<span class="w"> </span>--status<span class="w"> </span>failure<span class="w"> </span>--limit<span class="w"> </span><span class="m">20</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>gh<span class="w"> </span>run<span class="w"> </span>list<span class="w"> </span>--workflow<span class="w"> </span>&lt;workflow-filename.yml&gt;<span class="w"> </span>--status<span class="w"> </span>failure<span class="w"> </span>--limit<span class="w"> </span><span class="m">20</span>
 </code></pre></div>
 <p><strong>Check if a workflow is disabled</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>gh<span class="w"> </span>workflow<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>gh<span class="w"> </span>workflow<span class="w"> </span>list
 </code></pre></div>
 <p>A workflow marked <code>disabled</code> will not trigger. Re-enable with <code>gh workflow enable &lt;workflow-name&gt;</code>.</p>
 <p><strong>Key health indicators</strong></p>
@@ -3809,19 +3812,19 @@ Health Checks reference covering Runner Health, Workflow Failures, Secrets and C
 <h2 id="secrets-and-credentials">Secrets and Credentials<a class="headerlink" href="#secrets-and-credentials" title="Permanent link">&para;</a></h2>
 <p>Expired or missing secrets cause silent authentication failures during workflow runs. Secrets should be audited on a regular cadence.</p>
 <p><strong>List secrets configured for a repository</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>gh<span class="w"> </span>secret<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>gh<span class="w"> </span>secret<span class="w"> </span>list
 </code></pre></div>
 <p>This shows secret names only — values are never returned by the API.</p>
 <p><strong>List organisation-level secrets</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>gh<span class="w"> </span>secret<span class="w"> </span>list<span class="w"> </span>--org<span class="w"> </span>&lt;org&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>gh<span class="w"> </span>secret<span class="w"> </span>list<span class="w"> </span>--org<span class="w"> </span>&lt;org&gt;
 </code></pre></div>
 <p><strong>Check environment secrets</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>gh<span class="w"> </span>secret<span class="w"> </span>list<span class="w"> </span>--env<span class="w"> </span>&lt;environment-name&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>gh<span class="w"> </span>secret<span class="w"> </span>list<span class="w"> </span>--env<span class="w"> </span>&lt;environment-name&gt;
 </code></pre></div>
 <p><strong>Identify expiring credentials (manual check)</strong></p>
 <p>Navigate to <strong>Settings → Secrets and variables → Actions</strong> and review each secret's purpose and expected expiry date against your credential rotation schedule.</p>
 <p><strong>Update a secret</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>gh<span class="w"> </span>secret<span class="w"> </span><span class="nb">set</span><span class="w"> </span>&lt;SECRET_NAME&gt;<span class="w"> </span>--body<span class="w"> </span><span class="s2">&quot;&lt;new-value&gt;&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>gh<span class="w"> </span>secret<span class="w"> </span><span class="nb">set</span><span class="w"> </span>&lt;SECRET_NAME&gt;<span class="w"> </span>--body<span class="w"> </span><span class="s2">&quot;&lt;new-value&gt;&quot;</span>
 </code></pre></div>
 <p><strong>Key health indicators</strong></p>
 <table>
@@ -3859,22 +3862,22 @@ Health Checks reference covering Runner Health, Workflow Failures, Secrets and C
 <h2 id="runner-resources">Runner Resources<a class="headerlink" href="#runner-resources" title="Permanent link">&para;</a></h2>
 <p>Self-hosted runner hosts require adequate disk, CPU, and memory. Resource exhaustion causes job failures and may leave workspace directories filling up the disk.</p>
 <p><strong>Check disk space on runner host</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>df<span class="w"> </span>-h<span class="w"> </span>/
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>df<span class="w"> </span>-h<span class="w"> </span>/
 </code></pre></div>
 <p>Alert if usage exceeds 80%. Runner workspace directories at <code>_work/</code> accumulate artefacts from past runs.</p>
 <p><strong>Clean up stale runner workspaces</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># List workspace directories older than 7 days</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>find<span class="w"> </span>/home/runner/_work<span class="w"> </span>-maxdepth<span class="w"> </span><span class="m">2</span><span class="w"> </span>-type<span class="w"> </span>d<span class="w"> </span>-mtime<span class="w"> </span>+7
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># Remove stale workspaces (run with caution — confirm no active jobs)</span>
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>find<span class="w"> </span>/home/runner/_work<span class="w"> </span>-maxdepth<span class="w"> </span><span class="m">2</span><span class="w"> </span>-type<span class="w"> </span>d<span class="w"> </span>-mtime<span class="w"> </span>+7<span class="w"> </span>-exec<span class="w"> </span>rm<span class="w"> </span>-rf<span class="w"> </span><span class="o">{}</span><span class="w"> </span>+
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># List workspace directories older than 7 days</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>find<span class="w"> </span>/home/runner/_work<span class="w"> </span>-maxdepth<span class="w"> </span><span class="m">2</span><span class="w"> </span>-type<span class="w"> </span>d<span class="w"> </span>-mtime<span class="w"> </span>+7
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="c1"># Remove stale workspaces (run with caution — confirm no active jobs)</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>find<span class="w"> </span>/home/runner/_work<span class="w"> </span>-maxdepth<span class="w"> </span><span class="m">2</span><span class="w"> </span>-type<span class="w"> </span>d<span class="w"> </span>-mtime<span class="w"> </span>+7<span class="w"> </span>-exec<span class="w"> </span>rm<span class="w"> </span>-rf<span class="w"> </span><span class="o">{}</span><span class="w"> </span>+
 </code></pre></div>
 <p><strong>Check runner service status</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># systemd-based runner</span>
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>actions.runner.&lt;owner&gt;.&lt;repo&gt;.&lt;runner-name&gt;.service
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># systemd-based runner</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>systemctl<span class="w"> </span>status<span class="w"> </span>actions.runner.&lt;owner&gt;.&lt;repo&gt;.&lt;runner-name&gt;.service
 </code></pre></div>
 <p><strong>Check runner process is active</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>ps<span class="w"> </span>aux<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>Runner.Listener
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>ps<span class="w"> </span>aux<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>Runner.Listener
 </code></pre></div>
 <p><strong>Key health indicators</strong></p>
 <table>
@@ -3928,73 +3931,73 @@ Health Checks reference covering Runner Health, Workflow Failures, Secrets and C
     branchProt --&gt; result{Issues found?}
     result --&gt;|No| ok(["Health check passed"])
     result --&gt;|Yes| investigate(["Investigate and remediate"])</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>┌─────────────────────────────────── GitHub Actions — Health Checks ────────────────────────────────────┐
-<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>│   │ Health checks for GitHub Actions: runner availability, job queue depth, workflow failure rate │   │
-<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>│   │          Monitor: Org Settings → Actions → Runners — check idle/active/offline count          │   │
-<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>│   │    Alert conditions: self-hosted runner offline &gt;5 min, queue depth &gt;10, failure rate &gt;10%    │   │
-<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>│                                                                                                       │
-<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>│   │                Runner Health                 │  │               Workflow Health               │   │
-<a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>│   │          gh api /orgs/{org}/runners          │  │         gh run list --status failure        │   │
-<a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>│   │        Runner status: online/offline         │  │         Workflow failure rate trend         │   │
-<a id="__codelineno-19-12" name="__codelineno-19-12" href="#__codelineno-19-12"></a>│   │      Runner version: check for updates       │  │          Queue wait time (Insights)         │   │
-<a id="__codelineno-19-13" name="__codelineno-19-13" href="#__codelineno-19-13"></a>│   │         Runner disk and CPU on host          │  │           Billing minutes consumed          │   │
-<a id="__codelineno-19-14" name="__codelineno-19-14" href="#__codelineno-19-14"></a>│   │         Runner labels match workflow         │  │             Secrets expiry dates            │   │
-<a id="__codelineno-19-15" name="__codelineno-19-15" href="#__codelineno-19-15"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-19-16" name="__codelineno-19-16" href="#__codelineno-19-16"></a>│                                                                                                       │
-<a id="__codelineno-19-17" name="__codelineno-19-17" href="#__codelineno-19-17"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-19-18" name="__codelineno-19-18" href="#__codelineno-19-18"></a>│   │  Runner labels   = tags assigned to self-hosted runners; workflows select runner via runs-on: │   │
-<a id="__codelineno-19-19" name="__codelineno-19-19" href="#__codelineno-19-19"></a>│   │   Insights tab    = repo/org-level: workflow run history, duration trends, billing breakdown  │   │
-<a id="__codelineno-19-20" name="__codelineno-19-20" href="#__codelineno-19-20"></a>│   │     Queue wait time = time from trigger to job start; high values = runner pool undersized    │   │
-<a id="__codelineno-19-21" name="__codelineno-19-21" href="#__codelineno-19-21"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-19-22" name="__codelineno-19-22" href="#__codelineno-19-22"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>┌─────────────────────────────────── GitHub Actions — Health Checks ────────────────────────────────────┐
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>│   │ Health checks for GitHub Actions: runner availability, job queue depth, workflow failure rate │   │
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>│   │          Monitor: Org Settings → Actions → Runners — check idle/active/offline count          │   │
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>│   │    Alert conditions: self-hosted runner offline &gt;5 min, queue depth &gt;10, failure rate &gt;10%    │   │
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>│                                                                                                       │
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>│   │                Runner Health                 │  │               Workflow Health               │   │
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>│   │          gh api /orgs/{org}/runners          │  │         gh run list --status failure        │   │
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>│   │        Runner status: online/offline         │  │         Workflow failure rate trend         │   │
+<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>│   │      Runner version: check for updates       │  │          Queue wait time (Insights)         │   │
+<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a>│   │         Runner disk and CPU on host          │  │           Billing minutes consumed          │   │
+<a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a>│   │         Runner labels match workflow         │  │             Secrets expiry dates            │   │
+<a id="__codelineno-18-15" name="__codelineno-18-15" href="#__codelineno-18-15"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-18-16" name="__codelineno-18-16" href="#__codelineno-18-16"></a>│                                                                                                       │
+<a id="__codelineno-18-17" name="__codelineno-18-17" href="#__codelineno-18-17"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-18-18" name="__codelineno-18-18" href="#__codelineno-18-18"></a>│   │  Runner labels   = tags assigned to self-hosted runners; workflows select runner via runs-on: │   │
+<a id="__codelineno-18-19" name="__codelineno-18-19" href="#__codelineno-18-19"></a>│   │   Insights tab    = repo/org-level: workflow run history, duration trends, billing breakdown  │   │
+<a id="__codelineno-18-20" name="__codelineno-18-20" href="#__codelineno-18-20"></a>│   │     Queue wait time = time from trigger to job start; high values = runner pool undersized    │   │
+<a id="__codelineno-18-21" name="__codelineno-18-21" href="#__codelineno-18-21"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-18-22" name="__codelineno-18-22" href="#__codelineno-18-22"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Validate using ajv-cli against the schema</span>
-<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>npm<span class="w"> </span>install<span class="w"> </span>-g<span class="w"> </span>ajv-cli
-<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>ajv<span class="w"> </span>validate<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="w">  </span>-s<span class="w"> </span>https://json.schemastore.org/github-workflow.json<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="w">  </span>-d<span class="w"> </span>.github/workflows/ci.yml
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Validate using ajv-cli against the schema</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>npm<span class="w"> </span>install<span class="w"> </span>-g<span class="w"> </span>ajv-cli
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>ajv<span class="w"> </span>validate<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="w">  </span>-s<span class="w"> </span>https://json.schemastore.org/github-workflow.json<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="w">  </span>-d<span class="w"> </span>.github/workflows/ci.yml
 </code></pre></div>
 <h3 id="required-status-checks">Required Status Checks<a class="headerlink" href="#required-status-checks" title="Permanent link">&para;</a></h3>
 <p>Configure branch protection to require workflow jobs to pass before merging.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># Enable branch protection with required checks via gh CLI</span>
-<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>gh<span class="w"> </span>api<span class="w"> </span>--method<span class="w"> </span>PUT<span class="w"> </span>/repos/OWNER/REPO/branches/main/protection<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="w">  </span>--input<span class="w"> </span>-<span class="w"> </span><span class="s">&lt;&lt;&#39;EOF&#39;</span>
-<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="s">{</span>
-<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="s">  &quot;required_status_checks&quot;: {</span>
-<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="s">    &quot;strict&quot;: true,</span>
-<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="s">    &quot;contexts&quot;: [&quot;build&quot;, &quot;test (3.11)&quot;, &quot;test (3.12)&quot;]</span>
-<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a><span class="s">  },</span>
-<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a><span class="s">  &quot;enforce_admins&quot;: true,</span>
-<a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a><span class="s">  &quot;required_pull_request_reviews&quot;: {</span>
-<a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a><span class="s">    &quot;required_approving_review_count&quot;: 1</span>
-<a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a><span class="s">  },</span>
-<a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a><span class="s">  &quot;restrictions&quot;: null</span>
-<a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a><span class="s">}</span>
-<a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a><span class="s">EOF</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Enable branch protection with required checks via gh CLI</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>gh<span class="w"> </span>api<span class="w"> </span>--method<span class="w"> </span>PUT<span class="w"> </span>/repos/OWNER/REPO/branches/main/protection<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="w">  </span>--input<span class="w"> </span>-<span class="w"> </span><span class="s">&lt;&lt;&#39;EOF&#39;</span>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="s">{</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="s">  &quot;required_status_checks&quot;: {</span>
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="s">    &quot;strict&quot;: true,</span>
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="s">    &quot;contexts&quot;: [&quot;build&quot;, &quot;test (3.11)&quot;, &quot;test (3.12)&quot;]</span>
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a><span class="s">  },</span>
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a><span class="s">  &quot;enforce_admins&quot;: true,</span>
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a><span class="s">  &quot;required_pull_request_reviews&quot;: {</span>
+<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a><span class="s">    &quot;required_approving_review_count&quot;: 1</span>
+<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a><span class="s">  },</span>
+<a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a><span class="s">  &quot;restrictions&quot;: null</span>
+<a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a><span class="s">}</span>
+<a id="__codelineno-20-15" name="__codelineno-20-15" href="#__codelineno-20-15"></a><span class="s">EOF</span>
 </code></pre></div>
 <h3 id="validating-workflows-in-ci">Validating Workflows in CI<a class="headerlink" href="#validating-workflows-in-ci" title="Permanent link">&para;</a></h3>
 <p>Run actionlint automatically as part of the CI pipeline.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># .github/workflows/lint-workflows.yml</span>
-<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Lint Workflows</span>
-<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>
-<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="nt">on</span><span class="p">:</span>
-<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a><span class="w">  </span><span class="nt">pull_request</span><span class="p">:</span>
-<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a><span class="w">    </span><span class="nt">paths</span><span class="p">:</span>
-<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;.github/workflows/**&#39;</span>
-<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a>
-<a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a><span class="nt">jobs</span><span class="p">:</span>
-<a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a><span class="w">  </span><span class="nt">actionlint</span><span class="p">:</span>
-<a id="__codelineno-22-11" name="__codelineno-22-11" href="#__codelineno-22-11"></a><span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-24.04</span>
-<a id="__codelineno-22-12" name="__codelineno-22-12" href="#__codelineno-22-12"></a><span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
-<a id="__codelineno-22-13" name="__codelineno-22-13" href="#__codelineno-22-13"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v4</span>
-<a id="__codelineno-22-14" name="__codelineno-22-14" href="#__codelineno-22-14"></a>
-<a id="__codelineno-22-15" name="__codelineno-22-15" href="#__codelineno-22-15"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run actionlint</span>
-<a id="__codelineno-22-16" name="__codelineno-22-16" href="#__codelineno-22-16"></a><span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rhysd/actionlint@v1</span>
-<a id="__codelineno-22-17" name="__codelineno-22-17" href="#__codelineno-22-17"></a><span class="w">        </span><span class="nt">with</span><span class="p">:</span>
-<a id="__codelineno-22-18" name="__codelineno-22-18" href="#__codelineno-22-18"></a><span class="w">          </span><span class="nt">fail-on-error</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># .github/workflows/lint-workflows.yml</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Lint Workflows</span>
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="nt">on</span><span class="p">:</span>
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="w">  </span><span class="nt">pull_request</span><span class="p">:</span>
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="w">    </span><span class="nt">paths</span><span class="p">:</span>
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;.github/workflows/**&#39;</span>
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>
+<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a><span class="nt">jobs</span><span class="p">:</span>
+<a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a><span class="w">  </span><span class="nt">actionlint</span><span class="p">:</span>
+<a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a><span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-24.04</span>
+<a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a><span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v4</span>
+<a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a>
+<a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run actionlint</span>
+<a id="__codelineno-21-16" name="__codelineno-21-16" href="#__codelineno-21-16"></a><span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rhysd/actionlint@v1</span>
+<a id="__codelineno-21-17" name="__codelineno-21-17" href="#__codelineno-21-17"></a><span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<a id="__codelineno-21-18" name="__codelineno-21-18" href="#__codelineno-21-18"></a><span class="w">          </span><span class="nt">fail-on-error</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 </code></pre></div>
 <h3 id="common-validation-errors-and-fixes">Common Validation Errors and Fixes<a class="headerlink" href="#common-validation-errors-and-fixes" title="Permanent link">&para;</a></h3>
 <table>
@@ -4039,24 +4042,24 @@ Health Checks reference covering Runner Health, Workflow Failures, Secrets and C
 </tbody>
 </table>
 <h3 id="pinning-action-versions">Pinning Action Versions<a class="headerlink" href="#pinning-action-versions" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="c1"># Avoid using @main or @master — pin to a specific tag or SHA</span>
-<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="nt">steps</span><span class="p">:</span>
-<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v4</span><span class="w">           </span><span class="c1"># semver tag (recommended)</span>
-<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/setup-python@v5</span>
-<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>
-<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a><span class="w">  </span><span class="c1"># For maximum security, pin to the commit SHA</span>
-<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683</span><span class="w">  </span><span class="c1"># v4.2.2</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># Avoid using @main or @master — pin to a specific tag or SHA</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="nt">steps</span><span class="p">:</span>
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v4</span><span class="w">           </span><span class="c1"># semver tag (recommended)</span>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/setup-python@v5</span>
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a><span class="w">  </span><span class="c1"># For maximum security, pin to the commit SHA</span>
+<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683</span><span class="w">  </span><span class="c1"># v4.2.2</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># .github/dependabot.yml</span>
-<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
-<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="nt">updates</span><span class="p">:</span>
-<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">package-ecosystem</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">github-actions</span>
-<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a><span class="w">    </span><span class="nt">directory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/</span>
-<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a><span class="w">    </span><span class="nt">schedule</span><span class="p">:</span>
-<a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a><span class="w">      </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">weekly</span>
-<a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a><span class="w">    </span><span class="nt">groups</span><span class="p">:</span>
-<a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a><span class="w">      </span><span class="nt">actions</span><span class="p">:</span>
-<a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a><span class="w">        </span><span class="nt">patterns</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;*&quot;</span><span class="p p-Indicator">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="c1"># .github/dependabot.yml</span>
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2</span>
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="nt">updates</span><span class="p">:</span>
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">package-ecosystem</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">github-actions</span>
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a><span class="w">    </span><span class="nt">directory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/</span>
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a><span class="w">    </span><span class="nt">schedule</span><span class="p">:</span>
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a><span class="w">      </span><span class="nt">interval</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">weekly</span>
+<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a><span class="w">    </span><span class="nt">groups</span><span class="p">:</span>
+<a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a><span class="w">      </span><span class="nt">actions</span><span class="p">:</span>
+<a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a><span class="w">        </span><span class="nt">patterns</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;*&quot;</span><span class="p p-Indicator">]</span>
 </code></pre></div>
 
 

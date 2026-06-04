@@ -3396,17 +3396,6 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#inventory-health" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Inventory Health
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#connectivity" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3649,25 +3638,38 @@ Health Checks reference covering Inventory Health, Connectivity, Vault and Secre
 <a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
 <a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="c1"># 8. Collection versions</span>
 <a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>ansible-galaxy<span class="w"> </span>collection<span class="w"> </span>list
-</code></pre></div>
-<blockquote>
-<p><strong>Connectivity check:</strong> The <code>grep -v SUCCESS</code> filter on the ping output means any remaining lines are failures or warnings. An empty result confirms all hosts are reachable.</p>
-</blockquote>
-<hr />
-<h2 id="inventory-health">Inventory Health<a class="headerlink" href="#inventory-health" title="Permanent link">&para;</a></h2>
-<p>The inventory is the authoritative list of managed hosts. Stale or incorrect inventory entries lead to missed deployments or unintended targeting.</p>
-<p><strong>List all hosts and groups</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ansible-inventory<span class="w"> </span>--list<span class="w"> </span>-i<span class="w"> </span>&lt;inventory&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>ansible-inventory<span class="w"> </span>--graph<span class="w"> </span>-i<span class="w"> </span>&lt;inventory&gt;
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="sb">```</span>text
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>┌───────────────────────────────────────<span class="w"> </span>Ansible<span class="w"> </span>—<span class="w"> </span>Health<span class="w"> </span>Checks<span class="w"> </span>───────────────────────────────────────┐
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│<span class="w">   </span>┌───────────────────────────────────────────────────────────────────────────────────────────────┐<span class="w">   </span>│
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│<span class="w">   </span>│<span class="w"> </span>Ansible<span class="w"> </span>health<span class="w"> </span>checks:<span class="w"> </span>verify<span class="w"> </span>control<span class="w"> </span>node,<span class="w"> </span>AWX<span class="w"> </span>services,<span class="w"> </span>connectivity,<span class="w"> </span>and<span class="w"> </span>job<span class="w"> </span>success<span class="w"> </span>rates<span class="w"> </span>│<span class="w">   </span>│
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│<span class="w">   </span>│<span class="w">     </span>Control<span class="w"> </span>node:<span class="w"> </span>check<span class="w"> </span>ansible<span class="w"> </span>version,<span class="w"> </span>Python<span class="w"> </span>version,<span class="w"> </span>SSH<span class="w"> </span>connectivity<span class="w"> </span>to<span class="w"> </span>managed<span class="w"> </span>nodes<span class="w">    </span>│<span class="w">   </span>│
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│<span class="w">   </span>│<span class="w">         </span>AWX:<span class="w"> </span>check<span class="w"> </span>service<span class="w"> </span>pods<span class="w"> </span><span class="o">(</span>Kubernetes<span class="o">)</span>,<span class="w"> </span>job<span class="w"> </span>queue<span class="w"> </span>depth,<span class="w"> </span>credential<span class="w"> </span>expiry<span class="w"> </span>dates<span class="w">        </span>│<span class="w">   </span>│
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│<span class="w">   </span>└───────────────────────────────────────────────────────────────────────────────────────────────┘<span class="w">   </span>│
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│<span class="w">                                                                                                       </span>│
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│<span class="w">   </span>┌──────────────────────────────────────────────┐<span class="w">  </span>┌─────────────────────────────────────────────┐<span class="w">   </span>│
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│<span class="w">   </span>│<span class="w">             </span>Control<span class="w"> </span>Node<span class="w"> </span>Checks<span class="w">              </span>│<span class="w">  </span>│<span class="w">                  </span>AWX<span class="w"> </span>Checks<span class="w">                 </span>│<span class="w">   </span>│
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│<span class="w">   </span>│<span class="w">              </span>ansible<span class="w"> </span>--version<span class="w">               </span>│<span class="w">  </span>│<span class="w">           </span>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>awx<span class="w">           </span>│<span class="w">   </span>│
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│<span class="w">   </span>│<span class="w">       </span>ansible<span class="w"> </span>all<span class="w"> </span>-m<span class="w"> </span>ping<span class="w"> </span><span class="o">(</span>all<span class="w"> </span>hosts<span class="o">)</span><span class="w">        </span>│<span class="w">  </span>│<span class="w">         </span>AWX<span class="w"> </span>UI:<span class="w"> </span>Dashboard<span class="w"> </span>job<span class="w"> </span>stats<span class="w">         </span>│<span class="w">   </span>│
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│<span class="w">   </span>│<span class="w">       </span>ansible-inventory<span class="w"> </span>--list<span class="w"> </span>--graph<span class="w">       </span>│<span class="w">  </span>│<span class="w">        </span>awx<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>list<span class="w"> </span>--status<span class="w"> </span>failed<span class="w">        </span>│<span class="w">   </span>│
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│<span class="w">   </span>│<span class="w">       </span>Check<span class="w"> </span>Vault<span class="w"> </span>password<span class="w"> </span>accessible<span class="w">        </span>│<span class="w">  </span>│<span class="w">        </span>Check<span class="w"> </span>credential<span class="w"> </span>expiry<span class="w"> </span>dates<span class="w">        </span>│<span class="w">   </span>│
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│<span class="w">   </span>│<span class="w">         </span>Verify<span class="w"> </span>EE<span class="w"> </span>images<span class="w"> </span>are<span class="w"> </span>current<span class="w">         </span>│<span class="w">  </span>│<span class="w">         </span>AWX<span class="w"> </span>capacity:<span class="w"> </span>forks<span class="w"> </span>headroom<span class="w">        </span>│<span class="w">   </span>│
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│<span class="w">   </span>└──────────────────────────────────────────────┘<span class="w">  </span>└─────────────────────────────────────────────┘<span class="w">   </span>│
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│<span class="w">                                                                                                       </span>│
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│<span class="w">   </span>┌───────────────────────────────────────────────────────────────────────────────────────────────┐<span class="w">   </span>│
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│<span class="w">   </span>│<span class="w">     </span>ansible<span class="w"> </span>all<span class="w"> </span>-m<span class="w"> </span><span class="nv">ping</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>fastest<span class="w"> </span>connectivity<span class="w"> </span>check<span class="p">;</span><span class="w"> </span>pong<span class="w"> </span>on<span class="w"> </span>success,<span class="w"> </span>unreachable<span class="w"> </span>on<span class="w"> </span>fail<span class="w">    </span>│<span class="w">   </span>│
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>│<span class="w">   </span>│<span class="w">      </span>Job<span class="w"> </span>success<span class="w"> </span><span class="nv">rate</span><span class="w">      </span><span class="o">=</span><span class="w"> </span>AWX<span class="w"> </span>dashboard<span class="p">;</span><span class="w"> </span>alert<span class="w"> </span><span class="k">if</span><span class="w"> </span>&gt;5%<span class="w"> </span>failure<span class="w"> </span>rate<span class="w"> </span>over<span class="w"> </span>rolling<span class="w"> </span><span class="m">7</span><span class="w"> </span>days<span class="w">     </span>│<span class="w">   </span>│
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>│<span class="w">   </span>│<span class="w">      </span>EE<span class="w"> </span><span class="nv">freshness</span><span class="w">          </span><span class="o">=</span><span class="w"> </span>execution<span class="w"> </span>environment<span class="w"> </span>images<span class="p">;</span><span class="w"> </span>rebuild<span class="w"> </span><span class="k">if</span><span class="w"> </span>base<span class="w"> </span>OS<span class="w"> </span>CVEs<span class="w"> </span>exist<span class="w">      </span>│<span class="w">   </span>│
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>│<span class="w">   </span>└───────────────────────────────────────────────────────────────────────────────────────────────┘<span class="w">   </span>│
+<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
 <p><strong>Count hosts per group</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ansible-inventory<span class="w"> </span>--list<span class="w"> </span>-i<span class="w"> </span>&lt;inventory&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;hosts&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ansible-inventory<span class="w"> </span>--list<span class="w"> </span>-i<span class="w"> </span>&lt;inventory&gt;<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;hosts&quot;</span>
 </code></pre></div>
 <p><strong>Validate inventory syntax</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ansible-inventory<span class="w"> </span>--list<span class="w"> </span>-i<span class="w"> </span>&lt;inventory&gt;<span class="w"> </span>--yaml
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>ansible-inventory<span class="w"> </span>--list<span class="w"> </span>-i<span class="w"> </span>&lt;inventory&gt;<span class="w"> </span>--yaml
 </code></pre></div>
 <p><strong>Check for unreachable hosts in a dry run</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ansible<span class="w"> </span>all<span class="w"> </span>-i<span class="w"> </span>&lt;inventory&gt;<span class="w"> </span>-m<span class="w"> </span>ping<span class="w"> </span>--one-line<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;UNREACHABLE|FAILED&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>ansible<span class="w"> </span>all<span class="w"> </span>-i<span class="w"> </span>&lt;inventory&gt;<span class="w"> </span>-m<span class="w"> </span>ping<span class="w"> </span>--one-line<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;UNREACHABLE|FAILED&quot;</span>
 </code></pre></div>
 <p><strong>Key health indicators</strong></p>
 <table>
@@ -3705,19 +3707,19 @@ Health Checks reference covering Inventory Health, Connectivity, Vault and Secre
 <h2 id="connectivity">Connectivity<a class="headerlink" href="#connectivity" title="Permanent link">&para;</a></h2>
 <p>SSH connectivity must be confirmed before any playbook run. Unreachable hosts cause partial execution and can leave managed systems in an inconsistent state.</p>
 <p><strong>Ping all hosts</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>ansible<span class="w"> </span>all<span class="w"> </span>-i<span class="w"> </span>&lt;inventory&gt;<span class="w"> </span>-m<span class="w"> </span>ping
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ansible<span class="w"> </span>all<span class="w"> </span>-i<span class="w"> </span>&lt;inventory&gt;<span class="w"> </span>-m<span class="w"> </span>ping
 </code></pre></div>
 <p><strong>Ping a specific group</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ansible<span class="w"> </span>&lt;group&gt;<span class="w"> </span>-i<span class="w"> </span>&lt;inventory&gt;<span class="w"> </span>-m<span class="w"> </span>ping
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>ansible<span class="w"> </span>&lt;group&gt;<span class="w"> </span>-i<span class="w"> </span>&lt;inventory&gt;<span class="w"> </span>-m<span class="w"> </span>ping
 </code></pre></div>
 <p><strong>Test with verbose output to see SSH details</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>ansible<span class="w"> </span>all<span class="w"> </span>-i<span class="w"> </span>&lt;inventory&gt;<span class="w"> </span>-m<span class="w"> </span>ping<span class="w"> </span>-vvv<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;SSH|ESTABLISH|FAILED&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>ansible<span class="w"> </span>all<span class="w"> </span>-i<span class="w"> </span>&lt;inventory&gt;<span class="w"> </span>-m<span class="w"> </span>ping<span class="w"> </span>-vvv<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;SSH|ESTABLISH|FAILED&quot;</span>
 </code></pre></div>
 <p><strong>Check SSH key and user</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>ansible<span class="w"> </span>all<span class="w"> </span>-i<span class="w"> </span>&lt;inventory&gt;<span class="w"> </span>-m<span class="w"> </span><span class="nb">command</span><span class="w"> </span>-a<span class="w"> </span><span class="s2">&quot;whoami&quot;</span><span class="w"> </span>--become
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>ansible<span class="w"> </span>all<span class="w"> </span>-i<span class="w"> </span>&lt;inventory&gt;<span class="w"> </span>-m<span class="w"> </span><span class="nb">command</span><span class="w"> </span>-a<span class="w"> </span><span class="s2">&quot;whoami&quot;</span><span class="w"> </span>--become
 </code></pre></div>
 <p><strong>Verify Python interpreter on managed nodes</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>ansible<span class="w"> </span>all<span class="w"> </span>-i<span class="w"> </span>&lt;inventory&gt;<span class="w"> </span>-m<span class="w"> </span><span class="nb">command</span><span class="w"> </span>-a<span class="w"> </span><span class="s2">&quot;python3 --version&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>ansible<span class="w"> </span>all<span class="w"> </span>-i<span class="w"> </span>&lt;inventory&gt;<span class="w"> </span>-m<span class="w"> </span><span class="nb">command</span><span class="w"> </span>-a<span class="w"> </span><span class="s2">&quot;python3 --version&quot;</span>
 </code></pre></div>
 <p><strong>Key health indicators</strong></p>
 <table>
@@ -3755,16 +3757,16 @@ Health Checks reference covering Inventory Health, Connectivity, Vault and Secre
 <h2 id="vault-and-secrets">Vault and Secrets<a class="headerlink" href="#vault-and-secrets" title="Permanent link">&para;</a></h2>
 <p>Ansible Vault encrypts sensitive variables. Confirm that vault-encrypted files can be decrypted and that vault passwords are accessible to the automation process.</p>
 <p><strong>Test vault decryption</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>ansible-vault<span class="w"> </span>view<span class="w"> </span>&lt;encrypted-file&gt;<span class="w"> </span>--vault-password-file<span class="w"> </span>&lt;vault-pass&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>ansible-vault<span class="w"> </span>view<span class="w"> </span>&lt;encrypted-file&gt;<span class="w"> </span>--vault-password-file<span class="w"> </span>&lt;vault-pass&gt;
 </code></pre></div>
 <p><strong>Verify vault-encrypted variable is readable in a playbook context</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>ansible<span class="w"> </span>all<span class="w"> </span>-i<span class="w"> </span>&lt;inventory&gt;<span class="w"> </span>-m<span class="w"> </span>debug<span class="w"> </span>-a<span class="w"> </span><span class="s2">&quot;var=&lt;vault_variable&gt;&quot;</span><span class="w"> </span>--vault-password-file<span class="w"> </span>&lt;vault-pass&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>ansible<span class="w"> </span>all<span class="w"> </span>-i<span class="w"> </span>&lt;inventory&gt;<span class="w"> </span>-m<span class="w"> </span>debug<span class="w"> </span>-a<span class="w"> </span><span class="s2">&quot;var=&lt;vault_variable&gt;&quot;</span><span class="w"> </span>--vault-password-file<span class="w"> </span>&lt;vault-pass&gt;
 </code></pre></div>
 <p><strong>Re-key vault file (rotate vault password)</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>ansible-vault<span class="w"> </span>rekey<span class="w"> </span>&lt;encrypted-file&gt;<span class="w"> </span>--vault-password-file<span class="w"> </span>&lt;old-vault-pass&gt;<span class="w"> </span>--new-vault-password-file<span class="w"> </span>&lt;new-vault-pass&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>ansible-vault<span class="w"> </span>rekey<span class="w"> </span>&lt;encrypted-file&gt;<span class="w"> </span>--vault-password-file<span class="w"> </span>&lt;old-vault-pass&gt;<span class="w"> </span>--new-vault-password-file<span class="w"> </span>&lt;new-vault-pass&gt;
 </code></pre></div>
 <p><strong>List all vault-encrypted files in the project</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>grep<span class="w"> </span>-rl<span class="w"> </span><span class="s1">&#39;\$ANSIBLE_VAULT&#39;</span><span class="w"> </span>.<span class="w"> </span>--include<span class="o">=</span><span class="s2">&quot;*.yml&quot;</span><span class="w"> </span>--include<span class="o">=</span><span class="s2">&quot;*.yaml&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>grep<span class="w"> </span>-rl<span class="w"> </span><span class="s1">&#39;\$ANSIBLE_VAULT&#39;</span><span class="w"> </span>.<span class="w"> </span>--include<span class="o">=</span><span class="s2">&quot;*.yml&quot;</span><span class="w"> </span>--include<span class="o">=</span><span class="s2">&quot;*.yaml&quot;</span>
 </code></pre></div>
 <p><strong>Key health indicators</strong></p>
 <table>
@@ -3802,17 +3804,17 @@ Health Checks reference covering Inventory Health, Connectivity, Vault and Secre
 <h2 id="awx-automation-platform">AWX / Automation Platform<a class="headerlink" href="#awx-automation-platform" title="Permanent link">&para;</a></h2>
 <p>AWX (open source) and Red Hat Ansible Automation Platform (AAP) provide a centralised job scheduler, RBAC, and credential store. Health checks here focus on service availability and job queue status.</p>
 <p><strong>List recent failed jobs</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>awx<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>list<span class="w"> </span>--status<span class="w"> </span>failed<span class="w"> </span>--count<span class="w"> </span><span class="m">20</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>awx<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>list<span class="w"> </span>--status<span class="w"> </span>failed<span class="w"> </span>--count<span class="w"> </span><span class="m">20</span>
 </code></pre></div>
 <p><strong>List running jobs</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>awx<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>list<span class="w"> </span>--status<span class="w"> </span>running
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>awx<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>list<span class="w"> </span>--status<span class="w"> </span>running
 </code></pre></div>
 <p><strong>Check AWX service pods (Kubernetes deployment)</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>awx
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>awx
 </code></pre></div>
 <p>All pods should show <code>Running</code> status. Pods in <code>CrashLoopBackOff</code> or <code>Error</code> state require immediate investigation.</p>
 <p><strong>Check AWX capacity (forks headroom)</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>awx<span class="w"> </span>instances<span class="w"> </span>list
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>awx<span class="w"> </span>instances<span class="w"> </span>list
 </code></pre></div>
 <p>Review the <code>capacity</code> and <code>consumed_capacity</code> fields. High consumption indicates a need to scale the instance group.</p>
 <p><strong>Review credential expiry</strong></p>
@@ -3856,28 +3858,28 @@ Health Checks reference covering Inventory Health, Connectivity, Vault and Secre
 </table>
 <hr />
 <h2 id="ansible-health-check-flow">Ansible Health Check Flow<a class="headerlink" href="#ansible-health-check-flow" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>┌─────────────────────────────────────── Ansible — Health Checks ───────────────────────────────────────┐
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>│   │ Ansible health checks: verify control node, AWX services, connectivity, and job success rates │   │
-<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>│   │     Control node: check ansible version, Python version, SSH connectivity to managed nodes    │   │
-<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>│   │         AWX: check service pods (Kubernetes), job queue depth, credential expiry dates        │   │
-<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>│                                                                                                       │
-<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>│   │             Control Node Checks              │  │                  AWX Checks                 │   │
-<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>│   │              ansible --version               │  │           kubectl get pods -n awx           │   │
-<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>│   │       ansible all -m ping (all hosts)        │  │         AWX UI: Dashboard job stats         │   │
-<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>│   │       ansible-inventory --list --graph       │  │        awx jobs list --status failed        │   │
-<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a>│   │       Check Vault password accessible        │  │        Check credential expiry dates        │   │
-<a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a>│   │         Verify EE images are current         │  │         AWX capacity: forks headroom        │   │
-<a id="__codelineno-18-15" name="__codelineno-18-15" href="#__codelineno-18-15"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-18-16" name="__codelineno-18-16" href="#__codelineno-18-16"></a>│                                                                                                       │
-<a id="__codelineno-18-17" name="__codelineno-18-17" href="#__codelineno-18-17"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-18-18" name="__codelineno-18-18" href="#__codelineno-18-18"></a>│   │     ansible all -m ping = fastest connectivity check; pong on success, unreachable on fail    │   │
-<a id="__codelineno-18-19" name="__codelineno-18-19" href="#__codelineno-18-19"></a>│   │      Job success rate      = AWX dashboard; alert if &gt;5% failure rate over rolling 7 days     │   │
-<a id="__codelineno-18-20" name="__codelineno-18-20" href="#__codelineno-18-20"></a>│   │      EE freshness          = execution environment images; rebuild if base OS CVEs exist      │   │
-<a id="__codelineno-18-21" name="__codelineno-18-21" href="#__codelineno-18-21"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-18-22" name="__codelineno-18-22" href="#__codelineno-18-22"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>┌─────────────────────────────────────── Ansible — Health Checks ───────────────────────────────────────┐
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>│   │ Ansible health checks: verify control node, AWX services, connectivity, and job success rates │   │
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>│   │     Control node: check ansible version, Python version, SSH connectivity to managed nodes    │   │
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>│   │         AWX: check service pods (Kubernetes), job queue depth, credential expiry dates        │   │
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>│                                                                                                       │
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>│   │             Control Node Checks              │  │                  AWX Checks                 │   │
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>│   │              ansible --version               │  │           kubectl get pods -n awx           │   │
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>│   │       ansible all -m ping (all hosts)        │  │         AWX UI: Dashboard job stats         │   │
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>│   │       ansible-inventory --list --graph       │  │        awx jobs list --status failed        │   │
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>│   │       Check Vault password accessible        │  │        Check credential expiry dates        │   │
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>│   │         Verify EE images are current         │  │         AWX capacity: forks headroom        │   │
+<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a>│                                                                                                       │
+<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a>│   │     ansible all -m ping = fastest connectivity check; pong on success, unreachable on fail    │   │
+<a id="__codelineno-17-19" name="__codelineno-17-19" href="#__codelineno-17-19"></a>│   │      Job success rate      = AWX dashboard; alert if &gt;5% failure rate over rolling 7 days     │   │
+<a id="__codelineno-17-20" name="__codelineno-17-20" href="#__codelineno-17-20"></a>│   │      EE freshness          = execution environment images; rebuild if base OS CVEs exist      │   │
+<a id="__codelineno-17-21" name="__codelineno-17-21" href="#__codelineno-17-21"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-17-22" name="__codelineno-17-22" href="#__codelineno-17-22"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
 <blockquote>
 <p>Part of the <a href="../">Ansible Operations</a> reference.</p>
