@@ -3339,137 +3339,137 @@ Integration with other platforms and external systems.
     ad--&gt;&gt;krb: Credential OK
     krb--&gt;&gt;sssd: TGT issued
     sssd--&gt;&gt;pam: Authentication success
-    pam--&gt;&gt;user: Shell granted
-```text
-┌────────────────────────────────── Linux Architecture — Integrations ──────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                                       Integration Points                                      │   │
-│   │        Identity: SSSD + realmd joins Linux hosts to Active Directory via Kerberos/LDAP        │   │
-│   │            Storage: NFS/CIFS mounts, iSCSI initiator, multipath-tools for SAN LUNs            │   │
-│   │       Monitoring: node_exporter → Prometheus → Grafana; rsyslog/journald → Elasticsearch      │   │
-│   │       Config mgmt: Ansible (agentless SSH) · Puppet (agent) · Chef · SaltStack (minion)       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Linux integrates with enterprise identity, storage, and observability stacks                       │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │               Identity &amp; Auth                │  │              Storage &amp; Network              │   │
-│   │           SSSD: caches AD queries            │  │          NFS v4.1: Kerberos mounts          │   │
-│   │           realmd: domain join tool           │  │         iSCSI: open-iscsi initiator         │   │
-│   │           Kerberos: kinit / klist            │  │         multipath: dm-multipath I/O         │   │
-│   │           PAM: sssd module for AD            │  │         autofs: automount on demand         │   │
-│   │           sudo rules: LDAP-sourced           │  │         CIFS/SMB: mount.cifs shares         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  x86-64 servers · HBAs/NICs · SAN switches · NAS appliances · iDRAC · Power &amp; Cooling                 │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  SSSD        = System Security Services Daemon; caches LDAP/Kerberos identity lookups                 │
-│  realmd      = Realm Discovery daemon; simplifies domain join with a single command                   │
-│  Kerberos    = Ticket-based auth protocol; kinit obtains TGT from AD KDC                              │
-│  NFS v4.1    = Network File System v4.1; adds pNFS parallel I/O and session trunking                  │
-│  iSCSI       = IP-based SCSI protocol; carries SCSI commands over TCP/IP networks                     │
-│  dm-multipath= Device Mapper multipath; aggregates multiple HBA paths to one block device             │
-│  autofs      = Kernel automounter; mounts NFS/CIFS shares on access and unmounts on idle              │
-│  node_exporter= Prometheus agent; exposes host metrics (CPU, mem, disk, net) on port 9100             │
-│  Ansible     = Agentless automation over SSH; uses YAML playbooks for idempotent config               │
-│  Puppet      = Agent-based config mgmt; enforces declared resource state on each run                  │
-│  rsyslog     = Reliable syslog daemon; forwards structured log messages over UDP/TCP                  │
-│  Elasticsearch= Distributed search and analytics engine for log aggregation at scale                  │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</code></pre>
+    pam--&gt;&gt;user: Shell granted</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌────────────────────────────────── Linux Architecture — Integrations ──────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │                                       Integration Points                                      │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │        Identity: SSSD + realmd joins Linux hosts to Active Directory via Kerberos/LDAP        │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │            Storage: NFS/CIFS mounts, iSCSI initiator, multipath-tools for SAN LUNs            │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │       Monitoring: node_exporter → Prometheus → Grafana; rsyslog/journald → Elasticsearch      │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │       Config mgmt: Ansible (agentless SSH) · Puppet (agent) · Chef · SaltStack (minion)       │   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│                                                                                                       │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│    Linux integrates with enterprise identity, storage, and observability stacks                       │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                                                                                                       │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│                                                                                                       │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │               Identity &amp; Auth                │  │              Storage &amp; Network              │   │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │           SSSD: caches AD queries            │  │          NFS v4.1: Kerberos mounts          │   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │           realmd: domain join tool           │  │         iSCSI: open-iscsi initiator         │   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │           Kerberos: kinit / klist            │  │         multipath: dm-multipath I/O         │   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │           PAM: sssd module for AD            │  │         autofs: automount on demand         │   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   │           sudo rules: LDAP-sourced           │  │         CIFS/SMB: mount.cifs shares         │   │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│                                                                                                       │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  x86-64 servers · HBAs/NICs · SAN switches · NAS appliances · iDRAC · Power &amp; Cooling                 │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│                                                                                                       │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│                                                                                                       │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│  SSSD        = System Security Services Daemon; caches LDAP/Kerberos identity lookups                 │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  realmd      = Realm Discovery daemon; simplifies domain join with a single command                   │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│  Kerberos    = Ticket-based auth protocol; kinit obtains TGT from AD KDC                              │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  NFS v4.1    = Network File System v4.1; adds pNFS parallel I/O and session trunking                  │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│  iSCSI       = IP-based SCSI protocol; carries SCSI commands over TCP/IP networks                     │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│  dm-multipath= Device Mapper multipath; aggregates multiple HBA paths to one block device             │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│  autofs      = Kernel automounter; mounts NFS/CIFS shares on access and unmounts on idle              │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│  node_exporter= Prometheus agent; exposes host metrics (CPU, mem, disk, net) on port 9100             │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│  Ansible     = Agentless automation over SSH; uses YAML playbooks for idempotent config               │
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│  Puppet      = Agent-based config mgmt; enforces declared resource state on each run                  │
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│  rsyslog     = Reliable syslog daemon; forwards structured log messages over UDP/TCP                  │
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│  Elasticsearch= Distributed search and analytics engine for log aggregation at scale                  │
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│                                                                                                       │
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <p><strong>Troubleshoot AD authentication:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Test user lookup</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>id<span class="w"> </span>&lt;user&gt;@&lt;domain&gt;
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>getent<span class="w"> </span>passwd<span class="w"> </span>&lt;user&gt;@&lt;domain&gt;
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1"># Check SSSD logs</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>sssd<span class="w"> </span>-n<span class="w"> </span><span class="m">100</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>cat<span class="w"> </span>/var/log/sssd/sssd_&lt;domain&gt;.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-100
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># Clear SSSD cache (forces re-fetch from AD)</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>sss_cache<span class="w"> </span>-E
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>sssd
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># Test Kerberos ticket acquisition</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>kinit<span class="w"> </span>&lt;user&gt;@&lt;DOMAIN.FQDN&gt;
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>klist
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Test user lookup</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>id<span class="w"> </span>&lt;user&gt;@&lt;domain&gt;
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>getent<span class="w"> </span>passwd<span class="w"> </span>&lt;user&gt;@&lt;domain&gt;
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Check SSSD logs</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>journalctl<span class="w"> </span>-u<span class="w"> </span>sssd<span class="w"> </span>-n<span class="w"> </span><span class="m">100</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>cat<span class="w"> </span>/var/log/sssd/sssd_&lt;domain&gt;.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-100
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Clear SSSD cache (forces re-fetch from AD)</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>sss_cache<span class="w"> </span>-E
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>systemctl<span class="w"> </span>restart<span class="w"> </span>sssd
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Test Kerberos ticket acquisition</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>kinit<span class="w"> </span>&lt;user&gt;@&lt;DOMAIN.FQDN&gt;
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>klist
 </code></pre></div>
 <hr />
 <h2 id="sudo-configuration-for-ad-groups">Sudo Configuration for AD Groups<a class="headerlink" href="#sudo-configuration-for-ad-groups" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># /etc/sudoers.d/ad-groups — allow AD group full sudo access</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>%linux<span class="se">\ </span>admins@domain.fqdn<span class="w"> </span><span class="nv">ALL</span><span class="o">=(</span>ALL<span class="o">)</span><span class="w"> </span>ALL
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Allow passwordless sudo for a specific AD group</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>%linux<span class="se">\ </span>ops@domain.fqdn<span class="w"> </span><span class="nv">ALL</span><span class="o">=(</span>ALL<span class="o">)</span><span class="w"> </span>NOPASSWD:<span class="w"> </span>ALL
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># /etc/sudoers.d/ad-groups — allow AD group full sudo access</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>%linux<span class="se">\ </span>admins@domain.fqdn<span class="w"> </span><span class="nv">ALL</span><span class="o">=(</span>ALL<span class="o">)</span><span class="w"> </span>ALL
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Allow passwordless sudo for a specific AD group</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>%linux<span class="se">\ </span>ops@domain.fqdn<span class="w"> </span><span class="nv">ALL</span><span class="o">=(</span>ALL<span class="o">)</span><span class="w"> </span>NOPASSWD:<span class="w"> </span>ALL
 </code></pre></div>
 <p>Note: AD group names with spaces require escaping the space with a backslash.</p>
 <hr />
 <h2 id="backup-agent-integration">Backup Agent Integration<a class="headerlink" href="#backup-agent-integration" title="Permanent link">&para;</a></h2>
 <p><strong>Veeam Agent for Linux:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Install Veeam Agent (RHEL — requires the Veeam repo added first)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>rpm<span class="w"> </span>--import<span class="w"> </span>https://www.veeam.com/downloads/public.key
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>/etc/yum.repos.d/veeam.repo<span class="w"> </span><span class="s">&lt;&lt; EOF</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="s">[veeam]</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="s">name=Veeam</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="s">baseurl=https://repository.veeam.com/backup/linux/agent/rpm/rhel/x86_64/</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="s">enabled=1</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="s">gpgcheck=1</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="s">gpgkey=https://www.veeam.com/downloads/public.key</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="s">EOF</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>dnf<span class="w"> </span>install<span class="w"> </span>veeam
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Start and enable the Veeam agent service</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>veeamagent
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># Check agent status</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>veeam<span class="w"> </span>status
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Install Veeam Agent (RHEL — requires the Veeam repo added first)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>rpm<span class="w"> </span>--import<span class="w"> </span>https://www.veeam.com/downloads/public.key
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>/etc/yum.repos.d/veeam.repo<span class="w"> </span><span class="s">&lt;&lt; EOF</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="s">[veeam]</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="s">name=Veeam</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="s">baseurl=https://repository.veeam.com/backup/linux/agent/rpm/rhel/x86_64/</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="s">enabled=1</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="s">gpgcheck=1</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="s">gpgkey=https://www.veeam.com/downloads/public.key</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="s">EOF</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>dnf<span class="w"> </span>install<span class="w"> </span>veeam
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># Start and enable the Veeam agent service</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>veeamagent
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="c1"># Check agent status</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>veeam<span class="w"> </span>status
 </code></pre></div>
 <p>Registration to the Veeam Backup &amp; Replication server is done from the VBR console: Protection Groups → Add Group → select the server by hostname.</p>
 <hr />
 <h2 id="monitoring-integration">Monitoring Integration<a class="headerlink" href="#monitoring-integration" title="Permanent link">&para;</a></h2>
 <p><strong>node_exporter (Prometheus metrics):</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Install node_exporter (RHEL — via binary or package)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>dnf<span class="w"> </span>install<span class="w"> </span>golang-github-prometheus-node-exporter<span class="w">  </span><span class="c1"># EPEL repo required</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Or via binary</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>useradd<span class="w"> </span>-r<span class="w"> </span>-s<span class="w"> </span>/bin/false<span class="w"> </span>node_exporter
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>curl<span class="w"> </span>-L<span class="w"> </span>https://github.com/prometheus/node_exporter/releases/latest/download/node_exporter-*.linux-amd64.tar.gz<span class="w"> </span><span class="p">|</span><span class="w"> </span>tar<span class="w"> </span>xz
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>mv<span class="w"> </span>node_exporter-*/node_exporter<span class="w"> </span>/usr/local/bin/
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>node_exporter
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Default listen port</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>ss<span class="w"> </span>-tlnp<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="m">9100</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Install node_exporter (RHEL — via binary or package)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>dnf<span class="w"> </span>install<span class="w"> </span>golang-github-prometheus-node-exporter<span class="w">  </span><span class="c1"># EPEL repo required</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Or via binary</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>useradd<span class="w"> </span>-r<span class="w"> </span>-s<span class="w"> </span>/bin/false<span class="w"> </span>node_exporter
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>curl<span class="w"> </span>-L<span class="w"> </span>https://github.com/prometheus/node_exporter/releases/latest/download/node_exporter-*.linux-amd64.tar.gz<span class="w"> </span><span class="p">|</span><span class="w"> </span>tar<span class="w"> </span>xz
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>mv<span class="w"> </span>node_exporter-*/node_exporter<span class="w"> </span>/usr/local/bin/
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>node_exporter
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Default listen port</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>ss<span class="w"> </span>-tlnp<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="m">9100</span>
 </code></pre></div>
 <p><strong>Verify Prometheus can scrape the node:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>curl<span class="w"> </span>http://&lt;server-ip&gt;:9100/metrics<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>curl<span class="w"> </span>http://&lt;server-ip&gt;:9100/metrics<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-20
 </code></pre></div>
 <hr />
 <h2 id="iscsi-storage-connectivity">iSCSI Storage Connectivity<a class="headerlink" href="#iscsi-storage-connectivity" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Install iSCSI initiator (RHEL)</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>dnf<span class="w"> </span>install<span class="w"> </span>iscsi-initiator-utils
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>iscsid
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Set initiator IQN (unique per server — set before first login)</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>cat<span class="w"> </span>/etc/iscsi/initiatorname.iscsi
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Format: InitiatorName=iqn.YYYY-MM.reverse-domain:unique-name</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># Discover targets on a storage portal</span>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>iscsiadm<span class="w"> </span>--mode<span class="w"> </span>discovery<span class="w"> </span>--type<span class="w"> </span>sendtargets<span class="w"> </span>--portal<span class="w"> </span>&lt;storage-ip&gt;
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="c1"># Login to a specific target</span>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>iscsiadm<span class="w"> </span>--mode<span class="w"> </span>node<span class="w"> </span>--targetname<span class="w"> </span>&lt;iqn&gt;<span class="w"> </span>--portal<span class="w"> </span>&lt;storage-ip&gt;<span class="w"> </span>--login
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="c1"># Check active sessions</span>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>iscsiadm<span class="w"> </span>--mode<span class="w"> </span>session<span class="w"> </span>-P<span class="w"> </span><span class="m">3</span>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="c1"># Rescan for new LUNs</span>
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>iscsiadm<span class="w"> </span>--mode<span class="w"> </span>session<span class="w"> </span>--rescan
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Install iSCSI initiator (RHEL)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>dnf<span class="w"> </span>install<span class="w"> </span>iscsi-initiator-utils
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>iscsid
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Set initiator IQN (unique per server — set before first login)</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>cat<span class="w"> </span>/etc/iscsi/initiatorname.iscsi
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Format: InitiatorName=iqn.YYYY-MM.reverse-domain:unique-name</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Discover targets on a storage portal</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>iscsiadm<span class="w"> </span>--mode<span class="w"> </span>discovery<span class="w"> </span>--type<span class="w"> </span>sendtargets<span class="w"> </span>--portal<span class="w"> </span>&lt;storage-ip&gt;
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># Login to a specific target</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>iscsiadm<span class="w"> </span>--mode<span class="w"> </span>node<span class="w"> </span>--targetname<span class="w"> </span>&lt;iqn&gt;<span class="w"> </span>--portal<span class="w"> </span>&lt;storage-ip&gt;<span class="w"> </span>--login
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c1"># Check active sessions</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>iscsiadm<span class="w"> </span>--mode<span class="w"> </span>session<span class="w"> </span>-P<span class="w"> </span><span class="m">3</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="c1"># Rescan for new LUNs</span>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>iscsiadm<span class="w"> </span>--mode<span class="w"> </span>session<span class="w"> </span>--rescan
 </code></pre></div>
 <hr />
 <h2 id="san-multipath-data-path">SAN Multipath Data Path<a class="headerlink" href="#san-multipath-data-path" title="Permanent link">&para;</a></h2>
@@ -3486,32 +3486,32 @@ Integration with other platforms and external systems.
     dm --&gt; path1 --&gt; fab1 --&gt; san
     dm --&gt; path2 --&gt; fab2 --&gt; san</code></pre>
 <h2 id="multipath-configuration">Multipath Configuration<a class="headerlink" href="#multipath-configuration" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Install and enable multipathd (RHEL)</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>dnf<span class="w"> </span>install<span class="w"> </span>device-mapper-multipath
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>multipathd
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Generate a default config (do not use defaults for production — review vendor recommendations)</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>mpathconf<span class="w"> </span>--enable<span class="w"> </span>--with_multipathd<span class="w"> </span>y
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1"># Check multipath device map</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>multipath<span class="w"> </span>-l
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>multipath<span class="w"> </span>-ll<span class="w">  </span><span class="c1"># verbose</span>
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># Check path states</span>
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>multipath<span class="w"> </span>-v3<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;checker|faulty|active&quot;</span>
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c1"># Flush and reload multipath map</span>
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>multipath<span class="w"> </span>-F
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>multipath<span class="w"> </span>-r
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Install and enable multipathd (RHEL)</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>dnf<span class="w"> </span>install<span class="w"> </span>device-mapper-multipath
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>multipathd
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Generate a default config (do not use defaults for production — review vendor recommendations)</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>mpathconf<span class="w"> </span>--enable<span class="w"> </span>--with_multipathd<span class="w"> </span>y
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># Check multipath device map</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>multipath<span class="w"> </span>-l
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>multipath<span class="w"> </span>-ll<span class="w">  </span><span class="c1"># verbose</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="c1"># Check path states</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>multipath<span class="w"> </span>-v3<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;checker|faulty|active&quot;</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="c1"># Flush and reload multipath map</span>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>multipath<span class="w"> </span>-F
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>multipath<span class="w"> </span>-r
 </code></pre></div>
 <p>Key <code>/etc/multipath.conf</code> settings for Dell/EMC and Pure Storage:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>defaults {
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>    polling_interval     5
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    path_selector        &quot;round-robin 0&quot;
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    path_grouping_policy multibus
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>    failback             immediate
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>    no_path_retry        fail
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>}
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>defaults {
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>    polling_interval     5
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>    path_selector        &quot;round-robin 0&quot;
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>    path_grouping_policy multibus
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>    failback             immediate
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>    no_path_retry        fail
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>}
 </code></pre></div>
 <p>Consult the vendor's Linux Multipath Guide (Dell PowerMax, Pure Storage) for device-specific settings.</p>
 

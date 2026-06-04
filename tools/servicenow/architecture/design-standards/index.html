@@ -3705,51 +3705,51 @@ This page documents operational standards enforced within the ServiceNow platfor
     C -- Emergency --&gt; J --&gt; G
     G -- Approved --&gt; H
     G -- Rejected --&gt; I
-    H --&gt; K --&gt; L
-```text
-┌──────────────────────────────────── ServiceNow — Design Standards ────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                         ServiceNow Design and Configuration Standards                         │   │
-│   │                MID Server: min 4 vCPU / 8 GB RAM; Windows or Linux; n+1 for HA                │   │
-│   │           Instance: prod/test/dev; clone prod to test monthly for regression testing          │   │
-│   │             Script standards: always use GlideRecord; avoid cross-scope scripting             │   │
-│   │          Change management: all SNOW config changes via Update Set; tracked in source         │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    SNOW design standards govern MID sizing, scripting, and config management                          │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             MID Server Standards             │  │              Platform Standards             │   │
-│   │               Min 4 vCPU/8 GB                │  │           Update Sets for changes           │   │
-│   │              n+1 MID redundancy              │  │            Scripting: GlideRecord           │   │
-│   │              Outbound 443 only               │  │            No cross-scope scripts           │   │
-│   │            Dedicated MID per env             │  │            Test in sub-prod first           │   │
-│   │              JVM: 4 GB heap min              │  │             CMDB: CI naming std             │   │
-│   │             OS patching schedule             │  │            SLA definition review            │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  MID Server VMs (prod/test/dev) · firewall allowing outbound 443 only                                 │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Update Set    = container for SNOW config changes; migrate via XML export/import                     │
-│  GlideRecord   = SNOW server-side API; always preferred over raw SQL or direct DB                     │
-│  Cross-scope   = accessing data from different application scope; use public APIs                     │
-│  MID HA        = n+1 MID Servers; SNOW auto-fails over to available MID                               │
-│  Clone         = copy prod data to test/dev; Admin &gt; System Clone &gt; Clone Instance                    │
-│  CI naming     = consistent CMDB naming: hostname in lowercase, FQDN preferred                        │
-│  SLA definition = Agreement + SLA Definition + Workflow; reviewed quarterly                           │
-│  Dedicated MID = separate MID Server per environment (prod/test) to avoid confusion                   │
-│  JVM heap      = set in JAVA_OPTS in MID Server wrapper.conf; min 4 GB for prod                       │
-│  Script scope  = ServiceNow app scope isolation; prevents cross-app data access                       │
-│  Sub-prod test = always test Update Sets in test before applying to prod                              │
-│  Outbound 443  = MID Server only needs outbound HTTPS to *.service-now.com                            │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</code></pre>
+    H --&gt; K --&gt; L</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────────── ServiceNow — Design Standards ────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │                         ServiceNow Design and Configuration Standards                         │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │                MID Server: min 4 vCPU / 8 GB RAM; Windows or Linux; n+1 for HA                │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │           Instance: prod/test/dev; clone prod to test monthly for regression testing          │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │             Script standards: always use GlideRecord; avoid cross-scope scripting             │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │          Change management: all SNOW config changes via Update Set; tracked in source         │   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│                                                                                                       │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│    SNOW design standards govern MID sizing, scripting, and config management                          │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                                                                                                       │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│                                                                                                       │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │             MID Server Standards             │  │              Platform Standards             │   │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │               Min 4 vCPU/8 GB                │  │           Update Sets for changes           │   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │              n+1 MID redundancy              │  │            Scripting: GlideRecord           │   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │              Outbound 443 only               │  │            No cross-scope scripts           │   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │            Dedicated MID per env             │  │            Test in sub-prod first           │   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   │              JVM: 4 GB heap min              │  │             CMDB: CI naming std             │   │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   │             OS patching schedule             │  │            SLA definition review            │   │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│                                                                                                       │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  MID Server VMs (prod/test/dev) · firewall allowing outbound 443 only                                 │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│                                                                                                       │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│                                                                                                       │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  Update Set    = container for SNOW config changes; migrate via XML export/import                     │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│  GlideRecord   = SNOW server-side API; always preferred over raw SQL or direct DB                     │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  Cross-scope   = accessing data from different application scope; use public APIs                     │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│  MID HA        = n+1 MID Servers; SNOW auto-fails over to available MID                               │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│  Clone         = copy prod data to test/dev; Admin &gt; System Clone &gt; Clone Instance                    │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│  CI naming     = consistent CMDB naming: hostname in lowercase, FQDN preferred                        │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│  SLA definition = Agreement + SLA Definition + Workflow; reviewed quarterly                           │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│  Dedicated MID = separate MID Server per environment (prod/test) to avoid confusion                   │
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│  JVM heap      = set in JAVA_OPTS in MID Server wrapper.conf; min 4 GB for prod                       │
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│  Script scope  = ServiceNow app scope isolation; prevents cross-app data access                       │
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│  Sub-prod test = always test Update Sets in test before applying to prod                              │
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│  Outbound 443  = MID Server only needs outbound HTTPS to *.service-now.com                            │
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│                                                                                                       │
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <table>
 <thead>
 <tr>

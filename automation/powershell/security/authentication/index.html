@@ -3551,29 +3551,29 @@
     importClixml --&gt; psCred
     secretMgmt --&gt; psCred
     azKeyVault --&gt; psCred
-    psCred --&gt; cmdlet
-```text
-┌───────────────────────────────────── PowerShell — Authentication ─────────────────────────────────────┐
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │ PowerShell authentication: Kerberos (domain), NTLM (fallback), certificate-based for remoting │   │
-│   │     Service principal: use certificate auth for Azure/cloud (no password rotation needed)     │   │
-│   │  Secrets in scripts: use SecretManagement module; back-ends: KeyVault, SecretStore, CyberArk  │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                Remoting Auth                 │  │              Secret Management              │   │
-│   │       Kerberos: domain joined default        │  │       Install-Module SecretManagement       │   │
-│   │       NTLM: workgroup or cross-domain        │  │        Register-SecretVault -Name AKV       │   │
-│   │        Certificate: mutual TLS WinRM         │  │         Get-Secret -Name MyPassword         │   │
-│   │       CredSSP: avoid (double-hop only)       │  │        No ConvertTo-SecureString -Key       │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │      SecretManagement = PS module; abstraction layer for secret retrieval; vault-agnostic     │   │
-│   │  CredSSP          = delegates credentials to remote host; security risk; use Kerberos or JEA  │   │
-│   │  Managed Identity = Azure-side auth; PS running in Azure VM can get token without credentials │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</code></pre>
+    psCred --&gt; cmdlet</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────────── PowerShell — Authentication ─────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   │ PowerShell authentication: Kerberos (domain), NTLM (fallback), certificate-based for remoting │   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │     Service principal: use certificate auth for Azure/cloud (no password rotation needed)     │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │  Secrets in scripts: use SecretManagement module; back-ends: KeyVault, SecretStore, CyberArk  │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│                                                                                                       │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   │                Remoting Auth                 │  │              Secret Management              │   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   │       Kerberos: domain joined default        │  │       Install-Module SecretManagement       │   │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   │       NTLM: workgroup or cross-domain        │  │        Register-SecretVault -Name AKV       │   │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   │        Certificate: mutual TLS WinRM         │  │         Get-Secret -Name MyPassword         │   │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│   │       CredSSP: avoid (double-hop only)       │  │        No ConvertTo-SecureString -Key       │   │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│                                                                                                       │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │      SecretManagement = PS module; abstraction layer for secret retrieval; vault-agnostic     │   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │  CredSSP          = delegates credentials to remote host; security risk; use Kerberos or JEA  │   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │  Managed Identity = Azure-side auth; PS running in Azure VM can get token without credentials │   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <h2 id="authentication-reference">Authentication Reference<a class="headerlink" href="#authentication-reference" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

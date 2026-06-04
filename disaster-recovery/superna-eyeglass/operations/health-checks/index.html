@@ -4290,45 +4290,45 @@ Health Checks reference covering Overview, SyncIQ Replication Health, PowerScale
     dnsSync --&gt; isiStatus
     drives --&gt; result{All checks pass?}
     result --&gt;|Yes| ok([DR Ready - Score 100%])
-    result --&gt;|No| investigate([Investigate and remediate])
-```text
-┌────────────────────────────────── Superna Eyeglass — Health Checks ───────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                           Superna Eyeglass — Health Check Procedures                          │   │
-│   │                 Run these checks daily/weekly to confirm protection is working                │   │
-│   │                                         igls sync status                                      │   │
-│   │                  Review job completion rate — target 100%; investigate failures               │   │
-│   │                         Check replication/backup lag against RPO target                       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   │      Check       │  What to verify  │      Expected     │    Frequency     │  Action if bad   │   │
-│   │    Job status    │All jobs complete │    100% success   │      Daily       │ Triage failures  │   │
-│   │    Lag / RPO     │ Replication lag  │    &lt; RPO target   │      Daily       │  Tune bandwidth  │   │
-│   │     Capacity     │ Repo space used  │     &lt; 80% full    │      Weekly      │ Expand or expire │   │
-│   │   Restore test   │  Random restore  │    Data intact    │     Monthly      │ Fix backup chain │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  ESXi VM (Eyeglass appliance) · PowerScale cluster pair (production + DR) · SyncIQ replication link   │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Eyeglass      = Superna Eyeglass; software appliance for NAS DR and ransomware protection            │
-│  RAPA          = Ransomware Protection with Automated Response; detects and quarantines threats       │
-│  SyncIQ        = PowerScale built-in replication; Eyeglass monitors and orchestrates policies         │
-│  DFS-N         = Windows Distributed File System Namespace; Eyeglass automates failover of DFS        │
-│  Failover      = Eyeglass-orchestrated shift of NAS access from production to DR cluster              │
-│  Failback      = reversing failover; Eyeglass re-syncs DR changes back and cuts back to product       │
-│  Quota Sync    = Eyeglass replicates SmartQuotas from source to DR to preserve user limits            │
-│  Export Sync   = NFS exports and SMB shares replicated so clients can reconnect at DR site            │
-│  Quarantine    = RAPA isolation of suspect directory; blocks writes, alerts ops team                  │
-│  Shadow Copy   = Eyeglass exposes PowerScale snapshots as Windows Previous Versions for NFS sha       │
-│  Runbook       = Eyeglass DR Assistant guided checklist for pre-checks, failover, and validation      │
-│  igls          = Eyeglass CLI; used for status, sync, DR, and RAPA operations                         │
-│  SmartConnect  = PowerScale DNS load balancing; failover changes SmartConnect zone delegation         │
-│  Configuration = shares, exports, quotas, NFS aliases; Eyeglass syncs these between clusters          │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</code></pre>
+    result --&gt;|No| investigate([Investigate and remediate])</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌────────────────────────────────── Superna Eyeglass — Health Checks ───────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │                           Superna Eyeglass — Health Check Procedures                          │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │                 Run these checks daily/weekly to confirm protection is working                │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │                                         igls sync status                                      │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │                  Review job completion rate — target 100%; investigate failures               │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │                         Check replication/backup lag against RPO target                       │   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│                                                                                                       │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   │      Check       │  What to verify  │      Expected     │    Frequency     │  Action if bad   │   │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   │    Job status    │All jobs complete │    100% success   │      Daily       │ Triage failures  │   │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│   │    Lag / RPO     │ Replication lag  │    &lt; RPO target   │      Daily       │  Tune bandwidth  │   │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   │     Capacity     │ Repo space used  │     &lt; 80% full    │      Weekly      │ Expand or expire │   │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   │   Restore test   │  Random restore  │    Data intact    │     Monthly      │ Fix backup chain │   │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│                                                                                                       │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│  Physical Infrastructure:                                                                             │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│  ESXi VM (Eyeglass appliance) · PowerScale cluster pair (production + DR) · SyncIQ replication link   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│                                                                                                       │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│  Eyeglass      = Superna Eyeglass; software appliance for NAS DR and ransomware protection            │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│  RAPA          = Ransomware Protection with Automated Response; detects and quarantines threats       │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│  SyncIQ        = PowerScale built-in replication; Eyeglass monitors and orchestrates policies         │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│  DFS-N         = Windows Distributed File System Namespace; Eyeglass automates failover of DFS        │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  Failover      = Eyeglass-orchestrated shift of NAS access from production to DR cluster              │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│  Failback      = reversing failover; Eyeglass re-syncs DR changes back and cuts back to product       │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  Quota Sync    = Eyeglass replicates SmartQuotas from source to DR to preserve user limits            │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│  Export Sync   = NFS exports and SMB shares replicated so clients can reconnect at DR site            │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  Quarantine    = RAPA isolation of suspect directory; blocks writes, alerts ops team                  │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│  Shadow Copy   = Eyeglass exposes PowerScale snapshots as Windows Previous Versions for NFS sha       │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  Runbook       = Eyeglass DR Assistant guided checklist for pre-checks, failover, and validation      │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│  igls          = Eyeglass CLI; used for status, sync, DR, and RAPA operations                         │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│  SmartConnect  = PowerScale DNS load balancing; failover changes SmartConnect zone delegation         │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│  Configuration = shares, exports, quotas, NFS aliases; Eyeglass syncs these between clusters          │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│                                                                                                       │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <h2 id="run-this-routine">Run This Routine<a class="headerlink" href="#run-this-routine" title="Permanent link">&para;</a></h2>
 <ol>
 <li><strong>Eyeglass service health:</strong> browser to <code>https://&lt;eyeglass-appliance&gt;:443</code> — dashboard should load without errors</li>
@@ -4389,37 +4389,37 @@ Health Checks reference covering Overview, SyncIQ Replication Health, PowerScale
     egApp --&gt;|"alert if lag &gt; RPO threshold"| alert["SNMP / Email\nAlert"]</code></pre>
 <hr />
 <h2 id="powerscale-cluster-health">PowerScale Cluster Health<a class="headerlink" href="#powerscale-cluster-health" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># On each PowerScale cluster (production and DR)</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>isi<span class="w"> </span>status
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Check for critical alerts</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>isi<span class="w"> </span>alerts<span class="w"> </span>list<span class="w"> </span>--category<span class="w"> </span>critical
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Check for failed or degraded drives</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>isi<span class="w"> </span>devices<span class="w"> </span>node<span class="w"> </span>list
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>isi<span class="w"> </span>devices<span class="w"> </span>drive<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>HEALTHY
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c1"># Check SmartConnect VIP pool health (for client access)</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>isi<span class="w"> </span>network<span class="w"> </span>pools<span class="w"> </span>list
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="c1"># Confirm SyncIQ service is running</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>isi<span class="w"> </span>sync<span class="w"> </span>service<span class="w"> </span>view
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># On each PowerScale cluster (production and DR)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>isi<span class="w"> </span>status
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Check for critical alerts</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>isi<span class="w"> </span>alerts<span class="w"> </span>list<span class="w"> </span>--category<span class="w"> </span>critical
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Check for failed or degraded drives</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>isi<span class="w"> </span>devices<span class="w"> </span>node<span class="w"> </span>list
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>isi<span class="w"> </span>devices<span class="w"> </span>drive<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span>HEALTHY
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c1"># Check SmartConnect VIP pool health (for client access)</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>isi<span class="w"> </span>network<span class="w"> </span>pools<span class="w"> </span>list
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="c1"># Confirm SyncIQ service is running</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>isi<span class="w"> </span>sync<span class="w"> </span>service<span class="w"> </span>view
 </code></pre></div>
 <hr />
 <h2 id="weekly-dr-readiness-check">Weekly DR Readiness Check<a class="headerlink" href="#weekly-dr-readiness-check" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Run Eyeglass preflight on DR cluster — confirms all DR prerequisites are met</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>egcli<span class="w"> </span>drtest<span class="w"> </span>preflight<span class="w"> </span>--cluster<span class="w"> </span>&lt;dr-cluster&gt;
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Expected output: all checks PASS</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Common checks include:</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1">#   - SyncIQ policies configured and running</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1">#   - Access zones configured at DR site</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1">#   - NFS/SMB export/share definitions replicated</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1">#   - DNS integration (if configured) operational</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1">#   - Eyeglass connectivity to both clusters confirmed</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># Review Eyeglass DR readiness dashboard</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># Eyeglass UI: https://&lt;eyeglass-ip&gt;:8443 → DR Dashboard</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Run Eyeglass preflight on DR cluster — confirms all DR prerequisites are met</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>egcli<span class="w"> </span>drtest<span class="w"> </span>preflight<span class="w"> </span>--cluster<span class="w"> </span>&lt;dr-cluster&gt;
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Expected output: all checks PASS</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Common checks include:</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1">#   - SyncIQ policies configured and running</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1">#   - Access zones configured at DR site</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1">#   - NFS/SMB export/share definitions replicated</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1">#   - DNS integration (if configured) operational</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1">#   - Eyeglass connectivity to both clusters confirmed</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Review Eyeglass DR readiness dashboard</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Eyeglass UI: https://&lt;eyeglass-ip&gt;:8443 → DR Dashboard</span>
 </code></pre></div>
 <hr />
 <h2 id="health-check-summary-table">Health Check Summary Table<a class="headerlink" href="#health-check-summary-table" title="Permanent link">&para;</a></h2>
@@ -4523,88 +4523,88 @@ Health Checks reference covering Overview, SyncIQ Replication Health, PowerScale
     rollback --&gt; doc</code></pre>
 <h3 id="eyeglass-dr-preflight">Eyeglass DR Preflight<a class="headerlink" href="#eyeglass-dr-preflight" title="Permanent link">&para;</a></h3>
 <p>The preflight check verifies all prerequisites for a failover without making any changes.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Run preflight against the DR cluster</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>egcli<span class="w"> </span>drtest<span class="w"> </span>preflight<span class="w"> </span>--cluster<span class="w"> </span>&lt;dr-cluster&gt;
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Run preflight for a specific policy</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>egcli<span class="w"> </span>drtest<span class="w"> </span>preflight<span class="w"> </span>--policy<span class="w"> </span>&lt;policy_name&gt;
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Expected output — all items should show PASS:</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1">#   [PASS] SyncIQ policy last run: 3 minutes ago</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1">#   [PASS] Access zones configured on DR cluster</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1">#   [PASS] NFS exports replicated to DR cluster</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1">#   [PASS] SMB shares replicated to DR cluster</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1">#   [PASS] DNS zones configured</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1">#   [PASS] Eyeglass connectivity to both clusters confirmed</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="c1">#   [PASS] SyncIQ service running on both clusters</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># Review any WARN or FAIL items and remediate before proceeding</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Run preflight against the DR cluster</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>egcli<span class="w"> </span>drtest<span class="w"> </span>preflight<span class="w"> </span>--cluster<span class="w"> </span>&lt;dr-cluster&gt;
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Run preflight for a specific policy</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>egcli<span class="w"> </span>drtest<span class="w"> </span>preflight<span class="w"> </span>--policy<span class="w"> </span>&lt;policy_name&gt;
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Expected output — all items should show PASS:</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1">#   [PASS] SyncIQ policy last run: 3 minutes ago</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1">#   [PASS] Access zones configured on DR cluster</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1">#   [PASS] NFS exports replicated to DR cluster</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1">#   [PASS] SMB shares replicated to DR cluster</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c1">#   [PASS] DNS zones configured</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1">#   [PASS] Eyeglass connectivity to both clusters confirmed</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="c1">#   [PASS] SyncIQ service running on both clusters</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="c1"># Review any WARN or FAIL items and remediate before proceeding</span>
 </code></pre></div>
 <h3 id="dr-test-rehearsal">DR Test (Rehearsal)<a class="headerlink" href="#dr-test-rehearsal" title="Permanent link">&para;</a></h3>
 <p>A DR test performs all failover steps but rolls back at the end, returning to normal replication.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Step 1 — Run Eyeglass DR test (non-destructive rehearsal)</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>egcli<span class="w"> </span>drtest<span class="w"> </span>run<span class="w"> </span>--policy<span class="w"> </span>&lt;policy_name&gt;
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Step 2 — Monitor test progress</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>egcli<span class="w"> </span>drtest<span class="w"> </span>status<span class="w"> </span>--policy<span class="w"> </span>&lt;policy_name&gt;
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Step 3 — Validate access zones activated on DR cluster</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>egcli<span class="w"> </span>accesszone<span class="w"> </span>status<span class="w"> </span>--cluster<span class="w"> </span>&lt;dr-cluster&gt;
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Step 4 — Validate NFS exports on DR cluster</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>ssh<span class="w"> </span>admin@&lt;dr-cluster&gt;<span class="w"> </span><span class="s2">&quot;isi nfs exports list&quot;</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># Step 5 — Validate SMB shares on DR cluster</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>ssh<span class="w"> </span>admin@&lt;dr-cluster&gt;<span class="w"> </span><span class="s2">&quot;isi smb shares list&quot;</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="c1"># Step 6 — Confirm DNS resolution (if Eyeglass DNS integration active)</span>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>nslookup<span class="w"> </span>&lt;smartconnect_zone_name&gt;
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="c1"># Step 7 — After validation, confirm DR test rollback is complete</span>
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>egcli<span class="w"> </span>drtest<span class="w"> </span>status<span class="w"> </span>--policy<span class="w"> </span>&lt;policy_name&gt;
-<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="c1"># Expected: State = Rolled Back / Replicating</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Step 1 — Run Eyeglass DR test (non-destructive rehearsal)</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>egcli<span class="w"> </span>drtest<span class="w"> </span>run<span class="w"> </span>--policy<span class="w"> </span>&lt;policy_name&gt;
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Step 2 — Monitor test progress</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>egcli<span class="w"> </span>drtest<span class="w"> </span>status<span class="w"> </span>--policy<span class="w"> </span>&lt;policy_name&gt;
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Step 3 — Validate access zones activated on DR cluster</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>egcli<span class="w"> </span>accesszone<span class="w"> </span>status<span class="w"> </span>--cluster<span class="w"> </span>&lt;dr-cluster&gt;
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Step 4 — Validate NFS exports on DR cluster</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>ssh<span class="w"> </span>admin@&lt;dr-cluster&gt;<span class="w"> </span><span class="s2">&quot;isi nfs exports list&quot;</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># Step 5 — Validate SMB shares on DR cluster</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>ssh<span class="w"> </span>admin@&lt;dr-cluster&gt;<span class="w"> </span><span class="s2">&quot;isi smb shares list&quot;</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="c1"># Step 6 — Confirm DNS resolution (if Eyeglass DNS integration active)</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>nslookup<span class="w"> </span>&lt;smartconnect_zone_name&gt;
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="c1"># Step 7 — After validation, confirm DR test rollback is complete</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>egcli<span class="w"> </span>drtest<span class="w"> </span>status<span class="w"> </span>--policy<span class="w"> </span>&lt;policy_name&gt;
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="c1"># Expected: State = Rolled Back / Replicating</span>
 </code></pre></div>
 <h3 id="post-failover-validation">Post-Failover Validation<a class="headerlink" href="#post-failover-validation" title="Permanent link">&para;</a></h3>
 <p>Run after a declared DR failover to confirm the DR cluster is fully operational.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Confirm DR policy is in Failed Over state</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>egcli<span class="w"> </span>drpolicy<span class="w"> </span>status<span class="w"> </span>--all
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Confirm DR cluster is healthy</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>ssh<span class="w"> </span>admin@&lt;dr-cluster&gt;<span class="w"> </span><span class="s2">&quot;isi status&quot;</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>ssh<span class="w"> </span>admin@&lt;dr-cluster&gt;<span class="w"> </span><span class="s2">&quot;isi alerts list --category critical&quot;</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Confirm access zones are active on DR cluster</span>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>egcli<span class="w"> </span>accesszone<span class="w"> </span>status<span class="w"> </span>--cluster<span class="w"> </span>&lt;dr-cluster&gt;
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="c1"># Confirm NFS/SMB access for clients</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>ssh<span class="w"> </span>admin@&lt;dr-cluster&gt;<span class="w"> </span><span class="s2">&quot;isi nfs exports list&quot;</span>
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>ssh<span class="w"> </span>admin@&lt;dr-cluster&gt;<span class="w"> </span><span class="s2">&quot;isi smb shares list&quot;</span>
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="c1"># Test NFS mount from a client</span>
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>mount<span class="w"> </span>-t<span class="w"> </span>nfs<span class="w"> </span>&lt;dr-smartconnect-ip&gt;:/&lt;export_path&gt;<span class="w"> </span>/mnt/drtest
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>ls<span class="w"> </span>-la<span class="w"> </span>/mnt/drtest
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="c1"># Confirm SyncIQ is stopped on original production policy (not running)</span>
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>ssh<span class="w"> </span>admin@&lt;production-cluster&gt;<span class="w"> </span><span class="s2">&quot;isi sync policies list&quot;</span>
-</code></pre></div>
-<h3 id="post-failback-validation">Post-Failback Validation<a class="headerlink" href="#post-failback-validation" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Confirm DR policy is back to Replicating state</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Confirm DR policy is in Failed Over state</span>
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>egcli<span class="w"> </span>drpolicy<span class="w"> </span>status<span class="w"> </span>--all
 <a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Confirm production cluster is healthy</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>ssh<span class="w"> </span>admin@&lt;production-cluster&gt;<span class="w"> </span><span class="s2">&quot;isi status&quot;</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Confirm access zones are back on production cluster</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>egcli<span class="w"> </span>accesszone<span class="w"> </span>status<span class="w"> </span>--cluster<span class="w"> </span>&lt;production-cluster&gt;
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Confirm SyncIQ is running in the normal direction (production → DR)</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>ssh<span class="w"> </span>admin@&lt;production-cluster&gt;<span class="w"> </span><span class="s2">&quot;isi sync policies list&quot;</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># Confirm last SyncIQ run completed successfully</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>ssh<span class="w"> </span>admin@&lt;production-cluster&gt;<span class="w"> </span><span class="s2">&quot;isi sync reports list --limit 5&quot;</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="c1"># Confirm client access is restored to production</span>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>nslookup<span class="w"> </span>&lt;production-smartconnect-zone&gt;
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Confirm DR cluster is healthy</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>ssh<span class="w"> </span>admin@&lt;dr-cluster&gt;<span class="w"> </span><span class="s2">&quot;isi status&quot;</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>ssh<span class="w"> </span>admin@&lt;dr-cluster&gt;<span class="w"> </span><span class="s2">&quot;isi alerts list --category critical&quot;</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Confirm access zones are active on DR cluster</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>egcli<span class="w"> </span>accesszone<span class="w"> </span>status<span class="w"> </span>--cluster<span class="w"> </span>&lt;dr-cluster&gt;
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># Confirm NFS/SMB access for clients</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>ssh<span class="w"> </span>admin@&lt;dr-cluster&gt;<span class="w"> </span><span class="s2">&quot;isi nfs exports list&quot;</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>ssh<span class="w"> </span>admin@&lt;dr-cluster&gt;<span class="w"> </span><span class="s2">&quot;isi smb shares list&quot;</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="c1"># Test NFS mount from a client</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>mount<span class="w"> </span>-t<span class="w"> </span>nfs<span class="w"> </span>&lt;dr-smartconnect-ip&gt;:/&lt;export_path&gt;<span class="w"> </span>/mnt/drtest
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>ls<span class="w"> </span>-la<span class="w"> </span>/mnt/drtest
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="c1"># Confirm SyncIQ is stopped on original production policy (not running)</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>ssh<span class="w"> </span>admin@&lt;production-cluster&gt;<span class="w"> </span><span class="s2">&quot;isi sync policies list&quot;</span>
+</code></pre></div>
+<h3 id="post-failback-validation">Post-Failback Validation<a class="headerlink" href="#post-failback-validation" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Confirm DR policy is back to Replicating state</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>egcli<span class="w"> </span>drpolicy<span class="w"> </span>status<span class="w"> </span>--all
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Confirm production cluster is healthy</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>ssh<span class="w"> </span>admin@&lt;production-cluster&gt;<span class="w"> </span><span class="s2">&quot;isi status&quot;</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Confirm access zones are back on production cluster</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>egcli<span class="w"> </span>accesszone<span class="w"> </span>status<span class="w"> </span>--cluster<span class="w"> </span>&lt;production-cluster&gt;
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Confirm SyncIQ is running in the normal direction (production → DR)</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>ssh<span class="w"> </span>admin@&lt;production-cluster&gt;<span class="w"> </span><span class="s2">&quot;isi sync policies list&quot;</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># Confirm last SyncIQ run completed successfully</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>ssh<span class="w"> </span>admin@&lt;production-cluster&gt;<span class="w"> </span><span class="s2">&quot;isi sync reports list --limit 5&quot;</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="c1"># Confirm client access is restored to production</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>nslookup<span class="w"> </span>&lt;production-smartconnect-zone&gt;
 </code></pre></div>
 <h3 id="validation-record-template">Validation Record Template<a class="headerlink" href="#validation-record-template" title="Permanent link">&para;</a></h3>
 <table>

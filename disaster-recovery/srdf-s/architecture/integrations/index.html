@@ -4009,55 +4009,55 @@
     r1 --&gt;|"SRDF/S synchronous"| r2
     srmA &lt;--&gt;|"SRM pairing"| srmB
     sra1 --&gt; r1
-    sra2 --&gt; r2
-```text
-┌───────────────────────────────── SRDF/S — Architecture Integrations ──────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                              SRDF/S — External Integration Points                             │   │
-│   │       Auth: Symmetrix admin credentials; Solutions Enabler; Unisphere role-based access       │   │
-│   │             Storage: connected via Dark fiber FC (&lt; 5 ms RTT) · DWDM long-haul FC             │   │
-│   │            Monitoring: SNMP traps / syslog / REST API to ITSM and alerting systems            │   │
-│   │    Encryption: Data identical to R1 at R2; FA port encryption optional; Unisphere TLS/HTTPS   │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                          ▼                        ▼                        ▼                          │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │           Identity          │  │           Storage           │  │          Monitoring         │   │
-│   │          AD / LDAP          │  │  Dark fiber FC (&lt; 5 ms RTT) │  │        SNMP / syslog        │   │
-│   │           SAML SSO          │  │      DWDM long-haul FC      │  │         REST webhook        │   │
-│   │          RBAC roles         │  │       NFS / iSCSI / FC      │  │         Email alerts        │   │
-│   │         MFA optional        │  │       Dedup appliance       │  │          ServiceNow         │   │
-│   │          Cert auth          │  │        Object storage       │  │          Prometheus         │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Two PowerMax arrays · Dark fiber / DWDM FC link · Low-latency network (&lt; 200 km) · RF director ports │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  SRDF/S        = Synchronous SRDF; every R1 write is mirrored to R2 before host acknowledgment        │
-│  R1            = source volume; write is held pending R2 confirmation — adds WAN RTT to latency       │
-│  R2            = target volume; must acknowledge each write; acts as synchronous mirror               │
-│  RTT           = Round-Trip Time between R1 and R2 arrays; directly added to host write latency       │
-│  RPO=0         = zero recovery point objective; no data loss possible under normal operation          │
-│  RTO           = Recovery Time Objective; SRDF/S failover typically &lt; 5 minutes manual, &lt; 1 min       │
-│  symrdf        = CLI for all SRDF operations: establish, split, suspend, failover, restore, ver       │
-│  Pair State    = Synchronized | Consistent | Suspended | Failed Over | Split                          │
-│  Consistent    = transient state where R1 write is in transit but not yet confirmed on R2             │
-│  Failover      = makes R2 read-write; production continues from DR site after R1 failure              │
-│  Restore       = re-synchronises after failover; direction is reversed until R1 catches up            │
-│  RDFG          = RDF Group: logical grouping of SRDF pairs sharing same link and parameters           │
-│  FA Port       = Front-End Adapter port on PowerMax; used for host connectivity (non-SRDF)            │
-│  RF Port       = Remote Fabric port on PowerMax; used exclusively for SRDF replication traffic        │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</code></pre>
+    sra2 --&gt; r2</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────── SRDF/S — Architecture Integrations ──────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │                              SRDF/S — External Integration Points                             │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │       Auth: Symmetrix admin credentials; Solutions Enabler; Unisphere role-based access       │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │             Storage: connected via Dark fiber FC (&lt; 5 ms RTT) · DWDM long-haul FC             │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │            Monitoring: SNMP traps / syslog / REST API to ITSM and alerting systems            │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │    Encryption: Data identical to R1 at R2; FA port encryption optional; Unisphere TLS/HTTPS   │   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│                                                                                                       │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│                          ▼                        ▼                        ▼                          │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                                                                                                       │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   │           Identity          │  │           Storage           │  │          Monitoring         │   │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   │          AD / LDAP          │  │  Dark fiber FC (&lt; 5 ms RTT) │  │        SNMP / syslog        │   │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │           SAML SSO          │  │      DWDM long-haul FC      │  │         REST webhook        │   │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │          RBAC roles         │  │       NFS / iSCSI / FC      │  │         Email alerts        │   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │         MFA optional        │  │       Dedup appliance       │  │          ServiceNow         │   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │          Cert auth          │  │        Object storage       │  │          Prometheus         │   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│                                                                                                       │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│  Physical Infrastructure:                                                                             │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│  Two PowerMax arrays · Dark fiber / DWDM FC link · Low-latency network (&lt; 200 km) · RF director ports │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│                                                                                                       │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  SRDF/S        = Synchronous SRDF; every R1 write is mirrored to R2 before host acknowledgment        │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│  R1            = source volume; write is held pending R2 confirmation — adds WAN RTT to latency       │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  R2            = target volume; must acknowledge each write; acts as synchronous mirror               │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│  RTT           = Round-Trip Time between R1 and R2 arrays; directly added to host write latency       │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  RPO=0         = zero recovery point objective; no data loss possible under normal operation          │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│  RTO           = Recovery Time Objective; SRDF/S failover typically &lt; 5 minutes manual, &lt; 1 min       │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  symrdf        = CLI for all SRDF operations: establish, split, suspend, failover, restore, ver       │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│  Pair State    = Synchronized | Consistent | Suspended | Failed Over | Split                          │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│  Consistent    = transient state where R1 write is in transit but not yet confirmed on R2             │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│  Failover      = makes R2 read-write; production continues from DR site after R1 failure              │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│  Restore       = re-synchronises after failover; direction is reversed until R1 catches up            │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│  RDFG          = RDF Group: logical grouping of SRDF pairs sharing same link and parameters           │
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│  FA Port       = Front-End Adapter port on PowerMax; used for host connectivity (non-SRDF)            │
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│  RF Port       = Remote Fabric port on PowerMax; used exclusively for SRDF replication traffic        │
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│                                                                                                       │
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <hr />
 <h2 id="backup-from-r2">Backup from R2<a class="headerlink" href="#backup-from-r2" title="Permanent link">&para;</a></h2>
 <p>To offload backup I/O from production (R1), take SnapVX snapshots on the R2 side:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>symsnap<span class="w"> </span>-sid<span class="w"> </span>&lt;target_SID&gt;<span class="w"> </span>-sg<span class="w"> </span>&lt;sg_name&gt;<span class="w"> </span>create<span class="w"> </span>-name<span class="w"> </span>BACKUP_<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span><span class="w"> </span>-ttl<span class="w"> </span><span class="m">3</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1"># Mount the linked copy to a backup proxy server</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>symsnap<span class="w"> </span>-sid<span class="w"> </span>&lt;target_SID&gt;<span class="w"> </span>-sg<span class="w"> </span>&lt;sg_name&gt;<span class="w"> </span>link<span class="w"> </span>-name<span class="w"> </span>BACKUP_<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span><span class="w"> </span>-lnsg<span class="w"> </span>&lt;proxy_sg&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>symsnap<span class="w"> </span>-sid<span class="w"> </span>&lt;target_SID&gt;<span class="w"> </span>-sg<span class="w"> </span>&lt;sg_name&gt;<span class="w"> </span>create<span class="w"> </span>-name<span class="w"> </span>BACKUP_<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span><span class="w"> </span>-ttl<span class="w"> </span><span class="m">3</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Mount the linked copy to a backup proxy server</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>symsnap<span class="w"> </span>-sid<span class="w"> </span>&lt;target_SID&gt;<span class="w"> </span>-sg<span class="w"> </span>&lt;sg_name&gt;<span class="w"> </span>link<span class="w"> </span>-name<span class="w"> </span>BACKUP_<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span><span class="w"> </span>-lnsg<span class="w"> </span>&lt;proxy_sg&gt;
 </code></pre></div>
 <p>Note: always snapshot the R2 while it is in <code>Synchronized</code> state to ensure consistency.</p>
 

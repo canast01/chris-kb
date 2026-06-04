@@ -4968,53 +4968,53 @@ How It Works reference covering Deployment Model, Core Services, Main Dependenci
     class active active
     class passive standby
     class witness witness
-    class clients client
-```text
-┌──────────────────────────────────── vCenter Server — How It Works ────────────────────────────────────┐
-│                                                                                                       │
-│  vCenter Server is the centralised management platform for vSphere; all                               │
-│  ESXi hosts, VMs, clusters, and policies are controlled through its APIs.                             │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                 Client Layer                 │  │             API / Service Layer             │   │
-│   │          vSphere Client (HTML5 UI)           │  │             REST API + SOAP API             │   │
-│   │             CLI: govc, PowerCLI              │  │           SSO token auth for calls          │   │
-│   │            SDKs: Python, Go, Java            │  │             vCenter API gateway             │   │
-│   │             vCenter Mob browser              │  │               Task / event bus              │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Client requests hit the API gateway; SSO validates the token before any operation.                   │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                Core Services                 │  │              Host Agent (vpxa)              │   │
-│   │          Inventory: hosts/VMs/nets           │  │            Runs on each ESXi host           │   │
-│   │            Scheduler: DRS/HA/DPM             │  │            Relays tasks to hostd            │   │
-│   │            Storage: SDRS/profiles            │  │           Reports events up to VC           │   │
-│   │           Postgres DB: full state            │  │           Reconnects on VC restart          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  vCenter Server Appliance (VCSA) runs as a Linux VM on an ESXi host; requires                         │
-│  shared storage and management network reachability from all managed hosts.                           │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  VCSA          = vCenter Server Appliance; OVA-deployed Photon OS VM                                  │
-│  vpxd          = vCenter Server daemon; core process; crash restarts service                          │
-│  vpxa          = vCenter agent on each ESXi host; bridges host and vCenter                            │
-│  hostd         = host daemon on ESXi; handles VM power ops, storage, network                          │
-│  PSC           = Platform Services Controller; merged into VCSA 7.0+                                  │
-│  SSO           = Single Sign-On; identity store; issues SAML tokens for API                           │
-│  DRS           = Distributed Resource Scheduler; automates VM placement                               │
-│  HA            = High Availability; restarts VMs on host failure automatically                        │
-│  DPM           = Distributed Power Management; powers off idle hosts                                  │
-│  SDRS          = Storage DRS; balances datastore utilisation automatically                            │
-│  vDS           = vSphere Distributed Switch; managed centrally from vCenter                           │
-│  Inventory     = hierarchical object tree: DC → cluster → host → VM                                   │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</code></pre>
+    class clients client</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────────── vCenter Server — How It Works ────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  vCenter Server is the centralised management platform for vSphere; all                               │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  ESXi hosts, VMs, clusters, and policies are controlled through its APIs.                             │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│                                                                                                       │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │                 Client Layer                 │  │             API / Service Layer             │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │          vSphere Client (HTML5 UI)           │  │             REST API + SOAP API             │   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   │             CLI: govc, PowerCLI              │  │           SSO token auth for calls          │   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   │            SDKs: Python, Go, Java            │  │             vCenter API gateway             │   │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   │             vCenter Mob browser              │  │               Task / event bus              │   │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                                                                                                       │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  Client requests hit the API gateway; SSO validates the token before any operation.                   │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│                                                                                                       │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│                                                                                                       │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │                Core Services                 │  │              Host Agent (vpxa)              │   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │          Inventory: hosts/VMs/nets           │  │            Runs on each ESXi host           │   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   │            Scheduler: DRS/HA/DPM             │  │            Relays tasks to hostd            │   │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   │            Storage: SDRS/profiles            │  │           Reports events up to VC           │   │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│   │           Postgres DB: full state            │  │           Reconnects on VC restart          │   │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│                                                                                                       │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│  vCenter Server Appliance (VCSA) runs as a Linux VM on an ESXi host; requires                         │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  shared storage and management network reachability from all managed hosts.                           │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│                                                                                                       │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│                                                                                                       │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  VCSA          = vCenter Server Appliance; OVA-deployed Photon OS VM                                  │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│  vpxd          = vCenter Server daemon; core process; crash restarts service                          │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│  vpxa          = vCenter agent on each ESXi host; bridges host and vCenter                            │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│  hostd         = host daemon on ESXi; handles VM power ops, storage, network                          │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│  PSC           = Platform Services Controller; merged into VCSA 7.0+                                  │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│  SSO           = Single Sign-On; identity store; issues SAML tokens for API                           │
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│  DRS           = Distributed Resource Scheduler; automates VM placement                               │
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│  HA            = High Availability; restarts VMs on host failure automatically                        │
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│  DPM           = Distributed Power Management; powers off idle hosts                                  │
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│  SDRS          = Storage DRS; balances datastore utilisation automatically                            │
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│  vDS           = vSphere Distributed Switch; managed centrally from vCenter                           │
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>│  Inventory     = hierarchical object tree: DC → cluster → host → VM                                   │
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>│                                                                                                       │
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <hr />
 <h2 id="service-startup-order">Service Startup Order<a class="headerlink" href="#service-startup-order" title="Permanent link">&para;</a></h2>
 <p>Services must start in the correct dependency order or vpxd will fail to initialise:</p>
@@ -5041,16 +5041,16 @@ How It Works reference covering Deployment Model, Core Services, Main Dependenci
     class stsd,idmd sso
     class vpxd core
     class ui,eam svc</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Manual restart in dependency order</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>service-control<span class="w"> </span>--stop<span class="w"> </span>--all
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>service-control<span class="w"> </span>--start<span class="w"> </span>vmware-vpostgres
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>service-control<span class="w"> </span>--start<span class="w"> </span>vmware-stsd
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>service-control<span class="w"> </span>--start<span class="w"> </span>vmware-sts-idmd
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>service-control<span class="w"> </span>--start<span class="w"> </span>vpxd
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>service-control<span class="w"> </span>--start<span class="w"> </span>--all
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c1"># Verify</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>service-control<span class="w"> </span>--status<span class="w"> </span>--all
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Manual restart in dependency order</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>service-control<span class="w"> </span>--stop<span class="w"> </span>--all
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>service-control<span class="w"> </span>--start<span class="w"> </span>vmware-vpostgres
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>service-control<span class="w"> </span>--start<span class="w"> </span>vmware-stsd
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>service-control<span class="w"> </span>--start<span class="w"> </span>vmware-sts-idmd
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>service-control<span class="w"> </span>--start<span class="w"> </span>vpxd
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>service-control<span class="w"> </span>--start<span class="w"> </span>--all
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># Verify</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>service-control<span class="w"> </span>--status<span class="w"> </span>--all
 </code></pre></div>
 <hr />
 <h2 id="sizing">Sizing<a class="headerlink" href="#sizing" title="Permanent link">&para;</a></h2>
@@ -5251,61 +5251,61 @@ How It Works reference covering Deployment Model, Core Services, Main Dependenci
 </table>
 <hr />
 <h2 id="useful-commands">Useful Commands<a class="headerlink" href="#useful-commands" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Service status</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>service-control<span class="w"> </span>--status<span class="w"> </span>--all
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Disk usage</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>df<span class="w"> </span>-h
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># VECS certificate store — check expiry</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>/usr/lib/vmware-vmafd/bin/vecs-cli<span class="w"> </span>entry<span class="w"> </span>list<span class="w"> </span>--store<span class="w"> </span>MACHINE_SSL_CERT<span class="w"> </span>--text<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Alias|Not After&quot;</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c1"># SSO domain info</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>/usr/lib/vmware-vmafd/bin/vmafd-cli<span class="w"> </span>get-domain-name<span class="w"> </span>--server-name<span class="w"> </span>localhost
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># System resource usage</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>top
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>vmstat<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">5</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="c1"># Network — open listening ports</span>
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>ss<span class="w"> </span>-tlnp
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="c1"># Photon OS version</span>
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>cat<span class="w"> </span>/etc/photon-release
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Service status</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>service-control<span class="w"> </span>--status<span class="w"> </span>--all
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Disk usage</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>df<span class="w"> </span>-h
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># VECS certificate store — check expiry</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>/usr/lib/vmware-vmafd/bin/vecs-cli<span class="w"> </span>entry<span class="w"> </span>list<span class="w"> </span>--store<span class="w"> </span>MACHINE_SSL_CERT<span class="w"> </span>--text<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;Alias|Not After&quot;</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># SSO domain info</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>/usr/lib/vmware-vmafd/bin/vmafd-cli<span class="w"> </span>get-domain-name<span class="w"> </span>--server-name<span class="w"> </span>localhost
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># System resource usage</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>top
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>vmstat<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">5</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="c1"># Network — open listening ports</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>ss<span class="w"> </span>-tlnp
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="c1"># Photon OS version</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>cat<span class="w"> </span>/etc/photon-release
 </code></pre></div>
 <hr />
 <h2 id="database-operations">Database Operations<a class="headerlink" href="#database-operations" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Connect to embedded PostgreSQL</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>/opt/vmware/vpostgres/current/bin/psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-d<span class="w"> </span>VCDB
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Inside psql</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="se">\d</span>t<span class="w">                                          </span><span class="c1"># list tables</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>SELECT<span class="w"> </span>pg_size_pretty<span class="o">(</span>pg_database_size<span class="o">(</span><span class="s1">&#39;VCDB&#39;</span><span class="o">))</span><span class="p">;</span><span class="w">  </span><span class="c1"># check DB size</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>SELECT<span class="w"> </span>COUNT<span class="o">(</span>*<span class="o">)</span><span class="w"> </span>FROM<span class="w"> </span>vc_event<span class="p">;</span><span class="w">               </span><span class="c1"># verify DB is intact</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="se">\q</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Connect to embedded PostgreSQL</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>/opt/vmware/vpostgres/current/bin/psql<span class="w"> </span>-U<span class="w"> </span>postgres<span class="w"> </span>-d<span class="w"> </span>VCDB
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Inside psql</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="se">\d</span>t<span class="w">                                          </span><span class="c1"># list tables</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>SELECT<span class="w"> </span>pg_size_pretty<span class="o">(</span>pg_database_size<span class="o">(</span><span class="s1">&#39;VCDB&#39;</span><span class="o">))</span><span class="p">;</span><span class="w">  </span><span class="c1"># check DB size</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>SELECT<span class="w"> </span>COUNT<span class="o">(</span>*<span class="o">)</span><span class="w"> </span>FROM<span class="w"> </span>vc_event<span class="p">;</span><span class="w">               </span><span class="c1"># verify DB is intact</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="se">\q</span>
 </code></pre></div>
 <p>Do not modify the vCenter database directly unless directed by VMware Support.</p>
 <hr />
 <h2 id="rest-api-quick-reference">REST API Quick Reference<a class="headerlink" href="#rest-api-quick-reference" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Authenticate</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;administrator@vsphere.local:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span>-X<span class="w"> </span>POST<span class="w"> </span>https://vcenter.example.local/api/session<span class="w"> </span><span class="p">|</span><span class="w"> </span>tr<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;&quot;&#39;</span><span class="k">)</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># Host inventory</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;vmware-api-session-id: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">    </span><span class="s2">&quot;https://vcenter.example.local/api/vcenter/host&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="c1"># VM inventory</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;vmware-api-session-id: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">    </span><span class="s2">&quot;https://vcenter.example.local/api/vcenter/vm&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># System health</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;vmware-api-session-id: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">    </span><span class="s2">&quot;https://vcenter.example.local/api/vcenter/health/system&quot;</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="c1"># Delete session</span>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;vmware-api-session-id: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="w">    </span>-X<span class="w"> </span>DELETE<span class="w"> </span>https://vcenter.example.local/api/session
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Authenticate</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">TOKEN</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;administrator@vsphere.local:&lt;password&gt;&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span>-X<span class="w"> </span>POST<span class="w"> </span>https://vcenter.example.local/api/session<span class="w"> </span><span class="p">|</span><span class="w"> </span>tr<span class="w"> </span>-d<span class="w"> </span><span class="s1">&#39;&quot;&#39;</span><span class="k">)</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1"># Host inventory</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;vmware-api-session-id: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">    </span><span class="s2">&quot;https://vcenter.example.local/api/vcenter/host&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># VM inventory</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;vmware-api-session-id: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">    </span><span class="s2">&quot;https://vcenter.example.local/api/vcenter/vm&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="c1"># System health</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;vmware-api-session-id: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">    </span><span class="s2">&quot;https://vcenter.example.local/api/vcenter/health/system&quot;</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="c1"># Delete session</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-H<span class="w"> </span><span class="s2">&quot;vmware-api-session-id: </span><span class="nv">$TOKEN</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="w">    </span>-X<span class="w"> </span>DELETE<span class="w"> </span>https://vcenter.example.local/api/session
 </code></pre></div>
 <p>Swagger UI: <code>https://&lt;vcenter&gt;/apiexplorer</code></p>
 <hr />
@@ -5316,131 +5316,131 @@ How It Works reference covering Deployment Model, Core Services, Main Dependenci
 <h2 id="vm-encryption-key-hierarchy">VM Encryption — Key Hierarchy<a class="headerlink" href="#vm-encryption-key-hierarchy" title="Permanent link">&para;</a></h2>
 <hr />
 <h2 id="content-library-publish-subscribe">Content Library — Publish &amp; Subscribe<a class="headerlink" href="#content-library-publish-subscribe" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>┌─────────────────────────── Content Library — Publish &amp; Subscribe Topology ────────────────────────────┐
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>│                                                                                                       │
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>│  A published library exposes its catalogue over HTTPS. Subscribed libraries on any                    │
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>│  vCenter instance sync the content locally, enabling fast VM deployment without cross-site I/O.       │
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>│                                                                                                       │
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>│   │      Published Library (source vCenter)      │  │     Subscribed Library (target vCenter)     │   │
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>│   │──────────────────────────────────────────────│  │─────────────────────────────────────────────│   │
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>│   │ Contains: OVF/OVA templates                  │  │ Subscribes to published HTTPS URL           │   │
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>│   │   VM templates (native format)               │  │ Sync policy: on-demand or immediate         │   │
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>│   │   ISO images                                 │  │ Content cached locally on datastore         │   │
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>│   │   Scripts and files                          │  │ VM deploy uses local copy — fast            │   │
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>│   │ Publication endpoint: HTTPS URL              │  │ Read-only — changes made at source          │   │
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>│   │ HTTPS + optional password                    │  │ Multiple subscribers supported              │   │
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>│   │                                              │  │                                             │   │
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>│                                                                                                       │
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>│    Published → Subscribed sync flow:                                                                  │
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>│      1.  Admin creates local library → enables &quot;Published&quot; checkbox → gets HTTPS URL                  │
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>│      2.  On target vCenter: New Subscribed Library → paste URL → set sync policy                      │
-<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>│      3.  Initial full sync downloads all items to target datastore                                    │
-<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>│      4.  Updates: source library changes → subscribers detect delta → sync diff only                  │
-<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>│      5.  Deploy VM from subscribed library = pulls from local datastore copy                          │
-<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>│                                                                                                       │
-<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>│    OVF template  = Open Virtualisation Format; portable VM descriptor + disk(s)                       │
-<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>│    On-demand     = content downloaded only when needed for deployment                                 │
-<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a>│    Immediate     = content synced as soon as source library updates                                   │
-<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a>│    ISO sync      = entire ISO downloaded; large files sync in background                              │
-<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a>│                                                                                                       │
-<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>┌─────────────────────────── Content Library — Publish &amp; Subscribe Topology ────────────────────────────┐
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>│                                                                                                       │
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>│  A published library exposes its catalogue over HTTPS. Subscribed libraries on any                    │
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>│  vCenter instance sync the content locally, enabling fast VM deployment without cross-site I/O.       │
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>│                                                                                                       │
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>│   │      Published Library (source vCenter)      │  │     Subscribed Library (target vCenter)     │   │
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>│   │──────────────────────────────────────────────│  │─────────────────────────────────────────────│   │
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>│   │ Contains: OVF/OVA templates                  │  │ Subscribes to published HTTPS URL           │   │
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>│   │   VM templates (native format)               │  │ Sync policy: on-demand or immediate         │   │
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>│   │   ISO images                                 │  │ Content cached locally on datastore         │   │
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>│   │   Scripts and files                          │  │ VM deploy uses local copy — fast            │   │
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>│   │ Publication endpoint: HTTPS URL              │  │ Read-only — changes made at source          │   │
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>│   │ HTTPS + optional password                    │  │ Multiple subscribers supported              │   │
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>│   │                                              │  │                                             │   │
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>│                                                                                                       │
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>│    Published → Subscribed sync flow:                                                                  │
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>│      1.  Admin creates local library → enables &quot;Published&quot; checkbox → gets HTTPS URL                  │
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>│      2.  On target vCenter: New Subscribed Library → paste URL → set sync policy                      │
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>│      3.  Initial full sync downloads all items to target datastore                                    │
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>│      4.  Updates: source library changes → subscribers detect delta → sync diff only                  │
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>│      5.  Deploy VM from subscribed library = pulls from local datastore copy                          │
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>│                                                                                                       │
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>│    OVF template  = Open Virtualisation Format; portable VM descriptor + disk(s)                       │
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>│    On-demand     = content downloaded only when needed for deployment                                 │
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>│    Immediate     = content synced as soon as source library updates                                   │
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>│    ISO sync      = entire ISO downloaded; large files sync in background                              │
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>│                                                                                                       │
+<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
 <hr />
 <h2 id="resource-pools-shares-limits-reservations">Resource Pools — Shares, Limits &amp; Reservations<a class="headerlink" href="#resource-pools-shares-limits-reservations" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>┌─────────────────────────── Resource Pools — Shares, Limits &amp; Reservations ────────────────────────────┐
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>│                                                                                                       │
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>│  Resource pools create a hierarchy of guaranteed and throttled resource entitlements.                 │
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>│  Shares determine proportional access when contention exists; limits cap usage absolutely.            │
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>│                                                                                                       │
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>│    Cluster root  (all hosts combined: e.g. 128 pCPU, 1024 GB RAM)                                     │
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>│    │                                                                                                  │
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>│    ├── Resource Pool: Production  [shares: High 8000, limit: none, reservation: 64 GHz]               │
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>│    │     │  VMs here guaranteed 64 GHz floor; can burst to cluster max                                │
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>│    │     ├── VM-Prod-1  (4 vCPU, reservation: 4 GHz)                                                  │
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>│    │     └── VM-Prod-2  (8 vCPU, no reservation)                                                      │
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>│    │                                                                                                  │
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>│    ├── Resource Pool: Dev  [shares: Normal 4000, limit: 32 GHz, reservation: none]                    │
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>│    │     │  VMs capped at 32 GHz total even if cluster is idle                                        │
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>│    │     └── VM-Dev-1  (2 vCPU, no reservation or limit)                                              │
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>│    │                                                                                                  │
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>│    └── Resource Pool: Test  [shares: Low 2000, limit: 16 GHz, reservation: none]                      │
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>│          │  During contention: Prod gets 2x Dev shares, 4x Test shares                                │
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>│          └── VM-Test-1  (2 vCPU, limit: 2 GHz — hard cap always enforced)                             │
-<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>│                                                                                                       │
-<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>│    Shares      = relative priority during contention; High:Normal:Low = 4:2:1                         │
-<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>│    Reservation = guaranteed minimum CPU/mem; cluster must be able to meet all reservations            │
-<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>│    Limit       = hard ceiling on usage; never exceeded even if resources are free                     │
-<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>│    Expandable  = if set, child pool can borrow from parent when parent has slack                      │
-<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>│    Overhead    = vSphere reserves CPU/mem for VMkernel overhead per running VM                        │
-<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>│                                                                                                       │
-<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>┌─────────────────────────── Resource Pools — Shares, Limits &amp; Reservations ────────────────────────────┐
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>│                                                                                                       │
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>│  Resource pools create a hierarchy of guaranteed and throttled resource entitlements.                 │
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>│  Shares determine proportional access when contention exists; limits cap usage absolutely.            │
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>│                                                                                                       │
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>│    Cluster root  (all hosts combined: e.g. 128 pCPU, 1024 GB RAM)                                     │
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>│    │                                                                                                  │
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>│    ├── Resource Pool: Production  [shares: High 8000, limit: none, reservation: 64 GHz]               │
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>│    │     │  VMs here guaranteed 64 GHz floor; can burst to cluster max                                │
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>│    │     ├── VM-Prod-1  (4 vCPU, reservation: 4 GHz)                                                  │
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>│    │     └── VM-Prod-2  (8 vCPU, no reservation)                                                      │
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>│    │                                                                                                  │
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>│    ├── Resource Pool: Dev  [shares: Normal 4000, limit: 32 GHz, reservation: none]                    │
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>│    │     │  VMs capped at 32 GHz total even if cluster is idle                                        │
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>│    │     └── VM-Dev-1  (2 vCPU, no reservation or limit)                                              │
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>│    │                                                                                                  │
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>│    └── Resource Pool: Test  [shares: Low 2000, limit: 16 GHz, reservation: none]                      │
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>│          │  During contention: Prod gets 2x Dev shares, 4x Test shares                                │
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>│          └── VM-Test-1  (2 vCPU, limit: 2 GHz — hard cap always enforced)                             │
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>│                                                                                                       │
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>│    Shares      = relative priority during contention; High:Normal:Low = 4:2:1                         │
+<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>│    Reservation = guaranteed minimum CPU/mem; cluster must be able to meet all reservations            │
+<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>│    Limit       = hard ceiling on usage; never exceeded even if resources are free                     │
+<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a>│    Expandable  = if set, child pool can borrow from parent when parent has slack                      │
+<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a>│    Overhead    = vSphere reserves CPU/mem for VMkernel overhead per running VM                        │
+<a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a>│                                                                                                       │
+<a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
 <hr />
 <h2 id="vmotion-types-comparison">vMotion Types — Comparison<a class="headerlink" href="#vmotion-types-comparison" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>┌─────────────────────────────── VM Migration — vMotion Type Comparison ────────────────────────────────┐
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>│                                                                                                       │
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>│    Type                  VM State     What Moves           Storage         vCenter                    │
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>│    ────────────────────────────────────────────────────────────────────────────────────               │
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>│    vMotion               Powered ON   CPU + memory state   Stays on same   Same SSO                   │
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>│                                       vNIC reconnects      datastore       domain                     │
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>│                                       &lt; 1 s downtime                                                  │
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>│                                                                                                       │
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>│    Storage vMotion       Powered ON   VMDK files (live)    Moves to new    Same SSO                   │
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>│    (svMotion)                         VM stays running     datastore       domain                     │
-<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>│                                       Mirror → switch                                                 │
-<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>│                                                                                                       │
-<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>│    Cold Migration        Powered OFF  All VM files         Moves (opt.)    Same or                    │
-<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>│                                       .vmx .vmdk .nvram    New datastore   cross-VC                   │
-<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>│                                       No memory to xfer    or same                                    │
-<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>│                                                                                                       │
-<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>│    Cross-vCenter Export  Powered OFF  All VM files         Moves           Different                  │
-<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>│    (cross-VC vMotion*)   (or ON**)    Registered at dest   Optional        vCenters                   │
-<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>│    * Enhanced linked mode required for powered-on cross-VC vMotion (xvMotion)                         │
-<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>│                                                                                                       │
-<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>│    vMotion requirements: shared storage visible from both hosts; same L2 or vDS port group;           │
-<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>│      compatible CPU families (or EVC mode enabled); sufficient memory on target host.                 │
-<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>│                                                                                                       │
-<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a>│    vMotion    = live migration of running VM between hosts; no storage move                           │
-<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a>│    svMotion   = live storage migration; VM stays on same host; VMDK mirrored then cut                 │
-<a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a>│    EVC        = Enhanced vMotion Compatibility; masks CPU features for cross-gen moves                │
-<a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a>│    xvMotion   = cross-vCenter vMotion (powered-on); requires Enhanced Linked Mode                     │
-<a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a>│                                                                                                       │
-<a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>┌─────────────────────────────── VM Migration — vMotion Type Comparison ────────────────────────────────┐
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>│                                                                                                       │
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>│    Type                  VM State     What Moves           Storage         vCenter                    │
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>│    ────────────────────────────────────────────────────────────────────────────────────               │
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>│    vMotion               Powered ON   CPU + memory state   Stays on same   Same SSO                   │
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>│                                       vNIC reconnects      datastore       domain                     │
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>│                                       &lt; 1 s downtime                                                  │
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>│                                                                                                       │
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>│    Storage vMotion       Powered ON   VMDK files (live)    Moves to new    Same SSO                   │
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>│    (svMotion)                         VM stays running     datastore       domain                     │
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>│                                       Mirror → switch                                                 │
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>│                                                                                                       │
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>│    Cold Migration        Powered OFF  All VM files         Moves (opt.)    Same or                    │
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>│                                       .vmx .vmdk .nvram    New datastore   cross-VC                   │
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>│                                       No memory to xfer    or same                                    │
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>│                                                                                                       │
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>│    Cross-vCenter Export  Powered OFF  All VM files         Moves           Different                  │
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>│    (cross-VC vMotion*)   (or ON**)    Registered at dest   Optional        vCenters                   │
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>│    * Enhanced linked mode required for powered-on cross-VC vMotion (xvMotion)                         │
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>│                                                                                                       │
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>│    vMotion requirements: shared storage visible from both hosts; same L2 or vDS port group;           │
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>│      compatible CPU families (or EVC mode enabled); sufficient memory on target host.                 │
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>│                                                                                                       │
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>│    vMotion    = live migration of running VM between hosts; no storage move                           │
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>│    svMotion   = live storage migration; VM stays on same host; VMDK mirrored then cut                 │
+<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>│    EVC        = Enhanced vMotion Compatibility; masks CPU features for cross-gen moves                │
+<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a>│    xvMotion   = cross-vCenter vMotion (powered-on); requires Enhanced Linked Mode                     │
+<a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a>│                                                                                                       │
+<a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
 <hr />
 <h2 id="drs-placement-balancing-logic">DRS — Placement &amp; Balancing Logic<a class="headerlink" href="#drs-placement-balancing-logic" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>┌────────────────────────────────── DRS — Placement &amp; Balancing Logic ──────────────────────────────────┐
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>│                                                                                                       │
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>│   │       Initial Placement (VM power-on)        │  │       Ongoing Balancing (every 5 min)       │   │
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>│   │──────────────────────────────────────────────│  │─────────────────────────────────────────────│   │
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>│   │ DRS scores all eligible hosts                │  │ Measures host resource utilisation          │   │
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>│   │ Prefers host with most headroom              │  │ Calculates cluster imbalance score          │   │
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>│   │ Respects: affinity rules,                    │  │ Generates migration recommendations         │   │
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>│   │  reservations, NUMA topology                 │  │ Weighs move cost vs. benefit gained         │   │
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>│   │ Picks best-scored host,                      │  │ Applies recs per automation level:          │   │
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>│   │  powers on VM there                          │  │  Manual / Partial / Fully Automated         │   │
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>│   │                                              │  │                                             │   │
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>│                                                                                                       │
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>│    Automation levels:                                                                                 │
-<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>│      Manual          — DRS generates recommendations; admin reviews and applies each                  │
-<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>│      Partially Auto  — Auto power-on placement; manual approval for ongoing balancing                 │
-<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>│      Fully Automated — Auto placement + auto migration; threshold 1 (aggr) – 5 (cons)                 │
-<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>│                                                                                                       │
-<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>│    Affinity / Anti-affinity rules:                                                                    │
-<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>│      VM-VM affinity      — keep these VMs on the same host (HA pair, licensing)                       │
-<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>│      VM-VM anti-affinity — keep these VMs on different hosts (HA separation)                          │
-<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>│      VM-Host affinity    — prefer or require VMs on specific hosts (licensing, hardware)              │
-<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>│                                                                                                       │
-<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>│    DRS     = Distributed Resource Scheduler; runs in vCenter; uses vMotion to balance                 │
-<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>│    Score   = per-host metric: 0 (ideal) to 100 (overloaded); DRS targets uniform score                │
-<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a>│    Imbal.  = deviation of host scores from cluster average; triggers migration at threshold           │
-<a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a>│    DPM     = Distributed Power Management; companion to DRS; powers off idle hosts                    │
-<a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a>│                                                                                                       │
-<a id="__codelineno-7-30" name="__codelineno-7-30" href="#__codelineno-7-30"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>┌────────────────────────────────── DRS — Placement &amp; Balancing Logic ──────────────────────────────────┐
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>│                                                                                                       │
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>│   │       Initial Placement (VM power-on)        │  │       Ongoing Balancing (every 5 min)       │   │
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>│   │──────────────────────────────────────────────│  │─────────────────────────────────────────────│   │
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>│   │ DRS scores all eligible hosts                │  │ Measures host resource utilisation          │   │
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>│   │ Prefers host with most headroom              │  │ Calculates cluster imbalance score          │   │
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>│   │ Respects: affinity rules,                    │  │ Generates migration recommendations         │   │
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>│   │  reservations, NUMA topology                 │  │ Weighs move cost vs. benefit gained         │   │
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>│   │ Picks best-scored host,                      │  │ Applies recs per automation level:          │   │
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>│   │  powers on VM there                          │  │  Manual / Partial / Fully Automated         │   │
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>│   │                                              │  │                                             │   │
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>│                                                                                                       │
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>│    Automation levels:                                                                                 │
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>│      Manual          — DRS generates recommendations; admin reviews and applies each                  │
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>│      Partially Auto  — Auto power-on placement; manual approval for ongoing balancing                 │
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>│      Fully Automated — Auto placement + auto migration; threshold 1 (aggr) – 5 (cons)                 │
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>│                                                                                                       │
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>│    Affinity / Anti-affinity rules:                                                                    │
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>│      VM-VM affinity      — keep these VMs on the same host (HA pair, licensing)                       │
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a>│      VM-VM anti-affinity — keep these VMs on different hosts (HA separation)                          │
+<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a>│      VM-Host affinity    — prefer or require VMs on specific hosts (licensing, hardware)              │
+<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a>│                                                                                                       │
+<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a>│    DRS     = Distributed Resource Scheduler; runs in vCenter; uses vMotion to balance                 │
+<a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a>│    Score   = per-host metric: 0 (ideal) to 100 (overloaded); DRS targets uniform score                │
+<a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a>│    Imbal.  = deviation of host scores from cluster average; triggers migration at threshold           │
+<a id="__codelineno-8-28" name="__codelineno-8-28" href="#__codelineno-8-28"></a>│    DPM     = Distributed Power Management; companion to DRS; powers off idle hosts                    │
+<a id="__codelineno-8-29" name="__codelineno-8-29" href="#__codelineno-8-29"></a>│                                                                                                       │
+<a id="__codelineno-8-30" name="__codelineno-8-30" href="#__codelineno-8-30"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
 
 

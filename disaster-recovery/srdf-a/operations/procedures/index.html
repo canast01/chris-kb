@@ -4356,47 +4356,47 @@
     style plannedFO fill:#2563eb,color:#fff
     style unplannedFO fill:#7c3aed,color:#fff
     style validateApp fill:#15803d,color:#fff
-    style waitSite fill:#6b7280,color:#fff
-```text
-┌───────────────────────────────────────── SRDF/A — Procedures ─────────────────────────────────────────┐
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              Routine Procedures              │  │                DR Procedures                │   │
-│   │          Add new protection source           │  │              Initiate failover              │   │
-│   │           Modify retention policy            │  │               Validate replica              │   │
-│   │          Expire old recover points           │  │              Redirect host I/O              │   │
-│   │             Add storage capacity             │  │         Test failover (non-disrupt)         │   │
-│   │           Service account rotation           │  │            Failback to production           │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │                             Change Control Requirements for SRDF/A                            │   │
-│   │           All changes to protection policies require change ticket with rollback plan         │   │
-│   │                      Failover tests must be scheduled in maintenance window                   │   │
-│   │              Firmware/software upgrades need 48 h pre-approval and backup snapshot            │   │
-│   │                  Post-change: verify jobs run successfully for 2 backup cycles                │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure:                                                                             │
-│  Two PowerMax arrays (production + DR site) · FC/FCIP SRDF link (dedicated bandwidth) · RF ports      │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  SRDF          = Symmetrix Remote Data Facility; EMC array-based replication technology               │
-│  R1            = source SRDF volume on production array; host writes flow here                        │
-│  R2            = target SRDF volume on DR array; receives replicated data asynchronously              │
-│  Delta Set     = batch of host writes accumulated per SRDF/A cycle; shipped to R2 atomically          │
-│  Cycle Time    = SRDF/A replication interval (15–60 seconds); determines maximum RPO                  │
-│  symrdf        = Solutions Enabler CLI for SRDF operations: establish, split, failover, restore       │
-│  SRDF Link     = FC or FCIP path between R1 and R2 arrays; dedicated, monitored bandwidth             │
-│  Suspended     = SRDF pair state where replication is paused; R2 data frozen at last cycle            │
-│  Failover      = SRDF operation making R2 read-write; R1 becomes Not Ready to hosts                   │
-│  Restore       = after failover resolution, re-establishes replication with R1 as source              │
-│  Establish     = initial sync or re-sync operation that copies R1 to R2 in full                       │
-│  Split         = breaks SRDF pair temporarily; both R1 and R2 are R/W; no replication                 │
-│  FCIP          = Fibre Channel over IP; tunnels FC SRDF traffic over IP WAN link                      │
-│  Unisphere     = Dell PowerMax management GUI; REST API; array health and provisioning                │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</code></pre>
+    style waitSite fill:#6b7280,color:#fff</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>┌───────────────────────────────────────── SRDF/A — Procedures ─────────────────────────────────────────┐
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>│                                                                                                       │
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>│   │              Routine Procedures              │  │                DR Procedures                │   │
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>│   │          Add new protection source           │  │              Initiate failover              │   │
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>│   │           Modify retention policy            │  │               Validate replica              │   │
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>│   │          Expire old recover points           │  │              Redirect host I/O              │   │
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>│   │             Add storage capacity             │  │         Test failover (non-disrupt)         │   │
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>│   │           Service account rotation           │  │            Failback to production           │   │
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>│                                                                                                       │
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>│   │                             Change Control Requirements for SRDF/A                            │   │
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>│   │           All changes to protection policies require change ticket with rollback plan         │   │
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>│   │                      Failover tests must be scheduled in maintenance window                   │   │
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>│   │              Firmware/software upgrades need 48 h pre-approval and backup snapshot            │   │
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>│   │                  Post-change: verify jobs run successfully for 2 backup cycles                │   │
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>│                                                                                                       │
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>│  Physical Infrastructure:                                                                             │
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>│  Two PowerMax arrays (production + DR site) · FC/FCIP SRDF link (dedicated bandwidth) · RF ports      │
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>│                                                                                                       │
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>│  SRDF          = Symmetrix Remote Data Facility; EMC array-based replication technology               │
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>│  R1            = source SRDF volume on production array; host writes flow here                        │
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>│  R2            = target SRDF volume on DR array; receives replicated data asynchronously              │
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>│  Delta Set     = batch of host writes accumulated per SRDF/A cycle; shipped to R2 atomically          │
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>│  Cycle Time    = SRDF/A replication interval (15–60 seconds); determines maximum RPO                  │
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>│  symrdf        = Solutions Enabler CLI for SRDF operations: establish, split, failover, restore       │
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>│  SRDF Link     = FC or FCIP path between R1 and R2 arrays; dedicated, monitored bandwidth             │
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>│  Suspended     = SRDF pair state where replication is paused; R2 data frozen at last cycle            │
+<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>│  Failover      = SRDF operation making R2 read-write; R1 becomes Not Ready to hosts                   │
+<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a>│  Restore       = after failover resolution, re-establishes replication with R1 as source              │
+<a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a>│  Establish     = initial sync or re-sync operation that copies R1 to R2 in full                       │
+<a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a>│  Split         = breaks SRDF pair temporarily; both R1 and R2 are R/W; no replication                 │
+<a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a>│  FCIP          = Fibre Channel over IP; tunnels FC SRDF traffic over IP WAN link                      │
+<a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a>│  Unisphere     = Dell PowerMax management GUI; REST API; array health and provisioning                │
+<a id="__codelineno-3-38" name="__codelineno-3-38" href="#__codelineno-3-38"></a>│                                                                                                       │
+<a id="__codelineno-3-39" name="__codelineno-3-39" href="#__codelineno-3-39"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <table>
 <thead>
 <tr>
@@ -4429,14 +4429,14 @@
 </tbody>
 </table>
 <h3 id="post-failover-steps">Post-Failover Steps<a class="headerlink" href="#post-failover-steps" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Verify R2 devices are Failed Over and accessible</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">20</span><span class="w"> </span>-type<span class="w"> </span>A<span class="w"> </span>query
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Confirm write access on R2 (run from DR host)</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>dd<span class="w"> </span><span class="k">if</span><span class="o">=</span>/dev/zero<span class="w"> </span><span class="nv">of</span><span class="o">=</span>/dev/sdX<span class="w"> </span><span class="nv">bs</span><span class="o">=</span>1M<span class="w"> </span><span class="nv">count</span><span class="o">=</span><span class="m">10</span><span class="w"> </span><span class="nv">oflag</span><span class="o">=</span>direct
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Confirm no unexpected devices still in Consistent/Transmitting</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">20</span><span class="w"> </span>-type<span class="w"> </span>A<span class="w"> </span>query<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;Failed Over&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Verify R2 devices are Failed Over and accessible</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">20</span><span class="w"> </span>-type<span class="w"> </span>A<span class="w"> </span>query
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Confirm write access on R2 (run from DR host)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>dd<span class="w"> </span><span class="k">if</span><span class="o">=</span>/dev/zero<span class="w"> </span><span class="nv">of</span><span class="o">=</span>/dev/sdX<span class="w"> </span><span class="nv">bs</span><span class="o">=</span>1M<span class="w"> </span><span class="nv">count</span><span class="o">=</span><span class="m">10</span><span class="w"> </span><span class="nv">oflag</span><span class="o">=</span>direct
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Confirm no unexpected devices still in Consistent/Transmitting</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">20</span><span class="w"> </span>-type<span class="w"> </span>A<span class="w"> </span>query<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;Failed Over&quot;</span>
 </code></pre></div>
 <h3 id="failback-and-replication-restoration">Failback and Replication Restoration<a class="headerlink" href="#failback-and-replication-restoration" title="Permanent link">&para;</a></h3>
 <pre class="mermaid"><code>flowchart TD
@@ -4458,25 +4458,25 @@
     style primaryRestored fill:#2563eb,color:#fff
     style done fill:#15803d,color:#fff
     style drHostsOff fill:#b45309,color:#fff</code></pre>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># After primary site recovery: restore R1 from R2</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">20</span><span class="w"> </span>-type<span class="w"> </span>A<span class="w"> </span>restore<span class="w"> </span>-noprompt
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Wait for restore to complete (R1 returns to RW)</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">20</span><span class="w"> </span>-type<span class="w"> </span>A<span class="w"> </span>query<span class="w"> </span>-detail
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Re-establish SRDF/A replication (R1 -&gt; R2)</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">20</span><span class="w"> </span>-type<span class="w"> </span>A<span class="w"> </span>establish<span class="w"> </span>-noprompt
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># Confirm Consistent state restored</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">20</span><span class="w"> </span>-type<span class="w"> </span>A<span class="w"> </span>query
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># After primary site recovery: restore R1 from R2</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">20</span><span class="w"> </span>-type<span class="w"> </span>A<span class="w"> </span>restore<span class="w"> </span>-noprompt
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Wait for restore to complete (R1 returns to RW)</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">20</span><span class="w"> </span>-type<span class="w"> </span>A<span class="w"> </span>query<span class="w"> </span>-detail
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Re-establish SRDF/A replication (R1 -&gt; R2)</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">20</span><span class="w"> </span>-type<span class="w"> </span>A<span class="w"> </span>establish<span class="w"> </span>-noprompt
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Confirm Consistent state restored</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>symrdf<span class="w"> </span>-g<span class="w"> </span><span class="m">20</span><span class="w"> </span>-type<span class="w"> </span>A<span class="w"> </span>query
 </code></pre></div>
 <h3 id="planned-failover-via-symcli">Planned Failover via SYMCLI<a class="headerlink" href="#planned-failover-via-symcli" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Confirm all R1 applications are quiesced or shut down</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># Initiate planned failover:</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>symrdf<span class="w"> </span>failover<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span>-type<span class="w"> </span>RDF/A<span class="w"> </span>-planned
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># Activate R2 volumes for host access at the DR site</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># When failing back, follow the failback procedure: resync R2 to R1, then swap direction</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Confirm all R1 applications are quiesced or shut down</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># Initiate planned failover:</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>symrdf<span class="w"> </span>failover<span class="w"> </span>-sid<span class="w"> </span>&lt;r1_sid&gt;<span class="w"> </span>-rdfg<span class="w"> </span>&lt;rdf_group_number&gt;<span class="w"> </span>-type<span class="w"> </span>RDF/A<span class="w"> </span>-planned
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Activate R2 volumes for host access at the DR site</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># When failing back, follow the failback procedure: resync R2 to R1, then swap direction</span>
 </code></pre></div>
 <h3 id="known-issues-failover">Known Issues — Failover<a class="headerlink" href="#known-issues-failover" title="Permanent link">&para;</a></h3>
 <ul>

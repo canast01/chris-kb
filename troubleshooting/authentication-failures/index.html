@@ -3274,127 +3274,127 @@ Authentication Failures Troubleshooting reference covering Overview, Symptom Cla
     L -- Certificate --&gt; T[Check cert expiry\nopenssl x509 -noout -dates]
     T --&gt; U{CRL/OCSP reachable?}
     U -- No --&gt; V[Fix CDP / add OCSP proxy]
-    U -- Yes --&gt; W[Check EKU — Client Auth OID 1.3.6.1.5.5.7.3.2]
-```text
-┌─────────────────────────────────────── Authentication Failures ───────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │       Auth failures: account lockout, expired password, Kerberos clock skew, SSO config       │   │
-│   │      First check: Is the user account locked? Is the service account credential expired?      │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │          AD / LDAP          │  │           Kerberos          │  │          SSO / SAML         │   │
-│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
-│   │        Account locked       │  │      Clock skew &gt; 5 min     │  │      Metadata mismatch      │   │
-│   │       Password expired      │  │         SPN missing         │  │     Certificate expired     │   │
-│   │      LDAP port blocked      │  │       Delegation issue      │  │       ACS URL mismatch      │   │
-│   │        DC unreachable       │  │        Realm mismatch       │  │        Claim mapping        │   │
-│   │      Group policy block     │  │       KDC unreachable       │  │       IdP unreachable       │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│   │     Symptom      │   First check    │      Command      │       Fix        │      Verify      │   │
-│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
-│   │    Locked out    │   AD LockedOut   │     Get-ADUser    │ Unlock-ADAccount │     Login OK     │   │
-│   │  Kerberos fail   │    NTP clock     │    w32tm /query   │     Sync NTP     │ klist purge+test │   │
-│   │     SSO fail     │     IdP logs     │   Browser trace   │   Fix metadata   │    SAML trace    │   │
-│   │   LDAP blocked   │   Port 389/636   │    Test-NetConn   │     Open FW      │  ldapsearch OK   │   │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Clock skew     = Kerberos requires all participants within 5 min; verify NTP on all hosts          │
-│    SPN            = Service Principal Name; must exist and be unique for Kerberos auth to work        │
-│    SAML trace     = Browser extension (SAML Tracer) captures assertion for SP/IdP debugging           │
-│    ACS URL        = Assertion Consumer Service URL; SP endpoint; must match IdP configuration         │
-│    klist purge    = Clears cached Kerberos tickets; forces re-auth after fixing KDC issue             │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</code></pre>
+    U -- Yes --&gt; W[Check EKU — Client Auth OID 1.3.6.1.5.5.7.3.2]</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────────────────── Authentication Failures ───────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │       Auth failures: account lockout, expired password, Kerberos clock skew, SSO config       │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │      First check: Is the user account locked? Is the service account credential expired?      │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│                                                                                                       │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│                                                                                                       │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   │          AD / LDAP          │  │           Kerberos          │  │          SSO / SAML         │   │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   │      ─────────────────      │  │      ─────────────────      │  │      ─────────────────      │   │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│   │        Account locked       │  │      Clock skew &gt; 5 min     │  │      Metadata mismatch      │   │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   │       Password expired      │  │         SPN missing         │  │     Certificate expired     │   │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   │      LDAP port blocked      │  │       Delegation issue      │  │       ACS URL mismatch      │   │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │        DC unreachable       │  │        Realm mismatch       │  │        Claim mapping        │   │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │      Group policy block     │  │       KDC unreachable       │  │       IdP unreachable       │   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│                                                                                                       │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │     Symptom      │   First check    │      Command      │       Fix        │      Verify      │   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   │ ──────────────── │ ──────────────── │ ───────────────── │ ──────────────── │──────────────────│   │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   │    Locked out    │   AD LockedOut   │     Get-ADUser    │ Unlock-ADAccount │     Login OK     │   │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│   │  Kerberos fail   │    NTP clock     │    w32tm /query   │     Sync NTP     │ klist purge+test │   │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│   │     SSO fail     │     IdP logs     │   Browser trace   │   Fix metadata   │    SAML trace    │   │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│   │   LDAP blocked   │   Port 389/636   │    Test-NetConn   │     Open FW      │  ldapsearch OK   │   │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│                                                                                                       │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│    Key terms:                                                                                         │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│                                                                                                       │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│    Clock skew     = Kerberos requires all participants within 5 min; verify NTP on all hosts          │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│    SPN            = Service Principal Name; must exist and be unique for Kerberos auth to work        │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│    SAML trace     = Browser extension (SAML Tracer) captures assertion for SP/IdP debugging           │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│    ACS URL        = Assertion Consumer Service URL; SP endpoint; must match IdP configuration         │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│    klist purge    = Clears cached Kerberos tickets; forces re-auth after fixing KDC issue             │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│                                                                                                       │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <h3 id="3-clock-skew-detection">3. Clock Skew Detection<a class="headerlink" href="#3-clock-skew-detection" title="Permanent link">&para;</a></h3>
 <p>Kerberos requires clocks within 5 minutes. Skew &gt;5 min causes KRB5KRB_AP_ERR_SKEW.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Check domain time sync status</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">w32tm</span> <span class="p">/</span><span class="n">query</span> <span class="p">/</span><span class="n">status</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># Example output:</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c"># Leap Indicator: 0(no warning)</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c"># Stratum: 3 (secondary reference - syncd by (S)NTP)</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c"># Precision: -23 (119.209ns per tick)</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c"># Root Delay: 0.0151367s</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c"># Root Dispersion: 0.0397949s</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c"># Reference Id: 0xC0A8010A (source  dc01.corp.example.com)</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="c"># Last Successful Sync Time: 5/8/2026 8:10:22 AM</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c"># Force resync</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="n">w32tm</span> <span class="p">/</span><span class="n">resync</span> <span class="p">/</span><span class="n">force</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c"># Compare time between client and KDC</span>
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="n">w32tm</span> <span class="p">/</span><span class="n">stripchart</span> <span class="p">/</span><span class="n">computer</span><span class="p">:</span><span class="n">dc01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span> <span class="p">/</span><span class="n">samples</span><span class="p">:</span><span class="n">5</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Check domain time sync status</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">w32tm</span> <span class="p">/</span><span class="n">query</span> <span class="p">/</span><span class="n">status</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># Example output:</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c"># Leap Indicator: 0(no warning)</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c"># Stratum: 3 (secondary reference - syncd by (S)NTP)</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c"># Precision: -23 (119.209ns per tick)</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c"># Root Delay: 0.0151367s</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c"># Root Dispersion: 0.0397949s</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c"># Reference Id: 0xC0A8010A (source  dc01.corp.example.com)</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c"># Last Successful Sync Time: 5/8/2026 8:10:22 AM</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c"># Force resync</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="n">w32tm</span> <span class="p">/</span><span class="n">resync</span> <span class="p">/</span><span class="n">force</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c"># Compare time between client and KDC</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="n">w32tm</span> <span class="p">/</span><span class="n">stripchart</span> <span class="p">/</span><span class="n">computer</span><span class="p">:</span><span class="n">dc01</span><span class="p">.</span><span class="n">corp</span><span class="p">.</span><span class="n">example</span><span class="p">.</span><span class="n">com</span> <span class="p">/</span><span class="n">samples</span><span class="p">:</span><span class="n">5</span>
 </code></pre></div>
 <h3 id="4-spn-diagnosis">4. SPN Diagnosis<a class="headerlink" href="#4-spn-diagnosis" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># List SPNs registered for a service account</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">setspn</span> <span class="n">-L</span> <span class="n">svc-sql</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c"># Check for duplicate SPNs (common cause of auth failures)</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="n">setspn</span> <span class="n">-X</span> <span class="o">-F</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c"># Example duplicate SPN output:</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c"># Checking domain DC=corp,DC=example,DC=com</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c"># Duplicate SPNs found!</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="c"># MSSQLSvc/sql01.corp.example.com:1433 is registered on:</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="c">#   CN=svc-sql,OU=ServiceAccounts,...</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c">#   CN=sql01$,OU=Servers,...</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># List SPNs registered for a service account</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">setspn</span> <span class="n">-L</span> <span class="n">svc-sql</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c"># Check for duplicate SPNs (common cause of auth failures)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="n">setspn</span> <span class="n">-X</span> <span class="o">-F</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c"># Example duplicate SPN output:</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c"># Checking domain DC=corp,DC=example,DC=com</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c"># Duplicate SPNs found!</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c"># MSSQLSvc/sql01.corp.example.com:1433 is registered on:</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c">#   CN=svc-sql,OU=ServiceAccounts,...</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c">#   CN=sql01$,OU=Servers,...</span>
 </code></pre></div>
 <hr />
 <h2 id="ad-account-lockout-investigation">AD Account Lockout Investigation<a class="headerlink" href="#ad-account-lockout-investigation" title="Permanent link">&para;</a></h2>
 <h3 id="locate-lockout-source">Locate Lockout Source<a class="headerlink" href="#locate-lockout-source" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Check lockout status (run on PDC emulator or target DC)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Get-ADUser</span> <span class="n">-Identity</span> <span class="n">jsmith</span> <span class="n">-Properties</span> <span class="n">LockedOut</span><span class="p">,</span> <span class="n">BadLogonCount</span><span class="p">,</span> <span class="n">BadPasswordTime</span><span class="p">,</span> <span class="n">LastBadPasswordAttempt</span> <span class="p">|</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">LockedOut</span><span class="p">,</span> <span class="n">BadLogonCount</span><span class="p">,</span> <span class="n">BadPasswordTime</span><span class="p">,</span> <span class="n">LastBadPasswordAttempt</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c"># Unlock account</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="nb">Unlock-ADAccount</span> <span class="n">-Identity</span> <span class="n">jsmith</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c"># Find the PDC emulator (lockouts are forwarded here)</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="p">(</span><span class="nb">Get-ADDomain</span><span class="p">).</span><span class="n">PDCEmulator</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Check lockout status (run on PDC emulator or target DC)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">Get-ADUser</span> <span class="n">-Identity</span> <span class="n">jsmith</span> <span class="n">-Properties</span> <span class="n">LockedOut</span><span class="p">,</span> <span class="n">BadLogonCount</span><span class="p">,</span> <span class="n">BadPasswordTime</span><span class="p">,</span> <span class="n">LastBadPasswordAttempt</span> <span class="p">|</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">LockedOut</span><span class="p">,</span> <span class="n">BadLogonCount</span><span class="p">,</span> <span class="n">BadPasswordTime</span><span class="p">,</span> <span class="n">LastBadPasswordAttempt</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c"># Unlock account</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="nb">Unlock-ADAccount</span> <span class="n">-Identity</span> <span class="n">jsmith</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c"># Find the PDC emulator (lockouts are forwarded here)</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="p">(</span><span class="nb">Get-ADDomain</span><span class="p">).</span><span class="n">PDCEmulator</span>
 </code></pre></div>
 <h3 id="search-security-event-logs">Search Security Event Logs<a class="headerlink" href="#search-security-event-logs" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Event 4625 = Failed logon</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c"># Event 4740 = Account locked out</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c"># Event 4776 = NTLM credential validation attempt</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c"># Search for lockout events on PDC emulator</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="nb">Get-WinEvent</span> <span class="n">-ComputerName</span> <span class="n">pdc01</span> <span class="n">-FilterHashtable</span> <span class="p">@{</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    <span class="n">LogName</span>   <span class="p">=</span> <span class="s1">&#39;Security&#39;</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    <span class="n">Id</span>        <span class="p">=</span> <span class="n">4740</span>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    <span class="n">StartTime</span> <span class="p">=</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddHours</span><span class="p">(-</span><span class="n">2</span><span class="p">)</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="p">}</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">TimeCreated</span><span class="p">,</span> <span class="n">Message</span> <span class="p">|</span> <span class="nb">Format-List</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="c"># Extract caller workstation from event 4740</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="nb">Get-WinEvent</span> <span class="n">-ComputerName</span> <span class="n">pdc01</span> <span class="n">-FilterHashtable</span> <span class="p">@{</span><span class="n">LogName</span><span class="p">=</span><span class="s1">&#39;Security&#39;</span><span class="p">;</span> <span class="n">Id</span><span class="p">=</span><span class="n">4740</span><span class="p">}</span> <span class="n">-MaxEvents</span> <span class="n">10</span> <span class="p">|</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>    <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>        <span class="nv">$xml</span> <span class="p">=</span> <span class="no">[xml]</span><span class="nv">$_</span><span class="p">.</span><span class="n">ToXml</span><span class="p">()</span>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>        <span class="no">[PSCustomObject]</span><span class="p">@{</span>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>            <span class="n">Time</span>      <span class="p">=</span> <span class="nv">$_</span><span class="p">.</span><span class="n">TimeCreated</span>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>            <span class="n">User</span>      <span class="p">=</span> <span class="nv">$xml</span><span class="p">.</span><span class="n">Event</span><span class="p">.</span><span class="n">EventData</span><span class="p">.</span><span class="n">Data</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="n">Name</span> <span class="o">-eq</span> <span class="s1">&#39;TargetUserName&#39;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-Expand</span> <span class="s1">&#39;#text&#39;</span>
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>            <span class="n">Caller</span>    <span class="p">=</span> <span class="nv">$xml</span><span class="p">.</span><span class="n">Event</span><span class="p">.</span><span class="n">EventData</span><span class="p">.</span><span class="n">Data</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="n">Name</span> <span class="o">-eq</span> <span class="s1">&#39;CallerComputerName&#39;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-Expand</span> <span class="s1">&#39;#text&#39;</span>
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>        <span class="p">}</span>
-<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>    <span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c"># Event 4625 = Failed logon</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c"># Event 4740 = Account locked out</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c"># Event 4776 = NTLM credential validation attempt</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c"># Search for lockout events on PDC emulator</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nb">Get-WinEvent</span> <span class="n">-ComputerName</span> <span class="n">pdc01</span> <span class="n">-FilterHashtable</span> <span class="p">@{</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    <span class="n">LogName</span>   <span class="p">=</span> <span class="s1">&#39;Security&#39;</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    <span class="n">Id</span>        <span class="p">=</span> <span class="n">4740</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>    <span class="n">StartTime</span> <span class="p">=</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddHours</span><span class="p">(-</span><span class="n">2</span><span class="p">)</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="p">}</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">TimeCreated</span><span class="p">,</span> <span class="n">Message</span> <span class="p">|</span> <span class="nb">Format-List</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="c"># Extract caller workstation from event 4740</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="nb">Get-WinEvent</span> <span class="n">-ComputerName</span> <span class="n">pdc01</span> <span class="n">-FilterHashtable</span> <span class="p">@{</span><span class="n">LogName</span><span class="p">=</span><span class="s1">&#39;Security&#39;</span><span class="p">;</span> <span class="n">Id</span><span class="p">=</span><span class="n">4740</span><span class="p">}</span> <span class="n">-MaxEvents</span> <span class="n">10</span> <span class="p">|</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>    <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>        <span class="nv">$xml</span> <span class="p">=</span> <span class="no">[xml]</span><span class="nv">$_</span><span class="p">.</span><span class="n">ToXml</span><span class="p">()</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>        <span class="no">[PSCustomObject]</span><span class="p">@{</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>            <span class="n">Time</span>      <span class="p">=</span> <span class="nv">$_</span><span class="p">.</span><span class="n">TimeCreated</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>            <span class="n">User</span>      <span class="p">=</span> <span class="nv">$xml</span><span class="p">.</span><span class="n">Event</span><span class="p">.</span><span class="n">EventData</span><span class="p">.</span><span class="n">Data</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="n">Name</span> <span class="o">-eq</span> <span class="s1">&#39;TargetUserName&#39;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-Expand</span> <span class="s1">&#39;#text&#39;</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>            <span class="n">Caller</span>    <span class="p">=</span> <span class="nv">$xml</span><span class="p">.</span><span class="n">Event</span><span class="p">.</span><span class="n">EventData</span><span class="p">.</span><span class="n">Data</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="n">Name</span> <span class="o">-eq</span> <span class="s1">&#39;CallerComputerName&#39;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-Expand</span> <span class="s1">&#39;#text&#39;</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>        <span class="p">}</span>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>    <span class="p">}</span>
 </code></pre></div>
 <hr />
 <h2 id="ldap-bind-failure-diagnosis">LDAP Bind Failure Diagnosis<a class="headerlink" href="#ldap-bind-failure-diagnosis" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Linux: test anonymous and authenticated bind</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>ldapsearch<span class="w"> </span>-x<span class="w"> </span>-H<span class="w"> </span>ldap://dc01.corp.example.com<span class="w"> </span>-b<span class="w"> </span><span class="s2">&quot;DC=corp,DC=example,DC=com&quot;</span><span class="w"> </span><span class="s2">&quot;(sAMAccountName=jsmith)&quot;</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Test authenticated bind</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>ldapsearch<span class="w"> </span>-x<span class="w"> </span>-H<span class="w"> </span>ldap://dc01.corp.example.com<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span>-D<span class="w"> </span><span class="s2">&quot;CN=svc-ldap,OU=ServiceAccounts,DC=corp,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span>-W<span class="w"> </span>-b<span class="w"> </span><span class="s2">&quot;DC=corp,DC=example,DC=com&quot;</span><span class="w"> </span><span class="s2">&quot;(sAMAccountName=jsmith)&quot;</span>
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1"># Test LDAPS (port 636)</span>
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>ldapsearch<span class="w"> </span>-x<span class="w"> </span>-H<span class="w"> </span>ldaps://dc01.corp.example.com:636<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">  </span>-D<span class="w"> </span><span class="s2">&quot;CN=svc-ldap,OU=ServiceAccounts,DC=corp,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">  </span>-W<span class="w"> </span>-b<span class="w"> </span><span class="s2">&quot;DC=corp,DC=example,DC=com&quot;</span><span class="w"> </span><span class="s2">&quot;(sAMAccountName=jsmith)&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Linux: test anonymous and authenticated bind</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ldapsearch<span class="w"> </span>-x<span class="w"> </span>-H<span class="w"> </span>ldap://dc01.corp.example.com<span class="w"> </span>-b<span class="w"> </span><span class="s2">&quot;DC=corp,DC=example,DC=com&quot;</span><span class="w"> </span><span class="s2">&quot;(sAMAccountName=jsmith)&quot;</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Test authenticated bind</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>ldapsearch<span class="w"> </span>-x<span class="w"> </span>-H<span class="w"> </span>ldap://dc01.corp.example.com<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span>-D<span class="w"> </span><span class="s2">&quot;CN=svc-ldap,OU=ServiceAccounts,DC=corp,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span>-W<span class="w"> </span>-b<span class="w"> </span><span class="s2">&quot;DC=corp,DC=example,DC=com&quot;</span><span class="w"> </span><span class="s2">&quot;(sAMAccountName=jsmith)&quot;</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># Test LDAPS (port 636)</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>ldapsearch<span class="w"> </span>-x<span class="w"> </span>-H<span class="w"> </span>ldaps://dc01.corp.example.com:636<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">  </span>-D<span class="w"> </span><span class="s2">&quot;CN=svc-ldap,OU=ServiceAccounts,DC=corp,DC=example,DC=com&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">  </span>-W<span class="w"> </span>-b<span class="w"> </span><span class="s2">&quot;DC=corp,DC=example,DC=com&quot;</span><span class="w"> </span><span class="s2">&quot;(sAMAccountName=jsmith)&quot;</span>
 </code></pre></div>
 <h3 id="ldap-result-codes">LDAP Result Codes<a class="headerlink" href="#ldap-result-codes" title="Permanent link">&para;</a></h3>
 <table>
@@ -3455,32 +3455,32 @@ Authentication Failures Troubleshooting reference covering Overview, Symptom Cla
 </table>
 <hr />
 <h2 id="certificate-based-authentication-failures">Certificate-Based Authentication Failures<a class="headerlink" href="#certificate-based-authentication-failures" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Check certificate expiry dates</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-in<span class="w"> </span>/etc/ssl/certs/client.crt<span class="w"> </span>-noout<span class="w"> </span>-dates
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1"># Output:</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># notBefore=May  8 00:00:00 2025 GMT</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="c1"># notAfter=May  8 23:59:59 2026 GMT</span>
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
-<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Verify the full certificate chain</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>openssl<span class="w"> </span>verify<span class="w"> </span>-CAfile<span class="w"> </span>/etc/ssl/certs/ca-bundle.crt<span class="w"> </span>/etc/ssl/certs/client.crt
-<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
-<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Check CRL distribution point from certificate</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-in<span class="w"> </span>/etc/ssl/certs/client.crt<span class="w"> </span>-noout<span class="w"> </span>-text<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A3<span class="w"> </span><span class="s2">&quot;CRL Distribution&quot;</span>
-<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
-<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># Test OCSP manually</span>
-<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>openssl<span class="w"> </span>ocsp<span class="w"> </span>-issuer<span class="w"> </span>issuer.crt<span class="w"> </span>-cert<span class="w"> </span>client.crt<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">  </span>-url<span class="w"> </span>http://ocsp.corp.example.com<span class="w"> </span>-text
-<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>
-<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="c1"># Check Extended Key Usage (must include Client Authentication)</span>
-<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-in<span class="w"> </span>client.crt<span class="w"> </span>-noout<span class="w"> </span>-text<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A2<span class="w"> </span><span class="s2">&quot;Extended Key Usage&quot;</span>
-<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="c1"># Expected: TLS Web Client Authentication</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check certificate expiry dates</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-in<span class="w"> </span>/etc/ssl/certs/client.crt<span class="w"> </span>-noout<span class="w"> </span>-dates
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1"># Output:</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># notBefore=May  8 00:00:00 2025 GMT</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># notAfter=May  8 23:59:59 2026 GMT</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="c1"># Verify the full certificate chain</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>openssl<span class="w"> </span>verify<span class="w"> </span>-CAfile<span class="w"> </span>/etc/ssl/certs/ca-bundle.crt<span class="w"> </span>/etc/ssl/certs/client.crt
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Check CRL distribution point from certificate</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-in<span class="w"> </span>/etc/ssl/certs/client.crt<span class="w"> </span>-noout<span class="w"> </span>-text<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A3<span class="w"> </span><span class="s2">&quot;CRL Distribution&quot;</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="c1"># Test OCSP manually</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>openssl<span class="w"> </span>ocsp<span class="w"> </span>-issuer<span class="w"> </span>issuer.crt<span class="w"> </span>-cert<span class="w"> </span>client.crt<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="w">  </span>-url<span class="w"> </span>http://ocsp.corp.example.com<span class="w"> </span>-text
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="c1"># Check Extended Key Usage (must include Client Authentication)</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>openssl<span class="w"> </span>x509<span class="w"> </span>-in<span class="w"> </span>client.crt<span class="w"> </span>-noout<span class="w"> </span>-text<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A2<span class="w"> </span><span class="s2">&quot;Extended Key Usage&quot;</span>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="c1"># Expected: TLS Web Client Authentication</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c"># Windows: check certificate store</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nb">Get-ChildItem</span> <span class="n">Cert</span><span class="p">:\</span><span class="n">LocalMachine</span><span class="p">\</span><span class="n">My</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">NotAfter</span> <span class="o">-lt</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddDays</span><span class="p">(</span><span class="n">30</span><span class="p">)}</span> <span class="p">|</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    <span class="nb">Select-Object</span> <span class="n">Subject</span><span class="p">,</span> <span class="n">NotAfter</span><span class="p">,</span> <span class="n">Thumbprint</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c"># Check NTAuth store (required for smart card / certificate logon to AD)</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="n">certutil</span> <span class="n">-viewstore</span> <span class="n">-enterprise</span> <span class="n">NTAuth</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c"># Windows: check certificate store</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nb">Get-ChildItem</span> <span class="n">Cert</span><span class="p">:\</span><span class="n">LocalMachine</span><span class="p">\</span><span class="n">My</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">NotAfter</span> <span class="o">-lt</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddDays</span><span class="p">(</span><span class="n">30</span><span class="p">)}</span> <span class="p">|</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    <span class="nb">Select-Object</span> <span class="n">Subject</span><span class="p">,</span> <span class="n">NotAfter</span><span class="p">,</span> <span class="n">Thumbprint</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c"># Check NTAuth store (required for smart card / certificate logon to AD)</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="n">certutil</span> <span class="n">-viewstore</span> <span class="n">-enterprise</span> <span class="n">NTAuth</span>
 </code></pre></div>
 <hr />
 <h2 id="kerberos-error-code-reference">Kerberos Error Code Reference<a class="headerlink" href="#kerberos-error-code-reference" title="Permanent link">&para;</a></h2>
@@ -3558,19 +3558,19 @@ Authentication Failures Troubleshooting reference covering Overview, Symptom Cla
 </ul>
 <hr />
 <h2 id="quick-reference-time-sync-verification-chain">Quick Reference: Time Sync Verification Chain<a class="headerlink" href="#quick-reference-time-sync-verification-chain" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Authoritative NTP (Stratum 1)
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>        ↓
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>PDC Emulator DC (Stratum 2) ← All DCs sync here
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>        ↓
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>Domain Members / Servers (Stratum 3)
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>        ↓
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>VMs (sync from ESXi host OR domain — not both)
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>Authoritative NTP (Stratum 1)
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>        ↓
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>PDC Emulator DC (Stratum 2) ← All DCs sync here
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>        ↓
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>Domain Members / Servers (Stratum 3)
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>        ↓
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>VMs (sync from ESXi host OR domain — not both)
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c"># Verify which NTP server a machine is using</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="n">w32tm</span> <span class="p">/</span><span class="n">query</span> <span class="p">/</span><span class="n">peers</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c"># Identify PDC emulator in domain</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="n">netdom</span> <span class="n">query</span> <span class="n">fsmo</span> <span class="p">|</span> <span class="n">findstr</span> <span class="s2">&quot;PDC&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c"># Verify which NTP server a machine is using</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="n">w32tm</span> <span class="p">/</span><span class="n">query</span> <span class="p">/</span><span class="n">peers</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c"># Identify PDC emulator in domain</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="n">netdom</span> <span class="n">query</span> <span class="n">fsmo</span> <span class="p">|</span> <span class="n">findstr</span> <span class="s2">&quot;PDC&quot;</span>
 </code></pre></div>
 
 
