@@ -637,6 +637,12 @@
       
         
       
+        
+      
+        
+      
+        
+      
     
     
     
@@ -4460,6 +4466,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#aon-flow-data-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AON Flow Data Pipeline
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#stage-4-push-to-nsx" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4821,6 +4838,65 @@ How It Works reference covering Deployment Model, Application Discovery Mechanis
 <a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>│                                                                                                       │
 <a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
+<h3 id="aon-flow-data-pipeline">AON Flow Data Pipeline<a class="headerlink" href="#aon-flow-data-pipeline" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>graph LR
+    subgraph PUSH["Push Sources"]
+        NSX["NSX-T&lt;br/&gt;IPFIX UDP 2055"]
+        SW["Physical Switches&lt;br/&gt;NetFlow / sFlow"]
+        VPC["Cloud VPC Flow Logs&lt;br/&gt;REST Import"]
+    end
+
+    subgraph COLL["Collector VM"]
+        RECV["Receives IPFIX / NetFlow&lt;br/&gt;push traffic"]
+        POLL["Polls vCenter API&lt;br/&gt;and NSX-T API"]
+        SHIP["Ships all data to&lt;br/&gt;Platform on TCP 443"]
+    end
+
+    subgraph PLATFORM["Platform VM — Internal Services"]
+        KAFKA["Kafka&lt;br/&gt;message bus"]
+        CASS["Cassandra&lt;br/&gt;time-series flow store"]
+        ES["Elasticsearch&lt;br/&gt;search index"]
+        PG["Postgres&lt;br/&gt;config / metadata"]
+    end
+
+    subgraph OUT["Analytics Output"]
+        FM["Flow Map"]
+        PT["Path Trace"]
+        MS["Micro-seg&lt;br/&gt;Recommendations"]
+        AA["Anomaly Alerts"]
+        NLS["Natural Language&lt;br/&gt;Search"]
+    end
+
+    NSX --&gt; RECV
+    SW --&gt; RECV
+    VPC --&gt; RECV
+    RECV --&gt; SHIP
+    POLL --&gt; SHIP
+    SHIP --&gt; KAFKA
+    KAFKA --&gt; CASS
+    KAFKA --&gt; ES
+    KAFKA --&gt; PG
+    CASS --&gt; FM
+    CASS --&gt; PT
+    ES --&gt; MS
+    ES --&gt; AA
+    ES --&gt; NLS
+
+    style NSX fill:#2563eb,stroke:#1d4ed8,color:#fff
+    style SW fill:#2563eb,stroke:#1d4ed8,color:#fff
+    style VPC fill:#2563eb,stroke:#1d4ed8,color:#fff
+    style RECV fill:#15803d,stroke:#166534,color:#fff
+    style POLL fill:#15803d,stroke:#166534,color:#fff
+    style SHIP fill:#15803d,stroke:#166534,color:#fff
+    style KAFKA fill:#b45309,stroke:#92400e,color:#fff
+    style CASS fill:#2563eb,stroke:#1d4ed8,color:#fff
+    style ES fill:#2563eb,stroke:#1d4ed8,color:#fff
+    style PG fill:#2563eb,stroke:#1d4ed8,color:#fff
+    style FM fill:#7c3aed,stroke:#6d28d9,color:#fff
+    style PT fill:#7c3aed,stroke:#6d28d9,color:#fff
+    style MS fill:#7c3aed,stroke:#6d28d9,color:#fff
+    style AA fill:#7c3aed,stroke:#6d28d9,color:#fff
+    style NLS fill:#7c3aed,stroke:#6d28d9,color:#fff</code></pre>
 <h3 id="stage-4-push-to-nsx">Stage 4: Push to NSX<a class="headerlink" href="#stage-4-push-to-nsx" title="Permanent link">&para;</a></h3>
 <p>Recommendations can be exported or pushed directly:
 - <strong>Export</strong>: Download as CSV or JSON for manual review before applying
