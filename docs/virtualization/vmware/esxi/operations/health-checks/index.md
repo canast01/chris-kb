@@ -52,6 +52,45 @@ Health Checks reference covering Health Checklist.
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+
+## Run This Routine
+
+Run these commands in sequence for a complete ESXi health snapshot. Each block can be pasted directly into an SSH session on the host or run via PowerCLI.
+
+```bash
+# 1. Verify ESXi version and build
+vmware -vl
+
+# 2. Host hardware summary — vendor, model, serial
+esxcli hardware platform get
+
+# 3. List all running services and processes
+esxcli system process list | head -30
+
+# 4. Network adapter (vmnic) status — check link state and speed
+esxcli network nic list
+
+# 5. VMkernel adapter list — IPs, MTU, enabled services
+esxcli network ip interface list
+
+# 6. Storage adapter health — HBAs, iSCSI, NVMe controllers
+esxcli storage core adapter list
+
+# 7. Datastore accessibility — mount state and capacity
+esxcli storage filesystem list
+
+# 8. NTP sync status — current host clock and sync source
+esxcli system time get
+esxcli system ntp get
+
+# 9. Recent critical events — last 50 syslog entries
+esxcli system syslog mark --message="health-check-$(date +%F)"
+tail -50 /var/log/syslog.log | grep -iE "error|critical|warning"
+
+# 10. Installed VIB count — baseline for patch drift detection
+esxcli software vib list | wc -l
+```
+
 ESXi Health Check — Decision Flow
                            │
            ┌───────────────▼───────────────┐

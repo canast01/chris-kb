@@ -94,6 +94,36 @@
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+
+## Run This Routine
+
+1. **Connection Server service status** — run on or against each CS:
+   ```powershell
+   Get-Service -ComputerName cs-prod-01 -Name wsbroker | Select Status
+   ```
+2. **Horizon pod health** — Horizon Console → Dashboard → confirm all Connection Servers show green status.
+3. **UAG health** — open UAG admin UI at `https://<uag>:9443/admin` → verify all edge services show **Up**.
+4. **Desktop pool assignment** — via Horizon PowerCLI:
+   ```powershell
+   Get-Pool | Select pool_id,numMachines,numConnectedSessions
+   ```
+5. **Instant clone parent VM** — in vCenter, verify the parent VM and replica VMs exist for each pool under the correct folder.
+6. **Active session count** — Horizon Console → Monitor → Sessions → note current count vs licensed capacity limit.
+7. **Certificate expiry** — check Connection Server certificate:
+   ```powershell
+   Get-Certificate -DnsName <cs-fqdn>
+   ```
+   Or: Horizon Console → Settings → Servers → Connection Servers → select server → Certificates tab.
+8. **vCenter connectivity** — Horizon Console → Settings → Servers → vCenter → confirm status shows **Connected**.
+9. **Composer/Instant Clone health** — Horizon Console → Monitor → Events → filter by Error/Warning → confirm no provisioning errors.
+10. **Blast gateway reachability** — from a client network:
+    ```bash
+    curl -sk https://<uag-external>:443/
+    ```
+    Expect an HTTP redirect (3xx) response; a connection refused or timeout indicates a gateway issue.
+
+---
+
 ```text
 ┌──────────────────┐
 │  Desktop Pools                                                                                        │

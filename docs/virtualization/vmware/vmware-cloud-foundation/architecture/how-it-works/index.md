@@ -114,6 +114,54 @@ SDDC Manager → Network Settings → Network Pools
 /var/log/vmware/vcf/commonsvcs/audit.log        # Admin actions and API calls
 ```
 
+```mermaid
+graph TB
+    CB["☁ Cloud Builder<br/>(initial bring-up only)"]
+    SM["⚙ SDDC Manager<br/>Lifecycle &amp; Orchestration Hub"]
+
+    subgraph MD["Management Domain"]
+        VCA["vCenter A"]
+        NSXM["NSX Manager"]
+        VSANA["vSAN Cluster A"]
+    end
+
+    subgraph WD1["Workload Domain 1"]
+        VCB["vCenter B"]
+        NSXS["NSX (Shared or Dedicated)"]
+        VSANB["vSAN Cluster B"]
+    end
+
+    subgraph WD2["Workload Domain 2"]
+        VCC["vCenter C"]
+        VSANC["vSAN Cluster C"]
+    end
+
+    subgraph FP["Free Pool"]
+        UH1["Unassigned Host 1"]
+        UH2["Unassigned Host 2"]
+    end
+
+    CB -->|"Initial bringup only"| SM
+    SM -->|"Deploys &amp; manages"| MD
+    SM -->|"Deploys &amp; manages"| WD1
+    SM -->|"Deploys &amp; manages"| WD2
+    SM -->|"Commissions hosts"| FP
+    MD -->|"Lifecycle events"| SM
+    WD1 -->|"Lifecycle events"| SM
+    WD2 -->|"Lifecycle events"| SM
+    FP -->|"Assigned to domain"| SM
+
+    classDef blue fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef green fill:#15803d,stroke:#166534,color:#fff
+    classDef amber fill:#b45309,stroke:#92400e,color:#fff
+    classDef purple fill:#7c3aed,stroke:#6d28d9,color:#fff
+
+    class SM,CB blue
+    class VCA,NSXM,VSANA green
+    class VCB,NSXS,VSANB,VCC,VSANC amber
+    class UH1,UH2 purple
+```
+
 ```text
 ┌──────────────────────────── VMware Cloud Foundation — Domain Lifecycle ───────────────────────────────┐
 │                                                                                                       │

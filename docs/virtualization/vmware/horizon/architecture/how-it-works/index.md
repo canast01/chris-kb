@@ -85,6 +85,35 @@ VMware Horizon is a broker-based VDI and published application delivery platform
    (UAG acts as a Blast/PCoIP proxy — client never directly reaches internal VM)
 ```
 
+```mermaid
+flowchart LR
+    EP["Endpoint Client\n(external)"]:::blue
+    UAG["UAG\n(DMZ · port 443/8443)"]:::purple
+    CS["Connection Server\n(internal · port 443)"]:::amber
+    AD["Active Directory\n(auth)"]:::navy
+    AVM["App Volumes Manager\n(AppStack attach)"]:::navy
+    VC["vCenter\n(VM inventory)"]:::navy
+    ESX["ESXi Host"]:::green
+    DVM["Desktop VM\n(Horizon Agent)"]:::green
+
+    EP -->|"HTTPS (443)"| UAG
+    UAG -->|"auth + entitlement check"| CS
+    CS -->|"LDAP bind"| AD
+    CS -->|"session ticket"| UAG
+    UAG -->|"Blast/PCoIP tunnel (8443)"| EP
+    CS -->|"vmFork / power-on"| VC
+    VC -->|"schedule VM"| ESX
+    ESX -->|"runs"| DVM
+    UAG -->|"proxy display protocol"| DVM
+    DVM -->|"AppStack attach at login"| AVM
+
+    classDef blue fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef amber fill:#b45309,stroke:#92400e,color:#fff
+    classDef green fill:#15803d,stroke:#166534,color:#fff
+    classDef purple fill:#7c3aed,stroke:#6d28d9,color:#fff
+    classDef navy fill:#1e3a5f,stroke:#162d4a,color:#fff
+```
+
 **Ports summary:**
 
 | Port | Protocol | Purpose |

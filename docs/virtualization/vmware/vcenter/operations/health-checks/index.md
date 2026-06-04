@@ -100,6 +100,46 @@ Health Checks reference covering Disk Partition Usage, SSO and Lookup Service He
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Run This Routine
+
+Run these commands in sequence for a complete vCenter health snapshot. Each block can be pasted directly into an SSH session on the VCSA appliance shell.
+
+```bash
+# 1. VCSA service health — list all services, filter out stopped ones
+service-control --status --all | grep -v STOPPED
+
+# 2. vCenter version and build number
+vpxd --version
+
+# 3. SSO / Lookup Service health
+service-control --status vmware-sts
+service-control --status vmware-lookupsvc
+
+# 4. Certificate store list — inspect VECS stores for expiring certs
+/usr/lib/vmware-vmafd/bin/vecs-cli store list
+
+# 5. Disk usage — key VCSA partitions: DB, logs, seat data
+df -h /storage/db /storage/log /storage/seat
+
+# 6. vCenter HA state (run only if VCHA is deployed)
+python3 /usr/lib/vmware-vcha/VcHaMgr.py state
+
+# 7. NTP sync status — confirm clock is synchronised
+timedatectl status
+
+# 8. Connected host count via REST API
+# Replace credentials before running
+curl -sk -u 'administrator@vsphere.local:password' \
+  https://localhost/api/vcenter/host | python3 -m json.tool | grep -c connection_state
+
+# 9. Recent vpxd errors — last 100 lines of the main vCenter log
+tail -100 /var/log/vmware/vpxd/vpxd.log | grep -i error
+
+# 10. Backup job status — check VAMI file-based backup schedule
+# Verify via VAMI at https://<vcenter>:5480 → Backup, or inspect cron
+crontab -l 2>/dev/null | grep -i backup
+```
+
 Key partitions to monitor:
 - `/storage/log` — fills quickly during issues
 - `/storage/db` — vCenter database

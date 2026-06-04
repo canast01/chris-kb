@@ -20,6 +20,25 @@ Health Checks reference covering VRA and Site Pairing Status, Check All Replicat
 ```
                                                 └──────────────────┘
 
+## Run This Routine
+
+1. **VR appliance health** — open the VAMI console and verify all services show running: `https://<vr-appliance>:5480` → Summary → check hms and vrms service status.
+2. **VRS (scale-out server) health** — if VRS nodes are deployed, confirm each is registered and healthy: vCenter → Site Recovery → vSphere Replication → Replication Servers → all show Connected/Healthy.
+3. **Replication count and status** — vSR UI → Monitor → Replication → note total active replication count and confirm no items show in Error state.
+4. **RPO violations** — vSR UI → Monitor → Replication → filter by "RPO Violated" → investigate any flagged VMs; each violation needs a root-cause note before close of check.
+5. **Disk space on target datastores** — verify all target datastores holding replica VMDKs have >20% free headroom; use vCenter → Datastore → Summary for each target.
+6. **Network connectivity between VRAs** — from the source VRA appliance shell, confirm round-trip reachability to the target VRA:
+   ```bash
+   ping <target-VRA-IP>
+   ```
+7. **VRA-to-VRA data port reachability** — verify TCP 31031 is open between source and target VRA appliances (this is the vSphere Replication data channel):
+   ```bash
+   nc -zv <target-VRA-IP> 31031
+   ```
+8. **VRA registration with vCenter** — vCenter → Site Recovery → vSphere Replication → Replication Appliances → confirm VRA shows Registered and Connected for both sites.
+9. **SRM integration check** — if SRM is in use: SRM → Protection Groups → confirm no groups display "Replication Error"; expand any amber groups for detail.
+10. **Last successful sync timestamp** — vSR UI → per-VM detail → review "Last Sync" field; flag any VM whose last sync is older than 2× its configured RPO interval.
+
 ---
 
 ## VRA and Site Pairing Status

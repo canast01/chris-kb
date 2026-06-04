@@ -61,8 +61,45 @@ Health Checks reference covering Protection Group Health, RPO Compliance Check, 
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Run This Routine
+
+Work through these steps in order. Steps 1–2 use PowerShell; steps 3–9 use the SRM and vSphere UIs.
+
+**1. Verify SRM service is running on the protected site.**
+
 ```powershell
-# PowerCLI: check all protection group states
+# Run on the SRM Windows server at the protected site
+Get-Service -Name vmware-dr | Select-Object Name, Status, StartType
+# Status must be: Running
+# If stopped: Start-Service -Name vmware-dr
+```
+
+**2. Verify SRM service is running on the recovery site.**
+
+```powershell
+# Run on the SRM Windows server at the recovery site (remote, or open a session there)
+Get-Service -Name vmware-dr | Select-Object Name, Status, StartType
+```
+
+**3. Check site pair connection status.**
+
+```text
+SRM UI (vSphere Client → Site Recovery plugin) → Summary → Site Pair
+  Status must show: Connected
+  If Disconnected: check network between sites, SRM service on both sides, and certificate trust
+```
+
+**4. Review protection group status — all groups must show "Protected".**
+
+```text
+Site Recovery → Protection → Protection Groups
+  Scan the State column — every group should show: Protected
+  Flag any group showing: Error, Unconfigured, or Not Configured
+  Drill into flagged groups → VMs tab to identify which VMs are causing the issue
+```
+
+```powershell
+# PowerCLI: programmatic check — any non-OK state is logged as a warning
 $pgs = $srm.ExtensionData.Protection.ListProtectionGroups()
 foreach ($pg in $pgs) {
     $info = $srm.ExtensionData.Protection.QueryProtectionGroupState($pg)
@@ -70,6 +107,63 @@ foreach ($pg in $pgs) {
         Write-Warning "PG $($pg.Name): $($info.State)"
     }
 }
+```
+
+**5. Check recovery plan status — all plans must show "Ready".**
+
+```text
+Site Recovery → Recovery Plans
+  Check the Status column for each plan
+  Acceptable: Ready
+  Investigate immediately: Error, Configuration Needed, or Warning
+  Run Plan → Actions → Validate to get a detailed error list
+```
+
+**6. Check vSphere Replication health — flag any RPO violations.**
+
+```text
+vSphere Replication Appliance UI (or vSphere Client → Monitor → vSphere Replication)
+  Review each VM entry for: RPO Status, Last Sync time, and Replication State
+  RPO violation = Last Sync time exceeds configured RPO window
+  Common causes: network congestion, snapshot accumulation, storage I/O contention
+```
+
+**7. Verify placeholder VMs exist at the recovery site.**
+
+```text
+vCenter (Recovery Site) → VMs and Templates
+  Placeholder VMs appear with the same names as protected VMs but with minimal resource allocation
+  Every VM in a protection group must have a corresponding placeholder
+  Missing placeholders → Site Recovery → Protection → [PG] → Configure → Reconfigure
+```
+
+**8. Verify network mappings are complete and green.**
+
+```text
+Site Recovery → Configure → Network Mappings
+  Every protected-site network must have a mapped recovery-site network
+  Status must be green (valid mapping)
+  Red or missing mappings cause recovery plan validation failures
+```
+
+**9. Check last test date on all recovery plans — flag any untested for more than 90 days.**
+
+```text
+Site Recovery → Recovery Plans
+  Review the Last Test column for each plan
+  Flag any plan where Last Test is blank or older than 90 days
+  Schedule a test recovery for flagged plans — use isolated network mode
+  Record test date and outcome in your change log
+```
+
+**10. Verify inventory mappings (resource, folder, and storage).**
+
+```text
+Site Recovery → Configure → Inventory Mappings
+  Resource Mappings: each protected cluster/resource pool maps to a recovery counterpart
+  Folder Mappings: VM folders mapped at the recovery site
+  Storage Mappings: each protected datastore maps to a recovery datastore
+  Any unmapped item appears with a warning icon — resolve before the next recovery plan run
 ```
 
 ---

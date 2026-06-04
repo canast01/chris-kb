@@ -100,7 +100,62 @@ Aria Operations (formerly vRealize Operations) is an analytics cluster that coll
 
 ## Cluster Topology
 
+```mermaid
+graph LR
+    subgraph DS["Data Sources"]
+        VC["vCenter Adapter"]
+        NSX["NSX Adapter"]
+        ST["Storage Adapter"]
+        CA["Custom Adapters"]
+    end
 
+    subgraph PRIMARY["Primary Node (Aria Ops Master)"]
+        AE["Analytics Engine"]
+        AL["Alerting Engine"]
+        RE["Recommendation Engine"]
+    end
+
+    subgraph REPLICA["Replica Nodes (HA)"]
+        R1["Replica 1"]
+        R2["Replica 2"]
+    end
+
+    subgraph RC["Remote Collectors"]
+        RC1["Remote Collector — Site A"]
+        RC2["Remote Collector — Site B"]
+    end
+
+    subgraph OUT["Output / Consumers"]
+        UI["Dashboards / UI"]
+        AN["Alert Notifications"]
+        WO["Workload Optimization"]
+        API["API Consumers"]
+    end
+
+    VC -->|"Metric polling"| PRIMARY
+    NSX -->|"Metric polling"| PRIMARY
+    ST -->|"Metric polling"| PRIMARY
+    CA -->|"Metric polling"| PRIMARY
+
+    PRIMARY <-->|"Bidirectional sync"| REPLICA
+    RC1 -->|"Data relay"| PRIMARY
+    RC2 -->|"Data relay"| PRIMARY
+
+    PRIMARY --> UI
+    PRIMARY --> AN
+    PRIMARY --> WO
+    PRIMARY --> API
+
+    classDef blue fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef green fill:#15803d,stroke:#166534,color:#fff
+    classDef amber fill:#b45309,stroke:#92400e,color:#fff
+    classDef purple fill:#7c3aed,stroke:#6d28d9,color:#fff
+
+    class VC,NSX,ST,CA blue
+    class AE,AL,RE,R1,R2 green
+    class RC1,RC2 amber
+    class UI,AN,WO,API purple
+```
 
 ## Node Roles
 

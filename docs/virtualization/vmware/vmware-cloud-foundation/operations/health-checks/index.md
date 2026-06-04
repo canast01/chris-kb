@@ -101,6 +101,31 @@ VCF Daily Health Check — Coverage Map
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Run This Routine
+
+1. **SDDC Manager service health** — query the system health API and review the JSON output for any non-OK status:
+   ```bash
+   curl -sk -u 'admin@local:password' https://sddc-manager/v1/system/health | python3 -m json.tool
+   ```
+2. **Domain health overview** — SDDC Manager UI → Dashboard → confirm all domains show green status across vCenter, NSX, and vSAN.
+3. **Credential rotation status** — check no ESXi credentials are expired or pending rotation:
+   ```bash
+   curl -sk -u 'admin@local:password' 'https://sddc-manager/v1/credentials?resourceType=ESXI'
+   ```
+4. **Certificate expiry check** — SDDC Manager → Security → Certificate Management → review all certificates; flag any expiring within 30 days.
+5. **LCM bundle status** — SDDC Manager → Lifecycle Management → check for available updates; note any bundles downloaded but not applied.
+6. **Precheck execution** — SDDC Manager → Lifecycle Management → Precheck → run precheck for management domain and review results before any upgrade window.
+7. **Commissioned hosts in free pool** — SDDC Manager → Inventory → Hosts → count Unassigned hosts; alert if free pool is empty (no capacity for domain expansion).
+8. **NSX manager cluster status** — verify all NSX manager nodes are online and cluster is stable:
+   ```bash
+   curl -sk -u 'admin:password' https://<nsx>/api/v1/cluster/status
+   ```
+9. **vSAN health across all domains** — for each workload domain: vCenter → Cluster → Monitor → vSAN Health → confirm no red or yellow alerts.
+10. **SDDC Manager audit log review** — scan recent audit entries for unexpected API calls, failed logins, or credential changes:
+    ```bash
+    tail -50 /var/log/vmware/vcf/commonsvcs/audit.log
+    ```
+
 ## Common Operational Issues
 
 | Symptom | Where to Check | Action |

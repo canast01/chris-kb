@@ -102,6 +102,19 @@ All vCenter and NSX cloud accounts must show a green status indicator:
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Run This Routine
+
+Run these 8 checks in order at the start of each shift or before any planned change.
+
+1. **vRA service health** — `curl -sk https://<vra-fqdn>/health` — expect HTTP 200 OK; a non-200 response means one or more services are unhealthy
+2. **Pod health** — SSH to appliance → `kubectl get pods -n prelude | grep -v Running` — any non-Running pod needs investigation
+3. **Cloud account connectivity** — Infrastructure → Cloud Accounts → confirm all accounts show Connected; re-test credentials on any showing errors
+4. **vCenter data collection** — check the last collection timestamp for each cloud account; flag any account where collection has not run in the last 30 minutes
+5. **Catalog item count** — Service Broker → Content → Catalog Items → verify the expected number of items is present and visible to consumers
+6. **Recent failed deployments** — `curl -sk -H "Authorization: Bearer $TOKEN" "https://<vra>/deployment/api/deployments?status=CREATE_FAILED"` — review and action any failures
+7. **Certificate expiry** — `openssl s_client -connect <vra-fqdn>:443 </dev/null 2>/dev/null | openssl x509 -noout -dates` — flag any cert expiring within 30 days
+8. **ABX / FaaS connectivity** — Extensibility → Actions → run a simple test action manually and confirm it completes without error
+
 ---
 
 ### Review Deployment Event Log

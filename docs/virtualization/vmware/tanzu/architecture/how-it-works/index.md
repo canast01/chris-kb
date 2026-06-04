@@ -62,6 +62,51 @@ How It Works reference covering vSphere with Tanzu Architecture, TKG Standalone 
 
 vSphere with Tanzu (Workload Management) embeds Kubernetes natively into the ESXi hypervisor layer. The Supervisor cluster runs directly on ESXi hosts via the Spherelet component — a kubelet-equivalent that executes in the ESXi kernel space. Supervisor control plane VMs and workload VMs are scheduled as native vSphere VMs, but managed by Kubernetes APIs exposed through vCenter.
 
+```mermaid
+graph TB
+    VC["vCenter Server\n(Workload Management enabled)"]:::blue
+
+    subgraph SUP["Supervisor Cluster"]
+        direction TB
+        CP1["Supervisor Control Plane VM 1\n(K8s API · etcd · scheduler)"]:::blue
+        CP2["Supervisor Control Plane VM 2\n(K8s API · etcd · scheduler)"]:::blue
+        CP3["Supervisor Control Plane VM 3\n(K8s API · etcd · scheduler)"]:::blue
+        ESX1["ESXi Host (Spherelet)\nvSphere Pods host"]:::green
+        ESX2["ESXi Host (Spherelet)\nvSphere Pods host"]:::green
+    end
+
+    subgraph NS1["Supervisor Namespace 1\n(resource quota enforced)"]
+        direction TB
+        TKG1CP["TKG Control Plane VMs\n(kubeadm / KCP)"]:::blue
+        TKG1W["TKG Worker VMs\n(MachineDeployment)"]:::green
+        SEG1["NSX-T Segment\n(isolated per namespace)"]:::amber
+        LB1["Load Balancer VIP\n(NSX-T or AVI — TKG API server)"]:::amber
+    end
+
+    subgraph NS2["Supervisor Namespace 2\n(resource quota enforced)"]
+        direction TB
+        TKG2CP["TKG Control Plane VMs\n(kubeadm / KCP)"]:::blue
+        TKG2W["TKG Worker VMs\n(MachineDeployment)"]:::green
+        SEG2["NSX-T Segment\n(isolated per namespace)"]:::amber
+        LB2["Load Balancer VIP\n(NSX-T or AVI — TKG API server)"]:::amber
+    end
+
+    HAR["Harbor Registry\n(image supply for TKG nodes)"]:::purple
+
+    VC -->|"workload management\nenables Supervisor"| SUP
+    SUP -->|"vSphere Namespace\nprovisioning"| NS1
+    SUP -->|"vSphere Namespace\nprovisioning"| NS2
+    HAR -->|"OCI images pulled\nby worker nodes"| TKG1W
+    HAR -->|"OCI images pulled\nby worker nodes"| TKG2W
+    LB1 -->|"exposes K8s API"| TKG1CP
+    LB2 -->|"exposes K8s API"| TKG2CP
+
+    classDef blue fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef green fill:#15803d,stroke:#166534,color:#fff
+    classDef amber fill:#b45309,stroke:#92400e,color:#fff
+    classDef purple fill:#7c3aed,stroke:#6d28d9,color:#fff
+```
+
 ### Supervisor Cluster Components
 
 | Component | Location | Role |

@@ -142,6 +142,19 @@ Health Checks reference covering Cluster Node Health via API, Locker Health Chec
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Run This Routine
+
+Run these 8 checks in order at the start of each shift or before any planned change.
+
+1. **LCM service health** — `curl -sk https://<lcm-appliance>:8080/lcm/health` — expect `{"status":"UP"}`
+2. **Disk usage** — SSH to LCM appliance and run `df -h /` — flag if root partition is above 75%
+3. **Certificate expiry** — LCM UI → Settings → Certificates → review all expiry dates; renew anything within 30 days
+4. **Product environment health** — LCM → Environments → confirm every product card shows "Healthy"
+5. **Pending requests** — LCM → Requests → check for any operations in RUNNING or FAILED state longer than 30 minutes
+6. **vRSLCM service status** — SSH to appliance → `systemctl status vrlcm.service` — must be active (running)
+7. **NTP sync** — SSH to appliance → `timedatectl status` — confirm system clock is synchronised
+8. **Available product binaries in Locker** — LCM → Locker → verify expected product versions are present before any upgrade
+
 ---
 
 ## Locker Health Checks

@@ -57,6 +57,41 @@ Health Checks reference covering Supervisor Cluster Health, TKG Cluster Health, 
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Run This Routine
+
+1. **Supervisor cluster health** — list all namespaces to confirm the Supervisor API is reachable:
+   ```bash
+   kubectl get namespace --kubeconfig <supervisor-kubeconfig>
+   ```
+2. **Supervisor control plane VMs** — vCenter → Workload Management → Supervisor Clusters → confirm all 3 supervisor VMs are in **Running** state.
+3. **TKG cluster status** — list all workload clusters and their phase:
+   ```bash
+   kubectl get cluster -A
+   ```
+   Or with the Tanzu CLI: `tanzu cluster list`
+4. **TKG node health** — confirm all nodes are Ready across all clusters:
+   ```bash
+   kubectl get nodes --all-namespaces
+   ```
+5. **Supervisor namespace quotas** — check resource usage against configured limits:
+   ```bash
+   kubectl describe namespace <ns>
+   ```
+6. **Harbor registry health** (if deployed) — confirm all Harbor pods are Running:
+   ```bash
+   kubectl get pods -n harbor
+   ```
+7. **Workload Management status** — vCenter → Workload Management → confirm **Status = Running** for the Supervisor Cluster.
+8. **Network health (NSX segments)** — in NSX Manager, verify the supervisor namespace network segments are present and in **Up** state; confirm no segment alarms.
+9. **Certificate expiry** — check all certificates managed by cert-manager:
+   ```bash
+   kubectl get certificate -A
+   ```
+   All certificates should show `READY=True`; note any approaching expiry dates.
+10. **Recent events** — surface any errors or warnings across all namespaces:
+    ```bash
+    kubectl get events --all-namespaces --sort-by='.lastTimestamp' | tail -20
+    ```
 
 ---
 

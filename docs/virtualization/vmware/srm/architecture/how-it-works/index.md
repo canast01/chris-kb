@@ -160,6 +160,35 @@ After verifying the test:
 
 Test cleanup must complete before running a real failover or another test.
 
+```mermaid
+flowchart TD
+    A([Operator initiates Recovery Plan]):::green --> B[SRM validates protection groups and mappings]:::blue
+    B --> C{Execution mode?}:::amber
+
+    C -->|Test| D[Snapshot replicated datastore]:::blue
+    D --> E[Connect VMs to bubble network]:::blue
+    E --> F[Power on in priority order]:::blue
+
+    C -->|Planned| G[Graceful shutdown protected VMs]:::blue
+    G --> H[Final replication sync — RPO=0]:::blue
+    H --> I[Power on at recovery site]:::blue
+
+    C -->|Disaster| J[Skip graceful shutdown]:::blue
+    J --> K[Promote replicated datastore]:::blue
+    K --> L[Power on at recovery site]:::blue
+
+    F --> M[Apply IP customization]:::blue
+    I --> M
+    L --> M
+
+    M --> N[Run custom commands]:::blue
+    N --> O([Mark plan Complete]):::green
+
+    classDef green fill:#15803d,stroke:#166534,color:#fff
+    classDef blue  fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef amber fill:#b45309,stroke:#92400e,color:#fff
+```
+
 ---
 
 ## Planned Migration

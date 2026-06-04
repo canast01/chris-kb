@@ -64,6 +64,22 @@ for c in data.get('results', []):
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+
+## Run This Routine
+
+Run these 8 checks in order at the start of each shift or after any infrastructure change.
+
+1. **Platform health** — `curl -sk https://<platform-vm>/api/1.0/node/details` — check the `serviceStatus` field; anything other than OK requires investigation
+2. **Collector connectivity** — AON UI → Settings → Collectors → confirm all collectors show Connected; a disconnected collector stops flow ingestion for its segment
+3. **Data source status** — Settings → Data Sources → confirm all sources show green and that each has a recent last-synced timestamp (within 15 minutes)
+4. **IPFIX flow ingestion** — check the main dashboard flow rate; expect a non-zero flows/sec value from NSX; zero flows means IPFIX export has stopped
+5. **Disk usage** — SSH to platform VM → `df -h /var/lib/netinsight` — alert if usage is above 75%
+6. **Service health on platform** — SSH to platform VM → `service vrni-platform status` — must show running; restart if stopped
+7. **Application discovery status** — Plan & Assess → Applications → check for any applications in Error state; investigate and re-run discovery if needed
+8. **Alert count** — Alerts → review open anomaly alerts; flag any persistent alerts that have been open for more than 24 hours without investigation
+
+---
+
 ```bash
 # Flows in the last 15 minutes
 flows where time_range = "last 15 minutes"
