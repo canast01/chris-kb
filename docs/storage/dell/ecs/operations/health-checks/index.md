@@ -57,6 +57,15 @@ Health Checks reference covering Health Check Layers, Daily Checks, Pre-Change H
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Run This Routine
+
+1. **Node health:** ECS UI → Dashboard → Nodes — all nodes Green/Online
+2. **Disk status:** Dashboard → Disks — check for failed or degraded disks
+3. **Replication group lag:** ECS UI → Geo Replication → check RPO lag per RG
+4. **Bucket capacity:** `ecscli bucket list` — check used vs quota per bucket
+5. **Data protection status:** check Erasure Coding health in Dashboard
+6. **Active alerts:** Dashboard → Alerts — resolve any critical alerts
+7. **API endpoint health:** `curl -sk https://<ecs-node>:9101/diagnostic/` — expect HTTP 200
 
 ## Health Check Layers
 

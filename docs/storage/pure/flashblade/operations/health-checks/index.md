@@ -82,6 +82,17 @@ FlashBlade Health Check Sequence
 
 ---
 
+## Run This Routine
+
+1. **Blade health** — Pure1 or FlashBlade UI → Hardware — all blades and chassis components should be green
+2. **File system health** — `pureds list --flagged` — should return empty for object store datasets
+3. **Replication status** — `pureremote list` — all remote connections should show Connected
+4. **Snapshot lag** — `purepgroup list --snap` — verify replication snapshots are within RPO
+5. **Capacity** — FlashBlade UI → Storage → Capacity — check free space per file system and object store
+6. **Client connectivity** — verify NFS/SMB/S3 clients are connecting successfully (check access logs)
+7. **Phone home** — Pure1 → Settings → Phone Home — verify FlashBlade is reporting to Pure1
+8. **Active alerts** — FlashBlade UI → Alerts — resolve all open alerts
+
 ## Daily Checks
 
 | Check | Command | Notes |

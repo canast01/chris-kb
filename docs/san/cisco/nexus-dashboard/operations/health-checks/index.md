@@ -65,6 +65,17 @@ kubectl get pods --all-namespaces | grep -Ev "Running|Completed"
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+
+## Run This Routine
+
+1. Nexus Dashboard UI → System → Services — verify all platform services show **Running**; any Stopped or Error state needs investigation
+2. Nexus Dashboard → Sites — confirm all registered sites show **Connected**; Disconnected sites block policy deployment
+3. NDFC → Fabric Builder → switch inventory — verify all fabric switches appear as **Managed** with no discovery errors
+4. NDFC → Fabric → deployment status — check for any switches with **pending** or **failed** configuration deployments; resolve before next change window
+5. Nexus Dashboard → Alerts → open alarms — filter Critical and Major severity; review, assign, and escalate unacknowledged alarms
+6. NDFC → Operations → Backup — confirm last successful backup timestamp is within the last 24 hours; trigger manual backup if overdue
+7. SSH to each ND node: `df -h /data` — alert and escalate if any node filesystem usage exceeds **80%** (Elasticsearch fills fast)
+
 ```bash
 ssh ndadmin@nd-dc1-1.corp.example.com
 

@@ -57,6 +57,15 @@ Health Checks reference covering Daily Health Check Procedure, Change Readiness 
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Run This Routine
+
+1. **Cluster health:** `pstcli /cluster show` — check Health_state OK
+2. **Node status:** `pstcli /node show` — all nodes Healthy
+3. **Volume health:** `pstcli /volume show | grep -v Healthy` — should be empty
+4. **Alerts:** PowerStore Manager → Alerts → review open/critical
+5. **Capacity:** `pstcli /storage_resource show` — check used/available per pool
+6. **Replication session health:** `pstcli /replication_session show` — all sessions Active
+7. **Drive health:** `pstcli /drive show | grep -v Healthy`
 
 ## Daily Health Check Procedure
 

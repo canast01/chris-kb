@@ -71,3 +71,13 @@ timedatectl status
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+
+## Run This Routine
+
+1. `systemctl status sannav` on the SANnav appliance — confirm all component services are **active (running)**
+2. SANnav UI → Dashboard — verify all discovered fabrics show **Connected** status; flag any Unknown or Disconnected
+3. SANnav → Fabrics → switch list — confirm all switches appear as **Managed**; investigate any Unmanaged or Unreachable
+4. SANnav → Alarms → filter by Status: Open, Severity: Critical/Major — review and acknowledge or escalate each
+5. SANnav → Performance → port/ISL graphs — confirm data collection is active (non-flat graphs); missing data indicates collection failure
+6. `df -h /opt/brocade/sannav/data` on SANnav appliance — alert and investigate if filesystem usage exceeds **80%**
+7. SANnav → Administration → Certificates — review expiry dates; raise a ticket for any certificate expiring within 60 days

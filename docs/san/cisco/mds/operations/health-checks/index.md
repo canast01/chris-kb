@@ -56,6 +56,18 @@ show version
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+
+## Run This Routine
+
+1. `show system health` — verify **pass** for all subsystem checks; any fail requires investigation before proceeding
+2. `show module` — confirm all supervisor and line card modules show **Ok**; degraded or powered-down modules need immediate attention
+3. `show vsan` — verify all expected VSANs are **active** and contain member ports; suspended VSANs indicate fabric issue
+4. `show interface fc brief` — all in-use ports should be **connected** in F-port or trunk mode; down ports need investigation
+5. `show zoneset active vsan <id>` — confirm the correct zone set name is activated per VSAN; verify member count matches expected
+6. `show interface fc brief` — check Rx and Tx counters column for non-zero CRC or link-reset values; replace cable or SFP if non-zero
+7. `show flogi database vsan <id>` — verify all expected host HBAs and storage array ports are present; missing entries indicate login failure
+8. `show interface fc <isl-port> counters` — review ISL error counters for CRC, loss-of-sync, or credit starvation; repeat for each ISL port
+
 ```text
 show environment
 

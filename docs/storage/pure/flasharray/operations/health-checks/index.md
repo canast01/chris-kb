@@ -81,6 +81,17 @@ FlashArray Health Check Sequence
          OK — check Pure1 for fleet-level anomalies
 ```
 
+## Run This Routine
+
+1. **Array health** — `purediag --run basic` or Pure1 → Array → Health — verify all components are green
+2. **Drive status** — `pureadm list` — all drives should be Healthy; `pureadm list --failed` should return empty
+3. **Volume health** — `purevol list --flagged` — should return empty
+4. **Protection group lag** — `purepgroup list --snap` — verify snapshot lag is within RPO
+5. **ActiveDR / ActiveCluster status** — `purehgroup list` — verify host group and pod status
+6. **Performance baseline** — `purearray monitor` — check IOPS, bandwidth, and latency vs baseline
+7. **Capacity trend** — `purearray monitor --resolution 86400 --length 604800` — review 7-day capacity trend
+8. **Phone home status** — Pure1 → Settings → Phone Home — verify array is connected and reporting
+
 ## Daily Checks
 
 | Check | Command | Notes |

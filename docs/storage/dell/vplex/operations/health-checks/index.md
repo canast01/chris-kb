@@ -57,6 +57,15 @@ Health Checks reference covering Daily Checks, Health Check, Cluster Status, Dir
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Run This Routine
+
+1. **Cluster health:** `ll /clusters/` — all clusters Healthy
+2. **Director status:** `ll /engines/*/directors/*` — all directors Healthy
+3. **Distributed device health:** `ll /clusters/*/distributed-devices/*` — check operational status
+4. **Port health:** `ll /engines/*/directors/*/ports/*` — all ports Logged-In
+5. **Consistency group health:** `ll /clusters/*/consistency-groups/*` — all CGs Healthy
+6. **Witness health (Metro):** `ll /clusters/*/witness/*` — witness Connected
+7. **Backend volume status:** `ll /clusters/*/storage-volumes/*` — check for degraded volumes
 
 ## Daily Checks
 

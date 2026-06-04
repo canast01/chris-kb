@@ -41,6 +41,16 @@ Health Checks reference covering Daily Checks, Health Check Commands, Change Rea
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Run This Routine
+
+1. **Service status:** Check COD management portal → service health dashboard
+2. **Storage pool capacity:** review capacity percentage per storage class
+3. **Replication jobs:** check active replication jobs and verify completion
+4. **Access key validity:** review active access keys — flag keys >90 days old
+5. **Audit log review:** check audit logs for unauthorized access attempts
+6. **Bucket lifecycle policies:** verify lifecycle policies are active and executing
+7. **Network connectivity:** test endpoint connectivity from application nodes
+
 ## Change Readiness
 
 - [ ] Current utilization has been reviewed and is approaching the threshold requiring COD activation (typically >80% of licensed capacity)

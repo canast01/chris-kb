@@ -57,6 +57,14 @@
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Run This Routine
+
+1. **Service health** — Keystone customer portal → Dashboard — check overall service status
+2. **Consumed capacity** — verify consumed capacity vs committed capacity per service tier
+3. **Burst usage** — check if burst capacity is being consumed — flag if sustained above committed
+4. **SLA compliance** — verify performance metrics (IOPS, latency) meet contracted SLA
+5. **Open support cases** — review any open cases affecting Keystone service delivery
+6. **Billing alerts** — check for any threshold alerts from the Keystone portal
 
 ---
 

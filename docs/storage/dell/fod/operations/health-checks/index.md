@@ -57,6 +57,14 @@
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Run This Routine
+
+1. **Enabled features:** `symcfg -sid <sid> list -fod` — review all enabled FOD features
+2. **Feature licence expiry:** check FOD licence expiry dates — flag any expiring in <90 days
+3. **Feature utilisation:** verify FOD-enabled features are actually in use (to justify renewal)
+4. **Licence compliance:** confirm number of licensed features does not exceed entitlement
+5. **Renew pending:** check for FOD features with upcoming renewal dates in Unisphere
+6. **Audit log:** review FOD activation/deactivation log for unauthorised changes
 
 ---
 

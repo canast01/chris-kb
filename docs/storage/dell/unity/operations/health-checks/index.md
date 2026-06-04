@@ -57,6 +57,15 @@ Daily and pre/post-change health checks for Dell Unity storage systems.
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Run This Routine
+
+1. **System health:** `uemcli /sys/general show` — check Health field
+2. **Hardware status:** `uemcli /sys/component/disk show` — all disks Enabled
+3. **Pool health:** `uemcli /stor/config/pool show` — check Health, free capacity
+4. **SP (Storage Processor) status:** `uemcli /sys/component/sp show`
+5. **LUN and filesystem health:** `uemcli /stor/prov/luns/lun show | grep -i health`
+6. **Active alerts:** `uemcli /event/alert/hist show -filter "state eq active"` — investigate open alerts
+7. **Fan and power:** `uemcli /sys/component/fan show` and `uemcli /sys/component/psu show`
 
 ## Daily Checks
 

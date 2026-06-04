@@ -41,6 +41,16 @@ Health Checks reference covering Daily Checks, Health Check Commands, Change Rea
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Run This Routine
+
+1. **Overall health score:** CloudIQ dashboard → Health Score — note current score and trend
+2. **Active alerts:** CloudIQ → Alerts — review all Critical/High severity items
+3. **Storage system connectivity:** CloudIQ → Systems — all systems Connected and reporting
+4. **Capacity forecast:** CloudIQ → Capacity → flag any system projected to run out in <90 days
+5. **Performance anomalies:** CloudIQ → Performance → check for detected anomalies
+6. **Proactive recommendations:** CloudIQ → Recommendations — review and action outstanding items
+7. **Sensor data freshness:** verify last data collection timestamp is within 1 hour for all systems
+
 ## Change Readiness
 
 - [ ] No active CRITICAL alerts on the affected system in CloudIQ

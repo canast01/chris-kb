@@ -57,6 +57,15 @@ Health Checks reference covering Daily Health Check, Pre-Maintenance Health Chec
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Run This Routine
+
+1. **Path status:** `powermt display dev=all` — all paths should show alive
+2. **Dead paths:** `powermt display dev=all | grep -i dead` — should return empty
+3. **Load balancing:** `powermt display dev=all | grep -i policy` — verify expected policy (ServiceTime, CLARiiON, etc.)
+4. **Path count per device:** `powermt display dev=all | grep -c "=sd"` — verify expected path count
+5. **PowerPath version:** `powermt version`
+6. **HBA status:** `powermt display hba_info` — all HBAs Connected
+7. **Save path configuration:** `powermt save` — ensure current config is saved
 
 ## Daily Health Check
 

@@ -57,6 +57,16 @@ Health Checks reference covering Health Check Decision Flow, Daily Checks, Healt
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Run This Routine
+
+1. **Cluster health** — `cluster show -health true` — all nodes should return Healthy
+2. **Node status** — `system node show` — all nodes should be Online
+3. **Volume health** — `volume show -health-status degraded` — should return no entries
+4. **Aggregate status** — `aggr show -state !online` — should return no entries
+5. **Disk health** — `disk show -state !present` and `disk show -broken-count` — count should be 0
+6. **SVM status** — `vserver show -state !running` — all SVMs should be Running
+7. **SnapMirror health** — `snapmirror show -health false` — should return empty
+8. **NVRAM battery** — `system node show -fields nvram-battery-status` — all should show Ok
 
 ## Health Check Decision Flow
 

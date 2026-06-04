@@ -57,6 +57,15 @@
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Run This Routine
+
+1. **Relationship health** — `snapmirror show -health false` — should return empty
+2. **Lag time** — `snapmirror show -fields lag-time | sort -k2 -r | head -10` — flag any relationship with lag exceeding 2× its schedule interval
+3. **Failed transfers** — `snapmirror show -transfer-error !- | grep -v healthy` — investigate any transfer errors
+4. **Broken-off relationships** — `snapmirror show -state broken-off` — should be empty during normal operations
+5. **Throttle check** — `snapmirror show -fields throttle` — verify throttle is not inadvertently set to 0 during business hours
+6. **Vault relationship status** — `snapmirror show -policy-type vault` — check all SnapVault relationships are current
+7. **Policy compliance** — `snapmirror policy show` — verify a schedule is attached to all relationships
 
 ---
 

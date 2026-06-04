@@ -59,6 +59,16 @@ flowchart TD
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Run This Routine
+
+1. **System status:** `sysstat` — overall health and uptime
+2. **Filesystem status:** `filesys status` — check "File system is enabled and running"
+3. **Dedup ratio:** `filesys show compression` — verify compression ratio in expected range
+4. **Disk health:** `disk show state` — all disks in Normal state
+5. **Replication status (if configured):** `replication status` — check all contexts Replicating or Idle
+6. **Cleaner status:** `filesys clean show` — check last clean timestamp
+7. **Space usage:** `filesys show space` — flag if >80% used
+
 ## Health Check — Pre-Change
 
 Run these checks before any planned change or as first-response steps when investigating backup failures or capacity alerts.

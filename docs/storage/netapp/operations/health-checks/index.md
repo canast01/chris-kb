@@ -56,6 +56,14 @@ Health Checks reference covering Daily Health Check Workflow, AutoSupport Valida
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Run This Routine
+
+1. **Active IQ alerts** — log in to NetApp Active IQ → check open risk items by severity
+2. **Cluster count and version** — run `cluster show` across all managed clusters
+3. **Support case status** — NetApp Support → My Cases — review all open P1/P2 cases
+4. **Capacity at risk** — Active IQ → Capacity → flag any clusters above 80% used
+5. **Software version compliance** — verify no cluster is running an End-of-Support software version
+6. **License compliance** — run `license show` on each cluster — verify all required licences are active
 
 ## Daily Health Check Workflow
 

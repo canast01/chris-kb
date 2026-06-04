@@ -60,6 +60,17 @@ Health Checks reference covering Daily Checks, Health Check Checklist, Post-Chan
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Run This Routine
+
+1. `switchshow` — verify all ports show **Online**; check switch state field shows **Healthy**
+2. `fabricshow` — list all switches in fabric; flag any missing domain IDs or disconnected members
+3. `porterrshow` — scan every port for non-zero CRC, LR_IN, or LR_OUT; non-zero requires immediate investigation
+4. `cfgshow` — confirm active cfg name matches expected zoning configuration for this fabric
+5. `islshow` — all ISLs should show **Up** at expected speed and link distance; investigate any Down ISLs
+6. `sfpshow` — review Tx/Rx power dBm for every port against SFP vendor thresholds; replace out-of-range SFPs
+7. `portshow <port>` on all F-ports (NPIV environments) — verify expected initiator WWNs are logged in
+8. `configshow -all | wc -l` — confirm non-zero output; then `configupload` to save current config to backup server
+
 ---
 
 ## Post-Change Validation

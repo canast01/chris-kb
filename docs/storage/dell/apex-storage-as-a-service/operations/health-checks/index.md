@@ -57,6 +57,15 @@
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Run This Routine
+
+1. **Service health:** APEX Console → Services — all services Active
+2. **Capacity consumption:** APEX Console → Consumption — check against committed capacity
+3. **Performance metrics:** review IOPS and latency trends in APEX Console
+4. **Support case status:** check any open support cases related to service health
+5. **Billing alerts:** review any billing or consumption threshold alerts
+6. **SLA compliance:** verify uptime metrics meet contracted SLA in APEX Console
+7. **Data protection status:** verify snapshots and replication are completing per schedule
 
 ---
 

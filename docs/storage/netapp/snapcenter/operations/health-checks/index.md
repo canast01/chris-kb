@@ -57,6 +57,16 @@
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Run This Routine
+
+1. **SnapCenter service** — On SnapCenter server run `Get-Service SnapCenter* | Select Name,Status` — all services should be Running
+2. **Plugin connectivity** — SnapCenter UI → Hosts — all plugins should show Connected/Running
+3. **Recent job failures** — SnapCenter → Monitor → Jobs → filter Last 24h + Failed — investigate any failures
+4. **Storage system connectivity** — SnapCenter → Storage Systems — all systems should show Connected
+5. **Policy compliance** — SnapCenter → Resources — verify backups completed per scheduled policy
+6. **Catalog integrity** — SnapCenter → Settings → Jobs → check for any Catalog errors
+7. **License status** — SnapCenter → Settings → Licenses — check for upcoming expiry
+8. **Disk space on SnapCenter server** — `Get-PSDrive C | Select @{n='FreeGB';e={[math]::Round($_.Free/1GB,1)}}` — verify adequate free space
 
 ---
 

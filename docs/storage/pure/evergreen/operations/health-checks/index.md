@@ -85,6 +85,15 @@ Evergreen Health Check — Daily Sequence
 
 ---
 
+## Run This Routine
+
+1. **Controller version** — `purearray list --controllers` — verify current Purity version
+2. **Available upgrades** — Pure1 → Software → Upgrades — check for available Purity releases
+3. **Upgrade eligibility** — verify array is on an Evergreen subscription (not a perpetual licence)
+4. **Hardware refresh schedule** — review Evergreen hardware refresh timeline in the Pure1 contract portal
+5. **Phone home** — Pure1 → Settings — verify array is connected and sending telemetry
+6. **Support entitlement** — Pure1 → Support → verify active Evergreen subscription dates
+
 Regular health checks confirm that FlashArray is operating within expected parameters and that the Evergreen support relationship (Phone Home, entitlement, replacement readiness) is functioning.
 
 ## Quick Health Check (5 minutes)

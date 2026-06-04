@@ -235,3 +235,109 @@ log view | grep -i clean
 # Cleaning taking too long
 system show stats   # check if high I/O is causing slowdown
 ```
+
+---
+
+## Add a Replication Context (DD Boost)
+
+```bash
+# Add a DD Boost replication context from source MTree to target Data Domain
+replication add source ddboost://<source-dd>/data/col1/<source-mtree> \
+  destination ddboost://target-dd.example.com/data/col1/<target-mtree>
+
+# Initialise the context — seeds the initial copy to the DR system
+replication initialize ddboost://<source-dd>/data/col1/<source-mtree>
+
+# Monitor initialisation progress
+replication status
+```
+
+Monitor with `replication show all` until the context reports `Normal` state. Initial seeding time depends on dataset size and WAN bandwidth.
+
+## Configure NFS Export
+
+```bash
+# Add an NFS export for the specified MTree, restricting access to a single client IP
+nfs add /data/col1/<mtree> clients <client-IP> options ro,sec=sys
+
+# To allow read-write access for a subnet
+nfs add /data/col1/<mtree> clients <subnet>/<prefix> options rw,sec=sys
+
+# Enable the NFS service if not already running
+nfs enable
+
+# Verify the export is listed
+nfs show exports
+```
+
+Test the mount from the client:
+```bash
+mount -t nfs <dd-ip>:/data/col1/<mtree> /mnt/test
+ls /mnt/test
+```
+
+## Configure CIFS Share
+
+```bash
+# Create a CIFS share pointing to the MTree
+cifs share create <share-name> "<description>" /data/col1/<mtree>
+
+# Enable the share
+cifs share enable <share-name>
+
+# Verify the share is listed
+cifs share show
+```
+
+Test access from a Windows client by mapping a drive to `\\<dd-hostname>\<share-name>` using an account with access. Confirm read/write as expected by the share permissions.
+
+## Run Filesystem Cleaner
+
+Run during a low-activity backup window to reclaim space without impacting throughput.
+
+```bash
+# Start an immediate cleaning cycle
+filesys clean start
+
+# Monitor progress in real time
+filesys clean watch
+
+# Check cleaning status at any time
+filesys clean status
+```
+
+Cleaning reclaims space from expired or deleted backup data. Run `filesys show space` before and after to confirm space was recovered. See also the [Filesystem Cleaning](#filesystem-cleaning) section for scheduling and troubleshooting.
+
+## Change Replication Throttle
+
+```bash
+# Set a bandwidth limit in bytes per second (e.g. 50 MB/s = 52428800 bps)
+replication throttle set 52428800
+
+# View current throttle setting
+replication throttle show
+
+# Remove the throttle limit (full bandwidth)
+replication throttle del
+```
+
+Apply a throttle during business hours to protect production I/O from replication traffic. Remove or raise the limit during off-peak windows to reduce replication lag. Verify lag after any change with `replication show stats`.
+
+## Expand Data Domain Capacity (DD Expansion Shelf)
+
+1. Physically install the expansion shelf and connect the SAS cables per the Dell hardware installation guide
+2. Power on the expansion shelf and wait for it to initialise
+3. On the Data Domain, check that new disks are detected:
+   ```bash
+   disk show state
+   ```
+   New disks should appear as `Available`
+4. Expand the filesystem to include the new capacity:
+   ```bash
+   filesys expand
+   ```
+5. Verify the expanded capacity is reflected in the usable pool:
+   ```bash
+   filesys show space
+   ```
+6. Update the CMDB with the new raw and usable capacity figures and close the change record

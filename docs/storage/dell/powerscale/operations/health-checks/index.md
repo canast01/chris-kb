@@ -57,6 +57,15 @@ Health Checks reference covering Daily Checks, Health Check, Cluster Health Comm
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Run This Routine
+
+1. **Cluster health:** `isi status` — all nodes should show status Healthy
+2. **Quota status:** `isi quota quotas list --format=table` — check near-threshold quotas
+3. **SyncIQ replication:** `isi sync reports list` — check last sync success/failure
+4. **SmartPools:** `isi storagepool nodepools list` — verify tier assignments
+5. **Disk status:** `isi devices drive list` — all drives Healthy
+6. **Network interfaces:** `isi network interfaces list` — all Up
+7. **Active alerts:** `isi events list --is_alertable=true --resolved=false`
 
 ## Daily Checks
 

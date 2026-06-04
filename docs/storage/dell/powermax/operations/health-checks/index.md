@@ -57,6 +57,16 @@ Health Checks reference covering Monitoring Hierarchy, Daily Checks, Health Chec
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Run This Routine
+
+1. **System health:** `symcli -sid <sid> list -v | grep -i health`
+2. **Disk group status:** `symdisk -sid <sid> list -failed` — should return empty
+3. **Array performance:** `symstat -sid <sid> -type array` — check utilisation %
+4. **SRDF group health:** `symrdf -sid <sid> list -v | grep -i state`
+5. **Port health:** `symcfg -sid <sid> list -dir -v | grep -i status`
+6. **Snapshot and clone status:** `symsnapvx -sid <sid> list -expired` — review expired snaps
+7. **License status:** `symcfg -sid <sid> list -licenses`
+8. **Open alerts:** Unisphere for PowerMax → Alerts → open/unacknowledged count
 
 ## Monitoring Hierarchy
 
