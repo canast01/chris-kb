@@ -80,37 +80,46 @@ $headers = @{ Authorization = "Bearer $token"; "Content-Type" = "application/jso
 Invoke-RestMethod -Uri "$base/protection-copies?filter=policyName eq '<policy>'" `
   -Headers $headers | Select-Object -ExpandProperty content |
   Select-Object id, createTime, expirationTime, cyberSenseStatus
-```
-
----
-
-## Initiate Disaster Recovery Failover
-
-Full DR failover moves production workloads from the primary site to the clean-room or DR site. This is a destructive production action — requires incident ticket and management authorisation.
-
-1. Declare a DR event in the ITSM tool; open the DR runbook and confirm Integrity Lock two-person authorisation is in place to open the vault.
-2. In PPDM, go to **Cyber Recovery > Vault** and click **Open Vault** — requires two authorised users to confirm.
-3. Navigate to **Recovery > Virtual Machines** and select all VMs in scope for failover.
-4. Choose the most recent clean CyberSense-verified recovery point for each VM.
-5. Set target as clean-room vCenter with isolated network; do not connect to production network until validation is complete.
-6. Click **Restore All**; monitor job progress in **Jobs > Active Jobs**.
-7. Once VMs are online, run application health checks; then update DNS or load balancer records to redirect traffic to clean-room IPs.
-8. Notify stakeholders and begin planning failback once production environment is confirmed clean.
-
----
-
-## Monitor Recovery Progress
-
-During any active recovery operation, use the PPDM Jobs dashboard and PowerShell to track progress and identify stalls.
-
-1. In PPDM, open **Jobs > All Jobs** and filter by **Type = Restore** and **Status = Running**.
-2. Click a job to see the step-by-step progress: copy data, register VM, power on.
-3. Monitor throughput in the job detail — if throughput drops to near 0 MB/s for more than 5 minutes, check the vault network link and proxy resources.
-4. On the PPDM server, check the agent log for errors:
-
-```powershell
-# Tail the PPDM agent log on the target proxy
-Get-Content "C:\Program Files\Dell\PPDM\Logs\agent.log" -Tail 50 -Wait
+```text
+┌────────────────────────────────────────── RASR — Procedures ──────────────────────────────────────────┐
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Routine Procedures              │  │                DR Procedures                │   │
+│   │          Add new protection source           │  │              Initiate failover              │   │
+│   │           Modify retention policy            │  │               Validate replica              │   │
+│   │          Expire old recover points           │  │              Redirect host I/O              │   │
+│   │             Add storage capacity             │  │         Test failover (non-disrupt)         │   │
+│   │           Service account rotation           │  │            Failback to production           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                              Change Control Requirements for RASR                             │   │
+│   │           All changes to protection policies require change ticket with rollback plan         │   │
+│   │                      Failover tests must be scheduled in maintenance window                   │   │
+│   │              Firmware/software upgrades need 48 h pre-approval and backup snapshot            │   │
+│   │                  Post-change: verify jobs run successfully for 2 backup cycles                │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Isolated network segment (airgap switch) · Vault PowerStore/DD appliance · Clean-room ESXi hosts     │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  RASR          = Ransomware Air-gap Secure Recovery; full workflow from detection to clean rest       │
+│  Vault         = isolated, air-gapped storage appliance receiving periodic replication copies         │
+│  Vault Lock    = WORM lock applied after sync; prevents modification or deletion of vault copies      │
+│  CyberSense    = ML analytics engine scanning vault data for corruption, encryption signatures        │
+│  PPDM          = PowerProtect Data Manager; orchestrates protection policies, jobs, and recovery      │
+│  Air Gap       = physical or logical network isolation preventing attacker lateral movement to        │
+│  Delta Set     = incremental changed blocks replicated from production to vault each cycle            │
+│  Clean Room    = isolated recovery environment: separate vCenter, network, and workstations           │
+│  Recovery Point= specific vault snapshot timestamp from which clean recovery is performed             │
+│  Integrity Lock= two-person authorization required to open vault; prevents insider unlock attac       │
+│  Journal       = write-order-consistent journal on vault enabling point-in-time recovery              │
+│  Scan Report   = CyberSense output: clean/suspect classification per file and block                   │
+│  Retention     = vault copy lifespan; typically 30–90 days of daily snapshots kept                    │
+│  RTO           = Recovery Time Objective; time from failover decision to restored service             │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 5. Check clean-room ESXi host resource availability — ensure no datastore is above 85% capacity and no host is CPU/memory constrained.
