@@ -31,21 +31,29 @@ ansible <host> -m setup -a 'filter=ansible_distribution' -i <inventory>
 
 # 8. Collection versions
 ansible-galaxy collection list
-```
-
-> **Connectivity check:** The `grep -v SUCCESS` filter on the ping output means any remaining lines are failures or warnings. An empty result confirms all hosts are reachable.
-
----
-
-## Inventory Health
-
-The inventory is the authoritative list of managed hosts. Stale or incorrect inventory entries lead to missed deployments or unintended targeting.
-
-**List all hosts and groups**
-
-```bash
-ansible-inventory --list -i <inventory> | python3 -m json.tool
-ansible-inventory --graph -i <inventory>
+```text
+┌─────────────────────────────────────── Ansible — Health Checks ───────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │ Ansible health checks: verify control node, AWX services, connectivity, and job success rates │   │
+│   │     Control node: check ansible version, Python version, SSH connectivity to managed nodes    │   │
+│   │         AWX: check service pods (Kubernetes), job queue depth, credential expiry dates        │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │             Control Node Checks              │  │                  AWX Checks                 │   │
+│   │              ansible --version               │  │           kubectl get pods -n awx           │   │
+│   │       ansible all -m ping (all hosts)        │  │         AWX UI: Dashboard job stats         │   │
+│   │       ansible-inventory --list --graph       │  │        awx jobs list --status failed        │   │
+│   │       Check Vault password accessible        │  │        Check credential expiry dates        │   │
+│   │         Verify EE images are current         │  │         AWX capacity: forks headroom        │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │     ansible all -m ping = fastest connectivity check; pong on success, unreachable on fail    │   │
+│   │      Job success rate      = AWX dashboard; alert if >5% failure rate over rolling 7 days     │   │
+│   │      EE freshness          = execution environment images; rebuild if base OS CVEs exist      │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 **Count hosts per group**

@@ -25,22 +25,29 @@ python3 -m py_compile <script.py> && echo "OK"
 
 # 6. Cron / scheduled script health — verify expected jobs present
 crontab -l | grep python
-```
-
-> **Dependency conflicts:** `pip3 check` reports any installed packages with unsatisfied or conflicting dependencies. Any output here requires remediation before running automation scripts in production.
-
----
-
-## Environment Health
-
-A consistent Python environment — correct interpreter version, active virtual environment, and matching `.python-version` — is the foundation of reliable automation.
-
-**Check interpreter version**
-
-```bash
-python3 --version
-pip3 --version
-which python3
+```text
+┌─────────────────────────────────────── Python — Health Checks ────────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │  Python health checks: verify interpreter version, venv, dependency currency, test pass rate  │   │
+│   │      CI pipeline is the primary health gate: ruff + mypy + bandit + pytest must all pass      │   │
+│   │             Dependency audit: pip list --outdated; safety check; monthly CVE scan             │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │              Environment Checks              │  │                Quality Checks               │   │
+│   │          python3 --version (>=3.11)          │  │           pytest (all tests pass)           │   │
+│   │             pip list --outdated              │  │          ruff check . (zero errors)         │   │
+│   │           safety check (CVE scan)            │  │           mypy src/ (zero errors)           │   │
+│   │           python -c "import <lib>"           │  │          bandit -r src/ (zero high)         │   │
+│   │         Check .python-version match          │  │            Coverage report >= 80%           │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │   safety check   = queries PyPI advisory database; reports known CVEs in installed packages   │   │
+│   │    .python-version= pyenv file; records required Python version; auto-activates with pyenv    │   │
+│   │        Dependabot     = GitHub service; auto-creates PRs to update dependencies weekly        │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 **Check pyenv version (if using pyenv)**

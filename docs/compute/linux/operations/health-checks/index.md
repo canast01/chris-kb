@@ -45,39 +45,6 @@ ss -tlnp
 yum check-update --security 2>/dev/null | wc -l
 # Ubuntu/Debian:
 # apt list --upgradable 2>/dev/null | wc -l
-```
-
-A healthy server returns: `systemctl --failed` = 0 units, all filesystems below 85% used, no recent kernel errors, load average below CPU count.
-
----
-
-## Health Check Flow
-
-```mermaid
-flowchart TD
-    start["Start Daily Check"]
-    failedSvc{"systemctl --failed\n= 0?"}
-    diskOk{"df -h\n< 80%?"}
-    memOk{"free -h\nAvailable > 20%?"}
-    loadOk{"uptime load\n< nCPU?"}
-    ntpOk{"timedatectl\nSynchronised?"}
-    selinux{"getenforce\nEnforcing?"}
-    allOk["All checks passed\nLog result"]
-    investigate["Investigate\nand resolve"]
-
-    start --> failedSvc
-    failedSvc -- Yes --> diskOk
-    failedSvc -- No --> investigate
-    diskOk -- Yes --> memOk
-    diskOk -- No --> investigate
-    memOk -- Yes --> loadOk
-    memOk -- No --> investigate
-    loadOk -- Yes --> ntpOk
-    loadOk -- No --> investigate
-    ntpOk -- Yes --> selinux
-    ntpOk -- No --> investigate
-    selinux -- Yes --> allOk
-    selinux -- No --> investigate
 ```text
 ┌──────────────────────────────────────── Linux — Health Checks ────────────────────────────────────────┐
 │                                                                                                       │

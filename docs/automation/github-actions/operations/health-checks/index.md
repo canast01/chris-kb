@@ -25,20 +25,29 @@ df -h /
 
 # 6. Workflow run minutes (billed plan)
 gh api /repos/<owner>/<repo>/actions/billing/minutes
-```
-
-> **Stuck runs:** Any queued run older than 30 minutes without a runner pickup indicates a runner availability problem. Check runner status and labels before investigating the workflow itself.
-
----
-
-## Runner Health
-
-Self-hosted runners must be online, registered, and correctly labelled to pick up workflow jobs. GitHub-hosted runners are managed by GitHub but capacity and queue depth still require monitoring.
-
-**List all runners for a repository**
-
-```bash
-gh api /repos/<owner>/<repo>/actions/runners --jq '.runners[] | {name,status,busy,labels}'
+```text
+┌─────────────────────────────────── GitHub Actions — Health Checks ────────────────────────────────────┐
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │ Health checks for GitHub Actions: runner availability, job queue depth, workflow failure rate │   │
+│   │          Monitor: Org Settings → Actions → Runners — check idle/active/offline count          │   │
+│   │    Alert conditions: self-hosted runner offline >5 min, queue depth >10, failure rate >10%    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │                Runner Health                 │  │               Workflow Health               │   │
+│   │          gh api /orgs/{org}/runners          │  │         gh run list --status failure        │   │
+│   │        Runner status: online/offline         │  │         Workflow failure rate trend         │   │
+│   │      Runner version: check for updates       │  │          Queue wait time (Insights)         │   │
+│   │         Runner disk and CPU on host          │  │           Billing minutes consumed          │   │
+│   │         Runner labels match workflow         │  │             Secrets expiry dates            │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │  Runner labels   = tags assigned to self-hosted runners; workflows select runner via runs-on: │   │
+│   │   Insights tab    = repo/org-level: workflow run history, duration trends, billing breakdown  │   │
+│   │     Queue wait time = time from trigger to job start; high values = runner pool undersized    │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 **List runners at the organisation level**

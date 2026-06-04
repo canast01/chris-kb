@@ -41,36 +41,6 @@ Get-NetFirewallProfile | Select-Object Name, Enabled
 
 # 10. Last Windows Updates installed
 Get-HotFix | Sort-Object InstalledOn -Descending | Select-Object -First 5
-```
-
-A healthy server returns: 0 stopped auto-start services, no System errors in the last 24 hours, all adapters `Up`, `False` for pending reboot, and all firewall profiles `Enabled`.
-
----
-
-## Daily Health Check Flow
-
-```mermaid
-flowchart TD
-    start["Start Daily Checks"]
-    svcCheck{"Auto-start services\nall Running?"}
-    diskCheck{"Disk free\n> 20%?"}
-    evtCheck{"System event log\n0 errors (24h)?"}
-    defCheck{"Defender\nup to date?"}
-    rebootCheck{"Pending\nreboot?"}
-    allGood["All checks passed\nLog result"]
-    investigate["Investigate\nand action"]
-
-    start --> svcCheck
-    svcCheck -- Yes --> diskCheck
-    svcCheck -- No --> investigate
-    diskCheck -- Yes --> evtCheck
-    diskCheck -- No --> investigate
-    evtCheck -- Yes --> defCheck
-    evtCheck -- No --> investigate
-    defCheck -- Yes --> rebootCheck
-    defCheck -- No --> investigate
-    rebootCheck -- No --> allGood
-    rebootCheck -- Yes --> investigate
 ```text
 ┌─────────────────────────────────── Windows Server — Health Checks ────────────────────────────────────┐
 │                                                                                                       │
