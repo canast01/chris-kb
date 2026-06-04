@@ -101,3 +101,51 @@ Dell is responsible for APEX infrastructure maintenance. Customer responsibiliti
 | Add or modify user access | Administration → Users & Roles in APEX Console |
 | Open a support case | APEX Console → Support |
 | Review underlying platform health | Check PowerStore/PowerScale/PowerFlex management UI directly if needed |
+
+---
+
+## Request Capacity Expansion
+
+1. Log in to the APEX Console (console.dell.com/apex)
+2. Navigate to **Services** and select the relevant APEX service
+3. Click **Request Expansion** and specify the additional capacity required (in TB) and the desired tier
+4. Submit the request — Dell will review and provision the additional capacity within the contracted SLA (typically measured in days)
+5. Monitor the request status in **APEX Console → Support → Cases**
+6. After provisioning is confirmed by Dell, verify the new capacity is visible in **Services → Capacity** and update the CMDB
+
+## Open a Support Case from APEX Console
+
+1. Log in to the APEX Console and navigate to **Support → New Case**
+2. Select the affected service from the dropdown
+3. Enter a clear description of the issue, including symptoms, start time, and any steps already taken
+4. Attach relevant logs or screenshots to accelerate triage
+5. Set the severity level appropriate to the business impact (P1 for outage, P2 for degraded, P3/P4 for non-urgent)
+6. Submit — Dell support will acknowledge within the contracted response SLA and begin engagement
+
+## Configure Data Protection Policy
+
+1. Log in to the APEX Console and navigate to **Data Protection**
+2. Select the service or volume group to protect
+3. Click **Assign Snapshot Policy** and choose or create a policy specifying:
+   - Snapshot frequency (hourly, daily, weekly)
+   - Retention count or period
+4. Apply the policy — snapshots begin on the next scheduled interval
+5. Verify the policy is active in **Data Protection → Policies** and confirm the first snapshot completes successfully
+
+## Review SLA Compliance Report
+
+1. Log in to the APEX Console and navigate to **Reports → SLA Compliance**
+2. Set the reporting period (typically the previous calendar month)
+3. Review the report: available capacity, IOPS SLA met/missed, latency against SLA targets
+4. Export the report (PDF or CSV) for management distribution or finance review
+5. If any SLA breaches are identified, cross-reference with open support cases and request a Root Cause Analysis from Dell if applicable
+
+## Initiate Service Migration (APEX Data Migration)
+
+1. Contact the Dell account team to request a formal migration plan — migrations between APEX service tiers or infrastructure platforms are Dell-managed
+2. Dell provides a migration assessment: data volume, estimated duration, and any downtime requirements
+3. Within the approved change window, Dell uses the APEX migration tooling to copy data from the source service to the destination service tier
+4. Monitor migration progress via the APEX Console and via the Dell support case
+5. After migration completes, validate: mount points accessible, data integrity confirmed, performance metrics within expected range
+6. Perform application-level validation with the application owners, then confirm cutover is complete
+7. Decommission the old service after a post-migration soak period (typically 5–10 business days)

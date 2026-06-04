@@ -105,3 +105,76 @@ Run these checks after any SAN, fabric, or PowerPath change to confirm multipath
 - [ ] No path flap entries in host OS logs in the 30 minutes following the maintenance window
 - [ ] Application owners confirm I/O has resumed normally and no elevated latency is observed
 - [ ] `powermt save` run after the change to persist the restored configuration state
+
+---
+
+## Verify All Paths Are Active
+
+```bash
+# Display all PowerPath-managed devices and path states
+powermt display dev=all
+```
+
+Check that every path for every device shows `alive`. The path count per device should match the site baseline (typically 4 or 8 paths for dual-fabric FC environments). Any path showing `dead` or `unlic` requires investigation before proceeding with changes.
+
+## Restore Dead Paths
+
+```bash
+# Attempt to restore all dead paths
+powermt restore dev=all
+
+# Re-check path state after restore
+powermt display dev=all
+```
+
+If paths remain `dead` after `powermt restore`, investigate the underlying cause: check SAN switch port state, array-side masking, and HBA port state on the host. Dead paths that do not recover after restore indicate a connectivity or zoning issue that must be resolved before the host is considered fully healthy.
+
+## Change Load Balancing Policy
+
+```bash
+# Apply ServiceTime policy to all devices (recommended for most arrays)
+powermt set policy=ServiceTime dev=all
+
+# Other supported policies:
+# powermt set policy=CLARiiON dev=all      (legacy optimised round-robin)
+# powermt set policy=LeastBlocks dev=all   (routes to path with fewest pending blocks)
+# powermt set policy=RoundRobin dev=all    (distributes I/O evenly across all paths)
+
+# Save the new policy so it persists across reboots
+powermt save
+```
+
+After changing the policy, monitor `powermt display dev=all` for a few minutes to confirm I/O is distributing across paths as expected. A brief rebalance lag is normal.
+
+## Save Current PowerPath Configuration
+
+```bash
+# Save current path configuration and policy to disk
+powermt save
+```
+
+Run `powermt save` after any path change, policy change, or new LUN discovery to ensure the configuration persists across reboots. The saved configuration is written to `/etc/powermt.custom` (Linux) and is automatically loaded at boot by `powermt restore`.
+
+## Remove a Dead Device Entry
+
+```bash
+# Remove a stale PowerPath device entry (use after LUN has been unmapped at the array)
+powermt remove dev=<device-id>
+
+# Verify the device no longer appears in the device list
+powermt display dev=all
+```
+
+Only run `powermt remove` after the LUN has been unmapped from the host at the array side. Removing an active device will cause I/O failures. After removal, run `powermt save` to persist the updated device list.
+
+## Update PowerPath After Adding New LUNs
+
+```bash
+# Discover newly zoned or mapped LUNs
+powermt config
+
+# Verify new devices appear in the device list with all expected paths
+powermt display dev=all
+```
+
+Run `powermt config` after new LUNs have been zoned and masked to the host at the array. New devices will appear in `powermt display dev=all` output with the configured load-balancing policy applied automatically. Run `powermt save` after discovery to persist the updated configuration.
