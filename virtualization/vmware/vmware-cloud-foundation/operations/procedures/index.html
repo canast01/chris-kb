@@ -4649,6 +4649,116 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#commission-a-host-into-the-free-pool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Commission a Host into the Free Pool
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-a-workload-domain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create a Workload Domain
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#expand-a-workload-domain-add-hosts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Expand a Workload Domain (Add Hosts)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#delete-a-workload-domain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Delete a Workload Domain
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rotate-passwords-all-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rotate Passwords (All Components)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rotate-certificates-all-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rotate Certificates (All Components)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#run-an-lcm-precheck" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run an LCM Precheck
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#apply-a-vcf-upgrade-bundle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Apply a VCF Upgrade Bundle
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure-a-network-pool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure a Network Pool
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#review-audit-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Review Audit Logs
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -5043,6 +5153,422 @@ Procedures reference covering SDDC Manager Backup, Password Management, Useful L
 <tr>
 <td>ESXi (per host)</td>
 <td><code>/var/log/hostd.log</code>, <code>/var/log/vmkernel.log</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="commission-a-host-into-the-free-pool">Commission a Host into the Free Pool<a class="headerlink" href="#commission-a-host-into-the-free-pool" title="Permanent link">&para;</a></h2>
+<p>Commissioning prepares a bare-metal server for use by VCF by registering it with SDDC Manager and validating it against the Hardware Compatibility List. Once commissioned, the host enters the <strong>Unassigned</strong> state and is available for workload domain assignment.</p>
+<p><strong>Pre-requisites:</strong> host is physically racked, cabled to management, vMotion, vSAN, and uplink networks; iDRAC/iLO is reachable; ESXi ISO matches the VCF BOM.</p>
+<ol>
+<li>Rack the server and connect all required network cables (management, vMotion, vSAN, overlay uplinks, and out-of-band management).</li>
+<li>Configure BIOS baseline: enable HT, set boot order to internal disk first, disable legacy boot if using UEFI, set the correct power profile.</li>
+<li>
+<p>Install ESXi from the VCF-certified ISO — use the version specified in the SDDC Manager BOM.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Verify ESXi build number after installation</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>version<span class="w"> </span>get
+</code></pre></div>
+</li>
+<li>
+<p>Assign the host a static IP, FQDN, and DNS A/PTR records. Verify forward and reverse resolution from SDDC Manager.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># From SDDC Manager appliance — verify DNS</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>nslookup<span class="w"> </span>esxi-host-01.domain.local
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>nslookup<span class="w"> </span><span class="m">192</span>.168.10.51
+</code></pre></div>
+</li>
+<li>
+<p>Verify NTP synchronisation on the ESXi host.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>esxcli<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span>get
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>esxcli<span class="w"> </span>system<span class="w"> </span>ntp<span class="w"> </span><span class="nb">set</span><span class="w"> </span>--server<span class="o">=</span>ntp.domain.local<span class="w"> </span>--enabled<span class="o">=</span><span class="nb">true</span>
+</code></pre></div>
+</li>
+<li>
+<p>In SDDC Manager: navigate to <strong>Inventory → Hosts → Commission Hosts</strong>.</p>
+</li>
+<li>Enter the host FQDN, root credentials, and storage type. SDDC Manager runs automated validations:<ul>
+<li>HCL compatibility check</li>
+<li>SSH connectivity</li>
+<li>DNS resolution (forward + reverse)</li>
+<li>NTP sync</li>
+<li>Network connectivity to vCenter and NSX</li>
+</ul>
+</li>
+<li>Resolve any <code>WARN</code> or <code>ERROR</code> items reported by the validation before proceeding.</li>
+<li>
+<p>Confirm commissioning. The host moves to <strong>Unassigned</strong> state in the free pool.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Query host status via SDDC Manager API (optional verification)</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin@local<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>https://sddc-manager.domain.local/v1/hosts<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;&quot;status&quot;|&quot;fqdn&quot;&#39;</span>
+</code></pre></div>
+</li>
+</ol>
+<hr />
+<h2 id="create-a-workload-domain">Create a Workload Domain<a class="headerlink" href="#create-a-workload-domain" title="Permanent link">&para;</a></h2>
+<p>A workload domain is an isolated logical unit within VCF consisting of a vCenter Server instance, one or more NSX Managers, and one or more vSAN-backed clusters. SDDC Manager orchestrates the entire deployment from a single workflow.</p>
+<p><strong>Pre-requisites:</strong> at least 4 hosts are in the free pool (minimum 3 for vSAN stretched requires 4), DNS entries for vCenter and NSX FQDNs are pre-created, and an IP pool is configured in SDDC Manager Network Settings.</p>
+<ol>
+<li>Navigate to <strong>SDDC Manager → Inventory → Workload Domains → Add Domain</strong>.</li>
+<li>Select domain type: <strong>VI</strong> (Virtual Infrastructure) for standard workloads.</li>
+<li>Provide the domain name and select the primary cluster configuration.</li>
+<li>Assign hosts from the free pool — minimum 3 hosts for vSAN; minimum 4 for vSAN stretched cluster.</li>
+<li>Configure vCenter Server:<ul>
+<li>Enter the FQDN (must resolve in DNS before proceeding)</li>
+<li>Enter the datacenter and cluster names</li>
+<li>Select the appropriate size (tiny/small/medium/large)</li>
+</ul>
+</li>
+<li>Configure NSX — choose <strong>shared</strong> (use existing NSX deployment from management domain) or <strong>new</strong> (deploy dedicated NSX Manager cluster):<ul>
+<li>If new: provide 3 NSX Manager FQDNs, VIP FQDN, and admin credentials</li>
+</ul>
+</li>
+<li>Configure vSAN storage policy, failure tolerance method (FTT=1 or FTT=2), and disk group layout.</li>
+<li>
+<p>Review the generated JSON specification. Validate all IP addresses, FQDNs, and VLANs before submitting.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Export the draft spec for offline review (SDDC Mgr API)</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin@local<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="s2">&quot;https://sddc-manager.domain.local/v1/domains/validations&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">  </span>-d<span class="w"> </span>@domain-spec.json<span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+</code></pre></div>
+</li>
+<li>
+<p>Click <strong>Deploy</strong>. SDDC Manager sequentially deploys: vCenter → NSX → vSAN → joins hosts.</p>
+</li>
+<li>Monitor progress in <strong>SDDC Manager → Tasks</strong>. Total deployment time is typically 45–90 minutes.</li>
+<li>Post-deploy validation:<ul>
+<li>Log in to the new vCenter and confirm hosts are connected</li>
+<li>Confirm vSAN health in vCenter → Cluster → Monitor → vSAN → Health</li>
+<li>Confirm NSX transport nodes show <strong>Up</strong> status</li>
+</ul>
+</li>
+</ol>
+<hr />
+<h2 id="expand-a-workload-domain-add-hosts">Expand a Workload Domain (Add Hosts)<a class="headerlink" href="#expand-a-workload-domain-add-hosts" title="Permanent link">&para;</a></h2>
+<p>Expanding a workload domain adds capacity to an existing cluster by pulling commissioned hosts from the free pool. SDDC Manager handles ESXi configuration, vSAN disk group creation, and NSX transport node preparation automatically.</p>
+<p><strong>Pre-requisites:</strong> the additional hosts are commissioned and in the <strong>Unassigned</strong> (free pool) state; the cluster has sufficient vSAN capacity to absorb a temporary rebalance.</p>
+<ol>
+<li>Commission any new physical hosts into the free pool (see <strong>Commission a Host into the Free Pool</strong> above).</li>
+<li>Navigate to <strong>SDDC Manager → Inventory → Workload Domains</strong>.</li>
+<li>Select the target domain and then select the target cluster within that domain.</li>
+<li>Click <strong>Actions → Expand</strong>.</li>
+<li>Select one or more hosts from the free pool to add to the cluster.</li>
+<li>Review the summary — SDDC Manager will:<ul>
+<li>Configure ESXi networking (VMkernel adapters, vSwitches/DVS)</li>
+<li>Add the host to vCenter</li>
+<li>Join the host to the vSAN cluster and create disk groups</li>
+<li>Prepare the host as an NSX transport node</li>
+</ul>
+</li>
+<li>Click <strong>Apply</strong>. Monitor progress in <strong>SDDC Manager → Tasks</strong>.</li>
+<li>
+<p>Post-expansion validation:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Verify host count in cluster via ESXi CLI (run from any host in the cluster)</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>esxcli<span class="w"> </span>hardware<span class="w"> </span>platform<span class="w"> </span>get
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="c1"># Or via vCenter API</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>administrator@vsphere.local<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">  </span><span class="s2">&quot;https://vcenter.domain.local/api/vcenter/cluster&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+</code></pre></div>
+<ul>
+<li>Confirm the new host appears as <strong>Connected</strong> in vCenter</li>
+<li>Confirm vSAN rebalance completes and disk health is green</li>
+<li>Confirm NSX transport node status is <strong>Up</strong></li>
+</ul>
+</li>
+</ol>
+<hr />
+<h2 id="delete-a-workload-domain">Delete a Workload Domain<a class="headerlink" href="#delete-a-workload-domain" title="Permanent link">&para;</a></h2>
+<p>Deleting a workload domain permanently removes the vCenter, NSX, and all associated clusters from VCF management. Hosts return to the free pool. This operation is irreversible — ensure all workloads are migrated before proceeding.</p>
+<p><strong>Pre-requisites (mandatory before initiating delete):</strong></p>
+<ul>
+<li>All VMs are powered off or migrated to another domain</li>
+<li>vSAN datastore is empty (no VMs, no templates, no ISO files)</li>
+<li>
+<p>No dependent services (vRA, HCX, Tanzu) are still registered against this domain</p>
+</li>
+<li>
+<p>Migrate all running VMs off the domain using vMotion or Storage vMotion to an alternate domain.</p>
+</li>
+<li>
+<p>Verify the vSAN datastore is empty:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># SSH to any ESXi host in the cluster</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>vmfs<span class="w"> </span>extent<span class="w"> </span>list
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="c1"># Or check via vCenter: Storage → Datastore → Files</span>
+</code></pre></div>
+</li>
+<li>
+<p>Remove any add-on services (HCX, vRA, Aria) that reference this domain in SDDC Manager.</p>
+</li>
+<li>Navigate to <strong>SDDC Manager → Inventory → Workload Domains</strong>.</li>
+<li>Select the target domain.</li>
+<li>Click <strong>Actions → Delete</strong>.</li>
+<li>Confirm the decommission prompt. SDDC Manager will:<ul>
+<li>Deregister NSX from vCenter</li>
+<li>Remove hosts from vCenter clusters</li>
+<li>Uninstall NSX transport node preparation</li>
+<li>Destroy vCenter and NSX VM instances</li>
+<li>Return hosts to the <strong>Unassigned</strong> free pool</li>
+</ul>
+</li>
+<li>Monitor progress in <strong>SDDC Manager → Tasks</strong>. Duration is typically 20–40 minutes.</li>
+<li>Post-deletion: confirm hosts appear in the free pool under <strong>Inventory → Hosts</strong>.</li>
+</ul>
+<hr />
+<h2 id="rotate-passwords-all-components">Rotate Passwords (All Components)<a class="headerlink" href="#rotate-passwords-all-components" title="Permanent link">&para;</a></h2>
+<p>SDDC Manager centrally manages credentials for all VCF components (ESXi, vCenter, NSX, SDDC Manager itself, and PSC). Password rotation should be performed on a scheduled basis and is mandatory after any suspected credential compromise.</p>
+<p><strong>Note:</strong> Rotation is orchestrated by SDDC Manager — do not rotate passwords directly in individual product UIs, as this will cause credential drift and break SDDC Manager's ability to manage those components.</p>
+<ol>
+<li>Navigate to <strong>SDDC Manager → Security → Password Management</strong>.</li>
+<li>Select the <strong>Resource Type</strong> (e.g., ESXi, vCenter, NSX Manager, SDDC Manager, PSC).</li>
+<li>Select specific resources or use <strong>Select All</strong> for that resource type.</li>
+<li>Click <strong>Rotate</strong>.</li>
+<li>Review the confirmation dialog — note which accounts will be rotated.</li>
+<li>
+<p>Click <strong>Confirm</strong>. SDDC Manager rotates credentials in the correct dependency order.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Monitor rotation task status via API</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin@local<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span><span class="s2">&quot;https://sddc-manager.domain.local/v1/tasks?pageSize=5&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;&quot;status&quot;|&quot;name&quot;&#39;</span>
+</code></pre></div>
+</li>
+<li>
+<p>Verify the rotation task completes with <strong>SUCCESSFUL</strong> status in <strong>SDDC Manager → Tasks</strong>.</p>
+</li>
+<li>Confirm no downstream services are impacted:<ul>
+<li>vCenter alarms: check for authentication errors</li>
+<li>NSX Manager: confirm all transport nodes remain <strong>Up</strong></li>
+<li>Any external integrations (vRA, Aria Automation) may require credential updates in their own configuration</li>
+</ul>
+</li>
+<li>Update the enterprise vault (HashiCorp Vault, CyberArk, etc.) with the new credentials if not auto-synced.</li>
+</ol>
+<hr />
+<h2 id="rotate-certificates-all-components">Rotate Certificates (All Components)<a class="headerlink" href="#rotate-certificates-all-components" title="Permanent link">&para;</a></h2>
+<p>VCF components use TLS certificates managed by SDDC Manager. Certificates can be signed by the embedded VMware CA, a Microsoft CA (via integration), or an external CA using a CSR workflow. Renewing before expiry avoids service disruption.</p>
+<p><strong>Pre-requisites:</strong> verify current certificate expiry dates before scheduling; plan for brief service restarts on NSX Manager during rotation.</p>
+<ol>
+<li>Navigate to <strong>SDDC Manager → Security → Certificate Management</strong>.</li>
+<li>Review the certificate inventory table — identify components with certificates expiring within 60 days.</li>
+<li>Select the target component (e.g., SDDC Manager, vCenter, NSX Manager).</li>
+<li>
+<p>Click <strong>Renew</strong> (for VMware CA-signed certs) or <strong>Generate CSR</strong> (for external CA workflow):</p>
+<p><strong>VMware CA / Microsoft CA (auto-sign):</strong>
+- Select certificate authority
+- Click <strong>Generate CSR and Sign</strong> — SDDC Manager handles the full cycle</p>
+<p><strong>External CA (manual CSR):</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># After generating the CSR in SDDC Manager, download it</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="c1"># Submit to your CA, then import the signed cert + chain:</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="c1"># SDDC Manager → Certificate Management → select component → Import Certificate</span>
+</code></pre></div>
+</li>
+<li>
+<p>Click <strong>Renew</strong> / <strong>Apply</strong>. SDDC Manager pushes the new certificate and restarts the affected service.</p>
+</li>
+<li>
+<p>Verify the cert chain after rotation:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="c1"># Verify vCenter certificate from command line</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>vcenter.domain.local:443<span class="w"> </span>-showcerts<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-subject<span class="w"> </span>-issuer<span class="w"> </span>-dates
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="c1"># Verify SDDC Manager certificate</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>openssl<span class="w"> </span>s_client<span class="w"> </span>-connect<span class="w"> </span>sddc-manager.domain.local:443<span class="w"> </span>-showcerts<span class="w"> </span>&lt;/dev/null<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-noout<span class="w"> </span>-subject<span class="w"> </span>-issuer<span class="w"> </span>-dates
+</code></pre></div>
+</li>
+<li>
+<p>Confirm SDDC Manager re-registers trust with vCenter and NSX after certificate replacement — check that no <strong>Certificate Invalid</strong> alarms appear.</p>
+</li>
+<li>For NSX Manager: verify transport node connectivity is restored after the cert rotation completes.</li>
+</ol>
+<hr />
+<h2 id="run-an-lcm-precheck">Run an LCM Precheck<a class="headerlink" href="#run-an-lcm-precheck" title="Permanent link">&para;</a></h2>
+<p>The Lifecycle Management (LCM) Precheck validates the environment against a set of prerequisites before an upgrade is permitted to proceed. Always run a precheck at least 48 hours before a scheduled maintenance window to allow time to resolve findings.</p>
+<p><strong>Scope:</strong> precheck evaluates hardware compatibility, software interoperability, network connectivity, certificate validity, free disk space, and vSAN health.</p>
+<ol>
+<li>Navigate to <strong>SDDC Manager → Lifecycle Management → Upgrade</strong>.</li>
+<li>Select the component to be upgraded (e.g., SDDC Manager, vCenter, ESXi, NSX).</li>
+<li>Ensure the target upgrade bundle has been downloaded (see <strong>Apply a VCF Upgrade Bundle</strong>).</li>
+<li>Click <strong>Run Precheck</strong>.</li>
+<li>SDDC Manager executes checks across all affected components. This takes 5–15 minutes.</li>
+<li>
+<p>Review the results categorised by severity:</p>
+<ul>
+<li><strong>INFO</strong> — informational; no action required</li>
+<li><strong>WARN</strong> — advisory; resolve before upgrade if possible</li>
+<li><strong>ERROR</strong> — blocking; upgrade cannot proceed until resolved</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c1"># Retrieve precheck results via API for export to change ticket</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin@local<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">  </span><span class="s2">&quot;https://sddc-manager.domain.local/v1/upgradables/prechecks&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+</code></pre></div>
+</li>
+<li>
+<p>Common ERROR items and remediation:</p>
+<ul>
+<li><strong>Certificate expiry</strong> → rotate certs (see <strong>Rotate Certificates</strong> above)</li>
+<li><strong>vSAN health degraded</strong> → resolve disk/network faults before proceeding</li>
+<li><strong>Insufficient disk space</strong> → free space on SDDC Manager appliance (<code>/var</code> must have &gt;20 GB free)</li>
+<li><strong>DNS/NTP drift</strong> → correct on affected hosts</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Check SDDC Manager appliance disk usage</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>df<span class="w"> </span>-h<span class="w"> </span>/var
+</code></pre></div>
+</li>
+<li>
+<p>Re-run precheck after resolving issues; proceed to upgrade only when all ERRORs are cleared.</p>
+</li>
+</ol>
+<hr />
+<h2 id="apply-a-vcf-upgrade-bundle">Apply a VCF Upgrade Bundle<a class="headerlink" href="#apply-a-vcf-upgrade-bundle" title="Permanent link">&para;</a></h2>
+<p>VCF upgrades are applied via the LCM module in SDDC Manager. The upgrade order is fixed: SDDC Manager → vCenter → NSX → ESXi hosts → vSAN. Never upgrade components out of order.</p>
+<p><strong>Pre-requisites:</strong> precheck has completed with zero ERRORs; a maintenance window is scheduled; all VMs with HA/DRS enabled are in a known state; snapshots of management VMs are taken.</p>
+<ol>
+<li>Navigate to <strong>SDDC Manager → Lifecycle Management → Check for Updates</strong>.</li>
+<li>
+<p>SDDC Manager contacts the VMware depot and lists available bundles. If the environment is air-gapped, upload the bundle manually:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Copy bundle to SDDC Manager (from a jump host with access)</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>scp<span class="w"> </span>vcf-bundle-4.x.x.x.tar.gz<span class="w"> </span>vcf@sddc-manager.domain.local:/nfs/vmware/vcf/nfs-mount/bundles/
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c1"># Trigger a local depot rescan</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin@local<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="w">  </span><span class="s2">&quot;https://sddc-manager.domain.local/v1/bundles/retrigger&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span>
+</code></pre></div>
+</li>
+<li>
+<p>Select the target bundle. Verify the SHA-256 checksum matches the VMware KB for that release:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>sha256sum<span class="w"> </span>vcf-bundle-4.x.x.x.tar.gz
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="c1"># Compare output to the checksum published in the VMware release notes</span>
+</code></pre></div>
+</li>
+<li>
+<p>Click <strong>Download</strong> and wait for the bundle status to show <strong>SUCCESSFUL</strong>.</p>
+</li>
+<li>Schedule the upgrade window in SDDC Manager (date, time, notification email).</li>
+<li>Run Precheck one final time immediately before the maintenance window opens (see above).</li>
+<li>Click <strong>Upgrade</strong>. SDDC Manager upgrades components in the correct dependency order:<ul>
+<li>SDDC Manager appliance (self-upgrade; brief UI outage)</li>
+<li>vCenter Server</li>
+<li>NSX Manager cluster (rolling)</li>
+<li>ESXi hosts (sequential, with maintenance mode; DRS evacuates VMs)</li>
+<li>vSAN on-disk format upgrade (if applicable)</li>
+</ul>
+</li>
+<li>
+<p>Monitor progress in <strong>SDDC Manager → Tasks</strong>. Do not interrupt the upgrade once started.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Tail the LCM log during upgrade for real-time status</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/vmware/vcf/lcm/lcm.log
+</code></pre></div>
+</li>
+<li>
+<p>Post-upgrade validation:</p>
+<ul>
+<li>Confirm SDDC Manager build number matches the target release</li>
+<li>Confirm all vCenter, NSX, and ESXi versions match the BOM</li>
+<li>Run vSAN health check</li>
+<li>Verify NSX transport nodes are <strong>Up</strong></li>
+<li>Remove any pre-upgrade snapshots from management VMs</li>
+</ul>
+</li>
+</ol>
+<hr />
+<h2 id="configure-a-network-pool">Configure a Network Pool<a class="headerlink" href="#configure-a-network-pool" title="Permanent link">&para;</a></h2>
+<p>Network pools define the IP address ranges and VLAN assignments that SDDC Manager allocates to hosts and components during workload domain creation. Pools must be created before deploying a new domain.</p>
+<p><strong>Note:</strong> network pools are consumed at domain creation time and cannot be changed after the domain is deployed. Plan IP ranges carefully to avoid overlap.</p>
+<ol>
+<li>Navigate to <strong>SDDC Manager → Network Settings → Network Pools</strong>.</li>
+<li>Click <strong>New Pool</strong>.</li>
+<li>Provide a descriptive pool name (e.g., <code>wld-01-pool</code>).</li>
+<li>Configure the network types required for the target domain:<ul>
+<li><strong>Management</strong> network: VLAN ID, subnet, gateway, MTU, IP range start/end</li>
+<li><strong>vMotion</strong> network: VLAN ID, subnet, gateway, MTU, IP range start/end</li>
+<li><strong>vSAN</strong> network: VLAN ID, subnet, gateway, MTU, IP range start/end</li>
+<li><strong>NSX Host Overlay</strong> (TEP) network: VLAN ID, subnet, gateway, MTU, IP range start/end</li>
+</ul>
+</li>
+<li>Verify that IP ranges are sized to accommodate the maximum expected host count in the domain (current + future expansion).</li>
+<li>
+<p>Click <strong>Save</strong>. The pool appears in the network pool inventory.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># List configured network pools via API</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin@local<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="w">  </span><span class="s2">&quot;https://sddc-manager.domain.local/v1/network-pools&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="w">  </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s1">&#39;&quot;name&quot;|&quot;id&quot;&#39;</span>
+</code></pre></div>
+</li>
+<li>
+<p>The network pool is automatically assigned to the domain during the <strong>Create a Workload Domain</strong> workflow — select it in the vCenter/NSX configuration step.</p>
+</li>
+<li>Post-creation: verify the allocated IPs appear under <strong>SDDC Manager → Network Settings → IP Allocations</strong>.</li>
+</ol>
+<hr />
+<h2 id="review-audit-logs">Review Audit Logs<a class="headerlink" href="#review-audit-logs" title="Permanent link">&para;</a></h2>
+<p>SDDC Manager records all administrative actions (login events, task submissions, configuration changes) in its audit log. Audit logs are essential for change control reviews, security investigations, and compliance reporting.</p>
+<p><strong>Retention:</strong> the audit log file rolls over when it reaches 100 MB. For long-term retention, configure a syslog target in <strong>SDDC Manager → Administration → Syslog</strong>.</p>
+<p><strong>Via CLI (SDDC Manager appliance):</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># View the last 100 audit log entries</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>tail<span class="w"> </span>-100<span class="w"> </span>/var/log/vmware/vcf/commonsvcs/audit.log
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="c1"># Search for a specific user&#39;s actions</span>
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>grep<span class="w"> </span><span class="s2">&quot;user@domain.local&quot;</span><span class="w"> </span>/var/log/vmware/vcf/commonsvcs/audit.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="c1"># Filter for login events</span>
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;LOGIN\|LOGOUT\|AUTH&quot;</span><span class="w"> </span>/var/log/vmware/vcf/commonsvcs/audit.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+<a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>
+<a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a><span class="c1"># Filter for a specific action type (e.g., password rotation, domain creation)</span>
+<a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;ROTATE\|COMMISSION\|CREATE_DOMAIN&quot;</span><span class="w"> </span>/var/log/vmware/vcf/commonsvcs/audit.log
+</code></pre></div>
+<p><strong>Via SDDC Manager UI:</strong></p>
+<ol>
+<li>Navigate to <strong>SDDC Manager → Administration → Audit Logs</strong>.</li>
+<li>Apply filters:<ul>
+<li><strong>User</strong> — filter by the account that performed the action</li>
+<li><strong>Action</strong> — filter by operation type (e.g., Commission, Rotate, Upgrade)</li>
+<li><strong>Timeframe</strong> — set start and end date/time for the review window</li>
+<li><strong>Resource</strong> — filter by target resource (host FQDN, domain name, etc.)</li>
+</ul>
+</li>
+<li>Export results to CSV for inclusion in change management records or security reports.</li>
+</ol>
+<p><strong>Syslog forwarding (recommended for compliance):</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># Configure syslog target via SDDC Manager API</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span>admin@local<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="w">  </span><span class="s2">&quot;https://sddc-manager.domain.local/v1/syslog-configuration&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;host&quot;: &quot;syslog.domain.local&quot;, &quot;port&quot;: 514, &quot;protocol&quot;: &quot;UDP&quot;}&#39;</span>
+</code></pre></div>
+<p><strong>Key audit log fields:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>timestamp</code></td>
+<td>UTC time of the event</td>
+</tr>
+<tr>
+<td><code>user</code></td>
+<td>Account that initiated the action</td>
+</tr>
+<tr>
+<td><code>action</code></td>
+<td>Operation performed (e.g., <code>COMMISSION_HOST</code>)</td>
+</tr>
+<tr>
+<td><code>resource</code></td>
+<td>Target resource FQDN or ID</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td><code>SUCCESS</code>, <code>FAILURE</code>, or <code>IN_PROGRESS</code></td>
+</tr>
+<tr>
+<td><code>sourceIp</code></td>
+<td>Client IP address of the initiating session</td>
 </tr>
 </tbody>
 </table>

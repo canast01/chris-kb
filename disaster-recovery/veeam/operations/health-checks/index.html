@@ -1277,6 +1277,8 @@
       
         
       
+        
+      
     
     
     
@@ -1527,6 +1529,8 @@
       
         
       
+        
+      
     
     
     
@@ -1649,6 +1653,8 @@
       
         
           
+        
+      
         
       
         
@@ -1783,6 +1789,8 @@
       
         
       
+        
+      
     
     
     
@@ -1839,6 +1847,8 @@
       
         
           
+        
+      
         
       
         
@@ -1981,6 +1991,8 @@
       
         
       
+        
+      
     
     
     
@@ -2039,6 +2051,8 @@
       
         
           
+        
+      
         
       
         
@@ -2171,6 +2185,64 @@
                 
   
   
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../deploy/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deploy
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -2207,7 +2279,7 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_11_14_3" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_11_14_4" checked>
         
           
           <div class="md-nav__link md-nav__container">
@@ -2229,14 +2301,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_2_11_14_3" id="__nav_2_11_14_3_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_2_11_14_4" id="__nav_2_11_14_4_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_11_14_3_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_2_11_14_3">
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_11_14_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_11_14_4">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -2392,7 +2464,7 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_11_14_3_4" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_11_14_4_4" checked>
         
           
           <div class="md-nav__link md-nav__container">
@@ -2415,8 +2487,8 @@
             
           </div>
         
-        <nav class="md-nav" data-md-level="5" aria-labelledby="__nav_2_11_14_3_4_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_2_11_14_3_4">
+        <nav class="md-nav" data-md-level="5" aria-labelledby="__nav_2_11_14_4_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_11_14_4_4">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -3895,7 +3967,18 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="SureBackup Verification Sequence">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#run-this-routine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run This Routine
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Run This Routine">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -4210,6 +4293,40 @@ The primary review surface is the **Home** view in the VBR console, which shows 
 │  Forward Incremental= default mode; one full + daily incrementals; synthetic full created perio       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘</code></pre>
+<h2 id="run-this-routine">Run This Routine<a class="headerlink" href="#run-this-routine" title="Permanent link">&para;</a></h2>
+<p>Run these commands on the VBR server each morning for a complete health snapshot.</p>
+<ol>
+<li><strong>VBR service status</strong> — confirm the core service is running:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">Get-Service</span> <span class="n">-Name</span> <span class="n">VeeamBackupSvc</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Status</span><span class="p">,</span><span class="n">DisplayName</span>
+</code></pre></div></li>
+<li><strong>Backup job status (last 24 h)</strong> — check every scheduled job's last result:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">Get-VBRJob</span> <span class="p">|</span> <span class="nb">Where </span><span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">IsScheduleEnabled</span><span class="p">}</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,@{</span><span class="n">n</span><span class="p">=</span><span class="s1">&#39;LastResult&#39;</span><span class="p">;</span><span class="n">e</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">GetLastResult</span><span class="p">()}}</span>
+</code></pre></div></li>
+<li><strong>Repository free space</strong> — flag any repo below 10 % free:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">Get-VBRBackupRepository</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,@{</span><span class="n">n</span><span class="p">=</span><span class="s1">&#39;FreeGB&#39;</span><span class="p">;</span><span class="n">e</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">GetContainer</span><span class="p">().</span><span class="n">CachedFreeSpace</span><span class="p">/</span><span class="n">1GB</span><span class="p">,</span><span class="n">1</span><span class="p">)}}</span>
+</code></pre></div></li>
+<li><strong>Failed backup sessions</strong> — list all failures in the last 24 h:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">Get-VBRSession</span> <span class="p">|</span> <span class="nb">Where </span><span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">Result</span> <span class="o">-eq</span> <span class="s1">&#39;Failed&#39;</span> <span class="o">-and</span> <span class="nv">$_</span><span class="p">.</span><span class="n">CreationTime</span> <span class="o">-gt</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddHours</span><span class="p">(-</span><span class="n">24</span><span class="p">)}</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">JobName</span><span class="p">,</span><span class="n">CreationTime</span><span class="p">,</span><span class="n">Result</span>
+</code></pre></div></li>
+<li><strong>Proxy connectivity</strong> — verify all proxies are reachable:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">Get-VBRViProxy</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span><span class="n">Host</span><span class="p">,@{</span><span class="n">n</span><span class="p">=</span><span class="s1">&#39;Status&#39;</span><span class="p">;</span><span class="n">e</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">Host</span><span class="p">.</span><span class="n">GetConnectionStatus</span><span class="p">()}}</span>
+</code></pre></div></li>
+<li><strong>Tape library health</strong> (if applicable) — confirm all drives are online:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">Get-VBRTapeLibrary</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span><span class="n">State</span><span class="p">,</span><span class="n">DriveCount</span>
+</code></pre></div></li>
+<li><strong>Veeam ONE alarms</strong> (if deployed) — surface the latest errors:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">Get-VBRAAuditEntry</span> <span class="p">|</span> <span class="nb">Where </span><span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">Severity</span> <span class="o">-eq</span> <span class="s1">&#39;Error&#39;</span><span class="p">}</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">-First</span> <span class="n">20</span>
+</code></pre></div></li>
+<li><strong>License expiry</strong> — verify the licence is valid and not near expiry:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nb">Get-VBRInstalledLicense</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Edition</span><span class="p">,</span><span class="n">ExpirationDate</span><span class="p">,</span><span class="n">Status</span>
+</code></pre></div></li>
+<li><strong>Replica health</strong> (if replication jobs exist) — check last result for every replica job:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nb">Get-VBRJob</span> <span class="n">-Type</span> <span class="n">Replica</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,@{</span><span class="n">n</span><span class="p">=</span><span class="s1">&#39;LastResult&#39;</span><span class="p">;</span><span class="n">e</span><span class="p">={</span><span class="nv">$_</span><span class="p">.</span><span class="n">GetLastResult</span><span class="p">()}}</span>
+</code></pre></div></li>
+<li><strong>VBR database connection</strong> — confirm the configuration database is reachable:
+    <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nb">Get-VBRDatabaseConnection</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">ServerName</span><span class="p">,</span><span class="n">DatabaseName</span>
+</code></pre></div></li>
+</ol>
 <p>Flag any extent below 10% free space for immediate action (offload trigger or capacity expansion).</p>
 <h3 id="tape-check-if-applicable">Tape Check (if applicable)<a class="headerlink" href="#tape-check-if-applicable" title="Permanent link">&para;</a></h3>
 <ul>
@@ -4232,32 +4349,32 @@ The primary review surface is the **Home** view in the VBR console, which shows 
 <h3 id="surebackup-verification-job-review">SureBackup Verification Job Review<a class="headerlink" href="#surebackup-verification-job-review" title="Permanent link">&para;</a></h3>
 <p>Run or review the scheduled SureBackup job for critical VM groups. In <strong>Home &gt; Last 24 Hours</strong> (adjust filter to last 7 days), locate SureBackup sessions and check the <strong>Verification</strong> column.</p>
 <p>A SureBackup failure means the backup is not confirmed restorable — escalate immediately.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># List SureBackup sessions from the last 7 days</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">Get-VBRBackupSession</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="nv">$_</span><span class="p">.</span><span class="n">JobType</span> <span class="o">-eq</span> <span class="s2">&quot;SureBackup&quot;</span> <span class="o">-and</span> <span class="nv">$_</span><span class="p">.</span><span class="n">CreationTime</span> <span class="o">-gt</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddDays</span><span class="p">(-</span><span class="n">7</span><span class="p">)</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="p">}</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">JobName</span><span class="p">,</span> <span class="n">Result</span><span class="p">,</span> <span class="n">CreationTime</span><span class="p">,</span> <span class="n">EndTime</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c"># List SureBackup sessions from the last 7 days</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nb">Get-VBRBackupSession</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>    <span class="nv">$_</span><span class="p">.</span><span class="n">JobType</span> <span class="o">-eq</span> <span class="s2">&quot;SureBackup&quot;</span> <span class="o">-and</span> <span class="nv">$_</span><span class="p">.</span><span class="n">CreationTime</span> <span class="o">-gt</span> <span class="p">(</span><span class="nb">Get-Date</span><span class="p">).</span><span class="n">AddDays</span><span class="p">(-</span><span class="n">7</span><span class="p">)</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="p">}</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">JobName</span><span class="p">,</span> <span class="n">Result</span><span class="p">,</span> <span class="n">CreationTime</span><span class="p">,</span> <span class="n">EndTime</span>
 </code></pre></div>
 <h3 id="repository-capacity-trend">Repository Capacity Trend<a class="headerlink" href="#repository-capacity-trend" title="Permanent link">&para;</a></h3>
 <p>Pull weekly capacity snapshots and compare against the previous week to identify jobs with abnormal data growth.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># Capacity across all repositories</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">Get-VBRBackupRepository</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;FreeGB&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">FreeSpace</span><span class="p">/</span><span class="n">1GB</span><span class="p">,</span><span class="n">1</span><span class="p">)}},</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;TotalGB&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">TotalSpace</span><span class="p">/</span><span class="n">1GB</span><span class="p">,</span><span class="n">1</span><span class="p">)}},</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;UsedPct&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">((</span><span class="n">1</span> <span class="p">-</span> <span class="nv">$_</span><span class="p">.</span><span class="n">FreeSpace</span><span class="p">/</span><span class="nv">$_</span><span class="p">.</span><span class="n">TotalSpace</span><span class="p">)*</span><span class="n">100</span><span class="p">,</span><span class="n">1</span><span class="p">)}}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c"># Capacity across all repositories</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nb">Get-VBRBackupRepository</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;FreeGB&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">FreeSpace</span><span class="p">/</span><span class="n">1GB</span><span class="p">,</span><span class="n">1</span><span class="p">)}},</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;TotalGB&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">(</span><span class="nv">$_</span><span class="p">.</span><span class="n">TotalSpace</span><span class="p">/</span><span class="n">1GB</span><span class="p">,</span><span class="n">1</span><span class="p">)}},</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>    <span class="p">@{</span><span class="n">N</span><span class="p">=</span><span class="s2">&quot;UsedPct&quot;</span><span class="p">;</span><span class="n">E</span><span class="p">={</span><span class="no">[math]</span><span class="p">::</span><span class="n">Round</span><span class="p">((</span><span class="n">1</span> <span class="p">-</span> <span class="nv">$_</span><span class="p">.</span><span class="n">FreeSpace</span><span class="p">/</span><span class="nv">$_</span><span class="p">.</span><span class="n">TotalSpace</span><span class="p">)*</span><span class="n">100</span><span class="p">,</span><span class="n">1</span><span class="p">)}}</span>
 </code></pre></div>
 <p>Flag any repository trending to reach capacity within 30 days at current growth rate.</p>
 <h3 id="retention-compliance">Retention Compliance<a class="headerlink" href="#retention-compliance" title="Permanent link">&para;</a></h3>
 <p>Verify that restore point counts match the configured retention for each job.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># Count restore points per backup job</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">Get-VBRBackup</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="nv">$rp</span> <span class="p">=</span> <span class="nb">Get-VBRRestorePoint</span> <span class="n">-Backup</span> <span class="nv">$_</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="no">[PSCustomObject]</span><span class="p">@{</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>        <span class="n">Job</span>        <span class="p">=</span> <span class="nv">$_</span><span class="p">.</span><span class="n">JobName</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>        <span class="n">Points</span>     <span class="p">=</span> <span class="nv">$rp</span><span class="p">.</span><span class="n">Count</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>        <span class="n">Oldest</span>     <span class="p">=</span> <span class="p">(</span><span class="nv">$rp</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">CreationTime</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">1</span><span class="p">).</span><span class="n">CreationTime</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>        <span class="n">Newest</span>     <span class="p">=</span> <span class="p">(</span><span class="nv">$rp</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">CreationTime</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">1</span><span class="p">).</span><span class="n">CreationTime</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    <span class="p">}</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c"># Count restore points per backup job</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="nb">Get-VBRBackup</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>    <span class="nv">$rp</span> <span class="p">=</span> <span class="nb">Get-VBRRestorePoint</span> <span class="n">-Backup</span> <span class="nv">$_</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>    <span class="no">[PSCustomObject]</span><span class="p">@{</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>        <span class="n">Job</span>        <span class="p">=</span> <span class="nv">$_</span><span class="p">.</span><span class="n">JobName</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>        <span class="n">Points</span>     <span class="p">=</span> <span class="nv">$rp</span><span class="p">.</span><span class="n">Count</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>        <span class="n">Oldest</span>     <span class="p">=</span> <span class="p">(</span><span class="nv">$rp</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">CreationTime</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">1</span><span class="p">).</span><span class="n">CreationTime</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>        <span class="n">Newest</span>     <span class="p">=</span> <span class="p">(</span><span class="nv">$rp</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">CreationTime</span> <span class="n">-Descending</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-First</span> <span class="n">1</span><span class="p">).</span><span class="n">CreationTime</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>    <span class="p">}</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="p">}</span>
 </code></pre></div>
 
 

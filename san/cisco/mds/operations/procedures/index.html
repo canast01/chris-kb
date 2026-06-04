@@ -3602,6 +3602,72 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#add-a-new-switch-to-an-existing-vsan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Add a New Switch to an Existing VSAN
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-a-device-alias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create a Device Alias
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-an-ivr-zone-inter-vsan-routing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create an IVR Zone (Inter-VSAN Routing)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#check-fabric-login-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check Fabric Login Table
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#collect-nx-os-tech-support-for-tac" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Collect NX-OS Tech-Support for TAC
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#replace-a-failed-module-line-card" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replace a Failed Module (Line Card)
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -4064,6 +4130,69 @@
 <a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="c1"># Diff running vs active zone set (catch uncommitted changes)</span>
 <a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>switch#<span class="w"> </span>show<span class="w"> </span>zone<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
 <a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>switch#<span class="w"> </span>show<span class="w"> </span>zoneset<span class="w"> </span>active<span class="w"> </span>vsan<span class="w"> </span><span class="m">10</span>
+</code></pre></div>
+<h2 id="add-a-new-switch-to-an-existing-vsan">Add a New Switch to an Existing VSAN<a class="headerlink" href="#add-a-new-switch-to-an-existing-vsan" title="Permanent link">&para;</a></h2>
+<p>Connect ISL → on existing switch: <code>vsan database; vsan &lt;id&gt; interface fc1/1</code> → on new switch: set domain ID to auto → <code>no shutdown</code> → verify <code>show topology</code> includes new switch.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># On existing switch: add ISL port to VSAN</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>switch#<span class="w"> </span>vsan<span class="w"> </span>database
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>switch<span class="o">(</span>config-vsan-db<span class="o">)</span><span class="c1"># vsan &lt;id&gt; interface fc1/1</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>switch<span class="o">(</span>config-vsan-db<span class="o">)</span><span class="c1"># exit</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1"># On new switch: bring up ISL port</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>switch#<span class="w"> </span>interface<span class="w"> </span>fc1/1
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>switch<span class="o">(</span>config-if<span class="o">)</span><span class="c1"># no shutdown</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1"># Verify new switch appears in fabric topology</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>switch#<span class="w"> </span>show<span class="w"> </span>topology
+</code></pre></div>
+<h2 id="create-a-device-alias">Create a Device Alias<a class="headerlink" href="#create-a-device-alias" title="Permanent link">&para;</a></h2>
+<p><code>device-alias database; device-alias name host01_hba0 pwwn 10:00:00:00:00:00:00:01; device-alias commit</code> — simplifies zone membership management.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>switch#<span class="w"> </span>device-alias<span class="w"> </span>database
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>switch<span class="o">(</span>config-device-alias-db<span class="o">)</span><span class="c1"># device-alias name host01_hba0 pwwn 10:00:00:00:00:00:00:01</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>switch<span class="o">(</span>config-device-alias-db<span class="o">)</span><span class="c1"># exit</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>switch#<span class="w"> </span>device-alias<span class="w"> </span>commit
+</code></pre></div>
+<h2 id="create-an-ivr-zone-inter-vsan-routing">Create an IVR Zone (Inter-VSAN Routing)<a class="headerlink" href="#create-an-ivr-zone-inter-vsan-routing" title="Permanent link">&para;</a></h2>
+<p>Configure IVR topology → <code>ivr zoneset name ivr_prod</code> → <code>ivr zone name zone_ivr_host01_array01</code> → add members from different VSANs → <code>ivr zoneset activate name ivr_prod</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Configure IVR topology</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>switch#<span class="w"> </span>ivr<span class="w"> </span>topology<span class="w"> </span>distribute
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Create IVR zone with members from different VSANs</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>switch#<span class="w"> </span>ivr<span class="w"> </span>zone<span class="w"> </span>name<span class="w"> </span>zone_ivr_host01_array01
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>switch<span class="o">(</span>config-ivr-zone<span class="o">)</span><span class="c1"># member pwwn 10:00:00:00:00:00:00:01 vsan 10</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>switch<span class="o">(</span>config-ivr-zone<span class="o">)</span><span class="c1"># member pwwn 50:00:00:00:00:00:00:02 vsan 20</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>switch<span class="o">(</span>config-ivr-zone<span class="o">)</span><span class="c1"># exit</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c1"># Add to IVR zone set and activate</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>switch#<span class="w"> </span>ivr<span class="w"> </span>zoneset<span class="w"> </span>name<span class="w"> </span>ivr_prod
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>switch<span class="o">(</span>config-ivr-zoneset<span class="o">)</span><span class="c1"># member zone_ivr_host01_array01</span>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>switch<span class="o">(</span>config-ivr-zoneset<span class="o">)</span><span class="c1"># exit</span>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>switch#<span class="w"> </span>ivr<span class="w"> </span>zoneset<span class="w"> </span>activate<span class="w"> </span>name<span class="w"> </span>ivr_prod
+</code></pre></div>
+<h2 id="check-fabric-login-table">Check Fabric Login Table<a class="headerlink" href="#check-fabric-login-table" title="Permanent link">&para;</a></h2>
+<p><code>show flogi database vsan &lt;id&gt;</code> — lists all logged-in devices with FCID and WWPN; confirm expected hosts and arrays present.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>switch#<span class="w"> </span>show<span class="w"> </span>flogi<span class="w"> </span>database<span class="w"> </span>vsan<span class="w"> </span>&lt;id&gt;
+</code></pre></div>
+<h2 id="collect-nx-os-tech-support-for-tac">Collect NX-OS Tech-Support for TAC<a class="headerlink" href="#collect-nx-os-tech-support-for-tac" title="Permanent link">&para;</a></h2>
+<p><code>show tech-support</code> → save output to file; <code>copy running-config bootflash:switch-config-backup.cfg</code> for configuration backup.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Collect tech-support (redirect to file)</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>switch#<span class="w"> </span>show<span class="w"> </span>tech-support<span class="w"> </span>&gt;<span class="w"> </span>bootflash:tech-support-<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.txt
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Save configuration backup</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>switch#<span class="w"> </span>copy<span class="w"> </span>running-config<span class="w"> </span>bootflash:switch-config-backup.cfg
+</code></pre></div>
+<h2 id="replace-a-failed-module-line-card">Replace a Failed Module (Line Card)<a class="headerlink" href="#replace-a-failed-module-line-card" title="Permanent link">&para;</a></h2>
+<p><code>out-of-service module &lt;slot&gt;</code> → physically swap module → <code>no out-of-service module &lt;slot&gt;</code> → verify <code>show module</code> shows Online.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Take module out of service</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>switch#<span class="w"> </span>out-of-service<span class="w"> </span>module<span class="w"> </span>&lt;slot&gt;
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="c1"># -- Physical swap of line card --</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="c1"># Bring module back into service</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>switch#<span class="w"> </span>no<span class="w"> </span>out-of-service<span class="w"> </span>module<span class="w"> </span>&lt;slot&gt;
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="c1"># Verify module is Online</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>switch#<span class="w"> </span>show<span class="w"> </span>module
 </code></pre></div>
 
 

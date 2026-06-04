@@ -3880,6 +3880,124 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#launch-an-ec2-instance-aws-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Launch an EC2 Instance (AWS CLI)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-and-attach-an-ebs-volume" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create and Attach an EBS Volume
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-an-s3-bucket-and-set-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create an S3 Bucket and Set Policy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-a-security-group-rule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create a Security Group Rule
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-a-vpc-peering-connection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create a VPC Peering Connection
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure-an-iam-role-and-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure an IAM Role and Policy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#set-up-cloudwatch-alarms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Set Up CloudWatch Alarms
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-an-ami-from-a-running-instance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create an AMI from a Running Instance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resize-an-ec2-instance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resize an EC2 Instance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure-vpc-flow-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure VPC Flow Logs
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -4127,6 +4245,575 @@
 <a id="__codelineno-0-76" name="__codelineno-0-76" href="#__codelineno-0-76"></a>│<span class="w">                                                                                                       </span>│
 <a id="__codelineno-0-77" name="__codelineno-0-77" href="#__codelineno-0-77"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
+<hr />
+<h2 id="launch-an-ec2-instance-aws-cli">Launch an EC2 Instance (AWS CLI)<a class="headerlink" href="#launch-an-ec2-instance-aws-cli" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Create a key pair (skip if reusing an existing one)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-key-pair<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--key-name<span class="w"> </span>my-keypair<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;KeyMaterial&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span>--output<span class="w"> </span>text<span class="w"> </span>&gt;<span class="w"> </span>~/.ssh/my-keypair.pem
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>chmod<span class="w"> </span><span class="m">400</span><span class="w"> </span>~/.ssh/my-keypair.pem
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1"># Launch instance</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>aws<span class="w"> </span>ec2<span class="w"> </span>run-instances<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span>--image-id<span class="w"> </span>ami-0abcdef1234567890<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span>--instance-type<span class="w"> </span>t3.medium<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">  </span>--key-name<span class="w"> </span>my-keypair<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">  </span>--subnet-id<span class="w"> </span>subnet-0abc1234<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">  </span>--security-group-ids<span class="w"> </span>sg-0abc1234<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">  </span>--user-data<span class="w"> </span>file://userdata.sh<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">  </span>--tag-specifications<span class="w"> </span><span class="s1">&#39;ResourceType=instance,Tags=[{Key=Name,Value=my-instance},{Key=Env,Value=prod}]&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;Instances[0].{ID:InstanceId,State:State.Name,IP:PrivateIpAddress}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">  </span>--output<span class="w"> </span>table
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="c1"># Wait for the instance to reach running state</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>aws<span class="w"> </span>ec2<span class="w"> </span><span class="nb">wait</span><span class="w"> </span>instance-running<span class="w"> </span>--instance-ids<span class="w"> </span>&lt;instance-id&gt;
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="c1"># Confirm status checks pass</span>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-instance-status<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="w">  </span>--instance-ids<span class="w"> </span>&lt;instance-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;InstanceStatuses[0].{System:SystemStatus.Status,Instance:InstanceStatus.Status}&#39;</span>
+</code></pre></div>
+<p>Parameters to confirm before running:</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AMI ID</td>
+<td>Region-specific; check <code>aws ec2 describe-images</code> or SSM Public Parameters</td>
+</tr>
+<tr>
+<td>Instance type</td>
+<td>Match workload: t3 (burstable), m6i (general), c6i (compute), r6i (memory)</td>
+</tr>
+<tr>
+<td>Subnet</td>
+<td>Determines AZ and VPC; use private subnet for non-public workloads</td>
+</tr>
+<tr>
+<td>Security group</td>
+<td>Must allow required ingress (SSH/RDP) and application ports</td>
+</tr>
+<tr>
+<td>User data</td>
+<td>Optional bootstrap script (install packages, configure app)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="create-and-attach-an-ebs-volume">Create and Attach an EBS Volume<a class="headerlink" href="#create-and-attach-an-ebs-volume" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Get the AZ of the target instance (volume must be in the same AZ)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">AZ</span><span class="o">=</span><span class="k">$(</span>aws<span class="w"> </span>ec2<span class="w"> </span>describe-instances<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--instance-ids<span class="w"> </span>&lt;instance-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;Reservations[0].Instances[0].Placement.AvailabilityZone&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>--output<span class="w"> </span>text<span class="k">)</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Create volume</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-volume<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span>--availability-zone<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$AZ</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span>--size<span class="w"> </span><span class="m">100</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span>--volume-type<span class="w"> </span>gp3<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">  </span>--iops<span class="w"> </span><span class="m">3000</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w">  </span>--throughput<span class="w"> </span><span class="m">125</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">  </span>--encrypted<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">  </span>--tag-specifications<span class="w"> </span><span class="s1">&#39;ResourceType=volume,Tags=[{Key=Name,Value=data-vol-01}]&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;{VolumeId:VolumeId,State:State,Size:Size}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">  </span>--output<span class="w"> </span>table
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="c1"># Wait for volume to become available</span>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>aws<span class="w"> </span>ec2<span class="w"> </span><span class="nb">wait</span><span class="w"> </span>volume-available<span class="w"> </span>--volume-ids<span class="w"> </span>&lt;volume-id&gt;
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="c1"># Attach volume to instance</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>aws<span class="w"> </span>ec2<span class="w"> </span>attach-volume<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="w">  </span>--volume-id<span class="w"> </span>&lt;volume-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="w">  </span>--instance-id<span class="w"> </span>&lt;instance-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="w">  </span>--device<span class="w"> </span>/dev/sdf
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="c1"># --- In-guest: mount the volume (SSH into the instance) ---</span>
+<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a><span class="c1"># List block devices to confirm attachment</span>
+<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a>lsblk
+<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>
+<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a><span class="c1"># Format the volume (first time only — skip if restoring data)</span>
+<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a>sudo<span class="w"> </span>mkfs<span class="w"> </span>-t<span class="w"> </span>xfs<span class="w"> </span>/dev/nvme1n1
+<a id="__codelineno-2-34" name="__codelineno-2-34" href="#__codelineno-2-34"></a>
+<a id="__codelineno-2-35" name="__codelineno-2-35" href="#__codelineno-2-35"></a><span class="c1"># Create mount point and mount</span>
+<a id="__codelineno-2-36" name="__codelineno-2-36" href="#__codelineno-2-36"></a>sudo<span class="w"> </span>mkdir<span class="w"> </span>-p<span class="w"> </span>/data
+<a id="__codelineno-2-37" name="__codelineno-2-37" href="#__codelineno-2-37"></a>sudo<span class="w"> </span>mount<span class="w"> </span>/dev/nvme1n1<span class="w"> </span>/data
+<a id="__codelineno-2-38" name="__codelineno-2-38" href="#__codelineno-2-38"></a>
+<a id="__codelineno-2-39" name="__codelineno-2-39" href="#__codelineno-2-39"></a><span class="c1"># Persist mount across reboots</span>
+<a id="__codelineno-2-40" name="__codelineno-2-40" href="#__codelineno-2-40"></a><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;/dev/nvme1n1 /data xfs defaults,nofail 0 2&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>-a<span class="w"> </span>/etc/fstab
+</code></pre></div>
+<hr />
+<h2 id="create-an-s3-bucket-and-set-policy">Create an S3 Bucket and Set Policy<a class="headerlink" href="#create-an-s3-bucket-and-set-policy" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nv">BUCKET</span><span class="o">=</span>my-prod-bucket-20240601
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">REGION</span><span class="o">=</span>eu-west-1
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Create bucket (us-east-1 does not use --create-bucket-configuration)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>aws<span class="w"> </span>s3<span class="w"> </span>mb<span class="w"> </span>s3://<span class="nv">$BUCKET</span><span class="w"> </span>--region<span class="w"> </span><span class="nv">$REGION</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span>--create-bucket-configuration<span class="w"> </span><span class="nv">LocationConstraint</span><span class="o">=</span><span class="nv">$REGION</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="c1"># Enable versioning</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>aws<span class="w"> </span>s3api<span class="w"> </span>put-bucket-versioning<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span>--bucket<span class="w"> </span><span class="nv">$BUCKET</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">  </span>--versioning-configuration<span class="w"> </span><span class="nv">Status</span><span class="o">=</span>Enabled
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># Enable default server-side encryption (SSE-S3)</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>aws<span class="w"> </span>s3api<span class="w"> </span>put-bucket-encryption<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">  </span>--bucket<span class="w"> </span><span class="nv">$BUCKET</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">  </span>--server-side-encryption-configuration<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="s1">    &quot;Rules&quot;: [{</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="s1">      &quot;ApplyServerSideEncryptionByDefault&quot;: {</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="s1">        &quot;SSEAlgorithm&quot;: &quot;AES256&quot;</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="s1">      },</span>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="s1">      &quot;BucketKeyEnabled&quot;: true</span>
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="s1">    }]</span>
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="s1">  }&#39;</span>
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a><span class="c1"># Block all public access</span>
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>aws<span class="w"> </span>s3api<span class="w"> </span>put-public-access-block<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a><span class="w">  </span>--bucket<span class="w"> </span><span class="nv">$BUCKET</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a><span class="w">  </span>--public-access-block-configuration<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a><span class="w">    </span><span class="nv">BlockPublicAcls</span><span class="o">=</span>true,IgnorePublicAcls<span class="o">=</span>true,BlockPublicPolicy<span class="o">=</span>true,RestrictPublicBuckets<span class="o">=</span><span class="nb">true</span>
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a><span class="c1"># Apply a resource-based bucket policy (example: restrict to specific IAM role)</span>
+<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>/tmp/bucket-policy.json<span class="w"> </span><span class="s">&lt;&lt;&#39;EOF&#39;</span>
+<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a><span class="s">{</span>
+<a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a><span class="s">  &quot;Version&quot;: &quot;2012-10-17&quot;,</span>
+<a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a><span class="s">  &quot;Statement&quot;: [</span>
+<a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a><span class="s">    {</span>
+<a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a><span class="s">      &quot;Sid&quot;: &quot;AllowRoleAccess&quot;,</span>
+<a id="__codelineno-3-38" name="__codelineno-3-38" href="#__codelineno-3-38"></a><span class="s">      &quot;Effect&quot;: &quot;Allow&quot;,</span>
+<a id="__codelineno-3-39" name="__codelineno-3-39" href="#__codelineno-3-39"></a><span class="s">      &quot;Principal&quot;: {</span>
+<a id="__codelineno-3-40" name="__codelineno-3-40" href="#__codelineno-3-40"></a><span class="s">        &quot;AWS&quot;: &quot;arn:aws:iam::&lt;account-id&gt;:role/my-app-role&quot;</span>
+<a id="__codelineno-3-41" name="__codelineno-3-41" href="#__codelineno-3-41"></a><span class="s">      },</span>
+<a id="__codelineno-3-42" name="__codelineno-3-42" href="#__codelineno-3-42"></a><span class="s">      &quot;Action&quot;: [&quot;s3:GetObject&quot;,&quot;s3:PutObject&quot;,&quot;s3:DeleteObject&quot;],</span>
+<a id="__codelineno-3-43" name="__codelineno-3-43" href="#__codelineno-3-43"></a><span class="s">      &quot;Resource&quot;: &quot;arn:aws:s3:::my-prod-bucket-20240601/*&quot;</span>
+<a id="__codelineno-3-44" name="__codelineno-3-44" href="#__codelineno-3-44"></a><span class="s">    },</span>
+<a id="__codelineno-3-45" name="__codelineno-3-45" href="#__codelineno-3-45"></a><span class="s">    {</span>
+<a id="__codelineno-3-46" name="__codelineno-3-46" href="#__codelineno-3-46"></a><span class="s">      &quot;Sid&quot;: &quot;DenyNonSSL&quot;,</span>
+<a id="__codelineno-3-47" name="__codelineno-3-47" href="#__codelineno-3-47"></a><span class="s">      &quot;Effect&quot;: &quot;Deny&quot;,</span>
+<a id="__codelineno-3-48" name="__codelineno-3-48" href="#__codelineno-3-48"></a><span class="s">      &quot;Principal&quot;: &quot;*&quot;,</span>
+<a id="__codelineno-3-49" name="__codelineno-3-49" href="#__codelineno-3-49"></a><span class="s">      &quot;Action&quot;: &quot;s3:*&quot;,</span>
+<a id="__codelineno-3-50" name="__codelineno-3-50" href="#__codelineno-3-50"></a><span class="s">      &quot;Resource&quot;: [</span>
+<a id="__codelineno-3-51" name="__codelineno-3-51" href="#__codelineno-3-51"></a><span class="s">        &quot;arn:aws:s3:::my-prod-bucket-20240601&quot;,</span>
+<a id="__codelineno-3-52" name="__codelineno-3-52" href="#__codelineno-3-52"></a><span class="s">        &quot;arn:aws:s3:::my-prod-bucket-20240601/*&quot;</span>
+<a id="__codelineno-3-53" name="__codelineno-3-53" href="#__codelineno-3-53"></a><span class="s">      ],</span>
+<a id="__codelineno-3-54" name="__codelineno-3-54" href="#__codelineno-3-54"></a><span class="s">      &quot;Condition&quot;: {&quot;Bool&quot;: {&quot;aws:SecureTransport&quot;: &quot;false&quot;}}</span>
+<a id="__codelineno-3-55" name="__codelineno-3-55" href="#__codelineno-3-55"></a><span class="s">    }</span>
+<a id="__codelineno-3-56" name="__codelineno-3-56" href="#__codelineno-3-56"></a><span class="s">  ]</span>
+<a id="__codelineno-3-57" name="__codelineno-3-57" href="#__codelineno-3-57"></a><span class="s">}</span>
+<a id="__codelineno-3-58" name="__codelineno-3-58" href="#__codelineno-3-58"></a><span class="s">EOF</span>
+<a id="__codelineno-3-59" name="__codelineno-3-59" href="#__codelineno-3-59"></a>
+<a id="__codelineno-3-60" name="__codelineno-3-60" href="#__codelineno-3-60"></a>aws<span class="w"> </span>s3api<span class="w"> </span>put-bucket-policy<span class="w"> </span>--bucket<span class="w"> </span><span class="nv">$BUCKET</span><span class="w"> </span>--policy<span class="w"> </span>file:///tmp/bucket-policy.json
+<a id="__codelineno-3-61" name="__codelineno-3-61" href="#__codelineno-3-61"></a>
+<a id="__codelineno-3-62" name="__codelineno-3-62" href="#__codelineno-3-62"></a><span class="c1"># Verify</span>
+<a id="__codelineno-3-63" name="__codelineno-3-63" href="#__codelineno-3-63"></a>aws<span class="w"> </span>s3api<span class="w"> </span>get-bucket-versioning<span class="w"> </span>--bucket<span class="w"> </span><span class="nv">$BUCKET</span>
+<a id="__codelineno-3-64" name="__codelineno-3-64" href="#__codelineno-3-64"></a>aws<span class="w"> </span>s3api<span class="w"> </span>get-bucket-encryption<span class="w"> </span>--bucket<span class="w"> </span><span class="nv">$BUCKET</span>
+</code></pre></div>
+<hr />
+<h2 id="create-a-security-group-rule">Create a Security Group Rule<a class="headerlink" href="#create-a-security-group-rule" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Authorize inbound (ingress) rule — allow HTTPS from anywhere</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>aws<span class="w"> </span>ec2<span class="w"> </span>authorize-security-group-ingress<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>--group-id<span class="w"> </span>sg-0abc1234<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>--protocol<span class="w"> </span>tcp<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>--port<span class="w"> </span><span class="m">443</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span>--cidr<span class="w"> </span><span class="m">0</span>.0.0.0/0
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Authorize ingress from another security group (e.g., ALB → app servers)</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>aws<span class="w"> </span>ec2<span class="w"> </span>authorize-security-group-ingress<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span>--group-id<span class="w"> </span>sg-0app1234<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">  </span>--ip-permissions<span class="w"> </span><span class="s1">&#39;[{</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="s1">    &quot;IpProtocol&quot;: &quot;tcp&quot;,</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="s1">    &quot;FromPort&quot;: 8080,</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="s1">    &quot;ToPort&quot;: 8080,</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="s1">    &quot;UserIdGroupPairs&quot;: [{&quot;GroupId&quot;: &quot;sg-0alb1234&quot;}]</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="s1">  }]&#39;</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="c1"># Authorize outbound (egress) rule — allow DNS from instances</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>aws<span class="w"> </span>ec2<span class="w"> </span>authorize-security-group-egress<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="w">  </span>--group-id<span class="w"> </span>sg-0abc1234<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="w">  </span>--protocol<span class="w"> </span>udp<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="w">  </span>--port<span class="w"> </span><span class="m">53</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="w">  </span>--cidr<span class="w"> </span><span class="m">0</span>.0.0.0/0
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a><span class="c1"># Revoke a rule (same syntax as authorize, different sub-command)</span>
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>aws<span class="w"> </span>ec2<span class="w"> </span>revoke-security-group-ingress<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a><span class="w">  </span>--group-id<span class="w"> </span>sg-0abc1234<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a><span class="w">  </span>--protocol<span class="w"> </span>tcp<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a><span class="w">  </span>--port<span class="w"> </span><span class="m">22</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a><span class="w">  </span>--cidr<span class="w"> </span><span class="m">0</span>.0.0.0/0
+<a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a>
+<a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a><span class="c1"># Verify current rules</span>
+<a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-security-groups<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-34" name="__codelineno-4-34" href="#__codelineno-4-34"></a><span class="w">  </span>--group-ids<span class="w"> </span>sg-0abc1234<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-35" name="__codelineno-4-35" href="#__codelineno-4-35"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;SecurityGroups[0].{Name:GroupName,Ingress:IpPermissions,Egress:IpPermissionsEgress}&#39;</span>
+</code></pre></div>
+<p>Rule parameters:</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--protocol</code></td>
+<td><code>tcp</code>, <code>udp</code>, <code>icmp</code>, or <code>-1</code> (all)</td>
+</tr>
+<tr>
+<td><code>--port</code></td>
+<td>Single port or range <code>8080-8090</code>; <code>-1</code> for all</td>
+</tr>
+<tr>
+<td><code>--cidr</code></td>
+<td>IPv4 CIDR or use <code>--source-group</code> for SG-to-SG rules</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="create-a-vpc-peering-connection">Create a VPC Peering Connection<a class="headerlink" href="#create-a-vpc-peering-connection" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># --- Step 1: Requester account creates the peering request ---</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-vpc-peering-connection<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span>--vpc-id<span class="w"> </span>vpc-0requester<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span>--peer-vpc-id<span class="w"> </span>vpc-0accepter<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">  </span>--peer-region<span class="w"> </span>eu-central-1<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span>--peer-owner-id<span class="w"> </span>&lt;accepter-account-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span>--tag-specifications<span class="w"> </span><span class="s1">&#39;ResourceType=vpc-peering-connection,Tags=[{Key=Name,Value=peer-prod-to-dr}]&#39;</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="c1"># Note the PeeringConnectionId returned (pcx-0abc1234)</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># --- Step 2: Accepter account accepts the request ---</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>aws<span class="w"> </span>ec2<span class="w"> </span>accept-vpc-peering-connection<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">  </span>--vpc-peering-connection-id<span class="w"> </span>pcx-0abc1234
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="c1"># Wait for active state</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-vpc-peering-connections<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="w">  </span>--vpc-peering-connection-ids<span class="w"> </span>pcx-0abc1234<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;VpcPeeringConnections[0].Status.Code&#39;</span>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="c1"># --- Step 3: Update route tables on BOTH sides ---</span>
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="c1"># Requester: add route pointing to accepter CIDR via the peering connection</span>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-route<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="w">  </span>--route-table-id<span class="w"> </span>rtb-0requester<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a><span class="w">  </span>--destination-cidr-block<span class="w"> </span><span class="m">10</span>.1.0.0/16<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a><span class="w">  </span>--vpc-peering-connection-id<span class="w"> </span>pcx-0abc1234
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a><span class="c1"># Accepter: add route pointing to requester CIDR via the peering connection</span>
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-route<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a><span class="w">  </span>--route-table-id<span class="w"> </span>rtb-0accepter<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a><span class="w">  </span>--destination-cidr-block<span class="w"> </span><span class="m">10</span>.0.0.0/16<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a><span class="w">  </span>--vpc-peering-connection-id<span class="w"> </span>pcx-0abc1234
+<a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a>
+<a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a><span class="c1"># Verify connectivity from an EC2 instance in each VPC</span>
+<a id="__codelineno-5-34" name="__codelineno-5-34" href="#__codelineno-5-34"></a>ping<span class="w"> </span>&lt;peer-instance-private-ip&gt;
+</code></pre></div>
+<blockquote>
+<p>Note: VPC peering does not support transitive routing. If VPC-A peers with VPC-B and VPC-B peers with VPC-C, VPC-A cannot reach VPC-C through VPC-B. Use AWS Transit Gateway for hub-and-spoke topologies.</p>
+</blockquote>
+<hr />
+<h2 id="configure-an-iam-role-and-policy">Configure an IAM Role and Policy<a class="headerlink" href="#configure-an-iam-role-and-policy" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># --- Step 1: Define the trust policy (who can assume this role) ---</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>/tmp/trust-policy.json<span class="w"> </span><span class="s">&lt;&lt;&#39;EOF&#39;</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="s">{</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="s">  &quot;Version&quot;: &quot;2012-10-17&quot;,</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="s">  &quot;Statement&quot;: [{</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="s">    &quot;Effect&quot;: &quot;Allow&quot;,</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="s">    &quot;Principal&quot;: {</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="s">      &quot;Service&quot;: &quot;ec2.amazonaws.com&quot;</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="s">    },</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="s">    &quot;Action&quot;: &quot;sts:AssumeRole&quot;</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="s">  }]</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="s">}</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="s">EOF</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="c1"># --- Step 2: Create the role ---</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>aws<span class="w"> </span>iam<span class="w"> </span>create-role<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="w">  </span>--role-name<span class="w"> </span>MyAppRole<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="w">  </span>--assume-role-policy-document<span class="w"> </span>file:///tmp/trust-policy.json<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="w">  </span>--description<span class="w"> </span><span class="s2">&quot;Role for application EC2 instances&quot;</span>
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="c1"># --- Step 3: Attach a managed policy ---</span>
+<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>aws<span class="w"> </span>iam<span class="w"> </span>attach-role-policy<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a><span class="w">  </span>--role-name<span class="w"> </span>MyAppRole<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a><span class="w">  </span>--policy-arn<span class="w"> </span>arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess
+<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a>
+<a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a><span class="c1"># --- Step 4: Optionally create and attach a custom inline policy ---</span>
+<a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a>cat<span class="w"> </span>&gt;<span class="w"> </span>/tmp/custom-policy.json<span class="w"> </span><span class="s">&lt;&lt;&#39;EOF&#39;</span>
+<a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a><span class="s">{</span>
+<a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a><span class="s">  &quot;Version&quot;: &quot;2012-10-17&quot;,</span>
+<a id="__codelineno-6-30" name="__codelineno-6-30" href="#__codelineno-6-30"></a><span class="s">  &quot;Statement&quot;: [{</span>
+<a id="__codelineno-6-31" name="__codelineno-6-31" href="#__codelineno-6-31"></a><span class="s">    &quot;Effect&quot;: &quot;Allow&quot;,</span>
+<a id="__codelineno-6-32" name="__codelineno-6-32" href="#__codelineno-6-32"></a><span class="s">    &quot;Action&quot;: [&quot;s3:PutObject&quot;,&quot;s3:GetObject&quot;],</span>
+<a id="__codelineno-6-33" name="__codelineno-6-33" href="#__codelineno-6-33"></a><span class="s">    &quot;Resource&quot;: &quot;arn:aws:s3:::my-prod-bucket/*&quot;</span>
+<a id="__codelineno-6-34" name="__codelineno-6-34" href="#__codelineno-6-34"></a><span class="s">  }]</span>
+<a id="__codelineno-6-35" name="__codelineno-6-35" href="#__codelineno-6-35"></a><span class="s">}</span>
+<a id="__codelineno-6-36" name="__codelineno-6-36" href="#__codelineno-6-36"></a><span class="s">EOF</span>
+<a id="__codelineno-6-37" name="__codelineno-6-37" href="#__codelineno-6-37"></a>
+<a id="__codelineno-6-38" name="__codelineno-6-38" href="#__codelineno-6-38"></a>aws<span class="w"> </span>iam<span class="w"> </span>put-role-policy<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-39" name="__codelineno-6-39" href="#__codelineno-6-39"></a><span class="w">  </span>--role-name<span class="w"> </span>MyAppRole<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-40" name="__codelineno-6-40" href="#__codelineno-6-40"></a><span class="w">  </span>--policy-name<span class="w"> </span>MyAppInlinePolicy<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-41" name="__codelineno-6-41" href="#__codelineno-6-41"></a><span class="w">  </span>--policy-document<span class="w"> </span>file:///tmp/custom-policy.json
+<a id="__codelineno-6-42" name="__codelineno-6-42" href="#__codelineno-6-42"></a>
+<a id="__codelineno-6-43" name="__codelineno-6-43" href="#__codelineno-6-43"></a><span class="c1"># --- Step 5: Create an instance profile and attach to EC2 ---</span>
+<a id="__codelineno-6-44" name="__codelineno-6-44" href="#__codelineno-6-44"></a>aws<span class="w"> </span>iam<span class="w"> </span>create-instance-profile<span class="w"> </span>--instance-profile-name<span class="w"> </span>MyAppProfile
+<a id="__codelineno-6-45" name="__codelineno-6-45" href="#__codelineno-6-45"></a>aws<span class="w"> </span>iam<span class="w"> </span>add-role-to-instance-profile<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-46" name="__codelineno-6-46" href="#__codelineno-6-46"></a><span class="w">  </span>--instance-profile-name<span class="w"> </span>MyAppProfile<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-47" name="__codelineno-6-47" href="#__codelineno-6-47"></a><span class="w">  </span>--role-name<span class="w"> </span>MyAppRole
+<a id="__codelineno-6-48" name="__codelineno-6-48" href="#__codelineno-6-48"></a>
+<a id="__codelineno-6-49" name="__codelineno-6-49" href="#__codelineno-6-49"></a><span class="c1"># Attach to a running EC2 instance</span>
+<a id="__codelineno-6-50" name="__codelineno-6-50" href="#__codelineno-6-50"></a>aws<span class="w"> </span>ec2<span class="w"> </span>associate-iam-instance-profile<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-51" name="__codelineno-6-51" href="#__codelineno-6-51"></a><span class="w">  </span>--instance-id<span class="w"> </span>&lt;instance-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-52" name="__codelineno-6-52" href="#__codelineno-6-52"></a><span class="w">  </span>--iam-instance-profile<span class="w"> </span><span class="nv">Name</span><span class="o">=</span>MyAppProfile
+<a id="__codelineno-6-53" name="__codelineno-6-53" href="#__codelineno-6-53"></a>
+<a id="__codelineno-6-54" name="__codelineno-6-54" href="#__codelineno-6-54"></a><span class="c1"># Verify</span>
+<a id="__codelineno-6-55" name="__codelineno-6-55" href="#__codelineno-6-55"></a>aws<span class="w"> </span>iam<span class="w"> </span>get-role<span class="w"> </span>--role-name<span class="w"> </span>MyAppRole<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-56" name="__codelineno-6-56" href="#__codelineno-6-56"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;Role.{Name:RoleName,ARN:Arn,AssumeRolePolicyDocument:AssumeRolePolicyDocument}&#39;</span>
+<a id="__codelineno-6-57" name="__codelineno-6-57" href="#__codelineno-6-57"></a>aws<span class="w"> </span>iam<span class="w"> </span>list-attached-role-policies<span class="w"> </span>--role-name<span class="w"> </span>MyAppRole<span class="w"> </span>--output<span class="w"> </span>table
+</code></pre></div>
+<p>For Lambda, change the trust principal to <code>"Service": "lambda.amazonaws.com"</code> and skip the instance profile steps.</p>
+<hr />
+<h2 id="set-up-cloudwatch-alarms">Set Up CloudWatch Alarms<a class="headerlink" href="#set-up-cloudwatch-alarms" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># --- Create an SNS topic for notifications (if not already existing) ---</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>aws<span class="w"> </span>sns<span class="w"> </span>create-topic<span class="w"> </span>--name<span class="w"> </span>ops-alerts
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>aws<span class="w"> </span>sns<span class="w"> </span>subscribe<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>--topic-arn<span class="w"> </span>arn:aws:sns:eu-west-1:&lt;account&gt;:ops-alerts<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span>--protocol<span class="w"> </span>email<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">  </span>--notification-endpoint<span class="w"> </span>ops-team@example.com
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># --- CPU utilisation alarm on an EC2 instance ---</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>aws<span class="w"> </span>cloudwatch<span class="w"> </span>put-metric-alarm<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">  </span>--alarm-name<span class="w"> </span><span class="s2">&quot;High-CPU-myinstance&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">  </span>--alarm-description<span class="w"> </span><span class="s2">&quot;CPU &gt; 80% for 5 minutes&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="w">  </span>--metric-name<span class="w"> </span>CPUUtilization<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="w">  </span>--namespace<span class="w"> </span>AWS/EC2<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="w">  </span>--statistic<span class="w"> </span>Average<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="w">  </span>--period<span class="w"> </span><span class="m">300</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="w">  </span>--threshold<span class="w"> </span><span class="m">80</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="w">  </span>--comparison-operator<span class="w"> </span>GreaterThanThreshold<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="w">  </span>--evaluation-periods<span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a><span class="w">  </span>--dimensions<span class="w"> </span><span class="nv">Name</span><span class="o">=</span>InstanceId,Value<span class="o">=</span>&lt;instance-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a><span class="w">  </span>--alarm-actions<span class="w"> </span>arn:aws:sns:eu-west-1:&lt;account&gt;:ops-alerts<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a><span class="w">  </span>--ok-actions<span class="w"> </span>arn:aws:sns:eu-west-1:&lt;account&gt;:ops-alerts<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a><span class="w">  </span>--treat-missing-data<span class="w"> </span>notBreaching
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a><span class="c1"># --- RDS storage alarm ---</span>
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>aws<span class="w"> </span>cloudwatch<span class="w"> </span>put-metric-alarm<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a><span class="w">  </span>--alarm-name<span class="w"> </span><span class="s2">&quot;Low-RDS-Storage&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a><span class="w">  </span>--metric-name<span class="w"> </span>FreeStorageSpace<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a><span class="w">  </span>--namespace<span class="w"> </span>AWS/RDS<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a><span class="w">  </span>--statistic<span class="w"> </span>Minimum<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-30" name="__codelineno-7-30" href="#__codelineno-7-30"></a><span class="w">  </span>--period<span class="w"> </span><span class="m">300</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-31" name="__codelineno-7-31" href="#__codelineno-7-31"></a><span class="w">  </span>--threshold<span class="w"> </span><span class="m">5368709120</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-32" name="__codelineno-7-32" href="#__codelineno-7-32"></a><span class="w">  </span>--comparison-operator<span class="w"> </span>LessThanThreshold<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-33" name="__codelineno-7-33" href="#__codelineno-7-33"></a><span class="w">  </span>--evaluation-periods<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-34" name="__codelineno-7-34" href="#__codelineno-7-34"></a><span class="w">  </span>--dimensions<span class="w"> </span><span class="nv">Name</span><span class="o">=</span>DBInstanceIdentifier,Value<span class="o">=</span>&lt;db-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-35" name="__codelineno-7-35" href="#__codelineno-7-35"></a><span class="w">  </span>--alarm-actions<span class="w"> </span>arn:aws:sns:eu-west-1:&lt;account&gt;:ops-alerts
+<a id="__codelineno-7-36" name="__codelineno-7-36" href="#__codelineno-7-36"></a>
+<a id="__codelineno-7-37" name="__codelineno-7-37" href="#__codelineno-7-37"></a><span class="c1"># Verify alarm state</span>
+<a id="__codelineno-7-38" name="__codelineno-7-38" href="#__codelineno-7-38"></a>aws<span class="w"> </span>cloudwatch<span class="w"> </span>describe-alarms<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-39" name="__codelineno-7-39" href="#__codelineno-7-39"></a><span class="w">  </span>--alarm-names<span class="w"> </span><span class="s2">&quot;High-CPU-myinstance&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-7-40" name="__codelineno-7-40" href="#__codelineno-7-40"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;MetricAlarms[0].{State:StateValue,Reason:StateReason}&#39;</span>
+</code></pre></div>
+<p>Key parameters:</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--period</code></td>
+<td>Seconds per data point: 60, 300, 3600</td>
+</tr>
+<tr>
+<td><code>--evaluation-periods</code></td>
+<td>How many periods must breach before alarm fires</td>
+</tr>
+<tr>
+<td><code>--threshold</code></td>
+<td>Value in the metric's native unit (%, bytes, count, etc.)</td>
+</tr>
+<tr>
+<td><code>--treat-missing-data</code></td>
+<td><code>notBreaching</code> (safe), <code>breaching</code> (alert), <code>ignore</code>, <code>missing</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="create-an-ami-from-a-running-instance">Create an AMI from a Running Instance<a class="headerlink" href="#create-an-ami-from-a-running-instance" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Create the AMI (no-reboot avoids a brief instance outage but may produce a less consistent image)</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-image<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>--instance-id<span class="w"> </span>&lt;instance-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;my-instance-</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m%d-%H%M<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span>--description<span class="w"> </span><span class="s2">&quot;Pre-patch baseline AMI&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">  </span>--no-reboot<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;{ImageId:ImageId}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">  </span>--output<span class="w"> </span>table
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1"># Wait for the AMI to become available (can take several minutes)</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>aws<span class="w"> </span>ec2<span class="w"> </span><span class="nb">wait</span><span class="w"> </span>image-available<span class="w"> </span>--image-ids<span class="w"> </span>&lt;ami-id&gt;
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="c1"># Tag the AMI and its associated snapshots</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-tags<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="w">  </span>--resources<span class="w"> </span>&lt;ami-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="w">  </span>--tags<span class="w"> </span><span class="nv">Key</span><span class="o">=</span>Name,Value<span class="o">=</span>my-instance-baseline<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="w">         </span><span class="nv">Key</span><span class="o">=</span>CreatedBy,Value<span class="o">=</span>ops-runbook<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="w">         </span><span class="nv">Key</span><span class="o">=</span>Env,Value<span class="o">=</span>prod
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="c1"># List your AMIs to confirm</span>
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-images<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a><span class="w">  </span>--owners<span class="w"> </span>self<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;Images[*].{ID:ImageId,Name:Name,State:State,Created:CreationDate}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a><span class="w">  </span>--output<span class="w"> </span>table
+<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a>
+<a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a><span class="c1"># After a rollback or migration, launch from the AMI</span>
+<a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a>aws<span class="w"> </span>ec2<span class="w"> </span>run-instances<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-28" name="__codelineno-8-28" href="#__codelineno-8-28"></a><span class="w">  </span>--image-id<span class="w"> </span>&lt;ami-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-29" name="__codelineno-8-29" href="#__codelineno-8-29"></a><span class="w">  </span>--instance-type<span class="w"> </span>&lt;instance-type&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-30" name="__codelineno-8-30" href="#__codelineno-8-30"></a><span class="w">  </span>--key-name<span class="w"> </span>&lt;keypair&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-31" name="__codelineno-8-31" href="#__codelineno-8-31"></a><span class="w">  </span>--subnet-id<span class="w"> </span>&lt;subnet-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-8-32" name="__codelineno-8-32" href="#__codelineno-8-32"></a><span class="w">  </span>--security-group-ids<span class="w"> </span>&lt;sg-id&gt;
+</code></pre></div>
+<blockquote>
+<p>No-reboot note: <code>--no-reboot</code> does not guarantee crash-consistent images for all workloads. For databases, quiesce writes or take a reboot-based AMI during a maintenance window.</p>
+</blockquote>
+<hr />
+<h2 id="resize-an-ec2-instance">Resize an EC2 Instance<a class="headerlink" href="#resize-an-ec2-instance" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># --- Step 1: Stop the instance ---</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>aws<span class="w"> </span>ec2<span class="w"> </span>stop-instances<span class="w"> </span>--instance-ids<span class="w"> </span>&lt;instance-id&gt;
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>aws<span class="w"> </span>ec2<span class="w"> </span><span class="nb">wait</span><span class="w"> </span>instance-stopped<span class="w"> </span>--instance-ids<span class="w"> </span>&lt;instance-id&gt;
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># Confirm stopped state</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-instances<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">  </span>--instance-ids<span class="w"> </span>&lt;instance-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;Reservations[0].Instances[0].State.Name&#39;</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c1"># --- Step 2: Change the instance type ---</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>aws<span class="w"> </span>ec2<span class="w"> </span>modify-instance-attribute<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="w">  </span>--instance-id<span class="w"> </span>&lt;instance-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="w">  </span>--instance-type<span class="w"> </span><span class="s1">&#39;{&quot;Value&quot;:&quot;m6i.xlarge&quot;}&#39;</span>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="c1"># Verify the attribute was updated</span>
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-instances<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a><span class="w">  </span>--instance-ids<span class="w"> </span>&lt;instance-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;Reservations[0].Instances[0].InstanceType&#39;</span>
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a><span class="c1"># --- Step 3: Start the instance ---</span>
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>aws<span class="w"> </span>ec2<span class="w"> </span>start-instances<span class="w"> </span>--instance-ids<span class="w"> </span>&lt;instance-id&gt;
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>aws<span class="w"> </span>ec2<span class="w"> </span><span class="nb">wait</span><span class="w"> </span>instance-running<span class="w"> </span>--instance-ids<span class="w"> </span>&lt;instance-id&gt;
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a><span class="c1"># Confirm instance is healthy</span>
+<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-instance-status<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a><span class="w">  </span>--instance-ids<span class="w"> </span>&lt;instance-id&gt;<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;InstanceStatuses[0].{System:SystemStatus.Status,Instance:InstanceStatus.Status}&#39;</span>
+</code></pre></div>
+<p>Constraints:</p>
+<table>
+<thead>
+<tr>
+<th>Consideration</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Same family resize</td>
+<td>Usually no additional validation needed</td>
+</tr>
+<tr>
+<td>Cross-family resize</td>
+<td>Verify CPU flags (e.g., AVX-512); re-test application after resize</td>
+</tr>
+<tr>
+<td>Nitro vs. Xen</td>
+<td>Switching from Xen-based types may require NVMe/ENA driver updates in the OS</td>
+</tr>
+<tr>
+<td>ENA/EFA</td>
+<td>Check <code>--ena-support</code> is enabled if moving to a network-intensive type</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="configure-vpc-flow-logs">Configure VPC Flow Logs<a class="headerlink" href="#configure-vpc-flow-logs" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># --- Option A: Flow logs to an S3 bucket ---</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="c1"># Create S3 bucket for flow logs (if not existing)</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>aws<span class="w"> </span>s3<span class="w"> </span>mb<span class="w"> </span>s3://my-vpc-flowlogs-&lt;account-id&gt;<span class="w"> </span>--region<span class="w"> </span>eu-west-1
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># Enable flow logs on the VPC</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-flow-logs<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">  </span>--resource-type<span class="w"> </span>VPC<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">  </span>--resource-ids<span class="w"> </span>vpc-0abc1234<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">  </span>--traffic-type<span class="w"> </span>ALL<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="w">  </span>--log-destination-type<span class="w"> </span>s3<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="w">  </span>--log-destination<span class="w"> </span>arn:aws:s3:::my-vpc-flowlogs-&lt;account-id&gt;/vpc/<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="w">  </span>--log-format<span class="w"> </span><span class="s1">&#39;${version} ${account-id} ${interface-id} ${srcaddr} ${dstaddr} ${srcport} ${dstport} ${protocol} ${packets} ${bytes} ${start} ${end} ${action} ${log-status}&#39;</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="c1"># --- Option B: Flow logs to CloudWatch Logs ---</span>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="c1"># IAM role for flow logs to write to CloudWatch</span>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>aws<span class="w"> </span>iam<span class="w"> </span>create-role<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="w">  </span>--role-name<span class="w"> </span>VPCFlowLogsRole<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a><span class="w">  </span>--assume-role-policy-document<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a><span class="s1">    &quot;Version&quot;:&quot;2012-10-17&quot;,</span>
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a><span class="s1">    &quot;Statement&quot;:[{&quot;Effect&quot;:&quot;Allow&quot;,&quot;Principal&quot;:{&quot;Service&quot;:&quot;vpc-flow-logs.amazonaws.com&quot;},&quot;Action&quot;:&quot;sts:AssumeRole&quot;}]</span>
+<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a><span class="s1">  }&#39;</span>
+<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a>
+<a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a>aws<span class="w"> </span>iam<span class="w"> </span>put-role-policy<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a><span class="w">  </span>--role-name<span class="w"> </span>VPCFlowLogsRole<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-25" name="__codelineno-10-25" href="#__codelineno-10-25"></a><span class="w">  </span>--policy-name<span class="w"> </span>FlowLogsCWPolicy<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-26" name="__codelineno-10-26" href="#__codelineno-10-26"></a><span class="w">  </span>--policy-document<span class="w"> </span><span class="s1">&#39;{</span>
+<a id="__codelineno-10-27" name="__codelineno-10-27" href="#__codelineno-10-27"></a><span class="s1">    &quot;Version&quot;:&quot;2012-10-17&quot;,</span>
+<a id="__codelineno-10-28" name="__codelineno-10-28" href="#__codelineno-10-28"></a><span class="s1">    &quot;Statement&quot;:[{&quot;Effect&quot;:&quot;Allow&quot;,&quot;Action&quot;:[&quot;logs:CreateLogGroup&quot;,&quot;logs:CreateLogStream&quot;,&quot;logs:PutLogEvents&quot;,&quot;logs:DescribeLogGroups&quot;,&quot;logs:DescribeLogStreams&quot;],&quot;Resource&quot;:&quot;*&quot;}]</span>
+<a id="__codelineno-10-29" name="__codelineno-10-29" href="#__codelineno-10-29"></a><span class="s1">  }&#39;</span>
+<a id="__codelineno-10-30" name="__codelineno-10-30" href="#__codelineno-10-30"></a>
+<a id="__codelineno-10-31" name="__codelineno-10-31" href="#__codelineno-10-31"></a><span class="c1"># Create CW log group</span>
+<a id="__codelineno-10-32" name="__codelineno-10-32" href="#__codelineno-10-32"></a>aws<span class="w"> </span>logs<span class="w"> </span>create-log-group<span class="w"> </span>--log-group-name<span class="w"> </span>/aws/vpc/flowlogs/vpc-0abc1234
+<a id="__codelineno-10-33" name="__codelineno-10-33" href="#__codelineno-10-33"></a>
+<a id="__codelineno-10-34" name="__codelineno-10-34" href="#__codelineno-10-34"></a><span class="c1"># Enable flow logs to CloudWatch</span>
+<a id="__codelineno-10-35" name="__codelineno-10-35" href="#__codelineno-10-35"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-flow-logs<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-36" name="__codelineno-10-36" href="#__codelineno-10-36"></a><span class="w">  </span>--resource-type<span class="w"> </span>VPC<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-37" name="__codelineno-10-37" href="#__codelineno-10-37"></a><span class="w">  </span>--resource-ids<span class="w"> </span>vpc-0abc1234<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-38" name="__codelineno-10-38" href="#__codelineno-10-38"></a><span class="w">  </span>--traffic-type<span class="w"> </span>ALL<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-39" name="__codelineno-10-39" href="#__codelineno-10-39"></a><span class="w">  </span>--log-destination-type<span class="w"> </span>cloud-watch-logs<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-40" name="__codelineno-10-40" href="#__codelineno-10-40"></a><span class="w">  </span>--log-group-name<span class="w"> </span>/aws/vpc/flowlogs/vpc-0abc1234<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-41" name="__codelineno-10-41" href="#__codelineno-10-41"></a><span class="w">  </span>--deliver-logs-permission-arn<span class="w"> </span>arn:aws:iam::&lt;account-id&gt;:role/VPCFlowLogsRole
+<a id="__codelineno-10-42" name="__codelineno-10-42" href="#__codelineno-10-42"></a>
+<a id="__codelineno-10-43" name="__codelineno-10-43" href="#__codelineno-10-43"></a><span class="c1"># Verify flow log is active</span>
+<a id="__codelineno-10-44" name="__codelineno-10-44" href="#__codelineno-10-44"></a>aws<span class="w"> </span>ec2<span class="w"> </span>describe-flow-logs<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-45" name="__codelineno-10-45" href="#__codelineno-10-45"></a><span class="w">  </span>--filter<span class="w"> </span><span class="nv">Name</span><span class="o">=</span>resource-id,Values<span class="o">=</span>vpc-0abc1234<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-10-46" name="__codelineno-10-46" href="#__codelineno-10-46"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;FlowLogs[*].{ID:FlowLogId,Status:FlowLogStatus,Type:LogDestinationType,Destination:LogDestination}&#39;</span>
+</code></pre></div>
+<p>Traffic type options:</p>
+<table>
+<thead>
+<tr>
+<th><code>--traffic-type</code></th>
+<th>What is captured</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ALL</code></td>
+<td>Accepted and rejected traffic</td>
+</tr>
+<tr>
+<td><code>ACCEPT</code></td>
+<td>Only traffic allowed by security group and NACL rules</td>
+</tr>
+<tr>
+<td><code>REJECT</code></td>
+<td>Only traffic denied by security group or NACL rules</td>
+</tr>
+</tbody>
+</table>
 
 
 

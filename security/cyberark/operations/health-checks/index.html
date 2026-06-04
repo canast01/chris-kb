@@ -1117,6 +1117,8 @@
       
         
       
+        
+      
     
     
     
@@ -1309,6 +1311,8 @@
       
         
       
+        
+      
     
     
     
@@ -1431,6 +1435,64 @@
                 
   
   
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../deploy/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deploy
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -1467,7 +1529,7 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_8_6_3" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_8_6_4" checked>
         
           
           <div class="md-nav__link md-nav__container">
@@ -1489,14 +1551,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_2_8_6_3" id="__nav_2_8_6_3_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_2_8_6_4" id="__nav_2_8_6_4_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_8_6_3_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_2_8_6_3">
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_8_6_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_8_6_4">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1652,7 +1714,7 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_8_6_3_4" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_8_6_4_4" checked>
         
           
           <div class="md-nav__link md-nav__container">
@@ -1675,8 +1737,8 @@
             
           </div>
         
-        <nav class="md-nav" data-md-level="5" aria-labelledby="__nav_2_8_6_3_4_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_2_8_6_3_4">
+        <nav class="md-nav" data-md-level="5" aria-labelledby="__nav_2_8_6_4_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_8_6_4_4">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -2029,6 +2091,8 @@
           
         
       
+        
+      
     
     
     
@@ -2259,6 +2323,10 @@
       
         
           
+        
+      
+        
+      
         
       
     
@@ -3953,6 +4021,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#run-this-routine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run This Routine
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#daily-checks" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4199,6 +4278,51 @@ Daily operations focus on confirming that the Vault service is running, CPM is s
 <a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>│                                                                                                       │
 <a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
+<h2 id="run-this-routine">Run This Routine<a class="headerlink" href="#run-this-routine" title="Permanent link">&para;</a></h2>
+<p>Run these checks each morning to confirm CyberArk Vault, CPM, and PSM are operating normally before users begin privileged access sessions.</p>
+<ol>
+<li>
+<p><strong>Vault service status</strong> — on the Digital Vault server, confirm the CyberArk Vault service is Running:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>net start | findstr /i &quot;cyber&quot;
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>PVWA web service</strong> — confirm PVWA API is responding with HTTP 200:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">Invoke-WebRequest</span> <span class="n">-Uri</span> <span class="n">https</span><span class="p">://&lt;</span><span class="n">pvwa</span><span class="p">&gt;/</span><span class="n">PasswordVault</span><span class="p">/</span><span class="n">api</span><span class="p">/</span><span class="n">Auth</span><span class="p">/</span><span class="n">Cyberark</span><span class="p">/</span><span class="n">Logon</span> <span class="n">-Method</span> <span class="n">POST</span>
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>CPM service</strong> — confirm Central Policy Manager is running:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">Get-Service</span> <span class="n">CyberArkPasswordManager</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Status</span>
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>PSM service</strong> — confirm Privileged Session Manager is running:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">Get-Service</span> <span class="n">CyberArkPrivilegedSessionManager</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Status</span>
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Vault DR replication</strong> (if DR Vault is deployed) — in the DR Vault console navigate to: Vault → Disaster Recovery → Replication Status and confirm lag is 0.</p>
+</li>
+<li>
+<p><strong>Password change failures</strong> — in PVWA navigate to: Accounts → filter by "CPM Status: Failed" — investigate any failures immediately.</p>
+</li>
+<li>
+<p><strong>Privileged session recordings</strong> — in PVWA navigate to: Monitor → Active Sessions + Recordings — confirm recording is active for all live sessions.</p>
+</li>
+<li>
+<p><strong>Safe access audit</strong> — in PVWA navigate to: Policies → Safe → review any recently changed safe permissions for unauthorised changes.</p>
+</li>
+<li>
+<p><strong>License seat usage</strong> — in PVWA navigate to: Administration → License Capacity — flag if remaining seats fall below 10%.</p>
+</li>
+<li>
+<p><strong>Vault backup recency</strong> — on the Vault server review backup logs; the most recent backup must be within 24 hours:
+    <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>dir &lt;vault-root&gt;\Logs\
+</code></pre></div></p>
+</li>
+</ol>
+<hr />
 <p>Check the PVWA dashboard for failed rotation jobs (red accounts), CPM heartbeat status, and DR replication lag each morning. Weekly, review session recording storage capacity to ensure sufficient space for recordings retention.</p>
 <h2 id="daily-checks">Daily Checks<a class="headerlink" href="#daily-checks" title="Permanent link">&para;</a></h2>
 <ul>

@@ -3441,6 +3441,50 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#run-this-routine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run This Routine
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#module-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module Health
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scheduled-tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scheduled Tasks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#remoting-connectivity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Remoting Connectivity
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#powershell-environment-health-check-flow" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3623,32 +3667,253 @@
 
 <h1 id="powershell-health-checks">PowerShell — Health Checks<a class="headerlink" href="#powershell-health-checks" title="Permanent link">&para;</a></h1>
 <div class="kb-summary">
-Health Checks reference covering PowerShell Environment Health Check Flow.
+Health Checks reference covering Module Health, Scheduled Tasks, Remoting Connectivity.
 </div>
 
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────────── PowerShell — Health Checks ──────────────────────────────────────┐
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   │  PowerShell health checks: verify PS version, remoting, module currency, and script execution │   │
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │      Check: $PSVersionTable.PSVersion, Test-WSMan, Get-PSRepository, PSScriptAnalyzer run     │   │
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│                                                                                                       │
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │           Version and Environment            │  │               Remoting Health               │   │
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   │          $PSVersionTable.PSVersion           │  │            Test-WSMan &lt;hostname&gt;            │   │
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   │          Get-Module -ListAvailable           │  │        Test-NetConnection -port 5985        │   │
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   │       Get-InstalledModule (PSGallery)        │  │          Get-PSSessionConfiguration         │   │
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   │          Get-ExecutionPolicy -List           │  │            winrm get winrm/config           │   │
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│   │        Invoke-ScriptAnalyzer -Path .         │  │          Check JEA endpoints active         │   │
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│                                                                                                       │
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │           $PSVersionTable = hash table with PS version, OS, runtime, and build info           │   │
-<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │     Test-WSMan      = validates WinRM connectivity and config on remote host; returns XML     │   │
-<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │      ExecutionPolicy = scope: Process, CurrentUser, LocalMachine; Restricted blocks .ps1      │   │
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<h2 id="run-this-routine">Run This Routine<a class="headerlink" href="#run-this-routine" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># 1. PowerShell version</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">$PSVersionTable</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># 2. Module inventory</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">Get-Module</span> <span class="n">-ListAvailable</span> <span class="p">|</span> <span class="nb">Sort </span><span class="n">Name</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">Name</span><span class="p">,</span><span class="n">Version</span> <span class="p">|</span> <span class="nb">Format-Table</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c"># 3. Scheduled task health — running tasks or tasks with non-zero last result</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nb">Get-ScheduledTask</span> <span class="p">|</span> <span class="nb">Where </span><span class="p">{</span><span class="nv">$_</span><span class="p">.</span><span class="n">State</span> <span class="o">-eq</span> <span class="s1">&#39;Running&#39;</span> <span class="o">-or</span> <span class="nv">$_</span><span class="p">.</span><span class="n">LastTaskResult</span> <span class="o">-ne</span> <span class="n">0</span><span class="p">}</span> <span class="p">|</span> <span class="nb">Select </span><span class="n">TaskName</span><span class="p">,</span><span class="n">State</span><span class="p">,</span><span class="n">LastTaskResult</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c"># 4. Execution policy — verify no unexpected restrictions</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nb">Get-ExecutionPolicy</span> <span class="n">-List</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c"># 5. WinRM connectivity (for remoting)</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="nb">Test-WSMan</span> <span class="n">-ComputerName</span> <span class="p">&lt;</span><span class="n">target</span><span class="p">&gt;</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c"># 6. PowerShell Core availability — verify if cross-platform scripts require PS Core</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="n">pwsh</span> <span class="n">-Version</span>
 </code></pre></div>
+<blockquote>
+<p><strong>Execution policy:</strong> <code>RemoteSigned</code> is the standard setting for managed servers. <code>Restricted</code> blocks all script execution and will cause automation failures. Investigate any scope showing an unexpected policy.</p>
+</blockquote>
+<hr />
+<h2 id="module-health">Module Health<a class="headerlink" href="#module-health" title="Permanent link">&para;</a></h2>
+<p>Modules provide the cmdlets used by automation scripts. Missing or outdated modules cause <code>CommandNotFoundException</code> errors and script failures.</p>
+<p><strong>List all available modules</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">Get-Module</span> <span class="n">-ListAvailable</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">Name</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Version</span><span class="p">,</span> <span class="n">ModuleType</span>
+</code></pre></div>
+<p><strong>List only installed PSGallery modules</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">Get-InstalledModule</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">Name</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Version</span><span class="p">,</span> <span class="n">PublishedAt</span>
+</code></pre></div>
+<p><strong>Check for outdated modules</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">Get-InstalledModule</span> <span class="p">|</span> <span class="k">ForEach</span><span class="n">-Object</span> <span class="p">{</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    <span class="nv">$latest</span> <span class="p">=</span> <span class="nb">Find-Module</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="k">if</span> <span class="p">(</span><span class="nv">$latest</span> <span class="o">-and</span> <span class="nv">$latest</span><span class="p">.</span><span class="n">Version</span> <span class="o">-gt</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Version</span><span class="p">)</span> <span class="p">{</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>        <span class="no">[PSCustomObject]</span><span class="p">@{</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>            <span class="n">Name</span>           <span class="p">=</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Name</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>            <span class="n">Installed</span>      <span class="p">=</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Version</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>            <span class="n">Latest</span>         <span class="p">=</span> <span class="nv">$latest</span><span class="p">.</span><span class="n">Version</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>        <span class="p">}</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    <span class="p">}</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="p">}</span>
+</code></pre></div>
+<p><strong>Update a specific module</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">Update-Module</span> <span class="n">-Name</span> <span class="p">&lt;</span><span class="n">ModuleName</span><span class="p">&gt;</span> <span class="n">-Force</span>
+</code></pre></div>
+<p><strong>Verify a critical module is importable</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">Import-Module</span> <span class="p">&lt;</span><span class="n">ModuleName</span><span class="p">&gt;</span> <span class="n">-ErrorAction</span> <span class="n">Stop</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nb">Get-Command</span> <span class="n">-Module</span> <span class="p">&lt;</span><span class="n">ModuleName</span><span class="p">&gt;</span> <span class="p">|</span> <span class="nb">Measure-Object</span>
+</code></pre></div>
+<p><strong>Key health indicators</strong></p>
+<table>
+<thead>
+<tr>
+<th>Indicator</th>
+<th>Healthy</th>
+<th>Action Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Critical modules present</td>
+<td>All required modules found</td>
+<td>Install via <code>Install-Module</code></td>
+</tr>
+<tr>
+<td>Module versions</td>
+<td>Current or pinned release</td>
+<td>Update or pin in deployment scripts</td>
+</tr>
+<tr>
+<td>Import without error</td>
+<td>No <code>CommandNotFoundException</code></td>
+<td>Resolve missing dependencies</td>
+</tr>
+<tr>
+<td>Duplicate module versions</td>
+<td>Single version per module</td>
+<td>Remove stale versions with <code>Uninstall-Module</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="scheduled-tasks">Scheduled Tasks<a class="headerlink" href="#scheduled-tasks" title="Permanent link">&para;</a></h2>
+<p>PowerShell automation frequently runs as scheduled tasks. Tasks that fail silently or stop running are a common source of undetected automation breakdowns.</p>
+<p><strong>List all scheduled tasks with non-zero last result</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">Get-ScheduledTask</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">LastTaskResult</span> <span class="o">-ne</span> <span class="n">0</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>    <span class="nb">Select-Object</span> <span class="n">TaskName</span><span class="p">,</span> <span class="n">TaskPath</span><span class="p">,</span> <span class="n">State</span><span class="p">,</span> <span class="n">LastTaskResult</span> <span class="p">|</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    <span class="nb">Sort-Object</span> <span class="n">LastTaskResult</span>
+</code></pre></div>
+<p><strong>List tasks currently in Running state</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nb">Get-ScheduledTask</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">State</span> <span class="o">-eq</span> <span class="s1">&#39;Running&#39;</span> <span class="p">}</span> <span class="p">|</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>    <span class="nb">Select-Object</span> <span class="n">TaskName</span><span class="p">,</span> <span class="n">TaskPath</span><span class="p">,</span> <span class="n">State</span>
+</code></pre></div>
+<p><strong>Check last run time and result for a specific task</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nb">Get-ScheduledTaskInfo</span> <span class="n">-TaskName</span> <span class="s2">&quot;&lt;TaskName&gt;&quot;</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">LastRunTime</span><span class="p">,</span> <span class="n">LastTaskResult</span><span class="p">,</span> <span class="n">NextRunTime</span>
+</code></pre></div>
+<p><strong>Common exit codes</strong></p>
+<table>
+<thead>
+<tr>
+<th>Exit code</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>0</code></td>
+<td>Success</td>
+</tr>
+<tr>
+<td><code>1</code></td>
+<td>General error</td>
+</tr>
+<tr>
+<td><code>0x41301</code></td>
+<td>Task is currently running</td>
+</tr>
+<tr>
+<td><code>0x80070005</code></td>
+<td>Access denied — check task account permissions</td>
+</tr>
+<tr>
+<td><code>0x8007010B</code></td>
+<td>Directory not found — check script path</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Re-enable a disabled task</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nb">Enable-ScheduledTask</span> <span class="n">-TaskName</span> <span class="s2">&quot;&lt;TaskName&gt;&quot;</span>
+</code></pre></div>
+<p><strong>Key health indicators</strong></p>
+<table>
+<thead>
+<tr>
+<th>Indicator</th>
+<th>Healthy</th>
+<th>Action Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>LastTaskResult</code></td>
+<td><code>0</code> for all tasks</td>
+<td>Investigate non-zero exit codes</td>
+</tr>
+<tr>
+<td>Task state</td>
+<td><code>Ready</code> or <code>Running</code></td>
+<td>Re-enable <code>Disabled</code> tasks if unexpected</td>
+</tr>
+<tr>
+<td><code>NextRunTime</code></td>
+<td>Populated and future-dated</td>
+<td>Re-register task if <code>NextRunTime</code> is null</td>
+</tr>
+<tr>
+<td>Task account</td>
+<td>Service account with least privilege</td>
+<td>Audit tasks running as <code>SYSTEM</code> unnecessarily</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="remoting-connectivity">Remoting Connectivity<a class="headerlink" href="#remoting-connectivity" title="Permanent link">&para;</a></h2>
+<p>PowerShell Remoting (WinRM) enables remote script execution and is required for Invoke-Command, Enter-PSSession, and many management tools.</p>
+<p><strong>Test WinRM connectivity to a remote host</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nb">Test-WSMan</span> <span class="n">-ComputerName</span> <span class="p">&lt;</span><span class="n">target</span><span class="p">&gt;</span>
+</code></pre></div>
+<p>A successful response returns an XML object with the WinRM service version. An error indicates WinRM is not running or a firewall is blocking port 5985 (HTTP) or 5986 (HTTPS).</p>
+<p><strong>Test network connectivity to WinRM port</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nb">Test-NetConnection</span> <span class="n">-ComputerName</span> <span class="p">&lt;</span><span class="n">target</span><span class="p">&gt;</span> <span class="n">-Port</span> <span class="n">5985</span>
+</code></pre></div>
+<p><strong>List configured PS session configurations</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="nb">Get-PSSessionConfiguration</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Enabled</span><span class="p">,</span> <span class="n">Permission</span>
+</code></pre></div>
+<p><strong>Test a remote session end-to-end</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="nv">$session</span> <span class="p">=</span> <span class="nb">New-PSSession</span> <span class="n">-ComputerName</span> <span class="p">&lt;</span><span class="n">target</span><span class="p">&gt;</span> <span class="n">-ErrorAction</span> <span class="n">Stop</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="nb">Invoke-Command</span> <span class="n">-Session</span> <span class="nv">$session</span> <span class="n">-ScriptBlock</span> <span class="p">{</span> <span class="nv">$env:COMPUTERNAME</span> <span class="p">}</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="nb">Remove-PSSession</span> <span class="nv">$session</span>
+</code></pre></div>
+<p><strong>Check WinRM service status on the remote host</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="nb">Invoke-Command</span> <span class="n">-ComputerName</span> <span class="p">&lt;</span><span class="n">target</span><span class="p">&gt;</span> <span class="n">-ScriptBlock</span> <span class="p">{</span> <span class="nb">Get-Service</span> <span class="n">WinRM</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Status</span> <span class="p">}</span>
+</code></pre></div>
+<p><strong>JEA endpoint check</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="c"># List JEA endpoints</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="nb">Get-PSSessionConfiguration</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">SessionType</span> <span class="o">-eq</span> <span class="s1">&#39;RestrictedRemoteServer&#39;</span> <span class="p">}</span>
+</code></pre></div>
+<p><strong>Key health indicators</strong></p>
+<table>
+<thead>
+<tr>
+<th>Indicator</th>
+<th>Healthy</th>
+<th>Action Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Test-WSMan</code> response</td>
+<td>Returns WinRM XML object</td>
+<td>Enable WinRM: <code>Enable-PSRemoting -Force</code></td>
+</tr>
+<tr>
+<td>Port 5985/5986</td>
+<td>TCP open</td>
+<td>Check Windows Firewall and network ACLs</td>
+</tr>
+<tr>
+<td>PS session creation</td>
+<td>No authentication errors</td>
+<td>Verify Kerberos/NTLM and DNS resolution</td>
+</tr>
+<tr>
+<td>Session configuration</td>
+<td><code>Enabled = True</code></td>
+<td>Enable with <code>Enable-PSSessionConfiguration</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
 <h2 id="powershell-environment-health-check-flow">PowerShell Environment Health Check Flow<a class="headerlink" href="#powershell-environment-health-check-flow" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>┌───────────────────────────────────── PowerShell — Health Checks ──────────────────────────────────────┐
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>│   │  PowerShell health checks: verify PS version, remoting, module currency, and script execution │   │
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>│   │      Check: $PSVersionTable.PSVersion, Test-WSMan, Get-PSRepository, PSScriptAnalyzer run     │   │
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>│                                                                                                       │
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>│   │           Version and Environment            │  │               Remoting Health               │   │
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>│   │          $PSVersionTable.PSVersion           │  │            Test-WSMan &lt;hostname&gt;            │   │
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>│   │          Get-Module -ListAvailable           │  │        Test-NetConnection -port 5985        │   │
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>│   │       Get-InstalledModule (PSGallery)        │  │          Get-PSSessionConfiguration         │   │
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>│   │          Get-ExecutionPolicy -List           │  │            winrm get winrm/config           │   │
+<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a>│   │        Invoke-ScriptAnalyzer -Path .         │  │          Check JEA endpoints active         │   │
+<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a>│                                                                                                       │
+<a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a>│   │           $PSVersionTable = hash table with PS version, OS, runtime, and build info           │   │
+<a id="__codelineno-16-18" name="__codelineno-16-18" href="#__codelineno-16-18"></a>│   │     Test-WSMan      = validates WinRM connectivity and config on remote host; returns XML     │   │
+<a id="__codelineno-16-19" name="__codelineno-16-19" href="#__codelineno-16-19"></a>│   │      ExecutionPolicy = scope: Process, CurrentUser, LocalMachine; Restricted blocks .ps1      │   │
+<a id="__codelineno-16-20" name="__codelineno-16-20" href="#__codelineno-16-20"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-16-21" name="__codelineno-16-21" href="#__codelineno-16-21"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 
 
 

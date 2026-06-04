@@ -1,0 +1,4987 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
+      
+      
+      
+      
+        <link rel="prev" href="../architecture/integrations/">
+      
+      
+        <link rel="next" href="../operations/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Veeam — Initial Deployment - Chris KB</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230f172a'/%3E%3Ctext x='16' y='22' font-family='system-ui%2Csans-serif' font-size='13' font-weight='800' fill='%2338bdf8' text-anchor='middle'%3ECA%3C/text%3E%3C/svg%3E">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Chris KB">
+  <meta name="theme-color" content="#0f172a">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+  <meta property="og:site_name" content="Chris KB">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Veeam — Initial Deployment · Chris KB">
+  <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Veeam — Initial Deployment · Chris KB">
+  <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
+
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="slate" data-md-color-accent="light-blue">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#veeam-initial-deployment" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Chris KB" class="md-header__button md-logo" aria-label="Chris KB" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Chris KB
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Veeam — Initial Deployment
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="slate" data-md-color-accent="light-blue"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="slate" data-md-color-accent="light-blue"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../../virtualization/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Platforms
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../site-map/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Site Map
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Chris KB" class="md-nav__button md-logo" aria-label="Chris KB" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Chris KB
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Platforms
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Platforms
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../virtualization/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Virtualization
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../cloud/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cloud
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../storage/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Storage
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../san/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SAN
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../compute/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Compute
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../networking/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Networking
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../monitoring/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitoring
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../security/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../tools/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../automation/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Automation
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_11" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Disaster Recovery
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_11" id="__nav_2_11_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_11_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Disaster Recovery
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../commvault/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Commvault
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../failback-procedure/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Failback Procedure
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../failover-procedure/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Failover Procedure
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../isolated-recovery-environment-ire/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Isolated Recovery Environment IRE
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../netbackup/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NetBackup
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../rasr/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RASR
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../recoverpoint/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RecoverPoint
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../runbook/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Runbook
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../srdf-a/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SRDF a
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../srdf-s/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SRDF S
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../srm/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SRM
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../superna-eyeglass/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Superna Eyeglass
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_11_14" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Veeam
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_11_14" id="__nav_2_11_14_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_11_14_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_11_14">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Veeam
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../architecture/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_11_14_3" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="./" class="md-nav__link md-nav__link--active">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deploy
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_11_14_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_11_14_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Deploy
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../operations/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Operations
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../security/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../troubleshooting/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../data-protection/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Protection
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../troubleshooting/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../runbooks/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Runbooks
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../change-management/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Change Management
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../architecture/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../performance/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Performance
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../certifications/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Certifications
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../project-management/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project Management
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../protocols/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Protocols
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../database/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Database
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../integration/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integration
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../inventory/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inventory
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../lifecycle/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lifecycle
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../ai/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../start-here/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Start Here
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../site-map/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Site Map
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Prerequisites">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#hardware-and-os" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hardware and OS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sql-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SQL Server
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#network-ports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Ports
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#domain-and-service-accounts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Domain and Service Accounts
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#install-veeam-backup-replication-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Install Veeam Backup &amp; Replication Server
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Install Veeam Backup &amp; Replication Server">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-obtain-the-iso" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1 — Obtain the ISO
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-launch-the-installer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2 — Launch the Installer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-select-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3 — Select Components
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-license" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4 — License
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-sql-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5 — SQL Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-6-service-account" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6 — Service Account
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-7-complete-installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7 — Complete Installation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#add-vcenter-hypervisor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Add vCenter / Hypervisor
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Add vCenter / Hypervisor">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-open-managed-servers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1 — Open Managed Servers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-add-vmware-vcenter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2 — Add VMware vCenter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-scan-inventory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3 — Scan Inventory
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#add-backup-proxies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Add Backup Proxies
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Add Backup Proxies">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-add-the-proxy-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1 — Add the Proxy Server
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-configure-transport-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2 — Configure Transport Mode
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-linux-proxy-optional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3 — Linux Proxy (Optional)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#add-backup-repositories" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Add Backup Repositories
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Add Backup Repositories">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-add-a-repository" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1 — Add a Repository
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-windows-linux-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2 — Windows / Linux Path
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-object-storage-repository" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3 — Object Storage Repository
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-first-backup-job" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create First Backup Job
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Create First Backup Job">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-new-backup-job" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1 — New Backup Job
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-select-vms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2 — Select VMs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-assign-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3 — Assign Storage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-configure-guest-processing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4 — Configure Guest Processing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-schedule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5 — Schedule
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-6-notifications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6 — Notifications
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-7-finish-and-run" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7 — Finish and Run
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#add-veeam-one-optional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Add Veeam ONE (Optional)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Add Veeam ONE (Optional)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-install-veeam-one-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1 — Install Veeam ONE Server
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-connect-to-vbr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2 — Connect to VBR
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-configure-scope-and-alarms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3 — Configure Scope and Alarms
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validate-the-deployment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validate the Deployment
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Validate the Deployment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-run-a-surebackup-job-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1 — Run a SureBackup Job (Recommended)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-instant-vm-recovery-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2 — Instant VM Recovery Test
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-repository-health-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3 — Repository Health Check
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-confirm-notifications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4 — Confirm Notifications
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-document-the-deployment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5 — Document the Deployment
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="Navigation" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../../.." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    Home
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../../../virtualization/" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Platforms
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../../" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Disaster Recovery
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Veeam
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="./" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Deploy
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+  <div class="kb-progress" id="kb-progress"></div>
+
+  
+  <nav class="kb-topnav" aria-label="Page navigation">
+    
+    <a href="../architecture/integrations/" class="kb-topnav__link kb-topnav__link--prev" id="kb-prev-link">
+      <span class="kb-topnav__arrow">&#8592;</span>
+      <span class="kb-topnav__title">Veeam — Integrations</span>
+    </a>
+    
+
+    <a href="../../.." class="kb-topnav__link kb-topnav__home" title="Home">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+      <span class="kb-topnav__home-label">Home</span>
+    </a>
+
+    
+    <a href="../operations/" class="kb-topnav__link kb-topnav__link--next" id="kb-next-link">
+      <span class="kb-topnav__title">Veeam — Operations</span>
+      <span class="kb-topnav__arrow">&#8594;</span>
+    </a>
+    
+  </nav>
+
+  
+                  
+
+
+
+<h1 id="veeam-initial-deployment">Veeam — Initial Deployment<a class="headerlink" href="#veeam-initial-deployment" title="Permanent link">&para;</a></h1>
+<p>This guide walks through deploying Veeam Backup &amp; Replication from bare metal to a
+fully operational backup environment. Steps cover server installation, infrastructure
+onboarding, proxy and repository configuration, and first-job validation.</p>
+<hr />
+<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
+<h3 id="hardware-and-os">Hardware and OS<a class="headerlink" href="#hardware-and-os" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Windows Server 2019 or 2022 (Standard or Datacenter), 64-bit</li>
+<li>Minimum 4 vCPU, 8 GB RAM for the VBR server; 16 GB+ recommended for production</li>
+<li>100 GB free disk for VBR installation and temporary files</li>
+<li>Separate volume recommended for the backup catalog (default: <code>C:\VBRCatalog</code>)</li>
+</ul>
+<h3 id="sql-server">SQL Server<a class="headerlink" href="#sql-server" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Veeam bundles Microsoft SQL Server 2019 Express (10 GB DB limit)</li>
+<li>For production, use an existing SQL Server 2016 or later instance</li>
+<li>Create a dedicated database (<code>VeeamBackup</code>) or let the installer create it</li>
+<li>VBR service account needs <code>db_owner</code> on the VeeamBackup database</li>
+</ul>
+<h3 id="network-ports">Network Ports<a class="headerlink" href="#network-ports" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Port</th>
+<th>Protocol</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>9392</td>
+<td>TCP</td>
+<td>VBR console to VBR server (default management)</td>
+</tr>
+<tr>
+<td>9401</td>
+<td>TCP</td>
+<td>REST API (Veeam Backup Enterprise Manager / REST clients)</td>
+</tr>
+<tr>
+<td>2500–3300</td>
+<td>TCP</td>
+<td>Data mover ports between proxy, repository, and VBR server</td>
+</tr>
+<tr>
+<td>443</td>
+<td>TCP</td>
+<td>vCenter and ESXi API access</td>
+</tr>
+<tr>
+<td>902</td>
+<td>TCP</td>
+<td>ESXi host management (NBD transport)</td>
+</tr>
+<tr>
+<td>6160</td>
+<td>TCP</td>
+<td>Veeam Installer Service on managed Windows servers</td>
+</tr>
+<tr>
+<td>6162</td>
+<td>TCP</td>
+<td>Veeam Data Mover on Linux servers</td>
+</tr>
+</tbody>
+</table>
+<h3 id="domain-and-service-accounts">Domain and Service Accounts<a class="headerlink" href="#domain-and-service-accounts" title="Permanent link">&para;</a></h3>
+<ul>
+<li>VBR server must be domain-joined (or workgroup with consistent local accounts)</li>
+<li>Create a dedicated service account (e.g. <code>SVC-Veeam</code>) with:</li>
+<li>Local Administrator on the VBR server</li>
+<li>Local Administrator on all proxy and repository servers</li>
+<li>Read-only or backup-operator role on vCenter (or higher if using guest interaction)</li>
+<li>DNS resolution for all target hosts must be forward and reverse resolvable</li>
+</ul>
+<hr />
+<h2 id="install-veeam-backup-replication-server">Install Veeam Backup &amp; Replication Server<a class="headerlink" href="#install-veeam-backup-replication-server" title="Permanent link">&para;</a></h2>
+<h3 id="step-1-obtain-the-iso">Step 1 — Obtain the ISO<a class="headerlink" href="#step-1-obtain-the-iso" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Download <code>VeeamBackup_12.x.iso</code> from the Veeam customer portal or
+   the free trial page at <code>veeam.com/downloads</code>.</li>
+<li>Mount the ISO on the Windows Server target (double-click or use
+   <code>Mount-DiskImage</code> in PowerShell).</li>
+</ol>
+<h3 id="step-2-launch-the-installer">Step 2 — Launch the Installer<a class="headerlink" href="#step-2-launch-the-installer" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Open the mounted ISO root and run <code>Setup.exe</code>.</li>
+<li>The Veeam Backup &amp; Replication setup hub opens.</li>
+<li>Click <strong>Install</strong> under <em>Veeam Backup &amp; Replication</em>.</li>
+</ol>
+<h3 id="step-3-select-components">Step 3 — Select Components<a class="headerlink" href="#step-3-select-components" title="Permanent link">&para;</a></h3>
+<p>On the component selection screen, choose:</p>
+<ul>
+<li><strong>Veeam Backup &amp; Replication</strong> (required)</li>
+<li><strong>Veeam Backup Catalog</strong> (required; powers instant file-level search)</li>
+<li><strong>Veeam Backup &amp; Replication Console</strong> (install on VBR server; also installable remotely)</li>
+<li><strong>Veeam REST API</strong> (required for automation and Enterprise Manager integration)</li>
+</ul>
+<h3 id="step-4-license">Step 4 — License<a class="headerlink" href="#step-4-license" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Enter your license file (<code>.lic</code>) or select <em>Free</em> for the Community Edition.</li>
+<li>Socket-based and instance-based licenses are supported; instance-based is common
+  for virtual environments.</li>
+</ul>
+<h3 id="step-5-sql-configuration">Step 5 — SQL Configuration<a class="headerlink" href="#step-5-sql-configuration" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Select an existing SQL instance or accept the bundled SQL Express.</li>
+<li>For an existing instance: enter <code>SERVER\INSTANCE</code> and credentials.</li>
+<li>The installer creates the <code>VeeamBackup</code> database automatically.</li>
+</ul>
+<h3 id="step-6-service-account">Step 6 — Service Account<a class="headerlink" href="#step-6-service-account" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Enter the VBR service account (<code>DOMAIN\SVC-Veeam</code>) and password.</li>
+<li>The installer grants the account required local privileges automatically.</li>
+</ul>
+<h3 id="step-7-complete-installation">Step 7 — Complete Installation<a class="headerlink" href="#step-7-complete-installation" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Review the summary, click <strong>Install</strong>, and wait 10–15 minutes.</li>
+<li>After completion, the VBR Console opens automatically.</li>
+<li>Verify the VBR services are running in <code>services.msc</code>:</li>
+<li><code>Veeam Backup Service</code></li>
+<li><code>Veeam Broker Service</code></li>
+<li><code>Veeam Mount Service</code></li>
+</ul>
+<hr />
+<h2 id="add-vcenter-hypervisor">Add vCenter / Hypervisor<a class="headerlink" href="#add-vcenter-hypervisor" title="Permanent link">&para;</a></h2>
+<h3 id="step-1-open-managed-servers">Step 1 — Open Managed Servers<a class="headerlink" href="#step-1-open-managed-servers" title="Permanent link">&para;</a></h3>
+<p>In the VBR Console, navigate to <strong>Backup Infrastructure</strong> → <strong>Managed Servers</strong>.</p>
+<h3 id="step-2-add-vmware-vcenter">Step 2 — Add VMware vCenter<a class="headerlink" href="#step-2-add-vmware-vcenter" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Click <strong>Add Server</strong> → <strong>VMware vSphere</strong> → <strong>vCenter Server</strong>.</li>
+<li>Enter the vCenter FQDN or IP address.</li>
+<li>Enter credentials (a dedicated read/backup-operator account is sufficient for
+   inventory; use admin rights if enabling guest interaction features).</li>
+<li>Click <strong>Next</strong> → accept the certificate fingerprint.</li>
+</ol>
+<h3 id="step-3-scan-inventory">Step 3 — Scan Inventory<a class="headerlink" href="#step-3-scan-inventory" title="Permanent link">&para;</a></h3>
+<ul>
+<li>VBR connects to vCenter and enumerates all datacenters, clusters, hosts, and VMs.</li>
+<li>Verify the inventory tree appears under <strong>Backup Infrastructure</strong> →
+  <strong>Virtual Infrastructure</strong>.</li>
+<li>For standalone ESXi hosts (no vCenter), choose <strong>ESXi host</strong> instead and enter
+  the host address and root credentials.</li>
+</ul>
+<hr />
+<h2 id="add-backup-proxies">Add Backup Proxies<a class="headerlink" href="#add-backup-proxies" title="Permanent link">&para;</a></h2>
+<p>Backup proxies offload data movement from the VBR server.</p>
+<h3 id="step-1-add-the-proxy-server">Step 1 — Add the Proxy Server<a class="headerlink" href="#step-1-add-the-proxy-server" title="Permanent link">&para;</a></h3>
+<ol>
+<li>In VBR Console, go to <strong>Backup Infrastructure</strong> → <strong>Backup Proxies</strong>.</li>
+<li>Click <strong>Add VMware Backup Proxy</strong>.</li>
+<li>Select an existing managed server or add a new Windows/Linux server.</li>
+</ol>
+<h3 id="step-2-configure-transport-mode">Step 2 — Configure Transport Mode<a class="headerlink" href="#step-2-configure-transport-mode" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>When to Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Direct SAN Access</td>
+<td>Proxy has direct FC/iSCSI access to production datastores</td>
+</tr>
+<tr>
+<td>Virtual Appliance (HotAdd)</td>
+<td>Proxy is a VM on the same ESXi host or cluster</td>
+</tr>
+<tr>
+<td>Network (NBD/NBDSSL)</td>
+<td>Fallback; uses ESXi management network — lower throughput</td>
+</tr>
+<tr>
+<td>Backup from Storage Snapshots</td>
+<td>Array integration (NetApp, HPE, etc.)</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Choose the appropriate mode or set to <strong>Automatic</strong> to let VBR decide.</li>
+<li>Set the <strong>Maximum concurrent tasks</strong> (typically 2–4 per proxy core).</li>
+</ul>
+<h3 id="step-3-linux-proxy-optional">Step 3 — Linux Proxy (Optional)<a class="headerlink" href="#step-3-linux-proxy-optional" title="Permanent link">&para;</a></h3>
+<p>For Linux-based proxies (higher throughput, lower cost):</p>
+<ol>
+<li>Add the Linux server under <strong>Managed Servers</strong> first.</li>
+<li>Under <strong>Backup Proxies</strong>, add <strong>Linux backup proxy</strong>, select the managed Linux host.</li>
+<li>VBR deploys the Veeam Data Mover service over SSH automatically.</li>
+</ol>
+<hr />
+<h2 id="add-backup-repositories">Add Backup Repositories<a class="headerlink" href="#add-backup-repositories" title="Permanent link">&para;</a></h2>
+<p>Repositories are where backup files are stored.</p>
+<h3 id="step-1-add-a-repository">Step 1 — Add a Repository<a class="headerlink" href="#step-1-add-a-repository" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Go to <strong>Backup Infrastructure</strong> → <strong>Backup Repositories</strong>.</li>
+<li>Click <strong>Add Repository</strong>.</li>
+<li>Select the repository type:</li>
+<li><strong>Direct attached storage</strong> — Windows or Linux path</li>
+<li><strong>SMB share</strong> — network path (CIFS/NFS)</li>
+<li><strong>Object storage</strong> (S3-compatible) — AWS S3, MinIO, Wasabi, etc.</li>
+<li><strong>Deduplication appliance</strong> — DataDomain, StoreOnce, ExaGrid</li>
+</ol>
+<h3 id="step-2-windows-linux-path">Step 2 — Windows / Linux Path<a class="headerlink" href="#step-2-windows-linux-path" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Enter server and path (e.g. <code>E:\VeeamBackups</code>).</li>
+<li>Set <strong>Concurrent tasks</strong> (controls how many backup jobs write simultaneously).</li>
+<li>Enable <strong>Per-VM backup chains</strong> for faster synthetic fulls and parallel restores.</li>
+<li>Set <strong>Max backup file size</strong> if splitting large chains across volumes.</li>
+</ul>
+<h3 id="step-3-object-storage-repository">Step 3 — Object Storage Repository<a class="headerlink" href="#step-3-object-storage-repository" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Choose <strong>Amazon S3</strong> or <strong>S3 Compatible</strong>.</li>
+<li>Enter endpoint URL, access key, secret key, and bucket name.</li>
+<li>Select a storage class (Standard, Infrequent Access, Glacier — note restore latency
+  for archive tiers).</li>
+<li>Object storage is typically used as a <strong>capacity tier</strong> in a Scale-Out Backup
+  Repository (SOBR), not as a standalone repository for primary backups.</li>
+</ul>
+<hr />
+<h2 id="create-first-backup-job">Create First Backup Job<a class="headerlink" href="#create-first-backup-job" title="Permanent link">&para;</a></h2>
+<h3 id="step-1-new-backup-job">Step 1 — New Backup Job<a class="headerlink" href="#step-1-new-backup-job" title="Permanent link">&para;</a></h3>
+<p>In VBR Console, go to <strong>Home</strong> → <strong>Jobs</strong> → <strong>Backup</strong> → <strong>Virtual Machine</strong>.</p>
+<h3 id="step-2-select-vms">Step 2 — Select VMs<a class="headerlink" href="#step-2-select-vms" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Browse the vCenter inventory or search by name.</li>
+<li>Add individual VMs, folders, resource pools, or entire clusters.</li>
+<li>Exclusions can be set by tag or datastore.</li>
+</ul>
+<h3 id="step-3-assign-storage">Step 3 — Assign Storage<a class="headerlink" href="#step-3-assign-storage" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Backup proxy</strong>: set to <strong>Automatic</strong> or pin to a specific proxy.</li>
+<li><strong>Backup repository</strong>: select the repository created above.</li>
+<li><strong>Restore points to keep</strong>: typically 7–14 (daily) or 28 (with weekly/monthly GFS).</li>
+</ul>
+<h3 id="step-4-configure-guest-processing">Step 4 — Configure Guest Processing<a class="headerlink" href="#step-4-configure-guest-processing" title="Permanent link">&para;</a></h3>
+<p>Enable <strong>Application-aware processing</strong> for:</p>
+<ul>
+<li>VSS-consistent backups of Windows applications (SQL, Exchange, Active Directory)</li>
+<li>Transaction log truncation (SQL Server, Exchange)</li>
+<li>Pre/post freeze scripts</li>
+</ul>
+<p>Enter guest OS credentials (domain admin or local admin on each VM).</p>
+<h3 id="step-5-schedule">Step 5 — Schedule<a class="headerlink" href="#step-5-schedule" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Set the job to run daily (e.g. 22:00) or on a specific interval.</li>
+<li>Enable <strong>Retry failed items</strong> (3 retries is common).</li>
+<li>Set <strong>Backup window</strong> to terminate the job if it runs past a defined time.</li>
+</ul>
+<h3 id="step-6-notifications">Step 6 — Notifications<a class="headerlink" href="#step-6-notifications" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Under <strong>Advanced</strong> → <strong>Notifications</strong>, configure SMTP settings and send
+  a summary email to backup administrators on success and failure.</li>
+</ul>
+<h3 id="step-7-finish-and-run">Step 7 — Finish and Run<a class="headerlink" href="#step-7-finish-and-run" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Click <strong>Finish</strong>.</li>
+<li>Right-click the new job → <strong>Start</strong> to trigger the first run immediately.</li>
+<li>Monitor progress in the <strong>Home</strong> → <strong>Last 24 Hours</strong> view.</li>
+</ul>
+<hr />
+<h2 id="add-veeam-one-optional">Add Veeam ONE (Optional)<a class="headerlink" href="#add-veeam-one-optional" title="Permanent link">&para;</a></h2>
+<p>Veeam ONE provides monitoring, reporting, and capacity planning for VBR.</p>
+<h3 id="step-1-install-veeam-one-server">Step 1 — Install Veeam ONE Server<a class="headerlink" href="#step-1-install-veeam-one-server" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Run the Veeam ONE installer (from the same ISO or a separate download).</li>
+<li>Select components: <strong>Veeam ONE Server</strong>, <strong>Veeam ONE Web UI</strong>, <strong>Veeam ONE Agent</strong>.</li>
+<li>Point to an SQL instance for the Veeam ONE database.</li>
+</ul>
+<h3 id="step-2-connect-to-vbr">Step 2 — Connect to VBR<a class="headerlink" href="#step-2-connect-to-vbr" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Open the Veeam ONE Web UI (<code>https://&lt;server&gt;:1239</code>).</li>
+<li>Go to <strong>Settings</strong> → <strong>Data Sources</strong> → <strong>Add</strong> → <strong>Veeam Backup &amp; Replication</strong>.</li>
+<li>Enter the VBR server address and credentials.</li>
+<li>Veeam ONE imports all jobs, repositories, and infrastructure objects.</li>
+</ol>
+<h3 id="step-3-configure-scope-and-alarms">Step 3 — Configure Scope and Alarms<a class="headerlink" href="#step-3-configure-scope-and-alarms" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Assign monitoring scope (specific VMs, jobs, or repositories).</li>
+<li>Review default alarm thresholds (repository free space, job failure count, RPO breach).</li>
+<li>Adjust thresholds to match your environment's baseline.</li>
+<li>Configure alarm notification recipients under <strong>Settings</strong> → <strong>Notifications</strong>.</li>
+</ul>
+<hr />
+<h2 id="validate-the-deployment">Validate the Deployment<a class="headerlink" href="#validate-the-deployment" title="Permanent link">&para;</a></h2>
+<h3 id="step-1-run-a-surebackup-job-recommended">Step 1 — Run a SureBackup Job (Recommended)<a class="headerlink" href="#step-1-run-a-surebackup-job-recommended" title="Permanent link">&para;</a></h3>
+<p>SureBackup boots VMs from backup in an isolated virtual lab and tests recoverability.</p>
+<ol>
+<li>Create a <strong>Virtual Lab</strong> under <strong>Backup Infrastructure</strong> → <strong>Virtual Labs</strong>.</li>
+<li>Create an <strong>Application Group</strong> with the VMs to test.</li>
+<li>Create a <strong>SureBackup Job</strong> → point to the backup job → assign the Virtual Lab.</li>
+<li>Run the SureBackup job and verify each VM passes heartbeat and application tests.</li>
+</ol>
+<h3 id="step-2-instant-vm-recovery-test">Step 2 — Instant VM Recovery Test<a class="headerlink" href="#step-2-instant-vm-recovery-test" title="Permanent link">&para;</a></h3>
+<p>If SureBackup is not licensed:</p>
+<ol>
+<li>Right-click a backup restore point → <strong>Instant Recovery</strong> → <strong>VMware vSphere VM</strong>.</li>
+<li>Power on the recovered VM in an isolated network.</li>
+<li>Confirm the VM boots and the guest OS is accessible.</li>
+<li>Use <strong>Migrate to Production</strong> or <strong>Stop Publishing</strong> to clean up.</li>
+</ol>
+<h3 id="step-3-repository-health-check">Step 3 — Repository Health Check<a class="headerlink" href="#step-3-repository-health-check" title="Permanent link">&para;</a></h3>
+<ul>
+<li>In VBR Console, right-click the repository → <strong>Check</strong> → confirm no corrupted
+  restore points.</li>
+<li>Verify free space is above 20% (below 10% triggers job failures).</li>
+</ul>
+<h3 id="step-4-confirm-notifications">Step 4 — Confirm Notifications<a class="headerlink" href="#step-4-confirm-notifications" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Send a test email from the SMTP settings to confirm alerting is working.</li>
+<li>Verify Veeam ONE (if deployed) shows no critical alarms.</li>
+</ul>
+<h3 id="step-5-document-the-deployment">Step 5 — Document the Deployment<a class="headerlink" href="#step-5-document-the-deployment" title="Permanent link">&para;</a></h3>
+<p>Record the following for the operations runbook:</p>
+<ul>
+<li>VBR server hostname, IP, and SQL instance</li>
+<li>Service account names</li>
+<li>Repository paths and free capacity</li>
+<li>Backup job names and schedules</li>
+<li>Proxy server hostnames and transport modes</li>
+<li>Contact for backup alerts</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+
+  
+  <nav class="kb-topnav kb-bottomnav" aria-label="Page navigation (bottom)">
+    
+    <a href="../architecture/integrations/" class="kb-topnav__link kb-topnav__link--prev">
+      <span class="kb-topnav__arrow">&#8592;</span>
+      <span class="kb-topnav__title">Veeam — Integrations</span>
+    </a>
+    
+
+    <a href="../../.." class="kb-topnav__link kb-topnav__home" title="Home">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+      <span class="kb-topnav__home-label">Home</span>
+    </a>
+
+    
+    <a href="../operations/" class="kb-topnav__link kb-topnav__link--next">
+      <span class="kb-topnav__title">Veeam — Operations</span>
+      <span class="kb-topnav__arrow">&#8594;</span>
+    </a>
+    
+  </nav>
+
+  
+  <nav class="kb-mobile-nav" aria-label="Mobile navigation">
+    
+    <a href="../architecture/integrations/" class="kb-mobile-nav__btn" title="Previous: Veeam — Integrations">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+    </a>
+    
+
+    <a href="../../.." class="kb-mobile-nav__btn kb-mobile-nav__btn--home" title="Home">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+    </a>
+
+    
+    <a href="../operations/" class="kb-mobile-nav__btn" title="Next: Veeam — Operations">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M4 11h12.17l-5.59-5.59L12 4l8 8-8 8-1.41-1.41L16.17 13H4v-2z"/></svg>
+    </a>
+    
+  </nav>
+
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      © Christos Anastasiadis
+    </div>
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.indexes", "navigation.path", "navigation.prune", "navigation.top", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+  
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  <script>
+    // Reading progress bar
+    (function () {
+      var bar = document.getElementById('kb-progress');
+      if (!bar) return;
+      function update() {
+        var scroll = window.scrollY;
+        var total = document.documentElement.scrollHeight - window.innerHeight;
+        bar.style.width = total > 0 ? (scroll / total * 100) + '%' : '0%';
+      }
+      window.addEventListener('scroll', update, { passive: true });
+      update();
+    })();
+
+    // Code block language badge
+    (function () {
+      document.querySelectorAll('code[class*="language-"]').forEach(function (code) {
+        var match = Array.from(code.classList).find(function (c) { return c.startsWith('language-'); });
+        if (!match) return;
+        var lang = match.replace('language-', '');
+        if (['text', 'plaintext', 'none', 'shell-session'].includes(lang)) return;
+        var block = code.closest('.highlight');
+        if (!block || block.querySelector('.kb-lang-badge')) return;
+        var badge = document.createElement('span');
+        badge.className = 'kb-lang-badge';
+        badge.textContent = lang;
+        block.style.position = 'relative';
+        block.appendChild(badge);
+      });
+    })();
+
+    // Ambient mouse glow
+    (function () {
+      if (window.matchMedia('(hover: none)').matches) return;
+      var glow = document.createElement('div');
+      glow.style.cssText = 'position:fixed;width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,rgba(56,189,248,0.07) 0%,transparent 65%);pointer-events:none;z-index:0;transform:translate(-50%,-50%);left:50%;top:50%;';
+      document.body.appendChild(glow);
+      var tx = window.innerWidth / 2, ty = window.innerHeight / 2, cx = tx, cy = ty;
+      document.addEventListener('mousemove', function (e) { tx = e.clientX; ty = e.clientY; }, { passive: true });
+      (function tick() {
+        cx += (tx - cx) * 0.05;
+        cy += (ty - cy) * 0.05;
+        glow.style.left = cx + 'px';
+        glow.style.top = cy + 'px';
+        requestAnimationFrame(tick);
+      })();
+    })();
+
+    // Konami code — ↑↑↓↓←→←→BA → confetti burst
+    (function () {
+      var seq = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','KeyB','KeyA'];
+      var pos = 0;
+      document.addEventListener('keydown', function (e) {
+        pos = (e.code === seq[pos]) ? pos + 1 : (e.code === seq[0] ? 1 : 0);
+        if (pos === seq.length) {
+          pos = 0;
+          var colors = ['#38bdf8','#818cf8','#34d399','#f59e0b','#f43f5e','#a78bfa','#7dd3fc'];
+          for (var i = 0; i < 80; i++) {
+            (function (i) {
+              setTimeout(function () {
+                var el = document.createElement('div');
+                var size = 6 + Math.random() * 9;
+                var angle = Math.random() * Math.PI * 2;
+                var dist = 180 + Math.random() * 320;
+                var tx = Math.cos(angle) * dist, ty = Math.sin(angle) * dist;
+                el.style.cssText = 'position:fixed;width:'+size+'px;height:'+size+'px;border-radius:'+(Math.random()>0.5?'50%':'3px')+';background:'+colors[i%colors.length]+';pointer-events:none;z-index:99998;left:50%;top:50%;transform:translate(-50%,-50%);transition:transform 0.9s ease-out,opacity 0.9s ease-out;opacity:1;';
+                document.body.appendChild(el);
+                requestAnimationFrame(function () { requestAnimationFrame(function () {
+                  el.style.transform = 'translate(calc(-50% + '+tx+'px),calc(-50% + '+ty+'px)) rotate('+Math.random()*720+'deg)';
+                  el.style.opacity = '0';
+                }); });
+                setTimeout(function () { el.remove(); }, 1000);
+              }, i * 12);
+            })(i);
+          }
+        }
+      });
+    })();
+
+    // Hero h1 typing animation
+    (function () {
+      var h1 = document.querySelector('.hero-body h1');
+      if (!h1) return;
+      var text = h1.textContent.trim();
+      h1.textContent = '';
+      var cursor = document.createElement('span');
+      cursor.style.cssText = '-webkit-text-fill-color:#38bdf8;animation:kb-blink 0.75s step-end infinite;';
+      cursor.textContent = '|';
+      h1.appendChild(cursor);
+      var i = 0;
+      var timer = setInterval(function () {
+        if (i < text.length) {
+          h1.insertBefore(document.createTextNode(text[i]), cursor);
+          i++;
+        } else {
+          clearInterval(timer);
+          setTimeout(function () { cursor.remove(); }, 700);
+        }
+      }, 75);
+    })();
+
+    // Time-of-day hero greeting
+    (function () {
+      var hero = document.querySelector('.hero-body');
+      if (!hero) return;
+      var h = new Date().getHours();
+      var greeting = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
+      var el = document.createElement('p');
+      el.textContent = greeting + '.';
+      el.style.cssText = 'color:rgba(255,255,255,0.5);font-size:0.82rem;margin-bottom:0.2rem;font-style:italic;margin-top:0;';
+      var h1 = hero.querySelector('h1');
+      if (h1) hero.insertBefore(el, h1);
+    })();
+
+    // Image lightbox
+    (function () {
+      document.querySelectorAll('.md-typeset img').forEach(function (img) {
+        img.style.cursor = 'zoom-in';
+        img.addEventListener('click', function () {
+          var overlay = document.createElement('div');
+          overlay.className = 'kb-lightbox-overlay';
+          var clone = new Image();
+          clone.src = img.src;
+          clone.alt = img.alt;
+          overlay.appendChild(clone);
+          overlay.addEventListener('click', function () { overlay.remove(); });
+          document.addEventListener('keydown', function esc(e) {
+            if (e.key === 'Escape') { overlay.remove(); document.removeEventListener('keydown', esc); }
+          });
+          document.body.appendChild(overlay);
+        });
+      });
+    })();
+
+    // Scroll-reveal — animate content sections as they enter viewport
+    (function () {
+      var targets = document.querySelectorAll('.md-typeset h2, .md-typeset h3, .md-typeset table, .md-typeset .admonition, .kb-grid');
+      if (!('IntersectionObserver' in window)) return;
+      targets.forEach(function (el) { el.classList.add('kb-reveal'); });
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('kb-visible'); io.unobserve(e.target); } });
+      }, { threshold: 0.08 });
+      targets.forEach(function (el) { io.observe(el); });
+    })();
+
+    // Floating TOC dot
+    (function () {
+      var links = document.querySelectorAll('.md-nav--secondary .md-nav__link');
+      if (links.length < 2) return;
+      var dot = document.createElement('div');
+      dot.className = 'kb-toc-dot';
+      document.body.appendChild(dot);
+      function update() {
+        var active = document.querySelector('.md-nav--secondary .md-nav__link--active');
+        if (!active) return;
+        var r = active.getBoundingClientRect();
+        dot.style.top = (r.top + r.height / 2 - 4) + 'px';
+        dot.style.opacity = '1';
+      }
+      window.addEventListener('scroll', update, { passive: true });
+      update();
+    })();
+
+    // Back to top pill
+    (function () {
+      var btn = document.createElement('a');
+      btn.className = 'kb-back-top';
+      btn.href = '#';
+      btn.textContent = '↑ Top';
+      btn.addEventListener('click', function (e) { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); });
+      document.body.appendChild(btn);
+      window.addEventListener('scroll', function () {
+        btn.classList.toggle('kb-back-top--visible', window.scrollY > 400);
+      }, { passive: true });
+    })();
+
+    // Live clock in footer
+    (function () {
+      function pad(n) { return n < 10 ? '0' + n : n; }
+      function tick(el) {
+        var d = new Date();
+        el.textContent = pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
+      }
+      var footer = document.querySelector('.md-footer-meta__inner');
+      if (!footer) return;
+      var clock = document.createElement('div');
+      clock.className = 'kb-footer-clock';
+      footer.appendChild(clock);
+      tick(clock);
+      setInterval(function () { tick(clock); }, 1000);
+    })();
+
+    // Smooth page transitions
+    (function () {
+      var content = document.querySelector('.md-content__inner');
+      document.addEventListener('click', function (e) {
+        var link = e.target.closest('a[href]');
+        if (!link || !link.href || link.target === '_blank') return;
+        try { if (new URL(link.href).hostname !== window.location.hostname) return; } catch(e) { return; }
+        if (link.href.includes('#')) return;
+        e.preventDefault();
+        var href = link.href;
+        if (content) content.classList.add('kb-fade-out');
+        setTimeout(function () { window.location.href = href; }, 190);
+      });
+    })();
+
+    // Spotlight effect — toggle with L
+    (function () {
+      if (window.matchMedia('(hover: none)').matches) return;
+      var spotlight = document.createElement('div');
+      spotlight.className = 'kb-spotlight';
+      document.body.appendChild(spotlight);
+      var mx = window.innerWidth / 2, my = window.innerHeight / 2;
+      var active = false;
+      function update() {
+        spotlight.style.background = 'radial-gradient(circle 200px at ' + mx + 'px ' + my + 'px, transparent 0%, rgba(2,6,23,0.72) 100%)';
+      }
+      document.addEventListener('mousemove', function (e) {
+        mx = e.clientX; my = e.clientY;
+        if (active) update();
+      }, { passive: true });
+      document.addEventListener('keydown', function (e) {
+        var tag = document.activeElement && document.activeElement.tagName;
+        if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+        if (e.key === 'l' || e.key === 'L') {
+          active = !active;
+          update();
+          spotlight.classList.toggle('kb-spotlight--on', active);
+        }
+      });
+    })();
+
+    // Service Worker registration
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('/sw.js');
+      });
+    }
+
+    // Keyboard shortcut overlay — press ?
+    (function () {
+      var shortcuts = [
+        ['/', 'Focus search'],
+        ['S', 'Focus search'],
+        ['F', 'Find on page'],
+        ['L', 'Toggle spotlight'],
+        ['?', 'Show shortcuts'],
+        ['Esc', 'Close / dismiss'],
+        ['↑ ↑ ↓ ↓ ← → ← → B A', '🎉'],
+      ];
+      var overlay = null;
+      function show() {
+        if (overlay) return;
+        overlay = document.createElement('div');
+        overlay.className = 'kb-shortcuts-overlay';
+        var box = document.createElement('div');
+        box.className = 'kb-shortcuts-box';
+        var title = document.createElement('h3');
+        title.textContent = 'Keyboard shortcuts';
+        box.appendChild(title);
+        var tbl = document.createElement('table');
+        shortcuts.forEach(function (s) {
+          var tr = document.createElement('tr');
+          var td1 = document.createElement('td');
+          td1.textContent = s[1];
+          var td2 = document.createElement('td');
+          s[0].split(' ').forEach(function (k) {
+            var kbd = document.createElement('kbd');
+            kbd.textContent = k;
+            td2.appendChild(kbd);
+            td2.appendChild(document.createTextNode(' '));
+          });
+          tr.appendChild(td1);
+          tr.appendChild(td2);
+          tbl.appendChild(tr);
+        });
+        box.appendChild(tbl);
+        overlay.appendChild(box);
+        overlay.addEventListener('click', function (e) { if (e.target === overlay) hide(); });
+        document.body.appendChild(overlay);
+      }
+      function hide() { if (overlay) { overlay.remove(); overlay = null; } }
+      document.addEventListener('keydown', function (e) {
+        var tag = document.activeElement && document.activeElement.tagName;
+        if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+        if (e.key === '?') { overlay ? hide() : show(); }
+        if (e.key === 'Escape') hide();
+      });
+    })();
+  </script>
+
+  </body>
+</html>

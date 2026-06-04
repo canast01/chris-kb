@@ -3383,6 +3383,61 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#run-this-routine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run This Routine
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#state-file-health" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        State File Health
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#provider-drift" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Provider Drift
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#workspace-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workspace Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backend-connectivity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backend Connectivity
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#drift-detection-flow" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3629,6 +3684,221 @@
 Health Checks reference covering Drift Detection Flow, Daily Checks.
 </div>
 
+<h2 id="run-this-routine">Run This Routine<a class="headerlink" href="#run-this-routine" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># 1. Terraform version</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>terraform<span class="w"> </span>version
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># 2. Provider versions</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>terraform<span class="w"> </span>providers
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># 3. State file integrity — verify count matches expected resources</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>terraform<span class="w"> </span>state<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="c1"># 4. Plan drift check — exit 0 = no changes, exit 2 = changes detected</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>terraform<span class="w"> </span>plan<span class="w"> </span>-detailed-exitcode<span class="p">;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Exit: </span><span class="nv">$?</span><span class="s2">&quot;</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="c1"># 5. Workspace list</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>terraform<span class="w"> </span>workspace<span class="w"> </span>list
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="c1"># 6. Backend connectivity — should succeed without errors</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>terraform<span class="w"> </span>init<span class="w"> </span>-backend<span class="o">=</span><span class="nb">true</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c1"># 7. Validate configuration</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>terraform<span class="w"> </span>validate
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="c1"># 8. State lock check — inspect backend for stale locks; this is informational</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>terraform<span class="w"> </span>force-unlock<span class="w"> </span>--help
+</code></pre></div>
+<blockquote>
+<p><strong>Steady state:</strong> <code>terraform plan -detailed-exitcode</code> must return exit code 0. Exit code 2 indicates configuration drift and requires investigation before the next change window.</p>
+</blockquote>
+<hr />
+<h2 id="state-file-health">State File Health<a class="headerlink" href="#state-file-health" title="Permanent link">&para;</a></h2>
+<p>The state file is the source of truth for all managed resources. A corrupted or inconsistent state file can cause destructive changes.</p>
+<p><strong>Check resource count</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>terraform<span class="w"> </span>state<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l
+</code></pre></div>
+<p>Compare the output against the expected resource count tracked in your runbook. A sudden drop or spike indicates a state manipulation issue.</p>
+<p><strong>Inspect a specific resource</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>terraform<span class="w"> </span>state<span class="w"> </span>show<span class="w"> </span>&lt;resource_address&gt;
+</code></pre></div>
+<p><strong>Remove a stale resource from state (non-destructive)</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>terraform<span class="w"> </span>state<span class="w"> </span>rm<span class="w"> </span>&lt;resource_address&gt;
+</code></pre></div>
+<p>Use only when a resource has been manually deleted outside Terraform and the state entry is orphaned.</p>
+<p><strong>Pull remote state to inspect locally</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>terraform<span class="w"> </span>state<span class="w"> </span>pull<span class="w"> </span>&gt;<span class="w"> </span>state-snapshot.json
+</code></pre></div>
+<p>Review <code>state-snapshot.json</code> for unexpected <code>null</code> values, duplicate serial numbers, or missing resource blocks.</p>
+<p><strong>Key health indicators</strong></p>
+<table>
+<thead>
+<tr>
+<th>Indicator</th>
+<th>Healthy</th>
+<th>Action Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Resource count</td>
+<td>Matches expected</td>
+<td>Investigate additions or removals</td>
+</tr>
+<tr>
+<td>Serial number</td>
+<td>Incrementing</td>
+<td>Reset or re-init if repeated</td>
+</tr>
+<tr>
+<td>Lock file present</td>
+<td>None (steady state)</td>
+<td>Force-unlock if stale</td>
+</tr>
+<tr>
+<td>State file age</td>
+<td>Updated on last apply</td>
+<td>Re-run plan to verify</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="provider-drift">Provider Drift<a class="headerlink" href="#provider-drift" title="Permanent link">&para;</a></h2>
+<p>Provider version drift occurs when local <code>.terraform.lock.hcl</code> entries diverge from what is declared in <code>required_providers</code>, or when a provider registry releases a new version that was not pinned.</p>
+<p><strong>Check configured providers and their sources</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>terraform<span class="w"> </span>providers
+</code></pre></div>
+<p><strong>Review lock file constraints</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>cat<span class="w"> </span>.terraform.lock.hcl
+</code></pre></div>
+<p>Confirm that the <code>version</code> and <code>constraints</code> fields in the lock file match the versions declared in <code>versions.tf</code> or the root module.</p>
+<p><strong>Re-initialise and upgrade providers (controlled)</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>terraform<span class="w"> </span>init<span class="w"> </span>-upgrade
+</code></pre></div>
+<p>Run this only during a planned maintenance window. After upgrading, run <code>terraform plan</code> to verify no unintended resource changes are introduced by the new provider version.</p>
+<p><strong>Key health indicators</strong></p>
+<table>
+<thead>
+<tr>
+<th>Indicator</th>
+<th>Healthy</th>
+<th>Action Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lock file present</td>
+<td>Yes, committed to VCS</td>
+<td>Re-init and commit</td>
+</tr>
+<tr>
+<td>Provider version pinned</td>
+<td><code>~&gt;</code> or exact version</td>
+<td>Add version constraint</td>
+</tr>
+<tr>
+<td>Plan after provider upgrade</td>
+<td>No changes</td>
+<td>Review provider changelog</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="workspace-management">Workspace Management<a class="headerlink" href="#workspace-management" title="Permanent link">&para;</a></h2>
+<p>Workspaces isolate state between environments (e.g., <code>dev</code>, <code>staging</code>, <code>prod</code>). Confirm that the correct workspace is active before any operation.</p>
+<p><strong>List all workspaces</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>terraform<span class="w"> </span>workspace<span class="w"> </span>list
+</code></pre></div>
+<p>The active workspace is marked with <code>*</code>.</p>
+<p><strong>Show current workspace</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>terraform<span class="w"> </span>workspace<span class="w"> </span>show
+</code></pre></div>
+<p><strong>Switch workspace</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>terraform<span class="w"> </span>workspace<span class="w"> </span><span class="k">select</span><span class="w"> </span>&lt;workspace_name&gt;
+</code></pre></div>
+<p><strong>Confirm state is scoped to the correct workspace</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>terraform<span class="w"> </span>state<span class="w"> </span>list
+</code></pre></div>
+<p>Run this immediately after switching workspaces to verify the resource list matches the expected environment.</p>
+<p><strong>Key health indicators</strong></p>
+<table>
+<thead>
+<tr>
+<th>Indicator</th>
+<th>Healthy</th>
+<th>Action Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Active workspace</td>
+<td>Matches target environment</td>
+<td>Switch before running plan/apply</td>
+</tr>
+<tr>
+<td>State per workspace</td>
+<td>Separate, non-overlapping</td>
+<td>Audit if resources appear in wrong workspace</td>
+</tr>
+<tr>
+<td>Workspace naming</td>
+<td>Consistent convention</td>
+<td>Rename or document deviations</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="backend-connectivity">Backend Connectivity<a class="headerlink" href="#backend-connectivity" title="Permanent link">&para;</a></h2>
+<p>The remote backend (S3, Terraform Cloud, Azure Blob, GCS, etc.) must be reachable and properly authenticated for state reads, writes, and locking.</p>
+<p><strong>Test backend connectivity</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>terraform<span class="w"> </span>init<span class="w"> </span>-backend<span class="o">=</span><span class="nb">true</span>
+</code></pre></div>
+<p>A clean init with no errors confirms backend credentials and network access are valid.</p>
+<p><strong>Check backend configuration</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>cat<span class="w"> </span>backend.tf
+</code></pre></div>
+<p>Verify that the bucket/container name, region, and key path are correct for the current environment.</p>
+<p><strong>Validate credentials (AWS example)</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>aws<span class="w"> </span>sts<span class="w"> </span>get-caller-identity
+</code></pre></div>
+<p>Replace with the equivalent CLI check for your cloud provider (e.g., <code>az account show</code> for Azure, <code>gcloud auth list</code> for GCP).</p>
+<p><strong>Force-unlock a stale lock (use with caution)</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>terraform<span class="w"> </span>force-unlock<span class="w"> </span>&lt;lock-id&gt;
+</code></pre></div>
+<p>Obtain the lock ID from the backend error message or by inspecting the lock object directly in the backend store. Only unlock if you have confirmed no active <code>apply</code> is running.</p>
+<p><strong>Key health indicators</strong></p>
+<table>
+<thead>
+<tr>
+<th>Indicator</th>
+<th>Healthy</th>
+<th>Action Required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>terraform init</code> exit code</td>
+<td>0</td>
+<td>Check credentials and network</td>
+</tr>
+<tr>
+<td>Backend lock file</td>
+<td>Absent (steady state)</td>
+<td>Investigate running operations</td>
+</tr>
+<tr>
+<td>Credential expiry</td>
+<td>Valid</td>
+<td>Rotate or renew before expiry</td>
+</tr>
+<tr>
+<td>Backend region/endpoint</td>
+<td>Correct for environment</td>
+<td>Update <code>backend.tf</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
 <h2 id="drift-detection-flow">Drift Detection Flow<a class="headerlink" href="#drift-detection-flow" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>flowchart TD
     schedule["Scheduled Trigger\n(cron / CI weekday 08:00)"]
@@ -3650,93 +3920,93 @@ Health Checks reference covering Drift Detection Flow, Daily Checks.
     checkExit --&gt;|2| driftFound
     driftFound --&gt; parsePlan
     parsePlan --&gt; alertOps
-    alertOps --&gt; remediate
-```text
-┌────────────────────────────────────── Terraform — Health Checks ──────────────────────────────────────┐
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │ Terraform health checks: state drift, stale lock, provider version currency, CI pipeline pass │   │
-│   │   Drift detection: terraform plan on schedule; alert if non-empty plan in stable environment  │   │
-│   │       Stale lock: terraform force-unlock &lt;lock-id&gt; after confirming no apply is running       │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                 State Health                 │  │               Pipeline Health               │   │
-│   │        terraform plan (expect empty)         │  │         fmt -check: no format drift         │   │
-│   │       Check for stale lock in DynamoDB       │  │          validate: no config errors         │   │
-│   │            S3 versioning enabled             │  │            tflint: zero warnings            │   │
-│   │        terraform version (up to date)        │  │            checkov: zero failures           │   │
-│   │       Provider plugin version currency       │  │          Plan approved before apply         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │   Drift          = when actual infra state diverges from Terraform state; plan shows changes  │   │
-│   │   force-unlock   = removes DynamoDB lock entry; only run if certain no apply is in progress   │   │
-│   │    Scheduled plan = run terraform plan -detailed-exitcode in CI; exit 2 = changes detected    │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</code></pre>
+    alertOps --&gt; remediate</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>┌────────────────────────────────────── Terraform — Health Checks ──────────────────────────────────────┐
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>│   │ Terraform health checks: state drift, stale lock, provider version currency, CI pipeline pass │   │
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>│   │   Drift detection: terraform plan on schedule; alert if non-empty plan in stable environment  │   │
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>│   │       Stale lock: terraform force-unlock &lt;lock-id&gt; after confirming no apply is running       │   │
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>│                                                                                                       │
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>│   │                 State Health                 │  │               Pipeline Health               │   │
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>│   │        terraform plan (expect empty)         │  │         fmt -check: no format drift         │   │
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>│   │       Check for stale lock in DynamoDB       │  │          validate: no config errors         │   │
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>│   │            S3 versioning enabled             │  │            tflint: zero warnings            │   │
+<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a>│   │        terraform version (up to date)        │  │            checkov: zero failures           │   │
+<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>│   │       Provider plugin version currency       │  │          Plan approved before apply         │   │
+<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a>│                                                                                                       │
+<a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-16-18" name="__codelineno-16-18" href="#__codelineno-16-18"></a>│   │   Drift          = when actual infra state diverges from Terraform state; plan shows changes  │   │
+<a id="__codelineno-16-19" name="__codelineno-16-19" href="#__codelineno-16-19"></a>│   │   force-unlock   = removes DynamoDB lock entry; only run if certain no apply is in progress   │   │
+<a id="__codelineno-16-20" name="__codelineno-16-20" href="#__codelineno-16-20"></a>│   │    Scheduled plan = run terraform plan -detailed-exitcode in CI; exit 2 = changes detected    │   │
+<a id="__codelineno-16-21" name="__codelineno-16-21" href="#__codelineno-16-21"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-16-22" name="__codelineno-16-22" href="#__codelineno-16-22"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 <h3 id="terraform-import">terraform import<a class="headerlink" href="#terraform-import" title="Permanent link">&para;</a></h3>
 <p>Import real resources into state that were created outside Terraform.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Import an existing AWS EC2 instance</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>terraform<span class="w"> </span>import<span class="w"> </span>aws_instance.web01<span class="w"> </span>i-0abcd1234efgh5678
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Import with a module path</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>terraform<span class="w"> </span>import<span class="w"> </span>module.network.aws_vpc.main<span class="w"> </span>vpc-0a1b2c3d4e5f
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c1"># Import an Azure resource</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>terraform<span class="w"> </span>import<span class="w"> </span>azurerm_resource_group.rg<span class="w"> </span>/subscriptions/SUB_ID/resourceGroups/my-rg
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Import an existing AWS EC2 instance</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>terraform<span class="w"> </span>import<span class="w"> </span>aws_instance.web01<span class="w"> </span>i-0abcd1234efgh5678
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c1"># Import with a module path</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>terraform<span class="w"> </span>import<span class="w"> </span>module.network.aws_vpc.main<span class="w"> </span>vpc-0a1b2c3d4e5f
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="c1"># Import an Azure resource</span>
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>terraform<span class="w"> </span>import<span class="w"> </span>azurerm_resource_group.rg<span class="w"> </span>/subscriptions/SUB_ID/resourceGroups/my-rg
 </code></pre></div>
 <p>After import, add the matching resource block to your <code>.tf</code> files, then run <code>terraform plan</code> to verify state matches configuration.</p>
 <h3 id="moved-blocks">moved Blocks<a class="headerlink" href="#moved-blocks" title="Permanent link">&para;</a></h3>
 <p>The <code>moved</code> block updates state when you rename or move resources without recreating them.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># terraform/moved.tf</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">moved</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="na">from</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_instance.old_name</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="na">to</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_instance.new_name</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="p">}</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="nb">moved</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span><span class="na">from</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_security_group.sg</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span><span class="na">to</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="nv">module.network.aws_security_group.sg</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># terraform/moved.tf</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="nb">moved</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="w">  </span><span class="na">from</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_instance.old_name</span>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="w">  </span><span class="na">to</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_instance.new_name</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="p">}</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="nb">moved</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a><span class="w">  </span><span class="na">from</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nv">aws_security_group.sg</span>
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a><span class="w">  </span><span class="na">to</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="nv">module.network.aws_security_group.sg</span>
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a><span class="p">}</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Verify no unintended changes after adding moved blocks</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>terraform<span class="w"> </span>plan
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Should show: &quot;0 to add, 0 to change, 0 to destroy&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Verify no unintended changes after adding moved blocks</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>terraform<span class="w"> </span>plan
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="c1"># Should show: &quot;0 to add, 0 to change, 0 to destroy&quot;</span>
 </code></pre></div>
 <h3 id="scheduled-drift-detection">Scheduled Drift Detection<a class="headerlink" href="#scheduled-drift-detection" title="Permanent link">&para;</a></h3>
 <p>Run drift checks on a schedule in CI/CD to get early warnings.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># .github/workflows/drift-check.yml</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Terraform Drift Check</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="nt">on</span><span class="p">:</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span><span class="nt">schedule</span><span class="p">:</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">cron</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;0</span><span class="nv"> </span><span class="s">8</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">1-5&#39;</span><span class="w">   </span><span class="c1"># weekdays at 08:00 UTC</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span><span class="nt">workflow_dispatch</span><span class="p">:</span>
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
-<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="nt">jobs</span><span class="p">:</span>
-<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span><span class="nt">drift</span><span class="p">:</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-24.04</span>
-<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
-<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v4</span>
-<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hashicorp/setup-terraform@v3</span>
-<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
-<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Terraform Init</span>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">terraform init</span>
-<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="w">        </span><span class="nt">working-directory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">infra/</span>
-<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>
-<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Check for Drift</span>
-<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="w">        </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plan</span>
-<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">terraform plan -detailed-exitcode -refresh=true -no-color</span>
-<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="w">        </span><span class="nt">working-directory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">infra/</span>
-<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="w">        </span><span class="nt">continue-on-error</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>
-<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Notify on Drift</span>
-<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a><span class="w">        </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">steps.plan.outputs.exitcode == &#39;2&#39;</span>
-<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a><span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a><span class="w">          </span><span class="no">echo &quot;DRIFT DETECTED — manual review required&quot;</span>
-<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a><span class="w">          </span><span class="no"># Add Slack/Teams notification here</span>
-<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a><span class="w">        </span><span class="nt">env</span><span class="p">:</span>
-<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a><span class="w">          </span><span class="nt">exitcode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ steps.plan.outputs.exitcode }}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># .github/workflows/drift-check.yml</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Terraform Drift Check</span>
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="nt">on</span><span class="p">:</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="w">  </span><span class="nt">schedule</span><span class="p">:</span>
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">cron</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;0</span><span class="nv"> </span><span class="s">8</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">1-5&#39;</span><span class="w">   </span><span class="c1"># weekdays at 08:00 UTC</span>
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="w">  </span><span class="nt">workflow_dispatch</span><span class="p">:</span>
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a><span class="nt">jobs</span><span class="p">:</span>
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a><span class="w">  </span><span class="nt">drift</span><span class="p">:</span>
+<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a><span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-24.04</span>
+<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a><span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v4</span>
+<a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hashicorp/setup-terraform@v3</span>
+<a id="__codelineno-20-15" name="__codelineno-20-15" href="#__codelineno-20-15"></a>
+<a id="__codelineno-20-16" name="__codelineno-20-16" href="#__codelineno-20-16"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Terraform Init</span>
+<a id="__codelineno-20-17" name="__codelineno-20-17" href="#__codelineno-20-17"></a><span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">terraform init</span>
+<a id="__codelineno-20-18" name="__codelineno-20-18" href="#__codelineno-20-18"></a><span class="w">        </span><span class="nt">working-directory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">infra/</span>
+<a id="__codelineno-20-19" name="__codelineno-20-19" href="#__codelineno-20-19"></a>
+<a id="__codelineno-20-20" name="__codelineno-20-20" href="#__codelineno-20-20"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Check for Drift</span>
+<a id="__codelineno-20-21" name="__codelineno-20-21" href="#__codelineno-20-21"></a><span class="w">        </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">plan</span>
+<a id="__codelineno-20-22" name="__codelineno-20-22" href="#__codelineno-20-22"></a><span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">terraform plan -detailed-exitcode -refresh=true -no-color</span>
+<a id="__codelineno-20-23" name="__codelineno-20-23" href="#__codelineno-20-23"></a><span class="w">        </span><span class="nt">working-directory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">infra/</span>
+<a id="__codelineno-20-24" name="__codelineno-20-24" href="#__codelineno-20-24"></a><span class="w">        </span><span class="nt">continue-on-error</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<a id="__codelineno-20-25" name="__codelineno-20-25" href="#__codelineno-20-25"></a>
+<a id="__codelineno-20-26" name="__codelineno-20-26" href="#__codelineno-20-26"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Notify on Drift</span>
+<a id="__codelineno-20-27" name="__codelineno-20-27" href="#__codelineno-20-27"></a><span class="w">        </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">steps.plan.outputs.exitcode == &#39;2&#39;</span>
+<a id="__codelineno-20-28" name="__codelineno-20-28" href="#__codelineno-20-28"></a><span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<a id="__codelineno-20-29" name="__codelineno-20-29" href="#__codelineno-20-29"></a><span class="w">          </span><span class="no">echo &quot;DRIFT DETECTED — manual review required&quot;</span>
+<a id="__codelineno-20-30" name="__codelineno-20-30" href="#__codelineno-20-30"></a><span class="w">          </span><span class="no"># Add Slack/Teams notification here</span>
+<a id="__codelineno-20-31" name="__codelineno-20-31" href="#__codelineno-20-31"></a><span class="w">        </span><span class="nt">env</span><span class="p">:</span>
+<a id="__codelineno-20-32" name="__codelineno-20-32" href="#__codelineno-20-32"></a><span class="w">          </span><span class="nt">exitcode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ steps.plan.outputs.exitcode }}</span>
 </code></pre></div>
 <h3 id="drift-causes-and-remediation">Drift Causes and Remediation<a class="headerlink" href="#drift-causes-and-remediation" title="Permanent link">&para;</a></h3>
 <table>

@@ -3470,6 +3470,105 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#add-a-new-switch-to-an-existing-fabric" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Add a New Switch to an Existing Fabric
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#create-a-zone-and-zone-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create a Zone and Zone Configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#add-a-member-to-an-existing-zone" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Add a Member to an Existing Zone
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#remove-a-zone-member" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Remove a Zone Member
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#replace-a-failed-sfp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replace a Failed SFP
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#replace-a-failed-switch-fabric-resilience" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Replace a Failed Switch (Fabric Resilience)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#collect-support-bundle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Collect Support Bundle
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitor-port-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitor Port Errors
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#back-up-switch-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Back Up Switch Configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -3839,6 +3938,75 @@
 </tr>
 </tbody>
 </table>
+<h2 id="add-a-new-switch-to-an-existing-fabric">Add a New Switch to an Existing Fabric<a class="headerlink" href="#add-a-new-switch-to-an-existing-fabric" title="Permanent link">&para;</a></h2>
+<p>Connect ISL cables → <code>switchDisable</code> on new switch → configure domain ID (must be unique in fabric) → set fabric parameters to match existing → <code>switchEnable</code> → verify <code>fabricshow</code> shows new switch.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Disable new switch before connecting to fabric</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>switchDisable
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Set domain ID (must be unique across the fabric)</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>configure
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Answer domain ID prompt with a unique value</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># Re-enable switch</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>switchEnable
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># Verify new switch appears in fabric</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>fabricshow
+</code></pre></div>
+<h2 id="create-a-zone-and-zone-configuration">Create a Zone and Zone Configuration<a class="headerlink" href="#create-a-zone-and-zone-configuration" title="Permanent link">&para;</a></h2>
+<p><code>zonecreate "zone_host01_array01", "10:00:00:00:00:00:00:01; 50:00:00:00:00:00:00:02"</code> → <code>cfgadd "cfg_prod", "zone_host01_array01"</code> → <code>cfgsave</code> → <code>cfgenable "cfg_prod"</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>zonecreate<span class="w"> </span><span class="s2">&quot;zone_host01_array01&quot;</span>,<span class="w"> </span><span class="s2">&quot;10:00:00:00:00:00:00:01; 50:00:00:00:00:00:00:02&quot;</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>cfgadd<span class="w"> </span><span class="s2">&quot;cfg_prod&quot;</span>,<span class="w"> </span><span class="s2">&quot;zone_host01_array01&quot;</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>cfgsave
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>cfgenable<span class="w"> </span><span class="s2">&quot;cfg_prod&quot;</span>
+</code></pre></div>
+<h2 id="add-a-member-to-an-existing-zone">Add a Member to an Existing Zone<a class="headerlink" href="#add-a-member-to-an-existing-zone" title="Permanent link">&para;</a></h2>
+<p><code>zoneadd "zone_host01_array01", "10:00:00:00:00:00:00:03"</code> → <code>cfgsave</code> → <code>cfgenable "cfg_prod"</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>zoneadd<span class="w"> </span><span class="s2">&quot;zone_host01_array01&quot;</span>,<span class="w"> </span><span class="s2">&quot;10:00:00:00:00:00:00:03&quot;</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>cfgsave
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>cfgenable<span class="w"> </span><span class="s2">&quot;cfg_prod&quot;</span>
+</code></pre></div>
+<h2 id="remove-a-zone-member">Remove a Zone Member<a class="headerlink" href="#remove-a-zone-member" title="Permanent link">&para;</a></h2>
+<p><code>zoneremove "zone_host01_array01", "10:00:00:00:00:00:00:03"</code> → <code>cfgsave</code> → <code>cfgenable</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>zoneremove<span class="w"> </span><span class="s2">&quot;zone_host01_array01&quot;</span>,<span class="w"> </span><span class="s2">&quot;10:00:00:00:00:00:00:03&quot;</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>cfgsave
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>cfgenable<span class="w"> </span><span class="s2">&quot;cfg_prod&quot;</span>
+</code></pre></div>
+<h2 id="replace-a-failed-sfp">Replace a Failed SFP<a class="headerlink" href="#replace-a-failed-sfp" title="Permanent link">&para;</a></h2>
+<p>Identify failed port with <code>portshow &lt;port&gt;</code> → hot-replace SFP (no switch reboot needed) → verify with <code>sfpshow &lt;port&gt;</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Identify the failed port</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>portshow<span class="w"> </span>&lt;port&gt;
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Hot-replace SFP (no reboot needed)</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="c1"># -- Physical replacement --</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Verify new SFP</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>sfpshow<span class="w"> </span>&lt;port&gt;
+</code></pre></div>
+<h2 id="replace-a-failed-switch-fabric-resilience">Replace a Failed Switch (Fabric Resilience)<a class="headerlink" href="#replace-a-failed-switch-fabric-resilience" title="Permanent link">&para;</a></h2>
+<p>ISL failover to redundant paths → install replacement switch → restore domain ID and port config from backup → reconnect ISLs → verify fabric.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Verify redundant paths are carrying traffic before replacing</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>fabricshow
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>portshow
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># After replacement: restore config from backup</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>configdownload<span class="w"> </span>-all<span class="w"> </span>-P<span class="w"> </span>ftp<span class="w"> </span>-h<span class="w"> </span>&lt;server&gt;<span class="w"> </span>-u<span class="w"> </span>&lt;user&gt;<span class="w"> </span>-f<span class="w"> </span>&lt;filename&gt;
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="c1"># Verify fabric topology is restored</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>fabricshow
+</code></pre></div>
+<h2 id="collect-support-bundle">Collect Support Bundle<a class="headerlink" href="#collect-support-bundle" title="Permanent link">&para;</a></h2>
+<p><code>supportsave</code> → saves fabric and switch state to USB or remote FTP — use for TAC cases.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>supportsave
+</code></pre></div>
+<h2 id="monitor-port-errors">Monitor Port Errors<a class="headerlink" href="#monitor-port-errors" title="Permanent link">&para;</a></h2>
+<p><code>porterrshow</code> — shows CRC errors, LR in/out, link failures per port; investigate any port with non-zero CRC.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>porterrshow
+</code></pre></div>
+<h2 id="back-up-switch-configuration">Back Up Switch Configuration<a class="headerlink" href="#back-up-switch-configuration" title="Permanent link">&para;</a></h2>
+<p><code>configupload -all -P ftp -h &lt;server&gt; -u &lt;user&gt; -f &lt;filename&gt;</code> — saves running configuration for DR.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>configupload<span class="w"> </span>-all<span class="w"> </span>-P<span class="w"> </span>ftp<span class="w"> </span>-h<span class="w"> </span>&lt;server&gt;<span class="w"> </span>-u<span class="w"> </span>&lt;user&gt;<span class="w"> </span>-f<span class="w"> </span>&lt;filename&gt;
+</code></pre></div>
 
 
 
