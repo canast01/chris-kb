@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -693,6 +695,8 @@
       
         
           
+        
+      
         
       
         
@@ -1131,6 +1135,78 @@
     
       
         
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../concepts/cluster-services/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
           
         
       
@@ -1227,7 +1303,7 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1_4_8" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1_4_9" checked>
         
           
           <div class="md-nav__link md-nav__container">
@@ -1249,14 +1325,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_2_1_4_8" id="__nav_2_1_4_8_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_2_1_4_9" id="__nav_2_1_4_9_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_1_4_8_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_2_1_4_8">
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_1_4_9_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_1_4_9">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1302,7 +1378,7 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1_4_8_2" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1_4_9_2" checked>
         
           
           <div class="md-nav__link md-nav__container">
@@ -1324,14 +1400,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_2_1_4_8_2" id="__nav_2_1_4_8_2_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_2_1_4_9_2" id="__nav_2_1_4_9_2_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="5" aria-labelledby="__nav_2_1_4_8_2_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_2_1_4_8_2">
+        <nav class="md-nav" data-md-level="5" aria-labelledby="__nav_2_1_4_9_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_1_4_9_2">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1429,7 +1505,7 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1_4_8_2_3" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1_4_9_2_3" checked>
         
           
           <div class="md-nav__link md-nav__container">
@@ -1452,8 +1528,8 @@
             
           </div>
         
-        <nav class="md-nav" data-md-level="6" aria-labelledby="__nav_2_1_4_8_2_3_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_2_1_4_8_2_3">
+        <nav class="md-nav" data-md-level="6" aria-labelledby="__nav_2_1_4_9_2_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_1_4_9_2_3">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -4802,6 +4878,32 @@ How It Works reference covering Component Overview, Connection Flow, Blast Extre
 <a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>8. UAG proxies display protocol traffic → Horizon Agent in VM
 <a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>   (UAG acts as a Blast/PCoIP proxy — client never directly reaches internal VM)
 </code></pre></div>
+<pre class="mermaid"><code>flowchart LR
+    EP["Endpoint Client\n(external)"]:::blue
+    UAG["UAG\n(DMZ · port 443/8443)"]:::purple
+    CS["Connection Server\n(internal · port 443)"]:::amber
+    AD["Active Directory\n(auth)"]:::navy
+    AVM["App Volumes Manager\n(AppStack attach)"]:::navy
+    VC["vCenter\n(VM inventory)"]:::navy
+    ESX["ESXi Host"]:::green
+    DVM["Desktop VM\n(Horizon Agent)"]:::green
+
+    EP --&gt;|"HTTPS (443)"| UAG
+    UAG --&gt;|"auth + entitlement check"| CS
+    CS --&gt;|"LDAP bind"| AD
+    CS --&gt;|"session ticket"| UAG
+    UAG --&gt;|"Blast/PCoIP tunnel (8443)"| EP
+    CS --&gt;|"vmFork / power-on"| VC
+    VC --&gt;|"schedule VM"| ESX
+    ESX --&gt;|"runs"| DVM
+    UAG --&gt;|"proxy display protocol"| DVM
+    DVM --&gt;|"AppStack attach at login"| AVM
+
+    classDef blue fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef amber fill:#b45309,stroke:#92400e,color:#fff
+    classDef green fill:#15803d,stroke:#166534,color:#fff
+    classDef purple fill:#7c3aed,stroke:#6d28d9,color:#fff
+    classDef navy fill:#1e3a5f,stroke:#162d4a,color:#fff</code></pre>
 <p><strong>Ports summary:</strong></p>
 <table>
 <thead>

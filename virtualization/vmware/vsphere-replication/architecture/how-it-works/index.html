@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -693,6 +695,8 @@
       
         
           
+        
+      
         
       
         
@@ -1113,6 +1117,78 @@
         <span class="md-nav__icon md-icon"></span>
       
     </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../concepts/cluster-services/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
   
 
       
@@ -1791,7 +1867,7 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1_4_16" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1_4_17" checked>
         
           
           <div class="md-nav__link md-nav__container">
@@ -1813,14 +1889,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_2_1_4_16" id="__nav_2_1_4_16_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_2_1_4_17" id="__nav_2_1_4_17_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_1_4_16_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_2_1_4_16">
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_1_4_17_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_1_4_17">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1866,7 +1942,7 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1_4_16_2" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1_4_17_2" checked>
         
           
           <div class="md-nav__link md-nav__container">
@@ -1888,14 +1964,14 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_2_1_4_16_2" id="__nav_2_1_4_16_2_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_2_1_4_17_2" id="__nav_2_1_4_17_2_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="5" aria-labelledby="__nav_2_1_4_16_2_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_2_1_4_16_2">
+        <nav class="md-nav" data-md-level="5" aria-labelledby="__nav_2_1_4_17_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_1_4_17_2">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1993,7 +2069,7 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1_4_16_2_3" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1_4_17_2_3" checked>
         
           
           <div class="md-nav__link md-nav__container">
@@ -2016,8 +2092,8 @@
             
           </div>
         
-        <nav class="md-nav" data-md-level="6" aria-labelledby="__nav_2_1_4_16_2_3_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_2_1_4_16_2_3">
+        <nav class="md-nav" data-md-level="6" aria-labelledby="__nav_2_1_4_17_2_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_1_4_17_2_3">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -4905,6 +4981,37 @@ How It Works reference covering Replication Engine — ESXi Kernel Module, Data 
 </table>
 <hr />
 <h2 id="data-flow">Data Flow<a class="headerlink" href="#data-flow" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph LR
+    subgraph protected["Protected Site"]
+        VM["Source VM"]:::blue
+        HBR["VR kernel module\n(ESXi hbrsvc)"]:::blue
+        SVRA["VRA — vSphere Replication\nAppliance (source)"]:::green
+        SSRM["SRM Server\n(protected)"]:::amber
+    end
+
+    WAN(["WAN / MPLS"]):::purple
+
+    subgraph recovery["Recovery Site"]
+        TVRA["VRA — vSphere Replication\nAppliance (target)"]:::green
+        DS["Target datastore\n(replica VMDKs)"]:::blue
+        PVM["Placeholder VM\n(registered in vCenter)"]:::blue
+        RSRM["SRM Server\n(recovery)"]:::amber
+    end
+
+    VM --&gt;|"write I/Os tracked\nper hbr bitmap"| HBR
+    HBR --&gt;|"policy: RPO interval"| SVRA
+    HBR --&gt;|"changed blocks\n(TCP 31031)"| WAN
+    WAN --&gt;|"changed blocks\n(TCP 31031)"| TVRA
+    SVRA --&gt;|"management (TCP 443)"| WAN
+    WAN --&gt;|"management (TCP 443)"| TVRA
+    TVRA --&gt; DS
+    DS --&gt; PVM
+    SSRM &lt;--&gt;|"management (TCP 443 / 9086)"| RSRM
+
+    classDef blue   fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef green  fill:#15803d,stroke:#166534,color:#fff
+    classDef amber  fill:#b45309,stroke:#92400e,color:#fff
+    classDef purple fill:#7c3aed,stroke:#6d28d9,color:#fff</code></pre>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Source Site                                    Target Site
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>-----------                                    -----------
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>VM VMDK Write

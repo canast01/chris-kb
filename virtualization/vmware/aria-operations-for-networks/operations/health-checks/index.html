@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -693,6 +695,8 @@
       
         
           
+        
+      
         
       
         
@@ -1835,6 +1839,78 @@
         <span class="md-nav__icon md-icon"></span>
       
     </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../concepts/cluster-services/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
   
 
       
@@ -4539,6 +4615,25 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#run-this-routine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run This Routine
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -4743,7 +4838,7 @@
 <a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="s2">    print(f\&quot;{c.get(&#39;nickname&#39;,&#39;&#39;):&lt;25} {c.get(&#39;status&#39;,&#39;&#39;):&lt;15} Last HB: {dt}\&quot;)</span>
 <a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="s2">&quot;</span>
 </code></pre></div>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌───────────────────────────────────────── vRNI Health Checks ──────────────────────────────────────────┐
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌───────────────────────────────────────── vRNI Health Checks ──────────────────────────────────────────┐
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  Data source status, flow freshness, and collector health checks for vRNI.                            │
 <a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│                                                                                                       │
@@ -4787,7 +4882,20 @@
 <a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│                                                                                                       │
 <a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Flows in the last 15 minutes</span>
+<h2 id="run-this-routine">Run This Routine<a class="headerlink" href="#run-this-routine" title="Permanent link">&para;</a></h2>
+<p>Run these 8 checks in order at the start of each shift or after any infrastructure change.</p>
+<ol>
+<li><strong>Platform health</strong> — <code>curl -sk https://&lt;platform-vm&gt;/api/1.0/node/details</code> — check the <code>serviceStatus</code> field; anything other than OK requires investigation</li>
+<li><strong>Collector connectivity</strong> — AON UI → Settings → Collectors → confirm all collectors show Connected; a disconnected collector stops flow ingestion for its segment</li>
+<li><strong>Data source status</strong> — Settings → Data Sources → confirm all sources show green and that each has a recent last-synced timestamp (within 15 minutes)</li>
+<li><strong>IPFIX flow ingestion</strong> — check the main dashboard flow rate; expect a non-zero flows/sec value from NSX; zero flows means IPFIX export has stopped</li>
+<li><strong>Disk usage</strong> — SSH to platform VM → <code>df -h /var/lib/netinsight</code> — alert if usage is above 75%</li>
+<li><strong>Service health on platform</strong> — SSH to platform VM → <code>service vrni-platform status</code> — must show running; restart if stopped</li>
+<li><strong>Application discovery status</strong> — Plan &amp; Assess → Applications → check for any applications in Error state; investigate and re-run discovery if needed</li>
+<li><strong>Alert count</strong> — Alerts → review open anomaly alerts; flag any persistent alerts that have been open for more than 24 hours without investigation</li>
+</ol>
+<hr />
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Flows in the last 15 minutes</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>flows<span class="w"> </span>where<span class="w"> </span><span class="nv">time_range</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;last 15 minutes&quot;</span>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Flows from a specific subnet</span>

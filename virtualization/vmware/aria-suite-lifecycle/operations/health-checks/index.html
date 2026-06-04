@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -693,6 +695,8 @@
       
         
           
+        
+      
         
       
         
@@ -1837,6 +1841,78 @@
             
           </ul>
         </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../concepts/cluster-services/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+  
+
       
     </li>
   
@@ -4546,6 +4622,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#run-this-routine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run This Routine
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#locker-health-checks" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4915,6 +5002,18 @@ Health Checks reference covering Cluster Node Health via API, Locker Health Chec
 <a id="__codelineno-2-42" name="__codelineno-2-42" href="#__codelineno-2-42"></a>│                                                                                                       │
 <a id="__codelineno-2-43" name="__codelineno-2-43" href="#__codelineno-2-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
+<h2 id="run-this-routine">Run This Routine<a class="headerlink" href="#run-this-routine" title="Permanent link">&para;</a></h2>
+<p>Run these 8 checks in order at the start of each shift or before any planned change.</p>
+<ol>
+<li><strong>LCM service health</strong> — <code>curl -sk https://&lt;lcm-appliance&gt;:8080/lcm/health</code> — expect <code>{"status":"UP"}</code></li>
+<li><strong>Disk usage</strong> — SSH to LCM appliance and run <code>df -h /</code> — flag if root partition is above 75%</li>
+<li><strong>Certificate expiry</strong> — LCM UI → Settings → Certificates → review all expiry dates; renew anything within 30 days</li>
+<li><strong>Product environment health</strong> — LCM → Environments → confirm every product card shows "Healthy"</li>
+<li><strong>Pending requests</strong> — LCM → Requests → check for any operations in RUNNING or FAILED state longer than 30 minutes</li>
+<li><strong>vRSLCM service status</strong> — SSH to appliance → <code>systemctl status vrlcm.service</code> — must be active (running)</li>
+<li><strong>NTP sync</strong> — SSH to appliance → <code>timedatectl status</code> — confirm system clock is synchronised</li>
+<li><strong>Available product binaries in Locker</strong> — LCM → Locker → verify expected product versions are present before any upgrade</li>
+</ol>
 <hr />
 <h2 id="locker-health-checks">Locker Health Checks<a class="headerlink" href="#locker-health-checks" title="Permanent link">&para;</a></h2>
 <p>The Locker stores certificates, passwords, and licences. Run these checks weekly and before any upgrade.</p>

@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -693,6 +695,8 @@
       
         
           
+        
+      
         
       
         
@@ -1661,6 +1665,78 @@
         <span class="md-nav__icon md-icon"></span>
       
     </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../concepts/cluster-services/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
   
 
       
@@ -4741,6 +4817,60 @@ How It Works reference covering Overview, Cluster Topology, Node Roles, Sizing, 
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>Aria Operations (formerly vRealize Operations) is an analytics cluster that collects metrics, events, and properties from vSphere, NSX, storage, and cloud endpoints. Adapters (solutions/management packs) feed data into the cluster. Remote collectors extend monitoring reach into remote sites or DMZs without requiring firewall holes back to the primary cluster.</p>
 <h2 id="cluster-topology">Cluster Topology<a class="headerlink" href="#cluster-topology" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph LR
+    subgraph DS["Data Sources"]
+        VC["vCenter Adapter"]
+        NSX["NSX Adapter"]
+        ST["Storage Adapter"]
+        CA["Custom Adapters"]
+    end
+
+    subgraph PRIMARY["Primary Node (Aria Ops Master)"]
+        AE["Analytics Engine"]
+        AL["Alerting Engine"]
+        RE["Recommendation Engine"]
+    end
+
+    subgraph REPLICA["Replica Nodes (HA)"]
+        R1["Replica 1"]
+        R2["Replica 2"]
+    end
+
+    subgraph RC["Remote Collectors"]
+        RC1["Remote Collector — Site A"]
+        RC2["Remote Collector — Site B"]
+    end
+
+    subgraph OUT["Output / Consumers"]
+        UI["Dashboards / UI"]
+        AN["Alert Notifications"]
+        WO["Workload Optimization"]
+        API["API Consumers"]
+    end
+
+    VC --&gt;|"Metric polling"| PRIMARY
+    NSX --&gt;|"Metric polling"| PRIMARY
+    ST --&gt;|"Metric polling"| PRIMARY
+    CA --&gt;|"Metric polling"| PRIMARY
+
+    PRIMARY &lt;--&gt;|"Bidirectional sync"| REPLICA
+    RC1 --&gt;|"Data relay"| PRIMARY
+    RC2 --&gt;|"Data relay"| PRIMARY
+
+    PRIMARY --&gt; UI
+    PRIMARY --&gt; AN
+    PRIMARY --&gt; WO
+    PRIMARY --&gt; API
+
+    classDef blue fill:#2563eb,stroke:#1d4ed8,color:#fff
+    classDef green fill:#15803d,stroke:#166534,color:#fff
+    classDef amber fill:#b45309,stroke:#92400e,color:#fff
+    classDef purple fill:#7c3aed,stroke:#6d28d9,color:#fff
+
+    class VC,NSX,ST,CA blue
+    class AE,AL,RE,R1,R2 green
+    class RC1,RC2 amber
+    class UI,AN,WO,API purple</code></pre>
 <h2 id="node-roles">Node Roles<a class="headerlink" href="#node-roles" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

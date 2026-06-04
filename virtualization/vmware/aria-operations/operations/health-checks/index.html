@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -693,6 +695,8 @@
       
         
           
+        
+      
         
       
         
@@ -1835,6 +1839,78 @@
         <span class="md-nav__icon md-icon"></span>
       
     </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../concepts/cluster-services/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
   
 
       
@@ -4539,6 +4615,25 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#run-this-routine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run This Routine
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -4820,7 +4915,7 @@
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>│  chronyc makestep (force sync if drifted)                                                             │
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>└─────────────────────────────────────────────────────┘
 </code></pre></div></p>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>┌──────────────────────────────────── Aria Operations Health Checks ────────────────────────────────────┐
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>┌──────────────────────────────────── Aria Operations Health Checks ────────────────────────────────────┐
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>│                                                                                                       │
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>│  Node status, adapter health, and collection status checks for Aria Operations (vROps).               │
 <a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>│                                                                                                       │
@@ -4864,7 +4959,20 @@
 <a id="__codelineno-3-42" name="__codelineno-3-42" href="#__codelineno-3-42"></a>│                                                                                                       │
 <a id="__codelineno-3-43" name="__codelineno-3-43" href="#__codelineno-3-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1">## List adapters with verbose collection state</span>
+<h2 id="run-this-routine">Run This Routine<a class="headerlink" href="#run-this-routine" title="Permanent link">&para;</a></h2>
+<p>Run these 8 checks in order at the start of each shift or after any infrastructure change.</p>
+<ol>
+<li><strong>Cluster health</strong> — <code>curl -sk https://&lt;aria-ops&gt;/suite-api/api/deployment/node/status</code> or open the Admin UI → Cluster Management — all nodes must show ONLINE</li>
+<li><strong>Adapter instance connectivity</strong> — Administration → Solutions → check every adapter instance shows green (Collecting); investigate any showing "Not Collecting"</li>
+<li><strong>Alert queue</strong> — Operations → Alerts → review open P1/P2 alerts and confirm each is acknowledged or has an active investigation</li>
+<li><strong>Data retention disk</strong> — Admin UI → Administration → Disk Usage → confirm free space is above 20% on the <code>/storage/db</code> partition</li>
+<li><strong>Collector node connectivity</strong> — Administration → Cluster Management → Remote Collectors — confirm all remote collectors show Connected</li>
+<li><strong>vCenter adapter last collection</strong> — check each adapter Instance → Last Collection timestamp; flag if older than 15 minutes</li>
+<li><strong>License status</strong> — Administration → Licenses → confirm no licenses are expired or approaching expiry within 30 days</li>
+<li><strong>Pending recommendations / reclamation</strong> — Optimize → Reclamation → review pending items and action or defer any that have been open more than 7 days</li>
+</ol>
+<hr />
+<p><div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1">## List adapters with verbose collection state</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>vracli<span class="w"> </span>adapter<span class="w"> </span>list<span class="w"> </span>--verbose
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1">## Check the collector service log for adapter errors</span>

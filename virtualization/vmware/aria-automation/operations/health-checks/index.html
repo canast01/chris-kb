@@ -635,6 +635,8 @@
       
         
       
+        
+      
     
     
     
@@ -693,6 +695,8 @@
       
         
           
+        
+      
         
       
         
@@ -1835,6 +1839,78 @@
         <span class="md-nav__icon md-icon"></span>
       
     </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    
+  
+  
+  
+    <a href="../../../concepts/cluster-services/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
   
 
       
@@ -4568,6 +4644,23 @@
   
 </li>
         
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#run-this-routine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run This Routine
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Run This Routine">
+      <ul class="md-nav__list">
+        
           <li class="md-nav__item">
   <a href="#review-deployment-event-log" class="md-nav__link">
     <span class="md-ellipsis">
@@ -4951,6 +5044,18 @@ Health Checks reference covering Daily Checks, Weekly Checks, Pre-Maintenance Ch
 <a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│                                                                                                       │
 <a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
+<h2 id="run-this-routine">Run This Routine<a class="headerlink" href="#run-this-routine" title="Permanent link">&para;</a></h2>
+<p>Run these 8 checks in order at the start of each shift or before any planned change.</p>
+<ol>
+<li><strong>vRA service health</strong> — <code>curl -sk https://&lt;vra-fqdn&gt;/health</code> — expect HTTP 200 OK; a non-200 response means one or more services are unhealthy</li>
+<li><strong>Pod health</strong> — SSH to appliance → <code>kubectl get pods -n prelude | grep -v Running</code> — any non-Running pod needs investigation</li>
+<li><strong>Cloud account connectivity</strong> — Infrastructure → Cloud Accounts → confirm all accounts show Connected; re-test credentials on any showing errors</li>
+<li><strong>vCenter data collection</strong> — check the last collection timestamp for each cloud account; flag any account where collection has not run in the last 30 minutes</li>
+<li><strong>Catalog item count</strong> — Service Broker → Content → Catalog Items → verify the expected number of items is present and visible to consumers</li>
+<li><strong>Recent failed deployments</strong> — <code>curl -sk -H "Authorization: Bearer $TOKEN" "https://&lt;vra&gt;/deployment/api/deployments?status=CREATE_FAILED"</code> — review and action any failures</li>
+<li><strong>Certificate expiry</strong> — <code>openssl s_client -connect &lt;vra-fqdn&gt;:443 &lt;/dev/null 2&gt;/dev/null | openssl x509 -noout -dates</code> — flag any cert expiring within 30 days</li>
+<li><strong>ABX / FaaS connectivity</strong> — Extensibility → Actions → run a simple test action manually and confirm it completes without error</li>
+</ol>
 <hr />
 <h3 id="review-deployment-event-log">Review Deployment Event Log<a class="headerlink" href="#review-deployment-event-log" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Deployments → All Deployments → filter by &quot;Failed&quot; status

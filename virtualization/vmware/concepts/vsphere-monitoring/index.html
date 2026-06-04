@@ -1,0 +1,5843 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
+      
+      
+      
+      
+        <link rel="prev" href="../vsphere-lifecycle/">
+      
+      
+        <link rel="next" href="../vsphere-networking/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>vSphere Monitoring - Chris KB</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230f172a'/%3E%3Ctext x='16' y='22' font-family='system-ui%2Csans-serif' font-size='13' font-weight='800' fill='%2338bdf8' text-anchor='middle'%3ECA%3C/text%3E%3C/svg%3E">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Chris KB">
+  <meta name="theme-color" content="#0f172a">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+  <meta property="og:site_name" content="Chris KB">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="vSphere Monitoring · Chris KB">
+  <meta property="og:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="vSphere Monitoring · Chris KB">
+  <meta name="twitter:description" content="Christos Anastasiadis — Infrastructure Engineering Knowledge Base">
+
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="slate" data-md-color-accent="light-blue">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#vsphere-monitoring-performance-logs-and-skyline" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../../.." title="Chris KB" class="md-header__button md-logo" aria-label="Chris KB" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Chris KB
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              vSphere Monitoring
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="slate" data-md-color-accent="light-blue"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="slate" data-md-color-accent="light-blue"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Platforms
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../../site-map/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Site Map
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Chris KB" class="md-nav__button md-logo" aria-label="Chris KB" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Chris KB
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Platforms
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Platforms
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Virtualization
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_1" id="__nav_2_1_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_1_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Virtualization
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../operations/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Operations
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../reference/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1_4" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VMware
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2_1_4" id="__nav_2_1_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_1_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_1_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    VMware
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../aria-automation/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Aria Automation
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../aria-operations/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Aria Operations
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../aria-operations-for-logs/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Aria Operations for Logs
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../aria-operations-for-networks/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Aria Operations for Networks
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../aria-suite-lifecycle/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Aria Suite Lifecycle
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1_4_7" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_1_4_7" id="__nav_2_1_4_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="4" aria-labelledby="__nav_2_1_4_7_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_1_4_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Concepts
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../cluster-services/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cluster Services
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../vsphere-lifecycle/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    vSphere Lifecycle
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_1_4_7_3" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="./" class="md-nav__link md-nav__link--active">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    vSphere Monitoring
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="5" aria-labelledby="__nav_2_1_4_7_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_1_4_7_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    vSphere Monitoring
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../vsphere-networking/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    vSphere Networking
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../vsphere-security/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    vSphere Security
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../vsphere-storage/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    vSphere Storage
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../esxi/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ESXi
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../horizon/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Horizon
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../nsx/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NSX
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../srm/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SRM
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../tanzu/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tanzu
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../topics/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Topics
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../vcenter/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    vCenter
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../vmware-cloud-foundation/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VMware Cloud Foundation
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../vsan/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    vSAN
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../vsphere-replication/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    vSphere Replication
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../vxrail/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VxRail
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../vxrail/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VxRail
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../cloud/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cloud
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../storage/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Storage
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../san/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SAN
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../compute/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Compute
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../networking/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Networking
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../monitoring/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitoring
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../security/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../tools/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tools
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../automation/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Automation
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../disaster-recovery/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Disaster Recovery
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../data-protection/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data Protection
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../troubleshooting/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../runbooks/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Runbooks
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../change-management/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Change Management
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../architecture/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../performance/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Performance
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../certifications/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Certifications
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../project-management/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project Management
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../protocols/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Protocols
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../database/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Database
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../integration/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Integration
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../inventory/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Inventory
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../lifecycle/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lifecycle
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../ai/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../../../start-here/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Start Here
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../site-map/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Site Map
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#performance-charts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Charts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cpu-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CPU Metrics
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="CPU Metrics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#understanding-cpu-ready" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understanding CPU Ready
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#memory-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Memory Metrics
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Memory Metrics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#balloon-driver-operation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Balloon Driver Operation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#disk-and-network-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disk and Network Metrics
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Disk and Network Metrics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#disk-latency-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Disk Latency Metrics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#network-metrics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Metrics
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#log-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Log Files
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Log Files">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#esxi-key-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ESXi Key Logs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vcenter-key-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vCenter Key Logs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#log-bundle-generation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Log Bundle Generation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Log Bundle Generation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#esxi-support-bundle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ESXi Support Bundle
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vcsa-support-bundle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VCSA Support Bundle
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vsphere-cluster-services-vcls-retreat-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        vSphere Cluster Services (vCLS) Retreat Mode
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="vSphere Cluster Services (vCLS) Retreat Mode">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#retreat-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Retreat Mode
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vmware-skyline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VMware Skyline
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="VMware Skyline">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-skyline-does" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Skyline Does
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#skyline-advisor-pro" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Skyline Advisor Pro
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuring-skyline-data-collection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuring Skyline Data Collection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#relationship-to-aria-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Relationship to Aria Operations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-monitoring-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Monitoring Tools
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Performance Monitoring Tools">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#esxtop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ESXTOP
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resxtop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RESXTOP
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#powercli-get-stat" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PowerCLI Get-Stat
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-metrics-summary-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Metrics Summary Table
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-pages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related Pages
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="Navigation" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../../../.." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    Home
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../../../" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Platforms
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../../../" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Virtualization
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../../" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    VMware
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+    
+      
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../cluster-services/" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Concepts
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="./" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    vSphere Monitoring
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+  <div class="kb-progress" id="kb-progress"></div>
+
+  
+  <nav class="kb-topnav" aria-label="Page navigation">
+    
+    <a href="../vsphere-lifecycle/" class="kb-topnav__link kb-topnav__link--prev" id="kb-prev-link">
+      <span class="kb-topnav__arrow">&#8592;</span>
+      <span class="kb-topnav__title">vSphere Lifecycle Management</span>
+    </a>
+    
+
+    <a href="../../../.." class="kb-topnav__link kb-topnav__home" title="Home">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+      <span class="kb-topnav__home-label">Home</span>
+    </a>
+
+    
+    <a href="../vsphere-networking/" class="kb-topnav__link kb-topnav__link--next" id="kb-next-link">
+      <span class="kb-topnav__title">vSphere Networking</span>
+      <span class="kb-topnav__arrow">&#8594;</span>
+    </a>
+    
+  </nav>
+
+  
+                  
+
+
+
+<h1 id="vsphere-monitoring-performance-logs-and-skyline">vSphere Monitoring — Performance, Logs, and Skyline<a class="headerlink" href="#vsphere-monitoring-performance-logs-and-skyline" title="Permanent link">&para;</a></h1>
+<div class="kb-summary">
+Reference for vSphere observability. Covers performance chart metrics (CPU Ready, memory balloon, disk latency), log file locations on ESXi and vCenter, support bundle collection, vSphere Cluster Services retreat mode, VMware Skyline proactive monitoring, and hands-on tools including ESXTOP, RESXTOP, and PowerCLI Get-Stat.
+</div>
+
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────── vSphere Monitoring Stack ──────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  ┌──────────────────────────────────────────────────────────────────────────┐                         │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│  │  Skyline / Aria Operations (external telemetry → proactive advisories)  │                          │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│  └──────────────────────────────────┬─────────────────────────────────────┘                           │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│                                     │                                                                 │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│  ┌──────────────────────────────────▼─────────────────────────────────────┐                           │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│  │  vCenter Performance Charts  │  vCenter Event/Alarm Engine             │                           │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│  │  Real-time: 20s intervals    │  Triggered alerts → email / SNMP trap   │                           │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│  │  Historical: 5m / 1h / 1d   │  Tasks + Events log in vCenter DB       │                            │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│  └────────────────┬─────────────────────────────────────────────────────┘                             │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                   │                                                                                   │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│  ┌────────────────▼─────────────────────────────────────────────────────┐                             │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  │  ESXi Host: ESXTOP / RESXTOP (real-time)  │  /var/log/* (persistent) │                             │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│  │  vmkernel.log · vobd.log · fdm.log         │  storagerm.log           │                            │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│  └──────────────────────────────────────────────────────────────────────┘                             │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>└────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<hr />
+<h2 id="performance-charts">Performance Charts<a class="headerlink" href="#performance-charts" title="Permanent link">&para;</a></h2>
+<p>vCenter performance charts provide metric data for hosts, VMs, clusters, datastores, and networks. Data is available at different time resolutions:</p>
+<table>
+<thead>
+<tr>
+<th>Chart Type</th>
+<th>Interval</th>
+<th>Retention</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Real-time</strong></td>
+<td>20 seconds</td>
+<td>1 hour</td>
+<td>Active troubleshooting — spot current spikes</td>
+</tr>
+<tr>
+<td><strong>Past day</strong></td>
+<td>5 minutes</td>
+<td>1 day</td>
+<td>Review today's trend</td>
+</tr>
+<tr>
+<td><strong>Past week</strong></td>
+<td>30 minutes</td>
+<td>1 week</td>
+<td>Identify patterns over days</td>
+</tr>
+<tr>
+<td><strong>Past month</strong></td>
+<td>2 hours</td>
+<td>1 month</td>
+<td>Capacity trend analysis</td>
+</tr>
+<tr>
+<td><strong>Past year</strong></td>
+<td>1 day</td>
+<td>1 year</td>
+<td>Long-term capacity planning</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Metric groups available:</strong> CPU, Memory, Disk, Network, Storage I/O (SIOC), Cluster services.</p>
+<p>Real-time data is collected in memory on ESXi hosts. When rolled up to vCenter, averages are stored in the vCenter database (vPostgres). If vCenter is unavailable, real-time data is temporarily lost.</p>
+<hr />
+<h2 id="cpu-metrics">CPU Metrics<a class="headerlink" href="#cpu-metrics" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Description</th>
+<th>Healthy Threshold</th>
+<th>Concern</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>CPU Usage (%)</strong></td>
+<td>Percentage of physical CPU capacity consumed</td>
+<td>&lt; 80% average</td>
+<td>&gt; 90% sustained</td>
+</tr>
+<tr>
+<td><strong>CPU Ready (ms)</strong></td>
+<td>Time a vCPU spent ready to run but waiting for a physical core</td>
+<td>&lt; 5 ms per 20s interval</td>
+<td>&gt; 10 ms = contention</td>
+</tr>
+<tr>
+<td><strong>CPU Co-Stop (ms)</strong></td>
+<td>Time an SMP VM's vCPU was paused waiting for co-scheduling (Fault Tolerance)</td>
+<td>~0 for non-FT VMs</td>
+<td>Any value in FT VMs = investigate</td>
+</tr>
+<tr>
+<td><strong>CPU Swap-Wait (ms)</strong></td>
+<td>Time vCPUs waited for memory being swapped</td>
+<td>~0</td>
+<td>Any value = memory pressure causing CPU stall</td>
+</tr>
+<tr>
+<td><strong>CPU Latency (%)</strong></td>
+<td>Percentage of time waiting for scheduling</td>
+<td>&lt; 5%</td>
+<td>&gt; 10% sustained</td>
+</tr>
+</tbody>
+</table>
+<h3 id="understanding-cpu-ready">Understanding CPU Ready<a class="headerlink" href="#understanding-cpu-ready" title="Permanent link">&para;</a></h3>
+<p>CPU Ready is the most important CPU contention metric. It measures how long a vCPU was in the "ready" state — meaning it was runnable but no physical CPU was available to schedule it.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># ESXTOP — view CPU Ready (field: %RDY)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>esxtop
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1"># Press &#39;c&#39; for CPU view</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Look at %RDY column per VM world</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1"># In batch mode — collect 10 samples at 5-second intervals</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>esxtop<span class="w"> </span>-b<span class="w"> </span>-d<span class="w"> </span><span class="m">5</span><span class="w"> </span>-n<span class="w"> </span><span class="m">10</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/cpu_stats.csv
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="c1"># PowerCLI — get CPU Ready metric for a VM</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>Get-Stat<span class="w"> </span>-Entity<span class="w"> </span><span class="o">(</span>Get-VM<span class="w"> </span><span class="s2">&quot;web-server-01&quot;</span><span class="o">)</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">  </span>-Stat<span class="w"> </span>cpu.ready.summation<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">  </span>-Start<span class="w"> </span><span class="o">(</span>Get-Date<span class="o">)</span>.AddHours<span class="o">(</span>-1<span class="o">)</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">  </span>-Interval<span class="w"> </span><span class="m">20</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>Timestamp,<span class="w"> </span>Value
+</code></pre></div>
+<blockquote>
+<p><strong>VCP-DCV Exam Note:</strong> <strong>CPU Ready threshold is typically &gt; 10 ms per 20-second interval</strong> (or expressed as &gt; 5% in some older references). CPU Ready is caused by too many vCPUs competing for too few physical cores — common with over-provisioned VMs. The fix is to reduce the number of vCPUs on VMs that don't need them, not to add more hosts. <strong>CPU Co-Stop</strong> is specific to Fault Tolerance VMs — it measures synchronization pauses between primary and secondary VMs.</p>
+</blockquote>
+<hr />
+<h2 id="memory-metrics">Memory Metrics<a class="headerlink" href="#memory-metrics" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Description</th>
+<th>What It Indicates</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Active</strong></td>
+<td>Memory the guest OS is actively reading/writing</td>
+<td>True working set size</td>
+</tr>
+<tr>
+<td><strong>Consumed</strong></td>
+<td>Physical memory allocated and backed by RAM (includes shared)</td>
+<td>Actual host RAM in use</td>
+</tr>
+<tr>
+<td><strong>Balloon</strong></td>
+<td>Memory reclaimed by the balloon driver (vmmemctl)</td>
+<td>Host is memory-pressured; guest is being asked to give back pages</td>
+</tr>
+<tr>
+<td><strong>Swap (In/Out)</strong></td>
+<td>Memory swapped to the .vswp file on disk</td>
+<td>Severe memory pressure — expect significant performance degradation</td>
+</tr>
+<tr>
+<td><strong>Compressed</strong></td>
+<td>Memory compressed into the memory compression cache</td>
+<td>Moderate pressure; less severe than swapping</td>
+</tr>
+<tr>
+<td><strong>Overhead</strong></td>
+<td>VMkernel overhead per VM</td>
+<td>Fixed cost per VM for VMX process and virtualization structures</td>
+</tr>
+</tbody>
+</table>
+<h3 id="balloon-driver-operation">Balloon Driver Operation<a class="headerlink" href="#balloon-driver-operation" title="Permanent link">&para;</a></h3>
+<p>When a host runs low on physical memory, the VMkernel inflates the <strong>balloon driver</strong> (vmmemctl) inside the guest OS. The balloon driver allocates guest OS memory pages and holds them — forcing the guest OS to use its own memory management (paging) to reclaim pages. The VMkernel then reclaims those physical pages for other VMs.</p>
+<p>Balloon is preferred over swapping because guest-side paging is more intelligent (the guest knows which pages are truly idle) than VMkernel-level swapping.</p>
+<p>Memory reclamation priority order (from least to most disruptive):
+1. <strong>TPS (Transparent Page Sharing)</strong> — deduplicate identical memory pages across VMs
+2. <strong>Balloon</strong> — ask the guest to free memory via balloon driver
+3. <strong>Compression</strong> — compress pages into memory compression cache
+4. <strong>Swap</strong> — write pages to .vswp disk file (most disruptive)</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># ESXTOP — view memory metrics (press &#39;m&#39;)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>esxtop
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Key columns: MCTLSZ (balloon size MB), SWPWRT/SWPRD (swap activity)</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># PowerCLI — get balloon metric</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>Get-Stat<span class="w"> </span>-Entity<span class="w"> </span><span class="o">(</span>Get-VMHost<span class="w"> </span><span class="s2">&quot;esxi01.corp.local&quot;</span><span class="o">)</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>-Stat<span class="w"> </span>mem.vmmemctl.average<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span>-Start<span class="w"> </span><span class="o">(</span>Get-Date<span class="o">)</span>.AddHours<span class="o">(</span>-2<span class="o">)</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span>-Interval<span class="w"> </span><span class="m">300</span>
+</code></pre></div>
+<blockquote>
+<p><strong>VCP-DCV Exam Note:</strong> Know what each memory metric means and the reclamation order. <strong>Balloon</strong> means the VMkernel is asking guests to return memory. <strong>Swap</strong> means memory is being written to disk — this indicates severe pressure and will cause noticeable VM performance degradation. <strong>Active memory</strong> is the most accurate measure of a VM's true memory need — a VM with 8 GB allocated but only 500 MB active is a candidate for reclamation.</p>
+</blockquote>
+<hr />
+<h2 id="disk-and-network-metrics">Disk and Network Metrics<a class="headerlink" href="#disk-and-network-metrics" title="Permanent link">&para;</a></h2>
+<h3 id="disk-latency-metrics">Disk Latency Metrics<a class="headerlink" href="#disk-latency-metrics" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Description</th>
+<th>Healthy</th>
+<th>Concern</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>DAVG (Device Average Latency)</strong></td>
+<td>Latency in the storage device (array or disk) — time from HBA to device acknowledgment</td>
+<td>&lt; 10 ms</td>
+<td>&gt; 20 ms</td>
+</tr>
+<tr>
+<td><strong>KAVG (Kernel Average Latency)</strong></td>
+<td>Latency in the VMkernel storage stack (queueing in the kernel)</td>
+<td>&lt; 2 ms</td>
+<td>&gt; 4 ms</td>
+</tr>
+<tr>
+<td><strong>GAVG (Guest Average Latency)</strong></td>
+<td>Total latency seen by the guest OS (DAVG + KAVG)</td>
+<td>&lt; 15 ms</td>
+<td>&gt; 25 ms</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Interpretation:</strong>
+- High DAVG, low KAVG → problem is in the storage array or fabric
+- High KAVG, low DAVG → problem is VMkernel queuing (queue depth, too many concurrent I/Os)
+- High GAVG with both DAVG and KAVG normal → investigate in-guest I/O patterns</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># ESXTOP — view disk metrics (press &#39;u&#39; for storage adapter, &#39;d&#39; for disk)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>esxtop
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1"># DAVG, KAVG, GAVG visible in disk device view</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="c1"># esxcli — check storage path latency</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>esxcli<span class="w"> </span>storage<span class="w"> </span>core<span class="w"> </span>device<span class="w"> </span>stats<span class="w"> </span>get<span class="w"> </span>--device<span class="w"> </span>naa.xxxxxx
+</code></pre></div>
+<h3 id="network-metrics">Network Metrics<a class="headerlink" href="#network-metrics" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Description</th>
+<th>Concern</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Received/Transmitted (KBps)</strong></td>
+<td>Network throughput per VM or vmk adapter</td>
+<td>Near NIC saturation</td>
+</tr>
+<tr>
+<td><strong>Dropped Rx/Tx (packets)</strong></td>
+<td>Packets dropped due to buffer overflow</td>
+<td>Any sustained drop rate</td>
+</tr>
+<tr>
+<td><strong>Packets Received/Transmitted</strong></td>
+<td>Packet rate — useful for PPS-sensitive workloads</td>
+<td>Context-dependent</td>
+</tr>
+</tbody>
+</table>
+<p>Dropped packets on receive (Rx) indicate the VM or host cannot consume packets fast enough. Dropped packets on transmit (Tx) indicate the uplink is saturated.</p>
+<hr />
+<h2 id="log-files">Log Files<a class="headerlink" href="#log-files" title="Permanent link">&para;</a></h2>
+<h3 id="esxi-key-logs">ESXi Key Logs<a class="headerlink" href="#esxi-key-logs" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Log File</th>
+<th>Location</th>
+<th>Contents</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>vmkernel.log</strong></td>
+<td><code>/var/log/vmkernel.log</code></td>
+<td>Core VMkernel messages — storage, networking, hardware events</td>
+</tr>
+<tr>
+<td><strong>vmkwarning.log</strong></td>
+<td><code>/var/log/vmkwarning.log</code></td>
+<td>Warning-level VMkernel messages only</td>
+</tr>
+<tr>
+<td><strong>vobd.log</strong></td>
+<td><code>/var/log/vobd.log</code></td>
+<td>VMkernel observation daemon — hardware observation events (CIM)</td>
+</tr>
+<tr>
+<td><strong>hostd.log</strong></td>
+<td><code>/var/log/hostd.log</code></td>
+<td>Host daemon — all host management operations via vCenter or direct API</td>
+</tr>
+<tr>
+<td><strong>vpxa.log</strong></td>
+<td><code>/var/log/vpxa.log</code></td>
+<td>vCenter agent on ESXi — communication with vCenter</td>
+</tr>
+<tr>
+<td><strong>fdm.log</strong></td>
+<td><code>/var/log/fdm.log</code></td>
+<td>Fault Domain Manager — vSphere HA agent events</td>
+</tr>
+<tr>
+<td><strong>storageRM.log</strong></td>
+<td><code>/var/log/storageRM.log</code></td>
+<td>Storage Resource Manager — SIOC events</td>
+</tr>
+<tr>
+<td><strong>shell.log</strong></td>
+<td><code>/var/log/shell.log</code></td>
+<td>ESXi Shell (SSH) command history</td>
+</tr>
+<tr>
+<td><strong>auth.log</strong></td>
+<td><code>/var/log/auth.log</code></td>
+<td>Authentication events — login/logout, sudo</td>
+</tr>
+<tr>
+<td><strong>syslog.log</strong></td>
+<td><code>/var/log/syslog.log</code></td>
+<td>General syslog output</td>
+</tr>
+</tbody>
+</table>
+<h3 id="vcenter-key-logs">vCenter Key Logs<a class="headerlink" href="#vcenter-key-logs" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Log File</th>
+<th>Location</th>
+<th>Contents</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>vpxd.log</strong></td>
+<td><code>/var/log/vmware/vpxd/vpxd.log</code></td>
+<td>Main vCenter service log — all vCenter operations</td>
+</tr>
+<tr>
+<td><strong>vcsservicemanager.log</strong></td>
+<td><code>/var/log/vmware/vcsservicemanager.log</code></td>
+<td>vCenter service manager — service start/stop, dependency management</td>
+</tr>
+<tr>
+<td><strong>sso/vmware-sts-idmd.log</strong></td>
+<td><code>/var/log/vmware/sso/</code></td>
+<td>SSO identity management — login, token, federation events</td>
+</tr>
+<tr>
+<td><strong>eam/eam.log</strong></td>
+<td><code>/var/log/vmware/eam/eam.log</code></td>
+<td>ESX Agent Manager — vCLS agent VM management</td>
+</tr>
+<tr>
+<td><strong>content-library/cls.log</strong></td>
+<td><code>/var/log/vmware/content-library/</code></td>
+<td>Content Library service events</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>VCP-DCV Exam Note:</strong> Key log file associations to memorize: <strong>fdm.log → vSphere HA</strong>. <strong>vpxa.log → ESXi-to-vCenter agent communication</strong>. <strong>vpxd.log → vCenter main service</strong>. <strong>vobd.log → hardware events via CIM</strong>. These are common exam targets. On ESXi, most logs are in <code>/var/log/</code>. On VCSA, most vCenter-specific logs are in <code>/var/log/vmware/</code>.</p>
+</blockquote>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># View recent HA events on an ESXi host</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>tail<span class="w"> </span>-f<span class="w"> </span>/var/log/fdm.log
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Filter for storage errors in vmkernel log</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>grep<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;error\|fail&quot;</span><span class="w"> </span>/var/log/vmkernel.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-50
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># View hostd log for specific VM operations</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>grep<span class="w"> </span><span class="s2">&quot;web-server-01&quot;</span><span class="w"> </span>/var/log/hostd.log<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-30
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="c1"># List services and their status on ESXi</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>esxcli<span class="w"> </span>system<span class="w"> </span>process<span class="w"> </span>list<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-i<span class="w"> </span>log
+</code></pre></div>
+<hr />
+<h2 id="log-bundle-generation">Log Bundle Generation<a class="headerlink" href="#log-bundle-generation" title="Permanent link">&para;</a></h2>
+<h3 id="esxi-support-bundle">ESXi Support Bundle<a class="headerlink" href="#esxi-support-bundle" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Generate support bundle from ESXi CLI (creates .tgz in /var/tmp)</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>vm-support
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Generate and specify output location</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>vm-support<span class="w"> </span>-w<span class="w"> </span>/vmfs/volumes/datastore1/
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># From vCenter UI: Host → Monitor → Support → Export System Logs</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="c1"># This calls vm-support remotely and downloads the bundle</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># Using vim-cmd</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>vim-cmd<span class="w"> </span>hostsvc/advopt/view<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>diagnostic
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="c1"># Alternative — use the ESXi DCUI or direct SSH</span>
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>ssh<span class="w"> </span>root@esxi01.corp.local<span class="w"> </span><span class="s2">&quot;vm-support&quot;</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">  </span>scp<span class="w"> </span>root@esxi01.corp.local:/var/tmp/esx-*.tgz<span class="w"> </span>.
+</code></pre></div>
+<h3 id="vcsa-support-bundle">VCSA Support Bundle<a class="headerlink" href="#vcsa-support-bundle" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># From VAMI (port 5480): Administration → Support → Create Support Bundle</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># Download from the VAMI browser interface after generation</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># From VCSA API</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>curl<span class="w"> </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span><span class="s2">&quot;https://vcenter.corp.local/api/appliance/support-bundle&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;vmware-api-session-id: &lt;session-token&gt;&quot;</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># From VCSA shell</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>vc-support.sh
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="c1"># Output: /var/tmp/vc-support-*.tgz</span>
+</code></pre></div>
+<hr />
+<h2 id="vsphere-cluster-services-vcls-retreat-mode">vSphere Cluster Services (vCLS) Retreat Mode<a class="headerlink" href="#vsphere-cluster-services-vcls-retreat-mode" title="Permanent link">&para;</a></h2>
+<p><strong>vSphere Cluster Services (vCLS)</strong> are agent VMs that vCenter automatically deploys into clusters to maintain DRS and HA functionality. Even if vCenter becomes unavailable, vCLS agent VMs keep cluster services running.</p>
+<p>Under normal operation, vCenter deploys 3 vCLS agent VMs per cluster (1 for small clusters). These VMs are managed by vCenter and cannot be manually deleted — vCenter recreates them automatically.</p>
+<h3 id="retreat-mode">Retreat Mode<a class="headerlink" href="#retreat-mode" title="Permanent link">&para;</a></h3>
+<p><strong>Retreat mode</strong> temporarily disables vCLS and removes the agent VMs from a cluster. This is used exclusively for troubleshooting scenarios where vCLS VMs are causing problems (e.g., interfering with maintenance, consuming resources in a resource-constrained environment during troubleshooting).</p>
+<p><strong>Enabling retreat mode (per cluster):</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Find the cluster&#39;s MoRef ID</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># From PowerCLI:</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="nv">$cluster</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-Cluster<span class="w"> </span><span class="s2">&quot;Production-Cluster&quot;</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="nv">$cluster</span>.ExtensionData.MoRef.Value
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="c1"># Example output: domain-c123</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># Enable retreat mode by modifying cluster advanced setting</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># vCenter UI: Cluster → Configure → vSphere Cluster Service → Retreat Mode</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="c1"># Or via API — set config.retreatMode = true on the cluster</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="c1"># PowerCLI approach</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="nv">$clusterView</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>Get-View<span class="w"> </span><span class="nv">$cluster</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="nv">$spec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span>New-Object<span class="w"> </span>VMware.Vim.ClusterConfigSpecEx
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="c1"># retreatMode is set via cluster configuration API</span>
+</code></pre></div></p>
+<p><strong>Impact of retreat mode:</strong>
+- vCLS agent VMs are powered off and removed
+- <strong>DRS enters manual mode</strong> — automated load balancing stops
+- <strong>HA Optimal Placement is disabled</strong> — HA can still restart VMs but without optimized placement
+- vCenter-level cluster health checks are affected</p>
+<blockquote>
+<p><strong>VCP-DCV Exam Note:</strong> The most common exam question about vCLS retreat mode asks about its <strong>impact on HA</strong>. The correct answer is that <strong>HA Optimal Placement is disabled</strong> when retreat mode is active — HA can still function and restart VMs, but optimal placement decisions require vCLS. Retreat mode is not a permanent setting and should only be used temporarily for troubleshooting.</p>
+</blockquote>
+<hr />
+<h2 id="vmware-skyline">VMware Skyline<a class="headerlink" href="#vmware-skyline" title="Permanent link">&para;</a></h2>
+<p><strong>VMware Skyline</strong> is VMware's proactive support and monitoring platform. It collects telemetry data from vSphere environments and analyzes it against known issue signatures, security advisories, and best practices.</p>
+<h3 id="what-skyline-does">What Skyline Does<a class="headerlink" href="#what-skyline-does" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Proactive monitoring</strong></td>
+<td>Continuous collection of vSphere telemetry — configurations, logs, performance data</td>
+</tr>
+<tr>
+<td><strong>Health checks</strong></td>
+<td>Validates environment against VMware-defined health rules</td>
+</tr>
+<tr>
+<td><strong>Advisory recommendations</strong></td>
+<td>Surfaces known issues before they become outages</td>
+</tr>
+<tr>
+<td><strong>Security advisories</strong></td>
+<td>Alerts when installed versions have known CVEs</td>
+</tr>
+<tr>
+<td><strong>Support acceleration</strong></td>
+<td>Pre-populates support tickets with environment context when you open a case</td>
+</tr>
+</tbody>
+</table>
+<h3 id="skyline-advisor-pro">Skyline Advisor Pro<a class="headerlink" href="#skyline-advisor-pro" title="Permanent link">&para;</a></h3>
+<p>Skyline Advisor Pro is the enhanced tier offering:
+- Custom health checks per environment
+- Integration with your support contract
+- API access for automation
+- Trending analysis and executive-level reporting</p>
+<h3 id="configuring-skyline-data-collection">Configuring Skyline Data Collection<a class="headerlink" href="#configuring-skyline-data-collection" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Skyline Collector is a virtual appliance deployed in your environment</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="c1"># Configuration is done via the Skyline Collector VAMI (port 5480)</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Verify Skyline Collector connectivity to VMware cloud endpoints</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>curl<span class="w"> </span>-sk<span class="w"> </span>https://sc-collector.vmware.com/ping
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># PowerCLI — check if Skyline health is enabled</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="o">(</span>Get-View<span class="w"> </span>ServiceInstance<span class="o">)</span>.Content.Health
+</code></pre></div>
+<h3 id="relationship-to-aria-operations">Relationship to Aria Operations<a class="headerlink" href="#relationship-to-aria-operations" title="Permanent link">&para;</a></h3>
+<p>VMware Aria Operations (formerly vRealize Operations) and Skyline serve different purposes:
+- <strong>Skyline</strong> — vendor-managed proactive support; VMware analyzes your telemetry against their global knowledge base
+- <strong>Aria Operations</strong> — customer-managed performance and capacity management; you define policies and thresholds; runs in your environment or as SaaS</p>
+<hr />
+<h2 id="performance-monitoring-tools">Performance Monitoring Tools<a class="headerlink" href="#performance-monitoring-tools" title="Permanent link">&para;</a></h2>
+<h3 id="esxtop">ESXTOP<a class="headerlink" href="#esxtop" title="Permanent link">&para;</a></h3>
+<p>ESXTOP is the primary real-time performance tool for ESXi hosts. It runs interactively via SSH or in batch mode for data collection.</p>
+<table>
+<thead>
+<tr>
+<th>ESXTOP View</th>
+<th>Key</th>
+<th>Important Columns</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CPU</td>
+<td>c</td>
+<td>%USED, %RDY, %CSTP, %MLMTD</td>
+</tr>
+<tr>
+<td>Memory</td>
+<td>m</td>
+<td>MEMSZ, MCTLSZ (balloon), SWPWRT, SWPRD</td>
+</tr>
+<tr>
+<td>Network</td>
+<td>n</td>
+<td>MbRX/s, MbTX/s, DRPRX/s, DRPTX/s</td>
+</tr>
+<tr>
+<td>Disk/Storage Adapter</td>
+<td>u</td>
+<td>CMDS/s, DAVG, KAVG</td>
+</tr>
+<tr>
+<td>Disk Device</td>
+<td>d</td>
+<td>DAVG/cmd, KAVG/cmd, GAVG/cmd</td>
+</tr>
+<tr>
+<td>Virtual Disk</td>
+<td>v</td>
+<td>RDLATENCY, WRLATENCY</td>
+</tr>
+<tr>
+<td>Power</td>
+<td>p</td>
+<td>PCPU power states</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1"># Interactive ESXTOP</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>esxtop
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1"># Batch mode — 30 samples at 2-second intervals, write to CSV</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>esxtop<span class="w"> </span>-b<span class="w"> </span>-d<span class="w"> </span><span class="m">2</span><span class="w"> </span>-n<span class="w"> </span><span class="m">30</span><span class="w"> </span>&gt;<span class="w"> </span>/tmp/perf_data.csv
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1"># Replay mode — analyze a previously captured batch file</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>esxtop<span class="w"> </span>-R<span class="w"> </span>/tmp/perf_data.csv
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="c1"># Filter to specific VM (useful in busy environments)</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>esxtop<span class="w">   </span><span class="c1"># then press &#39;e&#39; to expand, search by VM name</span>
+</code></pre></div>
+<h3 id="resxtop">RESXTOP<a class="headerlink" href="#resxtop" title="Permanent link">&para;</a></h3>
+<p>RESXTOP is ESXTOP accessed remotely without SSH, using the vSphere CLI. It connects to a host via the vSphere API and presents the same interface as ESXTOP.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># RESXTOP from a remote system with vSphere CLI installed</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>resxtop<span class="w"> </span>--server<span class="w"> </span>esxi01.corp.local<span class="w"> </span>--username<span class="w"> </span>root
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="c1"># Batch mode collection remotely</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>resxtop<span class="w"> </span>--server<span class="w"> </span>esxi01.corp.local<span class="w"> </span>--batch<span class="w"> </span>output.csv<span class="w"> </span>--samples<span class="w"> </span><span class="m">30</span><span class="w"> </span>--interval<span class="w"> </span><span class="m">5</span>
+</code></pre></div>
+<h3 id="powercli-get-stat">PowerCLI Get-Stat<a class="headerlink" href="#powercli-get-stat" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># Get CPU Ready for a VM over the last hour (20s intervals)</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>Get-Stat<span class="w"> </span>-Entity<span class="w"> </span><span class="o">(</span>Get-VM<span class="w"> </span><span class="s2">&quot;db-server-01&quot;</span><span class="o">)</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span>-Stat<span class="w"> </span>cpu.ready.summation<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">  </span>-Start<span class="w"> </span><span class="o">(</span>Get-Date<span class="o">)</span>.AddHours<span class="o">(</span>-1<span class="o">)</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="w">  </span>-Interval<span class="w"> </span><span class="m">20</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Measure-Object<span class="w"> </span>Value<span class="w"> </span>-Average<span class="w"> </span>-Maximum
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1"># Get memory balloon for all hosts in a cluster</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>Get-VMHost<span class="w"> </span>-Location<span class="w"> </span><span class="o">(</span>Get-Cluster<span class="w"> </span><span class="s2">&quot;Production-Cluster&quot;</span><span class="o">)</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>ForEach-Object<span class="w"> </span><span class="o">{</span>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="w">  </span>Get-Stat<span class="w"> </span>-Entity<span class="w"> </span><span class="nv">$_</span><span class="w"> </span>-Stat<span class="w"> </span>mem.vmmemctl.average<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="w">    </span>-Start<span class="w"> </span><span class="o">(</span>Get-Date<span class="o">)</span>.AddHours<span class="o">(</span>-1<span class="o">)</span><span class="w"> </span>-Interval<span class="w"> </span><span class="m">300</span>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="o">}</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>Select<span class="w"> </span>EntityId,<span class="w"> </span>Timestamp,<span class="w"> </span>Value<span class="w"> </span><span class="p">|</span><span class="w"> </span>Sort-Object<span class="w"> </span>Value<span class="w"> </span>-Descending
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a><span class="c1"># Get disk DAVG for a datastore</span>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>Get-Stat<span class="w"> </span>-Entity<span class="w"> </span><span class="o">(</span>Get-Datastore<span class="w"> </span><span class="s2">&quot;vSAN-Datastore&quot;</span><span class="o">)</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="w">  </span>-Stat<span class="w"> </span>datastore.totalReadLatency.average<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a><span class="w">  </span>-Start<span class="w"> </span><span class="o">(</span>Get-Date<span class="o">)</span>.AddHours<span class="o">(</span>-4<span class="o">)</span><span class="w"> </span>-Interval<span class="w"> </span><span class="m">300</span>
+</code></pre></div>
+<h3 id="key-metrics-summary-table">Key Metrics Summary Table<a class="headerlink" href="#key-metrics-summary-table" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Tool</th>
+<th>Threshold</th>
+<th>Action If Exceeded</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CPU Ready</td>
+<td>ESXTOP %RDY, vCenter charts</td>
+<td>&gt; 10 ms / 20s interval</td>
+<td>Reduce vCPU count, add hosts</td>
+</tr>
+<tr>
+<td>CPU Co-Stop</td>
+<td>ESXTOP %CSTP</td>
+<td>&gt; 0 on FT VMs</td>
+<td>Review FT secondary placement</td>
+</tr>
+<tr>
+<td>Memory Balloon</td>
+<td>ESXTOP MCTLSZ, mem.vmmemctl</td>
+<td>Any sustained value</td>
+<td>Add RAM to host, reduce VM allocation</td>
+</tr>
+<tr>
+<td>Memory Swap Write</td>
+<td>ESXTOP SWPWRT</td>
+<td>&gt; 0</td>
+<td>Immediate attention — add RAM</td>
+</tr>
+<tr>
+<td>Disk DAVG</td>
+<td>ESXTOP disk view</td>
+<td>&gt; 20 ms</td>
+<td>Array performance investigation</td>
+</tr>
+<tr>
+<td>Disk KAVG</td>
+<td>ESXTOP disk view</td>
+<td>&gt; 4 ms</td>
+<td>Reduce VMkernel queue depth</td>
+</tr>
+<tr>
+<td>Network Dropped Rx</td>
+<td>ESXTOP DRPRX/s</td>
+<td>&gt; 0 sustained</td>
+<td>Increase VM network buffer, check NIC saturation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="related-pages">Related Pages<a class="headerlink" href="#related-pages" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="../vsphere-networking/">vSphere Networking Concepts</a></li>
+<li><a href="../cluster-services/">Cluster Services — DRS, HA, and vSAN</a></li>
+<li><a href="../vsphere-lifecycle/">vSphere Lifecycle Management</a></li>
+<li><a href="../../esxi/">ESXi Troubleshooting</a></li>
+<li><a href="../../aria-operations/">Aria Operations</a></li>
+</ul>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+
+  
+  <nav class="kb-topnav kb-bottomnav" aria-label="Page navigation (bottom)">
+    
+    <a href="../vsphere-lifecycle/" class="kb-topnav__link kb-topnav__link--prev">
+      <span class="kb-topnav__arrow">&#8592;</span>
+      <span class="kb-topnav__title">vSphere Lifecycle Management</span>
+    </a>
+    
+
+    <a href="../../../.." class="kb-topnav__link kb-topnav__home" title="Home">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+      <span class="kb-topnav__home-label">Home</span>
+    </a>
+
+    
+    <a href="../vsphere-networking/" class="kb-topnav__link kb-topnav__link--next">
+      <span class="kb-topnav__title">vSphere Networking</span>
+      <span class="kb-topnav__arrow">&#8594;</span>
+    </a>
+    
+  </nav>
+
+  
+  <nav class="kb-mobile-nav" aria-label="Mobile navigation">
+    
+    <a href="../vsphere-lifecycle/" class="kb-mobile-nav__btn" title="Previous: vSphere Lifecycle Management">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+    </a>
+    
+
+    <a href="../../../.." class="kb-mobile-nav__btn kb-mobile-nav__btn--home" title="Home">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+    </a>
+
+    
+    <a href="../vsphere-networking/" class="kb-mobile-nav__btn" title="Next: vSphere Networking">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M4 11h12.17l-5.59-5.59L12 4l8 8-8 8-1.41-1.41L16.17 13H4v-2z"/></svg>
+    </a>
+    
+  </nav>
+
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      © Christos Anastasiadis
+    </div>
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.indexes", "navigation.path", "navigation.prune", "navigation.top", "toc.follow", "search.suggest", "search.highlight", "search.share", "content.code.copy"], "search": "../../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+  
+      <script src="../../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  <script>
+    // Reading progress bar
+    (function () {
+      var bar = document.getElementById('kb-progress');
+      if (!bar) return;
+      function update() {
+        var scroll = window.scrollY;
+        var total = document.documentElement.scrollHeight - window.innerHeight;
+        bar.style.width = total > 0 ? (scroll / total * 100) + '%' : '0%';
+      }
+      window.addEventListener('scroll', update, { passive: true });
+      update();
+    })();
+
+    // Code block language badge
+    (function () {
+      document.querySelectorAll('code[class*="language-"]').forEach(function (code) {
+        var match = Array.from(code.classList).find(function (c) { return c.startsWith('language-'); });
+        if (!match) return;
+        var lang = match.replace('language-', '');
+        if (['text', 'plaintext', 'none', 'shell-session'].includes(lang)) return;
+        var block = code.closest('.highlight');
+        if (!block || block.querySelector('.kb-lang-badge')) return;
+        var badge = document.createElement('span');
+        badge.className = 'kb-lang-badge';
+        badge.textContent = lang;
+        block.style.position = 'relative';
+        block.appendChild(badge);
+      });
+    })();
+
+    // Ambient mouse glow
+    (function () {
+      if (window.matchMedia('(hover: none)').matches) return;
+      var glow = document.createElement('div');
+      glow.style.cssText = 'position:fixed;width:700px;height:700px;border-radius:50%;background:radial-gradient(circle,rgba(56,189,248,0.07) 0%,transparent 65%);pointer-events:none;z-index:0;transform:translate(-50%,-50%);left:50%;top:50%;';
+      document.body.appendChild(glow);
+      var tx = window.innerWidth / 2, ty = window.innerHeight / 2, cx = tx, cy = ty;
+      document.addEventListener('mousemove', function (e) { tx = e.clientX; ty = e.clientY; }, { passive: true });
+      (function tick() {
+        cx += (tx - cx) * 0.05;
+        cy += (ty - cy) * 0.05;
+        glow.style.left = cx + 'px';
+        glow.style.top = cy + 'px';
+        requestAnimationFrame(tick);
+      })();
+    })();
+
+    // Konami code — ↑↑↓↓←→←→BA → confetti burst
+    (function () {
+      var seq = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','KeyB','KeyA'];
+      var pos = 0;
+      document.addEventListener('keydown', function (e) {
+        pos = (e.code === seq[pos]) ? pos + 1 : (e.code === seq[0] ? 1 : 0);
+        if (pos === seq.length) {
+          pos = 0;
+          var colors = ['#38bdf8','#818cf8','#34d399','#f59e0b','#f43f5e','#a78bfa','#7dd3fc'];
+          for (var i = 0; i < 80; i++) {
+            (function (i) {
+              setTimeout(function () {
+                var el = document.createElement('div');
+                var size = 6 + Math.random() * 9;
+                var angle = Math.random() * Math.PI * 2;
+                var dist = 180 + Math.random() * 320;
+                var tx = Math.cos(angle) * dist, ty = Math.sin(angle) * dist;
+                el.style.cssText = 'position:fixed;width:'+size+'px;height:'+size+'px;border-radius:'+(Math.random()>0.5?'50%':'3px')+';background:'+colors[i%colors.length]+';pointer-events:none;z-index:99998;left:50%;top:50%;transform:translate(-50%,-50%);transition:transform 0.9s ease-out,opacity 0.9s ease-out;opacity:1;';
+                document.body.appendChild(el);
+                requestAnimationFrame(function () { requestAnimationFrame(function () {
+                  el.style.transform = 'translate(calc(-50% + '+tx+'px),calc(-50% + '+ty+'px)) rotate('+Math.random()*720+'deg)';
+                  el.style.opacity = '0';
+                }); });
+                setTimeout(function () { el.remove(); }, 1000);
+              }, i * 12);
+            })(i);
+          }
+        }
+      });
+    })();
+
+    // Hero h1 typing animation
+    (function () {
+      var h1 = document.querySelector('.hero-body h1');
+      if (!h1) return;
+      var text = h1.textContent.trim();
+      h1.textContent = '';
+      var cursor = document.createElement('span');
+      cursor.style.cssText = '-webkit-text-fill-color:#38bdf8;animation:kb-blink 0.75s step-end infinite;';
+      cursor.textContent = '|';
+      h1.appendChild(cursor);
+      var i = 0;
+      var timer = setInterval(function () {
+        if (i < text.length) {
+          h1.insertBefore(document.createTextNode(text[i]), cursor);
+          i++;
+        } else {
+          clearInterval(timer);
+          setTimeout(function () { cursor.remove(); }, 700);
+        }
+      }, 75);
+    })();
+
+    // Time-of-day hero greeting
+    (function () {
+      var hero = document.querySelector('.hero-body');
+      if (!hero) return;
+      var h = new Date().getHours();
+      var greeting = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
+      var el = document.createElement('p');
+      el.textContent = greeting + '.';
+      el.style.cssText = 'color:rgba(255,255,255,0.5);font-size:0.82rem;margin-bottom:0.2rem;font-style:italic;margin-top:0;';
+      var h1 = hero.querySelector('h1');
+      if (h1) hero.insertBefore(el, h1);
+    })();
+
+    // Image lightbox
+    (function () {
+      document.querySelectorAll('.md-typeset img').forEach(function (img) {
+        img.style.cursor = 'zoom-in';
+        img.addEventListener('click', function () {
+          var overlay = document.createElement('div');
+          overlay.className = 'kb-lightbox-overlay';
+          var clone = new Image();
+          clone.src = img.src;
+          clone.alt = img.alt;
+          overlay.appendChild(clone);
+          overlay.addEventListener('click', function () { overlay.remove(); });
+          document.addEventListener('keydown', function esc(e) {
+            if (e.key === 'Escape') { overlay.remove(); document.removeEventListener('keydown', esc); }
+          });
+          document.body.appendChild(overlay);
+        });
+      });
+    })();
+
+    // Scroll-reveal — animate content sections as they enter viewport
+    (function () {
+      var targets = document.querySelectorAll('.md-typeset h2, .md-typeset h3, .md-typeset table, .md-typeset .admonition, .kb-grid');
+      if (!('IntersectionObserver' in window)) return;
+      targets.forEach(function (el) { el.classList.add('kb-reveal'); });
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('kb-visible'); io.unobserve(e.target); } });
+      }, { threshold: 0.08 });
+      targets.forEach(function (el) { io.observe(el); });
+    })();
+
+    // Floating TOC dot
+    (function () {
+      var links = document.querySelectorAll('.md-nav--secondary .md-nav__link');
+      if (links.length < 2) return;
+      var dot = document.createElement('div');
+      dot.className = 'kb-toc-dot';
+      document.body.appendChild(dot);
+      function update() {
+        var active = document.querySelector('.md-nav--secondary .md-nav__link--active');
+        if (!active) return;
+        var r = active.getBoundingClientRect();
+        dot.style.top = (r.top + r.height / 2 - 4) + 'px';
+        dot.style.opacity = '1';
+      }
+      window.addEventListener('scroll', update, { passive: true });
+      update();
+    })();
+
+    // Back to top pill
+    (function () {
+      var btn = document.createElement('a');
+      btn.className = 'kb-back-top';
+      btn.href = '#';
+      btn.textContent = '↑ Top';
+      btn.addEventListener('click', function (e) { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); });
+      document.body.appendChild(btn);
+      window.addEventListener('scroll', function () {
+        btn.classList.toggle('kb-back-top--visible', window.scrollY > 400);
+      }, { passive: true });
+    })();
+
+    // Live clock in footer
+    (function () {
+      function pad(n) { return n < 10 ? '0' + n : n; }
+      function tick(el) {
+        var d = new Date();
+        el.textContent = pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
+      }
+      var footer = document.querySelector('.md-footer-meta__inner');
+      if (!footer) return;
+      var clock = document.createElement('div');
+      clock.className = 'kb-footer-clock';
+      footer.appendChild(clock);
+      tick(clock);
+      setInterval(function () { tick(clock); }, 1000);
+    })();
+
+    // Smooth page transitions
+    (function () {
+      var content = document.querySelector('.md-content__inner');
+      document.addEventListener('click', function (e) {
+        var link = e.target.closest('a[href]');
+        if (!link || !link.href || link.target === '_blank') return;
+        try { if (new URL(link.href).hostname !== window.location.hostname) return; } catch(e) { return; }
+        if (link.href.includes('#')) return;
+        e.preventDefault();
+        var href = link.href;
+        if (content) content.classList.add('kb-fade-out');
+        setTimeout(function () { window.location.href = href; }, 190);
+      });
+    })();
+
+    // Spotlight effect — toggle with L
+    (function () {
+      if (window.matchMedia('(hover: none)').matches) return;
+      var spotlight = document.createElement('div');
+      spotlight.className = 'kb-spotlight';
+      document.body.appendChild(spotlight);
+      var mx = window.innerWidth / 2, my = window.innerHeight / 2;
+      var active = false;
+      function update() {
+        spotlight.style.background = 'radial-gradient(circle 200px at ' + mx + 'px ' + my + 'px, transparent 0%, rgba(2,6,23,0.72) 100%)';
+      }
+      document.addEventListener('mousemove', function (e) {
+        mx = e.clientX; my = e.clientY;
+        if (active) update();
+      }, { passive: true });
+      document.addEventListener('keydown', function (e) {
+        var tag = document.activeElement && document.activeElement.tagName;
+        if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+        if (e.key === 'l' || e.key === 'L') {
+          active = !active;
+          update();
+          spotlight.classList.toggle('kb-spotlight--on', active);
+        }
+      });
+    })();
+
+    // Service Worker registration
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('/sw.js');
+      });
+    }
+
+    // Keyboard shortcut overlay — press ?
+    (function () {
+      var shortcuts = [
+        ['/', 'Focus search'],
+        ['S', 'Focus search'],
+        ['F', 'Find on page'],
+        ['L', 'Toggle spotlight'],
+        ['?', 'Show shortcuts'],
+        ['Esc', 'Close / dismiss'],
+        ['↑ ↑ ↓ ↓ ← → ← → B A', '🎉'],
+      ];
+      var overlay = null;
+      function show() {
+        if (overlay) return;
+        overlay = document.createElement('div');
+        overlay.className = 'kb-shortcuts-overlay';
+        var box = document.createElement('div');
+        box.className = 'kb-shortcuts-box';
+        var title = document.createElement('h3');
+        title.textContent = 'Keyboard shortcuts';
+        box.appendChild(title);
+        var tbl = document.createElement('table');
+        shortcuts.forEach(function (s) {
+          var tr = document.createElement('tr');
+          var td1 = document.createElement('td');
+          td1.textContent = s[1];
+          var td2 = document.createElement('td');
+          s[0].split(' ').forEach(function (k) {
+            var kbd = document.createElement('kbd');
+            kbd.textContent = k;
+            td2.appendChild(kbd);
+            td2.appendChild(document.createTextNode(' '));
+          });
+          tr.appendChild(td1);
+          tr.appendChild(td2);
+          tbl.appendChild(tr);
+        });
+        box.appendChild(tbl);
+        overlay.appendChild(box);
+        overlay.addEventListener('click', function (e) { if (e.target === overlay) hide(); });
+        document.body.appendChild(overlay);
+      }
+      function hide() { if (overlay) { overlay.remove(); overlay = null; } }
+      document.addEventListener('keydown', function (e) {
+        var tag = document.activeElement && document.activeElement.tagName;
+        if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+        if (e.key === '?') { overlay ? hide() : show(); }
+        if (e.key === 'Escape') hide();
+      });
+    })();
+  </script>
+
+  </body>
+</html>
