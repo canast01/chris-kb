@@ -67,7 +67,47 @@ VMware Site Recovery Manager (SRM) is a DR orchestration platform deployed as a 
 
 ## Topology
 
+```mermaid
+graph LR
+    subgraph Protected["Protected Site"]
+        PVMs["VMs<br/>production workloads"]
+        PvCenter["vCenter<br/>compute management"]
+        PSRMServer["SRM Server<br/>protection groups<br/>vCenter plugin"]
+        Replication["Replication Engine<br/>vSphere Replication<br/>or array-based (SRA)"]
+    end
 
+    subgraph WAN["WAN / MPLS"]
+        Link["replication link<br/>async TCP 31031<br/>mgmt TCP 443, 9086"]
+    end
+
+    subgraph Recovery["Recovery Site"]
+        RVMs["Placeholder VMs<br/>shadow inventory"]
+        RvCenter["vCenter<br/>compute management"]
+        RSRMServer["SRM Server<br/>recovery plans<br/>vCenter plugin"]
+        RecoveryPlan["Recovery Plan<br/>power-on order<br/>IP customisation"]
+    end
+
+    PVMs --- PvCenter
+    PvCenter --- PSRMServer
+    PSRMServer --- Replication
+    Replication -->|"async replication (TCP 31031)"| Link
+    PSRMServer -->|"management (TCP 443, 9086)"| Link
+    Link -->|"async replication (TCP 31031)"| RVMs
+    Link -->|"management (TCP 443, 9086)"| RSRMServer
+    RSRMServer --- RecoveryPlan
+    RecoveryPlan -->|"recovery plan execution"| RVMs
+    RVMs --- RvCenter
+
+    style PVMs fill:#2563eb,stroke:#1d4ed8,color:#fff
+    style PvCenter fill:#2563eb,stroke:#1d4ed8,color:#fff
+    style PSRMServer fill:#2563eb,stroke:#1d4ed8,color:#fff
+    style Replication fill:#2563eb,stroke:#1d4ed8,color:#fff
+    style Link fill:#b45309,stroke:#92400e,color:#fff
+    style RVMs fill:#15803d,stroke:#166534,color:#fff
+    style RvCenter fill:#15803d,stroke:#166534,color:#fff
+    style RSRMServer fill:#15803d,stroke:#166534,color:#fff
+    style RecoveryPlan fill:#7c3aed,stroke:#6d28d9,color:#fff
+```
 
 ## Recovery Plan Modes
 

@@ -67,7 +67,24 @@ NetBackup operates on a three-tier architecture: a centralized Primary Server (f
 
 ## Three-Tier Topology
 
+```mermaid
+graph TB
+    Primary["Primary Server<br/>catalog · policy engine<br/>nbpem · scheduler · job control"]
+    MediaSrv["Media Servers<br/>proxy I/O · MSDP dedup pools<br/>compression · encryption"]
+    Clients["Clients<br/>NBU agent · bpbkar<br/>Windows · Linux · NAS"]
+    Storage["Storage Units<br/>AdvancedDisk · MSDP pool<br/>tape robot · cloud LSU"]
 
+    Primary -->|"schedules + orchestrates"| MediaSrv
+    Primary -->|"schedules + orchestrates"| Clients
+    Clients -->|"data path"| MediaSrv
+    Primary -->|"catalog queries"| Storage
+    MediaSrv -->|"stores backups"| Storage
+
+    style Primary fill:#2563eb,stroke:#1d4ed8,color:#fff
+    style MediaSrv fill:#15803d,stroke:#166534,color:#fff
+    style Clients fill:#b45309,stroke:#92400e,color:#fff
+    style Storage fill:#7c3aed,stroke:#6d28d9,color:#fff
+```
 
 Store the DR file off-host (NAS/object storage) and the passphrase in a secure vault — both are required for catalog recovery.
 

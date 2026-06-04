@@ -62,6 +62,16 @@ flowchart TD
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Run This Routine
+
+1. **Confluence service status** — On Linux run `systemctl status confluence`; on Windows run `net start | findstr /i confluence`; the service must be active and running; if stopped, check `catalina.out` for the last error before restarting.
+2. **Cluster health (Data Center)** — Navigate to **Confluence Admin → General Configuration → Clustering**; confirm all expected nodes appear with state `ACTIVE`; a missing or `OFFLINE` node means the cluster is degraded and failover capacity is reduced.
+3. **Database connectivity** — Navigate to **Confluence Admin → General Configuration → Troubleshooting and Support → System Information**; confirm the database connection pool shows active connections and no pool exhaustion; alternatively check via `psql -U confluence -d confluencedb -c "SELECT 1;"` from the app server.
+4. **Index status** — Navigate to **Confluence Admin → General Configuration → Content Indexing**; confirm the index state is not currently rebuilding and the queue depth is near zero; a persistently growing queue or a stuck reindex will cause search results to be stale or unavailable.
+5. **Disk space** — Run `df -h /var/atlassian/application-data/confluence` and also check the shared home mount if Data Center; alert if any volume exceeds 80%; the shared home fills gradually with attachments and backups and is the most common cause of disk-related outages.
+6. **Mail server** — Navigate to **Confluence Admin → Mail Servers** and use the **Send Test Email** function; confirm the test email is received; a failing mail server means all Confluence notifications (page watches, mentions, space admin alerts) are silently dropped.
+7. **Recent errors** — Run `tail -100 /var/atlassian/application-data/confluence/logs/atlassian-confluence.log | grep -i error`; review any error lines for patterns such as `OutOfMemoryError`, `Could not get JDBC Connection`, or `LuceneIndex`; recurring errors should be opened as incidents rather than ignored.
+
 Response states:
 
 | State | Meaning |

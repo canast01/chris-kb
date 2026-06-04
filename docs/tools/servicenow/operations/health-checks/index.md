@@ -83,6 +83,16 @@ flowchart TD
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Run This Routine
+
+1. **Instance health** — Open `https://<instance>.service-now.com/api/now/stats` in a browser or run `curl -sk -u "$SN_USER:$SN_PASS" "https://<instance>.service-now.com/api/now/stats"`; confirm the instance is accessible and returns stats data; a login redirect or timeout indicates instance availability issues.
+2. **MID Server status** — Navigate to **ServiceNow → MID Server → MID Servers**; all MID Servers must show **Status: Up** and **Validated: true**; a MID Server that is down will cause all associated discovery jobs and integration spokes to fail silently.
+3. **Import and export jobs** — Navigate to **ServiceNow → System Import Sets → Import Sets**; review recent import set runs and check for any in a `Failed` or `Error` state; failed imports mean data from integrated sources (CMDB feeds, HR systems, monitoring tools) has not been ingested.
+4. **Scheduled jobs** — Navigate to **ServiceNow → System Scheduler → Scheduled Jobs** and filter for `state = error`; review all jobs in error state and check the execution log for root cause; jobs most critical to check include LDAP Import, SLA Workflow, Email Reader, and any custom integrations.
+5. **Integration health** — Navigate to **ServiceNow → Integration Hub → Spokes** or **IntegrationHub → Activity Stream**; confirm all active spoke connections show a healthy status and recent successful executions; a failed spoke may be silently dropping event data from monitored systems.
+6. **Storage usage** — Navigate to **ServiceNow → System Diagnostics → Stats** or check with your ServiceNow administrator for database storage consumption; review the largest tables by row count to identify runaway growth from event logs or import staging tables that require archiving.
+7. **Recent errors** — Navigate to **ServiceNow → System Logs → Application Log**; filter by `level = error` and `sys_created_on > last 24 hours`; review error patterns — repeated stack traces from the same script indicate a bug in a business rule or script include that should be raised as a defect.
+
 Baseline your active session count over 2 weeks to establish normal business-hours peaks. An unexplained 3x spike often indicates a script loop or runaway REST integration.
 
 ---

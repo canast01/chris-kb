@@ -43,7 +43,26 @@ Pure1 is Pure Storage's cloud-based management and analytics platform for FlashA
 
 ## Architecture
 
+```mermaid
+graph LR
+    Arrays["FlashArray / FlashBlade<br/>Purity OS phonehome<br/>every 30 seconds<br/>HTTPS outbound"]
+    Pure1Cloud["Pure1 Cloud Platform<br/>SaaS · Pure-managed<br/>time-series DB<br/>full resolution storage"]
+    Meta["Pure1 Meta (AI)<br/>ML health scoring<br/>workload classification<br/>capacity forecasting"]
+    Dashboard["Pure1 Dashboard<br/>fleet management<br/>health scores · alerts<br/>capacity trends"]
+    TAC["Pure Storage TAC<br/>auto case creation<br/>proactive swap<br/>zero-touch resolution"]
 
+    Arrays -->|"phonehome telemetry HTTPS"| Pure1Cloud
+    Pure1Cloud -->|"metrics ingest"| Meta
+    Meta -->|"health scores · alerts"| Dashboard
+    Meta -->|"pre-failure detection"| TAC
+    TAC -->|"auto case + diagnostics"| Dashboard
+
+    style Arrays fill:#2563eb,stroke:#1d4ed8,color:#fff
+    style Pure1Cloud fill:#7c3aed,stroke:#6d28d9,color:#fff
+    style Meta fill:#b45309,stroke:#92400e,color:#fff
+    style Dashboard fill:#15803d,stroke:#166534,color:#fff
+    style TAC fill:#15803d,stroke:#166534,color:#fff
+```
 
 ---
 

@@ -60,6 +60,17 @@ git -C /backup/repo.git fsck --full
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+
+## Run This Routine
+
+1. **Git service status** — On a GitLab server run `sudo gitlab-ctl status`; on a Gitea server run `systemctl status gitea`; on Bitbucket Server run `systemctl status bitbucket`; all component services (puma, gitaly, sidekiq, postgresql, nginx) must show `run:` status; any stopped service requires immediate investigation.
+2. **Web UI accessible** — Run `curl -sk -o /dev/null -w "%{http_code}" https://<git-server>/api/v4/version` for GitLab or the equivalent health endpoint for your platform; expect HTTP `200`; a non-200 or connection refused response indicates the web tier is down.
+3. **Runner status** — Run `gitlab-runner status` on each CI runner host; all registered runners must show `Service is running`; also verify runners appear as `online` in **GitLab Admin → CI/CD → Runners**; offline runners will cause pipelines to queue indefinitely.
+4. **Backup recency** — Check the backup destination configured in `/etc/gitlab/gitlab.rb` (key: `gitlab_rails['backup_path']`); run `ls -lht /var/opt/gitlab/backups/*.tar | head -5` and confirm the most recent backup file timestamp is within the last 24 hours; a missing recent backup means the next data loss event will have no recovery point.
+5. **Disk space** — Run `df -h /var/opt/gitlab` and `df -h /var/opt/gitlab/git-data`; alert if either volume exceeds 80%; also run the top-20 largest repositories check: `du -sh /var/opt/gitlab/git-data/repositories/*/*/*.git 2>/dev/null | sort -rh | head -20` to identify unexpected growth.
+6. **Database size** — Run `sudo gitlab-psql -c "SELECT pg_size_pretty(pg_database_size('gitlabhq_production'));"` and compare against the previous week; rapid database growth (more than 10% week-over-week) should be investigated for runaway audit log or CI artifact storage.
+7. **Background jobs (Sidekiq)** — Navigate to **GitLab Admin → Monitoring → Background Jobs**; review the Sidekiq queue depths — all queues should be draining; a persistently growing queue (especially `default` or `mailers`) indicates Sidekiq is unable to keep up and jobs are at risk of being dropped.
+
 ```bash
 # Set auto-gc thresholds in repo config
 git config gc.auto 6700             # loose object threshold (0 = disable auto-gc)

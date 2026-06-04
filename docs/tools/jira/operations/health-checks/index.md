@@ -81,6 +81,16 @@ flowchart TD
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Run This Routine
+
+1. **Jira service status** — Run `systemctl status jira` on the app server; confirm the service is `active (running)`; if not, check the process list with `ps aux | grep jira` and review `catalina.out` for the last recorded error before attempting a restart.
+2. **Jira URL health** — Run `curl -sk https://<jira-url>/status`; the response must contain `{"state":"RUNNING"}`; any other state (`STARTING`, `ERROR`, `STOPPING`) indicates Jira is not ready to serve users and requires immediate investigation.
+3. **Database connection** — Navigate to **Jira Admin → System → Database → Connection Pool Monitoring**; confirm active connections are below 80% of the pool maximum and the wait count is zero; elevated wait counts indicate connection starvation which causes request queuing and slow page loads.
+4. **Index integrity** — Navigate to **Jira Admin → System → Indexing**; confirm no reindex is currently in progress and the last reindex completed successfully; a stale index causes JQL searches to return incorrect or missing results.
+5. **Disk space** — Run `df -h /var/atlassian/application-data/jira`; alert if the shared home volume exceeds 80%; also check the app node OS disk and log directory with `du -sh /opt/atlassian/jira/logs/`; attachments accumulate silently and are the most common cause of disk fills.
+6. **Mail server** — Navigate to **Jira Admin → System → Outgoing Mail** and use the **Send a Test Email** function; confirm delivery; a failed outgoing mail server means all issue notification emails (assignments, comments, transitions) are queued but not delivered.
+7. **Application log errors** — Run `tail -100 /var/atlassian/application-data/jira/log/atlassian-jira.log | grep -iE "error|exception" | tail -20`; review the output for patterns such as `OutOfMemoryError`, `Could not get JDBC Connection`, or `Index is corrupted`; each unique error pattern should be triaged and tracked.
+
 Expected: All nodes show `healthy` / `UP`.
 
 ---

@@ -57,6 +57,15 @@ Daily operations centre on the Venafi Policy Server dashboard: review certificat
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Run This Routine
+
+1. **Venafi Trust Protection Platform service** — On the Venafi server run `Get-Service VenafiTrustProtectionPlatform | Select-Object Name, Status`; the service must show `Running`; if stopped, check the Windows Event Log under Application for startup errors before attempting a restart.
+2. **Venafi web console accessibility** — Run `Invoke-WebRequest -Uri https://<venafi-server>/vedadmin -UseBasicParsing | Select-Object StatusCode`; expect `200`; a non-200 response or connection failure indicates the web tier is down or a TLS certificate issue on the server itself.
+3. **Discovery job status** — In the Venafi console, navigate to **Discovery** and review the last completed discovery job; confirm it finished without errors and the discovery timestamp is within the expected schedule; failed discovery means newly issued unmanaged certificates will not be visible.
+4. **Certificate expiry alerts** — Navigate to **Venafi → Dashboard** and review the certificates expiring within 30 days panel; for each certificate listed, confirm a renewal ticket exists or auto-renewal is configured; escalate any without an assigned owner.
+5. **Policy compliance** — Navigate to **Venafi → Policy** and check for any active policy violations; violations indicate certificates in managed folders that do not meet the defined key length, algorithm, or CA requirements — each must be reviewed and either remediated or approved via exception.
+6. **Database size** — Connect to the SQL Server instance hosting the Venafi database and run `SELECT name, size * 8 / 1024 AS size_mb FROM sys.databases WHERE name = 'VenafiTPP'`; alert if the database is consuming more than 80% of its allocated file growth limit.
+7. **Certificate renewal failures** — In the Venafi console, navigate to **Reports → Renewal Activity** and filter by status `Failed` for the last 7 days; for each failure, review the error detail — common causes include CA connector credential expiry, template permission changes, or network connectivity to the issuing CA.
 
 nnectivity health for each integrated CA. Certificate counts by state (active, expiring, expired, revoked) should be trended over time.
 

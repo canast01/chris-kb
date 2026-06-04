@@ -19,6 +19,29 @@ RASR (Recovery and System Restore) is Dell's bare-metal recovery tool for Window
 | Recovery Media | Bootable WinPE USB drive or ISO; contains RASR engine and Dell hardware drivers |
 | Network Recovery Share | SMB share where recovery images are stored and retrieved |
 
+```mermaid
+graph LR
+    Server["Dell PowerEdge Server<br/>RASRAgent service<br/>OS + boot partition"]
+    Console["RASR Console<br/>backup initiation<br/>recovery media mgmt"]
+    Image["Recovery Image<br/>.wim / RASR format<br/>sector-level snapshot"]
+    Share["Network Recovery Share<br/>SMB share<br/>image storage · retrieval"]
+    Media["Recovery Media<br/>WinPE USB / ISO<br/>Dell hardware drivers"]
+    BareMetalTarget["Bare-Metal Target<br/>original or replacement<br/>Dell PowerEdge hardware"]
+
+    Server -->|"image capture"| Image
+    Console -->|"orchestrates capture"| Server
+    Image -->|"written to"| Share
+    Media -->|"boots into WinPE"| BareMetalTarget
+    Share -->|"image retrieved for restore"| BareMetalTarget
+
+    style Server fill:#2563eb,stroke:#1d4ed8,color:#fff
+    style Console fill:#7c3aed,stroke:#6d28d9,color:#fff
+    style Image fill:#b45309,stroke:#92400e,color:#fff
+    style Share fill:#15803d,stroke:#166534,color:#fff
+    style Media fill:#b45309,stroke:#92400e,color:#fff
+    style BareMetalTarget fill:#15803d,stroke:#166534,color:#fff
+```
+
 ```text
 ┌───────────────────────────────────────── RASR — How It Works ─────────────────────────────────────────┐
 │                                                                                                       │

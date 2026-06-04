@@ -1,5 +1,164 @@
 # Cisco DCNM — Operations Procedures
 
+Cisco DCNM (Data Center Network Manager) is the management and automation platform for Cisco MDS FC SAN fabrics, providing fabric discovery, zoning, configuration deployment, compliance checking, and VXLAN overlay management for IP fabrics.
+
+---
+
+## Discover a Fabric in DCNM
+
+Fabric discovery imports an existing MDS FC or VXLAN fabric into DCNM management without disrupting traffic.
+
+1. Log in to the DCNM web UI at `https://<dcnm-ip>/` using an account with the **Network Admin** role.
+2. Navigate to **SAN > Fabrics** (for FC) or **LAN > Fabrics** (for VXLAN/IP) and click **+ Add Fabric**.
+3. Select the fabric type — for MDS FC, choose **External Fabric** to import an existing fabric.
+4. Enter the **Seed Switch IP** (management IP of one switch in the fabric), SNMP v3 credentials, and SSH credentials.
+5. Click **Save & Deploy** — DCNM contacts the seed switch, walks CDP/LLDP/FC neighbours, and maps the entire fabric topology.
+6. Confirm all expected switches appear under **SAN > Fabrics > [Fabric Name] > Switches** with status **Manageable**.
+7. Review the topology in **SAN > Topology** — verify all ISL links are shown as active.
+8. Assign a descriptive fabric name and save (e.g., `DC1-MDS-Fabric-A`).
+
+---
+
+## Add a Switch to an Existing Fabric
+
+When a new MDS switch is cabled and powered on, add it to DCNM management and apply baseline configuration.
+
+1. In DCNM, navigate to **SAN > Fabrics > [Fabric Name]** and click **Actions > Rediscover**.
+2. If the switch is not detected automatically, go to **SAN > Switches > + Add Switch** and enter the management IP, SNMPv3 credentials, and SSH credentials.
+3. Click **Discover** — DCNM imports the switch inventory and port table.
+4. Confirm the switch appears in the fabric topology with all physical ISL links shown as active.
+5. Apply the site-standard SNMP threshold rules: navigate to **SAN > Switches > [Switch] > Configure > SNMP Threshold** and apply the template.
+6. Set the VSAN membership for all ports: **SAN > Switches > [Switch] > Interfaces > Assign VSAN**.
+7. Verify the NX-OS version matches the site-standard: **SAN > Switches > [Switch] > Hardware > Software Version**. If out of date, schedule an ISSU upgrade.
+8. Save the updated topology and attach the switch to the relevant change ticket.
+
+---
+
+## Deploy a Configuration Change
+
+DCNM tracks a fabric's intended state and can push diffs to switches, enabling controlled configuration deployment.
+
+1. In DCNM, navigate to **SAN > Fabrics > [Fabric Name] > Fabric Settings** or the relevant configuration panel (e.g., **Zoning**, **Interfaces**).
+2. Make the required configuration change in the DCNM UI — DCNM stores changes in its database but does not apply them immediately.
+3. Navigate to **SAN > Fabrics > [Fabric Name] > Actions > Recalculate Config** to generate the pending diff.
+4. Review the diff in **Pending** view — confirm only the intended changes appear; reject the change and investigate if unexpected diffs are present.
+5. Click **Deploy** to push the configuration to the switches — DCNM executes NX-OS CLI commands over SSH.
+6. Monitor the deployment job in **Monitor > Jobs > Deploy** — confirm all switch deployments complete with status **Success**.
+7. Validate the change on the switch via SSH:
+
+```bash
+ssh admin@<switch-ip>
+show running-config | section <changed-feature>
+```
+
+8. Close the change ticket and attach the DCNM deployment job log as evidence.
+
+---
+
+## Create a Network (VXLAN Segment)
+
+For IP fabric (VXLAN EVPN) managed by DCNM, networks represent L2 overlay segments mapped to VLANs on leaf switches.
+
+1. In DCNM, navigate to **LAN > Networks** and click **+ Create Network**.
+2. Enter the **Network Name** (e.g., `WEB-VLAN-100`), **VNI** (VXLAN Network Identifier, e.g., `10100`), and **VLAN ID** (`100`).
+3. Set the **Gateway IP/Mask** if L3 routing is required for this segment (e.g., `10.100.0.1/24`) — leave blank for L2-only networks.
+4. Under **Advanced**, set the VRF the network belongs to and configure any multicast group or ingress replication settings per fabric design.
+5. Click **Save** — the network is created in DCNM but not yet deployed to switches.
+6. Navigate to **LAN > Networks > [Network Name] > Actions > Deploy** and select the target leaf switches and port groups to attach the network.
+7. DCNM generates and pushes the VLAN, VNI, and NVE configuration to each selected leaf — monitor in **Monitor > Jobs > Deploy**.
+8. Validate on a leaf switch:
+
+```bash
+show vlan id 100
+show nve vni 10100
+```
+
+---
+
+## Configure VRF and L3 Gateway
+
+VRFs partition the IP routing table across the VXLAN fabric. The L3 gateway (anycast gateway) is the distributed default gateway for each network segment.
+
+1. In DCNM, navigate to **LAN > VRFs** and click **+ Create VRF**.
+2. Enter the **VRF Name** (e.g., `PROD-VRF`), **VRF VNI** (L3 VNI, e.g., `50001`), and **VLAN ID** reserved for the L3 VNI (e.g., `3001`).
+3. Set BGP route targets — DCNM auto-generates import/export route targets based on the VNI; adjust for inter-VRF or inter-DC scenarios.
+4. Click **Save** — then click **Deploy** and select all border leaf and leaf switches that will participate in this VRF.
+5. Attach networks to the VRF: navigate to **LAN > Networks**, edit each network, and set the **VRF** field to the newly created VRF.
+6. Configure the anycast gateway MAC: in **LAN > Fabrics > [Fabric] > Fabric Settings**, set a consistent **Anycast GW MAC** (e.g., `0000.2222.3333`) applied across all leaves.
+7. Validate L3 routing on a leaf:
+
+```bash
+show vrf PROD-VRF
+show ip route vrf PROD-VRF
+show bgp l2vpn evpn summary
+```
+
+---
+
+## Run Fabric Compliance Check
+
+DCNM compliance checking compares the running configuration on each switch against the intended configuration stored in DCNM and reports deviations.
+
+1. In DCNM, navigate to **SAN > Fabrics > [Fabric Name] > Actions > Compliance** (FC) or **LAN > Fabrics > [Fabric Name] > Compliance** (VXLAN).
+2. Click **Run Compliance Check** — DCNM polls each switch and compares running state against the DCNM-stored intended configuration.
+3. Wait for the compliance report to generate (1–5 minutes depending on fabric size).
+4. Review the compliance report: switches and configurations marked **In Sync** are compliant; **Out of Sync** items require investigation.
+5. For each Out-of-Sync item, expand the detail to see the diff — determine whether the deviation is a legitimate out-of-band change or a DCNM configuration drift.
+6. If the switch configuration is correct and DCNM is wrong, update the DCNM intended configuration to match. If the switch is wrong, use **Deploy** to push the correct configuration.
+7. Re-run compliance after remediation to confirm all switches return to **In Sync**.
+8. Save the compliance report and attach it to the weekly SAN operations report.
+
+---
+
+## Collect Tech-Support Bundle
+
+When raising a Cisco TAC case or escalating an issue internally, collect the DCNM tech-support bundle and relevant switch outputs.
+
+1. In DCNM, navigate to **Administration > DCNM Server > Logs & Tech Support** and click **Collect Tech Support**.
+2. Select the time range covering the incident window and click **Download** — the bundle is a `.tar.gz` archive.
+3. For the affected switches, collect tech-support directly via SSH:
+
+```bash
+ssh admin@<switch-ip>
+show tech-support >> /bootflash/<switch-name>-techsupport.log
+copy bootflash:<switch-name>-techsupport.log scp://<admin>@<server-ip>/<path>/
+```
+
+4. Collect the relevant logs from DCNM server (Linux):
+
+```bash
+# On DCNM server
+/usr/local/cisco/dcm/fm/logs/
+# Collect: dcm.log, event.log, discovery.log
+tar czf /tmp/dcnm-logs-<date>.tar.gz /usr/local/cisco/dcm/fm/logs/
+```
+
+5. Open the TAC case at `https://mycase.cloudapps.cisco.com/` with product **Data Center Network Manager** and upload the collected bundles.
+6. Include the following in the case notes: DCNM version, NX-OS versions of affected switches, issue description, and first occurrence timestamp.
+
+---
+
+## Upgrade DCNM Software
+
+DCNM upgrades follow Cisco's supported upgrade path. Never skip major versions without consulting the Cisco upgrade compatibility matrix.
+
+1. Download the DCNM upgrade ISO or `.bin` from Cisco Software Download (`software.cisco.com`) and verify the SHA-512 checksum.
+2. Take a VM snapshot of the DCNM appliance in vCenter — label: `dcnm-pre-upgrade-<version>-<YYYYMMDD>`.
+3. In DCNM, navigate to **Administration > DCNM Server > Software Upgrade** and click **Upload Upgrade Package**.
+4. Select the downloaded upgrade file and click **Upload** — DCNM validates the package against the current version for upgrade compatibility.
+5. Review the pre-upgrade compatibility check results — resolve any warnings before proceeding.
+6. Click **Upgrade** — DCNM will restart services; the web UI will be unavailable for 20–45 minutes.
+7. Monitor upgrade progress via the DCNM console (vCenter VM console or serial) or SSH to check service status:
+
+```bash
+# After DCNM services restart
+dcnm_mgmt_server status
+```
+
+8. Log back in to the DCNM web UI and confirm the version under **Administration > About DCNM**; verify all fabrics show **Connected** and fabric discovery is functional.
+
+---
+
 ```bash
 # CSV format: alias_name,wwn
 # esxi01-hba0,500010000abcdef0

@@ -43,7 +43,26 @@ InsightIQ is Dell EMC's performance analytics platform for NetApp PowerScale (Is
 
 ## Deployment Architecture
 
+```mermaid
+graph LR
+    Clusters["PowerScale Clusters<br/>OneFS management IP<br/>SmartConnect zones<br/>PAPI REST API"]
+    InsightIQ["InsightIQ Appliance<br/>OVA on mgmt cluster<br/>collection engine<br/>TCP 8080 poll"]
+    PostgreSQL["PostgreSQL Database<br/>local on-appliance<br/>30-sec raw samples<br/>5-min rollup buckets"]
+    WebUI["Web Dashboard<br/>HTTP/HTTPS<br/>pre-built + custom views<br/>time-range queries"]
+    Reports["Reports + Alerts<br/>PDF / CSV export<br/>email threshold alerts<br/>SMTP relay"]
 
+    Clusters -->|"HTTPS REST API TCP 8080 every 30 sec"| InsightIQ
+    InsightIQ -->|"stores metrics"| PostgreSQL
+    PostgreSQL -->|"on-demand queries"| WebUI
+    WebUI -->|"scheduled reports"| Reports
+    InsightIQ -->|"threshold breach"| Reports
+
+    style Clusters fill:#2563eb,stroke:#1d4ed8,color:#fff
+    style InsightIQ fill:#7c3aed,stroke:#6d28d9,color:#fff
+    style PostgreSQL fill:#b45309,stroke:#92400e,color:#fff
+    style WebUI fill:#15803d,stroke:#166534,color:#fff
+    style Reports fill:#15803d,stroke:#166534,color:#fff
+```
 
 ---
 

@@ -57,6 +57,15 @@ Weekly operations include reviewing the certificate expiry dashboard for certifi
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Run This Routine
+
+1. **CA certificate expiry** — On the CA server, open the Certification Authority MMC snap-in, right-click the CA, select **Properties → General**, and note the CA certificate expiry date; alternatively run `certutil -verify -urlfetch <ca-cert-file>` to validate the chain; flag if expiry is within 6 months.
+2. **Issued cert expiry scan** — On the CA server run `certutil -store CA | findstr /i "not after"` to list certificate expiry dates; flag any issued certificate expiring within 60 days and assign a renewal ticket to the certificate owner.
+3. **CRL freshness** — Run `certutil -URL <crl-distribution-point-url>` to open the URL retrieval tool and verify the CRL is retrievable and currently valid; a stale or unreachable CRL will cause certificate validation failures across all relying services.
+4. **OCSP responder health** — Run `curl -s -o /dev/null -w "%{http_code}" "http://<ocsp-server>/ocsp"` and confirm the response is `200`; if the OCSP responder is offline, clients configured for OCSP stapling will fail or fall back to CRL.
+5. **Auto-enrollment compliance** — Run `certutil -dstemplate` to list all published certificate templates; verify that templates used for auto-enrollment are present and that permissions are intact for the target computer/user groups.
+6. **Certificate services status** — Run `Get-Service CertSvc | Select-Object Name, Status` on the CA server; the service must show `Running`; a stopped CertSvc means no new certificates can be issued and renewals will fail.
+7. **Failed certificate requests** — Open the Certification Authority MMC, expand the CA, and click **Failed Requests**; filter for requests in the last 24 hours; investigate any failures for pattern — common causes are template misconfiguration, permission errors, or CSR format issues.
 
  service is running), and confirming auto-renewal jobs completed successfully. Monthly, audit newly issued certificates against naming and validity standards.
 

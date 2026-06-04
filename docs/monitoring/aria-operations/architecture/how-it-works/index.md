@@ -55,7 +55,29 @@ VMware Aria Operations (formerly vROps) is deployed as an analytics cluster comp
 
 ## Analytics Cluster Topology
 
+```mermaid
+graph LR
+    Sources["Data Sources<br/>vCenter · NSX-T · vSAN<br/>PowerStore · PowerScale<br/>3rd-party via MPs"]
+    RemoteCollector["Remote Collectors<br/>lightweight OVA<br/>per-site collection<br/>no local analytics"]
+    Primary["Primary Analytics Node<br/>UI · analytics engine<br/>master cluster services<br/>REST API"]
+    Replica["Replica Analytics Node<br/>HA failover<br/>auto-promotion on<br/>primary failure"]
+    DataNodes["Data Nodes<br/>scale-out indexing<br/>extended metric storage<br/>up to 10,000+ VMs"]
+    Outputs["Outputs<br/>dashboards · alerts<br/>reports PDF/CSV<br/>ServiceNow · REST API"]
 
+    Sources -->|"5-min API poll"| RemoteCollector
+    Sources -->|"5-min API poll"| Primary
+    RemoteCollector -->|"forwards telemetry TCP 443"| Primary
+    Primary -->|"replication"| Replica
+    Primary -->|"distributes storage"| DataNodes
+    Primary -->|"recommendations · alerts"| Outputs
+
+    style Sources fill:#2563eb,stroke:#1d4ed8,color:#fff
+    style RemoteCollector fill:#2563eb,stroke:#1d4ed8,color:#fff
+    style Primary fill:#7c3aed,stroke:#6d28d9,color:#fff
+    style Replica fill:#7c3aed,stroke:#6d28d9,color:#fff
+    style DataNodes fill:#15803d,stroke:#166534,color:#fff
+    style Outputs fill:#b45309,stroke:#92400e,color:#fff
+```
 
 ---
 

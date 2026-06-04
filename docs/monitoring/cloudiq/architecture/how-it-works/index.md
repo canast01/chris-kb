@@ -43,7 +43,26 @@ Dell CloudIQ is a cloud-native SaaS AIOps platform that collects telemetry from 
 
 ## Architecture
 
+```mermaid
+graph LR
+    Arrays["Dell Arrays<br/>PowerStore · PowerMax<br/>PowerScale · Unity XT<br/>Data Domain · PowerEdge"]
+    SCG["Secure Connect Gateway<br/>on-prem OVA<br/>telemetry collector<br/>HTTPS outbound only"]
+    CloudIQ["CloudIQ Cloud<br/>SaaS platform<br/>ML models · AI pipeline<br/>health scoring"]
+    Dashboard["CloudIQ Dashboard<br/>health scores · alerts<br/>capacity trends<br/>anomaly detections"]
+    Recommendations["Recommendations<br/>AI-generated actions<br/>root cause analysis<br/>priority + impact"]
 
+    Arrays -->|"telemetry REST API TCP 443/8443"| SCG
+    SCG -->|"encrypted upload TCP 443"| CloudIQ
+    CloudIQ -->|"anomaly detection · forecasting"| Dashboard
+    CloudIQ -->|"AI recommendations"| Recommendations
+    Dashboard -->|"engineer reviews"| Recommendations
+
+    style Arrays fill:#2563eb,stroke:#1d4ed8,color:#fff
+    style SCG fill:#b45309,stroke:#92400e,color:#fff
+    style CloudIQ fill:#7c3aed,stroke:#6d28d9,color:#fff
+    style Dashboard fill:#15803d,stroke:#166534,color:#fff
+    style Recommendations fill:#15803d,stroke:#166534,color:#fff
+```
 
 ---
 

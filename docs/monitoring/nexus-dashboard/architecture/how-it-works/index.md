@@ -45,7 +45,28 @@ Cisco Nexus Dashboard (ND) is a centralised operations platform for Cisco ACI an
 
 A Nexus Dashboard cluster consists of 3 or 5 nodes. All nodes are peers in a Raft-based cluster consensus model. A virtual IP (VIP) provides a single management entry point.
 
+```mermaid
+graph LR
+    Switches["ACI / NX-OS Switches<br/>streaming telemetry<br/>MDT / gRPC TCP 9339<br/>SNMP UDP 161"]
+    APIC["ACI APIC<br/>policy source<br/>REST API TCP 443<br/>fabric inventory"]
+    NDCluster["Nexus Dashboard Cluster<br/>3 or 5 nodes · Raft consensus<br/>VIP entry point<br/>NDFC · NDI services"]
+    NDI["Nexus Dashboard Insights<br/>ML health scoring<br/>anomaly detection<br/>flow analysis"]
+    NDFC["Nexus Dashboard Fabric Controller<br/>policy orchestration<br/>configuration management"]
+    Alerts["Alerts + Notifications<br/>email · webhook<br/>ServiceNow incidents<br/>affected objects"]
 
+    Switches -->|"MDT/gRPC telemetry"| NDCluster
+    APIC -->|"REST API poll TCP 443"| NDCluster
+    NDCluster -->|"health analysis"| NDI
+    NDCluster -->|"policy management"| NDFC
+    NDI -->|"events + recommendations"| Alerts
+
+    style Switches fill:#2563eb,stroke:#1d4ed8,color:#fff
+    style APIC fill:#2563eb,stroke:#1d4ed8,color:#fff
+    style NDCluster fill:#7c3aed,stroke:#6d28d9,color:#fff
+    style NDI fill:#b45309,stroke:#92400e,color:#fff
+    style NDFC fill:#b45309,stroke:#92400e,color:#fff
+    style Alerts fill:#15803d,stroke:#166534,color:#fff
+```
 
 ---
 

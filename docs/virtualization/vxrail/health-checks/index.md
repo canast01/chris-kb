@@ -56,6 +56,18 @@ VxRail Health Checks reference covering Overview, Where It Fits, Daily Checks, H
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+## Run This Routine
+
+Run these steps in order for every daily check, pre-change validation, or post-incident review of the VxRail cluster.
+
+1. **VxRail Manager cluster status** — Log in to VxRail Manager UI → Dashboard. Confirm cluster health indicator is green. Any non-green status requires investigation before proceeding with changes.
+2. **vSAN health** — In vCenter, select the VxRail cluster → Monitor → vSAN → Health. All health checks must show green. Investigate and resolve any failing checks; common culprits are clock skew, capacity imbalance, and network connectivity failures.
+3. **Node inventory status** — In VxRail Manager → Inventory → Nodes, confirm all nodes show status `Healthy`. A node in `Degraded` or `Unknown` state needs immediate triage — check iDRAC events and ESXi host logs.
+4. **LCM compliance** — In VxRail Manager → Lifecycle Management, verify all nodes are listed as `Compliant` against the current baseline. Non-compliant nodes must be remediated before the next change window.
+5. **iDRAC connectivity** — From the management host, ping each node's iDRAC IP (`ping <idrac-ip>`). All pings must succeed. An unreachable iDRAC means out-of-band management is unavailable for that node.
+6. **NTP time synchronisation** — SSH to each ESXi host and run `esxcli system time get`. Compare timestamps across all hosts — skew must be less than 5 seconds. Time drift causes vSAN and vCenter authentication failures.
+7. **vCenter connectivity** — In VxRail Manager → Settings → vCenter Server, confirm the connection status shows `Connected`. A disconnected vCenter stops all VxRail management operations.
+8. **Open alerts review** — In VxRail Manager → Alerts, review all open alerts. Resolve or acknowledge any `Critical` or `Warning` alerts, assigning owner and due date for each unresolved item before closing the check.
 
 ## Overview
 

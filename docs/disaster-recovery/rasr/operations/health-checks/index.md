@@ -55,6 +55,20 @@ $share   = "\\nas01\rasr-images\prod\$(hostname)"
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
+
+## Run This Routine
+
+Run these steps in order at the start of each shift or on-call check. All items must pass before closing the check.
+
+1. **RASR Agent service status** — On each protected server, run `Get-Service RASRAgent` and confirm status is `Running`. A stopped or degraded agent means no new images are being created.
+2. **Last backup age and result** — Query the registry key (`HKLM:\SOFTWARE\Dell\RASR`) for `LastBackupTime` and `LastBackupResult`. Backup age must be within RPO (typically ≤ 26 h for daily); result must be `Success`. Flag any server showing `Failed` or age > RPO.
+3. **Vault share reachability** — Confirm `Test-Path \\nas01\rasr-images\prod\<hostname>` returns `True` for each server. An unreachable share means the vault copy cannot be updated or verified.
+4. **Latest image verification** — Check that a `.wim` file exists in the vault share and that its `LastWriteTime` aligns with the last successful backup. A missing or stale image indicates a write failure.
+5. **VSS writer stability** — Run `vssadmin list writers` and confirm no writers are in `State: [8] Failed`. Failed VSS writers block consistent image capture and must be restarted before the next backup window.
+6. **CyberSense scan status** — In the PPDM console, open the latest CyberSense scan report and confirm all vault copies are classified `Clean`. Any `Suspect` classification requires immediate isolation and escalation.
+7. **Vault lock and air-gap posture** — Confirm the vault network segment is isolated (check airgap switch port state). Verify WORM lock is applied to the most recent vault copy; no unlocked copies should exist outside a scheduled sync window.
+8. **Last recovery test validation** — Confirm a restore test was completed within the past 30 days. If overdue, schedule a test-boot in the clean-room environment during the next maintenance window. Log the result in the check record below.
+
 ```powershell
 # Check VSS writers are in stable state
 $writers = vssadmin list writers 2>&1

@@ -245,6 +245,168 @@ isi sync policies disable <reverse_policy_name>
 
 ---
 
+## Configure Replication Job Schedule
+
+SyncIQ policies on the PowerScale cluster control how often data replicates to the DR cluster. Eyeglass monitors these policies and uses their schedules to calculate RPO compliance.
+
+1. Log in to the production PowerScale OneFS web UI at `https://<prod-cluster-ip>:8080` and navigate to **Data Protection > SyncIQ > Policies**.
+2. Select the SyncIQ policy to modify (or click **+ Add Policy** to create one) and click **Edit**.
+3. Under **Schedule**, choose the replication frequency:
+   - **Every N minutes/hours** — use for low-RPO requirements (e.g., every 15 minutes for critical NAS data).
+   - **Daily at a fixed time** — use for less critical data with overnight replication windows.
+4. Set the **Target Cluster** FQDN and **Target Directory** path — must match what Eyeglass is configured to monitor.
+5. Under **Advanced**, configure bandwidth throttling if replication competes with production workloads — set a maximum MB/s during business hours.
+6. Save the policy and trigger a manual sync to confirm the schedule is valid:
+
+```bash
+isi sync jobs start <policy_name>
+isi sync jobs list
+```
+
+7. In the Eyeglass web UI (`https://<eyeglass-ip>:8443`), navigate to **SyncIQ > Policies** and confirm the updated policy appears with the correct RPO display.
+8. Verify Eyeglass RPO compliance status turns green within one replication cycle.
+
+---
+
+## Run a DR Test (Non-Disruptive)
+
+A non-disruptive DR test validates failover readiness without affecting production data or client access. Eyeglass runs a preflight check against the DR policy.
+
+1. Log in to the Eyeglass web UI at `https://<eyeglass-ip>:8443` and navigate to **DR Assistant > DR Policies**.
+2. Select the policy to test and click **DR Test > Preflight Check**.
+3. Eyeglass runs the preflight sequence and reports on each check:
+   - SyncIQ replication lag vs. RPO threshold.
+   - DR cluster access zone configuration synchronisation.
+   - NFS exports and SMB shares present on DR cluster.
+   - DNS integration status (if configured).
+   - Quota sync status.
+4. Review the preflight report — all checks must return **Pass** before a live failover can be executed.
+5. For any **Fail** or **Warning** items, remediate before proceeding: common issues are replication lag exceeding RPO, missing NFS export sync, or DNS not configured.
+
+```bash
+# CLI equivalent preflight check
+egcli drtest preflight --policy <policy_name>
+```
+
+6. After all checks pass, the policy is marked **DR Ready** in the Eyeglass DR Assistant dashboard — document the test result and timestamp in the DR log.
+7. No production traffic is interrupted during this procedure.
+
+---
+
+## Perform DR Failover (Planned)
+
+A planned failover is a controlled switchover initiated during a maintenance window — for example, before planned production maintenance or as a scheduled DR exercise.
+
+1. Confirm all SyncIQ policies are in a healthy, fully replicated state — no replication lag:
+
+```bash
+egcli drpolicy status --all
+isi sync policies list
+```
+
+2. Schedule a maintenance window and notify all stakeholders.
+3. Quiesce production NFS/SMB clients where possible — coordinate with application teams to stop active writes.
+4. In the Eyeglass web UI, navigate to **DR Assistant > DR Policies** and select the policy to fail over.
+5. Click **Failover** and confirm the action — Eyeglass presents the RPO lag and requires explicit confirmation.
+6. Eyeglass executes the failover sequence:
+   - Stops SyncIQ replication on the production cluster.
+   - Makes the DR cluster writable (breaks the SyncIQ mirror).
+   - Activates access zones on the DR cluster.
+   - Remaps NFS exports and SMB shares.
+   - Updates DNS SmartConnect delegation to DR VIP pool (if DNS integration is enabled).
+7. Monitor failover progress: **DR Assistant > Active Jobs** or `egcli drfailover status --policy <policy_name>`.
+8. Validate client access at the DR site — mount a test NFS share, confirm SMB share connectivity, and write a test file.
+
+---
+
+## Perform DR Failover (Emergency)
+
+Emergency failover is triggered when the production cluster becomes unavailable unexpectedly. Speed is prioritised; accept the RPO lag and proceed.
+
+1. Assess production cluster status — confirm unavailability is not a network fault:
+
+```bash
+# From a host with access to both clusters
+ping <prod-cluster-mgmt-ip>
+ssh admin@<prod-cluster-ip> "isi status"
+```
+
+2. Declare a DR event in the ITSM tool and notify the SAN/Storage team lead.
+3. Log in to the Eyeglass web UI on the **DR cluster's Eyeglass instance** (if Eyeglass is deployed at DR) or the same Eyeglass appliance if it remains reachable.
+4. Navigate to **DR Assistant > DR Policies**, select the affected policy, and note the last successful replication timestamp — this is the effective RPO.
+5. Click **Failover** and confirm — in an emergency, accept the replication lag warning and proceed:
+
+```bash
+egcli drfailover --policy <policy_name> --confirm --force
+```
+
+6. Eyeglass breaks the SyncIQ mirror, activates DR access zones, reconfigures NFS/SMB, and updates DNS.
+7. Monitor failover job completion in **DR Assistant > Active Jobs**; escalate to Superna Support if the job stalls.
+8. Validate client access at DR, document the declared RPO (last replication timestamp), and begin planning failback once production is restored.
+
+---
+
+## Fail Back After Recovery
+
+Failback returns data and client access from the DR cluster to the production cluster after the production environment is restored and confirmed healthy.
+
+1. Confirm the production PowerScale cluster is healthy — all nodes online, no critical alerts, SyncIQ service running:
+
+```bash
+isi status
+isi alerts list --category critical
+isi sync service view
+egcli drtest preflight --cluster <production-cluster>
+```
+
+2. In the Eyeglass web UI, navigate to **DR Assistant > DR Policies** and confirm the policy state is **Failed Over**.
+3. Click **Failback** and review the pre-failback checklist displayed by Eyeglass — confirm all items pass.
+4. Eyeglass creates a reverse SyncIQ policy (DR → production) to sync changes made during the DR period:
+
+```bash
+# Monitor reverse sync progress
+isi sync jobs list
+watch -n 30 "isi sync jobs list"
+```
+
+5. Wait for the reverse SyncIQ job to complete — do not initiate access zone cutback until all data is synced.
+6. Once sync is complete, click **Complete Failback** in Eyeglass — this re-activates access zones on production, remaps NFS/SMB shares, and returns DNS to production SmartConnect VIP pool.
+7. Validate production client access: mount a test share, confirm SMB connectivity, write a test file.
+8. Disable the reverse SyncIQ policy and re-enable the normal production-to-DR policy:
+
+```bash
+isi sync policies disable <reverse_policy_name>
+isi sync policies enable <normal_policy_name>
+isi sync jobs start <normal_policy_name>
+```
+
+---
+
+## Update Cluster Credentials in Eyeglass
+
+When PowerScale cluster service account passwords are rotated, Eyeglass credentials must be updated to maintain monitoring and orchestration connectivity.
+
+1. Log in to the Eyeglass web UI at `https://<eyeglass-ip>:8443` and navigate to **Configuration > Clusters**.
+2. Select the cluster whose credentials have changed (production or DR) and click **Edit**.
+3. Update the **Username** and **Password** fields with the new service account credentials — the account requires `ISI_PRIV_LOGIN_PAPI` and `ISI_PRIV_SYNCIQ` privileges at minimum.
+4. Click **Save** — Eyeglass immediately attempts to re-authenticate using the new credentials.
+5. Confirm the cluster status returns to **Connected** (green) in the Clusters dashboard within 60 seconds.
+6. Verify Eyeglass can still read SyncIQ policy status:
+
+```bash
+egcli drpolicy status --all
+```
+
+7. Run a preflight check on each DR policy to confirm end-to-end access is intact after the credential update:
+
+```bash
+egcli drtest preflight --policy <policy_name>
+```
+
+8. Update the credentials record in the team password manager and document the rotation date in the change log.
+
+---
+
 ## Day-to-Day Operations
 
 Daily operations focus on the Eyeglass dashboard: check SyncIQ policy health (all policies in a healthy replication state), verify RPO compliance per policy (confirm replication lag is within defined thresholds), review the overall DR readiness score, confirm DNS sync status is current, and check quota policy sync status. Any policies showing degraded or failed state require immediate investigation.
