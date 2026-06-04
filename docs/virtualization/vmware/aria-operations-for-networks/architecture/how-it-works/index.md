@@ -116,6 +116,69 @@ Collectors maintain a persistent TLS connection back to the Platform VM on TCP 4
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+### AON Flow Data Pipeline
+
+```mermaid
+graph LR
+    subgraph PUSH["Push Sources"]
+        NSX["NSX-T<br/>IPFIX UDP 2055"]
+        SW["Physical Switches<br/>NetFlow / sFlow"]
+        VPC["Cloud VPC Flow Logs<br/>REST Import"]
+    end
+
+    subgraph COLL["Collector VM"]
+        RECV["Receives IPFIX / NetFlow<br/>push traffic"]
+        POLL["Polls vCenter API<br/>and NSX-T API"]
+        SHIP["Ships all data to<br/>Platform on TCP 443"]
+    end
+
+    subgraph PLATFORM["Platform VM — Internal Services"]
+        KAFKA["Kafka<br/>message bus"]
+        CASS["Cassandra<br/>time-series flow store"]
+        ES["Elasticsearch<br/>search index"]
+        PG["Postgres<br/>config / metadata"]
+    end
+
+    subgraph OUT["Analytics Output"]
+        FM["Flow Map"]
+        PT["Path Trace"]
+        MS["Micro-seg<br/>Recommendations"]
+        AA["Anomaly Alerts"]
+        NLS["Natural Language<br/>Search"]
+    end
+
+    NSX --> RECV
+    SW --> RECV
+    VPC --> RECV
+    RECV --> SHIP
+    POLL --> SHIP
+    SHIP --> KAFKA
+    KAFKA --> CASS
+    KAFKA --> ES
+    KAFKA --> PG
+    CASS --> FM
+    CASS --> PT
+    ES --> MS
+    ES --> AA
+    ES --> NLS
+
+    style NSX fill:#2563eb,stroke:#1d4ed8,color:#fff
+    style SW fill:#2563eb,stroke:#1d4ed8,color:#fff
+    style VPC fill:#2563eb,stroke:#1d4ed8,color:#fff
+    style RECV fill:#15803d,stroke:#166534,color:#fff
+    style POLL fill:#15803d,stroke:#166534,color:#fff
+    style SHIP fill:#15803d,stroke:#166534,color:#fff
+    style KAFKA fill:#b45309,stroke:#92400e,color:#fff
+    style CASS fill:#2563eb,stroke:#1d4ed8,color:#fff
+    style ES fill:#2563eb,stroke:#1d4ed8,color:#fff
+    style PG fill:#2563eb,stroke:#1d4ed8,color:#fff
+    style FM fill:#7c3aed,stroke:#6d28d9,color:#fff
+    style PT fill:#7c3aed,stroke:#6d28d9,color:#fff
+    style MS fill:#7c3aed,stroke:#6d28d9,color:#fff
+    style AA fill:#7c3aed,stroke:#6d28d9,color:#fff
+    style NLS fill:#7c3aed,stroke:#6d28d9,color:#fff
+```
+
 ### Stage 4: Push to NSX
 
 Recommendations can be exported or pushed directly:
