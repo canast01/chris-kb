@@ -62,6 +62,35 @@ How It Works reference covering Overview, Metering Model, Supported Platforms, U
 
 Dell Flex on Demand (FOD) is a consumption-based capacity model in which additional storage capacity is pre-installed in the array but metered — you pay only for what you use above the committed baseline. Usage is reported monthly via the CloudIQ telemetry pipeline, and burst consumption above the committed tier is billed at a per-TiB rate. FOD is available on PowerMax, PowerStore, and PowerScale platforms.
 
+## FOD Licence Lifecycle
+
+```mermaid
+graph TB
+  PORTAL["Dell Portal\n(licensing.dell.com)\nPurchase FOD licence"]
+  KEY["Activation Key\n(emailed to customer)\nalphanumeric string"]
+  CMD["Customer applies key\n`symcfg -auth activate`\nor Unisphere GUI"]
+  ARRAY["PowerMax Array\nFeature enabled\nExpiry date set"]
+  MONITOR["Monitor\nUnisphere dashboard\nor SYMCLI audit report"]
+  RENEW["Renewal\n(before expiry)\nor Deactivation"]
+
+  PORTAL -->|"licence purchased\nentitlement generated"| KEY
+  KEY -->|"admin receives key\nvia email"| CMD
+  CMD -->|"key applied to\narray serial number"| ARRAY
+  ARRAY -->|"feature active\nmonitor compliance"| MONITOR
+  MONITOR -->|"approaching expiry\nor no longer needed"| RENEW
+  RENEW -->|"renewed licence key\npurchased"| PORTAL
+
+  classDef blue fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef green fill:#15803d,stroke:#166534,color:#fff
+  classDef amber fill:#b45309,stroke:#92400e,color:#fff
+  classDef purple fill:#7c3aed,stroke:#6d28d9,color:#fff
+
+  class PORTAL blue
+  class ARRAY green
+  class CMD,KEY amber
+  class MONITOR,RENEW purple
+```
+
 ## Metering Model
 
 ```text
