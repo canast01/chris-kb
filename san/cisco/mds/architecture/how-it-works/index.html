@@ -3243,6 +3243,61 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#fc-fabric-login-sequence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FC Fabric Login Sequence
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vsan-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VSAN Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#zoning-and-device-aliases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Zoning and Device Aliases
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#npv-and-npiv-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NPV and NPIV Mode
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#high-availability-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        High Availability Features
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -3454,53 +3509,185 @@ How It Works reference covering Overview, SAN Fabric Topology.
   classDef storage fill:#7c3aed,stroke:#6d28d9,color:#fff
   class MDSA,MDSB switch
   class H1A,H2A,H1B,H2B host
-  class FA_CT0,PM_A,FA_CT1,PM_B storage
-```text
-┌──────────────────────────────────── Cisco MDS 9000 — How It Works ────────────────────────────────────┐
-│                                                                                                       │
-│  MDS operation: HBA FLOGI → Name Server → zoning lookup → PLOGI → I/O flow.                           │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             FC Fabric Login Flow             │  │           VSAN &amp; Zone Enforcement           │   │
-│   │         1. HBA powers on: FLOGI send         │  │             Zone lookup on PLOGI            │   │
-│   │         2. MDS assigns FCID (24-bit)         │  │           Deny if not in same zone          │   │
-│   │         3. Registered in Name Server         │  │          Hard zoning: hardware ACL          │   │
-│   │         4. Query GPN_ID for targets          │  │          VSAN segmentation: no leak         │   │
-│   │           5. PLOGI to target FCID            │  │          CFS propagates zone across         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  FLOGI registers HBA; zone is enforced at PLOGI; CFS keeps zones consistent.                          │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │              ISL &amp; FSPF Routing              │  │           SAN Analytics (MDS 9700)          │   │
-│   │           ISL E_Port forms on boot           │  │            Per-flow telemetry: FC           │   │
-│   │          FSPF: link state LSR flood          │  │          Initiator/target pair IOPS         │   │
-│   │          Shortest path: hop + cost           │  │          Latency histogram per ITL          │   │
-│   │         PortChannel: LACP-like hash          │  │       Export to Kafka / Elasticsearch       │   │
-│   │         BB credits: per-port control         │  │           Bottleneck ITL detection          │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  MDS director chassis · supervisor module · line card blades · SFP transceivers                       │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  FLOGI           = Fabric Login; HBA sends FLOGI to get assigned an FCID                              │
-│  FCID            = Fibre Channel ID; 24-bit address assigned by fabric to each port                   │
-│  Name Server     = MDS Name Server; database of all device logins (FCID → WWN)                        │
-│  GPN_ID          = Get Port Name by ID; query Name Server for target WWN list                         │
-│  PLOGI           = Port Login; initiator to target; MDS enforces zone at this step                    │
-│  Hard zoning     = zone enforcement in hardware ASIC; cannot be bypassed by software                  │
-│  CFS             = Cisco Fabric Services; zones propagated to all switches in fabric                  │
-│  FSPF            = link-state routing; each switch floods LSR with link costs                         │
-│  PortChannel     = ISL aggregation; frames hashed by source/dest FCID pair                            │
-│  BB credits      = Buffer-to-Buffer; receiver grants credits; no credit = pause                       │
-│  SAN analytics   = MDS 9700 ASIC feature; captures per-ITL IOPS and latency                           │
-│  ITL             = Initiator-Target-LUN; FC I/O flow identifier for analytics                         │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</code></pre>
+  class FA_CT0,PM_A,FA_CT1,PM_B storage</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌──────────────────────────────────── Cisco MDS 9000 — How It Works ────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│  MDS operation: HBA FLOGI → Name Server → zoning lookup → PLOGI → I/O flow.                           │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│                                                                                                       │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │             FC Fabric Login Flow             │  │           VSAN &amp; Zone Enforcement           │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │         1. HBA powers on: FLOGI send         │  │             Zone lookup on PLOGI            │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   │         2. MDS assigns FCID (24-bit)         │  │           Deny if not in same zone          │   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   │         3. Registered in Name Server         │  │          Hard zoning: hardware ACL          │   │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   │         4. Query GPN_ID for targets          │  │          VSAN segmentation: no leak         │   │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   │           5. PLOGI to target FCID            │  │          CFS propagates zone across         │   │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                                                                                                       │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│  FLOGI registers HBA; zone is enforced at PLOGI; CFS keeps zones consistent.                          │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│                                                                                                       │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│                                                                                                       │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │              ISL &amp; FSPF Routing              │  │           SAN Analytics (MDS 9700)          │   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │           ISL E_Port forms on boot           │  │            Per-flow telemetry: FC           │   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   │          FSPF: link state LSR flood          │  │          Initiator/target pair IOPS         │   │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   │          Shortest path: hop + cost           │  │          Latency histogram per ITL          │   │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│   │         PortChannel: LACP-like hash          │  │       Export to Kafka / Elasticsearch       │   │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│   │         BB credits: per-port control         │  │           Bottleneck ITL detection          │   │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│                                                                                                       │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│  MDS director chassis · supervisor module · line card blades · SFP transceivers                       │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│                                                                                                       │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│                                                                                                       │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│  FLOGI           = Fabric Login; HBA sends FLOGI to get assigned an FCID                              │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│  FCID            = Fibre Channel ID; 24-bit address assigned by fabric to each port                   │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│  Name Server     = MDS Name Server; database of all device logins (FCID → WWN)                        │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│  GPN_ID          = Get Port Name by ID; query Name Server for target WWN list                         │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│  PLOGI           = Port Login; initiator to target; MDS enforces zone at this step                    │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│  Hard zoning     = zone enforcement in hardware ASIC; cannot be bypassed by software                  │
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│  CFS             = Cisco Fabric Services; zones propagated to all switches in fabric                  │
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│  FSPF            = link-state routing; each switch floods LSR with link costs                         │
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│  PortChannel     = ISL aggregation; frames hashed by source/dest FCID pair                            │
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│  BB credits      = Buffer-to-Buffer; receiver grants credits; no credit = pause                       │
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│  SAN analytics   = MDS 9700 ASIC feature; captures per-ITL IOPS and latency                           │
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>│  ITL             = Initiator-Target-LUN; FC I/O flow identifier for analytics                         │
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>│                                                                                                       │
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<h2 id="fc-fabric-login-sequence">FC Fabric Login Sequence<a class="headerlink" href="#fc-fabric-login-sequence" title="Permanent link">&para;</a></h2>
+<p>When a host HBA initialises, it executes a three-stage login sequence before any SCSI I/O can occur. MDS handles and enforces each stage.</p>
+<table>
+<thead>
+<tr>
+<th>Stage</th>
+<th>Name</th>
+<th>What Happens</th>
+<th>MDS Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>FLOGI — Fabric Login</td>
+<td>HBA sends FLOGI to the well-known address 0xFFFFFE</td>
+<td>MDS assigns a 24-bit FCID; registers WWN in Name Server</td>
+</tr>
+<tr>
+<td>2</td>
+<td>PLOGI — Port Login</td>
+<td>Initiator sends PLOGI directly to target FCID</td>
+<td>MDS enforces zoning: PLOGI denied if initiator and target are not in the same zone</td>
+</tr>
+<tr>
+<td>3</td>
+<td>PRLI — Process Login</td>
+<td>Upper-layer protocol (SCSI) negotiation between initiator and target</td>
+<td>MDS passes transparently; FCP (FC Protocol) layer established</td>
+</tr>
+<tr>
+<td>4</td>
+<td>SCSI Commands</td>
+<td>Read/Write I/O begins over the FC connection</td>
+<td>MDS forwards frames; SAN Analytics captures per-ITL metrics</td>
+</tr>
+</tbody>
+</table>
+<p>FLOGI is the entry point — without a valid FCID, the device cannot communicate with any other fabric member. Zone enforcement at PLOGI is the primary security boundary.</p>
+<h2 id="vsan-architecture">VSAN Architecture<a class="headerlink" href="#vsan-architecture" title="Permanent link">&para;</a></h2>
+<p>VSANs (Virtual SANs) allow multiple independent FC fabrics to share the same physical MDS infrastructure. Each VSAN maintains its own:</p>
+<ul>
+<li><strong>Name Server</strong> — devices logged into VSAN 10 cannot see devices in VSAN 20.</li>
+<li><strong>Zoning database</strong> — zone sets and active zones are per-VSAN.</li>
+<li><strong>Fabric login table</strong> — FCID assignments are VSAN-scoped; the same FCID can exist in two VSANs without conflict.</li>
+<li><strong>Domain ID</strong> — each VSAN runs its own principal switch election and domain ID assignment process.</li>
+</ul>
+<p><strong>Inter-VSAN Routing (IVR)</strong> allows controlled communication between devices in different VSANs without merging the fabrics. IVR creates virtual ports (IVR proxy) in the target VSAN so the initiator can reach it. Commonly used to share a tape library across production and backup VSANs.</p>
+<p><strong>VSAN trunking</strong> on ISLs (E_Ports → TE_Ports) carries multiple VSANs across a single physical link, reducing cabling while maintaining full VSAN isolation.</p>
+<h2 id="zoning-and-device-aliases">Zoning and Device Aliases<a class="headerlink" href="#zoning-and-device-aliases" title="Permanent link">&para;</a></h2>
+<p>Zoning is the primary access-control mechanism in FC fabrics. MDS supports two enforcement models:</p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>How Enforced</th>
+<th>Bypass Risk</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Hard zoning</td>
+<td>Hardware ASIC — frames rejected at the port ASIC before forwarding</td>
+<td>Cannot be bypassed; enforced even if the Name Server is queried directly</td>
+</tr>
+<tr>
+<td>Soft zoning</td>
+<td>Name Server filtering — targets not in the zone are hidden from PLOGI queries</td>
+<td>Theoretically bypassable if an HBA sends PLOGI to a known FCID directly</td>
+</tr>
+</tbody>
+</table>
+<p>Cisco MDS uses <strong>hard zoning by default</strong>. Soft zoning is available but not recommended for security-sensitive environments.</p>
+<p><strong>Device aliases</strong> replace WWNs in zone definitions with human-readable names (e.g., <code>esxi-01-hba0</code> instead of <code>21:00:00:24:ff:ab:cd:ef</code>). Device aliases are stored in the fabric-wide CFS database and automatically resolve to WWNs during zone enforcement. Best practice: one initiator + one target per zone (single-initiator single-target zoning) to minimise blast radius if a host misbehaves.</p>
+<h2 id="npv-and-npiv-mode">NPV and NPIV Mode<a class="headerlink" href="#npv-and-npiv-mode" title="Permanent link">&para;</a></h2>
+<p><strong>NPV (N-Port Virtualiser)</strong> mode converts an MDS switch from a full fabric participant into a proxy that forwards logins to an upstream core switch. In NPV mode:</p>
+<ul>
+<li>The NPV switch does not have its own domain ID (no F_Port services).</li>
+<li>All HBA FLOGIs are proxied through NPV uplinks (NP_Ports) to the core fabric.</li>
+<li>Reduces total domain ID consumption — useful in large environments approaching the 239-domain limit.</li>
+<li>Commonly deployed on edge MDS switches connecting to a director-class core.</li>
+</ul>
+<p><strong>NPIV (N-Port ID Virtualisation)</strong> allows a single physical FC port to present multiple virtual WWNs (vHBAs). Each virtual port gets its own FCID and appears as a separate device in the fabric. NPIV is used by:</p>
+<ul>
+<li><strong>ESXi hosts</strong> — each VM can have a dedicated vHBA for per-VM zoning and QoS.</li>
+<li><strong>Virtual HBA cards</strong> — blade servers with a single mezzanine HBA presenting multiple virtual ports.</li>
+<li><strong>UCS vHBAs</strong> — Cisco UCS uses NPIV extensively to map service profiles to virtual FC identities.</li>
+</ul>
+<p>MDS enables NPIV per-port with <code>feature npiv</code>. The physical HBA must also support NPIV.</p>
+<h2 id="high-availability-features">High Availability Features<a class="headerlink" href="#high-availability-features" title="Permanent link">&para;</a></h2>
+<p>Director-class MDS switches (9710, 9718) and high-end fixed switches provide multiple HA mechanisms to eliminate single points of failure.</p>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Mechanism</th>
+<th>Benefit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Dual supervisor modules</td>
+<td>Active + standby supervisor in the director chassis; stateful switchover (SSO)</td>
+<td>Control-plane failover in &lt;30 seconds without traffic disruption</td>
+</tr>
+<tr>
+<td>Port channelling (ISL)</td>
+<td>Multiple physical FC links bundled into one logical ISL; LACP-like frame hashing</td>
+<td>Link failure transparent to fabric; no FSPF re-convergence required</td>
+</tr>
+<tr>
+<td>FSPF path selection</td>
+<td>Link-state routing; each switch floods Link State Records (LSRs) across the fabric</td>
+<td>Automatic traffic re-route around a failed ISL within seconds</td>
+</tr>
+<tr>
+<td>Graceful link failover</td>
+<td>Before a link goes down (planned), traffic is drained to alternate paths</td>
+<td>Zero traffic loss during planned maintenance</td>
+</tr>
+<tr>
+<td>In-Service Software Upgrade (ISSU)</td>
+<td>NX-OS upgrade without supervisor restart; data plane continues forwarding</td>
+<td>Upgrade fabric switches during business hours</td>
+</tr>
+<tr>
+<td>BB credit recovery</td>
+<td>Detects and recovers from BB credit stall (credit loss due to link event) without link reset</td>
+<td>Prevents fabric-wide credit-starvation from a single link event</td>
+</tr>
+</tbody>
+</table>
 
 
 

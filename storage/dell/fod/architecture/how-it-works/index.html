@@ -3981,6 +3981,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#fod-licence-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FOD Licence Lifecycle
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#metering-model" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4269,6 +4280,31 @@ How It Works reference covering Overview, Metering Model, Supported Platforms, U
 </code></pre></div>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>Dell Flex on Demand (FOD) is a consumption-based capacity model in which additional storage capacity is pre-installed in the array but metered — you pay only for what you use above the committed baseline. Usage is reported monthly via the CloudIQ telemetry pipeline, and burst consumption above the committed tier is billed at a per-TiB rate. FOD is available on PowerMax, PowerStore, and PowerScale platforms.</p>
+<h2 id="fod-licence-lifecycle">FOD Licence Lifecycle<a class="headerlink" href="#fod-licence-lifecycle" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TB
+  PORTAL["Dell Portal\n(licensing.dell.com)\nPurchase FOD licence"]
+  KEY["Activation Key\n(emailed to customer)\nalphanumeric string"]
+  CMD["Customer applies key\n`symcfg -auth activate`\nor Unisphere GUI"]
+  ARRAY["PowerMax Array\nFeature enabled\nExpiry date set"]
+  MONITOR["Monitor\nUnisphere dashboard\nor SYMCLI audit report"]
+  RENEW["Renewal\n(before expiry)\nor Deactivation"]
+
+  PORTAL --&gt;|"licence purchased\nentitlement generated"| KEY
+  KEY --&gt;|"admin receives key\nvia email"| CMD
+  CMD --&gt;|"key applied to\narray serial number"| ARRAY
+  ARRAY --&gt;|"feature active\nmonitor compliance"| MONITOR
+  MONITOR --&gt;|"approaching expiry\nor no longer needed"| RENEW
+  RENEW --&gt;|"renewed licence key\npurchased"| PORTAL
+
+  classDef blue fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef green fill:#15803d,stroke:#166534,color:#fff
+  classDef amber fill:#b45309,stroke:#92400e,color:#fff
+  classDef purple fill:#7c3aed,stroke:#6d28d9,color:#fff
+
+  class PORTAL blue
+  class ARRAY green
+  class CMD,KEY amber
+  class MONITOR,RENEW purple</code></pre>
 <h2 id="metering-model">Metering Model<a class="headerlink" href="#metering-model" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Total Installed Capacity (physically installed)
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    │

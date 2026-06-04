@@ -3933,6 +3933,61 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#service-tiers-and-performance-slas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Service Tiers and Performance SLAs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consumption-and-billing-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Consumption and Billing Model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#keystone-collector-and-telemetry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Keystone Collector and Telemetry
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-management-with-bluexp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Management with BlueXP
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#evergreen-storage-hardware-refresh" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evergreen Storage (Hardware Refresh)
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -4140,60 +4195,172 @@ How It Works reference covering Overview, STaaS Consumption Model, Capacity Mana
   classDef host fill:#15803d,stroke:#166534,color:#fff
   class ONTAP ctrl
   class KS,COMMIT,BURST,BILL cloud
-  class ADMIN host
-```text
-┌─────────────────────────────────── NetApp Keystone — How It Works ────────────────────────────────────┐
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │          Keystone Collector VM polls ONTAP REST API every 5 min; aggregates capacity          │   │
-│   │          Metrics compressed and uploaded to Active IQ via HTTPS/TLS to cloud endpoint         │   │
-│   │         Billing engine computes committed + burst consumed; monthly invoice generated         │   │
-│   │           Customer views usage in Active IQ Digital Advisor; exports CSV for finance          │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    ONTAP REST poll -&gt; Collector aggregates -&gt; HTTPS upload -&gt; IQ billing -&gt; invoice                   │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
-│   │          Collection         │  │            Upload           │  │           Billing           │   │
-│   │        REST API poll        │  │          HTTPS/TLS          │  │        Committed calc       │   │
-│   │         Every 5 min         │  │       Compressed JSON       │  │          Burst calc         │   │
-│   │       Volume capacity       │  │         IQ endpoint         │  │       Monthly invoice       │   │
-│   │        Perf counters        │  │        Retry on fail        │  │          CSV export         │   │
-│   │         SVM metadata        │  │        Proxy support        │  │         Usage charts        │   │
-│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
-│                                                                                                       │
-│    Collector must reach ONTAP mgmt LIF on 443 and Active IQ cloud endpoint on 443                     │
-│                                                                                                       │
-│                  ▼                                ▼                                ▼                  │
-│                                                                                                       │
-│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-│   │       Step       │      Action      │     Frequency     │     Outcome      │      Notes       │   │
-│   │       Poll       │  REST API call   │       5 min       │   Raw metrics    │     Per SVM      │   │
-│   │    Aggregate     │    Summarise     │      Per poll     │   JSON bundle    │    Compressed    │   │
-│   │      Upload      │   HTTPS to IQ    │     Per cycle     │   Cloud stored   │     TLS 1.2+     │   │
-│   │       Bill       │   Compute cost   │      Monthly      │   Invoice PDF    │   Burst extra    │   │
-│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-│                                                                                                       │
-│    Physical: Collector VM 2 vCPU 8 GB RAM needs outbound TCP 443 to cloud                             │
-│                                                                                                       │
-│    Key terms:                                                                                         │
-│                                                                                                       │
-│    Keystone Collector = Linux VM; polls ONTAP and ships metrics to Active IQ                          │
-│    ONTAP REST API     = Native JSON/HTTPS API (v9.6+); replaces legacy ZAPI                           │
-│    Active IQ          = NetApp cloud analytics; stores metrics; computes billing                      │
-│    Committed cap.     = Baseline TB contracted; billed at flat rate monthly                           │
-│    Burst cap.         = TB used above committed; billed at higher per-TB rate                         │
-│    Service level SLO  = Max latency + min IOPS/TB guaranteed per tier                                 │
-│    SVM                = Storage VM; ONTAP tenancy unit; polled individually                           │
-│    JSON bundle        = Compressed payload Collector uploads: volumes, capacity, perf                 │
-│    Proxy support      = Collector can route HTTPS uploads via HTTP/SOCKS proxy                        │
-│    Retry              = Collector queues failed uploads; retries up to 24 h                           │
-│    CSV export         = Active IQ provides usage CSV for chargeback/finance                           │
-│    TLS 1.2+           = Minimum encryption standard for all Collector communications                  │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</code></pre>
+  class ADMIN host</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────────────── NetApp Keystone — How It Works ────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │          Keystone Collector VM polls ONTAP REST API every 5 min; aggregates capacity          │   │
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   │          Metrics compressed and uploaded to Active IQ via HTTPS/TLS to cloud endpoint         │   │
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   │         Billing engine computes committed + burst consumed; monthly invoice generated         │   │
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   │           Customer views usage in Active IQ Digital Advisor; exports CSV for finance          │   │
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│                                                                                                       │
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│    ONTAP REST poll -&gt; Collector aggregates -&gt; HTTPS upload -&gt; IQ billing -&gt; invoice                   │
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│                                                                                                       │
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│                                                                                                       │
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   ┌─────────────────────────────┐  ┌─────────────────────────────┐  ┌─────────────────────────────┐   │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   │          Collection         │  │            Upload           │  │           Billing           │   │
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   │        REST API poll        │  │          HTTPS/TLS          │  │        Committed calc       │   │
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   │         Every 5 min         │  │       Compressed JSON       │  │          Burst calc         │   │
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   │       Volume capacity       │  │         IQ endpoint         │  │       Monthly invoice       │   │
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│   │        Perf counters        │  │        Retry on fail        │  │          CSV export         │   │
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>│   │         SVM metadata        │  │        Proxy support        │  │         Usage charts        │   │
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   └─────────────────────────────┘  └─────────────────────────────┘  └─────────────────────────────┘   │
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│                                                                                                       │
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│    Collector must reach ONTAP mgmt LIF on 443 and Active IQ cloud endpoint on 443                     │
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│                                                                                                       │
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│                  ▼                                ▼                                ▼                  │
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>│                                                                                                       │
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│   │       Step       │      Action      │     Frequency     │     Outcome      │      Notes       │   │
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│   │       Poll       │  REST API call   │       5 min       │   Raw metrics    │     Per SVM      │   │
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>│   │    Aggregate     │    Summarise     │      Per poll     │   JSON bundle    │    Compressed    │   │
+<a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>│   │      Upload      │   HTTPS to IQ    │     Per cycle     │   Cloud stored   │     TLS 1.2+     │   │
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>│   │       Bill       │   Compute cost   │      Monthly      │   Invoice PDF    │   Burst extra    │   │
+<a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+<a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>│                                                                                                       │
+<a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>│    Physical: Collector VM 2 vCPU 8 GB RAM needs outbound TCP 443 to cloud                             │
+<a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│                                                                                                       │
+<a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>│    Key terms:                                                                                         │
+<a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>│                                                                                                       │
+<a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>│    Keystone Collector = Linux VM; polls ONTAP and ships metrics to Active IQ                          │
+<a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>│    ONTAP REST API     = Native JSON/HTTPS API (v9.6+); replaces legacy ZAPI                           │
+<a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>│    Active IQ          = NetApp cloud analytics; stores metrics; computes billing                      │
+<a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>│    Committed cap.     = Baseline TB contracted; billed at flat rate monthly                           │
+<a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>│    Burst cap.         = TB used above committed; billed at higher per-TB rate                         │
+<a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>│    Service level SLO  = Max latency + min IOPS/TB guaranteed per tier                                 │
+<a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>│    SVM                = Storage VM; ONTAP tenancy unit; polled individually                           │
+<a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>│    JSON bundle        = Compressed payload Collector uploads: volumes, capacity, perf                 │
+<a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>│    Proxy support      = Collector can route HTTPS uploads via HTTP/SOCKS proxy                        │
+<a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>│    Retry              = Collector queues failed uploads; retries up to 24 h                           │
+<a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>│    CSV export         = Active IQ provides usage CSV for chargeback/finance                           │
+<a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>│    TLS 1.2+           = Minimum encryption standard for all Collector communications                  │
+<a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>│                                                                                                       │
+<a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<h2 id="service-tiers-and-performance-slas">Service Tiers and Performance SLAs<a class="headerlink" href="#service-tiers-and-performance-slas" title="Permanent link">&para;</a></h2>
+<p>Keystone offers four named service tiers, each with a committed latency SLA and a minimum IOPS/TB guarantee. The tier is selected per volume at provisioning time.</p>
+<table>
+<thead>
+<tr>
+<th>Tier</th>
+<th>Media</th>
+<th>Latency SLA</th>
+<th>Committed IOPS/TB</th>
+<th>Burst Allowance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Extreme</td>
+<td>NVMe (all-flash AFF A-series / C-series)</td>
+<td>&lt;1 ms average</td>
+<td>12,288</td>
+<td>Up to 2× committed</td>
+</tr>
+<tr>
+<td>Premium</td>
+<td>SSD (AFF A-series)</td>
+<td>&lt;2 ms average</td>
+<td>4,096</td>
+<td>Up to 2× committed</td>
+</tr>
+<tr>
+<td>Performance</td>
+<td>SSD (AFF C-series / FAS hybrid)</td>
+<td>&lt;4 ms average</td>
+<td>2,048</td>
+<td>Up to 2× committed</td>
+</tr>
+<tr>
+<td>Standard</td>
+<td>HDD / hybrid (FAS)</td>
+<td>No strict latency SLA</td>
+<td>512</td>
+<td>Up to 2× committed</td>
+</tr>
+</tbody>
+</table>
+<p>SLA metrics are monitored continuously by the Keystone Collector. If a committed SLA is breached for a sustained period, NetApp issues a service credit under the subscription agreement. Burst IOPS above the committed level are subject to availability and are not under SLA.</p>
+<h2 id="consumption-and-billing-model">Consumption and Billing Model<a class="headerlink" href="#consumption-and-billing-model" title="Permanent link">&para;</a></h2>
+<p>Keystone billing is capacity-based, not IOPS-based. The customer commits to a minimum capacity (TiB) per tier for the subscription term.</p>
+<ul>
+<li><strong>Committed capacity</strong> — the contracted baseline. Billed at a flat monthly rate per TiB regardless of actual usage. If usage falls below committed, the committed charge still applies.</li>
+<li><strong>Burst capacity</strong> — usage above the committed threshold within any calendar month. Billed at a higher per-TiB rate, calculated from the high-water mark of burst consumption recorded during the month.</li>
+<li><strong>No upfront CapEx</strong> — NetApp owns the hardware. The customer pays a predictable monthly subscription fee, converting storage from a capital expenditure to an operating expenditure.</li>
+<li><strong>Flex scaling</strong> — committed capacity can be adjusted (usually up) at a subscription renewal or via a contract amendment; scale-down is subject to contract terms.</li>
+</ul>
+<h2 id="keystone-collector-and-telemetry">Keystone Collector and Telemetry<a class="headerlink" href="#keystone-collector-and-telemetry" title="Permanent link">&para;</a></h2>
+<p>The <strong>Keystone Collector</strong> is a lightweight Linux VM deployed in the customer's environment (typically on an existing VMware cluster). It has no direct control over ONTAP configuration — it is read-only for billing purposes.</p>
+<p><strong>Sizing:</strong> 2 vCPU, 8 GB RAM, 200 GB disk. Requires outbound TCP 443 to ONTAP management LIFs and to the NetApp cloud endpoint.</p>
+<p><strong>Telemetry collection cycle:</strong></p>
+<ol>
+<li>Collector queries the ONTAP REST API every 5 minutes per SVM — volume capacity, efficiency savings, and performance counters.</li>
+<li>Raw metrics are aggregated into a compressed JSON bundle.</li>
+<li>The bundle is uploaded via HTTPS/TLS 1.2+ to the Active IQ cloud endpoint.</li>
+<li>Active IQ processes the bundle, updates usage dashboards, and feeds the billing engine.</li>
+<li>At month-end, the billing engine calculates committed + burst; an invoice PDF is generated.</li>
+</ol>
+<p>The Collector queues failed uploads and retries for up to 24 hours, ensuring no billing data is lost during transient network outages.</p>
+<h2 id="data-management-with-bluexp">Data Management with BlueXP<a class="headerlink" href="#data-management-with-bluexp" title="Permanent link">&para;</a></h2>
+<p><strong>NetApp BlueXP</strong> (formerly Cloud Manager) is NetApp's unified control plane that spans on-premises and cloud storage. Within a Keystone deployment, BlueXP provides:</p>
+<ul>
+<li><strong>Single management interface</strong> — view Keystone on-prem hardware alongside Cloud Volumes ONTAP (AWS, Azure, GCP) and FSx for ONTAP in one dashboard.</li>
+<li><strong>Data tiering</strong> — configure FabricPool to tier cold data from Keystone on-prem volumes to object storage (StorageGRID or public cloud) automatically.</li>
+<li><strong>SnapMirror orchestration</strong> — replicate data between Keystone on-prem and cloud-based ONTAP instances for hybrid DR or cloud bursting.</li>
+<li><strong>Capacity visibility</strong> — BlueXP shows committed vs consumed across all Keystone SVMs and correlates with cloud usage for unified chargeback reporting.</li>
+</ul>
+<p>BlueXP requires a Connector (VM) deployed in the environment and connectivity to the ONTAP cluster management interface.</p>
+<h2 id="evergreen-storage-hardware-refresh">Evergreen Storage (Hardware Refresh)<a class="headerlink" href="#evergreen-storage-hardware-refresh" title="Permanent link">&para;</a></h2>
+<p>Keystone includes <strong>Evergreen Storage</strong>, NetApp's proactive hardware refresh programme bundled into the subscription. The principle is that the customer never operates on unsupported or end-of-support hardware during the subscription term.</p>
+<p><strong>Refresh cadence:</strong> NetApp refreshes controllers every 3–5 years (driven by NetApp's platform lifecycle, not the customer's request). The process:</p>
+<ol>
+<li>NetApp engineers plan and schedule the controller replacement during an agreed maintenance window.</li>
+<li>Data is non-disruptively migrated to the new controllers using ONTAP's native volume move or aggregate relocation.</li>
+<li>Old controllers are removed and returned to NetApp. The customer retains no hardware asset.</li>
+<li>Disk shelves and drives may be reused or replaced depending on capacity and media type requirements.</li>
+</ol>
+<p>The customer's subscription price may be adjusted at the time of refresh if the new hardware tier results in a different cost basis, but the service continues uninterrupted.</p>
+<pre class="mermaid"><code>graph LR
+  WL(["Customer Workloads\nVMs · Databases · Files · Object"])
+
+  subgraph KS["NetApp Keystone Storage (On-Prem, Managed by NetApp)"]
+    HW["NetApp Hardware\nAFF / FAS / StorageGRID"]
+    ONTAP["ONTAP\nExtreme · Premium · Performance · Standard tiers"]
+  end
+
+  COL["Keystone Collector\nLinux VM · ONTAP REST poll\nEvery 5 min"]
+
+  subgraph CLOUD["NetApp Cloud"]
+    AIQ["Active IQ\nBilling engine · SLA reporting"]
+    BXP["BlueXP\nUnified management · Tiering"]
+  end
+
+  WL --&gt;|"NFS · iSCSI · FC · S3"| HW
+  HW --- ONTAP
+  ONTAP --&gt;|"REST API metrics"| COL
+  COL --&gt;|"HTTPS / TLS 1.2+\nCompressed JSON"| AIQ
+  AIQ --&gt; BXP
+
+  classDef wl fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef ks fill:#15803d,stroke:#166534,color:#fff
+  classDef col fill:#b45309,stroke:#92400e,color:#fff
+  classDef cloud fill:#7c3aed,stroke:#6d28d9,color:#fff
+  class WL wl
+  class HW,ONTAP ks
+  class COL col
+  class AIQ,BXP cloud</code></pre>
 
 
 

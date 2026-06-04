@@ -4269,6 +4269,48 @@ How It Works reference covering Overview, Data Pipeline Topology, How It Works, 
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>Dell CloudIQ is a cloud-native AIOps SaaS platform hosted by Dell. It receives telemetry from on-premises Dell infrastructure via the Secure Connect Gateway (SCG) and processes it through machine-learning models to produce health scores, capacity forecasts, and anomaly alerts. CloudIQ requires no on-premises compute beyond the SCG appliance — all analytics run in Dell's cloud.</p>
 <h2 id="data-pipeline-topology">Data Pipeline Topology<a class="headerlink" href="#data-pipeline-topology" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph LR
+  subgraph SOURCES["Storage Systems"]
+    PM["PowerMax\n(embedded agent)"]
+    UN["Unity XT\n(collection service)"]
+    PS["PowerStore\n(REST API)"]
+    SC["PowerScale\n(OneFS agent)"]
+    SW["PowerPath / vSAN\n/ VMware"]
+  end
+
+  subgraph ONPREM["On-Premises Collection"]
+    SA["SupportAssist Agent\n(SCG VM)\npoll every 5 min\noutbound HTTPS 443"]
+  end
+
+  subgraph CLOUD["Dell CloudIQ Cloud Platform"]
+    AE["Analytics Engine\n(ML Models)"]
+    TM["Telemetry Store"]
+    ML["ML Models\n7-day baseline\nper metric"]
+    AE --&gt; ML
+    TM --&gt; AE
+  end
+
+  subgraph OUTPUT["Outputs"]
+    HS["Health Score\n0–100"]
+    CF["Capacity Forecast\n(runway days)"]
+    PA["Performance\nAnomalies"]
+    PR["Proactive\nRecommendations"]
+    AL["Alerts\n(email / webhook)"]
+  end
+
+  PM &amp; UN &amp; PS &amp; SC &amp; SW --&gt; SA
+  SA --&gt;|"TLS-encrypted\nbatch telemetry"| TM
+  ML --&gt; HS &amp; CF &amp; PA &amp; PR &amp; AL
+
+  classDef blue fill:#2563eb,stroke:#1d4ed8,color:#fff
+  classDef green fill:#15803d,stroke:#166534,color:#fff
+  classDef amber fill:#b45309,stroke:#92400e,color:#fff
+  classDef purple fill:#7c3aed,stroke:#6d28d9,color:#fff
+
+  class PM,UN,PS,SC,SW blue
+  class SA green
+  class AE,TM,ML amber
+  class HS,CF,PA,PR,AL purple</code></pre>
 <h2 id="how-it-works">How It Works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h2>
 <ol>
 <li>Each on-premises Dell storage system is registered to an SCG appliance</li>
