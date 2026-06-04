@@ -4706,6 +4706,24 @@ How It Works (Monitoring) reference covering Architecture, Component Roles, Secu
 Dell CloudIQ is a cloud-native SaaS AIOps platform that collects telemetry from Dell storage, server, and networking systems. All communication is outbound HTTPS from an on-premises Secure Connect Gateway (SCG) virtual appliance — no inbound firewall rules are required.</p>
 <hr />
 <h2 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph LR
+    Arrays["Dell Arrays&lt;br/&gt;PowerStore · PowerMax&lt;br/&gt;PowerScale · Unity XT&lt;br/&gt;Data Domain · PowerEdge"]
+    SCG["Secure Connect Gateway&lt;br/&gt;on-prem OVA&lt;br/&gt;telemetry collector&lt;br/&gt;HTTPS outbound only"]
+    CloudIQ["CloudIQ Cloud&lt;br/&gt;SaaS platform&lt;br/&gt;ML models · AI pipeline&lt;br/&gt;health scoring"]
+    Dashboard["CloudIQ Dashboard&lt;br/&gt;health scores · alerts&lt;br/&gt;capacity trends&lt;br/&gt;anomaly detections"]
+    Recommendations["Recommendations&lt;br/&gt;AI-generated actions&lt;br/&gt;root cause analysis&lt;br/&gt;priority + impact"]
+
+    Arrays --&gt;|"telemetry REST API TCP 443/8443"| SCG
+    SCG --&gt;|"encrypted upload TCP 443"| CloudIQ
+    CloudIQ --&gt;|"anomaly detection · forecasting"| Dashboard
+    CloudIQ --&gt;|"AI recommendations"| Recommendations
+    Dashboard --&gt;|"engineer reviews"| Recommendations
+
+    style Arrays fill:#2563eb,stroke:#1d4ed8,color:#fff
+    style SCG fill:#b45309,stroke:#92400e,color:#fff
+    style CloudIQ fill:#7c3aed,stroke:#6d28d9,color:#fff
+    style Dashboard fill:#15803d,stroke:#166534,color:#fff
+    style Recommendations fill:#15803d,stroke:#166534,color:#fff</code></pre>
 <hr />
 <h2 id="component-roles">Component Roles<a class="headerlink" href="#component-roles" title="Permanent link">&para;</a></h2>
 <table>

@@ -3978,7 +3978,82 @@ How It Works reference covering Overview, Architecture, Network Recovery Share R
 </tr>
 </tbody>
 </table>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────────────── RASR — How It Works ─────────────────────────────────────────┐
+<p><pre class="mermaid"><code>graph LR
+    Server["Dell PowerEdge Server&lt;br/&gt;RASRAgent service&lt;br/&gt;OS + boot partition"]
+    Console["RASR Console&lt;br/&gt;backup initiation&lt;br/&gt;recovery media mgmt"]
+    Image["Recovery Image&lt;br/&gt;.wim / RASR format&lt;br/&gt;sector-level snapshot"]
+    Share["Network Recovery Share&lt;br/&gt;SMB share&lt;br/&gt;image storage · retrieval"]
+    Media["Recovery Media&lt;br/&gt;WinPE USB / ISO&lt;br/&gt;Dell hardware drivers"]
+    BareMetalTarget["Bare-Metal Target&lt;br/&gt;original or replacement&lt;br/&gt;Dell PowerEdge hardware"]
+
+    Server --&gt;|"image capture"| Image
+    Console --&gt;|"orchestrates capture"| Server
+    Image --&gt;|"written to"| Share
+    Media --&gt;|"boots into WinPE"| BareMetalTarget
+    Share --&gt;|"image retrieved for restore"| BareMetalTarget
+
+    style Server fill:#2563eb,stroke:#1d4ed8,color:#fff
+    style Console fill:#7c3aed,stroke:#6d28d9,color:#fff
+    style Image fill:#b45309,stroke:#92400e,color:#fff
+    style Share fill:#15803d,stroke:#166534,color:#fff
+    style Media fill:#b45309,stroke:#92400e,color:#fff
+    style BareMetalTarget fill:#15803d,stroke:#166534,color:#fff
+```text
+┌───────────────────────────────────────── RASR — How It Works ─────────────────────────────────────────┐
+│                                                                                                       │
+│    RASR data flow — from source to target through the protection pipeline:                            │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                 1  Source / Production System                                 │   │
+│   │            Vault Appliance      — air-gapped PowerStore/DD in isolated network segment        │   │
+│   │                Host writes are intercepted or snapshotted by the RASR agent/proxy             │   │
+│   │                  Changed blocks tracked via CBT / journal / delta-set mechanism               │   │
+│   │                 Consistency ensured at quiesce point before data transfer begins              │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│    Changed data forwarded to the RASR engine — compression and encryption applied in transit          │
+│                                                                                                       │
+│                                                   ▼                                                   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                         2  RASR Engine                                        │   │
+│   │          CyberSense Engine    — ML-based malware and corruption detection on vault data       │   │
+│   │                    Data compressed, deduplicated, and encrypted before storage                │   │
+│   │                  Metadata catalog updated; job status reported to control plane               │   │
+│   │                                         cr_vault_cli sync                                     │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│                                                   ▼                                                   │
+│                                                                                                       │
+│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                                     3  Target / Repository                                    │   │
+│   │           PowerProtect Manager — orchestrates replication jobs, retention, and recovery       │   │
+│   │                  Recovery point written; retention policy applied automatically               │   │
+│   │                                   Restore: cr_vault_cli status                                │   │
+│   │                     RTO driven by target storage performance and data volume                  │   │
+│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure:                                                                             │
+│  Isolated network segment (airgap switch) · Vault PowerStore/DD appliance · Clean-room ESXi hosts     │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  RASR          = Ransomware Air-gap Secure Recovery; full workflow from detection to clean rest       │
+│  Vault         = isolated, air-gapped storage appliance receiving periodic replication copies         │
+│  Vault Lock    = WORM lock applied after sync; prevents modification or deletion of vault copies      │
+│  CyberSense    = ML analytics engine scanning vault data for corruption, encryption signatures        │
+│  PPDM          = PowerProtect Data Manager; orchestrates protection policies, jobs, and recovery      │
+│  Air Gap       = physical or logical network isolation preventing attacker lateral movement to        │
+│  Delta Set     = incremental changed blocks replicated from production to vault each cycle            │
+│  Clean Room    = isolated recovery environment: separate vCenter, network, and workstations           │
+│  Recovery Point= specific vault snapshot timestamp from which clean recovery is performed             │
+│  Integrity Lock= two-person authorization required to open vault; prevents insider unlock attac       │
+│  Journal       = write-order-consistent journal on vault enabling point-in-time recovery              │
+│  Scan Report   = CyberSense output: clean/suspect classification per file and block                   │
+│  Retention     = vault copy lifespan; typically 30–90 days of daily snapshots kept                    │
+│  RTO           = Recovery Time Objective; time from failover decision to restored service             │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────────────── RASR — How It Works ─────────────────────────────────────────┐
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│    RASR data flow — from source to target through the protection pipeline:                            │
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│                                                                                                       │
@@ -4032,61 +4107,6 @@ How It Works reference covering Overview, Architecture, Network Recovery Share R
 <a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>│  RTO           = Recovery Time Objective; time from failover decision to restored service             │
 <a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a>│                                                                                                       │
 <a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌───────────────────────────────────────── RASR — How It Works ─────────────────────────────────────────┐
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│    RASR data flow — from source to target through the protection pipeline:                            │
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│                                                                                                       │
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   │                                 1  Source / Production System                                 │   │
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │            Vault Appliance      — air-gapped PowerStore/DD in isolated network segment        │   │
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │                Host writes are intercepted or snapshotted by the RASR agent/proxy             │   │
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │                  Changed blocks tracked via CBT / journal / delta-set mechanism               │   │
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │                 Consistency ensured at quiesce point before data transfer begins              │   │
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│                                                                                                       │
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│    Changed data forwarded to the RASR engine — compression and encryption applied in transit          │
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│                                                                                                       │
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                                                   ▼                                                   │
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                                                                                                       │
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   │                                         2  RASR Engine                                        │   │
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │          CyberSense Engine    — ML-based malware and corruption detection on vault data       │   │
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │                    Data compressed, deduplicated, and encrypted before storage                │   │
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │                  Metadata catalog updated; job status reported to control plane               │   │
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │                                         cr_vault_cli sync                                     │   │
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│                                                                                                       │
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│                                                   ▼                                                   │
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│                                                                                                       │
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│   │                                     3  Target / Repository                                    │   │
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│   │           PowerProtect Manager — orchestrates replication jobs, retention, and recovery       │   │
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│   │                  Recovery point written; retention policy applied automatically               │   │
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│   │                                   Restore: cr_vault_cli status                                │   │
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│   │                     RTO driven by target storage performance and data volume                  │   │
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│   └───────────────────────────────────────────────────────────────────────────────────────────────┘   │
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│                                                                                                       │
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  Physical Infrastructure:                                                                             │
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  Isolated network segment (airgap switch) · Vault PowerStore/DD appliance · Clean-room ESXi hosts     │
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│                                                                                                       │
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  RASR          = Ransomware Air-gap Secure Recovery; full workflow from detection to clean rest       │
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  Vault         = isolated, air-gapped storage appliance receiving periodic replication copies         │
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  Vault Lock    = WORM lock applied after sync; prevents modification or deletion of vault copies      │
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│  CyberSense    = ML analytics engine scanning vault data for corruption, encryption signatures        │
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  PPDM          = PowerProtect Data Manager; orchestrates protection policies, jobs, and recovery      │
-<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│  Air Gap       = physical or logical network isolation preventing attacker lateral movement to        │
-<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>│  Delta Set     = incremental changed blocks replicated from production to vault each cycle            │
-<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>│  Clean Room    = isolated recovery environment: separate vCenter, network, and workstations           │
-<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>│  Recovery Point= specific vault snapshot timestamp from which clean recovery is performed             │
-<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>│  Integrity Lock= two-person authorization required to open vault; prevents insider unlock attac       │
-<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>│  Journal       = write-order-consistent journal on vault enabling point-in-time recovery              │
-<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>│  Scan Report   = CyberSense output: clean/suspect classification per file and block                   │
-<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>│  Retention     = vault copy lifespan; typically 30–90 days of daily snapshots kept                    │
-<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>│  RTO           = Recovery Time Objective; time from failover decision to restored service             │
-<a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a>│                                                                                                       │
-<a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div></p>
 <h2 id="network-recovery-share-requirements">Network Recovery Share Requirements<a class="headerlink" href="#network-recovery-share-requirements" title="Permanent link">&para;</a></h2>
 <table>

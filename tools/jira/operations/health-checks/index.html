@@ -3326,6 +3326,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#run-this-routine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run This Routine
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#2-log-review" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3722,6 +3733,16 @@ Health Checks reference covering Health Check Overview, 2. Log Review, 3. Disk S
 │  JMX            = expose JVM metrics; scrape with Prometheus JMX exporter                             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘</code></pre>
+<h2 id="run-this-routine">Run This Routine<a class="headerlink" href="#run-this-routine" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Jira service status</strong> — Run <code>systemctl status jira</code> on the app server; confirm the service is <code>active (running)</code>; if not, check the process list with <code>ps aux | grep jira</code> and review <code>catalina.out</code> for the last recorded error before attempting a restart.</li>
+<li><strong>Jira URL health</strong> — Run <code>curl -sk https://&lt;jira-url&gt;/status</code>; the response must contain <code>{"state":"RUNNING"}</code>; any other state (<code>STARTING</code>, <code>ERROR</code>, <code>STOPPING</code>) indicates Jira is not ready to serve users and requires immediate investigation.</li>
+<li><strong>Database connection</strong> — Navigate to <strong>Jira Admin → System → Database → Connection Pool Monitoring</strong>; confirm active connections are below 80% of the pool maximum and the wait count is zero; elevated wait counts indicate connection starvation which causes request queuing and slow page loads.</li>
+<li><strong>Index integrity</strong> — Navigate to <strong>Jira Admin → System → Indexing</strong>; confirm no reindex is currently in progress and the last reindex completed successfully; a stale index causes JQL searches to return incorrect or missing results.</li>
+<li><strong>Disk space</strong> — Run <code>df -h /var/atlassian/application-data/jira</code>; alert if the shared home volume exceeds 80%; also check the app node OS disk and log directory with <code>du -sh /opt/atlassian/jira/logs/</code>; attachments accumulate silently and are the most common cause of disk fills.</li>
+<li><strong>Mail server</strong> — Navigate to <strong>Jira Admin → System → Outgoing Mail</strong> and use the <strong>Send a Test Email</strong> function; confirm delivery; a failed outgoing mail server means all issue notification emails (assignments, comments, transitions) are queued but not delivered.</li>
+<li><strong>Application log errors</strong> — Run <code>tail -100 /var/atlassian/application-data/jira/log/atlassian-jira.log | grep -iE "error|exception" | tail -20</code>; review the output for patterns such as <code>OutOfMemoryError</code>, <code>Could not get JDBC Connection</code>, or <code>Index is corrupted</code>; each unique error pattern should be triaged and tracked.</li>
+</ol>
 <p>Expected: All nodes show <code>healthy</code> / <code>UP</code>.</p>
 <hr />
 <h2 id="2-log-review">2. Log Review<a class="headerlink" href="#2-log-review" title="Permanent link">&para;</a></h2>

@@ -4083,6 +4083,26 @@ How It Works reference covering Overview, Architecture, Supported Platforms, Ret
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>Veeam Backup &amp; Replication provides backup, replication, recovery, and disaster recovery for virtual, physical, and cloud workloads. The Backup Server manages scheduling and configuration. Backup Proxies perform data movement via VMware VADP or agent-based reads. The Scale-Out Backup Repository (SOBR) provides tiered storage — fast disk for short-term, object storage for long-term.</p>
 <h2 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph LR
+    VMs["VMs / Workloads&lt;br/&gt;vSphere · Hyper-V&lt;br/&gt;Physical · Cloud"]
+    Proxy["Backup Proxy&lt;br/&gt;transport: SAN / HotAdd / NBD&lt;br/&gt;CBT · compression · dedup"]
+    Repo["Backup Repository&lt;br/&gt;local disk · NAS · S3&lt;br/&gt;tape · SOBR tiers"]
+    VeeamONE["Veeam ONE&lt;br/&gt;monitoring · reporting&lt;br/&gt;dashboards · capacity"]
+    Console["Veeam BR Console&lt;br/&gt;admin · REST API&lt;br/&gt;job engine · catalog"]
+
+    VMs --&gt;|"backup job"| Proxy
+    Proxy --&gt;|"writes backup chains"| Repo
+    VeeamONE --&gt;|"monitors"| Repo
+    Console --&gt;|"orchestrates"| VMs
+    Console --&gt;|"orchestrates"| Proxy
+    Console --&gt;|"orchestrates"| Repo
+    Console --&gt;|"orchestrates"| VeeamONE
+
+    style VMs fill:#2563eb,stroke:#1d4ed8,color:#fff
+    style Proxy fill:#2563eb,stroke:#1d4ed8,color:#fff
+    style Repo fill:#15803d,stroke:#166534,color:#fff
+    style VeeamONE fill:#b45309,stroke:#92400e,color:#fff
+    style Console fill:#7c3aed,stroke:#6d28d9,color:#fff</code></pre>
 <h2 id="supported-platforms">Supported Platforms<a class="headerlink" href="#supported-platforms" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

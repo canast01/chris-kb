@@ -3326,6 +3326,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#run-this-routine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run This Routine
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#2-log-checks" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3730,6 +3741,16 @@ This page defines the daily health check procedure for Confluence Data Center. R
 │  System Info = Admin &gt; System Information; shows memory, JVM version, and config                      │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘</code></pre>
+<h2 id="run-this-routine">Run This Routine<a class="headerlink" href="#run-this-routine" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Confluence service status</strong> — On Linux run <code>systemctl status confluence</code>; on Windows run <code>net start | findstr /i confluence</code>; the service must be active and running; if stopped, check <code>catalina.out</code> for the last error before restarting.</li>
+<li><strong>Cluster health (Data Center)</strong> — Navigate to <strong>Confluence Admin → General Configuration → Clustering</strong>; confirm all expected nodes appear with state <code>ACTIVE</code>; a missing or <code>OFFLINE</code> node means the cluster is degraded and failover capacity is reduced.</li>
+<li><strong>Database connectivity</strong> — Navigate to <strong>Confluence Admin → General Configuration → Troubleshooting and Support → System Information</strong>; confirm the database connection pool shows active connections and no pool exhaustion; alternatively check via <code>psql -U confluence -d confluencedb -c "SELECT 1;"</code> from the app server.</li>
+<li><strong>Index status</strong> — Navigate to <strong>Confluence Admin → General Configuration → Content Indexing</strong>; confirm the index state is not currently rebuilding and the queue depth is near zero; a persistently growing queue or a stuck reindex will cause search results to be stale or unavailable.</li>
+<li><strong>Disk space</strong> — Run <code>df -h /var/atlassian/application-data/confluence</code> and also check the shared home mount if Data Center; alert if any volume exceeds 80%; the shared home fills gradually with attachments and backups and is the most common cause of disk-related outages.</li>
+<li><strong>Mail server</strong> — Navigate to <strong>Confluence Admin → Mail Servers</strong> and use the <strong>Send Test Email</strong> function; confirm the test email is received; a failing mail server means all Confluence notifications (page watches, mentions, space admin alerts) are silently dropped.</li>
+<li><strong>Recent errors</strong> — Run <code>tail -100 /var/atlassian/application-data/confluence/logs/atlassian-confluence.log | grep -i error</code>; review any error lines for patterns such as <code>OutOfMemoryError</code>, <code>Could not get JDBC Connection</code>, or <code>LuceneIndex</code>; recurring errors should be opened as incidents rather than ignored.</li>
+</ol>
 <p>Response states:</p>
 <table>
 <thead>

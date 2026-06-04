@@ -4025,6 +4025,45 @@ How It Works reference covering Overview, Topology, Recovery Plan Modes, Storage
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>VMware Site Recovery Manager (SRM) is a DR orchestration platform deployed as a vCenter plugin on both the protected and recovery sites. It automates VM failover by coordinating storage presentation, VM registration, power-on sequencing, IP customisation, and custom scripts — without manual intervention at the storage or compute layer. SRM supports both array-based replication (via SRAs) and built-in vSphere Replication.</p>
 <h2 id="topology">Topology<a class="headerlink" href="#topology" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph LR
+    subgraph Protected["Protected Site"]
+        PVMs["VMs&lt;br/&gt;production workloads"]
+        PvCenter["vCenter&lt;br/&gt;compute management"]
+        PSRMServer["SRM Server&lt;br/&gt;protection groups&lt;br/&gt;vCenter plugin"]
+        Replication["Replication Engine&lt;br/&gt;vSphere Replication&lt;br/&gt;or array-based (SRA)"]
+    end
+
+    subgraph WAN["WAN / MPLS"]
+        Link["replication link&lt;br/&gt;async TCP 31031&lt;br/&gt;mgmt TCP 443, 9086"]
+    end
+
+    subgraph Recovery["Recovery Site"]
+        RVMs["Placeholder VMs&lt;br/&gt;shadow inventory"]
+        RvCenter["vCenter&lt;br/&gt;compute management"]
+        RSRMServer["SRM Server&lt;br/&gt;recovery plans&lt;br/&gt;vCenter plugin"]
+        RecoveryPlan["Recovery Plan&lt;br/&gt;power-on order&lt;br/&gt;IP customisation"]
+    end
+
+    PVMs --- PvCenter
+    PvCenter --- PSRMServer
+    PSRMServer --- Replication
+    Replication --&gt;|"async replication (TCP 31031)"| Link
+    PSRMServer --&gt;|"management (TCP 443, 9086)"| Link
+    Link --&gt;|"async replication (TCP 31031)"| RVMs
+    Link --&gt;|"management (TCP 443, 9086)"| RSRMServer
+    RSRMServer --- RecoveryPlan
+    RecoveryPlan --&gt;|"recovery plan execution"| RVMs
+    RVMs --- RvCenter
+
+    style PVMs fill:#2563eb,stroke:#1d4ed8,color:#fff
+    style PvCenter fill:#2563eb,stroke:#1d4ed8,color:#fff
+    style PSRMServer fill:#2563eb,stroke:#1d4ed8,color:#fff
+    style Replication fill:#2563eb,stroke:#1d4ed8,color:#fff
+    style Link fill:#b45309,stroke:#92400e,color:#fff
+    style RVMs fill:#15803d,stroke:#166534,color:#fff
+    style RvCenter fill:#15803d,stroke:#166534,color:#fff
+    style RSRMServer fill:#15803d,stroke:#166534,color:#fff
+    style RecoveryPlan fill:#7c3aed,stroke:#6d28d9,color:#fff</code></pre>
 <h2 id="recovery-plan-modes">Recovery Plan Modes<a class="headerlink" href="#recovery-plan-modes" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

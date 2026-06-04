@@ -4070,6 +4070,72 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#configure-replication-job-schedule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure Replication Job Schedule
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#run-a-dr-test-non-disruptive" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run a DR Test (Non-Disruptive)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#perform-dr-failover-planned" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Perform DR Failover (Planned)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#perform-dr-failover-emergency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Perform DR Failover (Emergency)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fail-back-after-recovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fail Back After Recovery
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#update-cluster-credentials-in-eyeglass" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Update Cluster Credentials in Eyeglass
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#day-to-day-operations" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4545,6 +4611,145 @@ Procedures reference covering Failover, Failback, Day-to-Day Operations.
 <a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Disable reverse SyncIQ policy (DR-to-prod direction) after failback is confirmed</span>
 <a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>disable<span class="w"> </span>&lt;reverse_policy_name&gt;
 </code></pre></div>
+<hr />
+<h2 id="configure-replication-job-schedule">Configure Replication Job Schedule<a class="headerlink" href="#configure-replication-job-schedule" title="Permanent link">&para;</a></h2>
+<p>SyncIQ policies on the PowerScale cluster control how often data replicates to the DR cluster. Eyeglass monitors these policies and uses their schedules to calculate RPO compliance.</p>
+<ol>
+<li>Log in to the production PowerScale OneFS web UI at <code>https://&lt;prod-cluster-ip&gt;:8080</code> and navigate to <strong>Data Protection &gt; SyncIQ &gt; Policies</strong>.</li>
+<li>Select the SyncIQ policy to modify (or click <strong>+ Add Policy</strong> to create one) and click <strong>Edit</strong>.</li>
+<li>Under <strong>Schedule</strong>, choose the replication frequency:</li>
+<li><strong>Every N minutes/hours</strong> — use for low-RPO requirements (e.g., every 15 minutes for critical NAS data).</li>
+<li><strong>Daily at a fixed time</strong> — use for less critical data with overnight replication windows.</li>
+<li>Set the <strong>Target Cluster</strong> FQDN and <strong>Target Directory</strong> path — must match what Eyeglass is configured to monitor.</li>
+<li>Under <strong>Advanced</strong>, configure bandwidth throttling if replication competes with production workloads — set a maximum MB/s during business hours.</li>
+<li>Save the policy and trigger a manual sync to confirm the schedule is valid:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>isi<span class="w"> </span>sync<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>start<span class="w"> </span>&lt;policy_name&gt;
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>isi<span class="w"> </span>sync<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>list
+</code></pre></div>
+<ol>
+<li>In the Eyeglass web UI (<code>https://&lt;eyeglass-ip&gt;:8443</code>), navigate to <strong>SyncIQ &gt; Policies</strong> and confirm the updated policy appears with the correct RPO display.</li>
+<li>Verify Eyeglass RPO compliance status turns green within one replication cycle.</li>
+</ol>
+<hr />
+<h2 id="run-a-dr-test-non-disruptive">Run a DR Test (Non-Disruptive)<a class="headerlink" href="#run-a-dr-test-non-disruptive" title="Permanent link">&para;</a></h2>
+<p>A non-disruptive DR test validates failover readiness without affecting production data or client access. Eyeglass runs a preflight check against the DR policy.</p>
+<ol>
+<li>Log in to the Eyeglass web UI at <code>https://&lt;eyeglass-ip&gt;:8443</code> and navigate to <strong>DR Assistant &gt; DR Policies</strong>.</li>
+<li>Select the policy to test and click <strong>DR Test &gt; Preflight Check</strong>.</li>
+<li>Eyeglass runs the preflight sequence and reports on each check:</li>
+<li>SyncIQ replication lag vs. RPO threshold.</li>
+<li>DR cluster access zone configuration synchronisation.</li>
+<li>NFS exports and SMB shares present on DR cluster.</li>
+<li>DNS integration status (if configured).</li>
+<li>Quota sync status.</li>
+<li>Review the preflight report — all checks must return <strong>Pass</strong> before a live failover can be executed.</li>
+<li>For any <strong>Fail</strong> or <strong>Warning</strong> items, remediate before proceeding: common issues are replication lag exceeding RPO, missing NFS export sync, or DNS not configured.</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># CLI equivalent preflight check</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>egcli<span class="w"> </span>drtest<span class="w"> </span>preflight<span class="w"> </span>--policy<span class="w"> </span>&lt;policy_name&gt;
+</code></pre></div>
+<ol>
+<li>After all checks pass, the policy is marked <strong>DR Ready</strong> in the Eyeglass DR Assistant dashboard — document the test result and timestamp in the DR log.</li>
+<li>No production traffic is interrupted during this procedure.</li>
+</ol>
+<hr />
+<h2 id="perform-dr-failover-planned">Perform DR Failover (Planned)<a class="headerlink" href="#perform-dr-failover-planned" title="Permanent link">&para;</a></h2>
+<p>A planned failover is a controlled switchover initiated during a maintenance window — for example, before planned production maintenance or as a scheduled DR exercise.</p>
+<ol>
+<li>Confirm all SyncIQ policies are in a healthy, fully replicated state — no replication lag:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>egcli<span class="w"> </span>drpolicy<span class="w"> </span>status<span class="w"> </span>--all
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>list
+</code></pre></div>
+<ol>
+<li>Schedule a maintenance window and notify all stakeholders.</li>
+<li>Quiesce production NFS/SMB clients where possible — coordinate with application teams to stop active writes.</li>
+<li>In the Eyeglass web UI, navigate to <strong>DR Assistant &gt; DR Policies</strong> and select the policy to fail over.</li>
+<li>Click <strong>Failover</strong> and confirm the action — Eyeglass presents the RPO lag and requires explicit confirmation.</li>
+<li>Eyeglass executes the failover sequence:</li>
+<li>Stops SyncIQ replication on the production cluster.</li>
+<li>Makes the DR cluster writable (breaks the SyncIQ mirror).</li>
+<li>Activates access zones on the DR cluster.</li>
+<li>Remaps NFS exports and SMB shares.</li>
+<li>Updates DNS SmartConnect delegation to DR VIP pool (if DNS integration is enabled).</li>
+<li>Monitor failover progress: <strong>DR Assistant &gt; Active Jobs</strong> or <code>egcli drfailover status --policy &lt;policy_name&gt;</code>.</li>
+<li>Validate client access at the DR site — mount a test NFS share, confirm SMB share connectivity, and write a test file.</li>
+</ol>
+<hr />
+<h2 id="perform-dr-failover-emergency">Perform DR Failover (Emergency)<a class="headerlink" href="#perform-dr-failover-emergency" title="Permanent link">&para;</a></h2>
+<p>Emergency failover is triggered when the production cluster becomes unavailable unexpectedly. Speed is prioritised; accept the RPO lag and proceed.</p>
+<ol>
+<li>Assess production cluster status — confirm unavailability is not a network fault:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># From a host with access to both clusters</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>ping<span class="w"> </span>&lt;prod-cluster-mgmt-ip&gt;
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>ssh<span class="w"> </span>admin@&lt;prod-cluster-ip&gt;<span class="w"> </span><span class="s2">&quot;isi status&quot;</span>
+</code></pre></div>
+<ol>
+<li>Declare a DR event in the ITSM tool and notify the SAN/Storage team lead.</li>
+<li>Log in to the Eyeglass web UI on the <strong>DR cluster's Eyeglass instance</strong> (if Eyeglass is deployed at DR) or the same Eyeglass appliance if it remains reachable.</li>
+<li>Navigate to <strong>DR Assistant &gt; DR Policies</strong>, select the affected policy, and note the last successful replication timestamp — this is the effective RPO.</li>
+<li>Click <strong>Failover</strong> and confirm — in an emergency, accept the replication lag warning and proceed:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>egcli<span class="w"> </span>drfailover<span class="w"> </span>--policy<span class="w"> </span>&lt;policy_name&gt;<span class="w"> </span>--confirm<span class="w"> </span>--force
+</code></pre></div>
+<ol>
+<li>Eyeglass breaks the SyncIQ mirror, activates DR access zones, reconfigures NFS/SMB, and updates DNS.</li>
+<li>Monitor failover job completion in <strong>DR Assistant &gt; Active Jobs</strong>; escalate to Superna Support if the job stalls.</li>
+<li>Validate client access at DR, document the declared RPO (last replication timestamp), and begin planning failback once production is restored.</li>
+</ol>
+<hr />
+<h2 id="fail-back-after-recovery">Fail Back After Recovery<a class="headerlink" href="#fail-back-after-recovery" title="Permanent link">&para;</a></h2>
+<p>Failback returns data and client access from the DR cluster to the production cluster after the production environment is restored and confirmed healthy.</p>
+<ol>
+<li>Confirm the production PowerScale cluster is healthy — all nodes online, no critical alerts, SyncIQ service running:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>isi<span class="w"> </span>status
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>isi<span class="w"> </span>alerts<span class="w"> </span>list<span class="w"> </span>--category<span class="w"> </span>critical
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>isi<span class="w"> </span>sync<span class="w"> </span>service<span class="w"> </span>view
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>egcli<span class="w"> </span>drtest<span class="w"> </span>preflight<span class="w"> </span>--cluster<span class="w"> </span>&lt;production-cluster&gt;
+</code></pre></div>
+<ol>
+<li>In the Eyeglass web UI, navigate to <strong>DR Assistant &gt; DR Policies</strong> and confirm the policy state is <strong>Failed Over</strong>.</li>
+<li>Click <strong>Failback</strong> and review the pre-failback checklist displayed by Eyeglass — confirm all items pass.</li>
+<li>Eyeglass creates a reverse SyncIQ policy (DR → production) to sync changes made during the DR period:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Monitor reverse sync progress</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>isi<span class="w"> </span>sync<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>list
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>watch<span class="w"> </span>-n<span class="w"> </span><span class="m">30</span><span class="w"> </span><span class="s2">&quot;isi sync jobs list&quot;</span>
+</code></pre></div>
+<ol>
+<li>Wait for the reverse SyncIQ job to complete — do not initiate access zone cutback until all data is synced.</li>
+<li>Once sync is complete, click <strong>Complete Failback</strong> in Eyeglass — this re-activates access zones on production, remaps NFS/SMB shares, and returns DNS to production SmartConnect VIP pool.</li>
+<li>Validate production client access: mount a test share, confirm SMB connectivity, write a test file.</li>
+<li>Disable the reverse SyncIQ policy and re-enable the normal production-to-DR policy:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span>disable<span class="w"> </span>&lt;reverse_policy_name&gt;
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>isi<span class="w"> </span>sync<span class="w"> </span>policies<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>&lt;normal_policy_name&gt;
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>isi<span class="w"> </span>sync<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>start<span class="w"> </span>&lt;normal_policy_name&gt;
+</code></pre></div>
+<hr />
+<h2 id="update-cluster-credentials-in-eyeglass">Update Cluster Credentials in Eyeglass<a class="headerlink" href="#update-cluster-credentials-in-eyeglass" title="Permanent link">&para;</a></h2>
+<p>When PowerScale cluster service account passwords are rotated, Eyeglass credentials must be updated to maintain monitoring and orchestration connectivity.</p>
+<ol>
+<li>Log in to the Eyeglass web UI at <code>https://&lt;eyeglass-ip&gt;:8443</code> and navigate to <strong>Configuration &gt; Clusters</strong>.</li>
+<li>Select the cluster whose credentials have changed (production or DR) and click <strong>Edit</strong>.</li>
+<li>Update the <strong>Username</strong> and <strong>Password</strong> fields with the new service account credentials — the account requires <code>ISI_PRIV_LOGIN_PAPI</code> and <code>ISI_PRIV_SYNCIQ</code> privileges at minimum.</li>
+<li>Click <strong>Save</strong> — Eyeglass immediately attempts to re-authenticate using the new credentials.</li>
+<li>Confirm the cluster status returns to <strong>Connected</strong> (green) in the Clusters dashboard within 60 seconds.</li>
+<li>Verify Eyeglass can still read SyncIQ policy status:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>egcli<span class="w"> </span>drpolicy<span class="w"> </span>status<span class="w"> </span>--all
+</code></pre></div>
+<ol>
+<li>Run a preflight check on each DR policy to confirm end-to-end access is intact after the credential update:</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>egcli<span class="w"> </span>drtest<span class="w"> </span>preflight<span class="w"> </span>--policy<span class="w"> </span>&lt;policy_name&gt;
+</code></pre></div>
+<ol>
+<li>Update the credentials record in the team password manager and document the rotation date in the change log.</li>
+</ol>
 <hr />
 <h2 id="day-to-day-operations">Day-to-Day Operations<a class="headerlink" href="#day-to-day-operations" title="Permanent link">&para;</a></h2>
 <p>Daily operations focus on the Eyeglass dashboard: check SyncIQ policy health (all policies in a healthy replication state), verify RPO compliance per policy (confirm replication lag is within defined thresholds), review the overall DR readiness score, confirm DNS sync status is current, and check quota policy sync status. Any policies showing degraded or failed state require immediate investigation.</p>

@@ -4645,6 +4645,24 @@ How It Works reference covering Architecture, High Availability.
 Pure1 is Pure Storage's cloud-based management and analytics platform for FlashArray and FlashBlade systems. It requires no on-premises management infrastructure — each array connects to Pure1 directly via outbound HTTPS. Pure1 provides AI-driven analytics (Pure1 Meta), capacity forecasting, health scoring, and a REST API for programmatic fleet management.</p>
 <hr />
 <h2 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph LR
+    Arrays["FlashArray / FlashBlade&lt;br/&gt;Purity OS phonehome&lt;br/&gt;every 30 seconds&lt;br/&gt;HTTPS outbound"]
+    Pure1Cloud["Pure1 Cloud Platform&lt;br/&gt;SaaS · Pure-managed&lt;br/&gt;time-series DB&lt;br/&gt;full resolution storage"]
+    Meta["Pure1 Meta (AI)&lt;br/&gt;ML health scoring&lt;br/&gt;workload classification&lt;br/&gt;capacity forecasting"]
+    Dashboard["Pure1 Dashboard&lt;br/&gt;fleet management&lt;br/&gt;health scores · alerts&lt;br/&gt;capacity trends"]
+    TAC["Pure Storage TAC&lt;br/&gt;auto case creation&lt;br/&gt;proactive swap&lt;br/&gt;zero-touch resolution"]
+
+    Arrays --&gt;|"phonehome telemetry HTTPS"| Pure1Cloud
+    Pure1Cloud --&gt;|"metrics ingest"| Meta
+    Meta --&gt;|"health scores · alerts"| Dashboard
+    Meta --&gt;|"pre-failure detection"| TAC
+    TAC --&gt;|"auto case + diagnostics"| Dashboard
+
+    style Arrays fill:#2563eb,stroke:#1d4ed8,color:#fff
+    style Pure1Cloud fill:#7c3aed,stroke:#6d28d9,color:#fff
+    style Meta fill:#b45309,stroke:#92400e,color:#fff
+    style Dashboard fill:#15803d,stroke:#166534,color:#fff
+    style TAC fill:#15803d,stroke:#166534,color:#fff</code></pre>
 <hr />
 <h2 id="high-availability">High Availability<a class="headerlink" href="#high-availability" title="Permanent link">&para;</a></h2>
 <p>Pure1 is managed entirely by Pure Storage as a SaaS platform. Availability SLA and disaster recovery are Pure Storage's responsibility. Customer action is not required for Pure1 infrastructure HA.</p>

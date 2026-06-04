@@ -3901,6 +3901,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#run-this-routine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run This Routine
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#weekly-checks" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4097,7 +4108,7 @@
 Health Checks reference covering Weekly Checks, Quarterly.
 </div>
 
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────────────── SRM — Health Checks ─────────────────────────────────────────┐
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌───────────────────────────────────────── SRM — Health Checks ─────────────────────────────────────────┐
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                                                                                                       │
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>│   │                                 SRM — Health Check Procedures                                 │   │
@@ -4135,7 +4146,18 @@ Health Checks reference covering Weekly Checks, Quarterly.
 <a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>│                                                                                                       │
 <a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-Weekly SRM operations focus on validating protection group health, confirming SRA connectivity, and ensuring recovery plans remain executable. All protection groups must show <code>OK</code> status; any group in <code>Not Ready</code> or <code>Error</code> state must be investigated and resolved before the end of the business day. Quarterly test failovers validate the full recovery plan workflow and must be completed in isolated network segments to avoid impacting production.</p>
+<h2 id="run-this-routine">Run This Routine<a class="headerlink" href="#run-this-routine" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>SRM service status</strong> — On both protected and recovery SRM servers, open Services or run <code>Get-Service -Name vmware-dr | Select Status</code>; confirm the SRM service is <code>Running</code> on both sites.</li>
+<li><strong>Site pair connection</strong> — In the SRM UI, navigate to <strong>Site Recovery → Sites</strong> and verify the site pair shows <code>Connected</code>; a <code>Disconnected</code> status indicates a network or certificate issue between vCenter instances.</li>
+<li><strong>Protection group health</strong> — Navigate to <strong>SRM UI → Protection Groups</strong>; all groups must show status <code>OK</code>; any group in <code>Not Ready</code> or <code>Error</code> state must be investigated before end of business day.</li>
+<li><strong>Recovery plan readiness</strong> — Navigate to <strong>SRM UI → Recovery Plans</strong>; confirm every plan shows <code>Ready</code>; a plan in <code>Not Ready</code> indicates a missing placeholder VM, failed network mapping, or an unresolved dependency.</li>
+<li><strong>Replication health</strong> — In the vSphere Replication UI, go to <strong>Monitor → Replication</strong>; confirm no VMs show RPO violations (red or amber); compare current lag against the agreed RPO target and escalate if exceeded.</li>
+<li><strong>Placeholder VM presence</strong> — At the recovery site vCenter, browse the DR cluster inventory and confirm placeholder VMs exist for each protected VM; missing placeholders indicate a broken protection group configuration.</li>
+<li><strong>Network mappings</strong> — In <strong>SRM UI → Network Mappings</strong>, confirm all mappings show a green status with valid source and target networks; any unmapped entry will cause a recovery plan to fail at the network configuration step.</li>
+<li><strong>Last test date</strong> — In <strong>SRM UI → Recovery Plans</strong>, check the <strong>Last Test</strong> column for each plan; if any plan has not been tested in more than 90 days, raise a change request to schedule a test failover within the next two weeks.</li>
+</ol>
+<p>Weekly SRM operations focus on validating protection group health, confirming SRA connectivity, and ensuring recovery plans remain executable. All protection groups must show <code>OK</code> status; any group in <code>Not Ready</code> or <code>Error</code> state must be investigated and resolved before the end of the business day. Quarterly test failovers validate the full recovery plan workflow and must be completed in isolated network segments to avoid impacting production.</p>
 <h2 id="weekly-checks">Weekly Checks<a class="headerlink" href="#weekly-checks" title="Permanent link">&para;</a></h2>
 <table>
 <thead>

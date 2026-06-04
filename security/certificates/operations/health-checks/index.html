@@ -3981,6 +3981,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#run-this-routine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run This Routine
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#certificate-expiry-monitoring-flow" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4288,6 +4299,16 @@ Weekly operations include reviewing the certificate expiry dashboard for certifi
 <a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>│                                                                                                       │
 <a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
+<h2 id="run-this-routine">Run This Routine<a class="headerlink" href="#run-this-routine" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>CA certificate expiry</strong> — On the CA server, open the Certification Authority MMC snap-in, right-click the CA, select <strong>Properties → General</strong>, and note the CA certificate expiry date; alternatively run <code>certutil -verify -urlfetch &lt;ca-cert-file&gt;</code> to validate the chain; flag if expiry is within 6 months.</li>
+<li><strong>Issued cert expiry scan</strong> — On the CA server run <code>certutil -store CA | findstr /i "not after"</code> to list certificate expiry dates; flag any issued certificate expiring within 60 days and assign a renewal ticket to the certificate owner.</li>
+<li><strong>CRL freshness</strong> — Run <code>certutil -URL &lt;crl-distribution-point-url&gt;</code> to open the URL retrieval tool and verify the CRL is retrievable and currently valid; a stale or unreachable CRL will cause certificate validation failures across all relying services.</li>
+<li><strong>OCSP responder health</strong> — Run <code>curl -s -o /dev/null -w "%{http_code}" "http://&lt;ocsp-server&gt;/ocsp"</code> and confirm the response is <code>200</code>; if the OCSP responder is offline, clients configured for OCSP stapling will fail or fall back to CRL.</li>
+<li><strong>Auto-enrollment compliance</strong> — Run <code>certutil -dstemplate</code> to list all published certificate templates; verify that templates used for auto-enrollment are present and that permissions are intact for the target computer/user groups.</li>
+<li><strong>Certificate services status</strong> — Run <code>Get-Service CertSvc | Select-Object Name, Status</code> on the CA server; the service must show <code>Running</code>; a stopped CertSvc means no new certificates can be issued and renewals will fail.</li>
+<li><strong>Failed certificate requests</strong> — Open the Certification Authority MMC, expand the CA, and click <strong>Failed Requests</strong>; filter for requests in the last 24 hours; investigate any failures for pattern — common causes are template misconfiguration, permission errors, or CSR format issues.</li>
+</ol>
 <p>service is running), and confirming auto-renewal jobs completed successfully. Monthly, audit newly issued certificates against naming and validity standards.</p>
 <h2 id="certificate-expiry-monitoring-flow">Certificate Expiry Monitoring Flow<a class="headerlink" href="#certificate-expiry-monitoring-flow" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>flowchart TD

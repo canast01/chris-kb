@@ -3970,6 +3970,94 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#configure-veeam-backup-job-granular-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure Veeam Backup Job (Granular Options)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#run-instant-vm-recovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run Instant VM Recovery
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#restore-individual-files-guest-file-restore" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Restore Individual Files (Guest File Restore)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#restore-application-items-sql-exchange" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Restore Application Items (SQL / Exchange)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#run-surebackup-verification-job" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run SureBackup Verification Job
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configure-veeam-replication-job" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configure Veeam Replication Job
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#perform-planned-failover-replica" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Perform Planned Failover (Replica)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rescan-infrastructure-and-update-credentials" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rescan Infrastructure and Update Credentials
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#sobr-capacity-management" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4247,6 +4335,126 @@ Operational procedures covering backup job creation, copy job setup, SOBR manage
 │  Forward Incremental= default mode; one full + daily incrementals; synthetic full created perio       │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘</code></pre>
+<hr />
+<h2 id="configure-veeam-backup-job-granular-options">Configure Veeam Backup Job (Granular Options)<a class="headerlink" href="#configure-veeam-backup-job-granular-options" title="Permanent link">&para;</a></h2>
+<p>The backup job wizard exposes advanced options beyond the defaults — configure these for production workloads to meet RPO and retention requirements.</p>
+<ol>
+<li>In the VBR console, navigate to <strong>Home &gt; Jobs &gt; Backup</strong> and click <strong>Backup Job &gt; Virtual Machine</strong>.</li>
+<li>Name the job using the site naming convention (e.g., <code>BKP-PROD-VCSA01-Daily</code>) and select <strong>VMware vSphere</strong> as the platform.</li>
+<li>Add VMs or containers (VM folder, resource pool, tag) — prefer tag-based selection so the job auto-includes new VMs.</li>
+<li>On the <strong>Storage</strong> step, select the target backup repository (or SOBR) and set the <strong>Restore Points to Keep</strong> to match the retention policy (e.g., <code>14</code> for two weeks of daily recovery points).</li>
+<li>Click <strong>Advanced &gt; Backup</strong> and configure:</li>
+<li><strong>Backup mode</strong>: Incremental with synthetic full on Sunday.</li>
+<li><strong>Storage optimisation</strong>: Local target (16 TB+ block size) for dedup appliances; LAN for standard repositories.</li>
+<li><strong>Enable inline dedup and compression</strong>: Deduplicate and compress (Optimal).</li>
+<li>On the <strong>Guest Processing</strong> tab, enable <strong>Application-Aware Processing</strong> and configure guest OS credentials for application-consistent backups (SQL, Exchange, Active Directory).</li>
+<li>Set the <strong>Schedule</strong> — configure daily at 22:00 with a retry window of 3 attempts every 10 minutes.</li>
+<li>Save and run the job immediately to confirm connectivity and the first full backup completes without errors.</li>
+</ol>
+<hr />
+<h2 id="run-instant-vm-recovery">Run Instant VM Recovery<a class="headerlink" href="#run-instant-vm-recovery" title="Permanent link">&para;</a></h2>
+<p>Instant VM Recovery (IVR) starts a VM directly from a backup file in seconds, enabling rapid RTO without waiting for a full restore. The VM runs on the backup proxy (vPower NFS) until migrated to production storage.</p>
+<ol>
+<li>In the VBR console, navigate to <strong>Home &gt; Backups &gt; Disk</strong> and locate the VM to recover.</li>
+<li>Right-click the restore point and select <strong>Instant Recovery &gt; VMware vSphere</strong>.</li>
+<li>On the <strong>Restore Point</strong> step, select the desired restore point — the most recent is pre-selected.</li>
+<li>On the <strong>Destination</strong> step:</li>
+<li>Set the <strong>Target Host</strong> to a clean-room or quarantine ESXi host (for DR testing) or a production host (for production recovery).</li>
+<li>Set the <strong>Target Datastore</strong> — the VM runs from the vPower NFS datastore; set a permanent datastore only if migrating immediately.</li>
+<li>Connect to an <strong>isolated network</strong> for testing; production network only after validation.</li>
+<li>Enable <strong>Restore VM tags</strong> and <strong>Restore VM to the original configuration</strong> if replacing the original.</li>
+<li>Click <strong>Finish</strong> — the VM registers in vCenter and powers on within 30–60 seconds.</li>
+<li>Validate application health on the recovered VM; if the VM is healthy, use <strong>Storage vMotion</strong> in vCenter to migrate from vPower NFS to permanent storage (committing the recovery).</li>
+<li>If recovery is not needed, right-click the IVR session in <strong>Home &gt; Instant Recovery</strong> and select <strong>Stop Publishing</strong> to unmount the datastore.</li>
+</ol>
+<hr />
+<h2 id="restore-individual-files-guest-file-restore">Restore Individual Files (Guest File Restore)<a class="headerlink" href="#restore-individual-files-guest-file-restore" title="Permanent link">&para;</a></h2>
+<p>Guest file restore (GFR) retrieves individual files or folders from a VM backup without restoring the entire VM.</p>
+<ol>
+<li>In the VBR console, go to <strong>Home &gt; Backups &gt; Disk</strong>, right-click a restore point for the target VM, and select <strong>Restore Guest Files &gt; Microsoft Windows</strong> (or <strong>Linux</strong>).</li>
+<li>Veeam mounts the backup VMDK and opens the <strong>File Level Restore</strong> browser.</li>
+<li>Navigate the virtual file system in the FLR browser to locate the file or folder to recover.</li>
+<li>Right-click the target file and choose:</li>
+<li><strong>Restore</strong> — overwrites the original file at its original path (requires guest OS credentials and network access).</li>
+<li><strong>Copy To</strong> — saves the file to a specified network share or local path (e.g., <code>\\filsrv01\restore-staging\</code>).</li>
+<li>For Linux VMs, Veeam mounts the backup via a helper VM — ensure a Linux helper appliance is configured in <strong>Backup Infrastructure &gt; Helper Appliances</strong>.</li>
+<li>Monitor the file transfer progress in the FLR status bar.</li>
+<li>After copying files, click <strong>Close</strong> in the FLR browser — Veeam automatically unmounts the backup within 15 minutes.</li>
+<li>Confirm the restored file at the destination: verify size, last-modified timestamp, and content integrity.</li>
+</ol>
+<hr />
+<h2 id="restore-application-items-sql-exchange">Restore Application Items (SQL / Exchange)<a class="headerlink" href="#restore-application-items-sql-exchange" title="Permanent link">&para;</a></h2>
+<p>Veeam Explorers enable granular application-item recovery (individual databases, mailboxes, emails, or table rows) directly from a VM backup.</p>
+<ol>
+<li>In the VBR console, go to <strong>Home &gt; Backups &gt; Disk</strong> and right-click a restore point for the application VM.</li>
+<li>Select <strong>Restore Application Items</strong> and choose the application type:</li>
+<li><strong>Microsoft SQL Server</strong> — opens Veeam Explorer for SQL.</li>
+<li><strong>Microsoft Exchange</strong> — opens Veeam Explorer for Exchange.</li>
+<li>For <strong>SQL restore</strong>: Veeam Explorer mounts the backup; browse the database tree, right-click the target database, and select <strong>Restore Database</strong> (to original or custom instance) or <strong>Export Schema</strong> for table-level recovery.</li>
+<li>For <strong>Exchange restore</strong>: browse mailboxes, folders, and individual items. Right-click an item (email, calendar, contact) and choose <strong>Restore to</strong> (original mailbox) or <strong>Export to PST</strong>.</li>
+<li>Provide target SQL Server or Exchange Server credentials when prompted — the account must have <code>sysadmin</code> (SQL) or <code>Organization Management</code> (Exchange) rights.</li>
+<li>Monitor the restore progress in the Veeam Explorer status pane.</li>
+<li>After restoring, verify the item at the application level — reconnect to the SQL instance or open Outlook to confirm the item is present.</li>
+<li>Log the recovery details (item name, restore point used, timestamp) in the incident ticket.</li>
+</ol>
+<hr />
+<h2 id="run-surebackup-verification-job">Run SureBackup Verification Job<a class="headerlink" href="#run-surebackup-verification-job" title="Permanent link">&para;</a></h2>
+<p>SureBackup automatically starts recovered VMs in an isolated virtual lab and runs application-specific tests to verify that backup restore points are usable.</p>
+<ol>
+<li>In the VBR console, navigate to <strong>Home &gt; Jobs &gt; SureBackup</strong> and click <strong>SureBackup Job</strong>.</li>
+<li>Name the job (e.g., <code>SUREBACKUP-PROD-CRITICAL</code>) and select an existing <strong>Virtual Lab</strong> (isolated sandbox environment with simulated network).</li>
+<li>On the <strong>Application Group</strong> step, add VMs to test — select the backup jobs or individual restore points to verify.</li>
+<li>Configure test scripts per VM under <strong>VM Settings &gt; Test Scripts</strong>:</li>
+<li><strong>Heartbeat test</strong>: confirms the VM powers on and VMware Tools responds.</li>
+<li><strong>Ping test</strong>: confirms network connectivity within the isolated lab.</li>
+<li><strong>Application test</strong>: select pre-built tests for DNS, DHCP, Exchange, SQL, or use a custom script.</li>
+<li>Set the <strong>Maximum allowed boot time</strong> (e.g., 300 seconds) and <strong>Startup memory limit</strong> per VM.</li>
+<li>Schedule the job — run weekly during off-hours (e.g., Sunday 01:00) to avoid contention.</li>
+<li>After each run, review results in <strong>Home &gt; Last 24 Hours &gt; SureBackup</strong> — each VM shows <strong>Success</strong>, <strong>Warning</strong>, or <strong>Failed</strong> for each test type.</li>
+<li>On test failure, investigate the application-specific log in the job session detail and raise a change to fix the underlying backup issue before the next run.</li>
+</ol>
+<hr />
+<h2 id="configure-veeam-replication-job">Configure Veeam Replication Job<a class="headerlink" href="#configure-veeam-replication-job" title="Permanent link">&para;</a></h2>
+<p>Replication creates a ready-to-power-on VM replica at the DR site, enabling near-zero RTO failover without a full restore.</p>
+<ol>
+<li>In the VBR console, navigate to <strong>Home &gt; Jobs &gt; Replication</strong> and click <strong>Replication Job &gt; Virtual Machine</strong>.</li>
+<li>Name the job (e.g., <code>REPL-PROD-VCSA01-DR</code>) and select the source VMs to replicate.</li>
+<li>On the <strong>Destination</strong> step:</li>
+<li>Set the <strong>Host</strong> to the DR ESXi host or cluster.</li>
+<li>Set the <strong>Datastore</strong> to the DR storage target.</li>
+<li>Add the suffix <code>_replica</code> to replica VM names to distinguish them in vCenter.</li>
+<li>On the <strong>Job Settings</strong> step, set <strong>Restore Points to Keep</strong> (e.g., <code>3</code>) — these are crash-consistent checkpoints on the replica.</li>
+<li>Enable <strong>Network Mapping</strong> — map each production network to the corresponding DR network so the replica is pre-configured for DR networking.</li>
+<li>On the <strong>Guest Processing</strong> tab, enable application-aware processing if replicating application VMs (SQL, Exchange).</li>
+<li>Set the schedule to run every 1 hour (or match the RPO target) — click <strong>Apply</strong> and enable the job.</li>
+<li>After the first run, verify the replica VM exists in the DR vCenter under the replicas folder and confirm the replication session completed without errors.</li>
+</ol>
+<hr />
+<h2 id="perform-planned-failover-replica">Perform Planned Failover (Replica)<a class="headerlink" href="#perform-planned-failover-replica" title="Permanent link">&para;</a></h2>
+<p>Planned failover migrates workloads from production to the DR replica with minimal data loss. Use this for planned maintenance or controlled DR exercises.</p>
+<ol>
+<li>Confirm the replication job has run successfully within the RPO window — check <strong>Home &gt; Last 24 Hours &gt; Replication</strong> for the most recent successful run.</li>
+<li>Place the production VM in maintenance mode or gracefully shut it down to allow the final replication sync to complete.</li>
+<li>In the VBR console, navigate to <strong>Home &gt; Replicas &gt; Ready</strong> and right-click the target replica.</li>
+<li>Select <strong>Planned Failover</strong> — VBR triggers a final incremental sync from the source VM to the replica, then powers off the source VM and powers on the replica at the DR site.</li>
+<li>Monitor the planned failover job in <strong>Home &gt; Running</strong> — it progresses through: sync, source shutdown, replica power-on.</li>
+<li>Once the replica is powered on at the DR site, validate application health — confirm services respond and data is intact.</li>
+<li>Update DNS or load balancer records to redirect client traffic to the DR IP (or use the DR network pre-mapped in the replication job).</li>
+<li>To complete the failover permanently, right-click the replica and select <strong>Failover Now</strong> to confirm DR as the new production; or select <strong>Undo Failover</strong> to roll back to the original production VM.</li>
+</ol>
+<hr />
+<h2 id="rescan-infrastructure-and-update-credentials">Rescan Infrastructure and Update Credentials<a class="headerlink" href="#rescan-infrastructure-and-update-credentials" title="Permanent link">&para;</a></h2>
+<p>When credentials are rotated or new infrastructure is added, VBR must be rescanned to update its internal inventory and reconnect to managed resources.</p>
+<ol>
+<li>In the VBR console, navigate to <strong>Backup Infrastructure &gt; Managed Servers</strong> and identify the server or vCenter whose credentials have changed.</li>
+<li>Right-click the managed server and select <strong>Edit</strong> — update the credentials in the <strong>Credentials</strong> field by selecting the new credential from the managed credentials store, or clicking <strong>Add</strong> to create a new entry.</li>
+<li>After updating credentials, right-click the managed server and select <strong>Rescan</strong> — VBR re-authenticates and refreshes the inventory of VMs, datastores, and hosts.</li>
+<li>For backup repositories with rotated credentials, navigate to <strong>Backup Infrastructure &gt; Backup Repositories</strong>, right-click the repository, select <strong>Edit</strong>, update the access credentials, and click <strong>Finish</strong>.</li>
+<li>Rescan the repository: right-click and select <strong>Rescan</strong> — VBR updates the repository inventory and confirms backup chain integrity.</li>
+<li>Navigate to <strong>Home &gt; Backups &gt; Disk</strong> and confirm no backup chains are showing orphaned or inaccessible status after the rescan.</li>
+<li>Run a test backup job on an affected VM to confirm end-to-end connectivity with the updated credentials.</li>
+<li>Update the credentials record in the team password manager and document the rotation in the change log.</li>
+</ol>
 <hr />
 <h2 id="sobr-capacity-management">SOBR Capacity Management<a class="headerlink" href="#sobr-capacity-management" title="Permanent link">&para;</a></h2>
 <h3 id="offload-policy">Offload Policy<a class="headerlink" href="#offload-policy" title="Permanent link">&para;</a></h3>

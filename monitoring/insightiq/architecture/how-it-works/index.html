@@ -4653,6 +4653,24 @@ How It Works reference covering Deployment Architecture, Component Roles, Data C
 InsightIQ is Dell EMC's performance analytics platform for NetApp PowerScale (Isilon) clusters, deployed as an on-premises virtual appliance. It collects, stores, and presents historical performance data for capacity planning, protocol analysis, and workload trending. A single InsightIQ instance can monitor multiple PowerScale clusters.</p>
 <hr />
 <h2 id="deployment-architecture">Deployment Architecture<a class="headerlink" href="#deployment-architecture" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph LR
+    Clusters["PowerScale Clusters&lt;br/&gt;OneFS management IP&lt;br/&gt;SmartConnect zones&lt;br/&gt;PAPI REST API"]
+    InsightIQ["InsightIQ Appliance&lt;br/&gt;OVA on mgmt cluster&lt;br/&gt;collection engine&lt;br/&gt;TCP 8080 poll"]
+    PostgreSQL["PostgreSQL Database&lt;br/&gt;local on-appliance&lt;br/&gt;30-sec raw samples&lt;br/&gt;5-min rollup buckets"]
+    WebUI["Web Dashboard&lt;br/&gt;HTTP/HTTPS&lt;br/&gt;pre-built + custom views&lt;br/&gt;time-range queries"]
+    Reports["Reports + Alerts&lt;br/&gt;PDF / CSV export&lt;br/&gt;email threshold alerts&lt;br/&gt;SMTP relay"]
+
+    Clusters --&gt;|"HTTPS REST API TCP 8080 every 30 sec"| InsightIQ
+    InsightIQ --&gt;|"stores metrics"| PostgreSQL
+    PostgreSQL --&gt;|"on-demand queries"| WebUI
+    WebUI --&gt;|"scheduled reports"| Reports
+    InsightIQ --&gt;|"threshold breach"| Reports
+
+    style Clusters fill:#2563eb,stroke:#1d4ed8,color:#fff
+    style InsightIQ fill:#7c3aed,stroke:#6d28d9,color:#fff
+    style PostgreSQL fill:#b45309,stroke:#92400e,color:#fff
+    style WebUI fill:#15803d,stroke:#166534,color:#fff
+    style Reports fill:#15803d,stroke:#166534,color:#fff</code></pre>
 <hr />
 <h2 id="component-roles">Component Roles<a class="headerlink" href="#component-roles" title="Permanent link">&para;</a></h2>
 <table>

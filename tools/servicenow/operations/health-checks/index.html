@@ -3326,6 +3326,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#run-this-routine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run This Routine
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#4-scheduled-job-health" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3684,6 +3695,16 @@ Routine health checks detect degradation before users are impacted. This page de
 │  Sched job backlog= queued jobs not yet executed; indicates thread starvation                         │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘</code></pre>
+<h2 id="run-this-routine">Run This Routine<a class="headerlink" href="#run-this-routine" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Instance health</strong> — Open <code>https://&lt;instance&gt;.service-now.com/api/now/stats</code> in a browser or run <code>curl -sk -u "$SN_USER:$SN_PASS" "https://&lt;instance&gt;.service-now.com/api/now/stats"</code>; confirm the instance is accessible and returns stats data; a login redirect or timeout indicates instance availability issues.</li>
+<li><strong>MID Server status</strong> — Navigate to <strong>ServiceNow → MID Server → MID Servers</strong>; all MID Servers must show <strong>Status: Up</strong> and <strong>Validated: true</strong>; a MID Server that is down will cause all associated discovery jobs and integration spokes to fail silently.</li>
+<li><strong>Import and export jobs</strong> — Navigate to <strong>ServiceNow → System Import Sets → Import Sets</strong>; review recent import set runs and check for any in a <code>Failed</code> or <code>Error</code> state; failed imports mean data from integrated sources (CMDB feeds, HR systems, monitoring tools) has not been ingested.</li>
+<li><strong>Scheduled jobs</strong> — Navigate to <strong>ServiceNow → System Scheduler → Scheduled Jobs</strong> and filter for <code>state = error</code>; review all jobs in error state and check the execution log for root cause; jobs most critical to check include LDAP Import, SLA Workflow, Email Reader, and any custom integrations.</li>
+<li><strong>Integration health</strong> — Navigate to <strong>ServiceNow → Integration Hub → Spokes</strong> or <strong>IntegrationHub → Activity Stream</strong>; confirm all active spoke connections show a healthy status and recent successful executions; a failed spoke may be silently dropping event data from monitored systems.</li>
+<li><strong>Storage usage</strong> — Navigate to <strong>ServiceNow → System Diagnostics → Stats</strong> or check with your ServiceNow administrator for database storage consumption; review the largest tables by row count to identify runaway growth from event logs or import staging tables that require archiving.</li>
+<li><strong>Recent errors</strong> — Navigate to <strong>ServiceNow → System Logs → Application Log</strong>; filter by <code>level = error</code> and <code>sys_created_on &gt; last 24 hours</code>; review error patterns — repeated stack traces from the same script indicate a bug in a business rule or script include that should be raised as a defect.</li>
+</ol>
 <p>Baseline your active session count over 2 weeks to establish normal business-hours peaks. An unexplained 3x spike often indicates a script loop or runaway REST integration.</p>
 <hr />
 <h2 id="4-scheduled-job-health">4. Scheduled Job Health<a class="headerlink" href="#4-scheduled-job-health" title="Permanent link">&para;</a></h2>

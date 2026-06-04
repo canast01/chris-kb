@@ -3736,6 +3736,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#run-this-routine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run This Routine
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4030,6 +4041,18 @@ VxRail Health Checks reference covering Overview, Where It Fits, Daily Checks, H
 <a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>│                                                                                                       │
 <a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
+<h2 id="run-this-routine">Run This Routine<a class="headerlink" href="#run-this-routine" title="Permanent link">&para;</a></h2>
+<p>Run these steps in order for every daily check, pre-change validation, or post-incident review of the VxRail cluster.</p>
+<ol>
+<li><strong>VxRail Manager cluster status</strong> — Log in to VxRail Manager UI → Dashboard. Confirm cluster health indicator is green. Any non-green status requires investigation before proceeding with changes.</li>
+<li><strong>vSAN health</strong> — In vCenter, select the VxRail cluster → Monitor → vSAN → Health. All health checks must show green. Investigate and resolve any failing checks; common culprits are clock skew, capacity imbalance, and network connectivity failures.</li>
+<li><strong>Node inventory status</strong> — In VxRail Manager → Inventory → Nodes, confirm all nodes show status <code>Healthy</code>. A node in <code>Degraded</code> or <code>Unknown</code> state needs immediate triage — check iDRAC events and ESXi host logs.</li>
+<li><strong>LCM compliance</strong> — In VxRail Manager → Lifecycle Management, verify all nodes are listed as <code>Compliant</code> against the current baseline. Non-compliant nodes must be remediated before the next change window.</li>
+<li><strong>iDRAC connectivity</strong> — From the management host, ping each node's iDRAC IP (<code>ping &lt;idrac-ip&gt;</code>). All pings must succeed. An unreachable iDRAC means out-of-band management is unavailable for that node.</li>
+<li><strong>NTP time synchronisation</strong> — SSH to each ESXi host and run <code>esxcli system time get</code>. Compare timestamps across all hosts — skew must be less than 5 seconds. Time drift causes vSAN and vCenter authentication failures.</li>
+<li><strong>vCenter connectivity</strong> — In VxRail Manager → Settings → vCenter Server, confirm the connection status shows <code>Connected</code>. A disconnected vCenter stops all VxRail management operations.</li>
+<li><strong>Open alerts review</strong> — In VxRail Manager → Alerts, review all open alerts. Resolve or acknowledge any <code>Critical</code> or <code>Warning</code> alerts, assigning owner and due date for each unresolved item before closing the check.</li>
+</ol>
 <h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
 <p>VxRail Health Checks notes for infrastructure operations, support, health checks, and troubleshooting.</p>
 <h2 id="where-it-fits">Where It Fits<a class="headerlink" href="#where-it-fits" title="Permanent link">&para;</a></h2>

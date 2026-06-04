@@ -4670,6 +4670,23 @@ How It Works reference covering Architecture, Component Roles, AIOps Capabilitie
 Dell AIOps (delivered via CloudIQ / APEX AIOps) is Dell's AI-driven IT operations platform providing anomaly detection, root cause analysis, and predictive recommendations across the Dell storage estate. The platform is fully SaaS-delivered — the only customer-managed component is the Secure Connect Gateway (SCG) virtual appliance.</p>
 <hr />
 <h2 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph LR
+    Sources["Storage Arrays&lt;br/&gt;PowerStore · PowerMax&lt;br/&gt;PowerScale · Unity XT&lt;br/&gt;Data Domain"]
+    SCG["Secure Connect Gateway&lt;br/&gt;on-prem OVA&lt;br/&gt;polls every 5 min&lt;br/&gt;HTTPS outbound only"]
+    AIPipeline["Dell AI Pipeline&lt;br/&gt;cloud-managed&lt;br/&gt;anomaly detection · RCA&lt;br/&gt;capacity forecasting"]
+    Console["CloudIQ / APEX Console&lt;br/&gt;SaaS portal&lt;br/&gt;recommendations&lt;br/&gt;health scores · alerts"]
+    Notify["Notification Channels&lt;br/&gt;PagerDuty · email&lt;br/&gt;webhooks · ITSM"]
+
+    Sources --&gt;|"REST API TCP 443"| SCG
+    SCG --&gt;|"encrypted telemetry HTTPS"| AIPipeline
+    AIPipeline --&gt;|"anomaly + RCA events"| Console
+    Console --&gt;|"alert routing"| Notify
+
+    style Sources fill:#2563eb,stroke:#1d4ed8,color:#fff
+    style SCG fill:#b45309,stroke:#92400e,color:#fff
+    style AIPipeline fill:#7c3aed,stroke:#6d28d9,color:#fff
+    style Console fill:#15803d,stroke:#166534,color:#fff
+    style Notify fill:#15803d,stroke:#166534,color:#fff</code></pre>
 <hr />
 <h2 id="component-roles">Component Roles<a class="headerlink" href="#component-roles" title="Permanent link">&para;</a></h2>
 <table>

@@ -3981,6 +3981,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#run-this-routine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Run This Routine
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#daily-health-check-flow" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4266,6 +4277,16 @@ Daily operations centre on the Venafi Policy Server dashboard: review certificat
 <a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>│                                                                                                       │
 <a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
+<h2 id="run-this-routine">Run This Routine<a class="headerlink" href="#run-this-routine" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Venafi Trust Protection Platform service</strong> — On the Venafi server run <code>Get-Service VenafiTrustProtectionPlatform | Select-Object Name, Status</code>; the service must show <code>Running</code>; if stopped, check the Windows Event Log under Application for startup errors before attempting a restart.</li>
+<li><strong>Venafi web console accessibility</strong> — Run <code>Invoke-WebRequest -Uri https://&lt;venafi-server&gt;/vedadmin -UseBasicParsing | Select-Object StatusCode</code>; expect <code>200</code>; a non-200 response or connection failure indicates the web tier is down or a TLS certificate issue on the server itself.</li>
+<li><strong>Discovery job status</strong> — In the Venafi console, navigate to <strong>Discovery</strong> and review the last completed discovery job; confirm it finished without errors and the discovery timestamp is within the expected schedule; failed discovery means newly issued unmanaged certificates will not be visible.</li>
+<li><strong>Certificate expiry alerts</strong> — Navigate to <strong>Venafi → Dashboard</strong> and review the certificates expiring within 30 days panel; for each certificate listed, confirm a renewal ticket exists or auto-renewal is configured; escalate any without an assigned owner.</li>
+<li><strong>Policy compliance</strong> — Navigate to <strong>Venafi → Policy</strong> and check for any active policy violations; violations indicate certificates in managed folders that do not meet the defined key length, algorithm, or CA requirements — each must be reviewed and either remediated or approved via exception.</li>
+<li><strong>Database size</strong> — Connect to the SQL Server instance hosting the Venafi database and run <code>SELECT name, size * 8 / 1024 AS size_mb FROM sys.databases WHERE name = 'VenafiTPP'</code>; alert if the database is consuming more than 80% of its allocated file growth limit.</li>
+<li><strong>Certificate renewal failures</strong> — In the Venafi console, navigate to <strong>Reports → Renewal Activity</strong> and filter by status <code>Failed</code> for the last 7 days; for each failure, review the error detail — common causes include CA connector credential expiry, template permission changes, or network connectivity to the issuing CA.</li>
+</ol>
 <p>nnectivity health for each integrated CA. Certificate counts by state (active, expiring, expired, revoked) should be trended over time.</p>
 <h2 id="daily-health-check-flow">Daily Health Check Flow<a class="headerlink" href="#daily-health-check-flow" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>flowchart TD

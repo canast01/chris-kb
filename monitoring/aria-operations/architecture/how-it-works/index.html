@@ -4665,6 +4665,27 @@ How It Works (Monitoring) reference covering Analytics Cluster Topology, Compone
 VMware Aria Operations (formerly vROps) is deployed as an analytics cluster comprising primary, replica, and optional data nodes. Remote Collectors distribute collection workload across sites without adding to the analytics tier. All components are managed through the Aria Suite Lifecycle Manager.</p>
 <hr />
 <h2 id="analytics-cluster-topology">Analytics Cluster Topology<a class="headerlink" href="#analytics-cluster-topology" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph LR
+    Sources["Data Sources&lt;br/&gt;vCenter · NSX-T · vSAN&lt;br/&gt;PowerStore · PowerScale&lt;br/&gt;3rd-party via MPs"]
+    RemoteCollector["Remote Collectors&lt;br/&gt;lightweight OVA&lt;br/&gt;per-site collection&lt;br/&gt;no local analytics"]
+    Primary["Primary Analytics Node&lt;br/&gt;UI · analytics engine&lt;br/&gt;master cluster services&lt;br/&gt;REST API"]
+    Replica["Replica Analytics Node&lt;br/&gt;HA failover&lt;br/&gt;auto-promotion on&lt;br/&gt;primary failure"]
+    DataNodes["Data Nodes&lt;br/&gt;scale-out indexing&lt;br/&gt;extended metric storage&lt;br/&gt;up to 10,000+ VMs"]
+    Outputs["Outputs&lt;br/&gt;dashboards · alerts&lt;br/&gt;reports PDF/CSV&lt;br/&gt;ServiceNow · REST API"]
+
+    Sources --&gt;|"5-min API poll"| RemoteCollector
+    Sources --&gt;|"5-min API poll"| Primary
+    RemoteCollector --&gt;|"forwards telemetry TCP 443"| Primary
+    Primary --&gt;|"replication"| Replica
+    Primary --&gt;|"distributes storage"| DataNodes
+    Primary --&gt;|"recommendations · alerts"| Outputs
+
+    style Sources fill:#2563eb,stroke:#1d4ed8,color:#fff
+    style RemoteCollector fill:#2563eb,stroke:#1d4ed8,color:#fff
+    style Primary fill:#7c3aed,stroke:#6d28d9,color:#fff
+    style Replica fill:#7c3aed,stroke:#6d28d9,color:#fff
+    style DataNodes fill:#15803d,stroke:#166534,color:#fff
+    style Outputs fill:#b45309,stroke:#92400e,color:#fff</code></pre>
 <hr />
 <h2 id="component-roles">Component Roles<a class="headerlink" href="#component-roles" title="Permanent link">&para;</a></h2>
 <table>
