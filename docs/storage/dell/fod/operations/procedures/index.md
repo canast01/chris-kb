@@ -99,3 +99,71 @@ FOD itself has no software maintenance requirement. However, any planned workloa
 | Adjust committed baseline | At contract renewal, based on observed consumption trend |
 | Request physical capacity addition | When burst headroom is running low — Dell adds capacity under the FOD agreement |
 | Export CloudIQ usage data via API | For internal chargeback or capacity planning reporting |
+
+---
+
+## Activate a Features on Demand Licence
+
+1. Obtain the activation key from Dell (delivered via the Dell licensing portal or by email)
+2. Apply the key using SYMCLI:
+   ```bash
+   symcfg -sid <sid> -auth <activation-key> activate
+   ```
+3. Verify the feature is now active:
+   ```bash
+   symcfg -sid <sid> list -fod
+   ```
+   The target feature should show status `Active`.
+4. Update the CMDB and the licence inventory record with the feature name, activation date, and expiry date
+5. Store the activation key in the organisation's secret/licence vault
+
+## Renew an Expiring FOD Licence
+
+1. Monitor expiry dates from the quarterly audit or via `symcfg -sid <sid> list -fod -v`
+2. Contact Dell or log in to MyService360 to purchase a renewal for the expiring feature
+3. Receive the new activation key from Dell (typically via email or the licensing portal)
+4. Apply the renewal key within an approved change window:
+   ```bash
+   symcfg -sid <sid> -auth <new-activation-key> activate
+   ```
+5. Verify the new expiry date:
+   ```bash
+   symcfg -sid <sid> list -fod -v
+   ```
+6. Update the CMDB and licence inventory with the new expiry date
+
+## List All Active FOD Features
+
+```bash
+# List all FOD features with name, status, and expiry date
+symcfg -sid <sid> list -fod -v
+```
+
+The output includes feature name, licence state (Active / Inactive / Expired), and expiry date. Use this output as the basis for quarterly licence audits and renewals.
+
+## Deactivate an Unused FOD Feature
+
+1. Confirm with the application or storage team that the feature is genuinely unused and safe to deactivate
+2. Raise a change request — deactivation may affect functionality if any workload still depends on the feature
+3. Deactivate the feature:
+   ```bash
+   symcfg -sid <sid> -auth <key> deactivate -feature <feature-name>
+   ```
+4. Verify the feature is no longer active:
+   ```bash
+   symcfg -sid <sid> list -fod
+   ```
+5. Update the CMDB and licence inventory; return the licence to Dell or reallocate to another array as applicable
+
+## Audit FOD Usage vs Entitlement
+
+1. Export the full FOD feature list for each array:
+   ```bash
+   symcfg -sid <sid> list -fod -v > fod_audit_<sid>.txt
+   ```
+2. Compare the exported list against the organisation's licence entitlement register (CMDB or licence spreadsheet)
+3. Identify any features that are active but not in the entitlement register (potential unlicensed use)
+4. Identify any features in the entitlement register that are not active on the array (potential unused licences)
+5. For over-licensed features: plan deactivation or reallocation
+6. For unused entitlements: confirm whether the feature was never applied or was deactivated; update the inventory accordingly
+7. Document audit findings and remediation actions; repeat quarterly
