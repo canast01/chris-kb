@@ -4598,155 +4598,115 @@
 <a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>│                                                                                                       │
 <a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌─────────────────────────────── VMware Cloud Foundation — How It Works ────────────────────────────────┐
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│                                                                                                       │
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  VCF bundles vSphere, vSAN, NSX, and Aria into a single SDDC stack; SDDC Manager                      │
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│  automates lifecycle, domain creation, and cluster expansion.                                         │
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│                                                                                                       │
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│   │                 SDDC Manager                 │  │                 Domain Model                │   │
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│   │           Lifecycle management hub           │  │         Management domain: ops stack        │   │
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│   │         Deploys vCenter + NSX + vSAN         │  │           Workload domains: tenant          │   │
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>│   │            Certificate management            │  │           VI domain: vSphere+vSAN           │   │
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>│   │        Password rotation: all stacks         │  │          NSX: shared or per-domain          │   │
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>│                                                                                                       │
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>│  SDDC Manager orchestrates all operations; management domain deploys first.                           │
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>│                                                                                                       │
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>│                          ▼                                                 ▼                          │
-<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>│                                                                                                       │
-<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>│   │               Bring-Up Process               │  │              Cluster Expansion              │   │
-<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>│   │        Cloud Builder: initial deploy         │  │               Add host to pool              │   │
-<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>│   │            Validates HW readiness            │  │           SDDC Mgr: expand cluster          │   │
-<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>│   │          Deploys mgmt domain stack           │  │            Create workload domain           │   │
-<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>│   │         JSON spec: all config values         │  │            Hosts: from free pool            │   │
-<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>│                                                                                                       │
-<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
-<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>│  VCF requires VMware-compatible servers on the VCF HCL; minimum 4 hosts for                           │
-<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>│  management domain; 25GbE+ network with defined VLAN layout.                                          │
-<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>│                                                                                                       │
-<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>│                                                                                                       │
-<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>│  SDDC Manager  = VCF automation and lifecycle engine; manages all components                          │
-<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>│  Cloud Builder = initial deployment tool; validates and bootstraps VCF                                │
-<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>│  Management domain= first domain; runs SDDC Mgr, vCenter, NSX, vSAN                                   │
-<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>│  Workload domain= tenant cluster; separate vCenter + NSX per domain                                   │
-<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>│  VI domain     = vSphere+vSAN workload domain; most common type                                       │
-<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>│  NSX shared    = single NSX manager serves multiple workload domains                                  │
-<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>│  Free pool     = unallocated hosts available for domain creation                                      │
-<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>│  JSON spec     = configuration file passed to Cloud Builder for bringup                               │
-<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>│  Bring-up      = process to deploy management domain from scratch                                     │
-<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>│  HCL           = Hardware Compatibility List; VCF-specific list                                       │
-<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>│  vLCM          = vSphere Lifecycle Manager; manages ESXi patching in VCF                              │
-<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>│  SDDC          = Software-Defined Data Center; the overall VCF platform                               │
-<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>│                                                                                                       │
-<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>┌─────────────────────────────────────────────────────┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>│  Upgrade Sequence                                                                                     │
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>│  SDDC Manager → vCenter → ESXi → NSX → vSAN FW                                                        │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>│                                                                                                       │
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>│  1. Download bundle from depot                                                                        │
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>│  2. Run Precheck (DNS, NTP, certs, vSAN, passwords)                                                   │
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>│  3. Resolve WARN/ERROR items                                                                          │
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>│  4. Schedule window → SDDC Manager applies BOM                                                        │
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>│  5. Post-upgrade validation                                                                           │
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>└─────────────────────────────────────────────────────┘
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>┌─────────────────────────────────────────────────────┐
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>│  Upgrade Sequence                                                                                     │
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>│  SDDC Manager → vCenter → ESXi → NSX → vSAN FW                                                        │
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>│                                                                                                       │
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>│  1. Download bundle from depot                                                                        │
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>│  2. Run Precheck (DNS, NTP, certs, vSAN, passwords)                                                   │
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>│  3. Resolve WARN/ERROR items                                                                          │
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>│  4. Schedule window → SDDC Manager applies BOM                                                        │
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>│  5. Post-upgrade validation                                                                           │
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>└─────────────────────────────────────────────────────┘
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>│  Workload Domain Provisioning                                                                         │
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>│  Commission hosts → Create domain → SDDC Manager                                                      │
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>│  deploys dedicated vCenter, NSX, vSAN as a unit                                                       │
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>└─────────────────────────────────────────────────────┘
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>┌─────────────────────────────────────────────────────┐
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>│  Workload Domain Provisioning                                                                         │
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>│  Commission hosts → Create domain → SDDC Manager                                                      │
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>│  deploys dedicated vCenter, NSX, vSAN as a unit                                                       │
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>└─────────────────────────────────────────────────────┘
-</code></pre></div></p>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>┌─────────────────────────────── VMware Cloud Foundation — How It Works ────────────────────────────────┐
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>│                                                                                                       │
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>│  VCF bundles vSphere, vSAN, NSX, and Aria into a single SDDC stack; SDDC Manager                      │
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>│  automates lifecycle, domain creation, and cluster expansion.                                         │
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>│                                                                                                       │
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>│   │                 SDDC Manager                 │  │                 Domain Model                │   │
-<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>│   │           Lifecycle management hub           │  │         Management domain: ops stack        │   │
-<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>│   │         Deploys vCenter + NSX + vSAN         │  │           Workload domains: tenant          │   │
-<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>│   │            Certificate management            │  │           VI domain: vSphere+vSAN           │   │
-<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>│   │        Password rotation: all stacks         │  │          NSX: shared or per-domain          │   │
-<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>│                                                                                                       │
-<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>│  SDDC Manager orchestrates all operations; management domain deploys first.                           │
-<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>│                                                                                                       │
-<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>│                          ▼                                                 ▼                          │
-<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>│                                                                                                       │
-<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>│   │               Bring-Up Process               │  │              Cluster Expansion              │   │
-<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>│   │        Cloud Builder: initial deploy         │  │               Add host to pool              │   │
-<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>│   │            Validates HW readiness            │  │           SDDC Mgr: expand cluster          │   │
-<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>│   │          Deploys mgmt domain stack           │  │            Create workload domain           │   │
-<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>│   │         JSON spec: all config values         │  │            Hosts: from free pool            │   │
-<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>│                                                                                                       │
-<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
-<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a>│  VCF requires VMware-compatible servers on the VCF HCL; minimum 4 hosts for                           │
-<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a>│  management domain; 25GbE+ network with defined VLAN layout.                                          │
-<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a>│                                                                                                       │
-<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a>│  Key terms:                                                                                           │
-<a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a>│                                                                                                       │
-<a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a>│  SDDC Manager  = VCF automation and lifecycle engine; manages all components                          │
-<a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a>│  Cloud Builder = initial deployment tool; validates and bootstraps VCF                                │
-<a id="__codelineno-4-34" name="__codelineno-4-34" href="#__codelineno-4-34"></a>│  Management domain= first domain; runs SDDC Mgr, vCenter, NSX, vSAN                                   │
-<a id="__codelineno-4-35" name="__codelineno-4-35" href="#__codelineno-4-35"></a>│  Workload domain= tenant cluster; separate vCenter + NSX per domain                                   │
-<a id="__codelineno-4-36" name="__codelineno-4-36" href="#__codelineno-4-36"></a>│  VI domain     = vSphere+vSAN workload domain; most common type                                       │
-<a id="__codelineno-4-37" name="__codelineno-4-37" href="#__codelineno-4-37"></a>│  NSX shared    = single NSX manager serves multiple workload domains                                  │
-<a id="__codelineno-4-38" name="__codelineno-4-38" href="#__codelineno-4-38"></a>│  Free pool     = unallocated hosts available for domain creation                                      │
-<a id="__codelineno-4-39" name="__codelineno-4-39" href="#__codelineno-4-39"></a>│  JSON spec     = configuration file passed to Cloud Builder for bringup                               │
-<a id="__codelineno-4-40" name="__codelineno-4-40" href="#__codelineno-4-40"></a>│  Bring-up      = process to deploy management domain from scratch                                     │
-<a id="__codelineno-4-41" name="__codelineno-4-41" href="#__codelineno-4-41"></a>│  HCL           = Hardware Compatibility List; VCF-specific list                                       │
-<a id="__codelineno-4-42" name="__codelineno-4-42" href="#__codelineno-4-42"></a>│  vLCM          = vSphere Lifecycle Manager; manages ESXi patching in VCF                              │
-<a id="__codelineno-4-43" name="__codelineno-4-43" href="#__codelineno-4-43"></a>│  SDDC          = Software-Defined Data Center; the overall VCF platform                               │
-<a id="__codelineno-4-44" name="__codelineno-4-44" href="#__codelineno-4-44"></a>│                                                                                                       │
-<a id="__codelineno-4-45" name="__codelineno-4-45" href="#__codelineno-4-45"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>SDDC Manager → Security → Password Management
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>→ Select component → Rotate Password
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>SDDC Manager → Security → Password Management
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>→ Select component → Rotate Password
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1">## API — rotate a single credential</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin@local:password&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;credentialType&quot;: &quot;SSH&quot;, &quot;resourceType&quot;: &quot;ESXI&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span><span class="s2">&quot;https://sddc-manager.example.local/v1/credentials/rotate&quot;</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1">## Check credential rotation status</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin@local:password&#39;</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">  </span><span class="s2">&quot;https://sddc-manager.example.local/v1/credentials&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1">## API — rotate a single credential</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>SDDC Manager → Security → Certificate Management
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>→ View expiry per component → Renew or Replace
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1">## Check certificate expiry across all components (API)</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin@local:password&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>-X<span class="w"> </span>POST<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>-H<span class="w"> </span><span class="s2">&quot;Content-Type: application/json&quot;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span>-d<span class="w"> </span><span class="s1">&#39;{&quot;credentialType&quot;: &quot;SSH&quot;, &quot;resourceType&quot;: &quot;ESXI&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span><span class="s2">&quot;https://sddc-manager.example.local/v1/credentials/rotate&quot;</span>
-<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
-<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="c1">## Check credential rotation status</span>
-<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin@local:password&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">  </span><span class="s2">&quot;https://sddc-manager.example.local/v1/credentials&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="s2">&quot;https://sddc-manager.example.local/v1/certificates&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;expirationDate|resourceFqdn&quot;</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>SDDC Manager → Security → Certificate Management
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>→ View expiry per component → Renew or Replace
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>SDDC Manager → Network Settings → Network Pools
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>→ Create pool → specify VLAN, subnet, gateway, IP range
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1">## Check certificate expiry across all components (API)</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>curl<span class="w"> </span>-sk<span class="w"> </span>-u<span class="w"> </span><span class="s1">&#39;admin@local:password&#39;</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="s2">&quot;https://sddc-manager.example.local/v1/certificates&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span>python3<span class="w"> </span>-m<span class="w"> </span>json.tool<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;expirationDate|resourceFqdn&quot;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>1. Rack and cable host; configure BIOS baseline
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>2. Install ESXi (or use Auto Deploy)
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>3. Set management IP, FQDN, DNS — must resolve forward and reverse
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>4. SDDC Manager → Inventory → Hosts → Commission
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>   → Provide ESXi IP and root credentials
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>   → SDDC Manager validates: HCL, SSH, DNS, NTP
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>5. Host enters &quot;Unassigned&quot; state — available for domain expansion
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>SDDC Manager → Network Settings → Network Pools
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>→ Create pool → specify VLAN, subnet, gateway, IP range
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>1. Rack and cable host; configure BIOS baseline
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>2. Install ESXi (or use Auto Deploy)
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>3. Set management IP, FQDN, DNS — must resolve forward and reverse
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>4. SDDC Manager → Inventory → Hosts → Commission
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>   → Provide ESXi IP and root credentials
-<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>   → SDDC Manager validates: HCL, SSH, DNS, NTP
-<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>5. Host enters &quot;Unassigned&quot; state — available for domain expansion
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1">## SSH to SDDC Manager appliance (vcf user → sudo)</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>/var/log/vmware/vcf/sddc-manager/vcfops.log<span class="w">     </span><span class="c1"># LCM and orchestration</span>
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>/var/log/vmware/vcf/sddc-manager/sddc-svc.log<span class="w">   </span><span class="c1"># core SDDC Manager service</span>
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>/var/log/vmware/vcf/lcm/lcm-debug.log<span class="w">           </span><span class="c1"># Lifecycle Management detail</span>
-<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>/var/log/vmware/vcf/domainmanager/dm.log<span class="w">        </span><span class="c1"># Workload domain operations</span>
-<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>/var/log/vmware/vcf/commonsvcs/audit.log<span class="w">        </span><span class="c1"># Admin actions and API calls</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1">## SSH to SDDC Manager appliance (vcf user → sudo)</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>/var/log/vmware/vcf/sddc-manager/vcfops.log<span class="w">     </span><span class="c1"># LCM and orchestration</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>/var/log/vmware/vcf/sddc-manager/sddc-svc.log<span class="w">   </span><span class="c1"># core SDDC Manager service</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>/var/log/vmware/vcf/lcm/lcm-debug.log<span class="w">           </span><span class="c1"># Lifecycle Management detail</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>/var/log/vmware/vcf/domainmanager/dm.log<span class="w">        </span><span class="c1"># Workload domain operations</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>/var/log/vmware/vcf/commonsvcs/audit.log<span class="w">        </span><span class="c1"># Admin actions and API calls</span>
 </code></pre></div></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>┌──────────────────────────── VMware Cloud Foundation — Domain Lifecycle ───────────────────────────────┐
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>│                                                                                                       │
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>│  VCF organises all infrastructure into domains managed by SDDC Manager. Each domain gets its          │
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>│  own vCenter + NSX + vSAN stack provisioned and lifecycle-managed as a single unit.                   │
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>│                                                                                                       │
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>│   │     Management Domain (always first)         │  │     Workload Domain (VI type — common)      │   │
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>│   │   Cloud Builder bootstraps from JSON spec    │  │   SDDC Manager provisions on demand          │  │
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>│   │   Deploys vCenter, NSX Manager, vSAN cluster │  │   Dedicated vCenter instance per domain     │   │
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>│   │   SDDC Manager runs here as automation hub   │  │   NSX: shared from mgmt or per-domain       │   │
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>│   │   All infra VMs (SDDC Mgr, vCenter) live here│  │   vSAN: per-domain isolated storage pool    │   │
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>│   │   Cannot be deleted; all domains depend on it│  │   Scaled by adding hosts from free pool     │   │
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>│                                                                                                       │
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>│  Management domain deploys first; workload domains are provisioned from commissioned free-pool hosts. │
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>│                                                                                                       │
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>│                          ▼                                                 ▼                          │
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>│                                                                                                       │
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>│   │     SDDC Manager Responsibilities            │  │     LCM — Lifecycle Management              │   │
+<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a>│   │   Certificate lifecycle: renew per component │  │   BOM: pinned component version matrix      │   │
+<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a>│   │   Password rotation: all components on sched │  │   Bundle download from VMware depot          │  │
+<a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a>│   │   Host commissioning: validate + add to pool │  │   Precheck: DNS, NTP, certs, vSAN, passwords│   │
+<a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a>│   │   Network pool: VLAN and IP range allocation │  │   Upgrade sequence: SDDC→VC→ESXi→NSX→vSAN  │    │
+<a id="__codelineno-10-25" name="__codelineno-10-25" href="#__codelineno-10-25"></a>│   │   Depot: download and stage upgrade bundles  │  │   Rolling upgrade: one host at a time       │   │
+<a id="__codelineno-10-26" name="__codelineno-10-26" href="#__codelineno-10-26"></a>│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+<a id="__codelineno-10-27" name="__codelineno-10-27" href="#__codelineno-10-27"></a>│                                                                                                       │
+<a id="__codelineno-10-28" name="__codelineno-10-28" href="#__codelineno-10-28"></a>│  Physical Infrastructure (the hardware everything above runs on):                                     │
+<a id="__codelineno-10-29" name="__codelineno-10-29" href="#__codelineno-10-29"></a>│  VCF requires VMware HCL-listed servers; minimum 4 hosts for management domain; 25GbE+ network        │
+<a id="__codelineno-10-30" name="__codelineno-10-30" href="#__codelineno-10-30"></a>│  with defined VLANs for management, vSAN, vMotion, NSX TEP, and uplink segments.                      │
+<a id="__codelineno-10-31" name="__codelineno-10-31" href="#__codelineno-10-31"></a>│                                                                                                       │
+<a id="__codelineno-10-32" name="__codelineno-10-32" href="#__codelineno-10-32"></a>│  Key terms:                                                                                           │
+<a id="__codelineno-10-33" name="__codelineno-10-33" href="#__codelineno-10-33"></a>│                                                                                                       │
+<a id="__codelineno-10-34" name="__codelineno-10-34" href="#__codelineno-10-34"></a>│  SDDC Manager      = VCF automation engine; manages lifecycle, domains, certificates, passwords       │
+<a id="__codelineno-10-35" name="__codelineno-10-35" href="#__codelineno-10-35"></a>│  Cloud Builder     = initial deployment tool; validates hardware and bootstraps management domain     │
+<a id="__codelineno-10-36" name="__codelineno-10-36" href="#__codelineno-10-36"></a>│  Management domain = first domain deployed; runs SDDC Manager, shared vCenter, NSX, vSAN              │
+<a id="__codelineno-10-37" name="__codelineno-10-37" href="#__codelineno-10-37"></a>│  Workload domain   = tenant cluster with its own vCenter; provisioned from free pool hosts            │
+<a id="__codelineno-10-38" name="__codelineno-10-38" href="#__codelineno-10-38"></a>│  VI domain         = vSphere + vSAN workload domain; most common workload domain type                 │
+<a id="__codelineno-10-39" name="__codelineno-10-39" href="#__codelineno-10-39"></a>│  NSX shared        = single NSX manager instance serving multiple workload domains                    │
+<a id="__codelineno-10-40" name="__codelineno-10-40" href="#__codelineno-10-40"></a>│  Free pool         = commissioned but unassigned hosts; available for domain creation or expansion    │
+<a id="__codelineno-10-41" name="__codelineno-10-41" href="#__codelineno-10-41"></a>│  BOM               = Bill of Materials; the exact pinned component versions SDDC Manager deploys      │
+<a id="__codelineno-10-42" name="__codelineno-10-42" href="#__codelineno-10-42"></a>│  LCM               = Lifecycle Management; SDDC Manager subsystem for upgrades and patching           │
+<a id="__codelineno-10-43" name="__codelineno-10-43" href="#__codelineno-10-43"></a>│  JSON spec         = configuration file passed to Cloud Builder for initial bringup                   │
+<a id="__codelineno-10-44" name="__codelineno-10-44" href="#__codelineno-10-44"></a>│  Bring-up          = process of deploying the management domain for the first time                    │
+<a id="__codelineno-10-45" name="__codelineno-10-45" href="#__codelineno-10-45"></a>│  Network pool      = named set of VLANs and IP ranges assigned to a domain at creation time           │
+<a id="__codelineno-10-46" name="__codelineno-10-46" href="#__codelineno-10-46"></a>│  HCL               = Hardware Compatibility List; VCF-specific list of approved server configurations │
+<a id="__codelineno-10-47" name="__codelineno-10-47" href="#__codelineno-10-47"></a>│  vLCM              = vSphere Lifecycle Manager; manages ESXi image-based patching within VCF          │
+<a id="__codelineno-10-48" name="__codelineno-10-48" href="#__codelineno-10-48"></a>│  SDDC              = Software-Defined Data Center; the full VCF integrated platform concept           │
+<a id="__codelineno-10-49" name="__codelineno-10-49" href="#__codelineno-10-49"></a>│  Precheck          = SDDC Manager validation step before any upgrade; DNS, NTP, cert, health checks   │
+<a id="__codelineno-10-50" name="__codelineno-10-50" href="#__codelineno-10-50"></a>│                                                                                                       │
+<a id="__codelineno-10-51" name="__codelineno-10-51" href="#__codelineno-10-51"></a>└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
 
 
 
