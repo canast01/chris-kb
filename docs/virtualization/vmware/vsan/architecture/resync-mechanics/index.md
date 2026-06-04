@@ -50,6 +50,58 @@ Why vSAN resyncs happen, how CLOM decides when and where to rebuild, what drives
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+```text
+┌─────────────────────────────── vSAN — CLOM Resync Priority Queue ─────────────────────────────────────┐
+│                                                                                                       │
+│  CLOM manages all resync operations through a prioritised queue. Higher-priority operations           │
+│  always preempt lower-priority ones for disk and network bandwidth on all participating hosts.        │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │       P1 — Compliance Rebuild (urgent)       │  │       P2 — Policy Change Resync             │   │
+│   │   Triggered: component enters DEGRADED       │  │   Triggered: FTT change or stripe width     │   │
+│   │   Goal: restore FTT before another failure   │  │   Triggered: dedup / encryption toggled     │   │
+│   │   clomRepairDelay elapses before P1 starts   │  │   Triggered: on-disk format upgrade         │   │
+│   │   Blocks P2 and P3 from using bandwidth      │  │   Runs only when no P1 operations active    │   │
+│   │   P1 → HEALTHY; then P2/P3 can proceed       │  │   May move large data (FTT increase = 2×)   │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Priority order: P1 (compliance) → P2 (policy change) → P3 (rebalance). All compete for bandwidth.    │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │       P3 — Proactive Rebalance (low)         │  │       Bandwidth Throttle and Monitoring     │   │
+│   │   Triggered: host added; utilisation skewed  │  │   Throttle=0: unlimited IOPS (fastest)      │   │
+│   │   Goal: equalise capacity use across hosts   │  │   Throttle=500: production-safe rate        │   │
+│   │   Lowest priority — suspended by P1/P2 load  │  │   CLI: esxcli vsan resync summary get       │   │
+│   │   Does not improve protection — efficiency   │  │   UI: Cluster → Monitor → vSAN → Resyncing  │   │
+│   │   Can be disabled if cluster is balanced     │  │   Duration ≈ bytes remaining ÷ throughput   │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  Resync I/O travels over the vSAN VMkernel network (25 GbE recommended); CLOM runs on the cluster     │
+│  master host; disk throughput on the destination host is the most common rebuild bottleneck.          │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  CLOM           = Cluster Level Object Manager; schedules and tracks all rebuild operations           │
+│  DOM            = Distributed Object Manager; handles per-object I/O and component writes             │
+│  Resync         = actual data copy from a healthy source component to a new destination component     │
+│  Delta-sync     = partial resync for STALE components — only changed blocks, not a full copy          │
+│  Throttle       = IOPS limit on resync I/O; 0 = unlimited; 500 = production-safe recommendation       │
+│  Headroom       = free capacity needed to place new component before old is removed; need 30%+        │
+│  Rebalance      = proactive move of components to equalise host utilisation; lowest priority          │
+│  Policy resync  = triggered by FTT change, stripe width change, dedup/encrypt toggle                  │
+│  clomRepairDelay= minutes between component going ABSENT and CLOM starting a P1 rebuild               │
+│  BOM            = Bill of Materials; pinned component versions in VCF (not directly vSAN)             │
+│  P1             = highest priority: compliance rebuild (object at risk of data loss)                  │
+│  P2             = medium priority: policy compliance (FTT change, format upgrade)                     │
+│  P3             = lowest priority: proactive rebalance (efficiency, not protection)                   │
+│  VMkernel       = ESXi special NIC adapter; vSAN uses a dedicated vmk for cluster I/O                 │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 ---
 
 ## Why Resync Happens

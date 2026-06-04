@@ -1,12 +1,6 @@
 # VxRail — Cluster Software Stack and Data Plane
 
 ```text
-┌─────────────────────────────────────────────────────────────┐
-│  VxRail Manager (VM on cluster)                                                                       │
-│  LCM Engine · vCenter plugin · REST API · Health monitor                                              │
-└───────────────┬─────────────────────────────────────────────┘
-```
-```text
 ┌─────────────────────────── VxRail — Cluster Software Stack and Data Plane ────────────────────────────┐
 │                                                                                                       │
 │    Every VxRail node runs the same layered stack; vSAN spans all nodes to form a                      │
@@ -48,7 +42,6 @@
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```python
 
 ## Overview
 
@@ -58,7 +51,6 @@ VxRail is sold exclusively as a pre-configured appliance and managed as a system
 
 ## HCI Node Cluster
 
-```
 
 ```mermaid
 graph TB

@@ -48,6 +48,58 @@ How vSAN classifies each object component's health — from the initial ABSENT s
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+```text
+┌───────────────────────────────── vSAN — Component State Transitions ──────────────────────────────────┐
+│                                                                                                       │
+│  Each component moves between states as hosts and disk groups come and go at runtime.                 │
+│  CLOM tracks all components and triggers rebuild when FTT policy compliance is threatened.            │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │     HEALTHY ──► ABSENT  (host/disk lost)     │  │     ABSENT ──► DEGRADED  (timer expiry)     │   │
+│   │   CLOM marks component ABSENT immediately    │  │   clomRepairDelay elapses without return    │   │
+│   │   Starts clomRepairDelay timer (default 60m) │  │   CLOM promotes to DEGRADED; plans rebuild  │   │
+│   │   No rebuild during timer — may be transient │  │   Object is now one failure from data loss  │   │
+│   │   Host returns before timer: back to HEALTHY │  │   Rebuild starts → transitions to REBUILDING│   │
+│   │   Timer: esxcli vsan cluster get clomDelay   │  │   Requires free capacity on another host    │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  REBUILDING → HEALTHY when rebuild completes. STALE → HEALTHY after delta resync finishes.            │
+│                                                                                                       │
+│                          ▼                                                 ▼                          │
+│                                                                                                       │
+│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
+│   │     HEALTHY ──► STALE  (host rejoins late)   │  │   ABSENT/DEGRADED ──► INACCESSIBLE          │   │
+│   │   Host returned after writes were committed  │  │   ALL copies of object simultaneously gone  │   │
+│   │   Component exists but missed recent writes  │  │   VM I/O suspended — nothing to serve reads │   │
+│   │   Only changed blocks need syncing (delta)   │  │   No rebuild possible until a copy returns  │   │
+│   │   Delta faster and lower-impact than full    │  │   One copy returns → ABSENT; then rebuilds  │   │
+│   │   STALE → HEALTHY once delta sync completes  │  │   Most severe state; entire FTT exhausted   │   │
+│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
+│                                                                                                       │
+│  Physical Infrastructure (the hardware everything above runs on):                                     │
+│  CLOM runs on the cluster master ESXi host. Each component is on a specific disk group per host;      │
+│  a disk group failure moves all its components to ABSENT immediately.                                 │
+│                                                                                                       │
+│  Key terms:                                                                                           │
+│                                                                                                       │
+│  Component      = one copy of a vSAN object stored on a specific disk group on one ESXi host          │
+│  CLOM           = Cluster Level Object Manager; tracks state and schedules all rebuild operations     │
+│  DOM            = Distributed Object Manager; routes all I/O to component owners across cluster       │
+│  clomRepairDelay= minutes CLOM waits before promoting ABSENT → DEGRADED; default 60, range 0–1440     │
+│  Resync         = rebuild process: CLOM copies data from a healthy component to a new location        │
+│  Delta-sync     = partial resync for STALE: only blocks missed during absence; no full copy           │
+│  FTT            = Failures to Tolerate; number of host failures an object can survive                 │
+│  Witness        = metadata-only component; holds no data; provides quorum tie-breaker for FTT=1       │
+│  INACCESSIBLE   = all copies unavailable; VM I/O halted until at least one copy is reachable          │
+│  Object         = full logical unit (e.g. a VMDK); split into components on different hosts           │
+│  Disk group     = cache + capacity disks on one host; its failure moves all components to ABSENT      │
+│  REBUILDING     = CLOM writing new component; I/O continues; progress visible in health UI            │
+│  STALE          = component exists but missed writes while offline; needs delta resync only           │
+│  HEALTHY        = component reachable, data current, FTT policy met; target for all resync paths      │
+│                                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
 ---
 
 ## The Four Operational States

@@ -70,53 +70,6 @@ VMware Horizon is a broker-based VDI and published application delivery platform
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
-```text
-┌──────────────────────────────────── VMware Horizon — How It Works ────────────────────────────────────┐
-│                                                                                                       │
-│  Horizon delivers virtualised desktops and apps via Connection Servers that broker                    │
-│  sessions between clients and desktop pools or RDS farms.                                             │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │             Session Broker Layer             │  │             Desktop & App Layer             │   │
-│   │          Connection Server: broker           │  │             Instant clone pools             │   │
-│   │             Authenticates via AD             │  │        Full clone pools (persistent)        │   │
-│   │          Selects resource from pool          │  │            RDS: App/Desktop farms           │   │
-│   │         Blast Extreme: display prot          │  │               GPUs: vGPU pools              │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Connection Server brokers AD auth then hands session to pool agent on target VM.                     │
-│                                                                                                       │
-│                          ▼                                                 ▼                          │
-│                                                                                                       │
-│   ┌──────────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐   │
-│   │                 Client Layer                 │  │            Unified Access Gateway           │   │
-│   │          Horizon Client: native app          │  │            UAG: DMZ reverse proxy           │   │
-│   │             HTML Access: browser             │  │            Offloads external auth           │   │
-│   │            Blast TCP/UDP 8443/443            │  │          SAML to Connection Server          │   │
-│   │            PCoIP: legacy protocol            │  │         Dual NIC: internal+external         │   │
-│   └──────────────────────────────────────────────┘  └─────────────────────────────────────────────┘   │
-│                                                                                                       │
-│  Physical Infrastructure (the hardware everything above runs on):                                     │
-│  Connection Servers run as Windows VMs; desktop VMs run on ESXi hosts with vSAN                       │
-│  or NFS storage; UAG VMs sit in DMZ with dual-NIC on separate networks.                               │
-│                                                                                                       │
-│  Key terms:                                                                                           │
-│                                                                                                       │
-│  Connection Server= Windows Server VM; Horizon broker and management                                  │
-│  Instant clone   = desktop provisioned in seconds from parent snapshot                                │
-│  Full clone      = independent persistent VM; slow to provision                                       │
-│  RDS             = Remote Desktop Services; server-based desktop/app                                  │
-│  UAG             = Unified Access Gateway; replaces Security Server                                   │
-│  Blast Extreme   = VMware display protocol; lower latency than PCoIP                                  │
-│  PCoIP           = PC over IP; legacy display protocol; UDP-based                                     │
-│  HTML Access     = browser-based Horizon client; uses WebSocket                                       │
-│  SAML            = assertion from UAG to Connection Server for auth                                   │
-│  vGPU            = NVIDIA GPU partition shared across desktop VMs                                     │
-│  Pool            = collection of desktops with same policy                                            │
-│  Farm            = collection of RDS hosts for app/desktop delivery                                   │
-│                                                                                                       │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
 
 ### External Client via UAG
 
