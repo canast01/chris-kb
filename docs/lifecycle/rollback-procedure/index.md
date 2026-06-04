@@ -20,6 +20,8 @@ flowchart TD
     F --> H[Execute rollback]
     H --> I[Validate rollback]
     I --> J[Incident report\nand change re-plan]
+```
+
 ```text
 ┌───────────────────────────────────────── Rollback Procedure ──────────────────────────────────────────┐
 │                                                                                                       │

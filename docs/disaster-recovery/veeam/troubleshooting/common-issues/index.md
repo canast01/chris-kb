@@ -32,6 +32,8 @@ flowchart TD
     class openStats,netQ,spaceQ,ivrQ,svcQ,copyQ,sbQ,snapCreate,snapCommit action
     class q1,snapQ decision
     class fail terminal
+```
+
 ```text
 ┌──────────────────────────────────────── Veeam — Common Issues ────────────────────────────────────────┐
 │                                                                                                       │

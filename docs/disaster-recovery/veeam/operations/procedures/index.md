@@ -32,6 +32,8 @@ sequenceDiagram
     Admin->>VBR: Undo Instant Recovery
     VBR->>vCenter: Unregister IVR VM
     VBR->>Proxy: Unmount vPower NFS datastore
+```
+
 ```text
 ┌───────────────────────────────────────── Veeam — Procedures ──────────────────────────────────────────┐
 │                                                                                                       │

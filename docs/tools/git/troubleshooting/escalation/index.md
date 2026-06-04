@@ -22,6 +22,8 @@ flowchart TD
     L2 -->|Unresolved after 60 min\nor data loss suspected| L3
     L2 -->|Corruption / data loss confirmed| EMERG
     L3 -->|Vendor escalation| EMERG
+```
+
 ```text
 ┌────────────────────────────────────────── Git — Escalation ───────────────────────────────────────────┐
 │                                                                                                       │

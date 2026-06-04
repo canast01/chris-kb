@@ -62,6 +62,8 @@ flowchart TD
     class storA,storB storage
     class hA,hB host
     class spA,spB splitter
+```
+
 ```text
 ┌────────────────────────────────── RecoverPoint — Install & Upgrade ───────────────────────────────────┐
 │                                                                                                       │

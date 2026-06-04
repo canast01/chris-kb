@@ -39,6 +39,8 @@ flowchart TD
     F --> F1[Check vCenter\ntasks & events]
     G --> G1[Run vSAN\nhealth check]
     H --> H1[GET /v1/system/health-summary]
+```
+
 ```text
 ┌──────────────────────────────── VMware Cloud Foundation — Diagnostics ────────────────────────────────┐
 │                                                                                                       │

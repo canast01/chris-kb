@@ -21,6 +21,8 @@ flowchart LR
     siem["SIEM / Log Platform\ncentralised logging"]
 
     gitRepo --> ansible --> copy --> cron --> output --> siem
+```
+
 ```text
 ┌──────────────────────────────────── Linux — Scripts & Automation ─────────────────────────────────────┐
 │                                                                                                       │

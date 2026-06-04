@@ -48,6 +48,8 @@ flowchart TD
     style ALERT_DB fill:#c0392b,color:#fff
     style ALERT_CLUSTER fill:#c0392b,color:#fff
     style ALERT_PERF fill:#e67e22,color:#fff
+```
+
 ```text
 ┌──────────────────────────────────────── Jira — Health Checks ─────────────────────────────────────────┐
 │                                                                                                       │

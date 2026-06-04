@@ -31,6 +31,8 @@ graph TB
     adminUser["Administrators"] --> ssh & https & snmp3
     backupServer["Backup Server"] --> scp
     monSystem["Monitoring Platform"] --> snmp3
+```
+
 ```text
 ┌─────────────────────────────────── Brocade Fabric OS — Encryption ────────────────────────────────────┐
 │                                                                                                       │

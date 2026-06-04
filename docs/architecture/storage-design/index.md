@@ -76,6 +76,8 @@ flowchart TD
     H -->|No - Linux/VMware| J["NFS v3 or v4.1\non NAS"]
     A --> K{Archive or\ncloud tiering?}
     K -->|Yes| L["S3 Object Storage\n(Dell ECS, AWS S3, Azure Blob)"]
+```
+
 ```text
 ┌──────────────────────────────────── Architecture — Storage Design ────────────────────────────────────┐
 │                                                                                                       │

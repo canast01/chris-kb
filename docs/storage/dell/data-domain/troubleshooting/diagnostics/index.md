@@ -22,6 +22,8 @@ flowchart TD
     K -->|Yes| L["filesys clean start\nExpire old backups"]
     K -->|No| M["support bundle generate\nEscalate to Dell"]
     D & F & H & J & L & M --> Z([Resolution])
+```
+
 ```text
 ┌──────────────────────────────────── Dell Data Domain Diagnostics ─────────────────────────────────────┐
 │                                                                                                       │

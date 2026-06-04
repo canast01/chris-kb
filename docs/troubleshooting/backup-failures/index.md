@@ -50,6 +50,8 @@ flowchart TD
     Q -- Yes --> S[Re-push agent\nCheck firewall port 2500-3300]
     C -- Authentication --> T[Check service account in job\nTest-ADServiceAccount]
     T --> U[Reset password\nVerify AD group membership]
+```
+
 ```text
 ┌─────────────────────────────────────────── Backup Failures ───────────────────────────────────────────┐
 │                                                                                                       │

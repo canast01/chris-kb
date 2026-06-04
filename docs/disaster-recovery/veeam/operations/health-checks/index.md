@@ -30,6 +30,8 @@ sequenceDiagram
     VBR->>VLab: Tear down virtual lab
     VBR-->>VBR: Record verification result in job session
     note over VBR: Failure = backup not confirmed restorable\nEscalate immediately
+```
+
 ```text
 ┌──────────────────────────────────────── Veeam — Health Checks ────────────────────────────────────────┐
 │                                                                                                       │

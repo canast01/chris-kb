@@ -13,6 +13,8 @@ sequenceDiagram
     client->>server: AP-REQ — Service Ticket + authenticator
     server-->>client: AP-REP — mutual auth confirmation
     client->>server: Application request (authorised session)
+```
+
 ```text
 ┌─────────────────────────────────── Windows Server — Authentication ───────────────────────────────────┐
 │                                                                                                       │

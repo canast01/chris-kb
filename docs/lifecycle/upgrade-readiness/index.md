@@ -16,6 +16,8 @@ flowchart LR
     E --> F{Go / No-Go\nDecision}
     F -->|Go| G[Proceed with Upgrade]
     F -->|No-Go| H[Defer — remediate\nblocker first]
+```
+
 ```text
 ┌────────────────────────────────────────── Upgrade Readiness ──────────────────────────────────────────┐
 │                                                                                                       │

@@ -38,6 +38,8 @@ flowchart TD
     class pg1,pg2,rp pg
     class vm1,vm2,vm3,vm4 vm
     class step1,step2,step3,step4,step5,step6 step
+```
+
 ```text
 ┌───────────────────────────────────────── SRM — CLI Reference ─────────────────────────────────────────┐
 │                                                                                                       │

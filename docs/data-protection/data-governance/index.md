@@ -64,6 +64,8 @@ flowchart TD
     O -- Yes --> P[Update Controls, Notify Owners]
     O -- No --> J
     P --> J
+```
+
 ```text
 ┌────────────────────────────────── Data Protection — Data Governance ──────────────────────────────────┐
 │                                                                                                       │

@@ -31,6 +31,8 @@ graph TD
     rpaA -->|"WAN replication"| rpaB["RPA Cluster Site B"]
     rpaB --> drJournal["DR Journal Volumes"]
     drJournal --> drReplica["DR Replica Volumes"]
+```
+
 ```text
 ┌───────────────────────────────────── RecoverPoint — Integrations ─────────────────────────────────────┐
 │                                                                                                       │

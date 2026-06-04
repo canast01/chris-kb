@@ -40,6 +40,8 @@ graph LR
     style Share fill:#15803d,stroke:#166534,color:#fff
     style Media fill:#b45309,stroke:#92400e,color:#fff
     style BareMetalTarget fill:#15803d,stroke:#166534,color:#fff
+```
+
 ```text
 ┌───────────────────────────────────────── RASR — How It Works ─────────────────────────────────────────┐
 │                                                                                                       │

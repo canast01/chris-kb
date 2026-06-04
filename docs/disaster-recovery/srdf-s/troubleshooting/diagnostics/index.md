@@ -39,6 +39,8 @@ flowchart TD
     style alert fill:#be123c,color:#fff
     style resolved fill:#15803d,color:#fff
     style notifyNetwork fill:#b45309,color:#fff
+```
+
 ```text
 ┌──────────────────────────────────────── SRDF/S — Diagnostics ─────────────────────────────────────────┐
 │                                                                                                       │

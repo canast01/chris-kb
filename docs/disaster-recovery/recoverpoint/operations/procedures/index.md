@@ -131,6 +131,8 @@ flowchart TD
     style enableImageAccess fill:#b45309,color:#fff
     style disableImageAccess fill:#b45309,color:#fff
     style confirmActive fill:#15803d,color:#fff
+```
+
 ```text
 ┌────────────────────────────────────── RecoverPoint — Procedures ──────────────────────────────────────┐
 │                                                                                                       │

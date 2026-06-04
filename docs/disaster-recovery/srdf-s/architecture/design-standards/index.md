@@ -39,6 +39,8 @@ graph LR
     r1 -->|"sync write commit"| linkLabel
     linkLabel -->|"ack to R1"| r1
     linkLabel --> r2
+```
+
 ```text
 ┌────────────────────────────────────── SRDF/S — Design Standards ──────────────────────────────────────┐
 │                                                                                                       │

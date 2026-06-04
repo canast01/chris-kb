@@ -29,6 +29,8 @@ graph LR
     sentinel -->|Fail| prOpen
     reviewGate -->|Approved| tfApply
     reviewGate -->|Changes| prOpen
+```
+
 ```text
 ┌──────────────────────────────────────── Terraform — Hardening ────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

@@ -22,6 +22,8 @@ flowchart TD
     checkResp --> updateParsing["Update parsing logic\nto match new schema"]
     errType -->|PermissionError| checkPath["ls -la on output\ndirectory"]
     checkPath --> fixPerms["chmod / chown\noutput directory"]
+```
+
 ```text
 ┌─────────────────────────────────────── Python — Common Issues ────────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

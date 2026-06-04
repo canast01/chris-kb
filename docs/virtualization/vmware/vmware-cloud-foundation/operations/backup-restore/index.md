@@ -40,6 +40,8 @@ flowchart TD
         R1 --> R2[Restore NSX Manager]
         R2 --> R3[Restore vCenter]
     end
+```
+
 ```text
 ┌───────────────────────────── VMware Cloud Foundation — Backup & Restore ──────────────────────────────┐
 │                                                                                                       │

@@ -27,6 +27,8 @@ sequenceDiagram
     StandbyCp-->>Admin: firmwaredownloadstatus — complete
     Admin->>Admin: version — confirm both CPs on new FOS
     Admin->>Fabric: switchshow, fabricshow — verify fabric intact
+```
+
 ```text
 ┌─────────────────────────────── Brocade Fabric OS — Install and Upgrade ───────────────────────────────┐
 │                                                                                                       │

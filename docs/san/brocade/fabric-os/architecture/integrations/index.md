@@ -32,6 +32,8 @@ sequenceDiagram
     HBA->>Storage: PRLI (Process Login)\nnegotiate FCP parameters
     Storage-->>HBA: ACC — FCP ready
     Note over HBA,Storage: LUN discovery and I/O can begin
+```
+
 ```text
 ┌────────────────────────────────── Brocade Fabric OS — Integrations ───────────────────────────────────┐
 │                                                                                                       │

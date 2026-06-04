@@ -17,6 +17,8 @@ flowchart LR
     applied["Final Applied\nEffective Policy\n(last writer wins)"]
 
     localGPO --> siteGPO --> domainGPO --> ouParentGPO --> ouChildGPO --> applied
+```
+
 ```text
 ┌────────────────────────────────── Windows Server — Design Standards ──────────────────────────────────┐
 │                                                                                                       │

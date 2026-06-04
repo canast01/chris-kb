@@ -46,6 +46,8 @@ flowchart TD
     class sobr,tape store
     class vcenter host
     class obj cloud
+```
+
 ```text
 ┌──────────────────────────────────────── Veeam — CLI Reference ────────────────────────────────────────┐
 │                                                                                                       │

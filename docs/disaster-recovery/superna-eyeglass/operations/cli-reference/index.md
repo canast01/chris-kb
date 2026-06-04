@@ -18,6 +18,8 @@ flowchart LR
     operator --> ssh --> iglsCLI --> eyeglassSvc
     operator --> restAPI --> eyeglassSvc
     eyeglassSvc --> psApi --> synciq
+```
+
 ```text
 ┌────────────────────────────────── Superna Eyeglass — CLI Reference ───────────────────────────────────┐
 │                                                                                                       │

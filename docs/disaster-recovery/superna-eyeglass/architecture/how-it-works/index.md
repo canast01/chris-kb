@@ -26,6 +26,8 @@ graph LR
   class PS_B dr
   class EG mgmt
   class ADMIN,DNS host
+```
+
 ```text
 ┌─────────────────────────────────── Superna Eyeglass — How It Works ───────────────────────────────────┐
 │                                                                                                       │

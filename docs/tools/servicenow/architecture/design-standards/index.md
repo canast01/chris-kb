@@ -117,6 +117,8 @@ flowchart TD
     G -- Approved --> H
     G -- Rejected --> I
     H --> K --> L
+```
+
 ```text
 ┌──────────────────────────────────── ServiceNow — Design Standards ────────────────────────────────────┐
 │                                                                                                       │

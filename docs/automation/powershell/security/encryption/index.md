@@ -27,6 +27,8 @@ graph TD
     clixml -->|Import-Clixml| secureString
     secureString -->|New-PSSession -UseSSL| winrmHTTPS
     winrmHTTPS --> remoteSession
+```
+
 ```text
 ┌─────────────────────────────────────── PowerShell — Encryption ───────────────────────────────────────┐
 │   ┌───────────────────────────────────────────────────────────────────────────────────────────────┐   │

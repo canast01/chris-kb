@@ -31,6 +31,8 @@ flowchart LR
         journalCmds["journalctl\nsystemd journal"]
         auditCmds["ausearch · aureport\nauditd"]
     end
+```
+
 ```text
 ┌──────────────────────────────────────── Linux — CLI Reference ────────────────────────────────────────┐
 │                                                                                                       │

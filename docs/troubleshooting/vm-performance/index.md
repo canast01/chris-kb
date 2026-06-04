@@ -63,6 +63,8 @@ flowchart TD
     Q -- Yes --> R[NIC saturation or vSwitch congestion\nCheck MbTX/s; check NIOC policy]
     Q -- No --> S[Issue may be inside guest\nSSH into VM; check top/iostat/netstat]
     S --> T[Correlate with recent changes\nSnapshot? New workload? Config change?]
+```
+
 ```text
 ┌─────────────────────────────────── VM Performance Troubleshooting ────────────────────────────────────┐
 │                                                                                                       │
